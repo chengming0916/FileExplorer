@@ -32,26 +32,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\..\..\Common\quickzip.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Cinch.WPF">
-      <HintPath>..\..\..\lib\Cinch.WPF.dll</HintPath>
+      <HintPath>..\..\..\..\lib\Cinch.WPF.dll</HintPath>
     </Reference>
     <Reference Include="ExifLibrary">
-      <HintPath>..\..\..\lib\ExifLibrary.dll</HintPath>
+      <HintPath>..\..\..\..\lib\ExifLibrary.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Classic" />
     <Reference Include="QuickZip.IO.PIDL">
-      <HintPath>..\..\..\lib\QuickZip.IO.PIDL.dll</HintPath>
+      <HintPath>..\..\..\..\lib\QuickZip.IO.PIDL.dll</HintPath>
     </Reference>
     <Reference Include="QuickZip.Translation">
-      <HintPath>..\..\..\lib\QuickZip.Translation.dll</HintPath>
+      <HintPath>..\..\..\..\lib\QuickZip.Translation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

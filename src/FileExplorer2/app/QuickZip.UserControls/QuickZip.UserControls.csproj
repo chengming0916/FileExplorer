@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\..\..\Common\quickzip.snk</AssemblyOriginatorKeyFile>
@@ -55,10 +55,10 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="QuickZip.IO.PIDL">
-      <HintPath>..\..\..\lib\QuickZip.IO.PIDL.dll</HintPath>
+      <HintPath>..\..\..\..\lib\QuickZip.IO.PIDL.dll</HintPath>
     </Reference>
     <Reference Include="QuickZip.Translation">
-      <HintPath>..\..\..\lib\QuickZip.Translation.dll</HintPath>
+      <HintPath>..\..\..\..\lib\QuickZip.Translation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -544,7 +544,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_ConfigurationName="Release" BuildVersion_UseGlobalSettings="True" />
+      <UserProperties BuildVersion_UseGlobalSettings="True" BuildVersion_ConfigurationName="Release" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
