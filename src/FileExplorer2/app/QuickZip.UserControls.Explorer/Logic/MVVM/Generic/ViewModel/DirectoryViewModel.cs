@@ -139,7 +139,7 @@ namespace QuickZip.UserControls.MVVM.ViewModel
                        foreach (EntryViewModel<FI, DI, FSI> entry in _subEntries)
                            if (entry is FileViewModel<FI, DI, FSI>)
                                _subFiles.Add(entry);
-
+                       
                        foreach (EntryViewModel<FI, DI, FSI> entry in _subEntries)
                            if (entry is DirectoryViewModel<FI, DI, FSI>)
                                _subDirectories.Add(entry);

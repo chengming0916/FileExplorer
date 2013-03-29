@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 using QuickZip.UserControls.MVVM;
 using QuickZip.UserControls.MVVM.ViewModel;
 using QuickZip.UserControls;
+using System.IO;
+using System.Diagnostics;
 
 namespace Explorer2TestProj
 {
@@ -26,13 +28,35 @@ namespace Explorer2TestProj
     public partial class MainWindow : Window
     {
         public MainWindow()
-        {            
+        {
             InitializeComponent();
             this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (o, e) => { this.Close(); }));
             var profile = new ExProfile();
-            _evm = null;            
-            explr.DataContext = _evm = new ExExplorerViewModel(profile);            
+            _evm = null;
+            explr.DataContext = _evm = new ExExplorerViewModel(profile);
             //evm.ChangeCurrentEntry(d);
+            //_evm.PropertyChanged += (o, e) =>
+            //    {
+            //        if (e.PropertyName == "CurrentEntryViewModel")
+            //        {
+            //            var dvm = (_evm.CurrentEntryViewModel as DirectoryViewModel<FileInfoEx, DirectoryInfoEx, FileSystemInfoEx>);
+            //            if (dvm != null)
+            //            {
+            //                Debug.WriteLine("CurrentItems" + dvm.SubEntries.Count);
+            //                dvm.SubEntries.CollectionChanged += (o1, e1) =>
+            //                {
+            //                    if (e1.NewItems != null)
+            //                        foreach (var item in e1.NewItems)
+            //                            Debug.WriteLine("Added" + item.ToString());
+            //                    if (e1.OldItems != null)
+            //                        foreach (var item in e1.OldItems)
+            //                            Debug.WriteLine("Removed" + item.ToString());
+            //                };
+            //            }
+            //        }
+            //    };
+
+
         }
 
         private ExExplorerViewModel _evm = null;
