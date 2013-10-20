@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,14 +14,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TestApp.WPF
+namespace FileExplorer.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for FileListView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    [Export(typeof(UserControl))]
+    public partial class FileListView : UserControl
     {
-        public MainWindow()
+        public FileListView()
         {
             InitializeComponent();
         }

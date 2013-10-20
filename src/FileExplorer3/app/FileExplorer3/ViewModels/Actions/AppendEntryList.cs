@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Caliburn.Micro;
+using FileExplorer.Models;
+
+namespace FileExplorer.ViewModels
+{
+    /// <summary>
+    /// Append entrylist context["EntryList"] to context.Target (IEntryListViewModel)
+    /// </summary>
+    public class AppendEntryList : IResult
+    {
+        #region Cosntructor
+
+        public AppendEntryList(IEntryViewModel parentModel, IEntryListViewModel targetModel)
+        {
+            _parentModel = parentModel;
+            _targetModel = targetModel;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public event EventHandler<ResultCompletionEventArgs> Completed;
+
+        public void Execute(ActionExecutionContext context)
+        {
+            var entryModels = context["EntryList"] as IEnumerable<IEntryModel>;
+            foreach (var em in entryModels)
+                _targetModel.Items.Add(EntryViewModel.FromEntryModel(_parentModel.Profile, em));
+            Completed(this, new ResultCompletionEventArgs());
+        }
+
+        #endregion
+
+        #region Data
+
+        private IEntryViewModel _parentModel;
+        private IEntryListViewModel _targetModel;
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
+       
+    }
+}
