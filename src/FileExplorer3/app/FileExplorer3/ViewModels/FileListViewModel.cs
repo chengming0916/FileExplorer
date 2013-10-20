@@ -35,7 +35,7 @@ namespace FileExplorer.ViewModels
         {
             var parentEVm = EntryViewModel.FromEntryModel(profile, em);
             yield return Loader.Show("Loading");
-            yield return new ChangeViewMode("Default");
+            yield return new ChangeView("Grid");
             yield return new LoadEntryList(parentEVm, filter);
             yield return new AppendEntryList(parentEVm, this);            
             yield return Loader.Show();

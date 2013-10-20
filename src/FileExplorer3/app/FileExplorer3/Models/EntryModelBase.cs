@@ -37,6 +37,7 @@ namespace FileExplorer.Models
         public bool IsDirectory { get; protected set; }
         public IEntryModel Parent { get; protected set; }
         public string Label { get; protected set; }
+        public string Description { get; protected set; }
         public string FullPath { get; protected set; }
 
         #endregion

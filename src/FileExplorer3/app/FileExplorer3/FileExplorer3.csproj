@@ -96,7 +96,7 @@
     <Compile Include="UserControls\VirutalWrapPanelView.cs" />
     <Compile Include="ValueComparer.cs" />
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
-    <Compile Include="ViewModels\Actions\ChangeViewMode.cs" />
+    <Compile Include="ViewModels\Actions\ChangeView.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\IEntryListViewModel.cs" />
@@ -113,6 +113,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\Common\FileListSupp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Default\Brushes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
