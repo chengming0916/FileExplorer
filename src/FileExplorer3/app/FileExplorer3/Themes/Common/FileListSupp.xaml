@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
+    xmlns:cali ="http://www.caliburnproject.org"
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
@@ -9,7 +10,7 @@
     <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type ListViewItem}" >
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="TextSearch.Text" Value="{Binding EmbeddedModel.Label, Mode=OneWay}" />
+        <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -54,10 +55,10 @@
                    BasedOn="{StaticResource ItemContainerStyleBase}">
     </Style>
 
-    
-    
+
+
     <!--Grid View-->
-    <DataTemplate x:Key="GridLabelTemplate" >        
+    <DataTemplate x:Key="GridLabelTemplate" >
         <TextBlock Text="{Binding EntryModel.Label}" HorizontalAlignment="Right" TextAlignment="Right" />
     </DataTemplate>
     <DataTemplate x:Key="GridDescTemplate" >
@@ -68,6 +69,28 @@
         <GridViewColumn Width="200" Header="Label"  CellTemplate="{StaticResource GridLabelTemplate}" />
         <GridViewColumn Width="200" Header="Description"  CellTemplate="{StaticResource GridDescTemplate}" />
     </GridView>
+
+    <!--Icon View-->
+
+    <ItemsPanelTemplate x:Key="IconPanelTemplate">
+        <uc:VirtualWrapPanel Width="{Binding (FrameworkElement.ActualWidth),
+                   RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"      
+                   Orientation="{Binding Orientation}"
+                   SmallChanges="{Binding ItemHeight}"  
+                   ItemWidth="{Binding ItemWidth}"
+                   MinWidth="{Binding ItemWidth}"
+                   ItemHeight="{Binding ItemHeight}"
+                   CacheItemCount="{Binding CacheCount}"
+           />
+    </ItemsPanelTemplate>
+
+    <Style x:Key="IconItemContainerStyle" TargetType="{x:Type ListViewItem}"
+                   BasedOn="{StaticResource ItemContainerStyleBase}">
+    </Style>
+    
+    
+    
+    
 
 
 </ResourceDictionary>

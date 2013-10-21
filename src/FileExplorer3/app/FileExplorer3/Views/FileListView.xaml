@@ -20,7 +20,7 @@
                 <TextBlock Text="{Binding EntryModel.Label}"></TextBlock>
             </DataTemplate>-->
 
-
+       
 
         </ResourceDictionary>
     </UserControl.Resources>
@@ -30,14 +30,12 @@
             <RowDefinition Height="*" MinHeight="150" />
         </Grid.RowDefinitions>
         <Button x:Name="Load" cal:View.Context="{Binding Items}" Grid.Row="0">Load</Button>
-        <ListView Grid.Row="1" x:Name="Items"  Background="LightBlue">
-            <!--<ListView.ItemTemplate>                    
-                    <DataTemplate>
-                        <TextBlock Text="{Binding EntryModel.Label}"></TextBlock>
-                    </DataTemplate>
-                </ListView.ItemTemplate>-->
-
+        <ListView Grid.Row="1" x:Name="Items"  Background="LightBlue"
+                  cal:View.Context="Icon"
+                  >
         </ListView>
+      
+
 
         <!--<TextBlock x:Name="BusyIndicator" Grid.Row="1">Busy</TextBlock>-->
     </Grid>

@@ -29,6 +29,8 @@ namespace FileExplorer.Models
 
         Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
 
+        Task<ImageSource> GetIconAsync(IEntryModel entry, int size);
+
         /// <summary>
         /// Transfer the source entries to dest directory.
         /// </summary>

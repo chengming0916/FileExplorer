@@ -12,5 +12,7 @@ namespace FileExplorer.ViewModels
     {
         IProfile Profile { get; }
         IEntryModel EntryModel { get; }
+
+        bool IsSelected { get; set; }
     }
 }

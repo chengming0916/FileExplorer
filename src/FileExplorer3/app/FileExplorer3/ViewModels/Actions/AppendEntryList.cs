@@ -31,7 +31,10 @@ namespace FileExplorer.ViewModels
         {
             var entryModels = context["EntryList"] as IEnumerable<IEntryModel>;
             foreach (var em in entryModels)
-                _targetModel.Items.Add(EntryViewModel.FromEntryModel(_parentModel.Profile, em));
+            {
+                var evm = EntryViewModel.FromEntryModel(_parentModel.Profile, em);                
+                _targetModel.Items.Add(evm);
+            }
             Completed(this, new ResultCompletionEventArgs());
         }
 

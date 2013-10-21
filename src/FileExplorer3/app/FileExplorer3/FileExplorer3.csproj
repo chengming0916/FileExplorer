@@ -94,7 +94,9 @@
     <Compile Include="UserControls\VirutalStackPanel.cs" />
     <Compile Include="UserControls\VirutalStackPanelView.cs" />
     <Compile Include="UserControls\VirutalWrapPanelView.cs" />
+    <Compile Include="Utils\BitmapSourceUtils.cs" />
     <Compile Include="ValueComparer.cs" />
+    <Compile Include="ViewModels\Actions\AddLabelColumn.cs" />
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
     <Compile Include="ViewModels\Actions\ChangeView.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />
@@ -104,6 +106,9 @@
     <Compile Include="ViewModels\Actions\LoadEntryList.cs" />
     <Compile Include="ViewModels\Actions\Loader.cs" />
     <Compile Include="ViewModels\TaskUtils.cs" />
+    <Compile Include="Views\EntryView.xaml.cs">
+      <DependentUpon>EntryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
     </Compile>
@@ -121,6 +126,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\VirtualStackPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -128,6 +137,10 @@
     <Page Include="UserControls\VirtualWrapPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EntryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FileListView.xaml">
       <Generator>MSBuild:Compile</Generator>

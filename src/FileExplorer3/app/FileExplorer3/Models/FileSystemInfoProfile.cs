@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 
@@ -43,7 +44,14 @@ namespace FileExplorer.Models
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }
-
+        
+        public Task<ImageSource> GetIconAsync(IEntryModel entry, int size)
+        {
+            using (var icon = System.Drawing.Icon.ExtractAssociatedIcon(entry.FullPath))
+            using (var bitmap = icon.ToBitmap())
+                return Task.FromResult<ImageSource>(
+                    Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
+        }
 
         public IResult<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
         {
@@ -79,5 +87,8 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
+
+
+      
     }
 }
