@@ -50,7 +50,7 @@ namespace FileExplorer.ViewModels
         public IEnumerable<IResult> ChangeView(string viewMode)
         {
             yield return new ChangeView(this, viewMode);
-            //yield return new AddLabelColumn("Label", "EntryModel.Label", null);
+            yield return new AddLabelColumn(_colList.ToArray());
         }
 
 
@@ -64,6 +64,12 @@ namespace FileExplorer.ViewModels
         private string _viewMode;
         private Orientation _orientation = Orientation.Vertical;
         private TimeSpan _itemAnimateDuration = TimeSpan.FromSeconds(5);
+        private List<ListViewColumnInfo> _colList = new List<ListViewColumnInfo>()
+        {
+            ListViewColumnInfo.FromTemplate("Name", "GridLabelTemplate", 200),   
+            ListViewColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200)   
+        };
+
         #endregion
 
         #region Public Properties

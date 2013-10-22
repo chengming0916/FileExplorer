@@ -39,13 +39,13 @@
                             <Setter Property="Foreground" 
                                         Value="{StaticResource DisabledForegroundBrush}"/>
                         </Trigger>
-                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard Storyboard.Target="{Binding}">
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.5" To="1" Duration="0:0:1" />
                                 </Storyboard>
                             </BeginStoryboard>
-                        </EventTrigger>
+                        </EventTrigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -56,19 +56,15 @@
                    BasedOn="{StaticResource ItemContainerStyleBase}">
     </Style>
 
+    <Style x:Key="ColumnHeaderContainerStyle" TargetType="GridViewColumnHeader">
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
 
 
     <!--Grid View-->
-    <DataTemplate x:Key="GridLabelTemplate" >
-        <TextBlock Text="{Binding EntryModel.Label}" HorizontalAlignment="Right" TextAlignment="Right" />
-    </DataTemplate>
-    <DataTemplate x:Key="GridDescTemplate" >
-        <TextBlock Text="{Binding EntryModel.Description}" HorizontalAlignment="Right" TextAlignment="Right" />
-    </DataTemplate>
-
+   
     <GridView x:Key="GridView" >
-        <GridViewColumn Width="200" Header="Label"  CellTemplate="{StaticResource GridLabelTemplate}" />
-        <GridViewColumn Width="200" Header="Description"  CellTemplate="{StaticResource GridDescTemplate}" />
     </GridView>
 
     <!--Icon View-->
@@ -78,6 +74,7 @@
     </Style>
 
     <uc:VirtualWrapPanelView x:Key="IconView"  
+                             ColumnHeaderContainerStyle="{StaticResource ColumnHeaderContainerStyle}"
                              SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
                              CacheItemCount="5"  
                              ItemHeight="{Binding ItemHeight}"

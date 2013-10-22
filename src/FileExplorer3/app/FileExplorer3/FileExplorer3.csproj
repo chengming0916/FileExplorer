@@ -80,8 +80,6 @@
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Structs.cs" />
     <Compile Include="Models\EntryModelBase.cs" />
-    <Compile Include="Models\FileSystemInfoModel.cs" />
-    <Compile Include="Models\FileSystemInfoProfile.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,6 +120,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Common\Panels.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\FileList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Caliburn.Micro;
+using FileExplorer.Defines;
 using FileExplorer.UserControls;
 
 namespace FileExplorer.ViewModels
@@ -15,11 +16,9 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public AddLabelColumn(string columnHeader, string columnValuePath, string columnTooltipPath)
+        public AddLabelColumn(params ListViewColumnInfo[] colInfos)
         {
-            _columnHeader = columnHeader;
-            _columnValuePath = columnValuePath;
-            _columnTooltipPath = columnTooltipPath;
+            _colInfos = colInfos;
         }
 
         #endregion
@@ -29,8 +28,57 @@ namespace FileExplorer.ViewModels
 
         public event EventHandler<ResultCompletionEventArgs> Completed;
 
+        private GridViewColumn createColumn(ListView found,ListViewColumnInfo colInfo)
+        {
+            DataTemplate dt = null;
+            if (colInfo.TemplateKey != null)
+                dt = found.FindResource(colInfo.TemplateKey) as DataTemplate;
+            else
+            {
+                dt = new DataTemplate();
+                FrameworkElementFactory label = new FrameworkElementFactory(typeof(TextBlock));
+                label.SetBinding(TextBlock.TextProperty, new Binding(colInfo.ValuePath));
+                if (!(String.IsNullOrEmpty(colInfo.TooltipPath)))
+                    label.SetValue(TextBlock.ToolTipProperty, new Binding(colInfo.TooltipPath));
+                dt.VisualTree = label;
+            }
+            return new GridViewColumn()
+                {
+                    Header = colInfo.Header,
+                    CellTemplate = dt,
+                    Width = colInfo.Width
+                };
+        }
+
+
+        private void addColumn(ListView found, GridViewColumnCollection columnCol, ListViewColumnInfo[] colInfos)
+        {
+            foreach (var colInfo in colInfos)
+            {
+                if (columnCol.Any(c => c.Header.Equals(colInfo.Header))) //Prevent re-add.
+                    break;
+                else columnCol.Add(createColumn(found, colInfo));
+            }
+        }
+
+        private void addColumn(ListView found, ListViewColumnInfo[] colInfos)
+        {
+            GridViewColumnCollection columnCol = null;
+
+            if (found.View is GridView)
+                columnCol = (found.View as GridView).Columns;
+            else if (found.View is VirtualWrapPanelView)
+                columnCol = (found.View as VirtualWrapPanelView).Columns;
+            else if (found.View is VirtualStackPanelView)
+                columnCol = (found.View as VirtualStackPanelView).Columns;
+
+            if (columnCol != null)
+                addColumn(found, columnCol, colInfos);
+        }
+
         public void Execute(ActionExecutionContext context)
         {
+
             FrameworkElement ele = context.Source as FrameworkElement;
             Exception ex = null;
             while (ele != null)
@@ -38,22 +86,7 @@ namespace FileExplorer.ViewModels
                 var found = UITools.FindVisualChildByName<ListView>(ele, "Items");
                 if (found != null)
                 {
-                    if (found.View is GridView)
-                    {
-                        var gView = (found.View as GridView);
-                        var dt = new DataTemplate();
-                        FrameworkElementFactory label = new FrameworkElementFactory(typeof(TextBlock));
-                        label.SetBinding(TextBlock.TextProperty, new Binding(_columnValuePath));
-                        if (!(String.IsNullOrEmpty(_columnTooltipPath)))
-                            label.SetValue(TextBlock.ToolTipProperty, new Binding(_columnTooltipPath));
-                        dt.VisualTree = label;
-                        gView.Columns.Add(new GridViewColumn()
-                        {
-                            Header = _columnHeader,
-                            CellTemplate = dt
-                        });
-                    }
-
+                    addColumn(found, _colInfos);
                     break;
                 }
                 ele = ele.Parent as FrameworkElement;
@@ -69,8 +102,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        string _columnValuePath, _columnTooltipPath;
-        string _columnHeader;
+        ListViewColumnInfo[] _colInfos;
 
         #endregion
 

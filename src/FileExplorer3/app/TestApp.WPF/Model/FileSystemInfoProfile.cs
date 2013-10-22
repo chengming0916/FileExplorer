@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,10 @@ namespace FileExplorer.Models
     public class FileSystemInfoProfile : IProfile
     {
         #region Cosntructor
+
+        public FileSystemInfoProfile()
+        {            
+        }
 
         #endregion
 
@@ -44,10 +49,17 @@ namespace FileExplorer.Models
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }
-        
+
+        private Icon getFolderIcon()
+        {
+            return new Icon(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("TestApp.WPF.Model.folder.ico"));
+        }
+
         public Task<ImageSource> GetIconAsync(IEntryModel entry, int size)
         {
-            using (var icon = System.Drawing.Icon.ExtractAssociatedIcon(entry.FullPath))
+            using (var icon = entry.IsDirectory ? 
+                getFolderIcon() : 
+                System.Drawing.Icon.ExtractAssociatedIcon(entry.FullPath))
             using (var bitmap = icon.ToBitmap())
                 return Task.FromResult<ImageSource>(
                     Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
@@ -66,6 +78,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Data
+
+        private Bitmap _folderBitmap;
 
         #endregion
 
@@ -89,6 +103,6 @@ namespace FileExplorer.Models
 
 
 
-      
+
     }
 }

@@ -7,17 +7,24 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />        
     </ResourceDictionary.MergedDictionaries>
 
+
+    <DataTemplate x:Key="GridLabelTemplate" >
+        <StackPanel Orientation="Horizontal">
+            <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Width="30" Height="30"  />
+            <TextBlock Text="{Binding EntryModel.Label}"  Padding="10,0,0,0"
+                       HorizontalAlignment="Left" 
+                       VerticalAlignment="Center" />
+        </StackPanel>
+        
+    </DataTemplate>
+
     <DataTemplate x:Key="IconItemTemplate">
-        <Grid Background="Snow">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions> 
-            <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Grid.Row="0" />
+        
+        <DockPanel LastChildFill="True">
             <TextBlock x:Name="Label" TextAlignment="Center" 
-                       Text="{Binding EntryModel.Label}" Grid.Row="1" />
-            <TextBlock x:Name="Debug" />
-        </Grid>
+                       Text="{Binding EntryModel.Label}" Grid.Row="1" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" />
+            <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Grid.Row="0"  />
+        </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="SmallIconItemTemplate">

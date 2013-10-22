@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Views/Views.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Panels.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/FileList.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!--<DataTemplate x:Key="DefaultEntryTemplate">
@@ -28,8 +29,11 @@
     <Grid>
 
         <!--ItemTemplate="{StaticResource IconItemTemplate}"-->
-        <ListView Grid.Row="1" x:Name="Items"  Background="LightBlue"  
+        <ListView Grid.Row="1" x:Name="Items"  Background="LightBlue"  Style="{DynamicResource FileListStyle}"
                   cal:View.ApplyConventions="False" ItemsSource="{Binding Items}">            
+            
+            
+            
         </ListView>
       
 
