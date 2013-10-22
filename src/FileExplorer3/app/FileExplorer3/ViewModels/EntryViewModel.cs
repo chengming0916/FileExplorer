@@ -40,11 +40,6 @@ namespace FileExplorer.ViewModels
             return base.GetView(context);
         }
 
-        private ImageSource getIcon()
-        {
-            return Profile.GetIconAsync(EntryModel, 32).Result;
-        }
-
         #endregion
 
         #region Data
@@ -58,7 +53,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
 
         public IProfile Profile { get; private set; }
-        public IScreen ContainerViewModel { get; private set; }
+        
         public IEntryModel EntryModel { get; private set; }
 
         public Lazy<ImageSource> Icon { get { return _icon; } }

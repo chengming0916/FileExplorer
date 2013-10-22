@@ -13,7 +13,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/FileListSupp.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Views/Views.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Panels.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!--<DataTemplate x:Key="DefaultEntryTemplate">
@@ -25,14 +26,10 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition Height="*" MinHeight="150" />
-        </Grid.RowDefinitions>
-        <Button x:Name="Load" cal:View.Context="{Binding Items}" Grid.Row="0">Load</Button>
-        <ListView Grid.Row="1" x:Name="Items"  Background="LightBlue"
-                  cal:View.Context="Icon"
-                  >
+
+        <!--ItemTemplate="{StaticResource IconItemTemplate}"-->
+        <ListView Grid.Row="1" x:Name="Items"  Background="LightBlue"  
+                  cal:View.ApplyConventions="False" ItemsSource="{Binding Items}">            
         </ListView>
       
 

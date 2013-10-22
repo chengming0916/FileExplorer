@@ -66,8 +66,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IShell.cs" />
-    <Compile Include="ShellViewModel.cs" />
+    <Compile Include="AppViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
@@ -99,7 +98,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ShellView.xaml">
+    <Page Include="AppView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -5,6 +5,7 @@
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Views/ItemTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type ListViewItem}" >
@@ -72,24 +73,37 @@
 
     <!--Icon View-->
 
-    <ItemsPanelTemplate x:Key="IconPanelTemplate">
-        <uc:VirtualWrapPanel Width="{Binding (FrameworkElement.ActualWidth),
-                   RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"      
-                   Orientation="{Binding Orientation}"
-                   SmallChanges="{Binding ItemHeight}"  
-                   ItemWidth="{Binding ItemWidth}"
-                   MinWidth="{Binding ItemWidth}"
-                   ItemHeight="{Binding ItemHeight}"
-                   CacheItemCount="{Binding CacheCount}"
-           />
-    </ItemsPanelTemplate>
-
     <Style x:Key="IconItemContainerStyle" TargetType="{x:Type ListViewItem}"
                    BasedOn="{StaticResource ItemContainerStyleBase}">
     </Style>
+
+    <uc:VirtualWrapPanelView x:Key="IconView"  
+                             SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
+                             CacheItemCount="5"  
+                             ItemHeight="{Binding ItemHeight}"
+                             ItemWidth="{Binding ItemWidth}"
+                             ItemTemplate="{DynamicResource IconItemTemplate}"
+                             ItemContainerStyle="{StaticResource IconItemContainerStyle}"
+                             HorizontalContentAlignment="Left" >       
+    </uc:VirtualWrapPanelView>
     
+    <!-- Small Icon View -->
+
+    <Style x:Key="SmallIconItemContainerStyle" TargetType="{x:Type ListViewItem}"
+                   BasedOn="{StaticResource ItemContainerStyleBase}">
+    </Style>
     
-    
+    <uc:VirtualWrapPanelView x:Key="SmallIconView"  
+                             SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
+                             CacheItemCount="5"  
+                             ItemHeight="30"
+                             ItemWidth="250"
+                             Orientation="Horizontal"
+                             ItemTemplate="{DynamicResource SmallIconItemTemplate}"
+                             ItemContainerStyle="{StaticResource SmallIconItemContainerStyle}"
+                             HorizontalContentAlignment="Left" >
+    </uc:VirtualWrapPanelView>
+
     
 
 

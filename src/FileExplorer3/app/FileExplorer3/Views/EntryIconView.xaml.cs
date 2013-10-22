@@ -18,9 +18,9 @@ namespace FileExplorer.Views
     /// <summary>
     /// Interaction logic for EntryView.xaml
     /// </summary>
-    public partial class EntryView : UserControl
+    public partial class EntryIconView : UserControl
     {
-        public EntryView()
+        public EntryIconView()
         {
             InitializeComponent();
         }

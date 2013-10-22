@@ -14,8 +14,8 @@
           Value="{Binding (ListView.View).ItemContainerStyle,
           RelativeSource={RelativeSource Self}}"/>
 
-        <Setter Property="ItemTemplate" 
-          Value="{Binding (ListView.View).ItemTemplate,
+        <Setter Property="ItemsControl.ItemTemplate" 
+          Value="{Binding (ItemsControl.View).ItemTemplate,
           RelativeSource={RelativeSource Self}}"/>
 
 

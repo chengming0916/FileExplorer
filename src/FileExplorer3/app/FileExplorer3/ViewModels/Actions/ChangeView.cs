@@ -21,11 +21,13 @@ namespace FileExplorer.ViewModels
         public static string Entry_ItemContainerStyle = "{0}ItemContainerStyle";
         public static string EntryList_View = "{0}View";
         public static string EntryList_PanelTemplate = "{0}PanelTemplate";
+        public static string EntryList_ItemTemplate = "{0}ItemTemplate";
 
         #region Cosntructor
 
-        public ChangeView(string viewMode)
+        public ChangeView(FileListViewModel flistModel, string viewMode)
         {
+            _fileListViewModel = flistModel;
             _viewMode = viewMode;
         }
 
@@ -47,47 +49,47 @@ namespace FileExplorer.ViewModels
                 {
                     string viewKey = String.Format(EntryList_View, _viewMode);
                     string itemContainerStyleKey = String.Format(Entry_ItemContainerStyle, _viewMode);
-                    var panelTemplate = found.FindResource(String.Format(EntryList_PanelTemplate, _viewMode));
 
-                    if (_viewMode.Equals("Grid"))
+                    var view = found.TryFindResource(viewKey);
+                    //Use view if specific view is found.
+                    //if ((view as FileExplorer.UserControls.VirtualWrapPanelView).ItemTemplate.VisualTree == null)
+                    //   throw new Exception();
+                    if (view != null)
                     {
-                        var view = found.TryFindResource(viewKey);
                         found.SetValue(ListView.ViewProperty, view);
+
+                        //if (found.GetBindingExpression(ListView.ItemContainerStyleProperty) == null)
+                        //    throw new Exception();
+                        //if (found.GetBindingExpression(ListView.ItemTemplateProperty) == null)
+                        //    throw new Exception();
                     }
                     else
                     {
+                        var panelTemplate = found.TryFindResource(String.Format(EntryList_PanelTemplate, _viewMode));
                         var itemContainerStyle = found.TryFindResource(itemContainerStyleKey);
-                        if (itemContainerStyle == null)
-                            ex = new Exception("Resource not found: " + itemContainerStyle);
-                        else found.SetValue(ListView.ItemContainerStyleProperty, itemContainerStyle);
-                    
-                        found.SetValue(ListView.ItemsPanelProperty, panelTemplate);
-                        found.SetValue(View.ContextProperty, _viewMode);
+
+
+                        if (itemContainerStyle != null)
+                            found.SetValue(ListView.ItemContainerStyleProperty, itemContainerStyle);
+                        if (panelTemplate != null)
+                            found.SetValue(ListView.ItemsPanelProperty, panelTemplate);
+
+                        //found.SetValue(View.ContextProperty, _viewMode);
                     }
-                    break; 
-                   
-                    //Debug.WriteLine(found.View.ToString());
-                    //break;
 
-                    ////string itemTemplateKey = String.Format(Entry_ItemTemplate, _viewMode);
-                    ////
+                    //var itemTemplate = found.TryFindResource(String.Format(EntryList_ItemTemplate, _viewMode));
+                    //if (itemTemplate != null)
+                    //    found.SetValue(ListView.ItemTemplateProperty, itemTemplate);
+                    
+                    _fileListViewModel.ViewMode = _viewMode;
+                    break;
 
-                    ////if (!itemTemplateKey.Equals(found.ItemTemplate.DataTemplateKey))                        
-                    ////{
-                    ////    var itemTemplate = found.TryFindResource(itemTemplateKey);
-                    ////    if (itemTemplate == null)
-                    ////        ex = new Exception("Resource not found: " + itemTemplateKey);
-                    ////    else found.SetValue(ListView.ItemTemplateProperty, itemTemplate);
-                    ////}
-;
-
-                    //break;
                 }
                 ele = ele.Parent as FrameworkElement;
             }
 
             if (ele == null)
-                ex = new Exception("Cannot find ListView named Items in FileList control");           
+                ex = new Exception("Cannot find ListView named Items in FileList control");
 
             Completed(this, new ResultCompletionEventArgs() { Error = ex });
         }
@@ -96,11 +98,14 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
+        FileListViewModel _fileListViewModel;
         string _viewMode;
 
         #endregion
 
         #region Public Properties
+
+        
 
         #endregion
     }

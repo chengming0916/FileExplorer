@@ -29,6 +29,7 @@ namespace TestApp.WPF
             batch.AddExportedValue(container);
 
             container.Compose(batch);
+
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()

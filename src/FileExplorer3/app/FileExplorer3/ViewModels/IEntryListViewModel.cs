@@ -11,5 +11,6 @@ namespace FileExplorer.ViewModels
     public interface IEntryListViewModel
     {        
         IObservableCollection<IEntryViewModel> Items { get; }
+        IEventAggregator Events { get; }
     }
 }
