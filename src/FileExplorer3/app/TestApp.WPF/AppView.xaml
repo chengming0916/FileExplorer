@@ -10,14 +10,8 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
             <Button x:Name="Load" Content="Load" Height="50" />
-            <ComboBox SelectedIndex="1" x:Name="ViewMode">
-                <ComboBox.Items>
-                    <ComboBoxItem>SmallIcon</ComboBoxItem>
-                    <ComboBoxItem>Icon</ComboBoxItem>
-                    <ComboBoxItem>Grid</ComboBoxItem>
-                </ComboBox.Items> 
-            </ComboBox>
-            <Button cal:Message.Attach="ChangeView(ViewMode.Text)" Content="ChangeView" Height="50" />
+            <ComboBox SelectedValue="{Binding FileListModel.ViewMode}" x:Name="ViewModes">                
+            </ComboBox>            
             <Slider Value="{Binding FileListModel.ItemSize, Mode=TwoWay}" Minimum="30" Maximum="120" />
         </StackPanel>
         <ContentControl Grid.Column="1" Name="FileListModel" Margin="10" />

@@ -32,17 +32,15 @@ namespace TestApp.WPF
             return FileListModel.Load(new FileSystemInfoProfile(), parentModel, null);
         }
 
-        public IEnumerable<IResult> ChangeView(string viewMode)
+        public void ChangeView(string viewMode)
         {
-            if (String.IsNullOrEmpty(viewMode))
-                new List<IResult>();
-
-            return FileListModel.ChangeView(viewMode);
+            FileListModel.ViewMode = viewMode;
         }
 
         #endregion
 
         #region Data
+        private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
 
         #endregion
 
@@ -50,6 +48,7 @@ namespace TestApp.WPF
 
         public IEventAggregator Events { get; private set; }
         public FileListViewModel FileListModel { get; private set; }
+        public List<string> ViewModes { get { return _viewModes; } }
 
         #endregion
 

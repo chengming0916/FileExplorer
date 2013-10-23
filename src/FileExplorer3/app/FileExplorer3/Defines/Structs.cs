@@ -27,28 +27,35 @@ namespace FileExplorer.Defines
         public double Width { get; set; }
         public string TemplateKey { get; set; }
 
-        private ListViewColumnInfo(string columnHeader, double columnWidth)
+        private ListViewColumnInfo(string header, double width)
         {
-            Header = columnHeader;
-            Width = columnWidth;
+            Header = header;
+            Width = width;
         }
 
-        public static ListViewColumnInfo FromTemplate(string columnHeader, string templateKey, double columnWidth = double.NaN)
+        public static ListViewColumnInfo FromTemplate(string header, string templateKey,
+            string valuePath = null, double width = double.NaN)
         {
-            return new ListViewColumnInfo(columnHeader, columnWidth)
+            return new ListViewColumnInfo(header, width)
             {
+                ValuePath = valuePath,
                 TemplateKey = templateKey
             };
         }
 
-        public static ListViewColumnInfo FromBindings(string columnHeader, string columnValuePath, string columnTooltipPath,
-            double columnWidth = double.NaN)
+        public static ListViewColumnInfo FromBindings(string columnHeader, string valuePath, string tooltipPath,
+            double width = double.NaN)
         {
-            return new ListViewColumnInfo(columnHeader, columnWidth)
+            return new ListViewColumnInfo(columnHeader, width)
             {
-                ValuePath = columnValuePath,
-                TooltipPath = columnTooltipPath
+                ValuePath = valuePath,
+                TooltipPath = tooltipPath
             };
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ListViewColumnInfo && (obj as ListViewColumnInfo).ValuePath == ValuePath;
         }
     }
 }

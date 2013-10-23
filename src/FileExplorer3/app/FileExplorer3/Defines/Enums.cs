@@ -19,4 +19,10 @@ namespace FileExplorer.Defines
         vmExtraLargeIcon = 120,
         vmViewer = 256
     }
+
+    public enum SortDirection
+    {
+        Ascending = 0,
+        Descending = 1,
+    }
 }

@@ -24,7 +24,9 @@
             <Setter.Value>
                 <ItemsPanelTemplate>
                     <uc:VirtualWrapPanel Width="{Binding (FrameworkElement.ActualWidth), 
-                   RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"                                         
+                        
+                   RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"  
+                   Duration="{Binding ItemAnimationDuration, RelativeSource={RelativeSource AncestorType=ListView}}"                      
                    Orientation="{Binding (ListView.View).Orientation, RelativeSource={RelativeSource AncestorType=ListView}}"                      
                    SmallChanges="{Binding (ListView.View).SmallChanges, RelativeSource={RelativeSource AncestorType=ListView}}"                      
                   ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
@@ -42,7 +44,7 @@
         <!--<Setter Property="Margin" Value="1,2,1,1"/>-->
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
-        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />        
 
         <!--<Setter Property="Background" Value="{TemplateBinding ListViewItem.Background}" />-->
         <Setter Property="Template">

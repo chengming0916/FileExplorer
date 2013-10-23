@@ -5,8 +5,8 @@
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Views/ItemTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
 
     <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type ListViewItem}" >
         <Setter Property="SnapsToDevicePixels" Value="true"/>
@@ -52,56 +52,15 @@
         </Setter>
     </Style>
 
-    <Style x:Key="DefaultItemContainerStyle" TargetType="{x:Type ListViewItem}"
-                   BasedOn="{StaticResource ItemContainerStyleBase}">
-    </Style>
-
-    <Style x:Key="ColumnHeaderContainerStyle" TargetType="GridViewColumnHeader">
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-    </Style>
-
-
-    <!--Grid View-->
-   
-    <GridView x:Key="GridView" >
-    </GridView>
-
-    <!--Icon View-->
-
-    <Style x:Key="IconItemContainerStyle" TargetType="{x:Type ListViewItem}"
-                   BasedOn="{StaticResource ItemContainerStyleBase}">
-    </Style>
-
-    <uc:VirtualWrapPanelView x:Key="IconView"  
-                             ColumnHeaderContainerStyle="{StaticResource ColumnHeaderContainerStyle}"
-                             SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
-                             CacheItemCount="5"  
-                             ItemHeight="{Binding ItemHeight}"
-                             ItemWidth="{Binding ItemWidth}"
-                             ItemTemplate="{DynamicResource IconItemTemplate}"
-                             ItemContainerStyle="{StaticResource IconItemContainerStyle}"
-                             HorizontalContentAlignment="Left" >       
-    </uc:VirtualWrapPanelView>
-    
-    <!-- Small Icon View -->
-
-    <Style x:Key="SmallIconItemContainerStyle" TargetType="{x:Type ListViewItem}"
-                   BasedOn="{StaticResource ItemContainerStyleBase}">
+    <!--BasedOn="{StaticResource AeroGridViewItemContainerStyleKey}"-->
+    <Style x:Key="FileListItemStyle_Grid" TargetType="{x:Type ListViewItem}" >
+        <Setter Property="TextSearch.Text" Value="{Binding EmbeddedModel.Label, Mode=OneWay}" />
+        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
     </Style>
     
-    <uc:VirtualWrapPanelView x:Key="SmallIconView"  
-                             SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
-                             CacheItemCount="5"  
-                             ItemHeight="30"
-                             ItemWidth="250"
-                             Orientation="Horizontal"
-                             ItemTemplate="{DynamicResource SmallIconItemTemplate}"
-                             ItemContainerStyle="{StaticResource SmallIconItemContainerStyle}"
-                             HorizontalContentAlignment="Left" >
-    </uc:VirtualWrapPanelView>
 
-    
+    <Style x:Key="FileListItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ItemContainerStyleBase}" >
 
+    </Style>
 
 </ResourceDictionary>

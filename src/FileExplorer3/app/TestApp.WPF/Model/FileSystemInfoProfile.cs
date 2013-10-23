@@ -104,5 +104,10 @@ namespace FileExplorer.Models
 
 
 
+
+        public List<ListViewColumnInfo> ColumnList
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

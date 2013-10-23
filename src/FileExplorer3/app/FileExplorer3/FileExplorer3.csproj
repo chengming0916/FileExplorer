@@ -86,8 +86,9 @@
     <Compile Include="UnitTests\ActionTest.cs" />
     <Compile Include="UnitTests\UnitTestExtensions.cs" />
     <Compile Include="UserControls\AnimatedVirtualizingPanel.cs" />
-    <None Include="UserControls\FileList.cs" />
     <Compile Include="UserControls\DebuggingConverter.cs" />
+    <Compile Include="UserControls\FileList.cs" />
+    <Compile Include="UserControls\ListViewColumnUtils.cs" />
     <Compile Include="UserControls\SelectionHelper.cs" />
     <Compile Include="UserControls\UITools.cs" />
     <Compile Include="UserControls\VirtualWrapPanel.cs" />
@@ -96,9 +97,7 @@
     <Compile Include="UserControls\VirutalWrapPanelView.cs" />
     <Compile Include="Utils\BitmapSourceUtils.cs" />
     <Compile Include="ValueComparer.cs" />
-    <Compile Include="ViewModels\Actions\AddLabelColumn.cs" />
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
-    <Compile Include="ViewModels\Actions\ChangeView.cs" />
     <None Include="ViewModels\Actions\LoadIcon.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
@@ -119,7 +118,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Themes\Common\Panels.xaml">
+    <None Include="Themes\backup\FileListItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <Page Include="Themes\Common\ListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -127,15 +130,39 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\Common\FileListItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ItemTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Panels.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <None Include="Themes\backup\FileList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <Page Include="Themes\Common\Views.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Default\Brushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ItemTemplates.xaml">
+    <None Include="Themes\backup\ItemTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Views.xaml">
+    </None>
+    <None Include="Themes\backup\Views.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <Page Include="Themes\Default\Geometry.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -160,6 +187,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

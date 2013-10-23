@@ -23,7 +23,7 @@
                 <ItemsPanelTemplate>
                     <uc:VirtualStackPanel Width="{Binding (FrameworkElement.ActualWidth),
                    RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"                                         
-                   Orientation="{Binding (ListView.View).Orientation, RelativeSource={RelativeSource AncestorType=ListView}}"                      
+                   Orientation="{Binding (ListView.View).Orientation, RelativeSource={RelativeSource AncestorType=ListView}}"
                    SmallChanges="{Binding (ListView.View).SmallChanges, RelativeSource={RelativeSource AncestorType=ListView}}"                      
                    ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
                    MinWidth="{Binding ItemWidth, RelativeSource={RelativeSource Self}}"

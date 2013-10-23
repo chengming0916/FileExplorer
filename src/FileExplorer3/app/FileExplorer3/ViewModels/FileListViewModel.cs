@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using System.Diagnostics;
 
 
 namespace FileExplorer.ViewModels
@@ -45,7 +46,7 @@ namespace FileExplorer.ViewModels
 
         //public async Task LoadAsync(IProfile profile, IEntryModel parentEm, Func<IEntryModel, bool> filter = null)
         //{
-            
+
         //    var parentEVm = EntryViewModel.FromEntryModel(profile, parentEm);
         //    var result = await profile.ListAsync(parentEm, filter);
 
@@ -67,13 +68,10 @@ namespace FileExplorer.ViewModels
 
         }
 
-        public IEnumerable<IResult> ChangeView(string viewMode)
+        protected virtual void OnSortDirectoryChanged(string sortBy, SortDirection direction)
         {
-            yield return new ChangeView(this, viewMode);
-            yield return new AddLabelColumn(_colList.ToArray());
-            yield break;
+            Debug.WriteLine(sortBy);
         }
-
 
         #endregion
 
@@ -81,13 +79,14 @@ namespace FileExplorer.ViewModels
 
         private IObservableCollection<IEntryViewModel> _entryVms = new BindableCollection<IEntryViewModel>();
         private IObservableCollection<IEntryViewModel> _selectedVms = new BindableCollection<IEntryViewModel>();
-        private int _itemSize = 60, _cacheCount = 5;
-        private string _viewMode;
-        private Orientation _orientation = Orientation.Vertical;
-        private TimeSpan _itemAnimateDuration = TimeSpan.FromSeconds(5);
-        private List<ListViewColumnInfo> _colList = new List<ListViewColumnInfo>()
+        private int _itemSize = 60;
+        private string _viewMode = "Icon";
+        private string _sortBy = "EntryModel.Label";
+        private SortDirection _sortDirection = SortDirection.Ascending;
+        //private Orientation _orientation = Orientation.Vertical;
+        private ListViewColumnInfo[] _colList = new ListViewColumnInfo[]
         {
-            ListViewColumnInfo.FromTemplate("Name", "GridLabelTemplate", 200),   
+            ListViewColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
             ListViewColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200)   
         };
 
@@ -97,12 +96,45 @@ namespace FileExplorer.ViewModels
 
         public IEventAggregator Events { get; private set; }
 
-        #region Orientation, CacheCount
-        public Orientation Orientation { get { return _orientation; } set { _orientation = value; NotifyOfPropertyChange(() => Orientation); } }
-        public int CacheCount { get { return _cacheCount; } set { _cacheCount = value; NotifyOfPropertyChange(() => CacheCount); } }
-        #endregion
+        public string SortBy
+        {
+            get { return _sortBy; }
+            set
+            {
+                if (_sortBy != value)
+                {
+                    _sortBy = value;
+                    OnSortDirectoryChanged(_sortBy, _sortDirection);
+                    NotifyOfPropertyChange(() => SortBy);
+                }
+            }
+        }
 
-        #region ItemSize - ItemHeight
+        public SortDirection SortDirection
+        {
+            get { return _sortDirection; }
+            set
+            {
+                if (_sortDirection != value)
+                {
+                    _sortDirection = value;
+                    OnSortDirectoryChanged(_sortBy, _sortDirection);
+                    NotifyOfPropertyChange(() => SortDirection);
+                }
+            }
+        }
+
+        #region ViewMode, ItemAnimateDuration
+        public string ViewMode
+        {
+            get { return _viewMode; }
+            set
+            {
+                _viewMode = value;
+                NotifyOfPropertyChange(() => ViewMode);
+            }
+        }
+
         public int ItemSize
         {
             get { return _itemSize; }
@@ -110,32 +142,18 @@ namespace FileExplorer.ViewModels
             {
                 _itemSize = value;
                 NotifyOfPropertyChange(() => ItemSize);
-                NotifyOfPropertyChange(() => ItemWidth);
-                NotifyOfPropertyChange(() => ItemHeight);
-
             }
         }
 
-        public int ItemWidth { get { return _itemSize; } }
-        public int ItemHeight { get { return _itemSize; } }
+        public ListViewColumnInfo[] ColumnList
+        {
+            get { return _colList; }
+            set { _colList = value; NotifyOfPropertyChange(() => ColumnList); }
+        }
+        //public List<ListViewColumnInfo> ColumnList { get { return _colList; } s
 
         #endregion
 
-        public string ViewMode
-        {
-            get { return _viewMode; }
-            set
-            {
-                NotifyOfPropertyChange(() => ViewMode);
-                Events.Publish(new ViewChangedEvent(value, _viewMode));
-                _viewMode = value;
-            }
-        }
-        public TimeSpan ItemAnimateDuration
-        {
-            get { return _itemAnimateDuration; }
-            set { _itemAnimateDuration = value; NotifyOfPropertyChange(() => ItemAnimateDuration); }
-        }
 
         public IObservableCollection<IEntryViewModel> Items { get { return _entryVms; } }
         public IObservableCollection<IEntryViewModel> SelectedEntries { get { return _selectedVms; } }
@@ -147,3 +165,29 @@ namespace FileExplorer.ViewModels
 
     }
 }
+
+//#region Orientation, CacheCount
+//public Orientation Orientation { get { return _orientation; } set { _orientation = value; NotifyOfPropertyChange(() => Orientation); } }
+//public int CacheCount { get { return _cacheCount; } set { _cacheCount = value; NotifyOfPropertyChange(() => CacheCount); } }
+
+//#endregion
+
+//#region ItemSize - ItemHeight
+//public int ItemSize
+//{
+//    get { return _itemSize; }
+//    set
+//    {
+//        _itemSize = value;
+//        NotifyOfPropertyChange(() => ItemSize);
+//        NotifyOfPropertyChange(() => ItemWidth);
+//        NotifyOfPropertyChange(() => ItemHeight);
+
+//    }
+//}
+
+//public int ItemWidth { get { return _itemSize; } }
+//public int ItemHeight { get { return _itemSize; } }
+
+//#endregion
+

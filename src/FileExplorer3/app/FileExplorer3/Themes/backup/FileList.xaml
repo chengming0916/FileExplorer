@@ -5,17 +5,15 @@
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
-        <ResourceDictionary Source="ListView.xaml" />
+        <ResourceDictionary Source="FileListItem.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="FileListColumnHeaderContainerStyle" TargetType="GridViewColumnHeader">
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Visibility" 
-                Value="{Binding ColumnsVisibility, RelativeSource={RelativeSource AncestorType={x:Type uc:FileList}}}" />
-    </Style>
 
     <ControlTemplate x:Key="FileListTemplate" TargetType="{x:Type uc:FileList}">
+        <ControlTemplate.Resources>
+         
+
+        </ControlTemplate.Resources>
         <Border Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
                             Background="{DynamicResource WindowBackgroundBrush}">
             <DockPanel>
