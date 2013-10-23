@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if WINRT
+using Windows.UI.Xaml.Media;
+#else
 using System.Windows.Media;
+#endif
 using Caliburn.Micro;
 using FileExplorer.Models;
 

@@ -4,11 +4,11 @@
     xmlns:cali ="http://www.caliburnproject.org"
     >
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />        
+        <ResourceDictionary Source="ms-appx:///FileExplorer3.RT/Themes/Default.RT/Brushes.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 
-    <DataTemplate x:Key="GridLabelTemplate" >
+    <!--<DataTemplate x:Key="GridLabelTemplate" >
         <StackPanel Orientation="Horizontal">
             <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Width="30" Height="30"  />
             <TextBlock Text="{Binding EntryModel.Label}"  Padding="10,0,0,0"
@@ -16,18 +16,21 @@
                        VerticalAlignment="Center" />
         </StackPanel>
         
-    </DataTemplate>
+    </DataTemplate>-->
 
-    <DataTemplate x:Key="IconItemTemplate">
-        
-        <DockPanel LastChildFill="True">
+    <DataTemplate x:Key="IconItemTemplate">        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <!--<Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Grid.Row="0"  />-->
             <TextBlock x:Name="Label" TextAlignment="Center" 
-                       Text="{Binding EntryModel.Label}" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" />
-            <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}"  />
-        </DockPanel>
+                       Text="{Binding EntryModel.Label}" Grid.Row="1" VerticalAlignment="Bottom" />
+        </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="SmallIconItemTemplate">
+    <!--<DataTemplate x:Key="SmallIconItemTemplate">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="32" />
@@ -37,7 +40,7 @@
             <TextBlock x:Name="Label" TextAlignment="Left" VerticalAlignment="Center" 
                        Text="{Binding EntryModel.Label}" Grid.Column="1" />
         </Grid>
-    </DataTemplate>
+    </DataTemplate>-->
 
 
 </ResourceDictionary>

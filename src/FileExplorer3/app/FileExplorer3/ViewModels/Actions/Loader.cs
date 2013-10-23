@@ -4,8 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using Caliburn.Micro;
+#if WINRT
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#else
+using System.Windows.Controls;
+#endif
 
 namespace FileExplorer.ViewModels
 {

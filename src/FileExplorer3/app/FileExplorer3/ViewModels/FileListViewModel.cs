@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+#if WINRT
+using Windows.UI.Xaml.Controls;
+#else
 using System.ComponentModel.Composition;
+using System.Windows.Controls;
+#endif
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
+
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 
+
 namespace FileExplorer.ViewModels
 {
+#if !WINRT
     [Export(typeof(FileListViewModel))]
+#endif
     public class FileListViewModel : Screen, IEntryListViewModel
     {
         #region Cosntructor
@@ -35,14 +43,26 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
+        //public async Task LoadAsync(IProfile profile, IEntryModel parentEm, Func<IEntryModel, bool> filter = null)
+        //{
+            
+        //    var parentEVm = EntryViewModel.FromEntryModel(profile, parentEm);
+        //    var result = await profile.ListAsync(parentEm, filter);
+
+        //    foreach (var em in result)
+        //    {
+        //        var evm = EntryViewModel.FromEntryModel(profile, em);
+        //        Items.Add(evm);
+        //    }
+        //}       
+
         public IEnumerable<IResult> Load(IProfile profile, IEntryModel em, Func<IEntryModel, bool> filter = null)
         {
             var parentEVm = EntryViewModel.FromEntryModel(profile, em);
             yield return Loader.Show("Loading");
-
             yield return new LoadEntryList(parentEVm, filter);
             yield return new AppendEntryList(parentEVm, this);
-            SelectedEntries.Add(Items.First());
+            //SelectedEntries.Add(Items.First());
             yield return Loader.Show();
 
         }
@@ -51,6 +71,7 @@ namespace FileExplorer.ViewModels
         {
             yield return new ChangeView(this, viewMode);
             yield return new AddLabelColumn(_colList.ToArray());
+            yield break;
         }
 
 

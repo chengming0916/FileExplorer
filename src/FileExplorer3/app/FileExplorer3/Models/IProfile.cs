@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if WINRT
+using Windows.UI.Xaml.Media;
+#else
 using System.Windows.Media;
+#endif
 using Caliburn.Micro;
 using FileExplorer.Defines;
 
@@ -17,6 +21,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Methods
+
+        List<ListViewColumnInfo> ColumnList { get; }
 
         IComparer<IEntryModel> GetComparer(string property);
 
@@ -39,6 +45,8 @@ namespace FileExplorer.Models
         /// <param name="dest"></param>
         /// <returns></returns>
         Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest);
+
+
 
         /// <summary>
         /// Rename an entry.
