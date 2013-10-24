@@ -115,6 +115,7 @@
     <Compile Include="UserControls\VirutalStackPanelView.cs" />
     <Compile Include="UserControls\VirutalWrapPanelView.cs" />
     <Compile Include="Utils\BitmapSourceUtils.cs" />
+    <Compile Include="Utils\InputBindingTrigger.cs" />
     <Compile Include="ValueComparer.cs" />
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
     <None Include="ViewModels\Actions\LoadIcon.cs" />
@@ -186,7 +187,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\EditBox.xaml">
+    <Page Include="Themes\Common\EditBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

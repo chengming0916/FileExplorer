@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:uc="clr-namespace:FileExplorer.UserControls"
              xmlns:m="clr-namespace:FileExplorer.Models"
              mc:Ignorable="d" 
@@ -25,11 +26,12 @@
                 <TextBlock Text="{Binding EntryModel.Label}"></TextBlock>
             </DataTemplate>-->
 
-       
+
 
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+
         <uc:FileList Background="LightBlue"  x:Name="ProcessedItems"                      
                      ItemsSource="{Binding Items}" 
                      ViewMode="{Binding ViewMode}"  
@@ -44,6 +46,14 @@
                      cal:View.ApplyConventions="False"
                      cal:Message.Attach = "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)]">
 
+            <i:Interaction.Triggers>
+                <uc:InputBindingTrigger>
+                    <uc:InputBindingTrigger.InputBinding>
+                        <KeyBinding Key="F2"/>
+                    </uc:InputBindingTrigger.InputBinding>
+                    <cal:ActionMessage MethodName="Rename"/>
+                </uc:InputBindingTrigger>
+            </i:Interaction.Triggers>
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -53,8 +63,8 @@
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
             </uc:FileList.GroupStyle>-->
-            
-            
+
+
         </uc:FileList>
     </Grid>
 </UserControl>

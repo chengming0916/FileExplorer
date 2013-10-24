@@ -72,6 +72,12 @@ namespace FileExplorer.ViewModels
 
         }
 
+        public void Rename()
+        {
+            if (SelectedItems.Count > 0)
+                SelectedItems[0].IsEditing = true;
+        }
+
         protected virtual void OnSortDirectoryChanged(ListViewColumnInfo col, ListSortDirection direction)
         {
             if (_profile == null)
@@ -88,8 +94,8 @@ namespace FileExplorer.ViewModels
         
         public void OnSelectionChanged(IList selectedItems)
         {
-            var selected = selectedItems.Cast<IEntryViewModel>();
-            Events.Publish(new SelectionChangedEvent(selected));
+            SelectedItems = selectedItems.Cast<IEntryViewModel>().ToList();
+            Events.Publish(new SelectionChangedEvent(SelectedItems));
         }
 
         #endregion
@@ -99,7 +105,7 @@ namespace FileExplorer.ViewModels
         private IProfile _profile;
 
         private IObservableCollection<IEntryViewModel> _items = new BindableCollection<IEntryViewModel>();
-        private IObservableCollection<IEntryViewModel> _selectedVms = new BindableCollection<IEntryViewModel>();
+        private IList<IEntryViewModel> _selectedVms = null;
         private ListCollectionView _processedVms = null;
         private int _itemSize = 60;
         private string _viewMode = "Icon";
@@ -186,7 +192,12 @@ namespace FileExplorer.ViewModels
             get { return _processedVms; }
         }
 
-        public IObservableCollection<IEntryViewModel> SelectedItems { get { return _selectedVms; }  } 
+        public IList<IEntryViewModel> SelectedItems
+        {
+            get { return _selectedVms; }
+            set { _selectedVms = value; 
+                NotifyOfPropertyChange(() => SelectedItems); }
+        } 
 
 
 

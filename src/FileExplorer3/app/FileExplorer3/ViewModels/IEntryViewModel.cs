@@ -13,6 +13,8 @@ namespace FileExplorer.ViewModels
         IProfile Profile { get; }
         IEntryModel EntryModel { get; }
 
+        bool IsEditable { get; set; }
+        bool IsEditing { get; set; }
         bool IsSelected { get; set; }
     }
 }
