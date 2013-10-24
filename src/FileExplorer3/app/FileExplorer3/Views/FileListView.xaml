@@ -30,30 +30,31 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <uc:FileList Background="LightBlue"  x:Name="Items" ViewMode="{Binding ViewMode}"  
+        <uc:FileList Background="LightBlue"  x:Name="ProcessedItems"                      
+                     ItemsSource="{Binding Items}" 
+                     ViewMode="{Binding ViewMode}"  
                      Columns="{Binding ColumnList}"
                      ColumnsVisibility="Visible"
                      ItemSize="{Binding ItemSize}"
                      ItemAnimationDuration="00:00:01"
                      SortDirection="{Binding SortDirection}"
                      SortBy="{Binding SortBy}"
+                     SelectionModeEx="SelectionHelper"
                      Style="{StaticResource FileListStyle}"         
-                     cal:View.ApplyConventions="False" ItemsSource="{Binding Items}" >
-            
-            
+                     cal:View.ApplyConventions="False"
+                     cal:Message.Attach = "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)]">
+
+            <!--<uc:FileList.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Name}"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </uc:FileList.GroupStyle>-->
             
             
         </uc:FileList>
-        <!--ItemTemplate="{StaticResource IconItemTemplate}"-->
-        <!--<ListView Grid.Row="1" x:Name="Items"   
-                  cal:View.ApplyConventions="False" ItemsSource="{Binding Items}">            
-            
-            
-            
-        </ListView>-->
-      
-
-
-        <!--<TextBlock x:Name="BusyIndicator" Grid.Row="1">Busy</TextBlock>-->
     </Grid>
 </UserControl>

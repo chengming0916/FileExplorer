@@ -14,5 +14,6 @@ namespace FileExplorer.Models
         string Label { get; }
         string Description { get; }
         string FullPath { get; }
+        bool IsRenamable { get; }
     }
 }

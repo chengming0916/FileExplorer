@@ -22,9 +22,7 @@ namespace FileExplorer.Models
 
         #region Methods
 
-        List<ListViewColumnInfo> ColumnList { get; }
-
-        IComparer<IEntryModel> GetComparer(string property);
+        IComparer<IEntryModel> GetComparer(ListViewColumnInfo column);
 
         /// <summary>
         /// Return the entry that represent the path, or null if not exists.

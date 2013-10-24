@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,8 +72,8 @@ namespace FileExplorer.UserControls
         /// <summary>
         /// Apply header template to GridViewColumns depending if it's selected and ascending.
         /// </summary>
-        public static void UpdateCollumnHeader(ListView listView, ListViewColumnInfo sortCol, 
-            SortDirection sortDirection = SortDirection.Ascending,
+        public static void UpdateCollumnHeader(ListView listView, ListViewColumnInfo sortCol,
+            ListSortDirection sortDirection = ListSortDirection.Ascending,
             string normalHeaderTemplate = "NormHeaderTemplate",
             string ascHeaderTemplate = "AscHeaderTemplate",
             string descHeaderTemplate = "DescHeaderTemplate")
@@ -91,7 +92,7 @@ namespace FileExplorer.UserControls
                 {
                     if (sortCol.Header.Equals(col.Header))
                     {
-                        if (sortDirection == SortDirection.Ascending)
+                        if (sortDirection == ListSortDirection.Ascending)
                             col.HeaderTemplate = ascTemplate;
                         else col.HeaderTemplate = descTemplate;
                     }

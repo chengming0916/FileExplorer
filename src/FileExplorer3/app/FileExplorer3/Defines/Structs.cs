@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileExplorer.Models;
+using FileExplorer.ViewModels;
 
 namespace FileExplorer.Defines
 {
@@ -16,6 +18,28 @@ namespace FileExplorer.Defines
         {
             ViewMode = viewMode;
             OldViewMode = oldViewMode;
+        }
+    }
+
+    public class SelectionChangedEvent
+    {
+        public IEnumerable<IEntryViewModel> SelectedViewModels { get; private set; }
+        public IEnumerable<IEntryModel> SelectedModels { get { return from vm in SelectedViewModels select vm.EntryModel; } }
+        
+        public SelectionChangedEvent(IEnumerable<IEntryViewModel> evms)
+        {
+            SelectedViewModels = evms.ToList();
+        }
+    }
+
+    public static class ListViewColumnInfoExtension
+    {
+        public static ListViewColumnInfo Find(this ListViewColumnInfo[] cols, string valuePath)
+        {
+            foreach (var col in cols)
+                if (col.ValuePath.Equals(valuePath) || col.Header.Equals(valuePath))
+                    return col;
+            return null;
         }
     }
 
@@ -53,9 +77,20 @@ namespace FileExplorer.Defines
             };
         }
 
+        public override string ToString()
+        {
+            return String.Format("Header:{0}, Key:{1}, ValuePath:{2}", Header, TemplateKey, ValuePath);
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is ListViewColumnInfo && (obj as ListViewColumnInfo).ValuePath == ValuePath;
+            return (obj is ListViewColumnInfo && (obj as ListViewColumnInfo).ValuePath == ValuePath) ||
+                (obj is string && (obj as String).Equals(ValuePath));
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

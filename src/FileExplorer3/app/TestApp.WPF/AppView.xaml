@@ -13,6 +13,7 @@
             <ComboBox SelectedValue="{Binding FileListModel.ViewMode}" x:Name="ViewModes">                
             </ComboBox>            
             <Slider Value="{Binding FileListModel.ItemSize, Mode=TwoWay}" Minimum="30" Maximum="120" />
+            <TextBlock x:Name="SelectionCount" />
         </StackPanel>
         <ContentControl Grid.Column="1" Name="FileListModel" Margin="10" />
     </Grid>

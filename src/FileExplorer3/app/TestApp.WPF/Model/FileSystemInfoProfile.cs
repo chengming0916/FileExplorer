@@ -23,9 +23,18 @@ namespace FileExplorer.Models
 
         #region Methods
 
-        public IComparer<IEntryModel> GetComparer(string property)
+        public IComparer<IEntryModel> GetComparer(ListViewColumnInfo column)
         {
-            return new ValueComparer<IEntryModel>(p => p.FullPath);
+            switch (column.ValuePath)
+            {
+                case "EntryModel.Label" :
+                    return new ValueComparer<IEntryModel>(p => p.Label);
+                case "EntryModel.Description":
+                    return new ValueComparer<IEntryModel>(p => p.Description);
+                default :
+                    return new ValueComparer<IEntryModel>(p => p.FullPath);
+            }
+            
         }
 
         public Task<IEntryModel> ParseAsync(string path)
@@ -105,9 +114,5 @@ namespace FileExplorer.Models
 
 
 
-        public List<ListViewColumnInfo> ColumnList
-        {
-            get { throw new NotImplementedException(); }
-        }
     }
 }

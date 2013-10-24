@@ -14,9 +14,9 @@
           Value="{Binding (ListView.View).ItemContainerStyle,
           RelativeSource={RelativeSource Self}}"/>
 
-        <!--<Setter Property="ItemTemplate" 
+        <Setter Property="ItemTemplate" 
           Value="{Binding (ListView.View).ItemTemplate,
-          RelativeSource={RelativeSource Self}}"/>-->
+          RelativeSource={RelativeSource Self}}"/>
 
         <Setter Property="ItemsPanel">
             <Setter.Value>
@@ -37,43 +37,9 @@
     </Style>
 
     <Style x:Key="lvItemSelectStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">        
-        <!--<Setter Property="Margin" Value="1,2,1,1"/>-->
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
-        <Setter Property="VerticalContentAlignment" Value="Stretch" />
-
-        <!--<Setter Property="Background" Value="{TemplateBinding ListViewItem.Background}" />-->
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                    <Border x:Name="border" BorderBrush="{DynamicResource LightBorderBrush}" 
-                            BorderThickness="0" Padding="1" Background="{TemplateBinding Background}" >                        
-                            <ContentPresenter Margin="5,0" />                        
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True" />
-                                <Condition Property="IsSelected" Value="False"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource HotTrackBrush}" />
-                            <Setter TargetName="border" Property="Padding" Value="0" />
-                            <Setter TargetName="border" Property="BorderThickness" Value="1" />
-                        </MultiTrigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}" />
-                            <Setter TargetName="border" Property="Padding" Value="0" />
-                            <Setter TargetName="border" Property="BorderThickness" Value="1" />
-                        </Trigger>
-                        <Trigger Property="uc:SelectionHelper.IsDragging" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource HotTrackBrush}" />
-                            <Setter TargetName="border" Property="Padding" Value="0" />
-                            <Setter TargetName="border" Property="BorderThickness" Value="1" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />      
     </Style>
 
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type uc:VirtualStackPanelView}, ResourceId=virtualStackPanelViewItemDSK}" 

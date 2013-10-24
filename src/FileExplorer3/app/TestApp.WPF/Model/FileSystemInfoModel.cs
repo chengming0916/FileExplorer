@@ -15,7 +15,10 @@ namespace FileExplorer.Models
             : base()
         {
             this.Label = fsi.Name;
+            this.Attributes = fsi.Attributes;
             this.FullPath = fsi.FullName;
+            this.Name = fsi.Name;
+            this.IsRenamable = true;
             this.IsDirectory = fsi is DirectoryInfo;
             string parentPath = Path.GetDirectoryName(fsi.FullName);
             this.Parent = String.IsNullOrEmpty(parentPath) ? null : new FileSystemInfoModel(new DirectoryInfo(parentPath));
@@ -33,6 +36,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
+
+        public FileAttributes Attributes { get; protected set; }
 
         #endregion
     }

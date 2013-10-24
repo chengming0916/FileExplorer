@@ -14,6 +14,10 @@ using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using System.Diagnostics;
+using System.Windows.Data;
+using System.ComponentModel;
+using System.Windows;
+using System.Collections;
 
 
 namespace FileExplorer.ViewModels
@@ -28,7 +32,7 @@ namespace FileExplorer.ViewModels
         public FileListViewModel(IEventAggregator events)
         {
             Events = events;
-
+            _processedVms = CollectionViewSource.GetDefaultView(Items) as ListCollectionView;
             //var ec = ConventionManager.AddElementConvention<ListView>(
             //   ListView.ItemsSourceProperty, "ItemsSource", "SourceUpdated");
             //ec.ApplyBinding = (vmType, path, property, element, convention) =>
@@ -57,9 +61,9 @@ namespace FileExplorer.ViewModels
         //    }
         //}       
 
-        public IEnumerable<IResult> Load(IProfile profile, IEntryModel em, Func<IEntryModel, bool> filter = null)
-        {
-            var parentEVm = EntryViewModel.FromEntryModel(profile, em);
+        public IEnumerable<IResult> Load(IEntryModel em, Func<IEntryModel, bool> filter = null)
+        {            
+            var parentEVm = EntryViewModel.FromEntryModel(Profile, em);
             yield return Loader.Show("Loading");
             yield return new LoadEntryList(parentEVm, filter);
             yield return new AppendEntryList(parentEVm, this);
@@ -68,21 +72,39 @@ namespace FileExplorer.ViewModels
 
         }
 
-        protected virtual void OnSortDirectoryChanged(string sortBy, SortDirection direction)
+        protected virtual void OnSortDirectoryChanged(ListViewColumnInfo col, ListSortDirection direction)
         {
-            Debug.WriteLine(sortBy);
+            if (_profile == null)
+                return;           
+            var comparer = new EntryViewModelComparer(_profile.GetComparer(col), direction);
+            _processedVms.CustomSort = comparer;
+
+            _processedVms.GroupDescriptions.Add(new PropertyGroupDescription(col.ValuePath));
+
+            //ProcessedItems.SortDescriptions.Clear();
+            //ProcessedItems.SortDescriptions.Add(new SortDescription(col.ValuePath, direction ));
+            //ProcessedItems = Items.OrderByDescending(evm => evm.EntryModel.Description);
+        }
+        
+        public void OnSelectionChanged(IList selectedItems)
+        {
+            var selected = selectedItems.Cast<IEntryViewModel>();
+            Events.Publish(new SelectionChangedEvent(selected));
         }
 
         #endregion
 
         #region Data
 
-        private IObservableCollection<IEntryViewModel> _entryVms = new BindableCollection<IEntryViewModel>();
+        private IProfile _profile;
+
+        private IObservableCollection<IEntryViewModel> _items = new BindableCollection<IEntryViewModel>();
         private IObservableCollection<IEntryViewModel> _selectedVms = new BindableCollection<IEntryViewModel>();
+        private ListCollectionView _processedVms = null;
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private string _sortBy = "EntryModel.Label";
-        private SortDirection _sortDirection = SortDirection.Ascending;
+        private ListSortDirection _sortDirection = ListSortDirection.Ascending;
         //private Orientation _orientation = Orientation.Vertical;
         private ListViewColumnInfo[] _colList = new ListViewColumnInfo[]
         {
@@ -94,6 +116,8 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
+        public IProfile Profile { get { return _profile; } set { _profile = value; NotifyOfPropertyChange(() => Profile); } }
+
         public IEventAggregator Events { get; private set; }
 
         public string SortBy
@@ -104,13 +128,13 @@ namespace FileExplorer.ViewModels
                 if (_sortBy != value)
                 {
                     _sortBy = value;
-                    OnSortDirectoryChanged(_sortBy, _sortDirection);
+                    OnSortDirectoryChanged(ColumnList.Find(_sortBy), _sortDirection);
                     NotifyOfPropertyChange(() => SortBy);
                 }
             }
         }
 
-        public SortDirection SortDirection
+        public ListSortDirection SortDirection
         {
             get { return _sortDirection; }
             set
@@ -118,7 +142,7 @@ namespace FileExplorer.ViewModels
                 if (_sortDirection != value)
                 {
                     _sortDirection = value;
-                    OnSortDirectoryChanged(_sortBy, _sortDirection);
+                    OnSortDirectoryChanged(ColumnList.Find(_sortBy), _sortDirection);
                     NotifyOfPropertyChange(() => SortDirection);
                 }
             }
@@ -155,8 +179,14 @@ namespace FileExplorer.ViewModels
         #endregion
 
 
-        public IObservableCollection<IEntryViewModel> Items { get { return _entryVms; } }
-        public IObservableCollection<IEntryViewModel> SelectedEntries { get { return _selectedVms; } }
+        public IObservableCollection<IEntryViewModel> Items { get { return _items; } }
+
+        public CollectionView ProcessedItems
+        {
+            get { return _processedVms; }
+        }
+
+        public IObservableCollection<IEntryViewModel> SelectedItems { get { return _selectedVms; }  } 
 
 
 

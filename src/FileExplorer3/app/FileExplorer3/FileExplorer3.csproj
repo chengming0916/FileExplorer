@@ -77,12 +77,31 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defines\Converters\BoolToVisibilityCollapsed.cs" />
+    <Compile Include="Defines\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Defines\Converters\EnumMatchToBooleanConverter.cs" />
+    <Compile Include="Defines\Converters\FlipBool.cs" />
+    <Compile Include="Defines\Converters\FlipBoolToVisibility.cs" />
+    <Compile Include="Defines\Converters\FlipBoolToVisibilityCollapsed.cs" />
+    <Compile Include="Defines\Converters\FormatDouble.cs" />
+    <Compile Include="Defines\Converters\FormatFileSize.cs" />
+    <Compile Include="Defines\Converters\FormatTime.cs" />
+    <Compile Include="Defines\Converters\IntAdd.cs" />
+    <Compile Include="Defines\Converters\IntSubstract.cs" />
+    <Compile Include="Defines\Converters\InvertSignConverter.cs" />
+    <Compile Include="Defines\Converters\StringArrayToString.cs" />
+    <Compile Include="Defines\Converters\TagToBold.cs" />
+    <Compile Include="Defines\Converters\ToStringConverter.cs" />
+    <Compile Include="Defines\Converters\UserFriendlyTextConverter.cs" />
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Structs.cs" />
     <Compile Include="Models\EntryModelBase.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\EditBox.cs" />
+    <Compile Include="UserControls\EditBoxAdorner.cs" />
+    <Compile Include="UserControls\VirtualizingWrapPanel.cs" />
     <Compile Include="UnitTests\ActionTest.cs" />
     <Compile Include="UnitTests\UnitTestExtensions.cs" />
     <Compile Include="UserControls\AnimatedVirtualizingPanel.cs" />
@@ -100,6 +119,7 @@
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
     <None Include="ViewModels\Actions\LoadIcon.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />
+    <Compile Include="ViewModels\EntryViewModelComparer.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\IEntryListViewModel.cs" />
     <Compile Include="ViewModels\IEntryViewModel.cs" />
@@ -118,10 +138,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Themes\backup\FileListItem.xaml">
+    <Page Include="Themes\Common\Converters.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </None>
+    </Page>
     <Page Include="Themes\Common\ListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -142,10 +162,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <None Include="Themes\backup\FileList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
     <Page Include="Themes\Common\Views.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -154,14 +170,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <None Include="Themes\backup\ItemTemplates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Themes\backup\Views.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
     <Page Include="Themes\Default\Geometry.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -178,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UserControls\EditBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\EntryIconView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -187,7 +199,9 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Themes\backup\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

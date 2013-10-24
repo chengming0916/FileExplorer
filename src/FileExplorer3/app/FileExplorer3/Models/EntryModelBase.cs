@@ -13,6 +13,7 @@ namespace FileExplorer.Models
 
         protected EntryModelBase()
         {            
+            IsRenamable = false;
         }
 
 
@@ -25,18 +26,27 @@ namespace FileExplorer.Models
         {
             return FullPath.Equals(other.FullPath);
         }
+
+        protected void OnRenamed(string orgName, string newName)
+        {
+
+        }
         
         #endregion
 
         #region Data
-        
+
+        private string _name;
+
         #endregion
 
         #region Public Properties
         
         public bool IsDirectory { get; protected set; }
         public IEntryModel Parent { get; protected set; }
-        public string Label { get; protected set; }
+        public string Name { get { return _name; } set { string org = _name; _name = value; OnRenamed(org, _name); } }
+        public string Label { get; protected set; }        
+        public bool IsRenamable { get; protected set; }
         public string Description { get; protected set; }
         public string FullPath { get; protected set; }
 

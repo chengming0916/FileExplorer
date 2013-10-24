@@ -20,9 +20,12 @@ namespace FileExplorer.Defines
         vmViewer = 256
     }
 
-    public enum SortDirection
+    public enum SelectionModeEx : int
     {
-        Ascending = 0,
-        Descending = 1,
+        Single = 1,
+        Multiple,
+        Extended,
+        SelectionHelper
     }
+
 }
