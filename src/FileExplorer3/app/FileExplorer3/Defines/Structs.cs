@@ -43,6 +43,12 @@ namespace FileExplorer.Defines
         }
     }
 
+    public class ListViewColumnFilter
+    {
+        public string Header { get; set; }
+        public bool IsEnabled { get; set; }
+    }
+
     public class ListViewColumnInfo
     {
         public string Header { get; set; }
@@ -50,11 +56,13 @@ namespace FileExplorer.Defines
         public string TooltipPath { get; set; }
         public double Width { get; set; }
         public string TemplateKey { get; set; }
+        public List<ListViewColumnFilter> Filters { get; set; }
 
         private ListViewColumnInfo(string header, double width)
         {
             Header = header;
             Width = width;
+            Filters = new List<ListViewColumnFilter>() {};
         }
 
         public static ListViewColumnInfo FromTemplate(string header, string templateKey,

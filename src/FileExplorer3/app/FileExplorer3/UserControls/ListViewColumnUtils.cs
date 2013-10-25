@@ -74,7 +74,7 @@ namespace FileExplorer.UserControls
         /// <summary>
         /// Apply header template to GridViewColumns depending if it's selected and ascending.
         /// </summary>
-        public static void UpdateCollumnHeader(ListView listView, ListViewColumnInfo sortCol,
+        public static void UpdateSortSymbol(ListView listView, ListViewColumnInfo sortCol,
             ListSortDirection sortDirection = ListSortDirection.Ascending,
             string normalHeaderTemplate = "NormHeaderTemplate",
             string ascHeaderTemplate = "AscHeaderTemplate",
@@ -112,11 +112,11 @@ namespace FileExplorer.UserControls
                     if (curHeader.Equals(foundHeader))
                     {
                         if (sortDirection == ListSortDirection.Ascending)
-                            FileList.SetColumnHeaderSortDirection(curHeader, -1);
-                        else FileList.SetColumnHeaderSortDirection(curHeader, 1);
+                            ListViewEx.SetColumnHeaderSortDirection(curHeader, -1);
+                        else ListViewEx.SetColumnHeaderSortDirection(curHeader, 1);
                     }
                     else
-                        FileList.SetColumnHeaderSortDirection(curHeader, 0);
+                        ListViewEx.SetColumnHeaderSortDirection(curHeader, 0);
                 }
         }
     }

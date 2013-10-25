@@ -108,7 +108,7 @@
     <Compile Include="UnitTests\UnitTestExtensions.cs" />
     <Compile Include="UserControls\AnimatedVirtualizingPanel.cs" />
     <Compile Include="UserControls\DebuggingConverter.cs" />
-    <Compile Include="UserControls\FileList.cs" />
+    <Compile Include="UserControls\ListViewEx.cs" />
     <Compile Include="UserControls\ListViewColumnUtils.cs" />
     <Compile Include="UserControls\SelectionHelper.cs" />
     <Compile Include="UserControls\UITools.cs" />
@@ -157,11 +157,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Common\FileList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\Common\FileListItem.xaml">
+    <Page Include="Themes\Common\ListViewItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

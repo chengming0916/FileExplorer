@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using FileExplorer.Defines;
 
 namespace FileExplorer.UserControls
 {
@@ -34,6 +35,19 @@ namespace FileExplorer.UserControls
         {
             get { return (string)GetValue(ColumnIdProperty); }
             set { SetValue(ColumnIdProperty, value); }
+        }
+
+        public static readonly DependencyProperty ColumnFiltersProperty =
+           DependencyProperty.Register("ColumnFilters", typeof(ListViewColumnFilter[]), typeof(GridViewColumnEx), 
+           new PropertyMetadata(new ListViewColumnFilter[]{}));
+
+        /// <summary>
+        /// Used to identify a GridViewColumn
+        /// </summary>
+        public ListViewColumnFilter[] ColumnFilters
+        {
+            get { return (ListViewColumnFilter[])GetValue(ColumnFiltersProperty); }
+            set { SetValue(ColumnFiltersProperty, value); }
         }
 
         #endregion

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FileExplorer.UserControls;
 
 namespace TestTemplate.WPF
 {
@@ -23,6 +24,13 @@ namespace TestTemplate.WPF
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            //UITools.FindVisualChild<
         }
     }
 }

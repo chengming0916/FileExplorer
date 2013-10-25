@@ -18,7 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Panels.xaml" />
                 -->
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/FileList.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Views.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -32,7 +32,7 @@
     </UserControl.Resources>
     <Grid>
 
-        <uc:FileList Background="LightBlue"  x:Name="ProcessedItems"                      
+        <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"                      
                      ItemsSource="{Binding Items}" 
                      ViewMode="{Binding ViewMode}"  
                      Columns="{Binding ColumnList}"
@@ -42,7 +42,7 @@
                      SortDirection="{Binding SortDirection}"
                      SortBy="{Binding SortBy}"
                      SelectionModeEx="SelectionHelper"
-                     Style="{StaticResource FileListStyle}"         
+                     Style="{StaticResource ListViewExStyle}"         
                      cal:View.ApplyConventions="False"
                      cal:Message.Attach = "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)]">
 
@@ -65,6 +65,6 @@
             </uc:FileList.GroupStyle>-->
 
 
-        </uc:FileList>
+        </uc:ListViewEx>
     </Grid>
 </UserControl>

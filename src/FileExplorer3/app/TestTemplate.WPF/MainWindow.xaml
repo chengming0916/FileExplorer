@@ -2,16 +2,25 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/FileList.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid Width="200" Height="60">
-        <GridViewColumnHeader>Last Name
-            <GridViewColumnHeader.ContextMenu>
-                <ContextMenu  
+            <GridViewColumnHeader Style="{StaticResource ListViewExColumnHeaderContainerStyle}">
+                Last Name
+                <GridViewColumnHeader.ContextMenu>
+                    <ContextMenu  
                       Name="LastNameCM">
-                    <MenuItem Header="Ascending" />
-                    <MenuItem Header="Descending" />
-                </ContextMenu>
-            </GridViewColumnHeader.ContextMenu>
+                        <MenuItem  IsCheckable="True" Header="Ascending" />
+                        <MenuItem IsCheckable="True" Header="Descending" />
+                    </ContextMenu>
+                </GridViewColumnHeader.ContextMenu>
             </GridViewColumnHeader>
         </Grid>
     </Grid>

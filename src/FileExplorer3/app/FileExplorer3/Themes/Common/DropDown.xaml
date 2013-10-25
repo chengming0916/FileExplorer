@@ -53,6 +53,9 @@
                         <Trigger Property="Header" Value="{x:Null}">
                             <Setter TargetName="PART_ToggleButton" Property="Template" Value="{StaticResource BasicArrowButton}" />
                         </Trigger>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
                         <Trigger Property="IsDropDownAlignLeft" Value="True">
                             <Setter TargetName="PART_Popup" Property="HorizontalOffset"
                                     Value="{Binding ActualWidth, ElementName=PART_ToggleButton}" />

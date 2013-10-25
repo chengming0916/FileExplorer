@@ -5,9 +5,8 @@
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
-        <ResourceDictionary Source="ItemTemplates.xaml" />
-        <ResourceDictionary Source="FileList.xaml" />
-        <ResourceDictionary Source="FileListItem.xaml" />
+        <ResourceDictionary Source="ItemTemplates.xaml" />        
+        <ResourceDictionary Source="ListViewItem.xaml" />
         <ResourceDictionary Source="ListView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
@@ -15,7 +14,7 @@
     <!--Grid View-->
     
     <GridView x:Key="GridView"
-        ColumnHeaderContainerStyle="{StaticResource FileListColumnHeaderContainerStyle}" >
+        ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}" >
         <!--<GridViewColumn Width="200" Header="Label"  CellTemplate="{StaticResource GridLabelTemplate}" />-->
     </GridView>
 
@@ -26,7 +25,7 @@
     </Style>
     
     <uc:VirtualWrapPanelView x:Key="IconView"  
-                             ColumnHeaderContainerStyle="{StaticResource FileListColumnHeaderContainerStyle}"
+                             ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}"
                              SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
                              CacheItemCount="5"  
                              
@@ -45,7 +44,7 @@
     </Style>
     
     <uc:VirtualWrapPanelView x:Key="SmallIconView"  
-                             ColumnHeaderContainerStyle="{StaticResource FileListColumnHeaderContainerStyle}"
+                             ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}"
                              SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
                              CacheItemCount="5"  
                              ItemHeight="30"
