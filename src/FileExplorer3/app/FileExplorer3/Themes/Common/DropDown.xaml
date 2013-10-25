@@ -42,8 +42,8 @@
                                PopupAnimation="Slide" AllowsTransparency="True">
                             <Grid x:Name="PART_DropDown">
                                 <Border x:Name="PART_DropDownBorder" 
-                                        Background="{DynamicResource WindowBackgroundBrush}" Padding="3"
-                                        BorderBrush="{DynamicResource SolidBorderBrush}" BorderThickness="1">
+                                        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Padding="3"
+                                        BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
                                     <ContentPresenter x:Name="PART_Content"  Content="{TemplateBinding Content}" />
                                 </Border>
                             </Grid>

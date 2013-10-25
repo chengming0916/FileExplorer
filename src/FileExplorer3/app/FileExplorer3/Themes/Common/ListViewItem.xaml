@@ -16,27 +16,30 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
-                    <Border Name="Border" Padding="2" SnapsToDevicePixels="true"                             
+                    <Border Name="Border"  SnapsToDevicePixels="true"                             
                             BorderThickness="1"
                             BorderBrush="Transparent"
                             Background="Transparent">
-                        <ContentPresenter 
+                        <Grid>
+                            <Rectangle x:Name="ContentBackground" Fill="Transparent" Opacity="0.5"/>
+                            <ContentPresenter  Margin="2"
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static SystemColors.HotTrackBrushKey}}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
+                            <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+                            <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static SystemColors.ActiveCaptionTextBrush}}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}"/>
+                            <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.InactiveCaptionBrushKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"/>
                         </Trigger>
                         <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
@@ -56,7 +59,7 @@
         <Setter Property="TextSearch.Text" Value="{Binding EmbeddedModel.Label, Mode=OneWay}" />
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
     </Style>
-    
+
 
     <Style x:Key="FileListItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ItemContainerStyleBase}" >
 

@@ -12,7 +12,7 @@
     </ResourceDictionary.MergedDictionaries>
 
 
-    <DataTemplate x:Key="NormHeaderTemplate">
+    <!--<DataTemplate x:Key="NormHeaderTemplate">
         <Grid HorizontalAlignment="Stretch" Margin="6,0">
             <TextBlock Text="{Binding}" TextAlignment="Left" Margin="0,2,0,0" />
         </Grid>
@@ -28,7 +28,7 @@
             <TextBlock Text="{Binding}" TextAlignment="Left" Margin="0,2,0,0" />
             <Path Data="{StaticResource ascArrow}" Fill="{StaticResource GlyphBrush}"  HorizontalAlignment="Center" />
         </Grid>
-    </DataTemplate>
+    </DataTemplate>-->
 
     <!--Stock from http://msdn.microsoft.com/en-us/library/ms788747.aspx-->
     <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
@@ -99,31 +99,31 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
-                                    <Storyboard>
+                                    <!--<Storyboard>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).
-                                                (GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                (GradientBrush.GradientStops)[0].(GradientStop.Color)"
                                                 Storyboard.TargetName="HeaderBorder">
                                             <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}" />
                                         </ColorAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    </Storyboard>-->
                                 </VisualState>
                                 <VisualState x:Name="Pressed" />
                                 <VisualState x:Name="Disabled" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="HeaderBorder" BorderThickness="0,1,0,1" Padding="2,0,2,0" 
+                        <Border x:Name="HeaderBorder" BorderThickness="0,0.5,0,0.5"  
                                 BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <!--<Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.5" >
                                     <LinearGradientBrush.GradientStops>
                                         <GradientStopCollection>
-                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}" Offset="0.0" />
-                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" Offset="0.5" />
+                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightLightColorKey}}" Offset="0.0" />
+                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}" Offset="0.95" />
                                         </GradientStopCollection>
                                     </LinearGradientBrush.GradientStops>
                                 </LinearGradientBrush>
-                            </Border.Background>
-                            <Grid>
+                            </Border.Background>-->
+                            <Grid Margin="2,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="6" />
                                     <RowDefinition Height="*" />
@@ -132,8 +132,11 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                 </Grid.ColumnDefinitions>
-                                <Path x:Name="PART_SortSymbol" Grid.Row="0" Grid.RowSpan="2"  Fill="{StaticResource GlyphBrush}" HorizontalAlignment="Center"  />
-                                <ContentPresenter x:Name="HeaderContent" Grid.RowSpan="2" Grid.Row="0" Margin="0,0,0,1" 
+                                <Rectangle x:Name="HeaderBackground" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,2"
+                                           Fill="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}" Opacity="0.5" />
+                                <Path x:Name="PART_SortSymbol" Grid.Row="0" Grid.RowSpan="2" Margin="0, -3,0,0"
+                                      Fill="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                                <ContentPresenter x:Name="HeaderContent" Grid.RowSpan="2" Grid.Row="0" Margin="10,4,0,4"
                                                   RecognizesAccessKey="True" 
                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -141,7 +144,7 @@
                                 <!--<ToggleButton x:Name="PART_DropDown" Grid.Column="1" Grid.RowSpan="2" 
                                               Template="{StaticResource BasicArrowButton}">
                                 </ToggleButton>-->
-                                <Grid x:Name="PART_DropDownGrid" Grid.Column="1" Grid.RowSpan="2" Visibility="Hidden">
+                                <Grid x:Name="PART_DropDownGrid" Grid.Column="1" Grid.RowSpan="2" Visibility="Visible" >
                                     <uc:DropDown x:Name="PART_DropDown"  >
                                         <uc:DropDown.Header>
                                             <Path x:Name="path" Fill="{TemplateBinding Foreground}" 
@@ -163,8 +166,11 @@
                         <Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right" Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}" />
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="PART_DropDownGrid" Property="Visibility" Value="Visible" />
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="PART_DropDownGrid" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_DropDownGrid" Property="Background" Value="Transparent" />
+                            <Setter TargetName="HeaderBackground" Property="Fill" 
+                                    Value="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}" />
                         </Trigger>
 
 

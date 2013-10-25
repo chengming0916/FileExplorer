@@ -30,12 +30,12 @@
             <Trigger Property="IsChecked" Value="False">
                 <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
             </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{StaticResource {x:Static SystemColors.HotTrackBrushKey}}" />
+            <!--<Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
                 <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
-            </Trigger>
+            </Trigger>-->
             <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{StaticResource {x:Static SystemColors.ActiveCaptionTextBrush}}" />
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrush}}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
