@@ -31,6 +31,7 @@ namespace FileExplorer.UserControls
             base.OnApplyTemplate();
             this.HandleScrollBarInvisible();
             this.AddHandler(ListViewEx.LoadedEvent, (RoutedEventHandler)((o,e) => OnLoaded()));
+          
         }
 
         public void OnLoaded()
@@ -75,6 +76,8 @@ namespace FileExplorer.UserControls
                         SetValue(SortDirectionProperty, ListSortDirection.Descending);
                     else SetValue(SortDirectionProperty, ListSortDirection.Ascending);
             }
+
+            var fl = sender as ListViewEx;
         }
 
         public static void OnSelectionModeExChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
@@ -115,11 +118,15 @@ namespace FileExplorer.UserControls
             if (fl.View != null)
             {
                 //Only update columns if View is updated
-                if (args.Property.Equals(ColumnsProperty) || args.Property.Equals(ViewModeProperty))                
+                if (args.Property.Equals(ColumnsProperty) || args.Property.Equals(ViewModeProperty))
+                {
                     ListViewColumnUtils.UpdateColumn(fl, fl.Columns);
+                    fl.Dispatcher.Invoke(() =>
+                         ListViewColumnUtils.UpdateFilterPanel(fl, fl.Columns, fl.ColumnFilters), 
+                         System.Windows.Threading.DispatcherPriority.Input);
+                }
 
-
-                //always update sort column
+                ////always update sort column
                 ListViewColumnInfo sortColumn = fl.Columns.Find(fl.SortBy);
                 if (sortColumn != null)
                     ListViewColumnUtils.UpdateSortSymbol(fl, sortColumn, fl.SortDirection);

@@ -14,8 +14,10 @@
     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveCaptionBrushKey}" Color="#888" />
     
     <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="#AAA" />
-    
-    
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#AAA" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.ActiveBorderBrushKey}" Color="White" />
+
     <LinearGradientBrush x:Key="{x:Static SystemColors.ActiveCaptionTextBrush}" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFD9F4FF" Offset="0"/>
         <GradientStop Color="#FF9BDDFB" Offset="1"/>

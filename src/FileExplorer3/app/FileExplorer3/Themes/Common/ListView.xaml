@@ -103,7 +103,7 @@
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).
                                                 (GradientBrush.GradientStops)[1].(GradientStop.Color)"
                                                 Storyboard.TargetName="HeaderBorder">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}" />
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -132,7 +132,7 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="16" />
                                 </Grid.ColumnDefinitions>
-                                <Path x:Name="PART_SortSymbol" Grid.Row="0"  Fill="{StaticResource GlyphBrush}" HorizontalAlignment="Center"  />
+                                <Path x:Name="PART_SortSymbol" Grid.Row="0" Grid.RowSpan="2"  Fill="{StaticResource GlyphBrush}" HorizontalAlignment="Center"  />
                                 <ContentPresenter x:Name="HeaderContent" Grid.RowSpan="2" Grid.Row="0" Margin="0,0,0,1" 
                                                   RecognizesAccessKey="True" 
                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -141,20 +141,33 @@
                                 <!--<ToggleButton x:Name="PART_DropDown" Grid.Column="1" Grid.RowSpan="2" 
                                               Template="{StaticResource BasicArrowButton}">
                                 </ToggleButton>-->
-                                <uc:DropDown x:Name="PART_DropDown" Grid.Column="1" Grid.RowSpan="2" >
-                                    <!--<uc:DropDown.Content>
+                                <Grid x:Name="PART_DropDownGrid" Grid.Column="1" Grid.RowSpan="2" Visibility="Hidden">
+                                    <uc:DropDown x:Name="PART_DropDown"  >
+                                        <uc:DropDown.Header>
+                                            <Path x:Name="path" Fill="{TemplateBinding Foreground}" 
+                                            Data="{StaticResource ExpandedArrow}"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                            Margin="{TemplateBinding Padding}" IsHitTestVisible="True" />
+                                        </uc:DropDown.Header>
+                                        <!--<uc:DropDown.Content>
                                         <StackPanel Orientation="Vertical">
                                             <MenuItem IsCheckable="True" Header="Life"  CommandParameter="T1"></MenuItem>
                                             <MenuItem IsCheckable="True" Header="Universe" CommandParameter="T2"></MenuItem>
                                             <MenuItem IsCheckable="True" Header="Everything" CommandParameter="T3"></MenuItem>
                                         </StackPanel>
                                     </uc:DropDown.Content>-->
-                                </uc:DropDown>
+                                    </uc:DropDown>
+                                </Grid>
                             </Grid>
                         </Border>
                         <Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right" Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}" />
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="PART_DropDownGrid" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+
                         <Trigger Property="uc:ListViewEx.ColumnHeaderSortDirection" Value="1">
                             <Setter TargetName="PART_SortSymbol" Property="Data" Value="{StaticResource ascArrow}" />
                         </Trigger>

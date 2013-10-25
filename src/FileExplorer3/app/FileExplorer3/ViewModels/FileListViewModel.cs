@@ -56,6 +56,7 @@ namespace FileExplorer.ViewModels
             yield return new AppendEntryList(parentEVm, this);
             yield return new CalculateColumnHeaderCount(ColumnFilters);
             yield return Loader.Show();
+            
 
         }
 
