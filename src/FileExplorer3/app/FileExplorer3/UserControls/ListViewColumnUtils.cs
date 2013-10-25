@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using FileExplorer.Defines;
 
 namespace FileExplorer.UserControls
@@ -27,6 +28,7 @@ namespace FileExplorer.UserControls
                     label.SetValue(TextBlock.ToolTipProperty, new Binding(colInfo.TooltipPath));
                 label.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Left);
                 label.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Left);
+
                 dt.VisualTree = label;
             }
             return new GridViewColumn()
@@ -77,7 +79,7 @@ namespace FileExplorer.UserControls
             string normalHeaderTemplate = "NormHeaderTemplate",
             string ascHeaderTemplate = "AscHeaderTemplate",
             string descHeaderTemplate = "DescHeaderTemplate")
-        {
+        {            
             GridViewColumnCollection columns = getColumnCols(listView);
 
             if (columns == null)
@@ -87,17 +89,34 @@ namespace FileExplorer.UserControls
             DataTemplate descTemplate = listView.TryFindResource(descHeaderTemplate) as DataTemplate;
             DataTemplate normTemplate = listView.TryFindResource(normalHeaderTemplate) as DataTemplate;
 
-            if (ascTemplate != null && descTemplate != null && normTemplate != null)
-                foreach (GridViewColumn col in columns)
+            //handle if sortCol = null
+
+            GridViewHeaderRowPresenter presenter = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);
+
+            Func<TextBlock, bool> filter = tb =>
                 {
-                    if (sortCol.Header.Equals(col.Header))
+                    var value = tb.GetValue(TextBlock.TextProperty);
+                    var match = sortCol.Header != null && sortCol.Header.Equals(value);
+                    return match;
+                };
+            GridViewColumnHeader foundHeader = null;
+
+            TextBlock lookup = UITools.FindVisualChild<TextBlock>(presenter, filter);
+            if (lookup != null)
+                foundHeader = lookup.FindAncestor<GridViewColumnHeader>();
+            IEnumerable<GridViewColumnHeader> headers = UITools.FindAllVisualChildren<GridViewColumnHeader>(presenter);
+
+            if (ascTemplate != null && descTemplate != null && normTemplate != null)
+                foreach (var curHeader in headers)
+                {                    
+                    if (curHeader.Equals(foundHeader))
                     {
                         if (sortDirection == ListSortDirection.Ascending)
-                            col.HeaderTemplate = ascTemplate;
-                        else col.HeaderTemplate = descTemplate;
+                            FileList.SetColumnHeaderSortDirection(curHeader, -1);
+                        else FileList.SetColumnHeaderSortDirection(curHeader, 1);
                     }
                     else
-                        col.HeaderTemplate = normTemplate;
+                        FileList.SetColumnHeaderSortDirection(curHeader, 0);
                 }
         }
     }

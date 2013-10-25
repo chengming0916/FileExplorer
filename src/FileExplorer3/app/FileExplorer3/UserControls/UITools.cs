@@ -59,19 +59,23 @@ namespace FileExplorer.UserControls
         }
 
         //http://stackoverflow.com/questions/665719/wpf-animate-listbox-scrollviewer-horizontaloffset
-        public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        public static T FindVisualChild<T>(DependencyObject obj, Func<T, bool> filter = null) where T : DependencyObject
         {
+            if (filter == null)
+                filter = (t) => true;
+
             // Search immediate children first (breadth-first)
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(obj, i);
 
-                if (child != null && child is T)
+                if (child != null && child is T && filter((T)child))
+                {
                     return (T)child;
-
+                }
                 else
                 {
-                    T childOfChild = FindVisualChild<T>(child);
+                    T childOfChild = FindVisualChild<T>(child, filter);
 
                     if (childOfChild != null)
                         return childOfChild;
@@ -80,6 +84,27 @@ namespace FileExplorer.UserControls
 
             return null;
         }
+
+        public static IEnumerable<T> FindAllVisualChildren<T>(DependencyObject obj, Func<T, bool> filter = null)
+            where T : DependencyObject
+        {
+            if (filter == null)
+                filter = (t) => true;
+
+            // Search immediate children first (breadth-first)
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+
+                if (child != null && child is T)
+                {
+                    yield return (T)child;
+                    foreach (var gc in FindAllVisualChildren<T>(child, filter))
+                        yield return gc;
+                }
+            }
+        }
+
 
         //http://pwnedcode.wordpress.com/2009/04/01/find-a-control-in-a-wpfsilverlight-visual-tree-by-name/
         public static T FindVisualChildByName<T>(DependencyObject parent, string name) where T : DependencyObject
@@ -199,7 +224,7 @@ namespace FileExplorer.UserControls
         /// <param name="container"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public static I GetItemByPosition<I,C>(C container, Point position)
+        public static I GetItemByPosition<I, C>(C container, Point position)
             where C : UIElement
             where I : UIElement
         {
@@ -233,7 +258,7 @@ namespace FileExplorer.UserControls
             return null;
         }
 
-       
+
 
         /// <summary>
         /// Return whether mouse over an selected item.
@@ -326,7 +351,7 @@ namespace FileExplorer.UserControls
                 e.GetPosition((IInputElement)e.Source));
             return GetParentTreeViewItem((FrameworkElement)htr.VisualHit);
         }
-    
+
         /// <summary>
         /// Reset scrollbar position of virtualizing panel if scrollBar becomes invisible
         /// </summary>

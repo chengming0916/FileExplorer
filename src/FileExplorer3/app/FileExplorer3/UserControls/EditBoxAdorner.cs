@@ -69,6 +69,7 @@ namespace FileExplorer.UserControls
             //if in editable mode, measure the space the adorner element should cover.
             if (_isVisible)
             {
+                
                 AdornedElement.Measure(constraint);
                 _textBox.Measure(constraint);
                 //since the adorner is to cover the EditBox, it should return the AdornedElement.Width, 
@@ -106,7 +107,8 @@ namespace FileExplorer.UserControls
                 _textBox.BorderBrush = Brushes.Black;
                 _textBox.Background = Brushes.White;
                 _textBox.Padding = new Thickness(0);
-                _textBox.Margin = new Thickness(0);                
+                _textBox.Margin = new Thickness(0);
+                _textBox.IsHitTestVisible = true;
                 _textBox.KeyDown +=
                     (KeyEventHandler)delegate(object sender, KeyEventArgs args)
                     {

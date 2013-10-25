@@ -78,7 +78,6 @@ namespace FileExplorer.UserControls
             _canBeEdit = false;
         }
 
-
         #endregion
 
         #region Data

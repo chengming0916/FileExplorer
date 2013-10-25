@@ -4,7 +4,11 @@
     xmlns:cali ="http://www.caliburnproject.org"
     >
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
         <ResourceDictionary Source="ListView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
@@ -13,11 +17,81 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Visibility" 
                 Value="{Binding ColumnsVisibility, RelativeSource={RelativeSource AncestorType={x:Type uc:FileList}}}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).
+                                                (GradientBrush.GradientStops)[1].(GradientStop.Color)"
+                                                Storyboard.TargetName="HeaderBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}" />
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed" />
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="HeaderBorder" BorderThickness="0,1,0,1" Padding="2,0,2,0" 
+                                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}" Offset="0.0" />
+                                            <GradientStop Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" Offset="0.5" />
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="6" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="16" />
+                                </Grid.ColumnDefinitions>
+                                <Path x:Name="PART_SortSymbol" Grid.Row="0"  Fill="{StaticResource GlyphBrush}" HorizontalAlignment="Center"  />
+                                <ContentPresenter x:Name="HeaderContent" Grid.RowSpan="2" Grid.Row="0" Margin="0,0,0,1" 
+                                                  RecognizesAccessKey="True" 
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <!--<ToggleButton x:Name="PART_DropDown" Grid.Column="1" Grid.RowSpan="2" 
+                                              Template="{StaticResource BasicArrowButton}">
+                                </ToggleButton>-->
+                                <uc:DropDown x:Name="PART_DropDown" Grid.Column="1" Grid.RowSpan="2" >
+                                    <uc:DropDown.Content>
+                                        <TextBlock>The answer is 42</TextBlock>
+                                    </uc:DropDown.Content>
+                                </uc:DropDown>
+                            </Grid>
+                        </Border>
+                        <Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right" Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="uc:FileList.ColumnHeaderSortDirection" Value="1">
+                            <Setter TargetName="PART_SortSymbol" Property="Data" Value="{StaticResource ascArrow}" />
+                        </Trigger>
+                        <Trigger Property="uc:FileList.ColumnHeaderSortDirection" Value="-1">
+                            <Setter TargetName="PART_SortSymbol" Property="Data" Value="{StaticResource descArrow}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <ControlTemplate x:Key="FileListTemplate" TargetType="{x:Type uc:FileList}">
         <Border Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
-                            Background="{DynamicResource WindowBackgroundBrush}">
+                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
             <DockPanel>
                 <AdornerDecorator>
                     <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
@@ -31,7 +105,7 @@
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter TargetName="Border" Property="Background" Value="{DynamicResource DisabledBorderBrush}"/>
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -42,8 +116,8 @@
         <!--<Setter Property="SelectionMode" Value="Extended" />-->
     </Style>
 
-   
 
-   
+
+
 
 </ResourceDictionary>

@@ -11,9 +11,15 @@
     <DataTemplate x:Key="GridLabelTemplate" >
         <StackPanel Orientation="Horizontal">
             <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Width="30" Height="30"  />
-            <TextBlock Text="{Binding EntryModel.Label}"  Padding="10,0,0,0"
-                       HorizontalAlignment="Left" 
-                       VerticalAlignment="Center" />
+
+            <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
+                        ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
+                        IsEditable="{Binding IsEditable}"        
+                        IsEditing="{Binding IsEditing, Mode=TwoWay}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Padding="10,0,0,0"
+                        />
             
         </StackPanel>
         
@@ -26,6 +32,7 @@
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
                         IsEditable="{Binding IsEditable}"        
                         IsEditing="{Binding IsEditing, Mode=TwoWay}"
+                        HorizontalAlignment="Center"
                         DockPanel.Dock="Bottom"
                         />
             <!--<TextBlock x:Name="Label" TextAlignment="Center" 
@@ -41,8 +48,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Grid.Column="0" />
-            <TextBlock x:Name="Label" TextAlignment="Left" VerticalAlignment="Center" 
-                       Text="{Binding EntryModel.Label}" Grid.Column="1" />
+
+            <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
+                        ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
+                        IsEditable="{Binding IsEditable}"        
+                        IsEditing="{Binding IsEditing, Mode=TwoWay}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Padding="10,0,0,0"
+                        Grid.Column="1"
+                        />
         </Grid>
     </DataTemplate>
 

@@ -5,6 +5,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Panels.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/EditBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 

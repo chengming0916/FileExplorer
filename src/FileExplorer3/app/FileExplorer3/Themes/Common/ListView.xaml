@@ -4,6 +4,7 @@
     xmlns:cali ="http://www.caliburnproject.org"
     >
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -27,7 +28,40 @@
         </Grid>
     </DataTemplate>
 
-   
+    <!--Stock from http://msdn.microsoft.com/en-us/library/ms788747.aspx-->
+    <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStopCollection>
+                            <GradientStop Color="{DynamicResource BorderLightColor}" Offset="0.0" />
+                            <GradientStop Color="{DynamicResource BorderDarkColor}" Offset="1.0" />
+                        </GradientStopCollection>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                        <Rectangle HorizontalAlignment="Center" Width="1" Fill="{TemplateBinding Background}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 
 </ResourceDictionary>

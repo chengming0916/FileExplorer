@@ -38,6 +38,11 @@
     <EllipseGeometry x:Key="MagnifierGlass" Center="10,6" RadiusX="3.2" RadiusY="3.2" />
     <Geometry x:Key="MagnifierHandle">M7,9 L3,13</Geometry>
 
+    <!--<GeometryGroup x:Key="Magnifier">
+        <EllipseGeometry Center="10,6" RadiusX="3.2" RadiusY="3.2" />
+        <Geometry>M7,9 L3,13</Geometry>
+    </GeometryGroup>-->
+
     <!--PreviewPanel-->
     <Geometry x:Key="NormalSquare">M0,0 L7,0 7,7 0,7 z</Geometry>
     <GeometryGroup x:Key="NormalPause">

@@ -33,10 +33,10 @@ namespace FileExplorer.ViewModels
                 IsEditable = model.IsRenamable
             };
         }
-     
+
         #endregion
 
-       
+
 
         #region Methods
 
@@ -49,7 +49,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        bool _isSelected = false,_isEditing = false, _isEditable = false; 
+        bool _isSelected = false, _isEditing = false, _isEditable = false;
 
         private Lazy<ImageSource> _icon;
 
@@ -58,12 +58,26 @@ namespace FileExplorer.ViewModels
         #region Public Properties
 
         public IProfile Profile { get; private set; }
-        public bool IsEditing { get { return _isEditing; } set { _isEditing = value; NotifyOfPropertyChange(() => IsEditing); } }
-        public bool IsEditable { get { return _isEditable; } 
-            set { _isEditable = value; 
-                NotifyOfPropertyChange(() => IsEditable);
+        public bool IsEditing
+        {
+            get { return _isEditing; }
+            set
+            {
+                _isEditing = value;
                 NotifyOfPropertyChange(() => EntryModel);
-            } }
+                NotifyOfPropertyChange(() => IsEditing);
+            }
+        }
+        public bool IsEditable
+        {
+            get { return _isEditable; }
+            set
+            {
+                _isEditable = value;
+                NotifyOfPropertyChange(() => IsEditable);
+
+            }
+        }
 
         public IEntryModel EntryModel { get; private set; }
 
@@ -73,5 +87,5 @@ namespace FileExplorer.ViewModels
 
         #endregion
     }
-    
+
 }

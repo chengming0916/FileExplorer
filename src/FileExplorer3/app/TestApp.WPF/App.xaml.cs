@@ -15,7 +15,7 @@ namespace TestApp.WPF
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            base.OnStartup(e); 
         }
     }
 }

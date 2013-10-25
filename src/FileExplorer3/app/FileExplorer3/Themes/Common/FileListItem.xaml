@@ -25,19 +25,18 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource HotTrackBrush}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource DisabledBorderBrush}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource HotTrackBrush}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static SystemColors.HotTrackBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource SelectedBackgroundBrush}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource LightBorderBrush}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource {x:Static SystemColors.ActiveCaptionTextBrush}}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource {x:Static SystemColors.ControlLightBrushKey}}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" 
-                                        Value="{StaticResource DisabledForegroundBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.InactiveCaptionBrushKey}}"/>
                         </Trigger>
                         <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>

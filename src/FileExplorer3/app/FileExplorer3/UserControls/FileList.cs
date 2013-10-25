@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using FileExplorer.Defines;
 
@@ -21,13 +22,43 @@ namespace FileExplorer.UserControls
 
         #region Methods
 
+     
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             this.HandleScrollBarInvisible();
+            this.AddHandler(FileList.LoadedEvent, (RoutedEventHandler)((o,e) => OnLoaded()));
+        }
 
+        public void OnLoaded()
+        {
+            var p = UITools.FindVisualChild<GridViewHeaderRowPresenter>(this);
+            p.AddHandler(GridViewHeaderRowPresenter.LoadedEvent, (RoutedEventHandler)((o, e) => UpdateColumnHeader()));
+            //p.AddHandler(UIElement.PreviewMouseDownEvent, (RoutedEventHandler)((o, e) =>
+            //{
+            //    var tb = UITools.FindAncestor<ToggleButton>(e.OriginalSource as DependencyObject);
+            //    if (tb != null && tb.Name == "PART_DropDown")
+            //    {
+            //        tb.RaiseEvent(e); //Bypass A --> C
+            //        e.Handled = true;
+            //    }
+            //}));
+        }
 
+        public void UpdateColumnHeader()
+        {
+            var p = UITools.FindVisualChild<GridViewHeaderRowPresenter>(this);
+            var headers = UITools.FindAllVisualChildren<GridViewColumnHeader>(p).ToList();
+
+            foreach (var header in headers)
+            {
+                var dropDown = UITools.FindVisualChild<ToggleButton>(header, tb => tb.Name == "PART_DropDown");
+                dropDown.AddHandler(GridViewColumnHeader.MouseDownEvent, (RoutedEventHandler)((o, e) =>
+                {
+                    e.Handled = true;
+                }));
+            }
         }
 
         #region OnPropertyChanged
@@ -45,6 +76,8 @@ namespace FileExplorer.UserControls
 
         private void columnClickedHandler(object sender, RoutedEventArgs args)
         {
+            if (!(args.OriginalSource is GridViewColumnHeader))
+                return;
             GridViewColumnHeader header = (GridViewColumnHeader)args.OriginalSource;
             if (header.Column != null)
             {
@@ -97,8 +130,9 @@ namespace FileExplorer.UserControls
             if (fl.View != null)
             {
                 //Only update columns if View is updated
-                if (args.Property.Equals(ColumnsProperty) || args.Property.Equals(ViewModeProperty))
+                if (args.Property.Equals(ColumnsProperty) || args.Property.Equals(ViewModeProperty))                
                     ListViewColumnUtils.UpdateColumn(fl, fl.Columns);
+
 
                 //always update sort column
                 ListViewColumnInfo sortColumn = fl.Columns.Find(fl.SortBy);
@@ -239,6 +273,36 @@ namespace FileExplorer.UserControls
             set { SetValue(SelectionModeExProperty, value); }
         }
 
+
+        public static readonly DependencyProperty ColumnHeaderSortDirectionProperty =
+            DependencyProperty.RegisterAttached("ColumnHeaderSortDirection", typeof(int), typeof(FileList),
+            new PropertyMetadata(0));
+
+        public static void SetColumnHeaderSortDirection(DependencyObject obj, int value)
+        {
+            obj.SetValue(ColumnHeaderSortDirectionProperty, value);
+        }
+
+        [AttachedPropertyBrowsableForType(typeof(GridViewColumnHeader))]
+        public static int GetColumnHeaderSortDirection(DependencyObject obj)
+        {
+            return (int)obj.GetValue(ColumnHeaderSortDirectionProperty);
+        }
+
+        //public static readonly DependencyProperty ColumnHeaderValueProperty =
+        //    DependencyProperty.RegisterAttached("ColumnHeaderValue", typeof(string), typeof(FileList),
+        //    new PropertyMetadata(0));
+
+        //public static void SetColumnHeaderValue(DependencyObject obj, int value)
+        //{
+        //    obj.SetValue(ColumnHeaderSortDirectionProperty, value);
+        //}
+
+        //[AttachedPropertyBrowsableForType(typeof(GridViewColumnHeader))]
+        //public static string GetColumnHeaderValue(DependencyObject obj)
+        //{
+        //    return (string)obj.GetValue(ColumnHeaderSortDirectionProperty);
+        //}
 
         //public static readonly DependencyProperty SelectedItemsProperty =
         //    DependencyProperty.Register("SelectedItems", typeof(IList), typeof(FileList));
