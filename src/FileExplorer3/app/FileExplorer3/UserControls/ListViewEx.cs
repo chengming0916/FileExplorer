@@ -10,7 +10,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.UserControls
 {
@@ -33,45 +35,28 @@ namespace FileExplorer.UserControls
 
         public void OnLoaded()
         {
-            var p = UITools.FindVisualChild<GridViewHeaderRowPresenter>(this);
-            p.AddHandler(GridViewHeaderRowPresenter.LoadedEvent, (RoutedEventHandler)((o, e) => UpdateColumnHeader()));
-            //p.AddHandler(UIElement.PreviewMouseDownEvent, (RoutedEventHandler)((o, e) =>
-            //{
-            //    var tb = UITools.FindAncestor<ToggleButton>(e.OriginalSource as DependencyObject);
-            //    if (tb != null && tb.Name == "PART_DropDown")
-            //    {
-            //        tb.RaiseEvent(e); //Bypass A --> C
-            //        e.Handled = true;
-            //    }
-            //}));
+            ListViewColumnUtils.RegisterFilterEvent(this);
+            ListViewColumnUtils.UpdateFilterPanel(this, Columns, ColumnFilters);           
         }
 
-        public void UpdateColumnHeader()
-        {
-            var p = UITools.FindVisualChild<GridViewHeaderRowPresenter>(this);
-            var headers = UITools.FindAllVisualChildren<GridViewColumnHeader>(p).ToList();
-
-            foreach (var header in headers)
-            {
-                var dropDown = UITools.FindVisualChild<ToggleButton>(header, tb => tb.Name == "PART_DropDown");
-                dropDown.AddHandler(GridViewColumnHeader.MouseDownEvent, (RoutedEventHandler)((o, e) =>
-                {
-                    e.Handled = true;
-                }));
-            }
-        }
-
+       
         #region OnPropertyChanged
+
+        public static void OnColumnsFilterChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+        {
+            ListViewEx lv = (ListViewEx)sender;
+            ListViewColumnUtils.UpdateFilterPanel(lv, lv.Columns, lv.ColumnFilters);           
+        }
 
         public static void OnColumnsVisibilityChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            ListViewEx fl = (ListViewEx)sender;
+            ListViewEx lv = (ListViewEx)sender;
 
             if (args.OldValue != args.NewValue)
                 if ((Visibility)args.NewValue == Visibility.Visible)
-                    fl.AddHandler(GridViewColumnHeader.ClickEvent, (RoutedEventHandler)fl.columnClickedHandler);
+                    lv.AddHandler(GridViewColumnHeader.ClickEvent, (RoutedEventHandler)lv.columnClickedHandler);
                 else
-                    fl.RemoveHandler(GridViewColumnHeader.ClickEvent, (RoutedEventHandler)fl.columnClickedHandler);
+                    lv.RemoveHandler(GridViewColumnHeader.ClickEvent, (RoutedEventHandler)lv.columnClickedHandler);
         }
 
         private void columnClickedHandler(object sender, RoutedEventArgs args)
@@ -124,7 +109,7 @@ namespace FileExplorer.UserControls
                 view = (ViewBase)(fl.TryFindResource(viewResourceName));
                 if (view != null)
                     fl.View = view;
-                else Debug.WriteLine(String.Format("FileList - {0} not found.", viewResourceName));
+                else Debug.WriteLine(String.Format("ListViewEx - {0} not found.", viewResourceName));
             }
 
             if (fl.View != null)
@@ -139,7 +124,7 @@ namespace FileExplorer.UserControls
                 if (sortColumn != null)
                     ListViewColumnUtils.UpdateSortSymbol(fl, sortColumn, fl.SortDirection);
             }
-            else Debug.WriteLine(String.Format("FileList - No view defined."));
+            else Debug.WriteLine(String.Format("ListViewEx - No view defined."));
         }
 
         #endregion
@@ -213,6 +198,19 @@ namespace FileExplorer.UserControls
             set { SetValue(ColumnsProperty, value); }
         }
 
+        public static readonly DependencyProperty ColumnFiltersProperty =
+      DependencyProperty.Register("ColumnFilters", typeof(ColumnFilter[]), typeof(ListViewEx),
+      new FrameworkPropertyMetadata(new ColumnFilter[] { }, new PropertyChangedCallback(OnColumnsFilterChanged)));
+
+        /// <summary>
+        /// Filters of column, display as dropdown box.
+        /// </summary>
+        public ColumnFilter[] ColumnFilters
+        {
+            get { return (ColumnFilter[])GetValue(ColumnFiltersProperty); }
+            set { SetValue(ColumnFiltersProperty, value); }
+        }
+     
         public static readonly DependencyProperty ColumnsVisibilityProperty =
         DependencyProperty.Register("ColumnsVisibility", typeof(Visibility), typeof(ListViewEx),
             new FrameworkPropertyMetadata(Visibility.Collapsed, new PropertyChangedCallback(OnColumnsVisibilityChanged)));
@@ -225,6 +223,16 @@ namespace FileExplorer.UserControls
             get { return (Visibility)GetValue(ColumnsVisibilityProperty); }
             set { SetValue(ColumnsVisibilityProperty, value); }
         }
+
+        public static readonly RoutedEvent FilterChangedEvent = EventManager.RegisterRoutedEvent("FilterChanged",
+            RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ListViewEx));
+
+        public event RoutedEventHandler FilterChanged
+        {
+            add { AddHandler(FilterChangedEvent, value); }
+            remove { RemoveHandler(FilterChangedEvent, value); }
+        }
+
         #endregion
 
         #region SortBy, SortDirection property

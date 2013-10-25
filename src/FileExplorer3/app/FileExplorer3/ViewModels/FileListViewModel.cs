@@ -48,26 +48,13 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        //public async Task LoadAsync(IProfile profile, IEntryModel parentEm, Func<IEntryModel, bool> filter = null)
-        //{
-
-        //    var parentEVm = EntryViewModel.FromEntryModel(profile, parentEm);
-        //    var result = await profile.ListAsync(parentEm, filter);
-
-        //    foreach (var em in result)
-        //    {
-        //        var evm = EntryViewModel.FromEntryModel(profile, em);
-        //        Items.Add(evm);
-        //    }
-        //}       
-
         public IEnumerable<IResult> Load(IEntryModel em, Func<IEntryModel, bool> filter = null)
-        {            
+        {
             var parentEVm = EntryViewModel.FromEntryModel(Profile, em);
             yield return Loader.Show("Loading");
             yield return new LoadEntryList(parentEVm, filter);
             yield return new AppendEntryList(parentEVm, this);
-            //SelectedEntries.Add(Items.First());
+            yield return new CalculateColumnHeaderCount(ColumnFilters);
             yield return Loader.Show();
 
         }
@@ -81,21 +68,30 @@ namespace FileExplorer.ViewModels
         protected virtual void OnSortDirectoryChanged(ListViewColumnInfo col, ListSortDirection direction)
         {
             if (_profile == null)
-                return;           
+                return;
             var comparer = new EntryViewModelComparer(_profile.GetComparer(col), direction);
             _processedVms.CustomSort = comparer;
-
             _processedVms.GroupDescriptions.Add(new PropertyGroupDescription(col.ValuePath));
 
             //ProcessedItems.SortDescriptions.Clear();
             //ProcessedItems.SortDescriptions.Add(new SortDescription(col.ValuePath, direction ));
             //ProcessedItems = Items.OrderByDescending(evm => evm.EntryModel.Description);
         }
-        
+
         public void OnSelectionChanged(IList selectedItems)
         {
             SelectedItems = selectedItems.Cast<IEntryViewModel>().ToList();
             Events.Publish(new SelectionChangedEvent(SelectedItems));
+        }
+
+        public void OnFilterChanged()
+        {
+            var allCheckedFilters = ColumnFilters.Where(f => f.IsChecked).ToArray();
+
+            if (allCheckedFilters.Length == 0)
+                _processedVms.Filter = null;
+            else
+                _processedVms.Filter = (e) => (ColumnFilter.Match(allCheckedFilters, (e as IEntryViewModel).EntryModel));
         }
 
         #endregion
@@ -110,13 +106,20 @@ namespace FileExplorer.ViewModels
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private string _sortBy = "EntryModel.Label";
-        private ListSortDirection _sortDirection = ListSortDirection.Ascending;
-        //private Orientation _orientation = Orientation.Vertical;
+        private ListSortDirection _sortDirection = ListSortDirection.Ascending;        
         private ListViewColumnInfo[] _colList = new ListViewColumnInfo[]
         {
             ListViewColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
             ListViewColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200)   
         };
+
+        private ColumnFilter[] _colFilters = new ColumnFilter[] { };
+        //new List<ListViewColumnFilter>() 
+        //{
+        //    new ListViewColumnFilter("Life", "EntryModel.Label"),
+        //    new ListViewColumnFilter("Universe", "EntryModel.Label"), 
+        //    new ListViewColumnFilter("Everything", "EntryModel.Label") { IsChecked = true }
+        //}.ToArray();
 
         #endregion
 
@@ -180,7 +183,12 @@ namespace FileExplorer.ViewModels
             get { return _colList; }
             set { _colList = value; NotifyOfPropertyChange(() => ColumnList); }
         }
-        //public List<ListViewColumnInfo> ColumnList { get { return _colList; } s
+
+        public ColumnFilter[] ColumnFilters
+        {
+            get { return _colFilters; }
+            set { _colFilters = value; NotifyOfPropertyChange(() => ColumnFilters); }
+        }
 
         #endregion
 
@@ -195,9 +203,12 @@ namespace FileExplorer.ViewModels
         public IList<IEntryViewModel> SelectedItems
         {
             get { return _selectedVms; }
-            set { _selectedVms = value; 
-                NotifyOfPropertyChange(() => SelectedItems); }
-        } 
+            set
+            {
+                _selectedVms = value;
+                NotifyOfPropertyChange(() => SelectedItems);
+            }
+        }
 
 
 
@@ -207,28 +218,4 @@ namespace FileExplorer.ViewModels
     }
 }
 
-//#region Orientation, CacheCount
-//public Orientation Orientation { get { return _orientation; } set { _orientation = value; NotifyOfPropertyChange(() => Orientation); } }
-//public int CacheCount { get { return _cacheCount; } set { _cacheCount = value; NotifyOfPropertyChange(() => CacheCount); } }
-
-//#endregion
-
-//#region ItemSize - ItemHeight
-//public int ItemSize
-//{
-//    get { return _itemSize; }
-//    set
-//    {
-//        _itemSize = value;
-//        NotifyOfPropertyChange(() => ItemSize);
-//        NotifyOfPropertyChange(() => ItemWidth);
-//        NotifyOfPropertyChange(() => ItemHeight);
-
-//    }
-//}
-
-//public int ItemWidth { get { return _itemSize; } }
-//public int ItemHeight { get { return _itemSize; } }
-
-//#endregion
 

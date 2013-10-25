@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Defines;
@@ -25,6 +26,17 @@ namespace TestApp.WPF
                 ListViewColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
                 ListViewColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200),
                 ListViewColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 200)   
+            };
+
+            FileListModel.ColumnFilters = new ColumnFilter[]
+            {
+                ColumnFilter.CreateNew("0 - 9", "EntryModel.Label", e => Regex.Match(e.Label, "^[0-9]").Success),
+                ColumnFilter.CreateNew("A - H", "EntryModel.Label", e => Regex.Match(e.Label, "^[A-Ha-h]").Success),
+                ColumnFilter.CreateNew("I - P", "EntryModel.Label", e => Regex.Match(e.Label, "^[I-Pi-i]").Success),
+                ColumnFilter.CreateNew("Q - Z", "EntryModel.Label", e => Regex.Match(e.Label, "^[Q-Zq-z]").Success),
+                ColumnFilter.CreateNew("The rest", "EntryModel.Label", e => Regex.Match(e.Label, "^[^A-Za-z0-9]").Success),
+                ColumnFilter.CreateNew("Directories", "EntryModel.Description", e => e.IsDirectory),
+                ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory),
             };
             events.Subscribe(this);
         }
@@ -68,6 +80,6 @@ namespace TestApp.WPF
         #endregion
 
 
-      
+
     }
 }

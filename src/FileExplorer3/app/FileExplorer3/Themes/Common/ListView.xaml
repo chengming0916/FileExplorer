@@ -64,6 +64,27 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ListViewExHeaderMenuItemHeaderStyle" TargetType="{x:Type MenuItem}" >
+        <Setter Property="HeaderTemplate"  >
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Header}" />
+                        <StackPanel x:Name="PART_MatchCount" Orientation="Horizontal" >
+                            <TextBlock Text=" ("  />
+                            <TextBlock Text="{Binding MatchedCount}" />
+                            <TextBlock Text=")" />
+                        </StackPanel>
+                    </StackPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding MatchedCount}" Value="0">
+                            <Setter TargetName="PART_MatchCount" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="ListViewExColumnHeaderContainerStyle" TargetType="GridViewColumnHeader">
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -121,15 +142,12 @@
                                               Template="{StaticResource BasicArrowButton}">
                                 </ToggleButton>-->
                                 <uc:DropDown x:Name="PART_DropDown" Grid.Column="1" Grid.RowSpan="2" >
-                                    <uc:DropDown.Content>
+                                    <!--<uc:DropDown.Content>
                                         <StackPanel Orientation="Vertical">
                                             <MenuItem IsCheckable="True" Header="Life"  CommandParameter="T1"></MenuItem>
                                             <MenuItem IsCheckable="True" Header="Universe" CommandParameter="T2"></MenuItem>
                                             <MenuItem IsCheckable="True" Header="Everything" CommandParameter="T3"></MenuItem>
                                         </StackPanel>
-                                    </uc:DropDown.Content>
-                                    <!--<uc:DropDown.Content>
-                                        <TextBlock>The answer is 42</TextBlock>
                                     </uc:DropDown.Content>-->
                                 </uc:DropDown>
                             </Grid>
@@ -150,7 +168,7 @@
     </Style>
 
 
-    <Style x:Key="ListViewExStyle" TargetType="{x:Type uc:ListViewEx}">
+    <Style TargetType="{x:Type uc:ListViewEx}">
         <!--<Setter Property="TextSearch.TextPath" Value="EmbeddedModel.Label" />-->
         <Setter Property="Template">
             <Setter.Value>

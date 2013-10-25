@@ -36,15 +36,19 @@
                      ItemsSource="{Binding Items}" 
                      ViewMode="{Binding ViewMode}"  
                      Columns="{Binding ColumnList}"
+                     ColumnFilters ="{Binding ColumnFilters}"
                      ColumnsVisibility="Visible"
                      ItemSize="{Binding ItemSize}"
                      ItemAnimationDuration="00:00:01"
                      SortDirection="{Binding SortDirection}"
                      SortBy="{Binding SortBy}"
                      SelectionModeEx="SelectionHelper"
-                     Style="{StaticResource ListViewExStyle}"         
                      cal:View.ApplyConventions="False"
-                     cal:Message.Attach = "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)]">
+                     cal:Message.Attach = 
+                       "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)];
+                       [Event FilterChangedEvent] = [Action OnFilterChanged()]"
+                       
+                       >
 
             <i:Interaction.Triggers>
                 <uc:InputBindingTrigger>

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FileExplorer.Models;
+using FileExplorer.UserControls;
 using FileExplorer.ViewModels;
 
 namespace FileExplorer.Defines
@@ -25,11 +27,24 @@ namespace FileExplorer.Defines
     {
         public IEnumerable<IEntryViewModel> SelectedViewModels { get; private set; }
         public IEnumerable<IEntryModel> SelectedModels { get { return from vm in SelectedViewModels select vm.EntryModel; } }
-        
+
         public SelectionChangedEvent(IEnumerable<IEntryViewModel> evms)
         {
             SelectedViewModels = evms.ToList();
         }
+    }
+
+
+
+    public class FilterChangedEventArgs : RoutedEventArgs
+    {
+        public FilterChangedEventArgs(object source)
+            : base(ListViewEx.FilterChangedEvent)
+        {
+
+        }
+        public ListViewColumnInfo ColumnInfo { get; set; }
+        public ColumnFilter Filter { get; set; }
     }
 
     public static class ListViewColumnInfoExtension
@@ -43,11 +58,7 @@ namespace FileExplorer.Defines
         }
     }
 
-    public class ListViewColumnFilter
-    {
-        public string Header { get; set; }
-        public bool IsEnabled { get; set; }
-    }
+  
 
     public class ListViewColumnInfo
     {
@@ -56,13 +67,11 @@ namespace FileExplorer.Defines
         public string TooltipPath { get; set; }
         public double Width { get; set; }
         public string TemplateKey { get; set; }
-        public List<ListViewColumnFilter> Filters { get; set; }
 
         private ListViewColumnInfo(string header, double width)
         {
             Header = header;
             Width = width;
-            Filters = new List<ListViewColumnFilter>() {};
         }
 
         public static ListViewColumnInfo FromTemplate(string header, string templateKey,

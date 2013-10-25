@@ -601,7 +601,7 @@ namespace FileExplorer.UserControls
                 Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
             ScrollContentPresenter p = getScrollContentPresenter(sender);
             _itemUnderMouse = getSelectedItem(p, e.GetPosition(p));
-            Debug.WriteLine(_itemUnderMouse == null ? "NONE" : _itemUnderMouse.ToString());
+            //Debug.WriteLine(_itemUnderMouse == null ? "NONE" : _itemUnderMouse.ToString());
             if (!spButtonPressed && !isOverScrollBar && !isOverGridViewHeader)
             {
                 SetStartPosition(p, Mouse.GetPosition(p));

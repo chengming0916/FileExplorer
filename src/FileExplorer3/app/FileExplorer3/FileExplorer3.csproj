@@ -95,7 +95,9 @@
     <Compile Include="Defines\Converters\UserFriendlyTextConverter.cs" />
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Structs.cs" />
+    <Compile Include="Models\ColumnFilter.cs" />
     <Compile Include="Models\EntryModelBase.cs" />
+    <Compile Include="Models\IColumnFilter.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="ValueComparer.cs" />
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
     <None Include="ViewModels\Actions\LoadIcon.cs" />
+    <Compile Include="ViewModels\Actions\CalculateColumnHeaderCount.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />
     <Compile Include="ViewModels\EntryViewModelComparer.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />

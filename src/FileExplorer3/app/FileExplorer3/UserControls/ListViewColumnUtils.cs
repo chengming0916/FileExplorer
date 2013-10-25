@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Media;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.UserControls
 {
@@ -31,11 +33,12 @@ namespace FileExplorer.UserControls
 
                 dt.VisualTree = label;
             }
-            return new GridViewColumn()
+            return new GridViewColumnEx()
             {
                 Header = colInfo.Header,
                 CellTemplate = dt,
-                Width = colInfo.Width
+                Width = colInfo.Width,
+                //ColumnFilters = colInfo.Filters.ToArray()
             };
         }
 
@@ -71,53 +74,113 @@ namespace FileExplorer.UserControls
             return null;
         }
 
+        private static GridViewColumnHeader findColumnHeader(GridViewHeaderRowPresenter headerPresenter, ListViewColumnInfo col)
+        {
+            Func<TextBlock, bool> filter = tb =>
+            {
+                var value = tb.GetValue(TextBlock.TextProperty);
+                var match = col.Header != null && col.Header.Equals(value);
+                return match;
+            };
+            GridViewColumnHeader foundHeader = null;
+
+            TextBlock lookup = UITools.FindVisualChild<TextBlock>(headerPresenter, filter);
+            if (lookup != null)
+                foundHeader = lookup.FindAncestor<GridViewColumnHeader>();
+
+            return foundHeader;
+        }
+
         /// <summary>
         /// Apply header template to GridViewColumns depending if it's selected and ascending.
         /// </summary>
         public static void UpdateSortSymbol(ListView listView, ListViewColumnInfo sortCol,
-            ListSortDirection sortDirection = ListSortDirection.Ascending,
-            string normalHeaderTemplate = "NormHeaderTemplate",
-            string ascHeaderTemplate = "AscHeaderTemplate",
-            string descHeaderTemplate = "DescHeaderTemplate")
-        {            
+            ListSortDirection sortDirection = ListSortDirection.Ascending)
+        {
             GridViewColumnCollection columns = getColumnCols(listView);
 
             if (columns == null)
                 return;
 
-            DataTemplate ascTemplate = listView.TryFindResource(ascHeaderTemplate) as DataTemplate;
-            DataTemplate descTemplate = listView.TryFindResource(descHeaderTemplate) as DataTemplate;
-            DataTemplate normTemplate = listView.TryFindResource(normalHeaderTemplate) as DataTemplate;
-
-            //handle if sortCol = null
-
             GridViewHeaderRowPresenter presenter = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);
-
-            Func<TextBlock, bool> filter = tb =>
-                {
-                    var value = tb.GetValue(TextBlock.TextProperty);
-                    var match = sortCol.Header != null && sortCol.Header.Equals(value);
-                    return match;
-                };
-            GridViewColumnHeader foundHeader = null;
-
-            TextBlock lookup = UITools.FindVisualChild<TextBlock>(presenter, filter);
-            if (lookup != null)
-                foundHeader = lookup.FindAncestor<GridViewColumnHeader>();
+            GridViewColumnHeader foundHeader = findColumnHeader(presenter, sortCol);
             IEnumerable<GridViewColumnHeader> headers = UITools.FindAllVisualChildren<GridViewColumnHeader>(presenter);
 
-            if (ascTemplate != null && descTemplate != null && normTemplate != null)
-                foreach (var curHeader in headers)
-                {                    
-                    if (curHeader.Equals(foundHeader))
-                    {
-                        if (sortDirection == ListSortDirection.Ascending)
-                            ListViewEx.SetColumnHeaderSortDirection(curHeader, -1);
-                        else ListViewEx.SetColumnHeaderSortDirection(curHeader, 1);
-                    }
-                    else
-                        ListViewEx.SetColumnHeaderSortDirection(curHeader, 0);
+            foreach (var curHeader in headers)
+            {
+                if (curHeader.Equals(foundHeader))
+                {
+                    if (sortDirection == ListSortDirection.Ascending)
+                        ListViewEx.SetColumnHeaderSortDirection(curHeader, -1);
+                    else ListViewEx.SetColumnHeaderSortDirection(curHeader, 1);
                 }
+                else
+                    ListViewEx.SetColumnHeaderSortDirection(curHeader, 0);
+            }
+        }
+
+        /// <summary>
+        /// If a filter is checked or unchecked, raise FilterChangedEvent.
+        /// </summary>
+        /// <param name="listView"></param>
+        public static void RegisterFilterEvent(ListViewEx listView)
+        {
+            var p = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);            
+            var handler = (RoutedEventHandler)((o, e) =>
+            {
+                ColumnFilter filter = (e.OriginalSource as MenuItem).DataContext as ColumnFilter;
+                if (filter != null)
+                {
+                    ListViewColumnInfo colInfo = ((VisualTreeHelper.GetParent(e.OriginalSource as DependencyObject))
+                        as StackPanel).DataContext as ListViewColumnInfo;
+                    listView.RaiseEvent(new FilterChangedEventArgs(e.Source) { ColumnInfo = colInfo, Filter = filter });
+                }
+            });
+            p.AddHandler(MenuItem.CheckedEvent, handler);
+            p.AddHandler(MenuItem.UncheckedEvent, handler);
+        }
+
+        public static void UpdateFilterPanel(ListView listView, ListViewColumnInfo[] columns, ColumnFilter[] filters)
+        {
+            Func<ColumnFilter, MenuItem> createMenuItem =
+                f =>
+                {
+                    var style = listView.FindResource("ListViewExHeaderMenuItemHeaderStyle") as Style;                    
+                    var retVal = new MenuItem()
+                    {
+                        
+                        IsCheckable = true,
+                        Style = style,
+                        Header = f,
+                        DataContext = f
+                    };
+                    retVal.SetBinding(MenuItem.IsCheckedProperty, new Binding("IsChecked"));
+                    return retVal;
+                };
+
+            if (columns == null)
+                return;
+            GridViewHeaderRowPresenter presenter = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);
+            foreach (var col in columns)
+            {
+                GridViewColumnHeader foundHeader = findColumnHeader(presenter, col);
+                if (foundHeader != null)
+                {
+                    var dropDown = UITools.FindVisualChildByName<DropDown>(foundHeader, "PART_DropDown");
+                    if (dropDown != null)
+                    {
+                        StackPanel sp = new StackPanel() {  Name="PART_Menu", DataContext = col };
+                        foreach (var f in filters)
+                            if (f.ValuePath == col.ValuePath)
+                                sp.Children.Add(createMenuItem(f));
+                        if (sp.Children.Count > 0)
+                            dropDown.Content = sp;
+                        else dropDown.Content = null;
+                    }
+                }
+            }
+
+
         }
     }
 }
