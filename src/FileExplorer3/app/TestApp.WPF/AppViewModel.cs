@@ -48,10 +48,11 @@ namespace TestApp.WPF
         public IEnumerable<IResult> Load()
         {
             IProfile profile = new FileSystemInfoProfile();
-            var parentModel = profile.ParseAsync(@"c:\temp").Result;
+            var parentModel = profile.ParseAsync(@"C:\Users\lycj\Documents").Result;
             return FileListModel.Load(parentModel, null);
         }
 
+     
         public void ChangeView(string viewMode)
         {
             FileListModel.ViewMode = viewMode;
@@ -61,6 +62,8 @@ namespace TestApp.WPF
         {
             SelectionCount = message.SelectedViewModels.Count();
         }
+
+        
 
         #endregion
 

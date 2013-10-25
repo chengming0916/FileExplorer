@@ -16,7 +16,7 @@ using FileExplorer.Models;
 
 namespace FileExplorer.UserControls
 {
-    public class ListViewEx : ListView
+    public class ListViewEx : ListView, IVirtualListView
     {
         #region Cosntructor
 
@@ -24,29 +24,29 @@ namespace FileExplorer.UserControls
 
         #region Methods
 
-     
+
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             this.HandleScrollBarInvisible();
-            this.AddHandler(ListViewEx.LoadedEvent, (RoutedEventHandler)((o,e) => OnLoaded()));
-          
+            this.AddHandler(ListViewEx.LoadedEvent, (RoutedEventHandler)((o, e) => OnLoaded()));
+
         }
 
         public void OnLoaded()
         {
             ListViewColumnUtils.RegisterFilterEvent(this);
-            ListViewColumnUtils.UpdateFilterPanel(this, Columns, ColumnFilters);           
+            ListViewColumnUtils.UpdateFilterPanel(this, Columns, ColumnFilters);
         }
 
-       
+
         #region OnPropertyChanged
 
         public static void OnColumnsFilterChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             ListViewEx lv = (ListViewEx)sender;
-            ListViewColumnUtils.UpdateFilterPanel(lv, lv.Columns, lv.ColumnFilters);           
+            ListViewColumnUtils.UpdateFilterPanel(lv, lv.Columns, lv.ColumnFilters);
         }
 
         public static void OnColumnsVisibilityChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
@@ -86,13 +86,13 @@ namespace FileExplorer.UserControls
             SelectionModeEx selMode = (SelectionModeEx)args.NewValue;
             switch (selMode)
             {
-                case SelectionModeEx.Single : 
-                case SelectionModeEx.Multiple : 
-                case SelectionModeEx.Extended :
+                case SelectionModeEx.Single:
+                case SelectionModeEx.Multiple:
+                case SelectionModeEx.Extended:
                     SelectionHelper.SetEnableSelection(fl, false);
                     fl.SetValue(SelectionModeProperty, (SelectionMode)(int)selMode);
                     break;
-                case SelectionModeEx.SelectionHelper :
+                case SelectionModeEx.SelectionHelper:
                     SelectionHelper.SetEnableSelection(fl, true);
                     break;
             }
@@ -122,7 +122,7 @@ namespace FileExplorer.UserControls
                 {
                     ListViewColumnUtils.UpdateColumn(fl, fl.Columns);
                     fl.Dispatcher.Invoke(() =>
-                         ListViewColumnUtils.UpdateFilterPanel(fl, fl.Columns, fl.ColumnFilters), 
+                         ListViewColumnUtils.UpdateFilterPanel(fl, fl.Columns, fl.ColumnFilters),
                          System.Windows.Threading.DispatcherPriority.Input);
                 }
 
@@ -132,6 +132,12 @@ namespace FileExplorer.UserControls
                     ListViewColumnUtils.UpdateSortSymbol(fl, sortColumn, fl.SortDirection);
             }
             else Debug.WriteLine(String.Format("ListViewEx - No view defined."));
+        }
+
+        void IVirtualListView.UnselectAll()
+        {
+            this.RaiseEvent(new RoutedEventArgs(UnselectAllRequiredEvent, this));
+            this.SelectedItems.Clear();
         }
 
         #endregion
@@ -190,7 +196,7 @@ namespace FileExplorer.UserControls
 
         #endregion
 
-        #region Columns, and ColumnsVisibility property
+        #region Columns, and ColumnsVisibility property, FilterChanged event
 
         public static readonly DependencyProperty ColumnsProperty =
          DependencyProperty.Register("Columns", typeof(ListViewColumnInfo[]), typeof(ListViewEx),
@@ -217,7 +223,7 @@ namespace FileExplorer.UserControls
             get { return (ColumnFilter[])GetValue(ColumnFiltersProperty); }
             set { SetValue(ColumnFiltersProperty, value); }
         }
-     
+
         public static readonly DependencyProperty ColumnsVisibilityProperty =
         DependencyProperty.Register("ColumnsVisibility", typeof(Visibility), typeof(ListViewEx),
             new FrameworkPropertyMetadata(Visibility.Collapsed, new PropertyChangedCallback(OnColumnsVisibilityChanged)));
@@ -274,6 +280,7 @@ namespace FileExplorer.UserControls
 
         #endregion
 
+        #region SelectionMode property, UnselectAllRequired event.
         public static readonly DependencyProperty SelectionModeExProperty =
        DependencyProperty.Register("SelectionModeEx", typeof(SelectionModeEx), typeof(ListViewEx),
        new FrameworkPropertyMetadata(SelectionModeEx.Single, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
@@ -289,6 +296,20 @@ namespace FileExplorer.UserControls
         }
 
 
+        public static readonly RoutedEvent UnselectAllRequiredEvent = EventManager.RegisterRoutedEvent("UnselectAllRequired",
+            RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ListViewEx));
+
+        /// <summary>
+        /// The ListView unable to deselect the items, request view model do the de-selection.
+        /// </summary>
+        public event RoutedEventHandler UnselectAllRequired
+        {
+            add { AddHandler(UnselectAllRequiredEvent, value); }
+            remove { RemoveHandler(UnselectAllRequiredEvent, value); }
+        }
+
+
+        #endregion
         public static readonly DependencyProperty ColumnHeaderSortDirectionProperty =
             DependencyProperty.RegisterAttached("ColumnHeaderSortDirection", typeof(int), typeof(ListViewEx),
             new PropertyMetadata(0));
@@ -327,9 +348,9 @@ namespace FileExplorer.UserControls
         //    set { SetValue(SelectedItemsProperty, value); }
         //}
 
-        
-        
-      
+
+
+
 
         //#region Commands
 

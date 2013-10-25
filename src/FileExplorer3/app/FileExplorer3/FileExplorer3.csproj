@@ -124,6 +124,7 @@
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
     <None Include="ViewModels\Actions\LoadIcon.cs" />
     <Compile Include="ViewModels\Actions\CalculateColumnHeaderCount.cs" />
+    <Compile Include="ViewModels\Actions\UnselectAll.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />
     <Compile Include="ViewModels\EntryViewModelComparer.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />

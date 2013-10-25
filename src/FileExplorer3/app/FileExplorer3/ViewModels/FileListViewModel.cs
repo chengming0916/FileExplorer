@@ -60,6 +60,12 @@ namespace FileExplorer.ViewModels
 
         }
 
+        public IEnumerable<IResult> UnselectAll()
+        {
+            yield return new UnselectAll(Items);
+        }
+
+
         public void Rename()
         {
             if (SelectedItems.Count > 0)
