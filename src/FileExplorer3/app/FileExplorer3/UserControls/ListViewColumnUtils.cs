@@ -16,7 +16,7 @@ namespace FileExplorer.UserControls
 {
     public static class ListViewColumnUtils
     {
-        public static GridViewColumn createColumn(ListView listView, ListViewColumnInfo colInfo)
+        public static GridViewColumn createColumn(ListView listView, ColumnInfo colInfo)
         {
             DataTemplate dt = null;
             if (colInfo.TemplateKey != null)
@@ -42,7 +42,7 @@ namespace FileExplorer.UserControls
             };
         }
 
-        public static void AddColumn(ListView listView, GridViewColumnCollection columnCol, ListViewColumnInfo[] colInfos)
+        public static void AddColumn(ListView listView, GridViewColumnCollection columnCol, ColumnInfo[] colInfos)
         {
             foreach (var colInfo in colInfos)
             {
@@ -52,7 +52,7 @@ namespace FileExplorer.UserControls
             }
         }
 
-        public static void UpdateColumn(ListView listView, ListViewColumnInfo[] colInfos)
+        public static void UpdateColumn(ListView listView, ColumnInfo[] colInfos)
         {
             GridViewColumnCollection columnCol = getColumnCols(listView);
             if (columnCol != null)
@@ -74,7 +74,7 @@ namespace FileExplorer.UserControls
             return null;
         }
 
-        private static GridViewColumnHeader findColumnHeader(GridViewHeaderRowPresenter headerPresenter, ListViewColumnInfo col)
+        private static GridViewColumnHeader findColumnHeader(GridViewHeaderRowPresenter headerPresenter, ColumnInfo col)
         {
             Func<TextBlock, bool> filter = tb =>
             {
@@ -94,7 +94,7 @@ namespace FileExplorer.UserControls
         /// <summary>
         /// Apply header template to GridViewColumns depending if it's selected and ascending.
         /// </summary>
-        public static void UpdateSortSymbol(ListView listView, ListViewColumnInfo sortCol,
+        public static void UpdateSortSymbol(ListView listView, ColumnInfo sortCol,
             ListSortDirection sortDirection = ListSortDirection.Ascending)
         {
             GridViewColumnCollection columns = getColumnCols(listView);
@@ -131,8 +131,8 @@ namespace FileExplorer.UserControls
                 ColumnFilter filter = (e.OriginalSource as MenuItem).DataContext as ColumnFilter;
                 if (filter != null)
                 {
-                    ListViewColumnInfo colInfo = ((VisualTreeHelper.GetParent(e.OriginalSource as DependencyObject))
-                        as StackPanel).DataContext as ListViewColumnInfo;
+                    ColumnInfo colInfo = ((VisualTreeHelper.GetParent(e.OriginalSource as DependencyObject))
+                        as StackPanel).DataContext as ColumnInfo;
                     listView.RaiseEvent(new FilterChangedEventArgs(e.Source) { ColumnInfo = colInfo, Filter = filter });
                 }
             });
@@ -140,7 +140,7 @@ namespace FileExplorer.UserControls
             p.AddHandler(MenuItem.UncheckedEvent, handler);
         }
 
-        public static void UpdateFilterPanel(ListView listView, ListViewColumnInfo[] columns, ColumnFilter[] filters)
+        public static void UpdateFilterPanel(ListView listView, ColumnInfo[] columns, ColumnFilter[] filters)
         {
             Func<ColumnFilter, MenuItem> createMenuItem =
                 f =>

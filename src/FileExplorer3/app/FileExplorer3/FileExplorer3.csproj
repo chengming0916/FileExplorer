@@ -99,14 +99,18 @@
     <Compile Include="Models\EntryModelBase.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
     <Compile Include="Models\IEntryModel.cs" />
+    <Compile Include="Models\IEntryHierarchyComparer.cs" />
     <Compile Include="Models\IProfile.cs" />
+    <Compile Include="Models\PathComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests\ActionTest2.cs" />
+    <Compile Include="UnitTests\ActionTest.cs" />
     <Compile Include="UserControls\DropDown.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
     <Compile Include="UserControls\GridViewColumnEx.cs" />
+    <Compile Include="UserControls\TreeViewEx.cs" />
     <Compile Include="UserControls\VirtualizingWrapPanel.cs" />
-    <Compile Include="UnitTests\ActionTest.cs" />
     <Compile Include="UnitTests\UnitTestExtensions.cs" />
     <Compile Include="UserControls\AnimatedVirtualizingPanel.cs" />
     <Compile Include="UserControls\DebuggingConverter.cs" />
@@ -121,18 +125,33 @@
     <Compile Include="Utils\BitmapSourceUtils.cs" />
     <Compile Include="UserControls\InputBindingTrigger.cs" />
     <Compile Include="ValueComparer.cs" />
+    <Compile Include="ViewModels\Actions\AppendDirectoryTree.cs" />
     <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
     <None Include="ViewModels\Actions\LoadIcon.cs" />
+    <Compile Include="ViewModels\Actions\BroadcastChild.cs" />
     <Compile Include="ViewModels\Actions\CalculateColumnHeaderCount.cs" />
+    <Compile Include="ViewModels\Actions\FindMatched.cs" />
+    <Compile Include="ViewModels\Actions\DoSomething.cs" />
+    <Compile Include="ViewModels\Actions\ToggleRename.cs" />
     <Compile Include="ViewModels\Actions\UnselectAll.cs" />
+    <Compile Include="ViewModels\Actions\WaitUntilPropertyChanged.cs" />
+    <Compile Include="ViewModels\DirectoryNodeViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />
     <Compile Include="ViewModels\EntryViewModelComparer.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
+    <Compile Include="ViewModels\IDirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\IEntryListViewModel.cs" />
     <Compile Include="ViewModels\IEntryViewModel.cs" />
     <Compile Include="ViewModels\Actions\LoadEntryList.cs" />
     <Compile Include="ViewModels\Actions\Loader.cs" />
     <Compile Include="ViewModels\TaskUtils.cs" />
+    <Compile Include="Views\DirectoryNodeView.xaml.cs">
+      <DependentUpon>DirectoryNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DirectoryTreeView.xaml.cs">
+      <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EntryIconView.xaml.cs">
       <DependentUpon>EntryIconView.xaml</DependentUpon>
     </Compile>
@@ -173,6 +192,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\Common\TreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\TreeViewItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Common\Views.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -208,6 +235,14 @@
     <Page Include="Themes\Common\EditBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DirectoryNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DirectoryTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EntryIconView.xaml">
       <SubType>Designer</SubType>

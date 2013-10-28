@@ -18,9 +18,13 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
+        public static IEntryViewModel DummyNode = EntryViewModel.FromEntryModel(null, EntryModelBase.DummyModel);
+
         private EntryViewModel()
         {
             Func<ImageSource> _getIcon = () => Profile.GetIconAsync(EntryModel, 32).Result;
+            //if (Profile == null)
+            //    _getIcon = () => null;
             _icon = new Lazy<ImageSource>(_getIcon);
         }
 

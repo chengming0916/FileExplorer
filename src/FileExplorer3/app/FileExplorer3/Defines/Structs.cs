@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Caliburn.Micro;
 using FileExplorer.Models;
 using FileExplorer.UserControls;
 using FileExplorer.ViewModels;
@@ -23,12 +24,23 @@ namespace FileExplorer.Defines
         }
     }
 
-    public class SelectionChangedEvent
+    public class ViewModelEvent
+    {
+        public PropertyChangedBase Sender { get; private set; }
+
+        public ViewModelEvent(PropertyChangedBase sender)
+        {
+            Sender = sender;
+        }
+    }
+
+    public class SelectionChangedEvent : ViewModelEvent
     {
         public IEnumerable<IEntryViewModel> SelectedViewModels { get; private set; }
         public IEnumerable<IEntryModel> SelectedModels { get { return from vm in SelectedViewModels select vm.EntryModel; } }
 
-        public SelectionChangedEvent(IEnumerable<IEntryViewModel> evms)
+        public SelectionChangedEvent(PropertyChangedBase sender, IEnumerable<IEntryViewModel> evms)
+            : base(sender)
         {
             SelectedViewModels = evms.ToList();
         }
@@ -43,13 +55,13 @@ namespace FileExplorer.Defines
         {
 
         }
-        public ListViewColumnInfo ColumnInfo { get; set; }
+        public ColumnInfo ColumnInfo { get; set; }
         public ColumnFilter Filter { get; set; }
     }
 
     public static class ListViewColumnInfoExtension
     {
-        public static ListViewColumnInfo Find(this ListViewColumnInfo[] cols, string valuePath)
+        public static ColumnInfo Find(this ColumnInfo[] cols, string valuePath)
         {
             foreach (var col in cols)
                 if (col.ValuePath.Equals(valuePath) || col.Header.Equals(valuePath))
@@ -60,7 +72,7 @@ namespace FileExplorer.Defines
 
   
 
-    public class ListViewColumnInfo
+    public class ColumnInfo
     {
         public string Header { get; set; }
         public string ValuePath { get; set; }
@@ -68,26 +80,26 @@ namespace FileExplorer.Defines
         public double Width { get; set; }
         public string TemplateKey { get; set; }
 
-        private ListViewColumnInfo(string header, double width)
+        private ColumnInfo(string header, double width)
         {
             Header = header;
             Width = width;
         }
 
-        public static ListViewColumnInfo FromTemplate(string header, string templateKey,
+        public static ColumnInfo FromTemplate(string header, string templateKey,
             string valuePath = null, double width = double.NaN)
         {
-            return new ListViewColumnInfo(header, width)
+            return new ColumnInfo(header, width)
             {
                 ValuePath = valuePath,
                 TemplateKey = templateKey
             };
         }
 
-        public static ListViewColumnInfo FromBindings(string columnHeader, string valuePath, string tooltipPath,
+        public static ColumnInfo FromBindings(string columnHeader, string valuePath, string tooltipPath,
             double width = double.NaN)
         {
-            return new ListViewColumnInfo(columnHeader, width)
+            return new ColumnInfo(columnHeader, width)
             {
                 ValuePath = valuePath,
                 TooltipPath = tooltipPath
@@ -101,7 +113,7 @@ namespace FileExplorer.Defines
 
         public override bool Equals(object obj)
         {
-            return (obj is ListViewColumnInfo && (obj as ListViewColumnInfo).ValuePath == ValuePath) ||
+            return (obj is ColumnInfo && (obj as ColumnInfo).ValuePath == ValuePath) ||
                 (obj is string && (obj as String).Equals(ValuePath));
         }
 

@@ -18,7 +18,7 @@ namespace FileExplorer.ViewModels
         public LoadEntryList(IEntryViewModel parentModel, Func<IEntryModel, bool> filter = null)
         {
             _parentModel = parentModel;
-            _filter = filter;
+            _filter = filter ?? (m => true);
         }
 
         #endregion
@@ -37,6 +37,7 @@ namespace FileExplorer.ViewModels
                     else
                     {
                         var entryModels = from m in prev.Result
+                                          where _filter(m)
                                           select (IEntryModel)m;
                         context["EntryList"] = entryModels;
                         Completed(this, new ResultCompletionEventArgs());

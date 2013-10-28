@@ -10,16 +10,8 @@
   <Class Name="FileExplorer.Models.EntryModelBase">
     <Position X="0.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAgAEAAAAAAAgAAAQAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>CAAAIAAAEEAgAAAAgAAQQAQAAIAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\EntryModelBase.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="FileExplorer.Models.FileSystemInfoProfile">
-    <Position X="2.75" Y="3.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAABAAAAACAAAAAAAAQAABAAAIAAAAAAAAAAAgAA=</HashCode>
-      <FileName>Models\FileSystemInfoProfile.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -29,29 +21,42 @@
       <Method Name="EntryViewModel" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAhAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAIAQAAAEAAgAAAAIACAAgAAAACAAhABAAEAAAA=</HashCode>
       <FileName>ViewModels\EntryViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FileExplorer.ViewModels.FileListViewModel">
     <Position X="7.5" Y="1.25" Width="1.5" />
+    <Members>
+      <Field Name="_colFilters" Hidden="true" />
+      <Field Name="_colList" Hidden="true" />
+      <Field Name="_items" Hidden="true" />
+      <Field Name="_itemSize" Hidden="true" />
+      <Field Name="_processedVms" Hidden="true" />
+      <Field Name="_profile" Hidden="true" />
+      <Field Name="_selectedVms" Hidden="true" />
+      <Field Name="_sortBy" Hidden="true" />
+      <Field Name="_sortDirection" Hidden="true" />
+      <Field Name="_viewMode" Hidden="true" />
+    </Members>
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAIgAAA=</HashCode>
+      <HashCode>AAAAiAAEgAiCCABAAAACAAAIE3AggAAAABkQACACAAA=</HashCode>
       <FileName>ViewModels\FileListViewModel.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Interface Name="FileExplorer.Models.IEntryModel">
     <Position X="0.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAgAEAAAAAAAAAAAQAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>CAAAAAAAEAAgAAAAAAAQQAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\IEntryModel.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FileExplorer.Models.IProfile">
     <Position X="2.75" Y="1.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAABAAAAACAAAAAAAAAAAAAAAIAAAAAAAAAAAgAA=</HashCode>
+      <HashCode>AAAAAABAAAAACAABAAAAAAAAAAAAIAAAAQAAAAAAgAA=</HashCode>
       <FileName>Models\IProfile.cs</FileName>
     </TypeIdentifier>
   </Interface>

@@ -7,9 +7,11 @@ using Caliburn.Micro;
 
 namespace FileExplorer.Models
 {
-    public abstract class EntryModelBase : PropertyChangedBase, IEntryModel
+    public class EntryModelBase : PropertyChangedBase, IEntryModel
     {
         #region Cosntructor
+
+        public static IEntryModel DummyModel = new EntryModelBase() { Name="Dummy" };
 
         protected EntryModelBase()
         {            

@@ -22,7 +22,7 @@ namespace FileExplorer.Models
 
         #region Methods
 
-        IComparer<IEntryModel> GetComparer(ListViewColumnInfo column);
+        IComparer<IEntryModel> GetComparer(ColumnInfo column);
 
         /// <summary>
         /// Return the entry that represent the path, or null if not exists.
@@ -62,6 +62,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
+
+        IEntryHierarchyComparer HierarchyComparer { get; }
         
         #endregion
     }

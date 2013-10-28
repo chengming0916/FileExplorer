@@ -16,14 +16,15 @@ namespace FileExplorer.Models
         #region Cosntructor
 
         public FileSystemInfoProfile()
-        {            
+        {
+            HierarchyComparer = PathComparer.Default;
         }
 
         #endregion
 
         #region Methods
 
-        public IComparer<IEntryModel> GetComparer(ListViewColumnInfo column)
+        public IComparer<IEntryModel> GetComparer(ColumnInfo column)
         {
             switch (column.ValuePath)
             {
@@ -93,6 +94,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
+
+        public IEntryHierarchyComparer HierarchyComparer { get; private set; }
 
         #endregion
 

@@ -9,15 +9,14 @@ using FileExplorer.Models;
 namespace FileExplorer.ViewModels.Actions
 {
     /// <summary>
-    /// Append entrylist context["EntryList"] to context.Target (IEntryListViewModel)
+    /// Append entrylist context["EntryList"] to context.Target (IDirectoryTreeViewModel)'s Subdirectories 
     /// </summary>
-    public class AppendEntryList : IResult
+    public class AppendDirectoryTree : IResult 
     {
-        #region Cosntructor
+         #region Cosntructor
 
-        public AppendEntryList(IEntryViewModel parentModel, IEntryListViewModel targetModel)
+        public AppendDirectoryTree(IDirectoryNodeViewModel targetModel)
         {
-            _parentModel = parentModel;
             _targetModel = targetModel;
         }
 
@@ -32,8 +31,8 @@ namespace FileExplorer.ViewModels.Actions
             var entryModels = context["EntryList"] as IEnumerable<IEntryModel>;
             foreach (var em in entryModels)
             {
-                var evm = EntryViewModel.FromEntryModel(_parentModel.Profile, em);                
-                _targetModel.Items.Add(evm);
+                var evm = _targetModel.CreateSubmodel(em);                
+                _targetModel.Subdirectories.Add(evm);
             }
             Completed(this, new ResultCompletionEventArgs());
         }
@@ -42,14 +41,13 @@ namespace FileExplorer.ViewModels.Actions
 
         #region Data
 
-        private IEntryViewModel _parentModel;
-        private IEntryListViewModel _targetModel;
+        private IDirectoryNodeViewModel _targetModel;
 
         #endregion
 
         #region Public Properties
 
         #endregion
-       
+
     }
 }

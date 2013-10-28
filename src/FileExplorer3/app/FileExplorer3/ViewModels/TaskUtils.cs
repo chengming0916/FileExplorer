@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 
 namespace FileExplorer.ViewModels
 {
@@ -21,5 +22,22 @@ namespace FileExplorer.ViewModels
             else continueTask(prevTask);
         }
 
+        public static void Execute(this IEnumerable<IResult> actions, ActionExecutionContext context = null)
+        {
+            new SequentialResult(actions.GetEnumerator()).Execute(context);
+        }
+
+        public static async Task ExecuteAsync(this IEnumerable<IResult> actions, ActionExecutionContext context = null)
+        {
+            await new SequentialResult(actions.GetEnumerator()).ExecuteAsync(context);
+        }
+
+        public static IEnumerable<IResult> Append(this IEnumerable<IResult> actions, params IResult[] appendActions)
+        {
+            foreach (var a in actions)
+                yield return a;
+            foreach (var a in appendActions)
+                yield return a;   
+        }
     }
 }

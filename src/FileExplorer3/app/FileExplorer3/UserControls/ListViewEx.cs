@@ -67,7 +67,7 @@ namespace FileExplorer.UserControls
             GridViewColumnHeader header = (GridViewColumnHeader)args.OriginalSource;
             if (header.Column != null)
             {
-                ListViewColumnInfo sortColumn = Columns.Find((string)header.Column.Header);
+                ColumnInfo sortColumn = Columns.Find((string)header.Column.Header);
 
                 if (SortBy != sortColumn.Header && SortBy != sortColumn.ValuePath)
                     SetValue(SortByProperty, sortColumn.ValuePath);
@@ -127,7 +127,7 @@ namespace FileExplorer.UserControls
                 }
 
                 ////always update sort column
-                ListViewColumnInfo sortColumn = fl.Columns.Find(fl.SortBy);
+                ColumnInfo sortColumn = fl.Columns.Find(fl.SortBy);
                 if (sortColumn != null)
                     ListViewColumnUtils.UpdateSortSymbol(fl, sortColumn, fl.SortDirection);
             }
@@ -199,15 +199,15 @@ namespace FileExplorer.UserControls
         #region Columns, and ColumnsVisibility property, FilterChanged event
 
         public static readonly DependencyProperty ColumnsProperty =
-         DependencyProperty.Register("Columns", typeof(ListViewColumnInfo[]), typeof(ListViewEx),
-         new FrameworkPropertyMetadata(new ListViewColumnInfo[] { }, new PropertyChangedCallback(OnViewModeChanged)));
+         DependencyProperty.Register("Columns", typeof(ColumnInfo[]), typeof(ListViewEx),
+         new FrameworkPropertyMetadata(new ColumnInfo[] { }, new PropertyChangedCallback(OnViewModeChanged)));
 
         /// <summary>
         /// If the Panel is GridView, VirtualStack/WrapPanelView, one can change the column headers.
         /// </summary>
-        public ListViewColumnInfo[] Columns
+        public ColumnInfo[] Columns
         {
-            get { return (ListViewColumnInfo[])GetValue(ColumnsProperty); }
+            get { return (ColumnInfo[])GetValue(ColumnsProperty); }
             set { SetValue(ColumnsProperty, value); }
         }
 

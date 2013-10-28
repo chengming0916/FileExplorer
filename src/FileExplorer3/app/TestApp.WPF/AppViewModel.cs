@@ -15,17 +15,26 @@ namespace TestApp.WPF
     [Export(typeof(IScreen))]
     public class AppViewModel : Screen, IHandle<SelectionChangedEvent>
     {
+        static string rootPath = @"C:\Temp";
+        static string lookupPath = @"C:\Temp\COFE3\DB";
+
         #region Cosntructor
 
         [ImportingConstructor]
         public AppViewModel(IEventAggregator events)
         {
-            FileListModel = new FileListViewModel(events) { Profile = new FileSystemInfoProfile() };
-            FileListModel.ColumnList = new ListViewColumnInfo[] 
+            
+
+            FileListModel = new FileListViewModel(events,  new FileSystemInfoProfile());
+            IProfile profile = new FileSystemInfoProfile();
+            DirectoryTreeModel = new DirectoryTreeViewModel(events,
+                EntryViewModel.FromEntryModel(profile, profile.ParseAsync(rootPath).Result));
+
+            FileListModel.ColumnList = new ColumnInfo[] 
             {
-                ListViewColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
-                ListViewColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200),
-                ListViewColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 200)   
+                ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
+                ColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200),
+                ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 200)   
             };
 
             FileListModel.ColumnFilters = new ColumnFilter[]
@@ -52,6 +61,12 @@ namespace TestApp.WPF
             return FileListModel.Load(parentModel, null);
         }
 
+        public void Select()
+        {
+            IProfile profile = new FileSystemInfoProfile();
+            var model = profile.ParseAsync(lookupPath).Result;
+            DirectoryTreeModel.Select(model);
+        }
      
         public void ChangeView(string viewMode)
         {
@@ -76,6 +91,7 @@ namespace TestApp.WPF
         #region Public Properties
 
         public IEventAggregator Events { get; private set; }
+        public DirectoryTreeViewModel DirectoryTreeModel { get; private set; }
         public FileListViewModel FileListModel { get; private set; }
         public List<string> ViewModes { get { return _viewModes; } }
         public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }

@@ -6,16 +6,23 @@
 	<Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />            
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition Height="*"    />            
+        </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
             <Button x:Name="Load" Content="Load" Height="50" />
             <ComboBox SelectedValue="{Binding FileListModel.ViewMode}" x:Name="ViewModes">                
             </ComboBox>            
             <Slider Value="{Binding FileListModel.ItemSize, Mode=TwoWay}" Minimum="30" Maximum="120" />
+
+            <Button x:Name="Select" Content="Load" Height="50" />
             <TextBlock x:Name="SelectionCount" />
         </StackPanel>
-        <ContentControl Grid.Column="1" Name="FileListModel" Margin="10" />
+        <ContentControl Grid.Column="1" Name="DirectoryTreeModel" Margin="10" />
+        <ContentControl Grid.Column="1" Grid.Row="1" Name="FileListModel" Margin="10" />
     </Grid>
 
 </Window>

@@ -18,6 +18,7 @@ using System.Windows.Data;
 using System.ComponentModel;
 using System.Windows;
 using System.Collections;
+using FileExplorer.ViewModels.Actions;
 
 
 namespace FileExplorer.ViewModels
@@ -29,10 +30,12 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events)
+        public FileListViewModel(IEventAggregator events, IProfile profile)
         {
             Events = events;
+            Profile = profile;
             _processedVms = CollectionViewSource.GetDefaultView(Items) as ListCollectionView;
+            #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
             //   ListView.ItemsSourceProperty, "ItemsSource", "SourceUpdated");
             //ec.ApplyBinding = (vmType, path, property, element, convention) =>
@@ -41,13 +44,22 @@ namespace FileExplorer.ViewModels
             //        ec, ItemsControl.ItemsSourceProperty);
             //    return true;
             //};
-
+            #endregion
         }
 
         #endregion
 
         #region Methods
 
+        #region Actions
+        
+        /// <summary>
+        /// Load sub entries in the specified entry model to Items, the filter is used to filter entries out 
+        /// before added to items, while ColumnFilter update ProcessedItems so some added entries are not displayed.
+        /// </summary>
+        /// <param name="em"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public IEnumerable<IResult> Load(IEntryModel em, Func<IEntryModel, bool> filter = null)
         {
             var parentEVm = EntryViewModel.FromEntryModel(Profile, em);
@@ -60,35 +72,38 @@ namespace FileExplorer.ViewModels
 
         }
 
+        /// <summary>
+        /// Virtual panel require this to unselect all entries using view models.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<IResult> UnselectAll()
         {
             yield return new UnselectAll(Items);
         }
 
 
-        public void Rename()
+        public IEnumerable<IResult> ToggleRename()
         {
-            if (SelectedItems.Count > 0)
-                SelectedItems[0].IsEditing = true;
+            yield return new ToggleRename(this);
         }
 
-        protected virtual void OnSortDirectoryChanged(ListViewColumnInfo col, ListSortDirection direction)
+        #endregion 
+
+        #region OnPropertyChanged
+
+        protected virtual void OnSortDirectoryChanged(ColumnInfo col, ListSortDirection direction)
         {
             if (_profile == null)
                 return;
             var comparer = new EntryViewModelComparer(_profile.GetComparer(col), direction);
             _processedVms.CustomSort = comparer;
             _processedVms.GroupDescriptions.Add(new PropertyGroupDescription(col.ValuePath));
-
-            //ProcessedItems.SortDescriptions.Clear();
-            //ProcessedItems.SortDescriptions.Add(new SortDescription(col.ValuePath, direction ));
-            //ProcessedItems = Items.OrderByDescending(evm => evm.EntryModel.Description);
         }
 
         public void OnSelectionChanged(IList selectedItems)
         {
             SelectedItems = selectedItems.Cast<IEntryViewModel>().ToList();
-            Events.Publish(new SelectionChangedEvent(SelectedItems));
+            Events.Publish(new SelectionChangedEvent(this, SelectedItems));
         }
 
         public void OnFilterChanged()
@@ -103,6 +118,8 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
+        #endregion
+
         #region Data
 
         private IProfile _profile;
@@ -114,10 +131,10 @@ namespace FileExplorer.ViewModels
         private string _viewMode = "Icon";
         private string _sortBy = "EntryModel.Label";
         private ListSortDirection _sortDirection = ListSortDirection.Ascending;        
-        private ListViewColumnInfo[] _colList = new ListViewColumnInfo[]
+        private ColumnInfo[] _colList = new ColumnInfo[]
         {
-            ListViewColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
-            ListViewColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200)   
+            ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
+            ColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200)   
         };
 
         private ColumnFilter[] _colFilters = new ColumnFilter[] { };
@@ -135,6 +152,8 @@ namespace FileExplorer.ViewModels
         public IProfile Profile { get { return _profile; } set { _profile = value; NotifyOfPropertyChange(() => Profile); } }
 
         public IEventAggregator Events { get; private set; }
+
+        #region SortBy, SortDirection 
 
         public string SortBy
         {
@@ -164,7 +183,10 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        #region ViewMode, ItemAnimateDuration
+        #endregion
+
+        #region ViewMode, ItemSize, ColumnList, ColumnFilters
+
         public string ViewMode
         {
             get { return _viewMode; }
@@ -185,7 +207,7 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        public ListViewColumnInfo[] ColumnList
+        public ColumnInfo[] ColumnList
         {
             get { return _colList; }
             set { _colList = value; NotifyOfPropertyChange(() => ColumnList); }
@@ -199,6 +221,7 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
+        #region Items, ProcessedItems, SelectedItems
 
         public IObservableCollection<IEntryViewModel> Items { get { return _items; } }
 
@@ -216,6 +239,8 @@ namespace FileExplorer.ViewModels
                 NotifyOfPropertyChange(() => SelectedItems);
             }
         }
+
+        #endregion
 
 
 
