@@ -25,11 +25,13 @@ namespace FileExplorer.Models
 
         public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
         {
-            if (a.FullPath.Equals(b.FullPath, _stringComparsion))
+            string apath = a.FullPath.TrimEnd('\\');
+            string bpath = b.FullPath.TrimEnd('\\');
+            if (apath.Equals(bpath, _stringComparsion))
                 return HierarchicalResult.Current;
 
-            var aSplit = a.FullPath.Split(_separator);
-            var bSplit = b.FullPath.Split(_separator);
+            var aSplit = apath.Split(new char[] { _separator }, StringSplitOptions.RemoveEmptyEntries);
+            var bSplit = bpath.Split(new char[] { _separator }, StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < Math.Min(aSplit.Length, bSplit.Length); i++)
             {

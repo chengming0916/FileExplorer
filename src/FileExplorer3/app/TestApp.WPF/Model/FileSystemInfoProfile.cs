@@ -28,14 +28,14 @@ namespace FileExplorer.Models
         {
             switch (column.ValuePath)
             {
-                case "EntryModel.Label" :
+                case "EntryModel.Label":
                     return new ValueComparer<IEntryModel>(p => p.Label);
                 case "EntryModel.Description":
                     return new ValueComparer<IEntryModel>(p => p.Description);
-                default :
+                default:
                     return new ValueComparer<IEntryModel>(p => p.FullPath);
             }
-            
+
         }
 
         public Task<IEntryModel> ParseAsync(string path)
@@ -62,13 +62,14 @@ namespace FileExplorer.Models
 
         private Icon getFolderIcon()
         {
-            return new Icon(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("TestApp.WPF.Model.folder.ico"));
+            return new Icon(System.Reflection.Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("TestApp.WPF.Model.folder.ico"));
         }
 
         public Task<ImageSource> GetIconAsync(IEntryModel entry, int size)
         {
-            using (var icon = entry.IsDirectory ? 
-                getFolderIcon() : 
+            using (var icon = entry.IsDirectory ?
+                getFolderIcon() :
                 System.Drawing.Icon.ExtractAssociatedIcon(entry.FullPath))
             using (var bitmap = icon.ToBitmap())
                 return Task.FromResult<ImageSource>(

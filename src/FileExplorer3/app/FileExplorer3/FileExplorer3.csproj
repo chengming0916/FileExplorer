@@ -134,7 +134,7 @@
     <Compile Include="ViewModels\Actions\DoSomething.cs" />
     <Compile Include="ViewModels\Actions\ToggleRename.cs" />
     <Compile Include="ViewModels\Actions\UnselectAll.cs" />
-    <Compile Include="ViewModels\Actions\WaitUntilPropertyChanged.cs" />
+    <Compile Include="ViewModels\Actions\WaitTillPropertyChanged.cs" />
     <Compile Include="ViewModels\DirectoryNodeViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
     <Compile Include="ViewModels\EntryViewModel.cs" />

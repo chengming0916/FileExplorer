@@ -20,7 +20,7 @@ namespace FileExplorer.ViewModels
 
         IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel);
         
-        Task BroadcastBountyAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action);
+        Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action);
 
         bool IsSelected { get; set; }
 

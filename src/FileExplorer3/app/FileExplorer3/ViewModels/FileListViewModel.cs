@@ -64,12 +64,11 @@ namespace FileExplorer.ViewModels
         {
             var parentEVm = EntryViewModel.FromEntryModel(Profile, em);
             yield return Loader.Show("Loading");
+            yield return new DoSomething((c) => {  Items.Clear(); });
             yield return new LoadEntryList(parentEVm, filter);
             yield return new AppendEntryList(parentEVm, this);
             yield return new CalculateColumnHeaderCount(ColumnFilters);
-            yield return Loader.Show();
-            
-
+            yield return Loader.Show();            
         }
 
         /// <summary>

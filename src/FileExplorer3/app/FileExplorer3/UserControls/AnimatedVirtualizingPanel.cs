@@ -140,6 +140,15 @@ namespace FileExplorer.UserControls
             }
         }
 
+
+        protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
+        {
+            base.OnItemsChanged(sender, args);
+            startingPositions.Clear();
+            currentPositions.Clear();
+            targetPositions.Clear();
+        }
+
         public void AnimatedArrange(UIElement child, Rect finalSize)
         {
             this.targetPositions[child] = finalSize;

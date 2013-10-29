@@ -15,7 +15,7 @@ namespace TestApp.WPF
     [Export(typeof(IScreen))]
     public class AppViewModel : Screen, IHandle<SelectionChangedEvent>
     {
-        static string rootPath = @"C:\Temp";
+        static string rootPath = @"C:\";
         static string lookupPath = @"C:\Temp\COFE3\DB";
 
         #region Cosntructor
@@ -57,14 +57,14 @@ namespace TestApp.WPF
         public IEnumerable<IResult> Load()
         {
             IProfile profile = new FileSystemInfoProfile();
-            var parentModel = profile.ParseAsync(@"C:\Users\lycj\Documents").Result;
+            var parentModel = profile.ParseAsync(rootPath).Result;
             return FileListModel.Load(parentModel, null);
         }
 
-        public void Select()
+        public void Go()
         {
             IProfile profile = new FileSystemInfoProfile();
-            var model = profile.ParseAsync(lookupPath).Result;
+            var model = profile.ParseAsync(this._gotoPath).Result;
             DirectoryTreeModel.Select(model);
         }
      
@@ -75,7 +75,12 @@ namespace TestApp.WPF
 
         public void Handle(SelectionChangedEvent message)
         {
-            SelectionCount = message.SelectedViewModels.Count();
+            if (message.Sender.Equals(FileListModel)) //From file list.
+                SelectionCount = message.SelectedViewModels.Count();
+            if (message.Sender.Equals(DirectoryTreeModel))
+            {
+                FileListModel.Load(message.SelectedModels.First(), null).ExecuteAsync();
+            }
         }
 
         
@@ -85,16 +90,18 @@ namespace TestApp.WPF
         #region Data
         private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
         private int _selectionCount = 0;
-
+        private string _gotoPath = lookupPath;
         #endregion
 
         #region Public Properties
 
+        
         public IEventAggregator Events { get; private set; }
         public DirectoryTreeViewModel DirectoryTreeModel { get; private set; }
         public FileListViewModel FileListModel { get; private set; }
         public List<string> ViewModes { get { return _viewModes; } }
         public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
+        public string GotoPath { get { return _gotoPath; } set { _gotoPath = value; NotifyOfPropertyChange(() => GotoPath); } }
 
         #endregion
 

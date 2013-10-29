@@ -45,7 +45,13 @@ namespace FileExplorer.UserControls
 
         public TreeViewItemEx()
         {
-           
+            this.AddHandler(TreeViewItem.SelectedEvent, new RoutedEventHandler(
+                 (RoutedEventHandler)delegate(object obj, RoutedEventArgs args)
+                 {
+                     if (args.OriginalSource is TreeViewItem)
+                         (args.OriginalSource as TreeViewItem).BringIntoView();
+
+                 }));
         }
 
         #endregion

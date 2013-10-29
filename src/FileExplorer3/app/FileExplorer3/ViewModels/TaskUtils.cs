@@ -34,7 +34,7 @@ namespace FileExplorer.ViewModels
 
         public static IEnumerable<IResult> Append(this IEnumerable<IResult> actions, params IResult[] appendActions)
         {
-            foreach (var a in actions)
+            foreach (var a in actions.ToList())
                 yield return a;
             foreach (var a in appendActions)
                 yield return a;   

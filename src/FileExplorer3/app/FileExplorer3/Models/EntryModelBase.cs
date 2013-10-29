@@ -33,6 +33,11 @@ namespace FileExplorer.Models
         {
 
         }
+
+        public override string ToString()
+        {
+            return this.FullPath;
+        }
         
         #endregion
 

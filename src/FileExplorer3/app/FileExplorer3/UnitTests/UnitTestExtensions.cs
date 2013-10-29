@@ -18,7 +18,8 @@ namespace FileExplorer.UnitTests
             return setup.Returns(Task.FromResult(value));
         }
 
-        public static ResultCompletionEventArgs ExecuteAndWait(this IResult action, ActionExecutionContext context)
+        public static ResultCompletionEventArgs ExecuteAndWait(this IResult action, ActionExecutionContext context, 
+            System.Action executeAfterActionStarted = null)
         {
             ResultCompletionEventArgs retVal = null;
             var handle = new System.Threading.ManualResetEventSlim(false);
@@ -30,6 +31,8 @@ namespace FileExplorer.UnitTests
                 handle.Set();
             };
             action.Execute(context);
+            if (executeAfterActionStarted != null)
+                executeAfterActionStarted();
             handle.Wait();
 
             if (retVal == null)

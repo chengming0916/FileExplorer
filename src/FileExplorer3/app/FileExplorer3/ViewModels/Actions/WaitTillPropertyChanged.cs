@@ -9,16 +9,21 @@ using Caliburn.Micro;
 
 namespace FileExplorer.ViewModels.Actions
 {
-    public class WaitUntilPropertyChanged<T> : IResult        
+    /// <summary>
+    /// Wait until value of the specified property changed (INotifyPropertyChanged.PropertyChanged), then call Completed
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class WaitTilPropertyChanged<T> : IResult        
     {
         #region Cosntructor
 
-        public WaitUntilPropertyChanged(INotifyPropertyChanged parentModel,
+        public WaitTilPropertyChanged(INotifyPropertyChanged parentModel,
             Expression<Func<T>> propertyExpression)
         {
             _parentModel = parentModel;
+            _propertyExpression = propertyExpression;
             _propertyName = GetName(propertyExpression);
-            _initialValue = GetProperty(propertyExpression);            
+            InitialValue = GetProperty(propertyExpression);            
         }
 
         #endregion
@@ -45,8 +50,11 @@ namespace FileExplorer.ViewModels.Actions
 
         public void Execute(ActionExecutionContext context)
         {
-            if (!(GetProperty(_propertyExpresion).Equals(_initialValue)))
+            DestinationValue = GetProperty(_propertyExpression);
+            if (!(DestinationValue.Equals(InitialValue)))
+            {
                 Completed(this, new ResultCompletionEventArgs());
+            }
             else
                 _parentModel.PropertyChanged += OnPropertyChanged;
         }
@@ -56,6 +64,7 @@ namespace FileExplorer.ViewModels.Actions
             if (e.PropertyName == _propertyName)
             {
                 _parentModel.PropertyChanged -= OnPropertyChanged;
+                DestinationValue = GetProperty(_propertyExpression);
                 Completed(this, new ResultCompletionEventArgs());
             }
         }
@@ -66,12 +75,14 @@ namespace FileExplorer.ViewModels.Actions
 
         INotifyPropertyChanged _parentModel;
         string _propertyName;
-        Expression<Func<T>> _propertyExpresion;
-        T _initialValue;
+        Expression<Func<T>> _propertyExpression;
 
         #endregion
 
         #region Public Properties
+
+        public T InitialValue { get; private set; }
+        public T DestinationValue { get; private set; }
 
         #endregion
     }

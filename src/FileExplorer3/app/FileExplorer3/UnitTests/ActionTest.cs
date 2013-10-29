@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -58,7 +60,7 @@ namespace FileExplorer.UnitTests
 
 
         [Test]
-        public static void Test_LoadEntryList()
+        public static void LoadEntryList_Test()
         {
             //Setup
             setup();
@@ -76,7 +78,7 @@ namespace FileExplorer.UnitTests
         }
 
         [Test]
-        public static void Test_AppendEntryList()
+        public static void AppendEntryList_Test()
         {
             //Setup
             setup();
@@ -98,7 +100,7 @@ namespace FileExplorer.UnitTests
         }
 
         [Test]
-        public static void Test_ToggleRename()
+        public static void ToggleRename_Test()
         {
             setup();
             Mock<IEntryListViewModel> _selectable = new Mock<IEntryListViewModel>();
@@ -123,6 +125,43 @@ namespace FileExplorer.UnitTests
             Assert.IsFalse(isEditing1);
             Assert.IsTrue(isEditing2);
             Assert.IsTrue(isEditing);
+        }
+
+
+        public interface IDummy : System.ComponentModel.INotifyPropertyChanged
+        {
+            int test { get; set; }
+            void add();
+        }
+        public static void WaitUntilPropertyChanged_Test()
+        {
+            
+
+            //Setup
+            int test = 0;
+            var dummy = new Mock<IDummy>();
+            dummy.Setup(foo => foo.test).Returns(() => test);            
+            dummy.Setup(foo => foo.add()).Callback(() =>
+                {
+                    test++;
+                    dummy.Raise(foo => foo.PropertyChanged += null, 
+                        new PropertyChangedEventArgs("test"));
+                });
+            var wpc1 = new WaitTilPropertyChanged<int>(dummy.Object,() => dummy.Object.test);
+            test++;
+            var wpc2 = new WaitTilPropertyChanged<int>(dummy.Object, () => dummy.Object.test);
+            var context = new ActionExecutionContext();
+
+            Assert.AreEqual(0, wpc1.InitialValue);
+            Assert.AreEqual(1, wpc2.InitialValue);
+            Assert.AreEqual(1, test);
+            //Action
+            wpc1.ExecuteAndWait(context); //Return immediately.
+            wpc2.ExecuteAndWait(context, () => dummy.Object.add());
+
+            //Assert
+            Assert.AreEqual(1, wpc1.DestinationValue);
+            Assert.AreEqual(2, wpc2.DestinationValue);
         }
 
     }

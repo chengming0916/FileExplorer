@@ -134,7 +134,7 @@ namespace FileExplorer.UserControls
             Rect finalRect = GetChildRect(itemIndex, finalSize);
             //Point initPos = GetOriginalPosition(child);
             Point finalPos = new Point(finalRect.Left, finalRect.Top);
-
+            
             //child.Arrange(finalRect);
 
             base.AnimatedArrange(child, finalRect);
@@ -272,6 +272,7 @@ namespace FileExplorer.UserControls
 
                     // Get or create the child
                     UIElement child = generator.GenerateNext(out newlyRealized) as UIElement;
+
                     if (newlyRealized)
                     {
                         // Figure out if we need to insert the child at the end or somewhere in the middle
@@ -354,15 +355,19 @@ namespace FileExplorer.UserControls
         /// <param name="sender"></param>
         /// <param name="args"></param>
         protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
-        {
+        {            
             switch (args.Action)
             {
                 case NotifyCollectionChangedAction.Remove:
                 case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Move:
                     RemoveInternalChildRange(args.Position.Index, args.ItemUICount);
                     break;
+                case NotifyCollectionChangedAction.Move:
+                    RemoveInternalChildRange(args.OldPosition.Index, args.ItemUICount);
+                    break;
+
             }
+            base.OnItemsChanged(sender, args);
         }
         #endregion
 

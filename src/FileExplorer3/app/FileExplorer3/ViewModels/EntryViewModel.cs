@@ -10,6 +10,7 @@ using System.Windows.Media;
 #endif
 using Caliburn.Micro;
 using FileExplorer.Models;
+using System.Diagnostics;
 
 namespace FileExplorer.ViewModels
 {
@@ -22,7 +23,12 @@ namespace FileExplorer.ViewModels
 
         private EntryViewModel()
         {
-            Func<ImageSource> _getIcon = () => Profile.GetIconAsync(EntryModel, 32).Result;
+            Func<ImageSource> _getIcon = () => {
+                var icon = Profile.GetIconAsync(EntryModel, 32).Result;
+                icon.Freeze();
+                return icon;
+
+            };
             //if (Profile == null)
             //    _getIcon = () => null;
             _icon = new Lazy<ImageSource>(_getIcon);
@@ -38,6 +44,8 @@ namespace FileExplorer.ViewModels
             };
         }
 
+       
+
         #endregion
 
 
@@ -47,6 +55,11 @@ namespace FileExplorer.ViewModels
         public override object GetView(object context = null)
         {
             return base.GetView(context);
+        }
+
+        public override string ToString()
+        {
+            return "evm-" + this.EntryModel.ToString();
         }
 
         #endregion

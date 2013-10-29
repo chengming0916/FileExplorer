@@ -37,7 +37,7 @@ namespace FileExplorer.ViewModels
         public void Select(IEntryModel model)
         {
             foreach (var sub in Subdirectories)
-                sub.BroadcastBountyAsync(model, evm => { evm.IsSelected = true; });
+                sub.BroadcastSelectAsync(model, evm => { evm.IsSelected = true; });
         }
 
         #endregion

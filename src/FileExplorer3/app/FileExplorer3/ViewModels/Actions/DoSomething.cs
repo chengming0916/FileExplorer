@@ -11,7 +11,7 @@ namespace FileExplorer.ViewModels.Actions
     {
         #region Cosntructor
 
-        public DoSomething(System.Action action)
+        public DoSomething(System.Action<ActionExecutionContext> action)
         {
             _action = action;
         }
@@ -26,7 +26,7 @@ namespace FileExplorer.ViewModels.Actions
         {
             try
             {
-                _action();
+                _action(context);
                 Completed(this, new ResultCompletionEventArgs());
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace FileExplorer.ViewModels.Actions
 
         #region Data
 
-        private System.Action _action;
+        private System.Action<ActionExecutionContext> _action;
 
         #endregion
 

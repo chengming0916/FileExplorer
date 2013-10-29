@@ -37,7 +37,7 @@
                        [Event FilterChangedEvent] = [Action OnFilterChanged()];
                        [Event UnselectAllRequired] = [Action UnselectAll()]"
                        >
-
+                
             <i:Interaction.Triggers>
                 <uc:InputBindingTrigger>
                     <uc:InputBindingTrigger.InputBinding>

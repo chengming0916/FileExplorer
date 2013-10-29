@@ -15,7 +15,7 @@ namespace TestApp.WPF
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-           FileExplorer.UnitTests.ActionTest.Test_LoadEntryList();
+            FileExplorer.UnitTests.ActionTest.WaitUntilPropertyChanged_Test();
             base.OnStartup(e); 
         }
     }

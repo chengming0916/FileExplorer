@@ -48,27 +48,37 @@ namespace FileExplorer.ViewModels
             this.Subdirectories.Add(DirectoryNodeViewModel.DummyNode);
         }
 
+     
+
         #endregion
 
         #region Methods
 
-        public IEnumerable<IResult> Load()
+        public IEnumerable<IResult> Load(bool force = false)
         {
             if (State != NodeState.IsLoading)
             {
-                yield return new DoSomething(() => Subdirectories.Clear());
-                yield return new DoSomething(() => { State = NodeState.IsLoading; });
+                if (State == NodeState.IsLoaded && !force)
+                    yield break;
+                yield return new DoSomething((c) => Subdirectories.Clear());
+                yield return new DoSomething((c) => { State = NodeState.IsLoading; });
                 foreach (var iresult in base.Load(CurrentDirectory.EntryModel, em => em.IsDirectory))
                 {
                     if (iresult is AppendEntryList)
+                    {
                         yield return new AppendDirectoryTree(this);
+                        break;
+                    }
                     yield return iresult;
                 }
-                yield return new DoSomething(() => { State = NodeState.IsLoaded; });
+                yield return new DoSomething((c) => { 
+                    State = NodeState.IsLoaded; });
             }
             else
             {
-                yield return new WaitUntilPropertyChanged<NodeState>(this, () => State);
+                //If is loading... wait till state changed.
+                yield return new WaitTilPropertyChanged<NodeState>(this, () => State);
+
             }
         }        
 
@@ -83,22 +93,45 @@ namespace FileExplorer.ViewModels
             }
         }
 
+        public override string ToString()
+        {
+            return "node-" + CurrentDirectory.ToString();
+        }
+
         public IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel)
         {
             return new DirectoryNodeViewModel(Events, TreeModel, entryModel, Profile);
         }
         
-        public async Task BroadcastBountyAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action)
+        public async Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action)
         {
             switch (Profile.HierarchyComparer.CompareHierarchy(CurrentDirectory.EntryModel, model))
             {
-                case HierarchicalResult.Current: action(this); break;
+                case HierarchicalResult.Current: 
+                    action(this); break;
                 case HierarchicalResult.Parent :
                     if (Debugger.IsAttached)
                         Debugger.Break(); 
                     break;
                 case HierarchicalResult.Child :
-                    await Load().Append(new FindMatched(), new BroadcastChild()).ExecuteAsync();
+                    await Load().Append(
+                        new DoSomething((c) => { this.IsExpanded = true; }),
+                        new FindMatched<IDirectoryNodeViewModel>(model, this.Subdirectories,
+                            (nvm, evm) => 
+                                { 
+                                    var result = 
+                                        Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
+                                    return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
+                                })
+                        ,                         
+                        new DoSomething((c) => 
+                            {
+                                if (c["MatchedItem"] is IDirectoryNodeViewModel)
+                                    (c["MatchedItem"] as IDirectoryNodeViewModel)
+                                        .BroadcastSelectAsync(model, action).Wait();
+
+                            })
+                        ).ExecuteAsync();
                     break;
             }
         }
