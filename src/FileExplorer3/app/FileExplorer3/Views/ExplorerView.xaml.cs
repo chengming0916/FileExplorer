@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,15 +16,13 @@ using System.Windows.Shapes;
 namespace FileExplorer.Views
 {
     /// <summary>
-    /// Interaction logic for FileListView.xaml
+    /// Interaction logic for ExplorerView.xaml
     /// </summary>
-    [Export(typeof(UserControl))]
-    public partial class FileListView : UserControl
+    public partial class ExplorerView : UserControl
     {
-        public FileListView()
+        public ExplorerView()
         {
             InitializeComponent();
-            //CommandBindings.Add(new CommandBinding(this.ProcessedItems.RenameCommand));
         }
     }
 }

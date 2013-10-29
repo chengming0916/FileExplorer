@@ -44,6 +44,7 @@ namespace FileExplorer.Models
         #region Data
 
         private string _name;
+        private bool _isRenamable = false;
 
         #endregion
 
@@ -52,8 +53,8 @@ namespace FileExplorer.Models
         public bool IsDirectory { get; protected set; }
         public IEntryModel Parent { get; protected set; }
         public string Name { get { return _name; } set { string org = _name; _name = value; OnRenamed(org, _name); } }
-        public string Label { get; protected set; }        
-        public bool IsRenamable { get; protected set; }
+        public string Label { get; protected set; }
+        public bool IsRenamable { get { return _isRenamable; } set { _isRenamable = value; NotifyOfPropertyChange(() => IsRenamable); } }
         public string Description { get; protected set; }
         public string FullPath { get; protected set; }
 

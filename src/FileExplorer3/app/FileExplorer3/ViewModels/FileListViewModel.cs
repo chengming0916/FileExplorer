@@ -30,7 +30,7 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events, IProfile profile)
+        public FileListViewModel(IEventAggregator events, IProfile profile = null)
         {
             Events = events;
             Profile = profile;
@@ -85,7 +85,7 @@ namespace FileExplorer.ViewModels
         {
             yield return new ToggleRename(this);
         }
-
+      
         #endregion 
 
         #region OnPropertyChanged

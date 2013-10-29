@@ -8,27 +8,21 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
-using FileExplorer.ViewModels;
 
-namespace TestApp.WPF
+namespace FileExplorer.ViewModels
 {
-    [Export(typeof(IScreen))]
-    public class AppViewModel : Screen, IHandle<SelectionChangedEvent>
+    
+    public abstract class ExplorerViewModelBase : Screen, IHandle<SelectionChangedEvent>
     {
-        static string rootPath = @"C:\";
-        static string lookupPath = @"C:\Temp\COFE3\DB";
-
         #region Cosntructor
 
-        [ImportingConstructor]
-        public AppViewModel(IEventAggregator events)
+        public ExplorerViewModelBase(IEventAggregator events, params IEntryViewModel[] rootModels)
         {
+            _events = events;
+            _rootModels = rootModels;
 
-            IProfile profile = new FileSystemInfoProfile();
-            FileListModel = new FileListViewModel(events,  profile);
-            
-            DirectoryTreeModel = new DirectoryTreeViewModel(events,
-                EntryViewModel.FromEntryModel(profile, profile.ParseAsync(rootPath).Result));
+            FileListModel = new FileListViewModel(events);
+            DirectoryTreeModel = new DirectoryTreeViewModel(events, rootModels);
 
             FileListModel.ColumnList = new ColumnInfo[] 
             {
@@ -48,26 +42,27 @@ namespace TestApp.WPF
                 ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory),
             };
             events.Subscribe(this);
+
         }
 
         #endregion
 
         #region Methods
 
-        public IEnumerable<IResult> Load()
-        {
-            IProfile profile = new FileSystemInfoProfile();
-            var parentModel = profile.ParseAsync(rootPath).Result;
-            return FileListModel.Load(parentModel, null);
-        }
 
         public void Go()
         {
-            IProfile profile = new FileSystemInfoProfile();
-            var model = profile.ParseAsync(this._gotoPath).Result;
-            DirectoryTreeModel.Select(model);
+            foreach (var evm in _rootModels)
+            {
+                var model = evm.Profile.ParseAsync(_gotoPath).Result;
+                if (model != null)
+                {
+                    DirectoryTreeModel.Select(model);
+                    return;
+                }
+            }
         }
-     
+
         public void ChangeView(string viewMode)
         {
             FileListModel.ViewMode = viewMode;
@@ -75,37 +70,31 @@ namespace TestApp.WPF
 
         public void Handle(SelectionChangedEvent message)
         {
-            if (message.Sender.Equals(FileListModel)) //From file list.
-                SelectionCount = message.SelectedViewModels.Count();
+            //if (message.Sender.Equals(FileListModel)) //From file list.
+            //    SelectionCount = message.SelectedViewModels.Count();
             if (message.Sender.Equals(DirectoryTreeModel))
             {
                 FileListModel.Load(message.SelectedModels.First(), null).ExecuteAsync();
             }
         }
 
-        
 
         #endregion
 
         #region Data
-        private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
-        private int _selectionCount = 0;
-        private string _gotoPath = lookupPath;
+
+        private IEntryViewModel[] _rootModels;
+        private IEventAggregator _events;
+        private string _gotoPath;
+
         #endregion
 
         #region Public Properties
-
         
-        public IEventAggregator Events { get; private set; }
         public DirectoryTreeViewModel DirectoryTreeModel { get; private set; }
         public FileListViewModel FileListModel { get; private set; }
-        public List<string> ViewModes { get { return _viewModes; } }
-        public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
         public string GotoPath { get { return _gotoPath; } set { _gotoPath = value; NotifyOfPropertyChange(() => GotoPath); } }
 
         #endregion
-
-
-
     }
 }

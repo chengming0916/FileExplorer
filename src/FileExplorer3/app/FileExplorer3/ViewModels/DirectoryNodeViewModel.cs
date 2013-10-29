@@ -105,6 +105,7 @@ namespace FileExplorer.ViewModels
         
         public async Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action)
         {
+            
             switch (Profile.HierarchyComparer.CompareHierarchy(CurrentDirectory.EntryModel, model))
             {
                 case HierarchicalResult.Current: 
@@ -114,6 +115,7 @@ namespace FileExplorer.ViewModels
                         Debugger.Break(); 
                     break;
                 case HierarchicalResult.Child :
+                    ActionExecutionContext context = new ActionExecutionContext();
                     await Load().Append(
                         new DoSomething((c) => { this.IsExpanded = true; }),
                         new FindMatched<IDirectoryNodeViewModel>(model, this.Subdirectories,
@@ -123,15 +125,11 @@ namespace FileExplorer.ViewModels
                                         Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
                                     return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
                                 })
-                        ,                         
-                        new DoSomething((c) => 
-                            {
-                                if (c["MatchedItem"] is IDirectoryNodeViewModel)
-                                    (c["MatchedItem"] as IDirectoryNodeViewModel)
-                                        .BroadcastSelectAsync(model, action).Wait();
+                        ).ExecuteAsync(context);
 
-                            })
-                        ).ExecuteAsync();
+                    if (context["MatchedItem"] is IDirectoryNodeViewModel)
+                        await (context["MatchedItem"] as IDirectoryNodeViewModel)
+                            .BroadcastSelectAsync(model, action);
                     break;
             }
         }

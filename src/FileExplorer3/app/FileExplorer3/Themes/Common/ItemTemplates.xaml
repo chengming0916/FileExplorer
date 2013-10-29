@@ -54,7 +54,7 @@
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
                         IsEditable="{Binding IsEditable}"        
-                        IsEditing="{Binding IsEditing, Mode=TwoWay}"
+                        IsEditing="{Binding IsEditing}"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Padding="10,0,0,0"

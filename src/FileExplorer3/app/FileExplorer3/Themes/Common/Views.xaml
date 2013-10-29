@@ -20,8 +20,8 @@
 
     <!--Icon View-->
 
-    <Style x:Key="IconItemContainerStyle" TargetType="{x:Type ListViewItem}"
-                   BasedOn="{StaticResource ItemContainerStyleBase}">
+    <Style x:Key="IconItemContainerStyle" TargetType="{x:Type uc:ListViewItemEx}"
+                   BasedOn="{StaticResource FileListItemStyle}">
     </Style>
     
     <uc:VirtualWrapPanelView x:Key="IconView"  
@@ -39,8 +39,8 @@
     
     <!-- Small Icon View -->
 
-    <Style x:Key="SmallIconItemContainerStyle" TargetType="{x:Type ListViewItem}"
-                   BasedOn="{StaticResource ItemContainerStyleBase}">
+    <Style x:Key="SmallIconItemContainerStyle" TargetType="{x:Type uc:ListViewItemEx}"
+                   BasedOn="{StaticResource FileListItemStyle}">
     </Style>
     
     <uc:VirtualWrapPanelView x:Key="SmallIconView"  

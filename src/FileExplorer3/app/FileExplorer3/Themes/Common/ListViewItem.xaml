@@ -8,61 +8,59 @@
     </ResourceDictionary.MergedDictionaries>
 
 
-    <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type ListViewItem}" >
-        <Setter Property="SnapsToDevicePixels" Value="true"/>
-        <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
-        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ListBoxItem">
-                    <Border Name="Border"  SnapsToDevicePixels="true"                             
+    <ControlTemplate x:Key="lbControlTemplate" TargetType="ListBoxItem">
+        <Border Name="Border"  SnapsToDevicePixels="true"                             
                             BorderThickness="1"
                             BorderBrush="Transparent"
                             Background="Transparent">
-                        <Grid>
-                            <Rectangle x:Name="ContentBackground" Fill="Transparent" Opacity="0.5"/>
-                            <ContentPresenter  Margin="2"
+            <Grid>
+                <Rectangle x:Name="ContentBackground" Fill="Transparent" Opacity="0.5"/>
+                <ContentPresenter  Margin="2"
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Grid>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
-                            <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"/>
-                        </Trigger>
-                        <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
+                <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="true">
+                <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"/>
+            </Trigger>
+            <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard Storyboard.Target="{Binding}">
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.5" To="1" Duration="0:0:1" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>-->
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 
-    <!--BasedOn="{StaticResource AeroGridViewItemContainerStyleKey}"-->
-    <Style x:Key="FileListItemStyle_Grid" TargetType="{x:Type ListViewItem}" >
-        <Setter Property="TextSearch.Text" Value="{Binding EmbeddedModel.Label, Mode=OneWay}" />
+
+    <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type uc:ListViewItemEx}" >
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        
+        <!-- Bind to ViewModel -->
+        <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
     </Style>
 
+    <!--BasedOn="{StaticResource AeroGridViewItemContainerStyleKey}"-->
+    <Style x:Key="FileListItemStyle_Grid" TargetType="{x:Type uc:ListViewItemEx}" BasedOn="{StaticResource ItemContainerStyleBase}" >
+    </Style>
 
-    <Style x:Key="FileListItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ItemContainerStyleBase}" >
 
+    <Style x:Key="FileListItemStyle" TargetType="{x:Type uc:ListViewItemEx}" BasedOn="{StaticResource ItemContainerStyleBase}" >
+        <Setter Property="Template" Value="{StaticResource lbControlTemplate}" />
     </Style>
 
 </ResourceDictionary>

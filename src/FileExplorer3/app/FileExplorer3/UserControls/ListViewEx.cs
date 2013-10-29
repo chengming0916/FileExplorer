@@ -20,11 +20,23 @@ namespace FileExplorer.UserControls
     {
         #region Cosntructor
 
+        public ListViewEx()
+        {
+            
+        }
+
+
         #endregion
 
         #region Methods
+        
 
-
+        private ListViewItemEx getSelectedContainer()
+        {
+            if (this.SelectedIndex != -1)
+                return this.ItemContainerGenerator.ContainerFromIndex(this.SelectedIndex) as ListViewItemEx;
+            return null;
+        }
 
         public override void OnApplyTemplate()
         {
@@ -96,6 +108,11 @@ namespace FileExplorer.UserControls
                     SelectionHelper.SetEnableSelection(fl, true);
                     break;
             }
+        }
+
+        protected override DependencyObject GetContainerForItemOverride()
+        {
+            return new ListViewItemEx();
         }
 
         public static void OnViewModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
@@ -349,24 +366,56 @@ namespace FileExplorer.UserControls
         //}
 
 
+        #region Commands
 
+        public ICommand RenameCommand
+        {
+            get { return (ICommand)GetValue(RenameCommandProperty); }
+            set { SetValue(RenameCommandProperty, value); }
+        }
 
-
-        //#region Commands
-
-        //public ICommand RenameCommand
-        //{
-        //    get { return (ICommand)GetValue(RenameCommandProperty); }
-        //    set { SetValue(RenameCommandProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for RenameCommand.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty RenameCommandProperty =
-        //    DependencyProperty.Register("RenameCommand", typeof(ICommand), typeof(FileList), new UIPropertyMetadata(null));
-
-        //#endregion
+        public static readonly DependencyProperty RenameCommandProperty =
+            DependencyProperty.Register("RenameCommand", typeof(ICommand), typeof(ListViewItemEx), new UIPropertyMetadata(null));
 
         #endregion
+
+
+
+       
+
+        #endregion
+
+    }
+
+
+    public class ListViewItemEx : ListViewItem
+    {
+        #region Cosntructor
+
+        public ListViewItemEx()
+        {
+           
+        }
+
+        #endregion
+
+        #region Methods
+
+        #endregion
+
+        #region Data
+
+        #endregion
+
+        #region Public Properties
+
+
+
+      
+        #endregion
+
+
+
 
     }
 }

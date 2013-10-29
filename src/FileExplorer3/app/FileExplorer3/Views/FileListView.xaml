@@ -43,7 +43,8 @@
                     <uc:InputBindingTrigger.InputBinding>
                         <KeyBinding Key="F2"/>
                     </uc:InputBindingTrigger.InputBinding>
-                    <cal:ActionMessage MethodName="Rename"/>
+
+                    <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
             </i:Interaction.Triggers>
             <!--<uc:FileList.GroupStyle>
