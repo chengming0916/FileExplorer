@@ -23,16 +23,16 @@ namespace FileExplorer.ViewModels
         public static IDirectoryNodeViewModel DummyNode = new DirectoryNodeViewModel();
 
         private DirectoryNodeViewModel() //For Dummynode.
-            : base(null, null)
+            : base(null)
         {
 
         }
 
-        public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel, IProfile profile)
-            : base(events, profile)
+        public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel)
+            : base(events)
         {
             TreeModel = rootModel;
-            _curDirViewModel = EntryViewModel.FromEntryModel(profile, curDirModel);
+            _curDirViewModel = EntryViewModel.FromEntryModel(curDirModel);
 
             this.ColumnList =
                 new ColumnInfo[] { 
@@ -100,13 +100,13 @@ namespace FileExplorer.ViewModels
 
         public IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel)
         {
-            return new DirectoryNodeViewModel(Events, TreeModel, entryModel, Profile);
+            return new DirectoryNodeViewModel(Events, TreeModel, entryModel);
         }
         
         public async Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action)
         {
             
-            switch (Profile.HierarchyComparer.CompareHierarchy(CurrentDirectory.EntryModel, model))
+            switch (model.Profile.HierarchyComparer.CompareHierarchy(CurrentDirectory.EntryModel, model))
             {
                 case HierarchicalResult.Current: 
                     action(this); break;
@@ -122,7 +122,7 @@ namespace FileExplorer.ViewModels
                             (nvm, evm) => 
                                 { 
                                     var result = 
-                                        Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
+                                        model.Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
                                     return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
                                 })
                         ).ExecuteAsync(context);

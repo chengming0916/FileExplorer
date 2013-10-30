@@ -11,8 +11,8 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public FileSystemInfoModel(FileSystemInfo fsi)
-            : base()
+        public FileSystemInfoModel(IProfile profile, FileSystemInfo fsi)
+            : base(profile)
         {
             this.Label = fsi.Name;
             this.Attributes = fsi.Attributes;
@@ -21,7 +21,7 @@ namespace FileExplorer.Models
             this.IsRenamable = true;
             this.IsDirectory = fsi is DirectoryInfo;
             string parentPath = Path.GetDirectoryName(fsi.FullName);
-            this.Parent = String.IsNullOrEmpty(parentPath) ? null : new FileSystemInfoModel(new DirectoryInfo(parentPath));
+            this.Parent = String.IsNullOrEmpty(parentPath) ? null : new FileSystemInfoModel(profile, new DirectoryInfo(parentPath));
             this.Description = fsi.GetType().ToString();
         }
 

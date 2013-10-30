@@ -29,7 +29,7 @@ namespace FileExplorer.ViewModels
 
         public void Execute(ActionExecutionContext context)
         {            
-            _parentModel.Profile.ListAsync(_parentModel.EntryModel, _filter).ContinueWithCheck(
+            _parentModel.EntryModel.Profile.ListAsync(_parentModel.EntryModel, _filter).ContinueWithCheck(
                 (prev) =>
                 {
                     if (prev.IsFaulted)

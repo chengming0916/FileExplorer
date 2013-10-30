@@ -42,10 +42,10 @@ namespace FileExplorer.Models
         {
             IEntryModel retVal = null;
             if (Directory.Exists(path))
-                retVal = new FileSystemInfoModel(new DirectoryInfo(path));
+                retVal = new FileSystemInfoModel(this, new DirectoryInfo(path));
             else
                 if (File.Exists(path))
-                    retVal = new FileSystemInfoModel(new FileInfo(path));
+                    retVal = new FileSystemInfoModel(this, new FileInfo(path));
             return Task.FromResult<IEntryModel>(retVal);
         }
 
@@ -55,7 +55,7 @@ namespace FileExplorer.Models
             if (entry.IsDirectory)
             {
                 DirectoryInfo di = new DirectoryInfo(entry.FullPath);
-                retVal.AddRange(from fsi in di.GetFileSystemInfos() select new FileSystemInfoModel(fsi));
+                retVal.AddRange(from fsi in di.GetFileSystemInfos() select new FileSystemInfoModel(this, fsi));
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }

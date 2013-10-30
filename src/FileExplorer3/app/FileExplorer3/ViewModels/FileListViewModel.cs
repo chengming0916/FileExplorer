@@ -30,10 +30,9 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events, IProfile profile = null)
+        public FileListViewModel(IEventAggregator events)
         {
-            Events = events;
-            Profile = profile;
+            Events = events;            
             _processedVms = CollectionViewSource.GetDefaultView(Items) as ListCollectionView;
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -61,8 +60,8 @@ namespace FileExplorer.ViewModels
         /// <param name="filter"></param>
         /// <returns></returns>
         public IEnumerable<IResult> Load(IEntryModel em, Func<IEntryModel, bool> filter = null)
-        {
-            var parentEVm = EntryViewModel.FromEntryModel(Profile, em);
+        {                        
+            var parentEVm = EntryViewModel.FromEntryModel(em);
             yield return Loader.Show("Loading");
             yield return new DoSomething((c) => {  Items.Clear(); });
             yield return new LoadEntryList(parentEVm, filter);
@@ -147,8 +146,6 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
-
-        public IProfile Profile { get { return _profile; } set { _profile = value; NotifyOfPropertyChange(() => Profile); } }
 
         public IEventAggregator Events { get; private set; }
 

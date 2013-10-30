@@ -19,12 +19,12 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public static IEntryViewModel DummyNode = EntryViewModel.FromEntryModel(null, EntryModelBase.DummyModel);
+        public static IEntryViewModel DummyNode = new EntryViewModel() { EntryModel = EntryModelBase.DummyModel };
 
         private EntryViewModel()
         {
             Func<ImageSource> _getIcon = () => {
-                var icon = Profile.GetIconAsync(EntryModel, 32).Result;
+                var icon = EntryModel.Profile.GetIconAsync(EntryModel, 32).Result;
                 icon.Freeze();
                 return icon;
 
@@ -34,11 +34,10 @@ namespace FileExplorer.ViewModels
             _icon = new Lazy<ImageSource>(_getIcon);
         }
 
-        public static EntryViewModel FromEntryModel(IProfile profile, IEntryModel model)
+        public static EntryViewModel FromEntryModel(IEntryModel model)
         {
             return new EntryViewModel()
-            {
-                Profile = profile,
+            {                
                 EntryModel = model,
                 IsEditable = model.IsRenamable
             };
@@ -74,7 +73,6 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IProfile Profile { get; private set; }
         public bool IsEditing
         {
             get { return _isEditing; }

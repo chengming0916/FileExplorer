@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels
         {
             _events = events;
             _rootViewModel = new BindableCollection<IDirectoryNodeViewModel>(rootModels
-                .Select(r => new DirectoryNodeViewModel(events, this, r.EntryModel, r.Profile)));
+                .Select(r => new DirectoryNodeViewModel(events, this, r.EntryModel)));
         }
 
         #endregion

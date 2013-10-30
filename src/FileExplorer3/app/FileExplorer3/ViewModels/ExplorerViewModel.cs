@@ -12,11 +12,11 @@ using FileExplorer.Models;
 namespace FileExplorer.ViewModels
 {
     
-    public abstract class ExplorerViewModelBase : Screen, IHandle<SelectionChangedEvent>
+    public class ExplorerViewModel : Screen, IHandle<SelectionChangedEvent>
     {
         #region Cosntructor
 
-        public ExplorerViewModelBase(IEventAggregator events, params IEntryViewModel[] rootModels)
+        public ExplorerViewModel(IEventAggregator events, params IEntryViewModel[] rootModels)
         {
             _events = events;
             _rootModels = rootModels;
@@ -24,23 +24,7 @@ namespace FileExplorer.ViewModels
             FileListModel = new FileListViewModel(events);
             DirectoryTreeModel = new DirectoryTreeViewModel(events, rootModels);
 
-            FileListModel.ColumnList = new ColumnInfo[] 
-            {
-                ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
-                ColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200),
-                ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 200)   
-            };
-
-            FileListModel.ColumnFilters = new ColumnFilter[]
-            {
-                ColumnFilter.CreateNew("0 - 9", "EntryModel.Label", e => Regex.Match(e.Label, "^[0-9]").Success),
-                ColumnFilter.CreateNew("A - H", "EntryModel.Label", e => Regex.Match(e.Label, "^[A-Ha-h]").Success),
-                ColumnFilter.CreateNew("I - P", "EntryModel.Label", e => Regex.Match(e.Label, "^[I-Pi-i]").Success),
-                ColumnFilter.CreateNew("Q - Z", "EntryModel.Label", e => Regex.Match(e.Label, "^[Q-Zq-z]").Success),
-                ColumnFilter.CreateNew("The rest", "EntryModel.Label", e => Regex.Match(e.Label, "^[^A-Za-z0-9]").Success),
-                ColumnFilter.CreateNew("Directories", "EntryModel.Description", e => e.IsDirectory),
-                ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory),
-            };
+        
             events.Subscribe(this);
 
         }
@@ -50,11 +34,11 @@ namespace FileExplorer.ViewModels
         #region Methods
 
 
-        public void Go()
+        public void Go(string gotoPath)
         {
             foreach (var evm in _rootModels)
             {
-                var model = evm.Profile.ParseAsync(_gotoPath).Result;
+                var model = evm.EntryModel.Profile.ParseAsync(gotoPath).Result;
                 if (model != null)
                 {
                     DirectoryTreeModel.Select(model);
@@ -74,8 +58,14 @@ namespace FileExplorer.ViewModels
             //    SelectionCount = message.SelectedViewModels.Count();
             if (message.Sender.Equals(DirectoryTreeModel))
             {
-                FileListModel.Load(message.SelectedModels.First(), null).ExecuteAsync();
+                var selectedDirectory = message.SelectedModels.First();
+                FileListModel.Load(selectedDirectory, null).ExecuteAsync();
             }
+            else
+                if (message.Sender.Equals(FileListModel))
+                {
+                    SelectionCount = message.SelectedViewModels.Count();
+                }
         }
 
 
@@ -85,7 +75,8 @@ namespace FileExplorer.ViewModels
 
         private IEntryViewModel[] _rootModels;
         private IEventAggregator _events;
-        private string _gotoPath;
+        
+        private int _selectionCount = 0;
 
         #endregion
 
@@ -93,7 +84,8 @@ namespace FileExplorer.ViewModels
         
         public DirectoryTreeViewModel DirectoryTreeModel { get; private set; }
         public FileListViewModel FileListModel { get; private set; }
-        public string GotoPath { get { return _gotoPath; } set { _gotoPath = value; NotifyOfPropertyChange(() => GotoPath); } }
+
+        public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
 
         #endregion
     }

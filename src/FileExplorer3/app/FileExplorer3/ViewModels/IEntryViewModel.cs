@@ -10,7 +10,6 @@ namespace FileExplorer.ViewModels
 {
     public interface IEntryViewModel : INotifyPropertyChangedEx
     {
-        IProfile Profile { get; }
         IEntryModel EntryModel { get; }
 
         bool IsEditable { get; set; }

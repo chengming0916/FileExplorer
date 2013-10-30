@@ -11,10 +11,11 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public static IEntryModel DummyModel = new EntryModelBase() { Name="Dummy" };
+        public static IEntryModel DummyModel = new EntryModelBase(null) { Name="Dummy" };
 
-        protected EntryModelBase()
-        {            
+        protected EntryModelBase(IProfile profile)
+        {
+            Profile = profile;
             IsRenamable = false;
         }
 
@@ -49,7 +50,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
-        
+
+        public IProfile Profile { get; protected set; }
         public bool IsDirectory { get; protected set; }
         public IEntryModel Parent { get; protected set; }
         public string Name { get { return _name; } set { string org = _name; _name = value; OnRenamed(org, _name); } }

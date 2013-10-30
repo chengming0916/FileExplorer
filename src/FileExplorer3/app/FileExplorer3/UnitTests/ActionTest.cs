@@ -38,9 +38,10 @@ namespace FileExplorer.UnitTests
 
             entryModel.Setup(em => em.Label).Returns(label);
             entryModel.Setup(em => em.IsDirectory).Returns(isDirectory);
+            entryModel.Setup(em => em.Profile).Returns(profile);
             var retVal = new Mock<IEntryViewModel>();
             retVal.Setup(evm => evm.EntryModel).Returns(entryModel.Object);
-            retVal.Setup(evm => evm.Profile).Returns(profile);
+            
             return retVal;
         }
 

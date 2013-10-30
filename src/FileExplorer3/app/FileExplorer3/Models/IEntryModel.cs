@@ -9,6 +9,8 @@ namespace FileExplorer.Models
 {
     public interface IEntryModel : INotifyPropertyChangedEx, IEquatable<IEntryModel>
     {
+        IProfile Profile { get; }
+
         bool IsDirectory { get;  }
         IEntryModel Parent { get; }
         string Label { get; }
