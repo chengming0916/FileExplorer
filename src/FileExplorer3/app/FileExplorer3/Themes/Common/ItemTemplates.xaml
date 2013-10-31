@@ -6,7 +6,7 @@
     xmlns:cali ="http://www.caliburnproject.org"
     >
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />        
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 
@@ -22,13 +22,17 @@
                         VerticalAlignment="Center"
                         Padding="10,0,0,0"
                         />
-            
+
         </StackPanel>
-        
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="IconOnlyTemplate">
+        <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}"  />
     </DataTemplate>
 
     <DataTemplate x:Key="IconItemTemplate">
-        
+
         <DockPanel LastChildFill="True">
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
@@ -62,12 +66,12 @@
                         />
         </Grid>
     </DataTemplate>
-    
+
     <HierarchicalDataTemplate x:Key="DirectoryNodeItemTemplate"  
                               ItemsSource="{Binding Subdirectories}"
                               DataType="{x:Type vm:DirectoryNodeViewModel}">
         <ContentPresenter Content="{Binding CurrentDirectory}"
-            ContentTemplate="{StaticResource GridLabelTemplate}" />                
+            ContentTemplate="{StaticResource GridLabelTemplate}" />
     </HierarchicalDataTemplate>
 
 

@@ -32,7 +32,7 @@ namespace FileExplorer.ViewModels
             : base(events)
         {
             TreeModel = rootModel;
-            _curDirViewModel = EntryViewModel.FromEntryModel(curDirModel);
+            CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
 
             this.ColumnList =
                 new ColumnInfo[] { 
@@ -53,6 +53,12 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
+
+        #region Utils
+
+        
+
+        #endregion
 
         public IEnumerable<IResult> Load(bool force = false)
         {
@@ -80,18 +86,43 @@ namespace FileExplorer.ViewModels
                 yield return new WaitTilPropertyChanged<NodeState>(this, () => State);
 
             }
-        }        
+        }
 
-        public async Task LoadAsync()
+        public async Task LoadAsync(bool force = false)
         {
-            var task = Load().ExecuteAsync();
-            await task;
-            if (task.Exception != null)
+            if (State != NodeState.IsLoading)
             {
-                State = NodeState.IsError;
-                Error = task.Exception.Message;
+                if (State == NodeState.IsLoaded && !force)
+                    return;
+                try
+                {
+                    State = NodeState.IsLoading;
+                    var entryModels = await base.LoadAsync(CurrentDirectory.EntryModel, em => em.IsDirectory);
+                    replaceEntryList(Subdirectories, entryModels, evm => CreateSubmodel(evm));
+                    State = NodeState.IsLoaded;
+                }
+                catch
+                {
+                    State = NodeState.IsError;
+                }
+            }
+            else
+            {
+                while (State == NodeState.IsLoading)
+                    await Task.Delay(1000);
             }
         }
+
+        //public async Task LoadAsync()
+        //{
+        //    var task = Load().ExecuteAsync();
+        //    await task;
+        //    if (task.Exception != null)
+        //    {
+        //        State = NodeState.IsError;
+        //        Error = task.Exception.Message;
+        //    }
+        //}
 
         public override string ToString()
         {
@@ -116,20 +147,32 @@ namespace FileExplorer.ViewModels
                     break;
                 case HierarchicalResult.Child :
                     ActionExecutionContext context = new ActionExecutionContext();
-                    await Load().Append(
-                        new DoSomething((c) => { this.IsExpanded = true; }),
-                        new FindMatched<IDirectoryNodeViewModel>(model, this.Subdirectories,
-                            (nvm, evm) => 
+                    await LoadAsync();
+                    IsExpanded = true;
+                    var matched = findMatched(model, this.Subdirectories,
+                        (nvm, evm) => 
                                 { 
                                     var result = 
                                         model.Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
                                     return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
-                                })
-                        ).ExecuteAsync(context);
+                                });
+                    if (matched != null)
+                        await matched.BroadcastSelectAsync(model, action);
 
-                    if (context["MatchedItem"] is IDirectoryNodeViewModel)
-                        await (context["MatchedItem"] as IDirectoryNodeViewModel)
-                            .BroadcastSelectAsync(model, action);
+                    //await Load().Append(
+                    //    new DoSomething((c) => { this.IsExpanded = true; }),
+                    //    new FindMatched<IDirectoryNodeViewModel>(model, this.Subdirectories,
+                    //        (nvm, evm) => 
+                    //            { 
+                    //                var result = 
+                    //                    model.Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
+                    //                return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
+                    //            })
+                    //    ).ExecuteAsync(context);
+
+                    //if (context["MatchedItem"] is IDirectoryNodeViewModel)
+                    //    await (context["MatchedItem"] as IDirectoryNodeViewModel)
+                    //        .BroadcastSelectAsync(model, action);
                     break;
             }
         }
@@ -162,7 +205,7 @@ namespace FileExplorer.ViewModels
         string _error = null;
         bool _isSelected = false;
         bool _isExpanded = false;
-        IEntryViewModel _curDirViewModel;
+        
         IObservableCollection<IDirectoryNodeViewModel> _subdirs = new BindableCollection<IDirectoryNodeViewModel>();
 
         #endregion
@@ -183,7 +226,7 @@ namespace FileExplorer.ViewModels
             private set { _error = value; NotifyOfPropertyChange(() => Error); }
         }
 
-        public IEntryViewModel CurrentDirectory { get { return _curDirViewModel; } }
+        
         public IObservableCollection<IDirectoryNodeViewModel> Subdirectories
         {
             get { return _subdirs; }

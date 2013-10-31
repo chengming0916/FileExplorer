@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:uc="clr-namespace:FileExplorer.UserControls"
+    >
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />        
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DisplayTemplates.xaml" />
+        
+    </ResourceDictionary.MergedDictionaries>
+
+    <ControlTemplate x:Key="StatusbarItemTemplate" TargetType="{x:Type uc:StatusbarItemEx}">
+        <Border BorderBrush="Transparent" Padding="5,0" >
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{TemplateBinding Header}" />
+                <TextBlock Text=":" Padding="5,0"  />
+                <!-- See DisplayTemplates -->
+                <ContentPresenter ContentTemplateSelector="{StaticResource dts}" />
+            </StackPanel>
+        </Border>
+    </ControlTemplate>   
+
+    <Style TargetType="{x:Type uc:StatusbarItemEx}">
+        <Setter  Property="Template" Value="{StaticResource StatusbarItemTemplate}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+    </Style>
+
+
+</ResourceDictionary>

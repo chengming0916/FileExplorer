@@ -15,7 +15,7 @@ namespace FileExplorer.ViewModels.Actions
     {
         #region Cosntructor
 
-        public AppendEntryList(IEntryViewModel parentModel, IEntryListViewModel targetModel)
+        public AppendEntryList(IEntryViewModel parentModel, IFileListViewModel targetModel)
         {
             _parentModel = parentModel;
             _targetModel = targetModel;
@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels.Actions
         #region Data
 
         private IEntryViewModel _parentModel;
-        private IEntryListViewModel _targetModel;
+        private IFileListViewModel _targetModel;
 
         #endregion
 

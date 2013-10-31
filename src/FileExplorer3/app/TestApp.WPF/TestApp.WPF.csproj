@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Model\FileSystemInfoMetadataProvider.cs" />
     <Compile Include="Model\FileSystemInfoModel.cs" />
     <Compile Include="Model\FileSystemInfoProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

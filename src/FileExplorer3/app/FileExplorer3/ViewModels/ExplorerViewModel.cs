@@ -11,8 +11,8 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels
 {
-    
-    public class ExplorerViewModel : Screen, IHandle<SelectionChangedEvent>
+
+    public class ExplorerViewModel : Screen, IExplorerViewModel, IHandle<SelectionChangedEvent>
     {
         #region Cosntructor
 
@@ -23,7 +23,7 @@ namespace FileExplorer.ViewModels
 
             FileListModel = new FileListViewModel(events);
             DirectoryTreeModel = new DirectoryTreeViewModel(events, rootModels);
-
+            StatusbarModel = new StatusbarViewModel(this, events);
         
             events.Subscribe(this);
 
@@ -59,13 +59,9 @@ namespace FileExplorer.ViewModels
             if (message.Sender.Equals(DirectoryTreeModel))
             {
                 var selectedDirectory = message.SelectedModels.First();
-                FileListModel.Load(selectedDirectory, null).ExecuteAsync();
+                FileListModel.LoadAsync(selectedDirectory, null);
             }
-            else
-                if (message.Sender.Equals(FileListModel))
-                {
-                    SelectionCount = message.SelectedViewModels.Count();
-                }
+
         }
 
 
@@ -75,17 +71,15 @@ namespace FileExplorer.ViewModels
 
         private IEntryViewModel[] _rootModels;
         private IEventAggregator _events;
-        
-        private int _selectionCount = 0;
 
         #endregion
 
         #region Public Properties
         
-        public DirectoryTreeViewModel DirectoryTreeModel { get; private set; }
-        public FileListViewModel FileListModel { get; private set; }
-
-        public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
+        public IDirectoryTreeViewModel DirectoryTreeModel { get; private set; }
+        public IFileListViewModel FileListModel { get; private set; }
+        public IStatusbarViewModel StatusbarModel { get; private set; }
+        
 
         #endregion
     }

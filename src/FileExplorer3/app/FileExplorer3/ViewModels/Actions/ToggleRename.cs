@@ -11,7 +11,7 @@ namespace FileExplorer.ViewModels.Actions
     { 
         #region Cosntructor
 
-        public ToggleRename(IEntryListViewModel model, bool? value = null)
+        public ToggleRename(IFileListViewModel model, bool? value = null)
         {
             _model = model;
             _value = value;
@@ -38,7 +38,7 @@ namespace FileExplorer.ViewModels.Actions
 
         #region Data
 
-        IEntryListViewModel _model;
+        IFileListViewModel _model;
         bool? _value;
         
         #endregion

@@ -7,6 +7,8 @@
     <conv:FlipBoolToVisibilityCollapsedConverter x:Key="fbtvc" />
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />
     
+    <conv:FormatNumberConverter x:Key="fnc" />
+    
     <!--<conv:BoolToVisibilityConverter x:Key="btv" />
     <conv:BoolToVisibilityCollapsedConverter x:Key="btvc" />
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />

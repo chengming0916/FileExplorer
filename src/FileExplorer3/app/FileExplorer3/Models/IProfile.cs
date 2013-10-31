@@ -64,6 +64,7 @@ namespace FileExplorer.Models
         #region Public Properties
 
         IEntryHierarchyComparer HierarchyComparer { get; }
+        IMetadataProvider MetadataProvider { get; }
         
         #endregion
     }

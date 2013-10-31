@@ -34,6 +34,7 @@ namespace FileExplorer.Defines
         }
     }
 
+
     public class SelectionChangedEvent : ViewModelEvent
     {
         public IEnumerable<IEntryViewModel> SelectedViewModels { get; private set; }
@@ -46,6 +47,18 @@ namespace FileExplorer.Defines
         }
     }
 
+    public class ListCompletedEvent : ViewModelEvent
+    {
+        public IEnumerable<IEntryViewModel> ListedViewModels { get; private set; }
+        public IEnumerable<IEntryModel> ListedModels { get { return from vm in ListedViewModels select vm.EntryModel; } }
+
+        public ListCompletedEvent(PropertyChangedBase sender, IEnumerable<IEntryViewModel> evms)
+            : base(sender)
+        {
+            ListedViewModels = evms.ToList();
+        }
+    }
+    
 
 
     public class FilterChangedEventArgs : RoutedEventArgs

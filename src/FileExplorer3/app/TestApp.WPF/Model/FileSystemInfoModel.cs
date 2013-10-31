@@ -20,6 +20,8 @@ namespace FileExplorer.Models
             this.Name = fsi.Name;
             this.IsRenamable = true;
             this.IsDirectory = fsi is DirectoryInfo;
+            if (fsi is FileInfo)
+                Size = (fsi as FileInfo).Length;
             string parentPath = Path.GetDirectoryName(fsi.FullName);
             this.Parent = String.IsNullOrEmpty(parentPath) ? null : new FileSystemInfoModel(profile, new DirectoryInfo(parentPath));
             this.Description = fsi.GetType().ToString();
@@ -38,6 +40,8 @@ namespace FileExplorer.Models
         #region Public Properties
 
         public FileAttributes Attributes { get; protected set; }
+        public long Size { get; protected set; }
+
 
         #endregion
     }

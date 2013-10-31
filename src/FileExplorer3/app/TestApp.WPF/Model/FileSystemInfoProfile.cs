@@ -18,6 +18,7 @@ namespace FileExplorer.Models
         public FileSystemInfoProfile()
         {
             HierarchyComparer = PathComparer.Default;
+            MetadataProvider = new FileSystemInfoMetadataProvider();
         }
 
         #endregion
@@ -97,6 +98,7 @@ namespace FileExplorer.Models
         #region Public Properties
 
         public IEntryHierarchyComparer HierarchyComparer { get; private set; }
+        public IMetadataProvider MetadataProvider { get; private set; }
 
         #endregion
 
@@ -118,5 +120,8 @@ namespace FileExplorer.Models
 
 
 
+
+
+        
     }
 }

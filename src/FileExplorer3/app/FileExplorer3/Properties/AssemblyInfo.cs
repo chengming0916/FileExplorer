@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -11,9 +12,11 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FileExplorer3")]
-[assembly: AssemblyCopyright("Copyright © Leung Yat Chun Joseph 2008 - 2013 under LGPL license")]
+[assembly: AssemblyCopyright("Copyright © Leung Yat Chun Joseph 2008 - 2013 under MIT license")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.UserControls")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

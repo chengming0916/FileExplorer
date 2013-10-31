@@ -84,7 +84,7 @@ namespace FileExplorer.UnitTests
             //Setup
             setup();
             List<IEntryViewModel> _addedList = new List<IEntryViewModel>();
-            var _entryListvm = new Mock<IEntryListViewModel>();
+            var _entryListvm = new Mock<IFileListViewModel>();
             _entryListvm.Setup(elvm => elvm.Items.Add(It.IsAny<IEntryViewModel>()))
                 .Callback((IEntryViewModel elvm) => { _addedList.Add(elvm); });
 
@@ -104,7 +104,7 @@ namespace FileExplorer.UnitTests
         public static void ToggleRename_Test()
         {
             setup();
-            Mock<IEntryListViewModel> _selectable = new Mock<IEntryListViewModel>();
+            Mock<IFileListViewModel> _selectable = new Mock<IFileListViewModel>();
             _selectable.Setup(selvm => selvm.SelectedItems).Returns(_entryVMList);
             var togRename = new ToggleRename(_selectable.Object);
             var togRename2 = new ToggleRename(_selectable.Object);

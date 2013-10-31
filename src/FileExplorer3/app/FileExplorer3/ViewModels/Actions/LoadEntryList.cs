@@ -25,10 +25,10 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        public event EventHandler<ResultCompletionEventArgs> Completed;
+        public event EventHandler<ResultCompletionEventArgs> Completed;     
 
         public void Execute(ActionExecutionContext context)
-        {            
+        {
             _parentModel.EntryModel.Profile.ListAsync(_parentModel.EntryModel, _filter).ContinueWithCheck(
                 (prev) =>
                 {
