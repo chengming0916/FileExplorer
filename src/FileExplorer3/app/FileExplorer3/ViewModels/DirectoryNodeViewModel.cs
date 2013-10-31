@@ -59,35 +59,7 @@ namespace FileExplorer.ViewModels
         
 
         #endregion
-
-        public IEnumerable<IResult> Load(bool force = false)
-        {
-            if (State != NodeState.IsLoading)
-            {
-                if (State == NodeState.IsLoaded && !force)
-                    yield break;
-                yield return new DoSomething((c) => Subdirectories.Clear());
-                yield return new DoSomething((c) => { State = NodeState.IsLoading; });
-                foreach (var iresult in base.Load(CurrentDirectory.EntryModel, em => em.IsDirectory))
-                {
-                    if (iresult is AppendEntryList)
-                    {
-                        yield return new AppendDirectoryTree(this);
-                        break;
-                    }
-                    yield return iresult;
-                }
-                yield return new DoSomething((c) => { 
-                    State = NodeState.IsLoaded; });
-            }
-            else
-            {
-                //If is loading... wait till state changed.
-                yield return new WaitTilPropertyChanged<NodeState>(this, () => State);
-
-            }
-        }
-
+       
         public async Task LoadAsync(bool force = false)
         {
             if (State != NodeState.IsLoading)
@@ -112,17 +84,6 @@ namespace FileExplorer.ViewModels
                     await Task.Delay(1000);
             }
         }
-
-        //public async Task LoadAsync()
-        //{
-        //    var task = Load().ExecuteAsync();
-        //    await task;
-        //    if (task.Exception != null)
-        //    {
-        //        State = NodeState.IsError;
-        //        Error = task.Exception.Message;
-        //    }
-        //}
 
         public override string ToString()
         {
@@ -158,21 +119,6 @@ namespace FileExplorer.ViewModels
                                 });
                     if (matched != null)
                         await matched.BroadcastSelectAsync(model, action);
-
-                    //await Load().Append(
-                    //    new DoSomething((c) => { this.IsExpanded = true; }),
-                    //    new FindMatched<IDirectoryNodeViewModel>(model, this.Subdirectories,
-                    //        (nvm, evm) => 
-                    //            { 
-                    //                var result = 
-                    //                    model.Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
-                    //                return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
-                    //            })
-                    //    ).ExecuteAsync(context);
-
-                    //if (context["MatchedItem"] is IDirectoryNodeViewModel)
-                    //    await (context["MatchedItem"] as IDirectoryNodeViewModel)
-                    //        .BroadcastSelectAsync(model, action);
                     break;
             }
         }

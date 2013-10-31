@@ -35,7 +35,7 @@
                         <DockPanel VerticalAlignment="Top"  >
                             <ContentControl Content="{TemplateBinding Header}" DockPanel.Dock="Left" 
                                         VerticalAlignment="Top" Padding="5,0,15,0" />
-                            <ItemsPresenter VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <ItemsPresenter x:Name="itemPresenter" VerticalAlignment="Center" HorizontalAlignment="Left" />
                             <!--<ListView 
                                     x:Name="MetadataList"
                                 ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType={x:Type uc:StatusbarEx}}}" 
@@ -49,14 +49,10 @@
                         </DockPanel>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <!--<Trigger Property="IsExpanded" Value="True">
+                        <Trigger Property="IsExpanded" Value="True">
                             <Setter TargetName="outerBorder" Property="BorderBrush" Value="Black" />
-                            <Setter TargetName="MetadataList" Property="View" Value="{StaticResource ExpandedView}" />
+                            <Setter TargetName="itemPresenter" Property="HorizontalAlignment" Value="Center" />
                         </Trigger>
-
-                        <Trigger Property="IsExpanded" Value="False">
-                            <Setter TargetName="outerBorder" Property="BorderBrush" Value="Blue" />
-                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

@@ -18,8 +18,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-
-        <uc:StatusbarEx Grid.Row="1">
+        <Button Click="Button_Click" />
+        <uc:StatusbarEx Grid.Row="1" x:Name="sbar">
             <uc:StatusbarEx.Header>
                 <DockPanel>
                     <Image Source="folder.ico" DockPanel.Dock="Left" />

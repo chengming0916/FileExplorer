@@ -142,6 +142,8 @@
     <None Include="ViewModels\Helpers\EntryListHelper.cs" />
     <None Include="ViewModels\Helpers\IColumnHeaderHelper.cs" />
     <None Include="ViewModels\Helpers\IEntryListHelper.cs" />
+    <Compile Include="ViewModels\IMetadataViewModel.cs" />
+    <Compile Include="ViewModels\MetadataViewModel.cs" />
     <Compile Include="Views\StatusbarView.xaml.cs">
       <DependentUpon>StatusbarView.xaml</DependentUpon>
     </Compile>

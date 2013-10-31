@@ -11,8 +11,7 @@ namespace FileExplorer.ViewModels
 {
     public interface IFileListViewModel
     {
-
-        IEnumerable<IResult> Load(IEntryModel em, Func<IEntryModel, bool> filter = null);
+       
 
         Task<IList<IEntryModel>> LoadAsync(IEntryModel em, Func<IEntryModel, bool> filter = null);
 

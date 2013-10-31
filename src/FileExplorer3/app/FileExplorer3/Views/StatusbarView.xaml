@@ -16,10 +16,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <uc:StatusbarEx >
+        <uc:StatusbarEx x:Name="MetadataItems" >
             <uc:StatusbarEx.Header>
                 <DockPanel>
-                    <!--<Image Source="folder.ico" DockPanel.Dock="Left" />-->
                     <ItemsControl ItemsSource="{Binding DisplayItems}" DockPanel.Dock="Left"
                                                   ItemTemplate="{StaticResource IconOnlyTemplate}">
                         <ItemsControl.ItemsPanel>
@@ -34,12 +33,20 @@
                     </StackPanel>
                 </DockPanel>
             </uc:StatusbarEx.Header>
-            <uc:StatusbarEx.Items>
+            <uc:StatusbarEx.ItemContainerStyle>
+                <Style TargetType="{x:Type uc:StatusbarItemEx}" >
+                    <!-- Bind to ViewModel -->
+                    <Setter Property="Header" Value="{Binding MetadataModel.Header, Mode=OneWay}" />
+                    <Setter Property="Content" Value="{Binding MetadataModel.Content, Mode=OneWay}" />
+                    <Setter Property="Type" Value="{Binding MetadataModel.DisplayType, Mode=OneWay}" />
+                </Style>
+            </uc:StatusbarEx.ItemContainerStyle>
+                <!--<uc:StatusbarEx.Items>
                 <uc:StatusbarItemEx Header="Text" Content="content" Type="text" />
                 <uc:StatusbarItemEx Header="Percentage" Content="10" Type="percent" />
                 <uc:StatusbarItemEx Header="Number" Content="100000000000" Type="Number" />
 
-            </uc:StatusbarEx.Items>
+            </uc:StatusbarEx.Items>-->
         </uc:StatusbarEx>
 
     </Grid>

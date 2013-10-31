@@ -36,7 +36,7 @@ namespace FileExplorer.UserControls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-           
+
         }
 
         protected void OnSizeChanged(object sender, SizeChangedEventArgs args)
@@ -44,13 +44,22 @@ namespace FileExplorer.UserControls
             if (double.IsNaN(IsExpandedDelta))
             {
                 if (Orientation == Orientation.Horizontal)
-                    IsExpandedDelta = this.ActualHeight;
-                else IsExpandedDelta = this.ActualWidth;
+                    IsExpandedDelta = this.ActualHeight + 10;
+                else IsExpandedDelta = this.ActualWidth + 10;
             }
             else
                 if (Orientation == Orientation.Horizontal)
                     IsExpanded = args.NewSize.Height > IsExpandedDelta;
                 else IsExpanded = args.NewSize.Width > IsExpandedDelta;
+        }
+
+        public static void OnIsExpandedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+        {
+            StatusbarEx sbar = sender as StatusbarEx;
+            if (args.NewValue != args.OldValue)
+                if ((bool)args.NewValue)
+                    sbar.RaiseEvent(new RoutedEventArgs(ExpandedEvent));
+                else sbar.RaiseEvent(new RoutedEventArgs(CollapsedEvent));
         }
 
         #endregion
@@ -80,13 +89,35 @@ namespace FileExplorer.UserControls
         }
 
         public static DependencyProperty IsExpandedProperty = DependencyProperty.Register("IsExpanded",
-          typeof(bool), typeof(StatusbarEx), new UIPropertyMetadata(false));
+          typeof(bool), typeof(StatusbarEx), new UIPropertyMetadata(false, OnIsExpandedChanged));
 
         public bool IsExpanded
         {
             get { return (bool)GetValue(IsExpandedProperty); }
             set { SetValue(IsExpandedProperty, value); }
         }
+
+
+        public static readonly RoutedEvent ExpandedEvent =
+            EventManager.RegisterRoutedEvent("Expanded", RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler), typeof(StatusbarEx));
+        
+        public event RoutedEventHandler Expanded
+        {
+            add { AddHandler(ExpandedEvent, value); }
+            remove { RemoveHandler(ExpandedEvent, value); }
+        }
+
+        public static readonly RoutedEvent CollapsedEvent =
+    EventManager.RegisterRoutedEvent("Collapsed", RoutingStrategy.Bubble,
+    typeof(RoutedEventHandler), typeof(StatusbarEx));
+
+        public event RoutedEventHandler Collapsed
+        {
+            add { AddHandler(CollapsedEvent, value); }
+            remove { RemoveHandler(CollapsedEvent, value); }
+        }
+
 
 
         #endregion

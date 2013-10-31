@@ -17,11 +17,16 @@
         <Border BorderBrush="Transparent" Padding="5,0" >
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{TemplateBinding Header}" />
-                <TextBlock Text=":" Padding="5,0"  />
+                <TextBlock x:Name="ColonTextBlock" Text=":" Padding="5,0"  />
                 <!-- See DisplayTemplates -->
                 <ContentPresenter ContentTemplateSelector="{StaticResource dts}" />
             </StackPanel>
         </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Header" Value="">
+                <Setter TargetName="ColonTextBlock" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>   
 
     <Style TargetType="{x:Type uc:StatusbarItemEx}">

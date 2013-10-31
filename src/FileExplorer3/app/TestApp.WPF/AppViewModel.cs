@@ -16,6 +16,7 @@ namespace TestApp.WPF
     public class AppViewModel : Screen//, IHandle<SelectionChangedEvent>
     {
         static string rootPath = @"C:\";
+        static string rootPath2 = @"C:\Temp";
         static string lookupPath = @"C:\Temp\COFE3\DB";
 
         #region Cosntructor
@@ -26,7 +27,9 @@ namespace TestApp.WPF
 
             IProfile profile = new FileSystemInfoProfile();
             ExplorerModel = new ExplorerViewModel(events,
-                EntryViewModel.FromEntryModel(profile.ParseAsync(rootPath).Result));
+                EntryViewModel.FromEntryModel(profile.ParseAsync(rootPath).Result),
+                EntryViewModel.FromEntryModel(profile.ParseAsync(rootPath2).Result)
+                );
 
 
             ExplorerModel.FileListModel.ColumnList = new ColumnInfo[] 

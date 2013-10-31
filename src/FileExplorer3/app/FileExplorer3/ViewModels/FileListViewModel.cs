@@ -108,35 +108,14 @@ namespace FileExplorer.ViewModels
 
         #region Actions
 
-        /// <summary>
-        /// Load sub entries in the specified entry model to Items, the filter is used to filter entries out 
-        /// before added to items, while ColumnFilter update ProcessedItems so some added entries are not displayed.
-        /// </summary>
-        /// <param name="em"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public IEnumerable<IResult> Load(IEntryModel em, Func<IEntryModel, bool> filter = null)
-        {
-            CurrentDirectory = EntryViewModel.FromEntryModel(em);
-            yield return Loader.Show("Loading");
-            yield return new DoSomething((c) => { Items.Clear(); });
-            yield return new LoadEntryList(CurrentDirectory, filter);
-            yield return new AppendEntryList(CurrentDirectory, this);
-            yield return new CalculateColumnHeaderCount(ColumnFilters);
-            yield return new DoSomething((c) =>
-            {
-                Events.Publish(new SelectionChangedEvent(this, Items));
-            });
-            yield return Loader.Show();
-        }
-
         public async Task<IList<IEntryModel>> LoadAsync(IEntryModel em, Func<IEntryModel, bool> filter = null)
         {
             CurrentDirectory = EntryViewModel.FromEntryModel(em);
+            SelectedItems.Clear();
             var entryModels = await listAsync(CurrentDirectory, filter);
             replaceEntryList(this.Items, entryModels, (subem) => EntryViewModel.FromEntryModel(subem));
             calculateColumnHeaderCount(ColumnFilters, entryModels);
-            Events.Publish(new SelectionChangedEvent(this, Items));
+            Events.Publish(new ListCompletedEvent(this, Items));
             return entryModels;
         }
 
@@ -193,7 +172,7 @@ namespace FileExplorer.ViewModels
         private IEntryViewModel _parentVm = null;
 
         private IObservableCollection<IEntryViewModel> _items = new BindableCollection<IEntryViewModel>();
-        private IList<IEntryViewModel> _selectedVms = null;
+        private IList<IEntryViewModel> _selectedVms = new List<IEntryViewModel>();
         private ListCollectionView _processedVms = null;
         private int _itemSize = 60;
         private string _viewMode = "Icon";
