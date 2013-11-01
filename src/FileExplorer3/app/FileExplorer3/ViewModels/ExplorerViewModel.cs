@@ -21,7 +21,7 @@ namespace FileExplorer.ViewModels
             _events = events;
             _rootModels = rootModels;
 
-            FileListModel = new FileListViewModel(events);
+            FileListModel = new FileListViewModel(events, true);
             DirectoryTreeModel = new DirectoryTreeViewModel(events, rootModels);
             StatusbarModel = new StatusbarViewModel(this, events);
         

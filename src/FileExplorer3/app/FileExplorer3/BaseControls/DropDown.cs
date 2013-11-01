@@ -10,6 +10,9 @@ using System.Windows.Media;
 
 namespace FileExplorer.UserControls
 {
+    /// <summary>
+    /// Display a ToggleButton and when it's clicked, show it's content as a dropdown.
+    /// </summary>
     public class DropDown : HeaderedContentControl
     {
         #region Constructor

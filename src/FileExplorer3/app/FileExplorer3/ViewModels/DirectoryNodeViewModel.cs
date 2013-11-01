@@ -23,13 +23,13 @@ namespace FileExplorer.ViewModels
         public static IDirectoryNodeViewModel DummyNode = new DirectoryNodeViewModel();
 
         private DirectoryNodeViewModel() //For Dummynode.
-            : base(null)
+            : base(null, false)
         {
 
         }
 
         public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel)
-            : base(events)
+            : base(events, false)
         {
             TreeModel = rootModel;
             CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);

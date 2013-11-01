@@ -18,7 +18,15 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <Button Click="Button_Click" />
+        
+        
+        <ComboBox>
+            
+            
+        </ComboBox>
+        
+        <!-- Statusbar -->
+        <!--<Button Click="Button_Click" />
         <uc:StatusbarEx Grid.Row="1" x:Name="sbar">
             <uc:StatusbarEx.Header>
                 <DockPanel>
@@ -35,7 +43,7 @@
                 <uc:StatusbarItemEx Header="Number" Content="100000000000" Type="Number" />
 
             </uc:StatusbarEx.Items>
-        </uc:StatusbarEx>
+        </uc:StatusbarEx>-->
 
         <GridSplitter Grid.Row="1" ResizeDirection="Rows" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
         <!--<Grid Width="200" Height="60">

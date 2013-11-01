@@ -14,15 +14,20 @@ namespace FileExplorer.ViewModels
     [Export(typeof(StatusbarViewModel))]
 #endif
     public class StatusbarViewModel : Screen, IStatusbarViewModel,
-        IHandle<SelectionChangedEvent>, IHandle<ListCompletedEvent>
+        IHandle<SelectionChangedEvent>, IHandle<ListCompletedEvent>, IHandle<ViewChangedEvent>
     {
         #region Cosntructor
 
         public StatusbarViewModel(IExplorerViewModel explorerModel, IEventAggregator events)
         {
+            _events = events;
             _explorerModel = explorerModel;
             _displayItems = new BindableCollection<IEntryViewModel>();
             _metadataItems = new BindableCollection<IMetadataViewModel>();
+            _viewModes = new BindableCollection<ViewModeViewModel>();
+            _viewModes.Add(new ViewModeViewModel("IconView"));
+            _viewModes.Add(new ViewModeViewModel("SmallIconView"));
+            _viewModes.Add(new ViewModeViewModel("GridView"));
             events.Subscribe(this);
         }
 
@@ -49,16 +54,16 @@ namespace FileExplorer.ViewModels
 
             switch (SelectionCount)
             {
-                case 0 :
+                case 0:
                     //Caption = String.Format(NoneSelected, flvm.CurrentDirectory.EntryModel.Label);
-                    
+
                     DisplayItems.Add(flvm.CurrentDirectory);
                     break;
-                case 1 :
+                case 1:
                     //Caption = String.Format(OneSelected, flvm.SelectedItems.First().EntryModel.Label);
                     DisplayItems.Add(flvm.SelectedItems.First());
                     break;
-                default :
+                default:
                     //Caption = String.Format(ManySelected, flvm.SelectedItems.Count.ToString());
                     DisplayItems.AddRange(flvm.SelectedItems.Take(5));
                     break;
@@ -69,10 +74,10 @@ namespace FileExplorer.ViewModels
         {
             if (message.Sender.Equals(_explorerModel.FileListModel))
             {
-               
+
                 updateDisplayItemsAndCaption(message.Sender as IFileListViewModel);
-                
-               
+
+
                 //if (SelectionCount == 1)
                 //    Caption = message.SelectedViewModels.First()
             }
@@ -85,27 +90,50 @@ namespace FileExplorer.ViewModels
                 updateDisplayItemsAndCaption(message.Sender as IFileListViewModel);
             }
         }
+
+        public void Handle(ViewChangedEvent message)
+        {
+            if (!(message.Sender.Equals(this)))
+                this.SelectedViewMode = message.ViewMode;
+        }
         #endregion
 
         #region Data
-        
+
         IExplorerViewModel _explorerModel;
         int _selectionCount;
         string _caption;
         IObservableCollection<IEntryViewModel> _displayItems;
         IObservableCollection<IMetadataViewModel> _metadataItems;
+        IObservableCollection<ViewModeViewModel> _viewModes;
+        string _selectedViewMode = "Icon";
+        private IEventAggregator _events;
 
         #endregion
 
         #region Public Properties
 
+        public string SelectedViewMode
+        {
+            get { return _selectedViewMode; }
+            set
+            {
+                string orgViewMode = _selectedViewMode;
+                _selectedViewMode = value;
+                NotifyOfPropertyChange(() => SelectedViewMode);
+                _events.Publish(new ViewChangedEvent(this, value, orgViewMode));
+            }
+        }
         public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
         public IObservableCollection<IEntryViewModel> DisplayItems { get { return _displayItems; } }
         public IObservableCollection<IMetadataViewModel> MetadataItems { get { return _metadataItems; } }
+        public IObservableCollection<ViewModeViewModel> ViewModes { get { return _viewModes; } }
         public string Caption { get { return _caption; } set { _caption = value; NotifyOfPropertyChange(() => Caption); } }
 
         #endregion
 
-       
+
+
+      
     }
 }

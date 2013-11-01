@@ -77,6 +77,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseControls\RadioGroup.cs" />
     <Compile Include="Defines\Converters\BoolToVisibilityCollapsed.cs" />
     <Compile Include="Defines\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Defines\Converters\FormatNumbers.cs" />
@@ -144,6 +145,7 @@
     <None Include="ViewModels\Helpers\IEntryListHelper.cs" />
     <Compile Include="ViewModels\IMetadataViewModel.cs" />
     <Compile Include="ViewModels\MetadataViewModel.cs" />
+    <Compile Include="ViewModels\ViewModeViewModel.cs" />
     <Compile Include="Views\StatusbarView.xaml.cs">
       <DependentUpon>StatusbarView.xaml</DependentUpon>
     </Compile>
@@ -191,6 +193,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Common\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\RadioCombo.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -308,7 +314,22 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Themes\backup\" />
+    <Resource Include="Themes\Resources\ViewMode\collage_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\collage_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\grid_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\details_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\details_25.png" />
+    <Resource Include="Themes\Resources\ViewMode\extralarge_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\icon_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\Icon_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\large_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\list_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\list_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\organize_25.png" />
+    <Resource Include="Themes\Resources\ViewMode\smallicon_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\smallicon_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\tile_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\tile_16_2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

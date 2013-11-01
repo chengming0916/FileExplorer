@@ -11,13 +11,13 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer.Defines
 {
-    [Obsolete]
-    public class ViewChangedEvent
+    public class ViewChangedEvent : ViewModelEvent
     {
-        string ViewMode { get; set; }
-        string OldViewMode { get; set; }
+        public string ViewMode { get; set; }
+        public string OldViewMode { get; set; }
 
-        public ViewChangedEvent(string viewMode, string oldViewMode)
+        public ViewChangedEvent(PropertyChangedBase sender, string viewMode, string oldViewMode)
+            : base(sender)
         {
             ViewMode = viewMode;
             OldViewMode = oldViewMode;

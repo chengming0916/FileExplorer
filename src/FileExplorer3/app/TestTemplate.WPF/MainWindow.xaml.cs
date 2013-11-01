@@ -36,7 +36,7 @@ namespace TestTemplate.WPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            sbar.Items.Add(new StatusbarItemEx() { Content = "Add", Type = FileExplorer.Defines.DisplayType.Text, Header = "New" });
+            //sbar.Items.Add(new StatusbarItemEx() { Content = "Add", Type = FileExplorer.Defines.DisplayType.Text, Header = "New" });
         }
     }
 }
