@@ -10,6 +10,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <!-- Remember to assign the template to DisplayTemplateSelector below as well. -->
     <DataTemplate x:Key="PercentTemplate">
         <ProgressBar Maximum="100" Minimum="0" Width="100" Value="{Binding Mode=OneWay}" />
     </DataTemplate>
@@ -19,20 +20,26 @@
     <DataTemplate x:Key="TextTemplate">
         <TextBlock Text="{TemplateBinding Content}" Foreground="BlueViolet" />
     </DataTemplate>
+    <DataTemplate x:Key="KbTemplate">
+        <TextBlock Text="{Binding Converter={StaticResource ffs}}" />
+    </DataTemplate>
     <DataTemplate x:Key="FilenameTemplate">
         <TextBlock Text="{TemplateBinding Content}" Foreground="BlueViolet" />
     </DataTemplate>
     <DataTemplate x:Key="BooleanTemplate">
-        <ProgressBar Maximum="100" Minimum="0" Width="100" Value="{Binding Mode=OneWay}" />
+        <CheckBox IsChecked="{TemplateBinding Content}" />        
     </DataTemplate>
 
     <uc:DisplayTemplateSelector x:Key="dts"                                          
               TextTemplate="{StaticResource TextTemplate}"
               NumberTemplate="{StaticResource NumberTemplate}"
+              KbTemplate="{StaticResource KbTemplate}"
               PercentTemplate="{StaticResource PercentTemplate}"
               FilenameTemplate="{StaticResource FilenameTemplate}"
               BooleanTemplate="{StaticResource BooleanTemplate}"
-              />
+              >
+    </uc:DisplayTemplateSelector>
+
 
 
 </ResourceDictionary>

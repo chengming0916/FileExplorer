@@ -15,5 +15,7 @@ namespace FileExplorer.ViewModels
         bool IsEditable { get; set; }
         bool IsEditing { get; set; }
         bool IsSelected { get; set; }
+
+        IEntryViewModel Clone();
     }
 }

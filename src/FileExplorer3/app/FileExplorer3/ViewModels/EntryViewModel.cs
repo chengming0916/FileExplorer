@@ -43,7 +43,10 @@ namespace FileExplorer.ViewModels
             };
         }
 
-       
+        public IEntryViewModel Clone()
+        {
+            return EntryViewModel.FromEntryModel(this.EntryModel);
+        }
 
         #endregion
 

@@ -10,6 +10,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/RadioCombo.xaml" />
@@ -50,11 +51,14 @@
             </ItemsControl.ItemsPanel>    
         </ItemsControl>-->
         
-        <uc:StatusbarEx x:Name="MetadataItems" Grid.RowSpan="2" Grid.Column="0" >
+        <uc:StatusbarEx x:Name="Items" Grid.RowSpan="2" Grid.Column="0" 
+                        IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" >
             <uc:StatusbarEx.Header>
                 <DockPanel>
-                    <ItemsControl ItemsSource="{Binding DisplayItems}" DockPanel.Dock="Left"
-                                                  ItemTemplate="{StaticResource IconOnlyTemplate}">
+                    <ItemsControl x:Name="Icon" 
+                                  Visibility="{Binding IsExpanded, Converter={StaticResource btvc}}"
+                                  ItemsSource="{Binding DisplayItems}" DockPanel.Dock="Left"
+                                  ItemTemplate="{StaticResource IconOnlyTemplate}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <uc:OverlappingPanel OverlapX="0.05" OverlapY="0.05" MaxItems="10"  IsItemsHost="True" />
@@ -69,10 +73,12 @@
             </uc:StatusbarEx.Header>
             <uc:StatusbarEx.ItemContainerStyle>
                 <Style TargetType="{x:Type uc:StatusbarItemEx}" >
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type uc:StatusbarEx}} }" />
                     <!-- Bind to ViewModel -->
-                    <Setter Property="Header" Value="{Binding MetadataModel.Header, Mode=OneWay}" />
+                    <Setter Property="Header" Value="{Binding MetadataModel.HeaderText, Mode=OneWay}" />
                     <Setter Property="Content" Value="{Binding MetadataModel.Content, Mode=OneWay}" />
                     <Setter Property="Type" Value="{Binding MetadataModel.DisplayType, Mode=OneWay}" />
+                    <Setter Property="IsHeader" Value="{Binding MetadataModel.IsHeader, Mode=OneWay}" />
                 </Style>
             </uc:StatusbarEx.ItemContainerStyle>
                 <!--<uc:StatusbarEx.Items>
@@ -81,6 +87,7 @@
                 <uc:StatusbarItemEx Header="Number" Content="100000000000" Type="Number" />
 
             </uc:StatusbarEx.Items>-->
+            
         </uc:StatusbarEx>
 
     </Grid >

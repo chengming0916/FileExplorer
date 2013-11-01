@@ -26,6 +26,18 @@
             <Trigger Property="Header" Value="">
                 <Setter TargetName="ColonTextBlock" Property="Visibility" Value="Collapsed" />
             </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsHeader" Value="True" />
+                    <Condition Property="IsExpanded" Value="True" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Width" 
+                            Value="{Binding ActualWidth, 
+                            RelativeSource={RelativeSource AncestorType={x:Type Panel}}}" />                    
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+                            
         </ControlTemplate.Triggers>
     </ControlTemplate>   
 

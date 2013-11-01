@@ -10,7 +10,8 @@ namespace FileExplorer.Defines
     
     public enum TransferMode { Copy, Move, Rename, Link }
 
-    public enum DisplayType { Auto, Text, Number, Percent, Filename, Boolean }
+    //ToAdd a template, you have to update DisplayTemplateSelector.cs
+    public enum DisplayType { Auto, Text, Number, Kb, Percent, Filename, Boolean }
 
     public enum ViewMode : int
     {

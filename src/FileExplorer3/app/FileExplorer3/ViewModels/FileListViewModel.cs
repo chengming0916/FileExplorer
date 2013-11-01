@@ -151,7 +151,7 @@ namespace FileExplorer.ViewModels
 
         public void OnSelectionChanged(IList selectedItems)
         {
-            SelectedItems = selectedItems.Cast<IEntryViewModel>().ToList();
+            SelectedItems = selectedItems.Cast<IEntryViewModel>().Distinct().ToList();
             Events.Publish(new SelectionChangedEvent(this, SelectedItems));
         }
 

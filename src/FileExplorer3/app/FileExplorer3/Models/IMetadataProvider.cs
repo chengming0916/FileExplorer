@@ -8,6 +8,8 @@ namespace FileExplorer.Models
 {
     public interface IMetadataProvider
     {
-        IEnumerable<IMetadata> GetMetadata(IEnumerable<IEntryModel> models);
+        IEnumerable<IMetadata> GetMetadata
+            (IEnumerable<IEntryModel> selectedModels,
+            int modelCount, IEntryModel parentModel);
     }
 }

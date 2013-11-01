@@ -50,7 +50,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsExpanded" Value="True">
-                            <Setter TargetName="outerBorder" Property="BorderBrush" Value="Black" />
+                            <!--<Setter TargetName="outerBorder" Property="BorderBrush" Value="Black" />-->
                             <Setter TargetName="itemPresenter" Property="HorizontalAlignment" Value="Center" />
                         </Trigger>
                     </ControlTemplate.Triggers>

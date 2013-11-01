@@ -38,6 +38,7 @@ namespace FileExplorer.UserControls
                     case DisplayType.Text: retVal = TextTemplate; break;
                     case DisplayType.Number: retVal = NumberTemplate; break;
                     case DisplayType.Percent: retVal = PercentTemplate; break;
+                    case DisplayType.Kb: retVal = KbTemplate; break;
                     case DisplayType.Filename: retVal = FilenameTemplate; break;
                     case DisplayType.Boolean: retVal = BooleanTemplate; break;
                 }
@@ -55,6 +56,7 @@ namespace FileExplorer.UserControls
 
         public DataTemplate TextTemplate { get; set; }
         public DataTemplate NumberTemplate { get; set; }
+        public DataTemplate KbTemplate { get; set; }
         public DataTemplate PercentTemplate { get; set; }
         public DataTemplate FilenameTemplate { get; set; }
         public DataTemplate BooleanTemplate { get; set; }

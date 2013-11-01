@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
@@ -23,7 +25,9 @@ namespace FileExplorer.ViewModels
             _events = events;
             _explorerModel = explorerModel;
             _displayItems = new BindableCollection<IEntryViewModel>();
-            _metadataItems = new BindableCollection<IMetadataViewModel>();
+            _allMetadataItems = new BindableCollection<IMetadataViewModel>();
+
+
             _viewModes = new BindableCollection<ViewModeViewModel>();
             _viewModes.Add(new ViewModeViewModel("IconView"));
             _viewModes.Add(new ViewModeViewModel("SmallIconView"));
@@ -35,23 +39,38 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
+
+        private void OnIsExpandedChanged(bool isExpanded)
+        {
+            Debug.WriteLine(isExpanded);
+        }
+
         public static string NoneSelected = "{0}";
         public static string OneSelected = "{0}";
         public static string ManySelected = "{0} items selected";
 
         private void updateDisplayItemsAndCaption(IFileListViewModel flvm)
         {
-            DisplayItems.Clear();
-            MetadataItems.Clear();
+           
+            Items.Clear();
             SelectionCount = flvm.SelectedItems.Count();
 
-            MetadataItems.Add(MetadataViewModel.FromText("", String.Format("{0} items", flvm.Items.Count())));
-            if (SelectionCount > 0)
-                MetadataItems.Add(MetadataViewModel.FromText("", String.Format("{0} items selected", SelectionCount)));
+            Items.AddRange(flvm.CurrentDirectory.EntryModel.Profile.MetadataProvider.GetMetadata(
+                flvm.SelectedItems.Select(evm => evm.EntryModel), 
+                flvm.ProcessedItems.Count, 
+                flvm.CurrentDirectory.EntryModel).Select(m => MetadataViewModel.FromMetadata(m)));
+
+            //Items.Add(MetadataViewModel.FromText("", String.Format("{0} items", flvm.Items.Count()), true));
+            //if (SelectionCount > 0)
+            //    Items.Add(MetadataViewModel.FromText("", String.Format("{0} items selected", SelectionCount), true));
+
+            //Items.Add(MetadataViewModel.FromMetadata(new Metadata(DisplayType.Text, "text", "text")));
+            //Items.Add(MetadataViewModel.FromMetadata(new Metadata(DisplayType.Percent, "percent", 50)));
 
             //MetadataItems.Add(MetadataViewModel.FromTotalItems(flvm.Items.Count()));
             //MetadataItems.Add(MetadataViewModel.FromMetadata(new Metadata(DisplayType.Percent, "abc", 50)));
 
+            DisplayItems.Clear();
             switch (SelectionCount)
             {
                 case 0:
@@ -101,13 +120,15 @@ namespace FileExplorer.ViewModels
         #region Data
 
         IExplorerViewModel _explorerModel;
+        bool _isExpanded = false;
         int _selectionCount;
         string _caption;
         IObservableCollection<IEntryViewModel> _displayItems;
-        IObservableCollection<IMetadataViewModel> _metadataItems;
+        IObservableCollection<IMetadataViewModel> _allMetadataItems;
         IObservableCollection<ViewModeViewModel> _viewModes;
         string _selectedViewMode = "Icon";
         private IEventAggregator _events;
+        
 
         #endregion
 
@@ -124,9 +145,16 @@ namespace FileExplorer.ViewModels
                 _events.Publish(new ViewChangedEvent(this, value, orgViewMode));
             }
         }
+
+        public bool IsExpanded { get { return _isExpanded; } set { if (_isExpanded != value) { _isExpanded = value;
+        NotifyOfPropertyChange(() => IsExpanded);
+            OnIsExpandedChanged(_isExpanded); } } }
+
         public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
         public IObservableCollection<IEntryViewModel> DisplayItems { get { return _displayItems; } }
-        public IObservableCollection<IMetadataViewModel> MetadataItems { get { return _metadataItems; } }
+        public IObservableCollection<IMetadataViewModel> Items { get { return _allMetadataItems; } }
+
+
         public IObservableCollection<ViewModeViewModel> ViewModes { get { return _viewModes; } }
         public string Caption { get { return _caption; } set { _caption = value; NotifyOfPropertyChange(() => Caption); } }
 

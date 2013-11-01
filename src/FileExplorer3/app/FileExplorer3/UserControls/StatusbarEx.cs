@@ -48,9 +48,14 @@ namespace FileExplorer.UserControls
                 else IsExpandedDelta = this.ActualWidth + 10;
             }
             else
+            {
+                bool isExpanded;
                 if (Orientation == Orientation.Horizontal)
-                    IsExpanded = args.NewSize.Height > IsExpandedDelta;
-                else IsExpanded = args.NewSize.Width > IsExpandedDelta;
+                    isExpanded = args.NewSize.Height > IsExpandedDelta;
+                else isExpanded = args.NewSize.Width > IsExpandedDelta;
+                if (isExpanded != IsExpanded)
+                    IsExpanded = isExpanded;
+            }
         }
 
         public static void OnIsExpandedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
@@ -151,6 +156,15 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
+        public static DependencyProperty IsHeaderProperty = DependencyProperty.Register("IsHeader",
+           typeof(bool), typeof(StatusbarItemEx), new PropertyMetadata(false));
+
+        public bool IsHeader
+        {
+            get { return (bool)GetValue(IsHeaderProperty); }
+            set { SetValue(IsHeaderProperty, value); }
+        }
+
         public static DependencyProperty TypeProperty = DependencyProperty.Register("Type",
             typeof(DisplayType), typeof(StatusbarItemEx), new PropertyMetadata(DisplayType.Auto));
 
@@ -170,6 +184,14 @@ namespace FileExplorer.UserControls
             set { SetValue(CaptionWidthProperty, value); }
         }
 
+        public static DependencyProperty IsExpandedProperty = StatusbarEx.IsExpandedProperty
+            .AddOwner(typeof(StatusbarItemEx));
+
+        public bool IsExpanded
+        {
+            get { return (bool)GetValue(IsExpandedProperty); }
+            set { SetValue(IsExpandedProperty, value); }
+        }
 
         #endregion
     }
