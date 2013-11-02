@@ -16,7 +16,7 @@ namespace FileExplorer.Models
    
     public interface IProfile
     {
-         #region Cosntructor
+        #region Cosntructor
         
         #endregion
 

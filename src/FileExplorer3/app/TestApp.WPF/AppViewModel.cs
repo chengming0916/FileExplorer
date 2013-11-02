@@ -9,6 +9,7 @@ using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.ViewModels;
+using FileExplorer;
 
 namespace TestApp.WPF
 {
@@ -34,10 +35,10 @@ namespace TestApp.WPF
 
             ExplorerModel.FileListModel.ColumnList = new ColumnInfo[] 
             {
-                ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
-                ColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200),
-                ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", 200),  
-                ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 200)   
+                ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
+                ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
+                ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Size), 200),  
+                ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
             };
 
             ExplorerModel.FileListModel.ColumnFilters = new ColumnFilter[]

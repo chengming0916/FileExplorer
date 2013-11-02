@@ -17,6 +17,7 @@ using System.Windows.Markup;
 [assembly: AssemblyCulture("")]
 
 [assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.UserControls")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.BaseControls")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

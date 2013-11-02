@@ -36,7 +36,7 @@ namespace FileExplorer.ViewModels
 
             this.ColumnList =
                 new ColumnInfo[] { 
-                    ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200) };
+                    ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", null, 200) };
 
             //this.ColumnFilters =
             //    new ColumnFilter[] { 

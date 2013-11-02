@@ -15,6 +15,12 @@ namespace FileExplorer.UserControls
 {
     public static class UITools
     {
+        public static void AddValueChanged<T>(this T obj, DependencyProperty property, EventHandler handler) where T : DependencyObject
+        {
+            DependencyPropertyDescriptor desc = DependencyPropertyDescriptor.FromProperty(property, typeof(T));
+            desc.AddValueChanged(obj, handler);
+        }
+
         public static T FindAncestor<T>(DependencyObject obj) where T : DependencyObject
         {
 

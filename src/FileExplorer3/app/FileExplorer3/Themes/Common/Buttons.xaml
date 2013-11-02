@@ -82,5 +82,57 @@
         </ControlTemplate.Triggers>-->
     </ControlTemplate>
 
+    <ControlTemplate x:Key="BaseButton" TargetType="{x:Type ButtonBase}">
+        <Border x:Name="border"
+                Padding="1,0"
+				Background="Transparent" 
+				BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="0"				
+				SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                              VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="BorderThickness" Value="1,0" />
+                <Setter TargetName="border" Property="Padding" Value="0" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="BaseBreadcrumbButton" TargetType="{x:Type ButtonBase}">
+        <Border x:Name="border"
+                Padding="{TemplateBinding Padding}"
+				Background="Transparent" 
+				BorderBrush="Transparent"                
+                BorderThickness="1"				
+				SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="11"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="UpperHighlight" Fill="#75FFFFFF" Visibility="Collapsed"/>
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.RowSpan="2" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+                <Setter TargetName="UpperHighlight" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Hidden" />
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
 
 </ResourceDictionary>

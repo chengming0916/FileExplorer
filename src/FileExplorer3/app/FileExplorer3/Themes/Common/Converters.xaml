@@ -5,13 +5,14 @@
     <!-- pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml -->
 
     <conv:FlipBoolToVisibilityCollapsedConverter x:Key="fbtvc" />
+    <conv:BoolToVisibilityConverter x:Key="btv" />
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />
     
     <conv:FormatNumberConverter x:Key="fnc" />
     <conv:FormatFileSizeConverter x:Key="ffs" />
     <conv:BoolToVisibilityCollapsedConverter x:Key="btvc" />
     
-    <!--<conv:BoolToVisibilityConverter x:Key="btv" />
+    <!--
     
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />
     

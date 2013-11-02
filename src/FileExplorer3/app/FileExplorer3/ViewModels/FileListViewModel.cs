@@ -144,7 +144,9 @@ namespace FileExplorer.ViewModels
         {
             if (CurrentDirectory == null)
                 return;
-            var comparer = new EntryViewModelComparer(Profile.GetComparer(col), direction);
+            var comparer = new EntryViewModelComparer(
+                col.Comparer != null ? col.Comparer : Profile.GetComparer(col), 
+                direction);
             _processedVms.CustomSort = comparer;
             _processedVms.GroupDescriptions.Add(new PropertyGroupDescription(col.ValuePath));
         }
@@ -189,8 +191,8 @@ namespace FileExplorer.ViewModels
         private ListSortDirection _sortDirection = ListSortDirection.Ascending;
         private ColumnInfo[] _colList = new ColumnInfo[]
         {
-            ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
-            ColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200)   
+            ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", null, 200),   
+            ColumnInfo.FromBindings("Description", "EntryModel.Description", "", null, 200)   
         };
 
         private ColumnFilter[] _colFilters = new ColumnFilter[] { };

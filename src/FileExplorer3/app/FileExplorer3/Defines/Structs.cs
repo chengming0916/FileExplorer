@@ -92,6 +92,7 @@ namespace FileExplorer.Defines
         public string TooltipPath { get; set; }
         public double Width { get; set; }
         public string TemplateKey { get; set; }
+        public IComparer<IEntryModel> Comparer { get; set; }
 
         private ColumnInfo(string header, double width)
         {
@@ -100,20 +101,22 @@ namespace FileExplorer.Defines
         }
 
         public static ColumnInfo FromTemplate(string header, string templateKey,
-            string valuePath = null, double width = double.NaN)
+            string valuePath = null, IComparer<IEntryModel> comparer = null, double width = double.NaN)
         {
             return new ColumnInfo(header, width)
             {
+                Comparer = comparer,
                 ValuePath = valuePath,
                 TemplateKey = templateKey
             };
         }
 
         public static ColumnInfo FromBindings(string columnHeader, string valuePath, string tooltipPath,
-            double width = double.NaN)
+            IComparer<IEntryModel> comparer = null, double width = double.NaN)
         {
             return new ColumnInfo(columnHeader, width)
             {
+                Comparer = comparer,
                 ValuePath = valuePath,
                 TooltipPath = tooltipPath
             };

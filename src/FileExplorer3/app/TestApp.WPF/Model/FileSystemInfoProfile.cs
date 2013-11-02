@@ -27,16 +27,7 @@ namespace FileExplorer.Models
 
         public IComparer<IEntryModel> GetComparer(ColumnInfo column)
         {
-            switch (column.ValuePath)
-            {
-                case "EntryModel.Label":
-                    return new ValueComparer<IEntryModel>(p => p.Label);
-                case "EntryModel.Description":
-                    return new ValueComparer<IEntryModel>(p => p.Description);
-                default:
-                    return new ValueComparer<IEntryModel>(p => p.FullPath);
-            }
-
+            return new ValueComparer<IEntryModel>(p => p.FullPath);
         }
 
         public Task<IEntryModel> ParseAsync(string path)
@@ -122,6 +113,6 @@ namespace FileExplorer.Models
 
 
 
-        
+
     }
 }
