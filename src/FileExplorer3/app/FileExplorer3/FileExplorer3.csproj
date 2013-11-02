@@ -201,6 +201,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Themes\Common\TreeViewItemCopy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
     <Page Include="Themes\Common\HotTrack.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

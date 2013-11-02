@@ -14,7 +14,9 @@
                             BorderThickness="1"
                             BorderBrush="Transparent"
                             Background="Transparent">
-            <bc:HotTrack IsEnabled="{TemplateBinding IsEnabled}">
+            <bc:HotTrack IsEnabled="{TemplateBinding IsEnabled}" 
+                         IsDragging="{Binding (uc:SelectionHelper.IsDragging), RelativeSource={RelativeSource TemplatedParent} }"
+                         IsSelected="{TemplateBinding IsSelected}">
                 <Grid>
                     <Rectangle x:Name="ContentBackground" Fill="Transparent" Opacity="0.5"/>
                     <ContentPresenter  Margin="2"
@@ -23,14 +25,14 @@
             </bc:HotTrack>
         </Border>
         <ControlTemplate.Triggers>
-            <Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
+            <!--<Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
                 <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"/>
                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
-            </Trigger>
-            <Trigger Property="IsSelected" Value="true">
+            </Trigger>-->
+            <!--<Trigger Property="IsSelected" Value="true">
                 <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-            </Trigger>            
+            </Trigger>-->            
             <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard Storyboard.Target="{Binding}">
