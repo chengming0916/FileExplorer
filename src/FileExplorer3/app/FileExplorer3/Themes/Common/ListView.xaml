@@ -33,7 +33,7 @@
     <!--Stock from http://msdn.microsoft.com/en-us/library/ms788747.aspx-->
     <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
         <Setter Property="Width" Value="18" />
-        <Setter Property="Background">
+        <!--<Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <LinearGradientBrush.GradientStops>
@@ -44,7 +44,7 @@
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Setter.Value>
-        </Setter>
+        </Setter>-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
@@ -111,8 +111,8 @@
                                 <VisualState x:Name="Disabled" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="HeaderBorder" BorderThickness="0,0.5,0,0.5"  
-                                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                        <Border x:Name="HeaderBorder" BorderThickness="{TemplateBinding BorderThickness}"  
+                                BorderBrush="{TemplateBinding BorderBrush}">
                             <!--<Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" Opacity="0.5" >
                                     <LinearGradientBrush.GradientStops>
@@ -192,7 +192,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type uc:ListViewEx}">
-                    <Border Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                    <Border Name="Border" BorderThickness="{TemplateBinding BorderThickness}" 
+                            BorderBrush="{TemplateBinding BorderBrush}"
                             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                         <DockPanel>
                             <AdornerDecorator>

@@ -29,9 +29,9 @@ namespace FileExplorer.ViewModels
 
 
             _viewModes = new BindableCollection<ViewModeViewModel>();
-            _viewModes.Add(new ViewModeViewModel("IconView"));
-            _viewModes.Add(new ViewModeViewModel("SmallIconView"));
-            _viewModes.Add(new ViewModeViewModel("GridView"));
+            _viewModes.Add(new ViewModeViewModel("Icon"));
+            _viewModes.Add(new ViewModeViewModel("SmallIcon"));
+            _viewModes.Add(new ViewModeViewModel("Grid"));
             events.Subscribe(this);
         }
 

@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels
 
         public ViewModeViewModel(string viewMode)
         {
-            _view = viewMode;
+            _viewMode = viewMode;
             _viewModeIcon = new Lazy<ImageSource>(
             () =>
                 {
@@ -41,7 +41,7 @@ namespace FileExplorer.ViewModels
 
         public override bool Equals(object obj)
         {
-            return (obj is ViewModeViewModel) && (obj as ViewModeViewModel).View == View;
+            return (obj is ViewModeViewModel) && (obj as ViewModeViewModel).ViewMode == ViewMode;
         }
 
         #endregion
@@ -50,15 +50,14 @@ namespace FileExplorer.ViewModels
 
         public static string iconPathMask = 
             "pack://application:,,,/FileExplorer3;component/Themes/Resources/ViewMode/{0}_16.png";
-        private string _view;
+        private string _viewMode;
         private Lazy<ImageSource> _viewModeIcon;
 
         #endregion
 
         #region Public Properties
 
-        public string View { get { return _view; } set { _view = value; NotifyOfPropertyChange(() => View); } }
-        public string ViewMode { get { return _view.Replace("View", ""); } }
+        public string ViewMode { get { return _viewMode; } set { _viewMode = value; NotifyOfPropertyChange(() => ViewMode); } }        
         public Lazy<ImageSource> ViewModeIcon { get { return _viewModeIcon; } }
 
 

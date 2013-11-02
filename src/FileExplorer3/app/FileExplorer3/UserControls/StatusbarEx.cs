@@ -85,7 +85,7 @@ namespace FileExplorer.UserControls
         }
 
         public static DependencyProperty IsExpandedDeltaProperty = DependencyProperty.Register("IsExpandedDelta",
-         typeof(double), typeof(StatusbarEx), new PropertyMetadata(double.NaN));
+         typeof(double), typeof(StatusbarEx), new PropertyMetadata(30d));
 
         public double IsExpandedDelta
         {

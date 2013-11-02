@@ -17,16 +17,16 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
+        </Grid.RowDefinitions>-->
+        <!--<StackPanel Orientation="Horizontal" Grid.Row="0">
             <TextBlock Text="Selected :" />
             <ContentPresenter ContentTemplate="{StaticResource GridLabelTemplate}" 
                           Content="{Binding SelectedViewModel.CurrentDirectory}" />
-        </StackPanel>
-        <uc:TreeViewEx x:Name="Subdirectories" Grid.Row="1">
+        </StackPanel>-->
+        <uc:TreeViewEx x:Name="Subdirectories" Grid.Row="0" >
 
         </uc:TreeViewEx>
     </Grid>

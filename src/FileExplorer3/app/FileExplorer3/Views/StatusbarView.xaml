@@ -55,7 +55,7 @@
                         IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" >
             <uc:StatusbarEx.Header>
                 <DockPanel>
-                    <ItemsControl x:Name="Icon" 
+                    <ItemsControl x:Name="Icon" Width="{Binding ActualHeight, ElementName=Items}"
                                   Visibility="{Binding IsExpanded, Converter={StaticResource btvc}}"
                                   ItemsSource="{Binding DisplayItems}" DockPanel.Dock="Left"
                                   ItemTemplate="{StaticResource IconOnlyTemplate}">

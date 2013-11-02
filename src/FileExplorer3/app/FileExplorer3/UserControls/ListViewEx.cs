@@ -22,14 +22,14 @@ namespace FileExplorer.UserControls
 
         public ListViewEx()
         {
-            
+
         }
 
 
         #endregion
 
         #region Methods
-        
+
 
         private ListViewItemEx getSelectedContainer()
         {
@@ -154,7 +154,7 @@ namespace FileExplorer.UserControls
         void IVirtualListView.UnselectAll()
         {
             this.RaiseEvent(new RoutedEventArgs(UnselectAllRequiredEvent, this));
-            this.SelectedItems.Clear();
+            base.UnselectAll();
         }
 
         #endregion
@@ -381,7 +381,7 @@ namespace FileExplorer.UserControls
 
 
 
-       
+
 
         #endregion
 
@@ -394,7 +394,7 @@ namespace FileExplorer.UserControls
 
         public ListViewItemEx()
         {
-           
+
         }
 
         #endregion
@@ -411,7 +411,7 @@ namespace FileExplorer.UserControls
 
 
 
-      
+
         #endregion
 
 

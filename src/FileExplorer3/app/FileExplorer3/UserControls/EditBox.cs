@@ -88,14 +88,14 @@ namespace FileExplorer.UserControls
         #endregion
 
         #region Public Properties
-        public static readonly DependencyProperty DisplayValueProperty = DependencyProperty.Register("DisplayValue", typeof(object),
-            typeof(EditBox), new FrameworkPropertyMetadata());
+public static readonly DependencyProperty DisplayValueProperty = DependencyProperty.Register("DisplayValue", typeof(object),
+    typeof(EditBox), new FrameworkPropertyMetadata());
 
-        public object DisplayValue
-        {
-            get { return GetValue(DisplayValueProperty); }
-            set { SetValue(DisplayValueProperty, value); }
-        }
+public object DisplayValue
+{
+    get { return GetValue(DisplayValueProperty); }
+    set { SetValue(DisplayValueProperty, value); }
+}
 
         public static readonly DependencyProperty ActualValueProperty = DependencyProperty.Register("ActualValue", typeof(object),
             typeof(EditBox), new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));

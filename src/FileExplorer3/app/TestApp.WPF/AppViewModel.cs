@@ -36,6 +36,7 @@ namespace TestApp.WPF
             {
                 ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", 200),   
                 ColumnInfo.FromBindings("Description", "EntryModel.Description", "", 200),
+                ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", 200),  
                 ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 200)   
             };
 

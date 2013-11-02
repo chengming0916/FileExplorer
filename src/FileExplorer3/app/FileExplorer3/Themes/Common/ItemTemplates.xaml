@@ -24,7 +24,6 @@
                         />
 
         </StackPanel>
-
     </DataTemplate>
 
     <DataTemplate x:Key="IconOnlyTemplate">
