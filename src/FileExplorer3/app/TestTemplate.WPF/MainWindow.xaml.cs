@@ -31,6 +31,11 @@ namespace TestTemplate.WPF
             base.OnApplyTemplate();
 
             //UITools.FindVisualChild<
+            List<FakeViewModel> fvm = new List<FakeViewModel>();
+            fvm.Add(new FakeViewModel("Root", "Root1", "Root2"));
+            for (int i = 1; i < 10; i++)
+                fvm.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));            
+            breadcrumbCore.ItemsSource = fvm;
         }
 
 

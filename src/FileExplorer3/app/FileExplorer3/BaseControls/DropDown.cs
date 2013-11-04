@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.BaseControls
 {
     /// <summary>
     /// Display a ToggleButton and when it's clicked, show it's content as a dropdown.
@@ -87,8 +87,6 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("IsDropDownOpen", typeof(bool),
             typeof(DropDown), new UIPropertyMetadata(false,
                 new PropertyChangedCallback(OnIsDropDownOpenChanged)));
-
-
 
 
         public bool IsDropDownAlignLeft

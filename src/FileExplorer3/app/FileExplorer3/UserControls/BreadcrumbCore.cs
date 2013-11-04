@@ -34,7 +34,7 @@ namespace FileExplorer.UserControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbItem();
+            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate };
         }
 
         private void updateToggle()
@@ -111,6 +111,19 @@ namespace FileExplorer.UserControls
         //    else return Items[Items.Count - 1];
         //}
 
+        public static void OnLastNonVisibleIndexChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            BreadcrumbCore bcore = sender as BreadcrumbCore;
+
+            List<Object> overflowedItems = new List<object>();
+            for (int i = 0; i < Math.Min((int)args.NewValue + 1, bcore.Items.Count) ; i++)
+            {
+                overflowedItems.Add(bcore.Items[i]);
+            }
+
+            bcore.SetValue(OverflowedItemsProperty, overflowedItems);
+        }
+
         #endregion
 
         #region Dependency properties
@@ -119,6 +132,23 @@ namespace FileExplorer.UserControls
         //{
         //    get { return getCurrent(); }
         //}
+        public static DependencyProperty OverflowedItemsProperty = DependencyProperty.Register("OverflowedItems",
+           typeof(IList<Object>), typeof(BreadcrumbCore), new PropertyMetadata(null));
+
+        public IList<Object> OverflowedItems
+        {
+            get { return (IList<Object>)GetValue(OverflowedItemsProperty); }
+            set { SetValue(OverflowedItemsProperty, value); }
+        }
+
+        public static DependencyProperty LastNonVisibleIndexProperty = DependencyProperty.Register("LastNonVisibleIndex",
+           typeof(int), typeof(BreadcrumbCore), new PropertyMetadata(0, OnLastNonVisibleIndexChanged));
+
+        public int LastNonVisible
+        {
+            get { return (int)GetValue(LastNonVisibleIndexProperty); }
+            set { SetValue(LastNonVisibleIndexProperty, value); }
+        }
 
         public static readonly DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(object), typeof(BreadcrumbCore),
             new FrameworkPropertyMetadata(null, new PropertyChangedCallback(RootChanged)));
@@ -130,13 +160,13 @@ namespace FileExplorer.UserControls
         }
 
 
-        //public static readonly DependencyProperty HeaderTemplateProperty = HeaderedItemsControl.HeaderTemplateProperty.AddOwner(typeof(BreadcrumbCore));
+        public static readonly DependencyProperty HeaderTemplateProperty = HeaderedItemsControl.HeaderTemplateProperty.AddOwner(typeof(BreadcrumbCore));
 
-        //public DataTemplate HeaderTemplate
-        //{
-        //    get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
-        //    set { SetValue(HeaderTemplateProperty, value); }
-        //}
+        public DataTemplate HeaderTemplate
+        {
+            get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
+            set { SetValue(HeaderTemplateProperty, value); }
+        }
         #endregion
     }
 }

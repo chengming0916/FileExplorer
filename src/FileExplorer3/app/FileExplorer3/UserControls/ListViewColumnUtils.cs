@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
+using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 

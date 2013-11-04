@@ -136,14 +136,14 @@
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
 
                                 <Grid x:Name="PART_DropDownGrid" Grid.Column="1" Grid.RowSpan="2" Visibility="Hidden" >
-                                    <uc:DropDown x:Name="PART_DropDown"  >
-                                        <uc:DropDown.Header>
+                                    <bc:DropDown x:Name="PART_DropDown"  >
+                                        <bc:DropDown.Header>
                                             <Path x:Name="path" Fill="{TemplateBinding Foreground}" 
                                             Data="{StaticResource ExpandedArrow}"
                                             HorizontalAlignment="Center" VerticalAlignment="Center" 
                                             Margin="{TemplateBinding Padding}" IsHitTestVisible="True" />
-                                        </uc:DropDown.Header>
-                                    </uc:DropDown>
+                                        </bc:DropDown.Header>
+                                    </bc:DropDown>
                                 </Grid>
                             </Grid>
                         </bc:HotTrack>

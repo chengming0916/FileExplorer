@@ -17,7 +17,7 @@
     <TabControl>
         <TabItem Header="HotTrack">
             <WrapPanel>
-                <uc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True">
+                <uc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
                     <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
@@ -57,7 +57,18 @@
             </ContentControl>-->
             </WrapPanel>
         </TabItem>
-
+        <TabItem Header="DropDown">
+            <WrapPanel>
+                <uc:DropDown x:Name="dd" >
+                    <uc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                        <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
+                            BorderBrush="Transparent"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
+                    </uc:HotTrack>
+                </uc:DropDown>
+                <TextBlock Text="{Binding ElementName=dd, Path=IsDropDownOpen}" />
+            </WrapPanel>
+        </TabItem>
         <TabItem Header="Statusbar">
             <WrapPanel Orientation="Vertical">
                 <!-- Statusbar -->
@@ -81,12 +92,35 @@
                 </uc:StatusbarEx>
             </WrapPanel>
         </TabItem>
-        <TabItem Header="Breadcrumb">
-            <uc:BreadcrumbCore>
-                <uc:BreadcrumbItem Header="Root" IsTopLevel="True" ></uc:BreadcrumbItem>
-                <uc:BreadcrumbItem Header="Sub" ShowCaption="True" IsTopLevel="False"  ></uc:BreadcrumbItem>
-                <uc:BreadcrumbItem Header="Sub2" ShowCaption="True" IsTopLevel="False"  ></uc:BreadcrumbItem>
-            </uc:BreadcrumbCore>
+        <TabItem Header="Breadcrumb" IsSelected="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <uc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left">
+
+                    <uc:BreadcrumbCore.Style>
+                        <Style TargetType="{x:Type uc:BreadcrumbCore}" >
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding SubDirectories}" >
+                                        <StackPanel Orientation="Horizontal" >
+                                            <Image Source="folder.ico" DockPanel.Dock="Left" />
+                                            <TextBlock Text="{Binding Header}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </uc:BreadcrumbCore.Style>
+                    <!--<uc:BreadcrumbItem DataContext="Root" ShowCaption="False" IsTopLevel="True" ></uc:BreadcrumbItem>
+                <uc:BreadcrumbItem DataContext="Root1" IsTopLevel="True" ></uc:BreadcrumbItem>
+                <uc:BreadcrumbItem DataContext="Root2" IsTopLevel="True" ></uc:BreadcrumbItem>
+                <uc:BreadcrumbItem DataContext="Sub" ShowCaption="True" IsTopLevel="True"  ></uc:BreadcrumbItem>
+                <uc:BreadcrumbItem DataContext="Sub2" ShowCaption="True" IsTopLevel="True"  ></uc:BreadcrumbItem>-->
+                </uc:BreadcrumbCore>
+            </Grid>
         </TabItem>
         <TabItem Header="Panels">
             <ItemsControl>
@@ -98,10 +132,10 @@
                 <TextBlock Text="Overlapping" />
                 <TextBlock Text="Panel" />
             </ItemsControl>
-            
+
         </TabItem>
         <TabItem Header="ListView">
-            <uc:ListViewEx x:Name="listView">              
+            <uc:ListViewEx x:Name="listView">
             </uc:ListViewEx>
         </TabItem>
     </TabControl>

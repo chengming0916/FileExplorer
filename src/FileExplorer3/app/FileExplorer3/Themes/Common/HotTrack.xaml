@@ -11,13 +11,26 @@
     <ControlTemplate x:Key="HotTrackTemplate" TargetType="bc:HotTrack">
         <Border x:Name="borderCurrent" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" Background="Transparent">
+                                BorderBrush="Transparent" Background="Transparent">
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" >
+                        <!--<Storyboard>
+                            <ObjectAnimationUsingKeyFrames 
+                                            Storyboard.TargetName="borderCurrent"
+                                            Storyboard.TargetProperty="BorderBrush" Duration="0:0:0.1">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0" 
+                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type bc:HotTrack},
+                                    Mode=FindAncestor}, Path=SelectedBorderBrush}" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>-->
                     </VisualState>
                     <VisualState x:Name="MouseOver">
                         <Storyboard>
+                            <!--<ColorAnimation  
+                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" 
+                                Storyboard.TargetName="borderCurrent" Duration="0" To="Black" />-->
+                                
                             <DoubleAnimation Storyboard.TargetName="background"  Duration="0:0:0.1"
                                              Storyboard.TargetProperty="Opacity"  To="0.15" />
                             <DoubleAnimation Storyboard.TargetName="highlight"  Duration="0:0:0.1"
@@ -84,6 +97,16 @@
                 <ContentPresenter x:Name="content" Content="{TemplateBinding Content}" Grid.RowSpan="2" />
             </Grid>
         </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter TargetName="borderCurrent" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type bc:HotTrack},
+                                    Mode=FindAncestor}, Path=SelectedBorderBrush}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="borderCurrent" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type bc:HotTrack},
+                                    Mode=FindAncestor}, Path=SelectedBorderBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style TargetType="{x:Type bc:HotTrack}">

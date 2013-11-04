@@ -67,7 +67,7 @@ namespace FileExplorer.UserControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            BreadcrumbItem retVal = new BreadcrumbItem();
+            BreadcrumbItem retVal = new BreadcrumbItem() { HeaderTemplate = HeaderTemplate };
             retVal.ShowToggle = false;
             retVal.IsTopLevel = false;
             return retVal;
@@ -209,6 +209,7 @@ namespace FileExplorer.UserControls
             get { return (bool)GetValue(IsItemVisibleProperty); }
             set { SetValue(IsItemVisibleProperty, value); }
         }
+
 
         public static readonly DependencyProperty IsLoadingProperty =
            DependencyProperty.Register("IsLoading", typeof(bool), typeof(BreadcrumbItem), new FrameworkPropertyMetadata(false));

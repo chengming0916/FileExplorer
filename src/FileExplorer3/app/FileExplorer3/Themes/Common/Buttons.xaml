@@ -12,7 +12,7 @@
     <ControlTemplate x:Key="BaseToggleButton" TargetType="{x:Type ToggleButton}">
         <bc:HotTrack
             IsSelected="{TemplateBinding IsChecked}"
-            SelectedBorderBrush="{TemplateBinding BorderBrush}"
+            SelectedBorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
             BorderThickness="{TemplateBinding BorderThickness}"
             >
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
@@ -118,7 +118,7 @@
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
                               VerticalAlignment="{TemplateBinding VerticalAlignment}" />
         </Border>
-        <ControlTemplate.Triggers>
+        <!--<ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="border" Property="BorderThickness" Value="1,0" />
                 <Setter TargetName="border" Property="Padding" Value="0" />
@@ -126,7 +126,7 @@
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
             </Trigger>
-        </ControlTemplate.Triggers>
+        </ControlTemplate.Triggers>-->
     </ControlTemplate>
 
     <ControlTemplate x:Key="BaseBreadcrumbButton" TargetType="{x:Type ButtonBase}">

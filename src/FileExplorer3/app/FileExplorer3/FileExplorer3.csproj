@@ -122,6 +122,7 @@
     <Compile Include="BaseControls\DropDown.cs" />
     <Compile Include="UserControls\BreadcrumbCore.cs" />
     <Compile Include="UserControls\BreadcrumbItem.cs" />
+    <Compile Include="UserControls\BreadcrumbOverflowPanel.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
     <Compile Include="BaseControls\GridViewColumnEx.cs" />
