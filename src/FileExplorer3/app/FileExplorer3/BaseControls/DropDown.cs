@@ -36,15 +36,19 @@ namespace FileExplorer.BaseControls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _popup = (Popup)this.Template.FindName("PART_Popup", this);
-            _content = (ContentPresenter)this.Template.FindName("PART_Content", this);
+            var popup = this.Template.FindName("PART_Popup", this);
+            if (popup is Popup)
+            {
+                _popup = (Popup)this.Template.FindName("PART_Popup", this);
+                _content = (ContentPresenter)this.Template.FindName("PART_Content", this);
 
-            _popup.AddHandler(Popup.LostFocusEvent,
-               new RoutedEventHandler((o, e) =>
-               {
-                   //(o as DropDownControl).                   
-                   //IsDropDownOpen = false;
-               }));
+                _popup.AddHandler(Popup.LostFocusEvent,
+                   new RoutedEventHandler((o, e) =>
+                   {
+                       //(o as DropDownControl).                   
+                       //IsDropDownOpen = false;
+                   }));
+            }
         }
 
         private static void OnIsDropDownOpenChanged(object sender, DependencyPropertyChangedEventArgs args)

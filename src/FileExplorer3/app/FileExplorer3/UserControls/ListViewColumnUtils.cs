@@ -126,19 +126,22 @@ namespace FileExplorer.UserControls
         /// <param name="listView"></param>
         public static void RegisterFilterEvent(ListViewEx listView)
         {
-            var p = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);            
-            var handler = (RoutedEventHandler)((o, e) =>
+            var p = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);
+            if (p != null)
             {
-                ColumnFilter filter = (e.OriginalSource as MenuItem).DataContext as ColumnFilter;
-                if (filter != null)
+                var handler = (RoutedEventHandler)((o, e) =>
                 {
-                    ColumnInfo colInfo = ((VisualTreeHelper.GetParent(e.OriginalSource as DependencyObject))
-                        as StackPanel).DataContext as ColumnInfo;
-                    listView.RaiseEvent(new FilterChangedEventArgs(e.Source) { ColumnInfo = colInfo, Filter = filter });
-                }
-            });
-            p.AddHandler(MenuItem.CheckedEvent, handler);
-            p.AddHandler(MenuItem.UncheckedEvent, handler);
+                    ColumnFilter filter = (e.OriginalSource as MenuItem).DataContext as ColumnFilter;
+                    if (filter != null)
+                    {
+                        ColumnInfo colInfo = ((VisualTreeHelper.GetParent(e.OriginalSource as DependencyObject))
+                            as StackPanel).DataContext as ColumnInfo;
+                        listView.RaiseEvent(new FilterChangedEventArgs(e.Source) { ColumnInfo = colInfo, Filter = filter });
+                    }
+                });
+                p.AddHandler(MenuItem.CheckedEvent, handler);
+                p.AddHandler(MenuItem.UncheckedEvent, handler);
+            }
         }
 
         public static void UpdateFilterPanel(ListView listView, ColumnInfo[] columns, ColumnFilter[] filters)

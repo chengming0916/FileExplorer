@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Diagnostics;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.BaseControls
 {
     public class OverlappingPanel : Panel
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.BaseControls
 {
     public class BreadcrumbOverflowPanel : ItemsControl
     {

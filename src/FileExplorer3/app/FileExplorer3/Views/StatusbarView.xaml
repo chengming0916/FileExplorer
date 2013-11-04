@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:uc="clr-namespace:FileExplorer.UserControls"
+             xmlns:bc="clr-namespace:FileExplorer.BaseControls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -61,7 +62,7 @@
                                   ItemTemplate="{StaticResource IconOnlyTemplate}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <uc:OverlappingPanel OverlapX="0.05" OverlapY="0.05" MaxItems="10"  IsItemsHost="True" />
+                                <bc:OverlappingPanel OverlapX="0.05" OverlapY="0.05" MaxItems="10"  IsItemsHost="True" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>

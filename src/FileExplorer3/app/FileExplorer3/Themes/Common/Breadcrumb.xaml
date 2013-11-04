@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:conv="clr-namespace:QuickZip.Converters"            
-    xmlns:local="clr-namespace:FileExplorer.UserControls"            
     xmlns:sys="clr-namespace:System;assembly=mscorlib" 
     xmlns:lc="clr-namespace:LoadingControl.Control"
     xmlns:ce="clr-namespace:CircularAnimations.Examples"
@@ -28,7 +27,7 @@
         </Setter>
     </Style>
 
-    <ControlTemplate x:Key="BreadcrumbItemTemplate" TargetType="{x:Type local:BreadcrumbItem}">
+    <ControlTemplate x:Key="BreadcrumbItemTemplate" TargetType="{x:Type bc:BreadcrumbItem}">
         <Grid Name="MainGrid" SnapsToDevicePixels="True" Margin="0,0"  HorizontalAlignment="Stretch"  >
             <!-- If Is separator, display separator -->
             <Separator Visibility="{Binding IsSeparator, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btv}}" />
@@ -96,8 +95,8 @@
     </ControlTemplate>
 
 
-    <Style x:Key="{x:Type local:BreadcrumbItem}"                       
-           TargetType="{x:Type local:BreadcrumbItem}" >
+    <Style x:Key="{x:Type bc:BreadcrumbItem}"                       
+           TargetType="{x:Type bc:BreadcrumbItem}" >
 
         <!--<Setter Property="Height" Value="20"  />-->
         <Setter Property="HorizontalAlignment" Value="Stretch"  />
@@ -107,17 +106,17 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template" Value="{StaticResource BreadcrumbItemTemplate}" />
         <Setter Property="HeaderTemplate" Value="{Binding HeaderTemplate, Mode=OneWay,
-            RelativeSource={RelativeSource AncestorType={x:Type local:BreadcrumbCore}}}" />
+            RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
     </Style>
 
-    <Style x:Key="{x:Type local:BreadcrumbOverflowPanel}"                       
-           TargetType="{x:Type local:BreadcrumbOverflowPanel}" BasedOn="{StaticResource {x:Type ItemsControl}}" >
+    <Style x:Key="{x:Type bc:BreadcrumbOverflowPanel}"                       
+           TargetType="{x:Type bc:BreadcrumbOverflowPanel}" BasedOn="{StaticResource {x:Type ItemsControl}}" >
 
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HeaderTemplate" Value="{Binding HeaderTemplate, 
-                                                    RelativeSource={RelativeSource AncestorType={x:Type local:BreadcrumbCore}}}" />
+                                                    RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
         <!--<Setter Property="ItemsPanel" Value="{Binding ItemsPanel, 
-                                                    RelativeSource={RelativeSource AncestorType={x:Type local:BreadcrumbCore}}}" />-->
+                                                    RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />-->
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -126,24 +125,24 @@
             </Setter.Value>
         </Setter>
         <Setter Property="ItemsSource" Value="{Binding OverflowedItems, 
-                                                    RelativeSource={RelativeSource AncestorType={x:Type local:BreadcrumbCore}}}" />
+                                                    RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
     </Style>
 
         <conv:BoolToVisibilityConverter x:Key="btv" />
 
-    <Style x:Key="{x:Type local:BreadcrumbCore}"                       
-           TargetType="{x:Type local:BreadcrumbCore}" >
+    <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
+           TargetType="{x:Type bc:BreadcrumbCore}" >
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <local:BreadcrumbCorePanel IsItemsHost="True"   />
+                    <bc:BreadcrumbCorePanel IsItemsHost="True"   />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
 
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:BreadcrumbCore}">
+                <ControlTemplate TargetType="{x:Type bc:BreadcrumbCore}">
                     <Border BorderBrush="{TemplateBinding BorderBrush}" IsHitTestVisible="True"  
                             BorderThickness="{TemplateBinding BorderThickness}" MinHeight="25">
                         <DockPanel Margin="1,0" Background="Transparent" IsHitTestVisible="True" >
@@ -159,11 +158,11 @@
                                         <StackPanel Orientation="Vertical" 
                                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
 
-                                            <ListBox MinHeight="100" BorderThickness="0" Background="Transparent">
+                                            <ListBox BorderThickness="0" Background="Transparent">
 
                                             </ListBox>
                                             <Separator HorizontalAlignment="Stretch" />
-                                            <uc:BreadcrumbOverflowPanel />                                    
+                                            <bc:BreadcrumbOverflowPanel />                                    
 
                                         </StackPanel>
                                     </ScrollViewer>

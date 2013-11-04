@@ -4,6 +4,7 @@
         
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:uc="http://www.quickzip.org/UserControls"
+        xmlns:bc="http://www.quickzip.org/BaseControls"
         Title="MainWindow" Height="350" Width="525">
     <Window.Resources>
         <ResourceDictionary>
@@ -17,55 +18,22 @@
     <TabControl>
         <TabItem Header="HotTrack">
             <WrapPanel>
-                <uc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
                     <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
-                </uc:HotTrack>
-                <!--<ContentControl BorderBrush="Silver" BorderThickness="1">
-                <ContentControl.Template>
-                    <ControlTemplate TargetType="ContentControl">
-                        <Border x:Name="borderCurrent" DockPanel.Dock="Left"  
-                                BorderThickness="{TemplateBinding BorderThickness}" Padding="1"
-                                     BorderBrush="{TemplateBinding BorderBrush}" Background="Transparent">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition MaxHeight="15"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-
-                                <Rectangle x:Name="background" Opacity="0" Fill="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" 
-                                           Grid.RowSpan="2" />
-                                <Rectangle x:Name="highlight"  Opacity="0" Fill="#75FFFFFF"  />
-                                <ContentPresenter x:Name="content" Content="{TemplateBinding Content}" Grid.RowSpan="2" />
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="background" Property="Opacity" Value="0.15" />
-                                <Setter TargetName="highlight" Property="Opacity" Value="0.50" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </ContentControl.Template>
-                <ContentControl.Content>
-                    <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
-                            BorderBrush="Transparent"
-                            HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
-                </ContentControl.Content>
-
-            </ContentControl>-->
+                </bc:HotTrack>              
             </WrapPanel>
         </TabItem>
         <TabItem Header="DropDown">
             <WrapPanel>
-                <uc:DropDown x:Name="dd" >
-                    <uc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                <bc:DropDown x:Name="dd" >
+                    <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
                         <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
-                    </uc:HotTrack>
-                </uc:DropDown>
+                    </bc:HotTrack>
+                </bc:DropDown>
                 <TextBlock Text="{Binding ElementName=dd, Path=IsDropDownOpen}" />
             </WrapPanel>
         </TabItem>
@@ -96,37 +64,37 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <uc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left">
+                <StackPanel VerticalAlignment="Stretch">
+                    <TextBlock Text="Breadcrumb Core Only" />
+                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left">
 
-                    <uc:BreadcrumbCore.Style>
-                        <Style TargetType="{x:Type uc:BreadcrumbCore}" >
-                            <Setter Property="HeaderTemplate">
-                                <Setter.Value>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding SubDirectories}" >
-                                        <StackPanel Orientation="Horizontal" >
-                                            <Image Source="folder.ico" DockPanel.Dock="Left" />
-                                            <TextBlock Text="{Binding Header}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </uc:BreadcrumbCore.Style>
-                    <!--<uc:BreadcrumbItem DataContext="Root" ShowCaption="False" IsTopLevel="True" ></uc:BreadcrumbItem>
-                <uc:BreadcrumbItem DataContext="Root1" IsTopLevel="True" ></uc:BreadcrumbItem>
-                <uc:BreadcrumbItem DataContext="Root2" IsTopLevel="True" ></uc:BreadcrumbItem>
-                <uc:BreadcrumbItem DataContext="Sub" ShowCaption="True" IsTopLevel="True"  ></uc:BreadcrumbItem>
-                <uc:BreadcrumbItem DataContext="Sub2" ShowCaption="True" IsTopLevel="True"  ></uc:BreadcrumbItem>-->
-                </uc:BreadcrumbCore>
+                        <bc:BreadcrumbCore.Style>
+                            <Style TargetType="{x:Type bc:BreadcrumbCore}" >
+                                <Setter Property="HeaderTemplate">
+                                    <Setter.Value>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding SubDirectories}" >
+                                            <StackPanel Orientation="Horizontal" >
+                                                <Image Source="folder.ico" DockPanel.Dock="Left" />
+                                                <TextBlock Text="{Binding Header}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </HierarchicalDataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </bc:BreadcrumbCore.Style>                        
+                    </bc:BreadcrumbCore>                    
+                </StackPanel>
+                <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="5" />
+                <TextBlock Text="{Binding SelectedValue.Header,ElementName=breadcrumbCore}" Grid.Column="1" />
             </Grid>
         </TabItem>
         <TabItem Header="Panels">
             <ItemsControl>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <uc:OverlappingPanel IsItemsHost="True" />
+                        <bc:OverlappingPanel IsItemsHost="True" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <TextBlock Text="Overlapping" />
