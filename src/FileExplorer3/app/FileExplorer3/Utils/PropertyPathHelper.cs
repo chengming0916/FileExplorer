@@ -20,6 +20,13 @@ namespace FileExplorer.Utils
             return _dummy.GetValue(Dummy.ValueProperty);
         }
 
+        public static object GetValue(object obj, BindingBase binding)
+        {
+            return GetValue(obj, (binding as Binding).Path.Path);
+        }
+
+
+
         private static readonly Dummy _dummy = new Dummy();
 
         private class Dummy : DependencyObject

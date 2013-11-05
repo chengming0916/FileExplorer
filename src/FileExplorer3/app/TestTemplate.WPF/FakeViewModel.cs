@@ -13,12 +13,14 @@ namespace TestTemplate.WPF
         public FakeViewModel(string header, params string[] subHeaders)
         {
             Header = header;
+            Value = header;
             SubDirectories = new ObservableCollection<FakeViewModel>();
             foreach (var sh in subHeaders)
-                SubDirectories.Add(new FakeViewModel(sh));
+                SubDirectories.Add(new FakeViewModel(sh) { Value = header + "\\" + sh });
         }
 
         public string Header { get; set; }
+        public string Value { get; set; }
         public ObservableCollection<FakeViewModel> SubDirectories { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;

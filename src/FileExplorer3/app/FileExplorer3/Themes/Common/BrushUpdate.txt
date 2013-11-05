@@ -4,3 +4,4 @@
 {StaticResource NormalBorderBrush} -> {DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}
 {DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}
 {StaticResource PressedBrush} ->  {DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}
+{StaticResource WindowBackgroundBrush} ->   {DynamicResource {x:Static SystemColors.WindowBrushKey}}

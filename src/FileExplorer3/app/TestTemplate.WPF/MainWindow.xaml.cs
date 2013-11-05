@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FileExplorer.BaseControls;
 using FileExplorer.UserControls;
+using FileExplorer.Utils;
 
 namespace TestTemplate.WPF
 {
@@ -27,6 +30,29 @@ namespace TestTemplate.WPF
             InitializeComponent();
         }
 
+        //private void test(System.Collections.IEnumerable itemSource, HierarchicalDataTemplate dt)
+        //{
+
+
+        //}
+
+        public class DummySuggestSource : ISuggestSource
+        {
+
+            public Task<IList<object>> SuggestAsync(string input)
+            {
+                return Task.FromResult<IList<object>>(new List<object>()
+                {
+                     new { Header = input + "-add xyz", Value = input + "xyz" },
+                     new { Header = input + "-add abc", Value = input + "abc" }
+                });
+            }
+
+            public bool RunInDispatcher { get { return false; } }
+        }
+
+
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -35,9 +61,17 @@ namespace TestTemplate.WPF
             List<FakeViewModel> fvm = new List<FakeViewModel>();
             fvm.Add(new FakeViewModel("Root", "Root1", "Root2"));
             for (int i = 1; i < 10; i++)
-                fvm.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));            
+                fvm.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));
             breadcrumbCore.ItemsSource = fvm;
+            suggestBoxDummy.SuggestSource = new DummySuggestSource();
+            suggestBoxAuto.SuggestSource = new AutoSuggestSource(
+                breadcrumbCore.HeaderTemplate as HierarchicalDataTemplate,
+                breadcrumbCore.ItemsSource, 
+                "Value");
             
+
+
+
         }
 
 

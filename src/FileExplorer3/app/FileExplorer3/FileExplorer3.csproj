@@ -78,8 +78,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
+    <Compile Include="BaseControls\AutoSuggestSource.cs" />
     <Compile Include="BaseControls\HotTrack.cs" />
-    <Compile Include="BaseControls\RadioGroup.cs" />
+    <Compile Include="BaseControls\SuggestBox.cs" />
     <Compile Include="Defines\Converters\BoolToVisibilityCollapsed.cs" />
     <Compile Include="Defines\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Defines\Converters\FormatNumbers.cs" />
@@ -206,6 +207,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Page Include="Themes\Common\TextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Common\HotTrack.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
