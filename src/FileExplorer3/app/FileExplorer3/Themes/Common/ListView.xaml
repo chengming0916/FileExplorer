@@ -168,7 +168,7 @@
 
 
     <Style TargetType="{x:Type uc:ListViewEx}">
-        <!--<Setter Property="TextSearch.TextPath" Value="EmbeddedModel.Label" />-->
+        <!--<Setter Property="TextRootItem.TextPath" Value="EmbeddedModel.Label" />-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type uc:ListViewEx}">

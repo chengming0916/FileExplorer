@@ -13,11 +13,14 @@ namespace FileExplorer.Utils
     {
         public static object GetValue(object obj, string propertyPath)
         {
-            Binding binding = new Binding(propertyPath);
-            binding.Mode = BindingMode.OneTime;
-            binding.Source = obj;
-            BindingOperations.SetBinding(_dummy, Dummy.ValueProperty, binding);
-            return _dummy.GetValue(Dummy.ValueProperty);
+            return Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    Binding binding = new Binding(propertyPath);
+                    binding.Mode = BindingMode.OneTime;
+                    binding.Source = obj;
+                    BindingOperations.SetBinding(_dummy, Dummy.ValueProperty, binding);
+                    return _dummy.GetValue(Dummy.ValueProperty);
+                });
         }
 
         public static object GetValue(object obj, BindingBase binding)

@@ -42,7 +42,7 @@ namespace FileExplorer.BaseControls
             _itemList = this.Template.FindName("PART_ItemList", this) as ListBox;
             _host = this.Template.FindName("PART_ContentHost", this) as ScrollViewer;
             _textBoxView = LogicalTreeHelper.GetChildren(_host).OfType<UIElement>().First();
-            _root = this.Template.FindName("root", this) as Grid;                       
+            _root = this.Template.FindName("root", this) as Grid;
 
             this.GotKeyboardFocus += (o, e) => { this.popupIfSuggest(); };
             this.LostKeyboardFocus += (o, e) => { if (!IsKeyboardFocusWithin) this.hidePopup(); };
@@ -77,7 +77,7 @@ namespace FileExplorer.BaseControls
                             //Handle in OnPreviewKeyDown
                             break;
                         case Key.Oem5:
-                            updateValueFromListBox();
+                            updateValueFromListBox(false);
                             SetValue(TextProperty, Text + "\\");
                             break;
                         case Key.Escape:
@@ -109,15 +109,16 @@ namespace FileExplorer.BaseControls
 
         }
 
-        #region Utils - Update Bindings 
+        #region Utils - Update Bindings
 
-        private void updateValueFromListBox()
+        private void updateValueFromListBox(bool updateSrc = true)
         {
             var bindingExpr = _itemList.GetBindingExpression(ListBox.SelectedValueProperty);
             if (bindingExpr != null)
                 bindingExpr.UpdateSource();
 
-            updateSource();
+            if (updateSrc)
+                updateSource();
             hidePopup();
         }
 
@@ -128,7 +129,7 @@ namespace FileExplorer.BaseControls
                 txtBindingExpr.UpdateSource();
         }
 
-        #endregion 
+        #endregion
 
         #region Utils - Popup show / hide
         private void popupIfSuggest()
@@ -210,13 +211,23 @@ namespace FileExplorer.BaseControls
         {
             base.OnTextChanged(e);
             var suggestSource = SuggestSource;
-            string text = Text;     
+            string text = Text;
             if (suggestSource != null)
-                Dispatcher.InvokeAsync(async () =>
-                {
-                    var retVal = await suggestSource.SuggestAsync(text);
-                    this.SetValue(SuggestionsProperty, retVal);
-                });
+                Task.Run(async () =>
+                    {
+                        return await suggestSource.SuggestAsync(text);
+                    }).ContinueWith(
+                    (pTask) =>
+                    {
+                        if (!pTask.IsFaulted)
+                            this.SetValue(SuggestionsProperty, pTask.Result);
+                    }, TaskScheduler.FromCurrentSynchronizationContext())
+                        ;
+                //Dispatcher.InvokeAsync(async () =>
+                //{
+                //    var retVal = await suggestSource.SuggestAsync(text);
+                //    this.SetValue(SuggestionsProperty, retVal);
+                //});
         }
 
 
@@ -231,7 +242,7 @@ namespace FileExplorer.BaseControls
         #endregion
 
         #region Data
-        
+
         Popup _popup;
         ListBox _itemList;
         Grid _root;

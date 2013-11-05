@@ -68,9 +68,9 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Stretch">
 
-                 
+
                     <TextBlock Text="Breadcrumb Core Only" />
-                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left">
+                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left" >
 
                         <bc:BreadcrumbCore.Style>
                             <Style TargetType="{x:Type bc:BreadcrumbCore}" >
@@ -91,24 +91,26 @@
                     <TextBlock Text="SuggestBox Only (dummy)" />
                     <bc:SuggestBox x:Name="suggestBoxDummy" />
                     <TextBlock Text="SuggestBox Only (auto, try Sub1\Sub12)" />
-                    <bc:SuggestBox x:Name="suggestBoxAuto" DisplayMemberPath="Value"
-                                   Text="{Binding Text, ElementName=txtAuto, UpdateSourceTrigger=Explicit}"
-                                   >
-                        <bc:SuggestBox.SuggestSource>
-                            <bc:AutoSuggestSource Separator="\" ValuePath="Value"
+                    <bc:AutoSuggestSource Separator="\" ValuePath="Value" x:Name="autoSuggestSource"
                                                   StringComparisonOption="CurrentCultureIgnoreCase"
                                                   HeaderTemplate="{Binding HeaderTemplate, ElementName=breadcrumbCore}"
                                                   ItemsSource="{Binding ItemsSource, ElementName=breadcrumbCore}"
                                                   />
-                        </bc:SuggestBox.SuggestSource>
-                    </bc:SuggestBox>
-                    
+                    <bc:SuggestBox x:Name="suggestBoxAuto" DisplayMemberPath="Value"
+                                   Text="{Binding Text, ElementName=txtAuto, UpdateSourceTrigger=Explicit}"
+                                   SuggestSource="{Binding ElementName=autoSuggestSource}" />
+
+                    <TextBlock Text="SuggestBox Only (use RootItem instead of ItemsSource)" />
+                    <bc:SuggestBox x:Name="suggestBoxAuto2" DisplayMemberPath="Value"
+                                   Text="{Binding Text, ElementName=txtAuto2, UpdateSourceTrigger=Explicit}" />                    
+
                 </StackPanel>
                 <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="5" />
-                <StackPanel Grid.Column="1" Orientation="Vertical" >                    
-                    <TextBlock Text="{Binding SelectedValue.Header,ElementName=breadcrumbCore}"  />
+                <StackPanel Grid.Column="1" Orientation="Vertical" >
+                    <TextBlock Text="{Binding SelectedValue.Value,ElementName=breadcrumbCore}"  />
                     <TextBlock Text="{Binding Text,ElementName=suggestBoxDummy}" />
                     <TextBlock x:Name="txtAuto"  />
+                    <TextBlock x:Name="txtAuto2"  />
                 </StackPanel>
             </Grid>
         </TabItem>

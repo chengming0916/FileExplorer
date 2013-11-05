@@ -64,9 +64,16 @@ namespace TestTemplate.WPF
                 fvm.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));
             breadcrumbCore.ItemsSource = fvm;
             suggestBoxDummy.SuggestSource = new DummySuggestSource();
-            suggestBoxAuto.SuggestSource = new AutoSuggestSource(
+
+            
+            
+            //suggestBoxAuto2
+            FakeViewModel root = new FakeViewModel();
+            foreach (var vm in fvm)
+                root.SubDirectories.Add(vm);            
+            suggestBoxAuto2.SuggestSource = new AutoSuggestSource(
                 breadcrumbCore.HeaderTemplate as HierarchicalDataTemplate,
-                breadcrumbCore.ItemsSource, 
+                FakeViewModel.GenerateFakeViewModels(), 
                 "Value");
             
 
