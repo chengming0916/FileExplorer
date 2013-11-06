@@ -75,7 +75,7 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate };
+            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate, IconTemplate = this.IconTemplate, IsTopLevel=true };
         }
 
         public static void OnLastNonVisibleIndexChanged(object sender, DependencyPropertyChangedEventArgs args)
@@ -146,6 +146,15 @@ namespace FileExplorer.BaseControls
         {
             get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
             set { SetValue(HeaderTemplateProperty, value); }
+        }
+
+        public static readonly DependencyProperty IconTemplateProperty = 
+            DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(BreadcrumbCore));
+
+        public DataTemplate IconTemplate
+        {
+            get { return (DataTemplate)GetValue(IconTemplateProperty); }
+            set { SetValue(IconTemplateProperty, value); }
         }
         #endregion
     }

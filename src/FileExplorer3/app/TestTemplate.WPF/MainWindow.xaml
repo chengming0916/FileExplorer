@@ -12,7 +12,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
-                
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -66,11 +66,12 @@
                 <Grid.Resources>
                     <ResourceDictionary>
                         <HierarchicalDataTemplate x:Key="FakeVMHeaderTemplate" ItemsSource="{Binding SubDirectories}"  >
-                            <StackPanel Orientation="Horizontal" >
-                                <Image Source="folder.ico" DockPanel.Dock="Left" />
-                                <TextBlock Text="{Binding Header}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                            </StackPanel>
+                            <TextBlock Text="{Binding Header}" Margin="5,0"
+                                       VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                         </HierarchicalDataTemplate>
+                        <DataTemplate x:Key="FakeVMIconTemplate">
+                            <Image Source="folder.ico" DockPanel.Dock="Left" />
+                        </DataTemplate>
                     </ResourceDictionary>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
@@ -80,7 +81,8 @@
                 <StackPanel VerticalAlignment="Stretch">
 
                     <TextBlock Text="Breadcrumb Core Only" />
-                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left"  
+                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left" 
+                                       IconTemplate="{StaticResource FakeVMIconTemplate}"
                                        HeaderTemplate="{StaticResource FakeVMHeaderTemplate}">
                     </bc:BreadcrumbCore>
 
@@ -93,8 +95,10 @@
 
                     <TextBlock Text="Breadcrumb" />
                     <uc:Breadcrumb x:Name="breadcrumb" Height="30"
+                                   IconTemplate="{StaticResource FakeVMIconTemplate}"
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
-                                   SelectedValue="{Binding SelectedValue,ElementName=breadcrumbCore}" />
+                                   SelectedValue="{Binding SelectedValue,ElementName=breadcrumbCore}" >
+                    </uc:Breadcrumb>
                 </StackPanel>
                 <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="5" Grid.Column="1" />
                 <StackPanel Grid.Column="1" Orientation="Vertical" >

@@ -95,6 +95,16 @@ namespace FileExplorer.UserControls
             set { SetValue(HeaderTemplateProperty, value); }
         }
 
+        public static readonly DependencyProperty IconTemplateProperty =
+           DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(Breadcrumb));
+
+        public DataTemplate IconTemplate
+        {
+            get { return (DataTemplate)GetValue(IconTemplateProperty); }
+            set { SetValue(IconTemplateProperty, value); }
+        }
+
+
         #region HierarchyHelper, SuggestSource
 
         public IHierarchyHelper HierarchyHelper

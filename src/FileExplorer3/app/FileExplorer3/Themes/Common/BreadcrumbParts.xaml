@@ -48,29 +48,27 @@
                                  Visibility="{Binding ShowToggle, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btv}}"
                                  MinWidth="10">
-                        <Grid>
-                            <!-- DropDown Popup  -->
-                            <bc:DropDown IsDropDownOpen="{TemplateBinding ComboBox.IsDropDownOpen}">
-                                <Border BorderThickness="1,1,1,1" MinWidth="50" MinHeight="10"
+                        <!-- DropDown Popup  -->
+                        <bc:DropDown IsDropDownOpen="{TemplateBinding ComboBox.IsDropDownOpen}">
+                            <Border BorderThickness="1,1,1,1" MinWidth="100" MinHeight="10"
                                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
                                             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Name="DropDownBorder">
-                                    <ScrollViewer CanContentScroll="True"  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto"
+                                <ScrollViewer CanContentScroll="True"  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto"
                                                       Visibility="{Binding Path=IsLoading, Converter={StaticResource fbtvc},
                                                         Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                       >
-                                        <ItemsPresenter x:Name="itemList" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                                    <ItemsPresenter x:Name="itemList" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                                                      SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"                                                      
                                                      MaxHeight="200" 
                                                      KeyboardNavigation.DirectionalNavigation="None"
                                                      VirtualizingStackPanel.IsVirtualizing="True" 
                                                      VirtualizingStackPanel.VirtualizationMode="Standard"                                                     
                                                     >
-                                        </ItemsPresenter>
-                                    </ScrollViewer>
-                                </Border>
+                                    </ItemsPresenter>
+                                </ScrollViewer>
+                            </Border>
 
-                            </bc:DropDown>
-                        </Grid>
+                        </bc:DropDown>
                     </bc:HotTrack>
                     <!-- Header Content -->
                     <bc:HotTrack x:Name="headerHL"  BorderThickness="{TemplateBinding BorderThickness}"
@@ -80,8 +78,18 @@
                                                 Height="{TemplateBinding ActualHeight}" Template="{StaticResource BaseButton}" 
                                                 Grid.RowSpan="2" >
                             <Button.Content>
-                                <ContentPresenter VerticalAlignment="Stretch" 
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter VerticalAlignment="Stretch" Margin="0,2" DockPanel.Dock="Left" Grid.Column="0"
+                                                      Visibility="{TemplateBinding IsTopLevel, 
+                                                                    Converter={StaticResource fbtvc}}"
+                                                    ContentTemplate="{TemplateBinding IconTemplate}"  Content="{Binding}" />
+                                    <ContentPresenter VerticalAlignment="Stretch"  Grid.Column="1"
                                                     ContentTemplate="{TemplateBinding HeaderTemplate}"  Content="{Binding}" />
+                                </Grid>
                             </Button.Content>
                         </Button>
                     </bc:HotTrack>
@@ -107,6 +115,8 @@
         <Setter Property="Template" Value="{StaticResource BreadcrumbItemTemplate}" />
         <Setter Property="HeaderTemplate" Value="{Binding HeaderTemplate, Mode=OneWay,
             RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
+        <Setter Property="IconTemplate" Value="{Binding IconTemplate, Mode=OneWay,
+            RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
     </Style>
 
     <Style x:Key="{x:Type bc:BreadcrumbOverflowPanel}"                       
@@ -128,7 +138,7 @@
                                                     RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
     </Style>
 
-        <conv:BoolToVisibilityConverter x:Key="btv" />
+    <conv:BoolToVisibilityConverter x:Key="btv" />
 
     <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
            TargetType="{x:Type bc:BreadcrumbCore}" >
@@ -162,7 +172,7 @@
 
                                             </ListBox>
                                             <Separator HorizontalAlignment="Stretch" />
-                                            <bc:BreadcrumbOverflowPanel />                                    
+                                            <bc:BreadcrumbOverflowPanel />
 
                                         </StackPanel>
                                     </ScrollViewer>

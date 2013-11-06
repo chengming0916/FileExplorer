@@ -67,7 +67,7 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            BreadcrumbItem retVal = new BreadcrumbItem() { HeaderTemplate = HeaderTemplate };
+            BreadcrumbItem retVal = new BreadcrumbItem() { HeaderTemplate = HeaderTemplate, IconTemplate = IconTemplate, IsTopLevel = false };
             retVal.ShowToggle = false;
             retVal.IsTopLevel = false;
             return retVal;
@@ -221,6 +221,15 @@ namespace FileExplorer.BaseControls
         {
             get { return (bool)GetValue(IsLoadingProperty); }
             set { SetValue(IsLoadingProperty, value); }
+        }
+
+        public static readonly DependencyProperty IconTemplateProperty =
+            DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(BreadcrumbItem));
+
+        public DataTemplate IconTemplate
+        {
+            get { return (DataTemplate)GetValue(IconTemplateProperty); }
+            set { SetValue(IconTemplateProperty, value); }
         }
 
         #endregion
