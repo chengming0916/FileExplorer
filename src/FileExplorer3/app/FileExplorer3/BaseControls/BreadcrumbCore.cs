@@ -29,7 +29,8 @@ namespace FileExplorer.BaseControls
             {                
                 SelectedItem = e.OriginalSource as BreadcrumbItem;
                 if (SelectedItem is BreadcrumbItem)
-                    SelectedValue = (SelectedItem as BreadcrumbItem).DataContext;                
+                    SelectedValue = (SelectedItem as BreadcrumbItem).DataContext;
+                RaiseEvent(new RoutedEventArgs(SelectedValueChangedEvent));
             }));
         }
 
@@ -58,6 +59,15 @@ namespace FileExplorer.BaseControls
         #endregion
 
         #region Dependency properties
+
+        public static readonly RoutedEvent SelectedValueChangedEvent = EventManager.RegisterRoutedEvent("SelectedValueChanged",
+          RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbCore));
+
+        public event RoutedEventHandler SelectedValueChanged
+        {
+            add { AddHandler(SelectedValueChangedEvent, value); }
+            remove { RemoveHandler(SelectedValueChangedEvent, value); }
+        }               
 
         public static DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem",
           typeof(Object), typeof(BreadcrumbCore), new PropertyMetadata(null));

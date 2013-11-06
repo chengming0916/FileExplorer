@@ -14,7 +14,7 @@ namespace FileExplorer.BaseControls
 {
     public interface ISuggestSource
     {
-        Task<IList<object>> SuggestAsync(string input);
+        Task<IList<object>> SuggestAsync(object data, string input);
     }
 
     public class SuggestBox : TextBox
@@ -213,11 +213,12 @@ namespace FileExplorer.BaseControls
             base.OnTextChanged(e);
             var suggestSource = SuggestSource;
             string text = Text;
+            object data = DataContext;
             IsHintVisible = String.IsNullOrEmpty(text);
             if (suggestSource != null)
                 Task.Run(async () =>
                     {
-                        return await suggestSource.SuggestAsync(text);
+                        return await suggestSource.SuggestAsync(data, text);
                     }).ContinueWith(
                     (pTask) =>
                     {

@@ -39,7 +39,7 @@ namespace TestTemplate.WPF
         public class DummySuggestSource : ISuggestSource
         {
 
-            public Task<IList<object>> SuggestAsync(string input)
+            public Task<IList<object>> SuggestAsync(object data, string input)
             {
                 return Task.FromResult<IList<object>>(new List<object>()
                 {
@@ -65,14 +65,13 @@ namespace TestTemplate.WPF
             breadcrumbCore.ItemsSource = fvm;
             suggestBoxDummy.SuggestSource = new DummySuggestSource();
 
-            suggestBoxAuto.SuggestSource = new AutoSuggestSource(
-                fvm, "SubDirectories", "Value");
+            suggestBoxAuto.DataContext = fvm;
+            suggestBoxAuto.SuggestSource = new AutoSuggestSource<FakeViewModel>(
+                 "SubDirectories", "Value");
 
             //suggestBoxAuto2
-            suggestBoxAuto2.SuggestSource = new AutoSuggestSource(                
-                FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5)),
-                "SubDirectories",
-                "Value");
+            suggestBoxAuto2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));
+            suggestBoxAuto2.SuggestSource = new AutoSuggestSource<FakeViewModel>("SubDirectories", "Value");
             
 
 

@@ -21,7 +21,8 @@ namespace TestTemplate.WPF
                     {
                         Header = root.Header + i.ToString(),
                         Value = (root.Value + "\\Sub" + root.Header + i.ToString()).TrimStart('\\'),
-                        Latency = root.Latency
+                        Latency = root.Latency, 
+                        Parent = root
                     };
                     generate(vm, level - 1);
                     root._subDirectories.Add(vm);
@@ -42,7 +43,10 @@ namespace TestTemplate.WPF
             Latency = TimeSpan.FromSeconds(0);
             _subDirectories = new ObservableCollection<FakeViewModel>();
             foreach (var rm in rootModels)
+            {
+                rm.Parent = this;
                 _subDirectories.Add(rm);
+            }
         }
 
         public FakeViewModel(string header, params string[] subHeaders)
@@ -51,7 +55,7 @@ namespace TestTemplate.WPF
             Value = header;
             SubDirectories = new ObservableCollection<FakeViewModel>();
             foreach (var sh in subHeaders)
-                _subDirectories.Add(new FakeViewModel(sh) { Value = header + "\\" + sh });
+                _subDirectories.Add(new FakeViewModel(sh) { Value = header + "\\" + sh, Parent = this });
         }
 
         public override string ToString()
@@ -60,6 +64,7 @@ namespace TestTemplate.WPF
         }
 
         private ObservableCollection<FakeViewModel> _subDirectories;
+        public FakeViewModel Parent { get; set; }
         public string Header { get; set; }
         public string Value { get; set; }
         public TimeSpan Latency { get; set; }

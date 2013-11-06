@@ -17,4 +17,36 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbParts.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <ControlTemplate x:Key="BreadcrumbTemplate" TargetType="{x:Type uc:Breadcrumb}">
+        <Border x:Name="bdr">
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                <Grid x:Name="BreadcrumbBackgroundGrid" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0"
+                                  IsChecked="{Binding IsBreadcrumbVisible, RelativeSource={RelativeSource TemplatedParent}}" 
+                                  Template="{StaticResource BaseBreadcrumbButton}" Background="Transparent" >
+                        <TextBlock>Toggle</TextBlock>
+                    </ToggleButton>
+
+                    <bc:SuggestBox x:Name="PART_TextBox" Grid.Column="1" 
+                                   Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, RelativeSource={RelativeSource TemplatedParent}}"   />
+
+                    <bc:BreadcrumbCore x:Name="PART_BreadcrumbCore" Grid.Column="1"
+                                   HeaderTemplate="{TemplateBinding HeaderTemplate}"
+                                   Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent}}">                        
+                    </bc:BreadcrumbCore>
+                </Grid>
+            </Border>
+        </Border>
+    </ControlTemplate>
+    
+    <Style TargetType="{x:Type uc:Breadcrumb}">
+        <Setter Property="Template" Value="{StaticResource BreadcrumbTemplate}" />
+    </Style>
+    
 </ResourceDictionary>

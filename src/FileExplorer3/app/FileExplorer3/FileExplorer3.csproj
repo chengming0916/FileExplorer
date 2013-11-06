@@ -77,6 +77,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserControls\AutoHierarchyHelper.cs" />
     <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
     <Compile Include="BaseControls\AutoSuggestSource.cs" />
     <Compile Include="BaseControls\HotTrack.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="BaseControls\BreadcrumbCore.cs" />
     <Compile Include="BaseControls\BreadcrumbItem.cs" />
     <Compile Include="BaseControls\BreadcrumbOverflowPanel.cs" />
+    <Compile Include="UserControls\Breadcrumb.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
     <Compile Include="BaseControls\GridViewColumnEx.cs" />
@@ -207,6 +209,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Page Include="Themes\Common\BreadcrumbParts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Common\TextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

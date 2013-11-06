@@ -36,7 +36,9 @@ namespace FileExplorer.BaseControls
                     availableWidth -= current.DesiredSize.Width;
                     maxHeight = Math.Max(maxHeight, current.DesiredSize.Height);
                 }
-                return new Size(availableSize.Width, maxHeight);
+                if (availableWidth <= 0)
+                    return new Size(availableSize.Width, maxHeight);
+                return new Size(availableSize.Width - availableWidth + 1, maxHeight);
 
             }
             return new Size(0, 0);

@@ -5,13 +5,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:uc="http://www.quickzip.org/UserControls"
         xmlns:bc="http://www.quickzip.org/BaseControls"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Control Test" Height="350" Width="525">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -62,30 +63,25 @@
         </TabItem>
         <TabItem Header="Breadcrumb" IsSelected="True">
             <Grid>
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <HierarchicalDataTemplate x:Key="FakeVMHeaderTemplate" ItemsSource="{Binding SubDirectories}"  >
+                            <StackPanel Orientation="Horizontal" >
+                                <Image Source="folder.ico" DockPanel.Dock="Left" />
+                                <TextBlock Text="{Binding Header}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </ResourceDictionary>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Stretch">
 
-
                     <TextBlock Text="Breadcrumb Core Only" />
-                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left" >
-
-                        <bc:BreadcrumbCore.Style>
-                            <Style TargetType="{x:Type bc:BreadcrumbCore}" >
-                                <Setter Property="HeaderTemplate">
-                                    <Setter.Value>
-                                        <HierarchicalDataTemplate ItemsSource="{Binding SubDirectories}"  >
-                                            <StackPanel Orientation="Horizontal" >
-                                                <Image Source="folder.ico" DockPanel.Dock="Left" />
-                                                <TextBlock Text="{Binding Header}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                                            </StackPanel>
-                                        </HierarchicalDataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </bc:BreadcrumbCore.Style>
+                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left"  
+                                       HeaderTemplate="{StaticResource FakeVMHeaderTemplate}">
                     </bc:BreadcrumbCore>
 
                     <TextBlock Text="SuggestBox Only" />
@@ -94,8 +90,12 @@
                                    Text="{Binding Text, ElementName=txtAuto, UpdateSourceTrigger=Explicit}"
                                    SuggestSource="{Binding ElementName=autoSuggestSource}" />
                     <bc:SuggestBox x:Name="suggestBoxAuto2" DisplayMemberPath="Value"  Hint="With delay 1 sec"
-                                   Text="{Binding Text, ElementName=txtAuto2, UpdateSourceTrigger=Explicit}" />                    
+                                   Text="{Binding Text, ElementName=txtAuto2, UpdateSourceTrigger=Explicit}" />
 
+                    <TextBlock Text="Breadcrumb" />
+                    <uc:Breadcrumb x:Name="breadcrumb" 
+                                   HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
+                                   SelectedValue="{Binding SelectedValue,ElementName=breadcrumbCore}" />
                 </StackPanel>
                 <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="5" Grid.Column="1" />
                 <StackPanel Grid.Column="1" Orientation="Vertical" >
