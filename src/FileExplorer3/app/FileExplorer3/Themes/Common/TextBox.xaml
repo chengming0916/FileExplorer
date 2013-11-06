@@ -32,6 +32,9 @@
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>-->
             <Grid x:Name="root">
+                <TextBlock Text="{TemplateBinding Hint}" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
+                           Visibility="{Binding IsHintVisible, RelativeSource={RelativeSource TemplatedParent}, 
+                            Converter={StaticResource btv}}"  Opacity="0.5" />
                 <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
                 <Popup x:Name="PART_Popup" AllowsTransparency="true"  
                                    PlacementTarget="{Binding ElementName=PART_ContentHost}"                                   
@@ -43,7 +46,7 @@
                     <Border x:Name="DropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"  
                                             Width="{Binding ActualWidth, ElementName=PART_ContentHost}" 
                                             
-                                            MaxHeight="200"
+                                            MaxHeight="100"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="1,0,1,1">
 

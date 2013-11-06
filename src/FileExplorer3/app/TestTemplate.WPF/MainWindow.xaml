@@ -88,24 +88,16 @@
                         </bc:BreadcrumbCore.Style>
                     </bc:BreadcrumbCore>
 
-                    <TextBlock Text="SuggestBox Only (dummy)" />
-                    <bc:SuggestBox x:Name="suggestBoxDummy" />
-                    <TextBlock Text="SuggestBox Only (auto, try Sub1\Sub12)" />
-                    <bc:AutoSuggestSource Separator="\" ValuePath="Value" x:Name="autoSuggestSource"
-                                                  StringComparisonOption="CurrentCultureIgnoreCase"
-                                                  HeaderTemplate="{Binding HeaderTemplate, ElementName=breadcrumbCore}"
-                                                  ItemsSource="{Binding ItemsSource, ElementName=breadcrumbCore}"
-                                                  />
-                    <bc:SuggestBox x:Name="suggestBoxAuto" DisplayMemberPath="Value"
+                    <TextBlock Text="SuggestBox Only" />
+                    <bc:SuggestBox x:Name="suggestBoxDummy" Hint="Custom implement (+xyz/abc)" />
+                    <bc:SuggestBox x:Name="suggestBoxAuto" DisplayMemberPath="Value" Hint="Uses ViewModel, try Sub1\Sub12"
                                    Text="{Binding Text, ElementName=txtAuto, UpdateSourceTrigger=Explicit}"
                                    SuggestSource="{Binding ElementName=autoSuggestSource}" />
-
-                    <TextBlock Text="SuggestBox Only (use RootItem instead of ItemsSource)" />
-                    <bc:SuggestBox x:Name="suggestBoxAuto2" DisplayMemberPath="Value"
+                    <bc:SuggestBox x:Name="suggestBoxAuto2" DisplayMemberPath="Value"  Hint="With delay 1 sec"
                                    Text="{Binding Text, ElementName=txtAuto2, UpdateSourceTrigger=Explicit}" />                    
 
                 </StackPanel>
-                <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="5" />
+                <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="5" Grid.Column="1" />
                 <StackPanel Grid.Column="1" Orientation="Vertical" >
                     <TextBlock Text="{Binding SelectedValue.Value,ElementName=breadcrumbCore}"  />
                     <TextBlock Text="{Binding Text,ElementName=suggestBoxDummy}" />

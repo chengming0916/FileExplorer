@@ -44,8 +44,9 @@ namespace FileExplorer.BaseControls
             _textBoxView = LogicalTreeHelper.GetChildren(_host).OfType<UIElement>().First();
             _root = this.Template.FindName("root", this) as Grid;
 
-            this.GotKeyboardFocus += (o, e) => { this.popupIfSuggest(); };
-            this.LostKeyboardFocus += (o, e) => { if (!IsKeyboardFocusWithin) this.hidePopup(); };
+            this.GotKeyboardFocus += (o, e) => { this.popupIfSuggest(); IsHintVisible = false; };
+            this.LostKeyboardFocus += (o, e) => { if (!IsKeyboardFocusWithin) this.hidePopup(); 
+                IsHintVisible = String.IsNullOrEmpty(Text); };
 
             //09-04-09 Based on SilverLaw's approach 
             _popup.CustomPopupPlacementCallback += new CustomPopupPlacementCallback(
@@ -212,6 +213,7 @@ namespace FileExplorer.BaseControls
             base.OnTextChanged(e);
             var suggestSource = SuggestSource;
             string text = Text;
+            IsHintVisible = String.IsNullOrEmpty(text);
             if (suggestSource != null)
                 Task.Run(async () =>
                     {
@@ -221,8 +223,7 @@ namespace FileExplorer.BaseControls
                     {
                         if (!pTask.IsFaulted)
                             this.SetValue(SuggestionsProperty, pTask.Result);
-                    }, TaskScheduler.FromCurrentSynchronizationContext())
-                        ;
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
                 //Dispatcher.InvokeAsync(async () =>
                 //{
                 //    var retVal = await suggestSource.SuggestAsync(text);
@@ -319,6 +320,25 @@ namespace FileExplorer.BaseControls
 
         public static readonly DependencyProperty DropDownPlacementTargetProperty =
             DependencyProperty.Register("DropDownPlacementTarget", typeof(object), typeof(SuggestBox));
+
+        public string Hint
+        {
+            get { return (string)GetValue(HintProperty); }
+            set { SetValue(HintProperty, value); }
+        }
+
+        public static readonly DependencyProperty HintProperty =
+            DependencyProperty.Register("Hint", typeof(string), typeof(SuggestBox), new PropertyMetadata(""));
+
+
+        public bool IsHintVisible
+        {
+            get { return (bool)GetValue(IsHintVisibleProperty); }
+            set { SetValue(IsHintVisibleProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsHintVisibleProperty =
+            DependencyProperty.Register("IsHintVisible", typeof(bool), typeof(SuggestBox), new PropertyMetadata(true));
 
 
         #endregion

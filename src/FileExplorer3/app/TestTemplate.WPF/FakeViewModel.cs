@@ -28,9 +28,9 @@ namespace TestTemplate.WPF
                 }
         }
 
-        public static FakeViewModel GenerateFakeViewModels()
+        public static FakeViewModel GenerateFakeViewModels(TimeSpan latency)
         {
-            var root = new FakeViewModel() { Latency = TimeSpan.FromSeconds(5) };
+            var root = new FakeViewModel() { Latency = latency };
             generate(root, 5);
             return root;
         }
@@ -54,15 +54,25 @@ namespace TestTemplate.WPF
                 _subDirectories.Add(new FakeViewModel(sh) { Value = header + "\\" + sh });
         }
 
+        public override string ToString()
+        {
+            return Value;
+        }
+
         private ObservableCollection<FakeViewModel> _subDirectories;
         public string Header { get; set; }
         public string Value { get; set; }
         public TimeSpan Latency { get; set; }
+        bool _loaded = false;
         public ObservableCollection<FakeViewModel> SubDirectories
         {
             get
             {
-                Thread.Sleep(Latency);
+                if (!_loaded)
+                {
+                    _loaded = true;
+                    Thread.Sleep(Latency);
+                }
                 return _subDirectories;
             }
             set { _subDirectories = value; }
