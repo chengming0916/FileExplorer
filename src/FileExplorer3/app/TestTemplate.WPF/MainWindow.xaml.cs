@@ -39,7 +39,7 @@ namespace TestTemplate.WPF
         public class DummySuggestSource : ISuggestSource
         {
 
-            public Task<IList<object>> SuggestAsync(object data, string input)
+            public Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
             {
                 return Task.FromResult<IList<object>>(new List<object>()
                 {
@@ -49,6 +49,7 @@ namespace TestTemplate.WPF
             }
 
             public bool RunInDispatcher { get { return false; } }
+         
         }
 
 
@@ -66,12 +67,12 @@ namespace TestTemplate.WPF
             suggestBoxDummy.SuggestSource = new DummySuggestSource();
 
             suggestBoxAuto.DataContext = fvm;
-            suggestBoxAuto.SuggestSource = new AutoSuggestSource<FakeViewModel>(
-                 "SubDirectories", "Value");
+            suggestBoxAuto.HierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");            
 
             //suggestBoxAuto2
             suggestBoxAuto2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));
-            suggestBoxAuto2.SuggestSource = new AutoSuggestSource<FakeViewModel>("SubDirectories", "Value");
+            suggestBoxAuto2.HierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");
+            suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value.
             
 
 

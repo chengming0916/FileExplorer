@@ -87,13 +87,12 @@
                     <TextBlock Text="SuggestBox Only" />
                     <bc:SuggestBox x:Name="suggestBoxDummy" Hint="Custom implement (+xyz/abc)" />
                     <bc:SuggestBox x:Name="suggestBoxAuto" DisplayMemberPath="Value" Hint="Uses ViewModel, try Sub1\Sub12"
-                                   Text="{Binding Text, ElementName=txtAuto, UpdateSourceTrigger=Explicit}"
-                                   SuggestSource="{Binding ElementName=autoSuggestSource}" />
+                                   Text="{Binding Text, ElementName=txtAuto, UpdateSourceTrigger=Explicit}"/>
                     <bc:SuggestBox x:Name="suggestBoxAuto2" DisplayMemberPath="Value"  Hint="With delay 1 sec"
                                    Text="{Binding Text, ElementName=txtAuto2, UpdateSourceTrigger=Explicit}" />
 
                     <TextBlock Text="Breadcrumb" />
-                    <uc:Breadcrumb x:Name="breadcrumb" 
+                    <uc:Breadcrumb x:Name="breadcrumb" Height="30"
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
                                    SelectedValue="{Binding SelectedValue,ElementName=breadcrumbCore}" />
                 </StackPanel>

@@ -77,7 +77,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserControls\AutoHierarchyHelper.cs" />
+    <Compile Include="BaseControls\PathHierarchyHelper.cs" />
     <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
     <Compile Include="BaseControls\AutoSuggestSource.cs" />
     <Compile Include="BaseControls\HotTrack.cs" />

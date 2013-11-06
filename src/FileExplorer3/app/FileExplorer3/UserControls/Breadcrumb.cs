@@ -9,30 +9,7 @@ using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
 {
-    public interface IHierarchyHelper
-    {
-        /// <summary>
-        /// Used to generate ItemsSource for BreadcrumbCore.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        IEnumerable<object> GetHierarchy(object item, bool includeCurrent);
-
-        /// <summary>
-        /// Generate Path from an item;
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        string GetPath(object item);
-
-        /// <summary>
-        /// Get Item from path.
-        /// </summary>
-        /// <param name="rootItem">RootItem or ItemSource which can be used to lookup from.</param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        object GetItem(object rootItem, string path);
-    }
+   
 
     public class Breadcrumb : ItemsControl
     {
@@ -61,8 +38,8 @@ namespace FileExplorer.UserControls
             if (bread.bcore != null && e.NewValue != null && !e.NewValue.Equals(e.OldValue))
             {
                 var hierarchy = bread.HierarchyHelper.GetHierarchy(e.NewValue, true).Reverse().ToList();                
-                bread.bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);                
-                //bread.tbox.SetValue(TextBlock.TextProperty, 
+                bread.bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);
+                bread.SelectedPathValue =  bread.HierarchyHelper.GetPath(e.NewValue);
             }
         }
         
@@ -86,6 +63,17 @@ namespace FileExplorer.UserControls
         public static readonly DependencyProperty SelectedValueProperty =
             DependencyProperty.Register("SelectedValue", typeof(object),
             typeof(Breadcrumb), new UIPropertyMetadata(null, OnSelectedValueChanged));
+
+        public object SelectedPathValue
+        {
+            get { return GetValue(SelectedPathValueProperty); }
+            set { SetValue(SelectedPathValueProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedPathValueProperty =
+            DependencyProperty.Register("SelectedPathValue", typeof(object),
+            typeof(Breadcrumb), new UIPropertyMetadata(null));
+
 
 
         public bool IsBreadcrumbVisible
@@ -117,7 +105,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty HierarchyHelperProperty =
             DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
-            typeof(Breadcrumb), new UIPropertyMetadata(new AutoHierarchyHelper("Parent", "Value", "SubDirectories")));
+            typeof(Breadcrumb), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubDirectories")));
 
        
         public ISuggestSource SuggestSource
@@ -128,7 +116,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty SuggestSourceProperty =
             DependencyProperty.Register("SuggestSource", typeof(ISuggestSource),
-            typeof(Breadcrumb), new UIPropertyMetadata(new AutoSuggestSource("SubDirectories", "Value")));
+            typeof(Breadcrumb), new UIPropertyMetadata(new AutoSuggestSource()));
 
         #endregion
         #endregion

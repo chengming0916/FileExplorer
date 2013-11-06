@@ -14,7 +14,7 @@ namespace FileExplorer.BaseControls
 {
     public interface ISuggestSource
     {
-        Task<IList<object>> SuggestAsync(object data, string input);
+        Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper);
     }
 
     public class SuggestBox : TextBox
@@ -45,8 +45,11 @@ namespace FileExplorer.BaseControls
             _root = this.Template.FindName("root", this) as Grid;
 
             this.GotKeyboardFocus += (o, e) => { this.popupIfSuggest(); IsHintVisible = false; };
-            this.LostKeyboardFocus += (o, e) => { if (!IsKeyboardFocusWithin) this.hidePopup(); 
-                IsHintVisible = String.IsNullOrEmpty(Text); };
+            this.LostKeyboardFocus += (o, e) =>
+            {
+                if (!IsKeyboardFocusWithin) this.hidePopup();
+                IsHintVisible = String.IsNullOrEmpty(Text);
+            };
 
             //09-04-09 Based on SilverLaw's approach 
             _popup.CustomPopupPlacementCallback += new CustomPopupPlacementCallback(
@@ -62,7 +65,7 @@ namespace FileExplorer.BaseControls
                 {
                     if (_itemList.SelectedValue != null)
                         updateValueFromListBox();
-                };
+                };          
 
             _itemList.PreviewKeyDown += (o, e) =>
             {
@@ -114,9 +117,7 @@ namespace FileExplorer.BaseControls
 
         private void updateValueFromListBox(bool updateSrc = true)
         {
-            var bindingExpr = _itemList.GetBindingExpression(ListBox.SelectedValueProperty);
-            if (bindingExpr != null)
-                bindingExpr.UpdateSource();
+            this.SetValue(TextBox.TextProperty, _itemList.SelectedValue);
 
             if (updateSrc)
                 updateSource();
@@ -195,9 +196,9 @@ namespace FileExplorer.BaseControls
                     if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
                     {
                         if (Text.EndsWith("\\"))
-                            Text = Text.Substring(0, Text.Length - 1);
+                            SetValue(TextProperty, Text.Substring(0, Text.Length - 1));
                         else
-                            Text = getDirectoryName(Text) + "\\";
+                            SetValue(TextProperty, getDirectoryName(Text) + "\\");
 
                         this.Select(Text.Length, 0);
                         e.Handled = true;
@@ -212,24 +213,25 @@ namespace FileExplorer.BaseControls
         {
             base.OnTextChanged(e);
             var suggestSource = SuggestSource;
+            var hierarchyHelper = HierarchyHelper;
             string text = Text;
             object data = DataContext;
             IsHintVisible = String.IsNullOrEmpty(text);
             if (suggestSource != null)
                 Task.Run(async () =>
                     {
-                        return await suggestSource.SuggestAsync(data, text);
+                        return await suggestSource.SuggestAsync(data, text, hierarchyHelper);
                     }).ContinueWith(
                     (pTask) =>
                     {
                         if (!pTask.IsFaulted)
                             this.SetValue(SuggestionsProperty, pTask.Result);
                     }, TaskScheduler.FromCurrentSynchronizationContext());
-                //Dispatcher.InvokeAsync(async () =>
-                //{
-                //    var retVal = await suggestSource.SuggestAsync(text);
-                //    this.SetValue(SuggestionsProperty, retVal);
-                //});
+            //Dispatcher.InvokeAsync(async () =>
+            //{
+            //    var retVal = await suggestSource.SuggestAsync(text);
+            //    this.SetValue(SuggestionsProperty, retVal);
+            //});
         }
 
 
@@ -257,13 +259,24 @@ namespace FileExplorer.BaseControls
         #region Public Properties
 
         public static readonly DependencyProperty SuggestSourceProperty = DependencyProperty.Register(
-            "SuggestSource", typeof(ISuggestSource), typeof(SuggestBox), new PropertyMetadata(null));
+            "SuggestSource", typeof(ISuggestSource), typeof(SuggestBox), new PropertyMetadata(new AutoSuggestSource()));
 
         public ISuggestSource SuggestSource
         {
             get { return (ISuggestSource)GetValue(SuggestSourceProperty); }
             set { SetValue(SuggestSourceProperty, value); }
         }
+
+        public IHierarchyHelper HierarchyHelper
+        {
+            get { return (IHierarchyHelper)GetValue(HierarchyHelperProperty); }
+            set { SetValue(HierarchyHelperProperty, value); }
+        }
+
+        public static readonly DependencyProperty HierarchyHelperProperty =
+            DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
+            typeof(SuggestBox), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubDirectories")));
+
 
         public static readonly DependencyProperty SuggestionsProperty = DependencyProperty.Register(
             "Suggestions", typeof(IList<object>), typeof(SuggestBox), new PropertyMetadata(null, OnSuggestionsChanged));

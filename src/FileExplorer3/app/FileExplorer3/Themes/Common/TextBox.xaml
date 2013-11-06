@@ -34,7 +34,7 @@
             <Grid x:Name="root">
                 <TextBlock Text="{TemplateBinding Hint}" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
                            Visibility="{Binding IsHintVisible, RelativeSource={RelativeSource TemplatedParent}, 
-                            Converter={StaticResource btv}}"  Opacity="0.5" />
+                            Converter={StaticResource btv}}"  Opacity="0.5"  />
                 <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
                 <Popup x:Name="PART_Popup" AllowsTransparency="true"  
                                    PlacementTarget="{Binding ElementName=PART_ContentHost}"                                   
@@ -58,9 +58,6 @@
                                                      ItemsSource="{Binding Suggestions, RelativeSource={RelativeSource TemplatedParent}}"
                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                                                     KeyboardNavigation.AcceptsReturn="True"
-                                 
-                                   SelectedValue="{Binding Text,  UpdateSourceTrigger=Explicit,
-                                                        RelativeSource={RelativeSource AncestorType={x:Type TextBox}}, Mode=OneWayToSource}"
                                                      KeyboardNavigation.DirectionalNavigation="Cycle" />
                     </Border>
                 </Popup>
@@ -70,7 +67,8 @@
     
     
     <Style TargetType="{x:Type bc:SuggestBox}" BasedOn="{StaticResource {x:Type TextBox}}">
-        <Setter Property="Template" Value="{StaticResource suggestableTextBoxTemplate}" />       
+        <Setter Property="Template" Value="{StaticResource suggestableTextBoxTemplate}" />     
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
 

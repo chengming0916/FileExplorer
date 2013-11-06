@@ -2,21 +2,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Utils;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.BaseControls
 {
-    public class AutoHierarchyHelper : IHierarchyHelper
+    /// <summary>
+    /// Use Path to query for hierarchy of ViewModels.
+    /// </summary>
+    public class PathHierarchyHelper : IHierarchyHelper
     {
         #region Constructor
 
-        public AutoHierarchyHelper(string parentPath, string valuePath, string subEntriesPath)
+        public PathHierarchyHelper(string parentPath, string valuePath, string subEntriesPath)
         {
             ParentPath = parentPath;
             ValuePath = valuePath;
             SubentriesPath = subEntriesPath;
+            Separator = '\\';
+            StringComparisonOption = StringComparison.CurrentCultureIgnoreCase;
         }
         
         #endregion
@@ -24,7 +30,7 @@ namespace FileExplorer.UserControls
         #region Methods
 
         #region Utils Func - extractPath/Name
-        private string extractPath(string pathName)
+        public string ExtractPath(string pathName)
         {
             if (String.IsNullOrEmpty(pathName))
                 return "";
@@ -32,7 +38,8 @@ namespace FileExplorer.UserControls
                 return "";
             else return pathName.Substring(0, pathName.LastIndexOf(Separator));
         }
-        private string extractName(string pathName)
+
+        public string ExtractName(string pathName)
         {
             if (String.IsNullOrEmpty(pathName))
                 return "";
@@ -81,23 +88,23 @@ namespace FileExplorer.UserControls
             return getValuePath(item);
         }
 
-        public object GetItem(object rootItem, string path)
+        public IEnumerable List(object item)
         {
-            Func<object, IEnumerable> list = (item) =>
-            {
-                return item is IEnumerable ? item as IEnumerable : getSubEntries(item);
-            };
+            return item is IEnumerable ? item as IEnumerable : getSubEntries(item);
+        }
 
+        public object GetItem(object rootItem, string path)
+        {           
             var queue = new Queue<string>(path.Split(new char[] { Separator }, StringSplitOptions.RemoveEmptyEntries));
             object current = rootItem;
             while (current != null && queue.Any())
             {
                 var nextSegment = queue.Dequeue();
                 object found = null;
-                foreach (var item in list(current))
+                foreach (var item in List(current))
                 {
                     string valuePathName = getValuePath(item);
-                    string value = extractName(valuePathName); //Value may be full path, or just current value.
+                    string value = ExtractName(valuePathName); //Value may be full path, or just current value.
                     if (value.Equals(nextSegment, StringComparisonOption))
                     {
                         found = item;
@@ -113,25 +120,67 @@ namespace FileExplorer.UserControls
 
         #endregion
 
-        #region Data
-
-        static char _separator = '\\';
-        static StringComparison _strComp = StringComparison.CurrentCultureIgnoreCase;
+        #region Data        
 
         #endregion
 
         #region Public Properties
 
-        public static char Separator { get { return _separator; } set { _separator = value; } }
-        public static StringComparison StringComparisonOption { get { return _strComp; } set { _strComp = value; } }
+        public char Separator { get; set; }
+        public StringComparison StringComparisonOption { get; set; }
         public string ParentPath { get; set; }
         public string ValuePath { get; set; }
         public string SubentriesPath { get; set; }
 
         #endregion
-
-
-
-        
     }
+
+    /// <summary>
+    /// Generic version of AutoHierarchyHelper, which use Path to query for hierarchy of ViewModels
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class PathHierarchyHelper<T> : PathHierarchyHelper
+    {
+        #region Constructor
+
+        public PathHierarchyHelper(string parentPath, string valuePath, string subEntriesPath)
+            : base(parentPath, valuePath, subEntriesPath)
+        {
+            propInfoSubEntries = typeof(T).GetProperty(subEntriesPath);
+            propInfoValue = typeof(T).GetProperty(valuePath);
+            propInfoParent = typeof(T).GetProperty(parentPath);
+        }
+        
+        #endregion
+
+        #region Methods
+
+        protected override object getParent(object item)
+        {
+            return propInfoParent.GetValue(item);
+        }
+
+        protected override IEnumerable getSubEntries(object item)
+        {
+            return propInfoSubEntries.GetValue(item) as IEnumerable;
+        }
+
+        protected override string getValuePath(object item)
+        {
+            return propInfoValue.GetValue(item) as string;
+        }
+        
+        #endregion
+
+        #region Data
+
+        PropertyInfo propInfoValue, propInfoSubEntries, propInfoParent;
+        
+        #endregion
+
+        #region Public Properties
+        
+        #endregion
+    }
+
 }
