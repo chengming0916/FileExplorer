@@ -106,9 +106,13 @@ namespace FileExplorer.BaseControls
         {
             lastfinalSize = finalSize;
             var rects = arrangeChildren(finalSize);
-       
+            Rect emptyRect = new Rect(0, 0, 0, 0);
+
             for (int i = 0; i < this.Children.Count; i++)
-                Children[i].Arrange(rects[i]);             
+            {
+                Children[i].Arrange(rects[i]);
+                Children[i].SetValue(BreadcrumbItem.IsOverflowedProperty, rects[i] == emptyRect);
+            }
             
             return finalSize;
         }

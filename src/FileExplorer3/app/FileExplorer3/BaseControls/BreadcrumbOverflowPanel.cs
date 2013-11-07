@@ -25,7 +25,8 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate, ShowToggle = false };
+            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate, IconTemplate = this.IconTemplate, 
+                ShowToggle = false, IsTopLevel = false };
         }
 
         #endregion
@@ -39,12 +40,21 @@ namespace FileExplorer.BaseControls
         #region Public Properties
 
         public static readonly DependencyProperty HeaderTemplateProperty =
-            HeaderedItemsControl.HeaderTemplateProperty.AddOwner(typeof(BreadcrumbOverflowPanel));
+           DependencyProperty.Register("HeaderTemplate", typeof(DataTemplate), typeof(BreadcrumbOverflowPanel), new PropertyMetadata(null));
 
         public DataTemplate HeaderTemplate
         {
             get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
             set { SetValue(HeaderTemplateProperty, value); }
+        }
+
+        public static readonly DependencyProperty IconTemplateProperty =
+           DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(BreadcrumbOverflowPanel), new PropertyMetadata(null));
+
+        public DataTemplate IconTemplate
+        {
+            get { return (DataTemplate)GetValue(IconTemplateProperty); }
+            set { SetValue(IconTemplateProperty, value); }
         }
 
         #endregion

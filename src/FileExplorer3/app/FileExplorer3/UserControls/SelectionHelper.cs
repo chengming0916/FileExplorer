@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows.Threading;
+using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
 {

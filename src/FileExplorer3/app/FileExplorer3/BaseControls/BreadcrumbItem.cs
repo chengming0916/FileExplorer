@@ -67,9 +67,10 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            BreadcrumbItem retVal = new BreadcrumbItem() { HeaderTemplate = HeaderTemplate, IconTemplate = IconTemplate, IsTopLevel = false };
+            BreadcrumbItem retVal = new BreadcrumbItem() { HeaderTemplate = HeaderTemplate, 
+                IconTemplate = IconTemplate, IsTopLevel = false };
             retVal.ShowToggle = false;
-            retVal.IsTopLevel = false;
+            retVal.IsTopLevel = false; 
             return retVal;
         }
 
@@ -78,6 +79,12 @@ namespace FileExplorer.BaseControls
             base.OnApplyTemplate();
             if (!ShowCaption)
                 raiseShowCaptionEvent(ShowCaption);
+
+            this.AddHandler(BreadcrumbItem.SelectedEvent, (RoutedEventHandler)delegate(object sender, RoutedEventArgs args)
+            {
+                this.SetValue(IsDropDownOpenProperty, false); //Close dropdown when selected.
+            });
+
             this.AddHandler(Button.ClickEvent, (RoutedEventHandler)delegate(object sender, RoutedEventArgs args)
             {
                 if ((args.OriginalSource is Button))
@@ -85,6 +92,19 @@ namespace FileExplorer.BaseControls
                 args.Handled = true;
             });
         }
+
+        public static void OnIsTopLevelChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            //if (!args.NewValue.Equals(args.OldValue))
+                (sender as BreadcrumbItem).ShowIcon = !(bool)args.NewValue;
+        }
+
+        public static void OnIsOverflowedChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            //if (!args.NewValue.Equals(args.OldValue))
+                (sender as BreadcrumbItem).ShowIcon = (bool)args.NewValue;
+        }
+            
 
         #region Public Properties
 
@@ -141,9 +161,24 @@ namespace FileExplorer.BaseControls
             set { SetValue(ShowToggleProperty, value); }
         }
 
+        public static readonly DependencyProperty ShowIconProperty =
+                    DependencyProperty.Register("ShowIcon", typeof(bool), typeof(BreadcrumbItem),
+                    new UIPropertyMetadata(false));
+
+        /// <summary>
+        /// ShowIcon?
+        /// </summary>
+        public bool ShowIcon
+        {
+            get { return (bool)GetValue(ShowIconProperty); }
+            set { SetValue(ShowIconProperty, value); }
+        }
+
+       
+
         public static readonly DependencyProperty IsTopLevelProperty =
                     DependencyProperty.Register("IsTopLevel", typeof(bool), typeof(BreadcrumbItem),
-                    new UIPropertyMetadata(true));
+                    new UIPropertyMetadata(true, OnIsTopLevelChanged));
 
         /// <summary>
         /// IsTopLevel?
@@ -152,6 +187,19 @@ namespace FileExplorer.BaseControls
         {
             get { return (bool)GetValue(IsTopLevelProperty); }
             set { SetValue(IsTopLevelProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsOverflowedProperty =
+                   DependencyProperty.Register("IsOverflowed", typeof(bool), typeof(BreadcrumbItem),
+                   new UIPropertyMetadata(false, OnIsOverflowedChanged));
+
+        /// <summary>
+        /// IsOverflowed?
+        /// </summary>
+        public bool IsOverflowed
+        {
+            get { return (bool)GetValue(IsOverflowedProperty); }
+            set { SetValue(IsOverflowedProperty, value); }
         }
 
         public static readonly DependencyProperty IsShadowItemProperty =
@@ -182,12 +230,7 @@ namespace FileExplorer.BaseControls
 
         public static readonly DependencyProperty IsDropDownOpenProperty =
             ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbItem), 
-            new PropertyMetadata(false, new PropertyChangedCallback(OnIsDropDownChanged)));
-
-        public static void OnIsDropDownChanged(object sender, DependencyPropertyChangedEventArgs args)
-        {
-            Debug.WriteLine("DropDown Changed");
-        }
+            new PropertyMetadata(false));
 
         /// <summary>
         /// Is current dropdown (combobox) opened

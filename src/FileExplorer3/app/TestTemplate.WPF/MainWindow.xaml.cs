@@ -59,11 +59,11 @@ namespace TestTemplate.WPF
             base.OnApplyTemplate();
 
             //UITools.FindVisualChild<
-            List<FakeViewModel> fvm = new List<FakeViewModel>();
-            fvm.Add(new FakeViewModel("Root", "Root1", "Root2"));
+            FakeViewModel fvm = new FakeViewModel("Root");            
             for (int i = 1; i < 10; i++)
-                fvm.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));
-            breadcrumbCore.ItemsSource = fvm;
+                fvm.SubDirectories.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));
+            breadcrumbCore.ItemsSource = fvm.SubDirectories;
+            breadcrumbCore.RootItems = fvm.SubDirectories;
             suggestBoxDummy.SuggestSource = new DummySuggestSource();
 
             suggestBoxAuto.DataContext = fvm;
@@ -73,8 +73,9 @@ namespace TestTemplate.WPF
             suggestBoxAuto2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));
             suggestBoxAuto2.HierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");
             suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value.
-            
 
+            breadcrumb.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            
 
 
         }

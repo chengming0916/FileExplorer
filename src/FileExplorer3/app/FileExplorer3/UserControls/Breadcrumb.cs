@@ -9,7 +9,7 @@ using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
 {
-   
+
 
     public class Breadcrumb : ItemsControl
     {
@@ -21,6 +21,11 @@ namespace FileExplorer.UserControls
                 new FrameworkPropertyMetadata(typeof(Breadcrumb)));
         }
 
+        public Breadcrumb()
+        {
+          
+        }
+
         #endregion
 
         #region Methods
@@ -30,26 +35,44 @@ namespace FileExplorer.UserControls
             base.OnApplyTemplate();
             bcore = this.Template.FindName("PART_BreadcrumbCore", this) as BreadcrumbCore;
             tbox = this.Template.FindName("PART_TextBox", this) as SuggestBox;
+
+            UpdateSelectedValue(DataContext);
+            
+            this.AddValueChanged(DataContextProperty, OnDataContextChanged);
+            OnDataContextChanged(this, EventArgs.Empty);
+        }
+
+        public void UpdateSelectedValue(object value)
+        {
+            if (bcore != null && value != null)
+            {
+                var hierarchy = HierarchyHelper.GetHierarchy(value, true).Reverse().ToList();
+                bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);
+                //bcore.SetValue(BreadcrumbCore.roo
+                SelectedPathValue = HierarchyHelper.GetPath(value);
+            }
+        }
+
+        public void OnDataContextChanged(object sender, EventArgs args)
+        {
+            if (DataContext != null)
+                bcore.RootItems = this.HierarchyHelper.List(DataContext);
         }
 
         public static void OnSelectedValueChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var bread = sender as Breadcrumb;
-            if (bread.bcore != null && e.NewValue != null && !e.NewValue.Equals(e.OldValue))
-            {
-                var hierarchy = bread.HierarchyHelper.GetHierarchy(e.NewValue, true).Reverse().ToList();                
-                bread.bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);
-                bread.SelectedPathValue =  bread.HierarchyHelper.GetPath(e.NewValue);
-            }
+            if (bread.bcore != null && !e.NewValue.Equals(e.OldValue))
+                bread.UpdateSelectedValue(e.NewValue);
         }
-        
+
         #endregion
 
         #region Data
 
         BreadcrumbCore bcore;
         SuggestBox tbox;
-        
+
         #endregion
 
         #region Public Properties
@@ -86,8 +109,11 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("IsBreadcrumbVisible", typeof(bool),
             typeof(Breadcrumb), new UIPropertyMetadata(true));
 
-        public static readonly DependencyProperty HeaderTemplateProperty = 
-            BreadcrumbCore.HeaderTemplateProperty.AddOwner(typeof(Breadcrumb));
+
+
+        #region Header/Icon Template
+        public static readonly DependencyProperty HeaderTemplateProperty =
+                    BreadcrumbCore.HeaderTemplateProperty.AddOwner(typeof(Breadcrumb));
 
         public DataTemplate HeaderTemplate
         {
@@ -96,14 +122,14 @@ namespace FileExplorer.UserControls
         }
 
         public static readonly DependencyProperty IconTemplateProperty =
-           DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(Breadcrumb));
+           DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(Breadcrumb), new PropertyMetadata(null));
 
         public DataTemplate IconTemplate
         {
             get { return (DataTemplate)GetValue(IconTemplateProperty); }
             set { SetValue(IconTemplateProperty, value); }
         }
-
+        #endregion
 
         #region HierarchyHelper, SuggestSource
 
@@ -117,7 +143,7 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
             typeof(Breadcrumb), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubDirectories")));
 
-       
+
         public ISuggestSource SuggestSource
         {
             get { return (ISuggestSource)GetValue(SuggestSourceProperty); }

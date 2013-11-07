@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
 {

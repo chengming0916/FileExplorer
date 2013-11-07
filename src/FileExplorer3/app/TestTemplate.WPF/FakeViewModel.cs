@@ -12,19 +12,19 @@ namespace TestTemplate.WPF
     public class FakeViewModel : INotifyPropertyChanged
     {
 
-        private static void generate(FakeViewModel root, int level)
+        private static void generate(FakeViewModel root, int level, string str = "")
         {
             if (level > 0)
                 for (int i = 1; i < 5; i++)
                 {
                     var vm = new FakeViewModel()
                     {
-                        Header = root.Header + i.ToString(),
-                        Value = (root.Value + "\\Sub" + root.Header + i.ToString()).TrimStart('\\'),
+                        Header = "Sub" + str + i.ToString(),
+                        Value = (root.Value + "\\Sub" + str + i.ToString()).TrimStart('\\'),
                         Latency = root.Latency, 
                         Parent = root
                     };
-                    generate(vm, level - 1);
+                    generate(vm, level - 1, str + i.ToString());
                     root._subDirectories.Add(vm);
                 }
         }

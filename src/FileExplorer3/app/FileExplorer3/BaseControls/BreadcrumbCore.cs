@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Diagnostics;
 using System.Collections;
+using System.Windows.Input;
 
 namespace FileExplorer.BaseControls
 {
@@ -60,12 +61,25 @@ namespace FileExplorer.BaseControls
 
         public BreadcrumbCore()
         {
+
+            //AddHandler(BreadcrumbItem.SelectedEvent, (RoutedEventHandler)delegate(object sender, RoutedEventArgs args)
+            //{
+            //    //Debug.WriteLine(this.GetValue(IsDropDownOpenProperty));
+            //    this.SetValue(IsDropDownOpenProperty, false);
+            //    //args.Handled = true;
+            //});
+
             AddHandler(BreadcrumbItem.SelectedEvent, (RoutedEventHandler)((o, e) =>
-            {                
+            {
                 SelectedItem = e.OriginalSource as BreadcrumbItem;
                 if (SelectedItem is BreadcrumbItem)
-                    SelectedValue = (SelectedItem as BreadcrumbItem).DataContext;
+                {
+                    var item = (SelectedItem as BreadcrumbItem);
+                    SelectedValue = item.DataContext;
+                }
                 RaiseEvent(new RoutedEventArgs(SelectedValueChangedEvent));
+                this.SetValue(IsDropDownOpenProperty, false); //Close << drop down when selected.
+                e.Handled = true;
             }));
         }
 
@@ -94,6 +108,7 @@ namespace FileExplorer.BaseControls
         #endregion
 
         #region Dependency properties
+
 
         public static readonly RoutedEvent SelectedValueChangedEvent = EventManager.RegisterRoutedEvent("SelectedValueChanged",
           RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbCore));
@@ -131,6 +146,33 @@ namespace FileExplorer.BaseControls
             set { SetValue(OverflowedItemsProperty, value); }
         }
 
+
+        public static readonly DependencyProperty RootItemsProperty = DependencyProperty.Register("RootItems",
+            typeof(IEnumerable), typeof(BreadcrumbCore), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty IsDropDownOpenProperty =
+          ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbCore),
+          new PropertyMetadata(false));
+
+        /// <summary>
+        /// Is current dropdown (combobox) opened, this apply to the first &lt;&lt; button only
+        /// </summary>
+        public bool IsDropDownOpen
+        {
+            get { return (bool)GetValue(IsDropDownOpenProperty); }
+            set { SetValue(IsDropDownOpenProperty, value); }
+        }
+
+
+        /// <summary>
+        /// Assigned by Breadcrumb
+        /// </summary>
+        public IEnumerable RootItems
+        {
+            get { return (IEnumerable)GetValue(RootItemsProperty); }
+            set { SetValue(RootItemsProperty, value); }
+        }
+
         public static DependencyProperty LastNonVisibleIndexProperty = DependencyProperty.Register("LastNonVisibleIndex",
            typeof(int), typeof(BreadcrumbCore), new PropertyMetadata(0, OnLastNonVisibleIndexChanged));
 
@@ -140,7 +182,12 @@ namespace FileExplorer.BaseControls
             set { SetValue(LastNonVisibleIndexProperty, value); }
         }
 
-        public static readonly DependencyProperty HeaderTemplateProperty = HeaderedItemsControl.HeaderTemplateProperty.AddOwner(typeof(BreadcrumbCore));
+
+
+        #region HeaderTemplate, IconTemplate
+
+        public static readonly DependencyProperty HeaderTemplateProperty = HeaderedItemsControl
+            .HeaderTemplateProperty.AddOwner(typeof(BreadcrumbCore));
 
         public DataTemplate HeaderTemplate
         {
@@ -156,6 +203,9 @@ namespace FileExplorer.BaseControls
             get { return (DataTemplate)GetValue(IconTemplateProperty); }
             set { SetValue(IconTemplateProperty, value); }
         }
+
+        #endregion
+
         #endregion
     }
 }

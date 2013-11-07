@@ -72,6 +72,13 @@
                         <DataTemplate x:Key="FakeVMIconTemplate">
                             <Image Source="folder.ico" DockPanel.Dock="Left" />
                         </DataTemplate>
+                <!-- Debug-->
+                        <!--<HierarchicalDataTemplate x:Key="FakeVMHeaderTemplate" ItemsSource="{Binding SubDirectories}"  >
+                            <TextBlock Text="Header" />
+                        </HierarchicalDataTemplate>
+                        <DataTemplate x:Key="FakeVMIconTemplate">
+                            <TextBlock Text="Icon" />
+                        </DataTemplate>-->
                     </ResourceDictionary>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>

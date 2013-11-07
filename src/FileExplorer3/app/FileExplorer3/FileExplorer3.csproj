@@ -77,6 +77,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseControls\MultiContentControl.cs" />
     <Compile Include="BaseControls\PathHierarchyHelper.cs" />
     <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
     <Compile Include="BaseControls\AutoSuggestSource.cs" />
@@ -210,6 +211,10 @@
       <SubType>Designer</SubType>
     </None>
     <Page Include="Themes\Common\BreadcrumbParts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ContentControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

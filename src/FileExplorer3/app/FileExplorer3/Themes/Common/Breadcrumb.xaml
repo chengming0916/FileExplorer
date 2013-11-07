@@ -36,12 +36,13 @@
 
                     <bc:SuggestBox x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
                                    Text="{Binding SelectedPathValue, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                   Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource btvc}, 
+                                   Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
                                             RelativeSource={RelativeSource TemplatedParent}}"   />
                     
                     <bc:BreadcrumbCore x:Name="PART_BreadcrumbCore" Grid.Column="1"
                                    HeaderTemplate="{TemplateBinding HeaderTemplate}"
-                                   Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
+                                   IconTemplate="{TemplateBinding IconTemplate}"
+                                   Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource btvc}, 
                                             RelativeSource={RelativeSource TemplatedParent}}">                        
                     </bc:BreadcrumbCore>
                 </Grid>
