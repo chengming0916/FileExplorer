@@ -23,7 +23,7 @@ namespace FileExplorer.BaseControls
         public BreadcrumbItem()
         {
             this.Loaded += delegate { _loaded = true; };
-
+            
         }
 
 

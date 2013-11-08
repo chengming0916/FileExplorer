@@ -40,16 +40,18 @@
                 <!-- Header -->
                 <DockPanel x:Name="basePanel" SnapsToDevicePixels="True" Grid.Column="0" Margin="0"  
                            LastChildFill="True" Height="22">
-                    <!-- Header Toggle Button -->
+                    <!-- Header Toggle Button - visible requires ShowToggle and HasItems -->
                     <bc:HotTrack IsSelected="{TemplateBinding IsMouseOver}"
                                  x:Name="headerToggleHL" DockPanel.Dock="Right" 
                                  BorderThickness="{TemplateBinding BorderThickness}"
                                  SelectedBorderBrush="{TemplateBinding BorderBrush}"
                                  Visibility="{Binding ShowToggle, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btvc}}"
-                                 MinWidth="10">
-                        <!-- DropDown Popup  -->
-                        <bc:DropDown IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
+                                >
+                        <!-- DropDown Popup -->
+                        <bc:DropDown Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
+                                        Converter={StaticResource btvc}}"                                    
+                                    IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
                                             RelativeSource={RelativeSource TemplatedParent}}">
                             <Border BorderThickness="1,1,1,1" MinWidth="100" MinHeight="10"
                                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
@@ -71,7 +73,7 @@
 
                         </bc:DropDown>
                     </bc:HotTrack>
-                    <!-- Header Content -->
+                    <!-- Header Content - visible requres ShowCaption  -->
                     <bc:HotTrack x:Name="headerHL"  BorderThickness="{TemplateBinding BorderThickness}"
                                  SelectedBorderBrush="{TemplateBinding BorderBrush}"                                 
                                  Visibility="{Binding ShowCaption, RelativeSource={RelativeSource TemplatedParent},
