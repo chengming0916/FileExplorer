@@ -39,7 +39,7 @@ namespace FileExplorer.BaseControls
                 }
                 if (availableWidth <= 0)
                     return new Size(availableSize.Width, maxHeight);
-                return new Size(availableSize.Width - availableWidth + 1, maxHeight);
+                return new Size(availableSize.Width - availableWidth + 1, availableSize.Height);
 
             }
             return new Size(0, 0);
@@ -93,8 +93,8 @@ namespace FileExplorer.BaseControls
                     if (curX > current.DesiredSize.Width)
                     {
                         retVal[i] = new Rect(startPos,
-                            (availableSize.Height - current.DesiredSize.Height) / 2,
-                            current.DesiredSize.Width, current.DesiredSize.Height);
+                           0,
+                            current.DesiredSize.Width, availableSize.Height);
                         curX -= current.DesiredSize.Width;
                     }
                     else //Not enough space to allocate current, recalculate the retVal

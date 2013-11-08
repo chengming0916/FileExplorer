@@ -27,10 +27,10 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Center"
+                    <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Stretch"
                                   IsChecked="{Binding IsBreadcrumbVisible, RelativeSource={RelativeSource TemplatedParent}}" 
                                   Template="{StaticResource BaseButton}" Background="Transparent" >
-                        <ContentControl ContentTemplate="{TemplateBinding IconTemplate}" 
+                        <ContentControl ContentTemplate="{TemplateBinding IconTemplate}"  
                                         Content="{Binding SelectedValue, RelativeSource={RelativeSource TemplatedParent}}" />                        
                     </ToggleButton>
 

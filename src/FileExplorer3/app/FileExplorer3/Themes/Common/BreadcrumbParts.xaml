@@ -28,7 +28,8 @@
     </Style>
 
     <ControlTemplate x:Key="BreadcrumbItemTemplate" TargetType="{x:Type bc:BreadcrumbItem}">
-        <Grid Name="MainGrid" SnapsToDevicePixels="True" Margin="0,0"  HorizontalAlignment="Stretch">
+        <Grid Name="MainGrid" SnapsToDevicePixels="True" 
+              Margin="0,0"  HorizontalAlignment="Stretch">
             <!-- If Is separator, display separator -->
             <Separator Visibility="{Binding IsSeparator, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btv}}" />
             <!-- Otherwise display a grid with popup -->
@@ -39,7 +40,7 @@
                 </Grid.ColumnDefinitions>
                 <!-- Header -->
                 <DockPanel x:Name="basePanel" SnapsToDevicePixels="True" Grid.Column="0" Margin="0"  
-                           LastChildFill="True" Height="22">
+                           LastChildFill="True">
                     <!-- Header Toggle Button - visible requires ShowToggle and HasItems -->
                     <bc:HotTrack IsSelected="{TemplateBinding IsMouseOver}"
                                  x:Name="headerToggleHL" DockPanel.Dock="Right" 
@@ -50,12 +51,12 @@
                                 >
                         <!-- DropDown Popup -->
                         <bc:DropDown Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
-                                        Converter={StaticResource btvc}}"                                    
+                                        Converter={StaticResource btvc}}"     
+                                     Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
+                                     BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
+                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
                                             RelativeSource={RelativeSource TemplatedParent}}">
-                            <Border BorderThickness="1,1,1,1" MinWidth="100" MinHeight="10"
-                                        BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
-                                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Name="DropDownBorder">
                                 <ScrollViewer CanContentScroll="True"  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto"
                                                       Visibility="{Binding Path=IsLoading, Converter={StaticResource fbtvc},
                                                         Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
@@ -69,7 +70,7 @@
                                                     >
                                     </ItemsPresenter>
                                 </ScrollViewer>
-                            </Border>
+                            
 
                         </bc:DropDown>
                     </bc:HotTrack>
@@ -145,6 +146,8 @@
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template" Value="{StaticResource BreadcrumbItemTemplate}" />
+        <Setter Property="MaxHeight" Value="{Binding ActualHeight, Mode=OneWay,
+            RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
         <!--<Setter Property="HeaderTemplate" Value="{Binding HeaderTemplate, Mode=OneWay,
             RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
         <Setter Property="IconTemplate" Value="{Binding IconTemplate, Mode=OneWay,
@@ -177,6 +180,8 @@
 
     <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
            TargetType="{x:Type bc:BreadcrumbCore}" >
+        <Setter Property="Height" Value="30" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -193,7 +198,10 @@
                         <DockPanel Margin="1,0" Background="Transparent" IsHitTestVisible="True" >
                             <bc:DropDown DockPanel.Dock="Left" IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
                                             RelativeSource={RelativeSource TemplatedParent}}"
-                                         VerticalAlignment="Center"  Height="22">
+                                         Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
+                                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
+                                         BorderThickness="{TemplateBinding BorderThickness}"
+                                         VerticalAlignment="Stretch" >
                                 <bc:DropDown.Header>
                                     <Grid>
                                         <Path Stroke="Black" StrokeThickness="1.2" Data="{StaticResource ExpanderArrow}"
@@ -209,15 +217,15 @@
                                     </Grid>
                                 </bc:DropDown.Header>
                                 <bc:DropDown.Content>
-                                    <ScrollViewer MaxHeight="200" MinWidth="150"
-                                                  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                                        <StackPanel Orientation="Vertical" 
-                                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
 
+                                    <ScrollViewer MaxHeight="200" MinWidth="150" 
+                                                  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                                        <StackPanel Orientation="Vertical" >
                                             <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding OverflowedItems}" />
                                             <Separator HorizontalAlignment="Stretch" />
                                             <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding RootItems}" />
                                         </StackPanel>
+
                                     </ScrollViewer>
                                 </bc:DropDown.Content>
 

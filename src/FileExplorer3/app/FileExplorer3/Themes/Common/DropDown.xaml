@@ -40,13 +40,17 @@
                                VerticalOffset="0"
                                Placement="Bottom"  
                                PopupAnimation="Slide" AllowsTransparency="True">
-                            <Grid x:Name="PART_DropDown">
-                                <Border x:Name="PART_DropDownBorder" 
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" MinWidth="100" MinHeight="10"
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                            Background="{TemplateBinding Background}" Name="DropDownBorder">
+                                <Grid x:Name="PART_DropDown">
+                                    <Border x:Name="PART_DropDownBorder" 
                                         Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Padding="0"
                                         BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0">
-                                    <ContentPresenter x:Name="PART_Content"  Content="{TemplateBinding Content}" />
-                                </Border>
-                            </Grid>
+                                        <ContentPresenter x:Name="PART_Content"  Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </Grid>
+                            </Border>
                         </Popup>
                     </Grid>
                     <ControlTemplate.Triggers>
