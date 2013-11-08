@@ -21,6 +21,9 @@
 
     <Style x:Key="{x:Type local:DropDown}" 
            TargetType="{x:Type local:DropDown}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DropDown}">
@@ -45,8 +48,9 @@
                                             Background="{TemplateBinding Background}" Name="DropDownBorder">
                                 <Grid x:Name="PART_DropDown">
                                     <Border x:Name="PART_DropDownBorder" 
-                                        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Padding="0"
-                                        BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="0">
+                                        Background="{TemplateBinding Background}" 
+                                            Padding="{TemplateBinding Padding}"
+                                        BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                                         <ContentPresenter x:Name="PART_Content"  Content="{TemplateBinding Content}" />
                                     </Border>
                                 </Grid>

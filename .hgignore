@@ -2,3 +2,4 @@ syntax: glob
 */obj/*
 */bin/*
 src/FileExplorer3/app/packages/*
+src/FileExplorer3/release/*

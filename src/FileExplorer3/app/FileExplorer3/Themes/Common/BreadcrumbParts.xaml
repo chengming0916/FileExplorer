@@ -41,6 +41,8 @@
                 <!-- Header -->
                 <DockPanel x:Name="basePanel" SnapsToDevicePixels="True" Grid.Column="0" Margin="0"  
                            LastChildFill="True">
+                    
+                   
                     <!-- Header Toggle Button - visible requires ShowToggle and HasItems -->
                     <bc:HotTrack IsSelected="{TemplateBinding IsMouseOver}"
                                  x:Name="headerToggleHL" DockPanel.Dock="Right" 
@@ -52,25 +54,22 @@
                         <!-- DropDown Popup -->
                         <bc:DropDown Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btvc}}"     
-                                     Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
-                                     BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
-                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
                                             RelativeSource={RelativeSource TemplatedParent}}">
-                                <ScrollViewer CanContentScroll="True"  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto"
+                            <ScrollViewer CanContentScroll="True"  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto"
                                                       Visibility="{Binding Path=IsLoading, Converter={StaticResource fbtvc},
-                                                        Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                        Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
                                                       >
-                                    <ItemsPresenter x:Name="itemList" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                                <ItemsPresenter x:Name="itemList" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                                                      SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"                                                      
                                                      MaxHeight="200"  
                                                      KeyboardNavigation.DirectionalNavigation="None"
                                                      VirtualizingStackPanel.IsVirtualizing="True" 
                                                      VirtualizingStackPanel.VirtualizationMode="Standard"                                                     
                                                     >
-                                    </ItemsPresenter>
-                                </ScrollViewer>
-                            
+                                </ItemsPresenter>
+                            </ScrollViewer>
+
 
                         </bc:DropDown>
                     </bc:HotTrack>
@@ -84,11 +83,17 @@
                                                 Height="{TemplateBinding ActualHeight}" Template="{StaticResource BaseButton}" 
                                                 Grid.RowSpan="2" >
                             <Button.Content>
-                                <bc:MultiContentControl Content="{Binding}"
+                                <DockPanel>
+                                    <!-- Add some space in front if it's inside menu  -->
+                                    <Rectangle Width="5" DockPanel.Dock="Left" 
+                                            Visibility="{Binding IsTopLevel,
+                                                RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource fbtvc}}" />
+                                    <bc:MultiContentControl 
                                                         ContentTemplate="{TemplateBinding HeaderTemplate}"
                                                         ContentTemplate2="{TemplateBinding IconTemplate}"
                                                         ContentVisible2="{TemplateBinding ShowIcon}"
                                     />
+                                </DockPanel>
                             </Button.Content>
                         </Button>
                     </bc:HotTrack>
@@ -181,7 +186,7 @@
     <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
            TargetType="{x:Type bc:BreadcrumbCore}" >
         <Setter Property="Height" Value="30" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -192,15 +197,14 @@
 
         <Setter Property="Template">
             <Setter.Value>
+
                 <ControlTemplate TargetType="{x:Type bc:BreadcrumbCore}">
                     <Border BorderBrush="{TemplateBinding BorderBrush}" IsHitTestVisible="True"  
                             BorderThickness="{TemplateBinding BorderThickness}" MinHeight="25">
                         <DockPanel Margin="1,0" Background="Transparent" IsHitTestVisible="True" >
-                            <bc:DropDown DockPanel.Dock="Left" IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
-                                            RelativeSource={RelativeSource TemplatedParent}}"
-                                         Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
-                                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
-                                         BorderThickness="{TemplateBinding BorderThickness}"
+                            <bc:DropDown DockPanel.Dock="Left" 
+                                         IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
+                                            RelativeSource={RelativeSource TemplatedParent}}" 
                                          VerticalAlignment="Stretch" >
                                 <bc:DropDown.Header>
                                     <Grid>

@@ -70,7 +70,7 @@
                                        VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                         </HierarchicalDataTemplate>
                         <DataTemplate x:Key="FakeVMIconTemplate">
-                            <Image Source="folder.ico" DockPanel.Dock="Left" />
+                            <Image Source="folder.ico" DockPanel.Dock="Left" Height="16" Width="16" />
                         </DataTemplate>
                 <!-- Debug-->
                         <!--<HierarchicalDataTemplate x:Key="FakeVMHeaderTemplate" ItemsSource="{Binding SubDirectories}"  >

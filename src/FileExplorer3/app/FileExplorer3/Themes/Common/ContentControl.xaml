@@ -12,7 +12,7 @@
             <ContentPresenter Content="{Binding}" DockPanel.Dock="Left" 
                               Visibility="{Binding ContentVisible2, Converter={StaticResource btvc}, 
                                         RelativeSource={RelativeSource TemplatedParent}}"
-                              ContentTemplate="{TemplateBinding ContentTemplate2}" />
+                              ContentTemplate="{TemplateBinding ContentTemplate2}" />            
             <ContentPresenter Content="{Binding}" ContentTemplate="{TemplateBinding ContentTemplate}" />
         </DockPanel>
     </ControlTemplate>
