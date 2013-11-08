@@ -112,6 +112,12 @@ namespace FileExplorer.UserControls
                 bread.UpdateSelectedValue(bread.HierarchyHelper.GetItem(bread.DataContext, e.NewValue as string));
         }
 
+         public static void OnHierarchyHelperPropChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var bread = sender as Breadcrumb;
+            bread.HierarchyHelper = new PathHierarchyHelper(bread.ParentPath, bread.ValuePath, bread.SubEntriesPath);
+        }
+
         #endregion
 
         #region Data
@@ -124,6 +130,11 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
+        #region SelectedValue, SelectedPathValue
+
+        /// <summary>
+        /// Selected value object, it's path is retrieved from HierarchyHelper.GetPath(), not bindable at this time
+        /// </summary>
         public object SelectedValue
         {
             get { return GetValue(SelectedValueProperty); }
@@ -134,6 +145,9 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("SelectedValue", typeof(object),
             typeof(Breadcrumb), new UIPropertyMetadata(null, OnSelectedValueChanged));
 
+        /// <summary>
+        /// Path value of the SelectedValue object, bindable.
+        /// </summary>
         public string SelectedPathValue
         {
             get { return (string)GetValue(SelectedPathValueProperty); }
@@ -144,8 +158,13 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("SelectedPathValue", typeof(string),
             typeof(Breadcrumb), new UIPropertyMetadata(null, OnSelectedPathValueChanged));
 
+        #endregion
 
-
+        #region IsBreadcrumbVisible
+        
+        /// <summary>
+        /// Toggle whether Breadcrumb (or SuggestBox) visible
+        /// </summary>
         public bool IsBreadcrumbVisible
         {
             get { return (bool)GetValue(IsBreadcrumbVisibleProperty); }
@@ -156,12 +175,15 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("IsBreadcrumbVisible", typeof(bool),
             typeof(Breadcrumb), new UIPropertyMetadata(true));
 
+        #endregion
 
-
-        #region Header/Icon Template
+        #region Header/Icon Template, DisplayMemberPath
         public static readonly DependencyProperty HeaderTemplateProperty =
                     BreadcrumbCore.HeaderTemplateProperty.AddOwner(typeof(Breadcrumb));
 
+        /// <summary>
+        /// DataTemplate define the header text, (see also IconTemplate)
+        /// </summary>
         public DataTemplate HeaderTemplate
         {
             get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
@@ -171,15 +193,22 @@ namespace FileExplorer.UserControls
         public static readonly DependencyProperty IconTemplateProperty =
            DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(Breadcrumb), new PropertyMetadata(null));
 
+        /// <summary>
+        /// DataTemplate define the icon.
+        /// </summary>
         public DataTemplate IconTemplate
         {
             get { return (DataTemplate)GetValue(IconTemplateProperty); }
             set { SetValue(IconTemplateProperty, value); }
         }
+
         #endregion
 
-        #region HierarchyHelper, SuggestSource
+        #region HierarchyHelper, ParentPath, ValuePath, SubEntriesPath, SuggestSource
 
+        /// <summary>
+        /// Uses to navigate the hierarchy, one can also set the ParentPath/ValuePath and SubEntriesPath instead.
+        /// </summary>
         public IHierarchyHelper HierarchyHelper
         {
             get { return (IHierarchyHelper)GetValue(HierarchyHelperProperty); }
@@ -188,9 +217,47 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty HierarchyHelperProperty =
             DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
-            typeof(Breadcrumb), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubDirectories")));
+            typeof(Breadcrumb), new PropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubEntries")));
 
+        /// <summary>
+        /// The path of view model to access parent.
+        /// </summary>
+        public string ParentPath
+        {
+            get { return (string)GetValue(ParentPathProperty); }
+            set { SetValue(ParentPathProperty, value); }
+        }
 
+        public static readonly DependencyProperty ParentPathProperty =
+             SuggestBox.ParentPathProperty.AddOwner(typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
+
+        /// <summary>
+        /// The path of view model to access value.
+        /// </summary>
+        public string ValuePath
+        {
+            get { return (string)GetValue(ValuePathProperty); }
+            set { SetValue(ValuePathProperty, value); }
+        }
+
+        public static readonly DependencyProperty ValuePathProperty =
+            SuggestBox.ValuePathProperty.AddOwner(typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
+
+        /// <summary>
+        /// The path of view model to access sub entries.
+        /// </summary>
+        public string SubEntriesPath
+        {
+            get { return (string)GetValue(SubEntriesPathProperty); }
+            set { SetValue(SubEntriesPathProperty, value); }
+        }
+
+        public static readonly DependencyProperty SubEntriesPathProperty =
+           SuggestBox.SubEntriesPathProperty.AddOwner(typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
+
+        /// <summary>
+        /// Uses by SuggestBox to suggest options.
+        /// </summary>
         public ISuggestSource SuggestSource
         {
             get { return (ISuggestSource)GetValue(SuggestSourceProperty); }

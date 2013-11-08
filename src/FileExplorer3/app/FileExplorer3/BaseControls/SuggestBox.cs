@@ -126,7 +126,9 @@ namespace FileExplorer.BaseControls
 
         private void updateSource()
         {
-            var txtBindingExpr = this.GetBindingExpression(TextBox.TextProperty);            
+            var txtBindingExpr = this.GetBindingExpression(TextBox.TextProperty);
+            if (txtBindingExpr == null)
+                return;
             var value = HierarchyHelper.GetItem(DataContext, Text);
             if (value != null)
             {
@@ -249,6 +251,13 @@ namespace FileExplorer.BaseControls
             if (args.OldValue != args.NewValue)
                 sbox.popupIfSuggest();
         }
+
+        public static void OnHierarchyHelperPropChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var sbox = sender as SuggestBox;
+            sbox.HierarchyHelper = new PathHierarchyHelper(sbox.ParentPath, sbox.ValuePath, sbox.SubEntriesPath);
+        }
+
         #endregion
 
         #endregion
@@ -293,8 +302,55 @@ namespace FileExplorer.BaseControls
 
         public static readonly DependencyProperty HierarchyHelperProperty =
             DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
-            typeof(SuggestBox), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubDirectories")));
+            typeof(SuggestBox), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubEntries")));
 
+        /// <summary>
+        /// The path of view model to access parent.
+        /// </summary>
+        public string ParentPath
+        {
+            get { return (string)GetValue(ParentPathProperty); }
+            set { SetValue(ParentPathProperty, value); }
+        }
+
+        public static readonly DependencyProperty DisplayMemberPathProperty = DependencyProperty.Register(
+            "DisplayMemberPath", typeof(string), typeof(SuggestBox), new PropertyMetadata("Header"));
+
+        public string DisplayMemberPath
+        {
+            get { return (string)GetValue(DisplayMemberPathProperty); }
+            set { SetValue(DisplayMemberPathProperty, value); }
+        }
+
+        public static readonly DependencyProperty ParentPathProperty =
+            DependencyProperty.Register("ParentPath", typeof(string),
+            typeof(SuggestBox), new PropertyMetadata("Parent", OnHierarchyHelperPropChanged));
+
+        /// <summary>
+        /// The path of view model to access value.
+        /// </summary>
+        public string ValuePath
+        {
+            get { return (string)GetValue(ValuePathProperty); }
+            set { SetValue(ValuePathProperty, value); }
+        }
+
+        public static readonly DependencyProperty ValuePathProperty =
+            DependencyProperty.Register("ValuePath", typeof(string),
+            typeof(SuggestBox), new PropertyMetadata("Value", OnHierarchyHelperPropChanged));
+
+        /// <summary>
+        /// The path of view model to access sub entries.
+        /// </summary>
+        public string SubEntriesPath
+        {
+            get { return (string)GetValue(SubEntriesPathProperty); }
+            set { SetValue(SubEntriesPathProperty, value); }
+        }
+
+        public static readonly DependencyProperty SubEntriesPathProperty =
+            DependencyProperty.Register("SubEntriesPath", typeof(string),
+            typeof(SuggestBox), new PropertyMetadata("SubEntries", OnHierarchyHelperPropChanged));
 
         public static readonly DependencyProperty SuggestionsProperty = DependencyProperty.Register(
             "Suggestions", typeof(IList<object>), typeof(SuggestBox), new PropertyMetadata(null, OnSuggestionsChanged));
@@ -315,23 +371,7 @@ namespace FileExplorer.BaseControls
         }
 
 
-        public static readonly DependencyProperty DisplayMemberPathProperty = DependencyProperty.Register(
-            "DisplayMemberPath", typeof(string), typeof(SuggestBox), new PropertyMetadata("Header"));
-
-        public string DisplayMemberPath
-        {
-            get { return (string)GetValue(DisplayMemberPathProperty); }
-            set { SetValue(DisplayMemberPathProperty, value); }
-        }
-
-        public static readonly DependencyProperty ValuePathProperty = DependencyProperty.Register(
-            "ValuePath", typeof(string), typeof(SuggestBox), new PropertyMetadata("Value"));
-
-        public string ValuePath
-        {
-            get { return (string)GetValue(ValuePathProperty); }
-            set { SetValue(ValuePathProperty, value); }
-        }
+   
 
         public bool IsPopupOpened
         {

@@ -57,27 +57,39 @@ namespace TestTemplate.WPF
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
-            //UITools.FindVisualChild<
+            
+            //BreadcrumbCore Test
             FakeViewModel fvm = new FakeViewModel("Root");            
             for (int i = 1; i < 10; i++)
                 fvm.SubDirectories.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));
             breadcrumbCore.ItemsSource = fvm.SubDirectories;
             breadcrumbCore.RootItems = fvm.SubDirectories;
-            suggestBoxDummy.SuggestSource = new DummySuggestSource();
 
-            suggestBoxAuto.DataContext = fvm;
-            suggestBoxAuto.HierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");            
+            //SuggestBoxes            
+            suggestBoxDummy.SuggestSource = new DummySuggestSource();
+            suggestBoxAuto.DataContext = fvm;            
 
             //suggestBoxAuto2
-            suggestBoxAuto2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));
-            suggestBoxAuto2.HierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");
-            suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value.
+            suggestBoxAuto2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));            
+            suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value, suggest based on HierarchyLister.List()
 
-            breadcrumb1.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            //breadcrumb
+            breadcrumb1.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));            
             breadcrumb2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
-            //breadcrumb3.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
-            //breadcrumb4.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+
+            bool UseGenericHierarchyHelper = true;
+
+            if (UseGenericHierarchyHelper)
+            {
+                //Generic version is faster than Nongeneric PathHierarchyHelper.
+                //This replaced the ParentPath, ValuePath and SubEntriesPath in markup.
+                IHierarchyHelper hierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");
+                suggestBoxAuto.HierarchyHelper = hierarchyHelper;
+                suggestBoxAuto2.HierarchyHelper = hierarchyHelper;
+                breadcrumb1.HierarchyHelper = hierarchyHelper;
+                breadcrumb2.HierarchyHelper = hierarchyHelper;
+            }
+
 
         }
 

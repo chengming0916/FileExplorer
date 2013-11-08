@@ -35,7 +35,8 @@
                     </ToggleButton>
 
                     <bc:SuggestBox x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
-                                   DisplayMemberPath="{Binding HierarchyHelper.ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                
+                                   HierarchyHelper="{TemplateBinding HierarchyHelper}"
+                                   DisplayMemberPath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                
                                    Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
                                             RelativeSource={RelativeSource TemplatedParent}}" >
                         <bc:SuggestBox.Text>

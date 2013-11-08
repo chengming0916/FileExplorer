@@ -22,7 +22,7 @@ namespace FileExplorer.BaseControls
 
         public BreadcrumbItem()
         {
-            this.Loaded += delegate { _loaded = true; };
+            //this.Loaded += delegate { _loaded = true; };
             
         }
 
@@ -96,61 +96,70 @@ namespace FileExplorer.BaseControls
             //if (!ShowCaption)
             //    raiseShowCaptionEvent(ShowCaption);
 
-            this.AddHandler(BreadcrumbItem.SelectedEvent, (RoutedEventHandler)delegate(object sender, RoutedEventArgs args)
-            {
-                this.SetValue(IsDropDownOpenProperty, false); //Close dropdown when selected.
-            });
-
+           
+            //When clicked, raise selected.
             this.AddHandler(Button.ClickEvent, (RoutedEventHandler)delegate(object sender, RoutedEventArgs args)
             {
                 if ((args.OriginalSource is Button))
                     RaiseEvent(new RoutedEventArgs(SelectedEvent));
                 args.Handled = true;
             });
+
+            //When selected, close drop down.
+            this.AddHandler(BreadcrumbItem.SelectedEvent, (RoutedEventHandler)delegate(object sender, RoutedEventArgs args)
+            {
+                this.SetValue(IsDropDownOpenProperty, false); 
+            });
         }
 
         public static void OnIsTopLevelChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
-            //if (!args.NewValue.Equals(args.OldValue))
             (sender as BreadcrumbItem).ShowIcon = !(bool)args.NewValue;
         }
 
         public static void OnIsOverflowedChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
-            //if (!args.NewValue.Equals(args.OldValue))
             (sender as BreadcrumbItem).ShowIcon = (bool)args.NewValue;
         }
 
 
-        #region Public Properties
+        #region Public Properties       
+
+        #region Events
 
         public static readonly RoutedEvent SelectedEvent = EventManager.RegisterRoutedEvent("Selected",
-           RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbItem));
+          RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbItem));
 
+        /// <summary>
+        /// The current item is clicked.
+        /// </summary>
         public event RoutedEventHandler Selected
         {
             add { AddHandler(SelectedEvent, value); }
             remove { RemoveHandler(SelectedEvent, value); }
         }
 
-        public static readonly RoutedEvent ShowingCaptionEvent = EventManager.RegisterRoutedEvent("ShowingCaption",
-            RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbItem));
+        //Animation related event - unused.
+        //public static readonly RoutedEvent ShowingCaptionEvent = EventManager.RegisterRoutedEvent("ShowingCaption",
+        //    RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbItem));
 
-        public event RoutedEventHandler ShowingCaption
-        {
-            add { AddHandler(ShowingCaptionEvent, value); }
-            remove { RemoveHandler(ShowingCaptionEvent, value); }
-        }
+        //public event RoutedEventHandler ShowingCaption
+        //{
+        //    add { AddHandler(ShowingCaptionEvent, value); }
+        //    remove { RemoveHandler(ShowingCaptionEvent, value); }
+        //}
 
-        public static readonly RoutedEvent HidingCaptionEvent = EventManager.RegisterRoutedEvent("HidingCaption",
-            RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbItem));
+        //public static readonly RoutedEvent HidingCaptionEvent = EventManager.RegisterRoutedEvent("HidingCaption",
+        //    RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(BreadcrumbItem));
 
-        public event RoutedEventHandler HidingCaption
-        {
-            add { AddHandler(HidingCaptionEvent, value); }
-            remove { RemoveHandler(HidingCaptionEvent, value); }
-        }
+        //public event RoutedEventHandler HidingCaption
+        //{
+        //    add { AddHandler(HidingCaptionEvent, value); }
+        //    remove { RemoveHandler(HidingCaptionEvent, value); }
+        //}
+        #endregion
 
+        #region ShowCaption, Toggle, Icon
 
         public static readonly DependencyProperty ShowCaptionProperty =
                     DependencyProperty.Register("ShowCaption", typeof(bool), typeof(BreadcrumbItem),
@@ -183,16 +192,16 @@ namespace FileExplorer.BaseControls
                     new UIPropertyMetadata(false));
 
         /// <summary>
-        /// ShowIcon?
+        /// Display Icon
         /// </summary>
         public bool ShowIcon
         {
             get { return (bool)GetValue(ShowIconProperty); }
             set { SetValue(ShowIconProperty, value); }
         }
+        #endregion
 
-
-
+        #region IsTopLevel, IsOverflowed, IsShadowItem(Unused), IsSeparator, IsLoading (Unused)
         public static readonly DependencyProperty IsTopLevelProperty =
                     DependencyProperty.Register("IsTopLevel", typeof(bool), typeof(BreadcrumbItem),
                     new UIPropertyMetadata(true, OnIsTopLevelChanged));
@@ -224,7 +233,7 @@ namespace FileExplorer.BaseControls
                    new UIPropertyMetadata(true));
 
         /// <summary>
-        /// For 1st level BreadcrumbItem, grey color if true.
+        /// For 1st level BreadcrumbItem, grey color if true. 
         /// </summary>
         public bool IsShadowItem
         {
@@ -245,9 +254,28 @@ namespace FileExplorer.BaseControls
             set { SetValue(IsSeparatorProperty, value); }
         }
 
+
+        public static readonly DependencyProperty IsLoadingProperty =
+                  DependencyProperty.Register("IsLoading", typeof(bool), typeof(BreadcrumbItem),
+                  new UIPropertyMetadata(false));
+
+        /// <summary>
+        /// Display separator, use for 2nd level BreadcrumbItem only.
+        /// </summary>
+        public bool IsLoading
+        {
+            get { return (bool)GetValue(IsLoadingProperty); }
+            set { SetValue(IsLoadingProperty, value); }
+        }
+
+
+        #endregion
+
+        #region IsDropDownOpen
+
         public static readonly DependencyProperty IsDropDownOpenProperty =
-            ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbItem),
-            new PropertyMetadata(false));
+           ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbItem),
+           new PropertyMetadata(false));
 
         /// <summary>
         /// Is current dropdown (combobox) opened
@@ -258,34 +286,17 @@ namespace FileExplorer.BaseControls
             set { SetValue(IsDropDownOpenProperty, value); }
         }
 
-        public static readonly DependencyProperty IsItemVisibleProperty =
-           DependencyProperty.Register("IsItemVisible", typeof(bool), typeof(BreadcrumbItem), new FrameworkPropertyMetadata(false));
+      
+        #endregion
 
-        /// <summary>
-        /// Whether the BreadcrumbItem is visible in breadcrumb bar, otherwise they should display in first BreadcrumbItem's Items
-        /// </summary>
-        public bool IsItemVisible
-        {
-            get { return (bool)GetValue(IsItemVisibleProperty); }
-            set { SetValue(IsItemVisibleProperty, value); }
-        }
-
-
-        public static readonly DependencyProperty IsLoadingProperty =
-           DependencyProperty.Register("IsLoading", typeof(bool), typeof(BreadcrumbItem), new FrameworkPropertyMetadata(false));
-
-        /// <summary>
-        /// Display loading animation if isloading
-        /// </summary>
-        public bool IsLoading
-        {
-            get { return (bool)GetValue(IsLoadingProperty); }
-            set { SetValue(IsLoadingProperty, value); }
-        }
+        #region IconTemplate
 
         public static readonly DependencyProperty IconTemplateProperty =
             DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(BreadcrumbItem));
 
+        /// <summary>
+        /// DataTemplate for display the icon.
+        /// </summary>
         public DataTemplate IconTemplate
         {
             get { return (DataTemplate)GetValue(IconTemplateProperty); }
@@ -294,12 +305,14 @@ namespace FileExplorer.BaseControls
 
         #endregion
 
+        #endregion
+
 
         #region Data
 
-        HotTrack _headerHL;
-        bool _loaded = false;
-        bool _showCaptionHandled = false;
+        //HotTrack _headerHL;
+        //bool _loaded = false;
+        //bool _showCaptionHandled = false;
 
         #endregion
     }

@@ -96,34 +96,28 @@
                     <TextBlock Text="SuggestBox Only" />
                     <bc:SuggestBox x:Name="suggestBoxDummy" Hint="Custom implement (+xyz/abc)" />
                     <bc:SuggestBox x:Name="suggestBoxAuto" DisplayMemberPath="Value" Hint="Uses ViewModel, try Sub1\Sub12"
+                                   ParentPath="Parent" ValuePath="Value" SubEntriesPath="SubDirectories" 
                                    Text="{Binding Text, ElementName=txtAuto, UpdateSourceTrigger=Explicit}"/>
                     <bc:SuggestBox x:Name="suggestBoxAuto2" DisplayMemberPath="Value"  Hint="With delay 1 sec"
+                                   ParentPath="Parent" ValuePath="Value" SubEntriesPath="SubDirectories" 
                                    Text="{Binding Text, ElementName=txtAuto2, UpdateSourceTrigger=Explicit}" />
 
                     <TextBlock Text="Breadcrumb" />
                     <!-- Have to bind using SelectedPathValue, SelectedValue doesn't bind for unknown reason -->
                     <uc:Breadcrumb x:Name="breadcrumb1"  
+                                   ParentPath="Parent" ValuePath="Value" SubEntriesPath="SubDirectories" 
                                    IconTemplate="{StaticResource FakeVMIconTemplate}"
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
                                    >
                     </uc:Breadcrumb>
                     <uc:Breadcrumb x:Name="breadcrumb2" 
+                                   ParentPath="Parent" ValuePath="Value" SubEntriesPath="SubDirectories" 
                                    SelectedPathValue="{Binding SelectedPathValue, ElementName=breadcrumb1, Mode=TwoWay}"
                                    IconTemplate="{StaticResource FakeVMIconTemplate}"
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
                                    >
                     </uc:Breadcrumb>
-                    <!--<uc:Breadcrumb x:Name="breadcrumb3" 
-                                   IconTemplate="{StaticResource FakeVMIconTemplate}"
-                                   HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
-                                   >
-                    </uc:Breadcrumb>
-                    <uc:Breadcrumb x:Name="breadcrumb4" 
-                                   SelectedValue="{Binding SelectedValue, ElementName=breadcrumb3, Mode=TwoWay}"
-                                   IconTemplate="{StaticResource FakeVMIconTemplate}"
-                                   HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
-                                   >
-                    </uc:Breadcrumb>-->
+
                 </StackPanel>
                 <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="5" Grid.Column="1" />
                 <StackPanel Grid.Column="1" Orientation="Vertical" >
