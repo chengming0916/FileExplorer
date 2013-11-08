@@ -58,6 +58,7 @@
     
     <Style TargetType="{x:Type uc:Breadcrumb}">
         <Setter Property="Template" Value="{StaticResource BreadcrumbTemplate}" />
+        <Setter Property="Height" Value="30" />
     </Style>
     
 </ResourceDictionary>

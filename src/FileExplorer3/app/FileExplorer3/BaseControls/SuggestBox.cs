@@ -176,7 +176,6 @@ namespace FileExplorer.BaseControls
         {
             base.OnPreviewKeyDown(e);
 
-
             switch (e.Key)
             {
                 case Key.Up:
@@ -237,11 +236,6 @@ namespace FileExplorer.BaseControls
                         if (!pTask.IsFaulted)
                             this.SetValue(SuggestionsProperty, pTask.Result);
                     }, TaskScheduler.FromCurrentSynchronizationContext());
-            //Dispatcher.InvokeAsync(async () =>
-            //{
-            //    var retVal = await suggestSource.SuggestAsync(text);
-            //    this.SetValue(SuggestionsProperty, retVal);
-            //});
         }
 
 
@@ -275,7 +269,7 @@ namespace FileExplorer.BaseControls
 
         #region Public Properties
 
-
+        #region Events
         public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent("ValueChanged",
           RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(SuggestBox));
 
@@ -284,15 +278,9 @@ namespace FileExplorer.BaseControls
             add { AddHandler(ValueChangedEvent, value); }
             remove { RemoveHandler(ValueChangedEvent, value); }
         }
+        #endregion
 
-        public static readonly DependencyProperty SuggestSourceProperty = DependencyProperty.Register(
-            "SuggestSource", typeof(ISuggestSource), typeof(SuggestBox), new PropertyMetadata(new AutoSuggestSource()));
-
-        public ISuggestSource SuggestSource
-        {
-            get { return (ISuggestSource)GetValue(SuggestSourceProperty); }
-            set { SetValue(SuggestSourceProperty, value); }
-        }
+        #region HierarchyHelper, SuggestSource
 
         public IHierarchyHelper HierarchyHelper
         {
@@ -304,6 +292,17 @@ namespace FileExplorer.BaseControls
             DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
             typeof(SuggestBox), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubEntries")));
 
+        public static readonly DependencyProperty SuggestSourceProperty = DependencyProperty.Register(
+            "SuggestSource", typeof(ISuggestSource), typeof(SuggestBox), new PropertyMetadata(new AutoSuggestSource()));
+
+        public ISuggestSource SuggestSource
+        {
+            get { return (ISuggestSource)GetValue(SuggestSourceProperty); }
+            set { SetValue(SuggestSourceProperty, value); }
+        }
+        #endregion
+
+        #region ParentPath, DisplayMemberPath, ValuePath, SubEntriesPath
         /// <summary>
         /// The path of view model to access parent.
         /// </summary>
@@ -351,6 +350,9 @@ namespace FileExplorer.BaseControls
         public static readonly DependencyProperty SubEntriesPathProperty =
             DependencyProperty.Register("SubEntriesPath", typeof(string),
             typeof(SuggestBox), new PropertyMetadata("SubEntries", OnHierarchyHelperPropChanged));
+        #endregion
+
+        #region Suggestions
 
         public static readonly DependencyProperty SuggestionsProperty = DependencyProperty.Register(
             "Suggestions", typeof(IList<object>), typeof(SuggestBox), new PropertyMetadata(null, OnSuggestionsChanged));
@@ -361,6 +363,10 @@ namespace FileExplorer.BaseControls
             set { SetValue(SuggestionsProperty, value); }
         }
 
+        #endregion
+
+        #region HeaderTemplate
+
         public static readonly DependencyProperty HeaderTemplateProperty =
             HeaderedItemsControl.HeaderTemplateProperty.AddOwner(typeof(SuggestBox));
 
@@ -370,8 +376,9 @@ namespace FileExplorer.BaseControls
             set { SetValue(HeaderTemplateProperty, value); }
         }
 
+        #endregion
 
-   
+        #region IsPopupOpened, DropDownPlacementTarget
 
         public bool IsPopupOpened
         {
@@ -393,6 +400,9 @@ namespace FileExplorer.BaseControls
         public static readonly DependencyProperty DropDownPlacementTargetProperty =
             DependencyProperty.Register("DropDownPlacementTarget", typeof(object), typeof(SuggestBox));
 
+        #endregion
+
+        #region Hint(Unused), IsHintVisible (Unused)
         public string Hint
         {
             get { return (string)GetValue(HintProperty); }
@@ -411,7 +421,7 @@ namespace FileExplorer.BaseControls
 
         public static readonly DependencyProperty IsHintVisibleProperty =
             DependencyProperty.Register("IsHintVisible", typeof(bool), typeof(SuggestBox), new PropertyMetadata(true));
-
+        #endregion
 
         #endregion
     }
