@@ -18,67 +18,83 @@ namespace FileExplorer.BaseControls
         static BreadcrumbItem()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BreadcrumbItem), new FrameworkPropertyMetadata(typeof(BreadcrumbItem)));
-        }        
+        }
 
         public BreadcrumbItem()
         {
-            this.Loaded += delegate { _loaded = true; };       
-            
+            this.Loaded += delegate { _loaded = true; };
+
         }
 
-        public void raiseShowCaptionEvent(bool value)
+
+        #region Unused code
+        //public void raiseShowCaptionEvent(bool value)
+        //{
+        //    //Fix:69: http://social.msdn.microsoft.com/forums/en-US/wpf/thread/6ec60f31-5a6f-486e-a4ac-309505987735/
+        //    //sometimes that element genuinely isn't there yet. (after loaded event / BreadcrumbItem.cs)
+        //    try
+        //    {
+        //        if (value)
+        //        {
+                    
+        //                RaiseEvent(new RoutedEventArgs(ShowingCaptionEvent));
+        //        }
+        //        else
+        //        {
+
+        //                RaiseEvent(new RoutedEventArgs(HidingCaptionEvent));
+        //        }
+        //    }
+        //    catch
+        //    {
+
+        //    }
+        //}
+        public static void OnShowCaptionChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
-            //Fix:69: http://social.msdn.microsoft.com/forums/en-US/wpf/thread/6ec60f31-5a6f-486e-a4ac-309505987735/
-            //sometimes that element genuinely isn't there yet. (after loaded event / BreadcrumbItem.cs)
-            try
-            {
-                if (value)
-                    RaiseEvent(new RoutedEventArgs(ShowingCaptionEvent));
-                else RaiseEvent(new RoutedEventArgs(HidingCaptionEvent));
-            }
-            catch
-            {
-
-            }
+            //if (args.NewValue != args.OldValue)
+            //{
+            //    BreadcrumbItem item = (BreadcrumbItem)sender;
+            //    bool newShowCaption = (bool)args.NewValue;
+            //    if (item.ShowCaption != newShowCaption)
+            //        if (item._loaded)
+            //        {
+            //            item.raiseShowCaptionEvent(newShowCaption);
+            //        }
+            //        else
+            //        {
+            //            RoutedEventHandler action = null;
+            //            action = (RoutedEventHandler)delegate
+            //            {
+            //                item.Loaded -= action;
+            //                if (!item._showCaptionHandled && newShowCaption)
+            //                    item.raiseShowCaptionEvent(newShowCaption);
+            //                item._showCaptionHandled = true;
+            //            };
+            //            item.Loaded += action;
+            //        }
+            //}
         }
-
-        public static object OnShowCaptionCoerce(DependencyObject obj, object value)
-        {
-            BreadcrumbItem item = (BreadcrumbItem)obj;
-            if (item._loaded)
-            {
-                item.raiseShowCaptionEvent((bool)value);
-            }
-            else
-            {
-                RoutedEventHandler action = null;
-                action = (RoutedEventHandler)delegate
-                 {
-                     item.Loaded -= action;
-                     if (!item._showCaptionHandled && !(bool)value)
-                         item.raiseShowCaptionEvent((bool)value);
-                     item._showCaptionHandled = true;
-                 };
-                item.Loaded += action;
-            }
-            return value;
-        }
-
+        #endregion
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            BreadcrumbItem retVal = new BreadcrumbItem() { HeaderTemplate = HeaderTemplate, 
-                IconTemplate = IconTemplate, IsTopLevel = false };
+            BreadcrumbItem retVal = new BreadcrumbItem()
+            {
+                HeaderTemplate = HeaderTemplate,
+                IconTemplate = IconTemplate,
+                IsTopLevel = false
+            };
             retVal.ShowToggle = false;
-            retVal.IsTopLevel = false; 
+            retVal.IsTopLevel = false;
             return retVal;
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (!ShowCaption)
-                raiseShowCaptionEvent(ShowCaption);
+            //if (!ShowCaption)
+            //    raiseShowCaptionEvent(ShowCaption);
 
             this.AddHandler(BreadcrumbItem.SelectedEvent, (RoutedEventHandler)delegate(object sender, RoutedEventArgs args)
             {
@@ -96,15 +112,15 @@ namespace FileExplorer.BaseControls
         public static void OnIsTopLevelChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
             //if (!args.NewValue.Equals(args.OldValue))
-                (sender as BreadcrumbItem).ShowIcon = !(bool)args.NewValue;
+            (sender as BreadcrumbItem).ShowIcon = !(bool)args.NewValue;
         }
 
         public static void OnIsOverflowedChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
             //if (!args.NewValue.Equals(args.OldValue))
-                (sender as BreadcrumbItem).ShowIcon = (bool)args.NewValue;
+            (sender as BreadcrumbItem).ShowIcon = (bool)args.NewValue;
         }
-            
+
 
         #region Public Properties
 
@@ -135,9 +151,10 @@ namespace FileExplorer.BaseControls
             remove { RemoveHandler(HidingCaptionEvent, value); }
         }
 
+
         public static readonly DependencyProperty ShowCaptionProperty =
                     DependencyProperty.Register("ShowCaption", typeof(bool), typeof(BreadcrumbItem),
-                    new UIPropertyMetadata(true, null, new CoerceValueCallback(OnShowCaptionCoerce)));
+                    new UIPropertyMetadata(true, OnShowCaptionChanged));
 
         /// <summary>
         /// Display Caption
@@ -174,7 +191,7 @@ namespace FileExplorer.BaseControls
             set { SetValue(ShowIconProperty, value); }
         }
 
-       
+
 
         public static readonly DependencyProperty IsTopLevelProperty =
                     DependencyProperty.Register("IsTopLevel", typeof(bool), typeof(BreadcrumbItem),
@@ -229,7 +246,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty IsDropDownOpenProperty =
-            ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbItem), 
+            ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbItem),
             new PropertyMetadata(false));
 
         /// <summary>
@@ -280,6 +297,7 @@ namespace FileExplorer.BaseControls
 
         #region Data
 
+        HotTrack _headerHL;
         bool _loaded = false;
         bool _showCaptionHandled = false;
 

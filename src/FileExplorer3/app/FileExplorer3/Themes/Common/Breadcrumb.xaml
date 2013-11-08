@@ -31,13 +31,18 @@
                                   IsChecked="{Binding IsBreadcrumbVisible, RelativeSource={RelativeSource TemplatedParent}}" 
                                   Template="{StaticResource BaseButton}" Background="Transparent" >
                         <ContentControl ContentTemplate="{TemplateBinding IconTemplate}" 
-                                        Content="{TemplateBinding SelectedValue}" />                        
+                                        Content="{Binding SelectedValue, RelativeSource={RelativeSource TemplatedParent}}" />                        
                     </ToggleButton>
 
                     <bc:SuggestBox x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
-                                   Text="{Binding SelectedPathValue, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                   DisplayMemberPath="{Binding HierarchyHelper.ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                
                                    Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
-                                            RelativeSource={RelativeSource TemplatedParent}}"   />
+                                            RelativeSource={RelativeSource TemplatedParent}}" >
+                        <bc:SuggestBox.Text>
+                            <Binding Path="SelectedPathValue" RelativeSource="{RelativeSource TemplatedParent}" UpdateSourceTrigger="Explicit">                                
+                            </Binding>
+                        </bc:SuggestBox.Text>
+                    </bc:SuggestBox>
                     
                     <bc:BreadcrumbCore x:Name="PART_BreadcrumbCore" Grid.Column="1"
                                    HeaderTemplate="{TemplateBinding HeaderTemplate}"

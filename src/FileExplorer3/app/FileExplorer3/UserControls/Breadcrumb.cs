@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
@@ -23,7 +24,6 @@ namespace FileExplorer.UserControls
 
         public Breadcrumb()
         {
-          
         }
 
         #endregion
@@ -35,8 +35,48 @@ namespace FileExplorer.UserControls
             base.OnApplyTemplate();
             bcore = this.Template.FindName("PART_BreadcrumbCore", this) as BreadcrumbCore;
             tbox = this.Template.FindName("PART_TextBox", this) as SuggestBox;
+            toggle = this.Template.FindName("PART_Toggle", this) as ToggleButton;
+
 
             UpdateSelectedValue(DataContext);
+
+            #region BreadcrumbCore related handlers
+            //When Breadcrumb select a value, update it.
+            AddHandler(BreadcrumbCore.SelectedValueChangedEvent, (RoutedEventHandler)((o, e) =>
+            {
+                UpdateSelectedValue(bcore.SelectedValue);
+            }));
+            #endregion
+
+            #region SuggestBox related handlers.
+            //When click empty space, switch to text box
+            AddHandler(Breadcrumb.MouseDownEvent, (RoutedEventHandler)((o, e) =>
+            {
+                toggle.SetValue(ToggleButton.IsCheckedProperty, false); //Hide Breadcrumb
+            }));
+            //When text box is visible, call SelectAll
+            toggle.AddValueChanged(ToggleButton.IsCheckedProperty,
+                (o, e) =>
+                {
+                    tbox.Focus();
+                    tbox.SelectAll();
+                });
+            //When changed selected (path) value, hide textbox.
+            AddHandler(SuggestBox.ValueChangedEvent, (RoutedEventHandler)((o, e) =>
+                {
+                    toggle.SetValue(ToggleButton.IsCheckedProperty, true); //Show Breadcrumb
+                }));
+            this.AddValueChanged(Breadcrumb.SelectedPathValueProperty, (o, e) =>
+            {
+                toggle.SetValue(ToggleButton.IsCheckedProperty, true); //Show Breadcrumb
+            });
+            this.AddValueChanged(Breadcrumb.SelectedValueProperty, (o, e) =>
+            {
+                toggle.SetValue(ToggleButton.IsCheckedProperty, true); //Show Breadcrumb
+            });
+            
+            #endregion
+
             
             this.AddValueChanged(DataContextProperty, OnDataContextChanged);
             OnDataContextChanged(this, EventArgs.Empty);
@@ -47,8 +87,7 @@ namespace FileExplorer.UserControls
             if (bcore != null && value != null)
             {
                 var hierarchy = HierarchyHelper.GetHierarchy(value, true).Reverse().ToList();
-                bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);
-                //bcore.SetValue(BreadcrumbCore.roo
+                bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);                
                 SelectedPathValue = HierarchyHelper.GetPath(value);
             }
         }
@@ -66,12 +105,20 @@ namespace FileExplorer.UserControls
                 bread.UpdateSelectedValue(e.NewValue);
         }
 
+        public static void OnSelectedPathValueChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var bread = sender as Breadcrumb;
+            if (bread.bcore != null && !e.NewValue.Equals(e.OldValue))
+                bread.UpdateSelectedValue(bread.HierarchyHelper.GetItem(bread.DataContext, e.NewValue as string));
+        }
+
         #endregion
 
         #region Data
 
         BreadcrumbCore bcore;
         SuggestBox tbox;
+        ToggleButton toggle;
 
         #endregion
 
@@ -87,15 +134,15 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("SelectedValue", typeof(object),
             typeof(Breadcrumb), new UIPropertyMetadata(null, OnSelectedValueChanged));
 
-        public object SelectedPathValue
+        public string SelectedPathValue
         {
-            get { return GetValue(SelectedPathValueProperty); }
+            get { return (string)GetValue(SelectedPathValueProperty); }
             set { SetValue(SelectedPathValueProperty, value); }
         }
 
         public static readonly DependencyProperty SelectedPathValueProperty =
-            DependencyProperty.Register("SelectedPathValue", typeof(object),
-            typeof(Breadcrumb), new UIPropertyMetadata(null));
+            DependencyProperty.Register("SelectedPathValue", typeof(string),
+            typeof(Breadcrumb), new UIPropertyMetadata(null, OnSelectedPathValueChanged));
 
 
 

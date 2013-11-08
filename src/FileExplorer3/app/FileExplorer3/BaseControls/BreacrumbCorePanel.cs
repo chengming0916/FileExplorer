@@ -24,6 +24,7 @@ namespace FileExplorer.BaseControls
         protected override Size MeasureOverride(Size availableSize)
         {
             Size resultSize = new Size(0, 0);
+            
             if (Children.Count > 0)
             {
                 //Measure as horizontal stack, right to left.
@@ -67,6 +68,13 @@ namespace FileExplorer.BaseControls
                 bcore.SetValue(BreadcrumbCore.LastNonVisibleIndexProperty, value);
         }
 
+        public void SetLastNonVisibleIndex()
+        {
+            var bcore = findBreadcrumbCore();
+            if (bcore != null)
+                bcore.SetValue(BreadcrumbCore.LastNonVisibleIndexProperty, bcore.DefaultLastNonVisibleIndex);
+        }
+
         #endregion
 
         private Rect[] arrangeChildren(Size availableSize)
@@ -74,6 +82,7 @@ namespace FileExplorer.BaseControls
             Rect[] retVal = new Rect[Children.Count];
 
             double curX = availableSize.Width;
+            SetLastNonVisibleIndex();
             for (int i = Children.Count - 1; i >= 0; i--) //Allocate from last to first
             {
                 var current = Children[i];

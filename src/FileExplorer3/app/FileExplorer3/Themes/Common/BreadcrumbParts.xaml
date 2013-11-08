@@ -28,7 +28,7 @@
     </Style>
 
     <ControlTemplate x:Key="BreadcrumbItemTemplate" TargetType="{x:Type bc:BreadcrumbItem}">
-        <Grid Name="MainGrid" SnapsToDevicePixels="True" Margin="0,0"  HorizontalAlignment="Stretch"  >
+        <Grid Name="MainGrid" SnapsToDevicePixels="True" Margin="0,0"  HorizontalAlignment="Stretch">
             <!-- If Is separator, display separator -->
             <Separator Visibility="{Binding IsSeparator, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btv}}" />
             <!-- Otherwise display a grid with popup -->
@@ -46,7 +46,7 @@
                                  BorderThickness="{TemplateBinding BorderThickness}"
                                  SelectedBorderBrush="{TemplateBinding BorderBrush}"
                                  Visibility="{Binding ShowToggle, RelativeSource={RelativeSource TemplatedParent}, 
-                                        Converter={StaticResource btv}}"
+                                        Converter={StaticResource btvc}}"
                                  MinWidth="10">
                         <!-- DropDown Popup  -->
                         <bc:DropDown IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
@@ -74,6 +74,8 @@
                     <!-- Header Content -->
                     <bc:HotTrack x:Name="headerHL"  BorderThickness="{TemplateBinding BorderThickness}"
                                  SelectedBorderBrush="{TemplateBinding BorderBrush}"                                 
+                                 Visibility="{Binding ShowCaption, RelativeSource={RelativeSource TemplatedParent},
+                                            Converter={StaticResource btvc}}"
                                  IsDragging="{Binding IsMouseOver, ElementName=headerToggleHL}">
                         <Button x:Name="buttonCurrent"  HorizontalAlignment="Stretch"                                                  
                                                 Height="{TemplateBinding ActualHeight}" Template="{StaticResource BaseButton}" 
@@ -94,6 +96,40 @@
 
         </Grid>
 
+        <ControlTemplate.Triggers>
+
+            <!--<EventTrigger RoutedEvent="bc:BreadcrumbItem.ShowingCaption"  >
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerToggleHL" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame Value="{x:Static Visibility.Collapsed}" KeyTime="0:0:0.2" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerHL" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame Value="{x:Static Visibility.Collapsed}" KeyTime="0:0:0.2" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Storyboard.TargetName="headerHL" FillBehavior="Stop" 
+                                                     Storyboard.TargetProperty="MaxWidth" From="0" To="200" Duration="00:00:0.5" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+
+            <EventTrigger RoutedEvent="bc:BreadcrumbItem.HidingCaption">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerToggleHL" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame Value="{x:Static Visibility.Collapsed}" KeyTime="0:0:0.2" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerHL" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame Value="{x:Static Visibility.Collapsed}" KeyTime="0:0:0.2" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Storyboard.TargetName="headerHL" FillBehavior="Stop" 
+                                                     Storyboard.TargetProperty="MaxWidth" From="200" To="0" Duration="00:00:0.5" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>-->
+
+
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
 
@@ -117,7 +153,7 @@
            TargetType="{x:Type bc:BreadcrumbOverflowPanel}" BasedOn="{StaticResource {x:Type ItemsControl}}" >
 
         <Setter Property="Background" Value="Transparent" />
-        
+
         <Setter Property="HeaderTemplate" Value="{Binding HeaderTemplate, 
                                                     RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
         <Setter Property="IconTemplate" Value="{Binding IconTemplate, 
@@ -157,9 +193,18 @@
                                             RelativeSource={RelativeSource TemplatedParent}}"
                                          VerticalAlignment="Center"  Height="22">
                                 <bc:DropDown.Header>
-                                    <Path x:Name="path"  Stroke="Black" StrokeThickness="1.2" Data="{StaticResource ExpanderArrow}"
+                                    <Grid>
+                                        <Path Stroke="Black" StrokeThickness="1.2" Data="{StaticResource ExpanderArrow}"
                                             HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                            Visibility="{Binding IsOverflowed, RelativeSource={RelativeSource TemplatedParent},
+                                            Converter={StaticResource btv}}"
                                           Margin="{TemplateBinding Padding}" IsHitTestVisible="True" />
+
+                                        <ToggleButton Template="{StaticResource BasicArrowButton}" IsHitTestVisible="False" 
+                                                      Visibility="{Binding IsOverflowed, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource fbtv}}"
+                                                      IsChecked="{Binding IsDropDownOpen, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                      />
+                                    </Grid>
                                 </bc:DropDown.Header>
                                 <bc:DropDown.Content>
                                     <ScrollViewer MaxHeight="200" MinWidth="150"
@@ -167,13 +212,9 @@
                                         <StackPanel Orientation="Vertical" 
                                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
 
-                                            <!--<ListBox BorderThickness="0" Background="Transparent">
-
-                                            </ListBox>-->
-                                            <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding RootItems}" />
+                                            <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding OverflowedItems}" />
                                             <Separator HorizontalAlignment="Stretch" />
-                                            <bc:BreadcrumbOverflowPanel />
-
+                                            <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding RootItems}" />
                                         </StackPanel>
                                     </ScrollViewer>
                                 </bc:DropDown.Content>

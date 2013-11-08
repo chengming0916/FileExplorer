@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseControls\MultiContentControl.cs" />
+    <Compile Include="BaseControls\PathExistsValidationRule.cs" />
     <Compile Include="BaseControls\PathHierarchyHelper.cs" />
     <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
     <Compile Include="BaseControls\AutoSuggestSource.cs" />

@@ -65,7 +65,7 @@ namespace FileExplorer.BaseControls
                 {
                     if (_itemList.SelectedValue != null)
                         updateValueFromListBox();
-                };          
+                };
 
             _itemList.PreviewKeyDown += (o, e) =>
             {
@@ -126,9 +126,17 @@ namespace FileExplorer.BaseControls
 
         private void updateSource()
         {
-            var txtBindingExpr = this.GetBindingExpression(TextBox.TextProperty);
-            if (txtBindingExpr != null)
-                txtBindingExpr.UpdateSource();
+            var txtBindingExpr = this.GetBindingExpression(TextBox.TextProperty);            
+            var value = HierarchyHelper.GetItem(DataContext, Text);
+            if (value != null)
+            {
+                if (txtBindingExpr != null)
+                    txtBindingExpr.UpdateSource();
+                RaiseEvent(new RoutedEventArgs(ValueChangedEvent));                
+            }
+            else Validation.MarkInvalid(txtBindingExpr,                
+                new ValidationError(new PathExistsValidationRule(), txtBindingExpr, 
+                    "Path not exists.", null));
         }
 
         #endregion
@@ -257,6 +265,16 @@ namespace FileExplorer.BaseControls
         #endregion
 
         #region Public Properties
+
+
+        public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent("ValueChanged",
+          RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(SuggestBox));
+
+        public event RoutedEventHandler ValueChanged
+        {
+            add { AddHandler(ValueChangedEvent, value); }
+            remove { RemoveHandler(ValueChangedEvent, value); }
+        }
 
         public static readonly DependencyProperty SuggestSourceProperty = DependencyProperty.Register(
             "SuggestSource", typeof(ISuggestSource), typeof(SuggestBox), new PropertyMetadata(new AutoSuggestSource()));

@@ -74,9 +74,10 @@ namespace TestTemplate.WPF
             suggestBoxAuto2.HierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");
             suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value.
 
-            breadcrumb.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
-            
-
+            breadcrumb1.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            breadcrumb2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            //breadcrumb3.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            //breadcrumb4.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
 
         }
 

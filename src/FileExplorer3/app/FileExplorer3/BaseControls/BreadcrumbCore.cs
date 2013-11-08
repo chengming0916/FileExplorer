@@ -47,6 +47,10 @@ namespace FileExplorer.BaseControls
 
         char Separator { get; }
         StringComparison StringComparisonOption { get; }
+
+        string ParentPath { get; }
+        string ValuePath { get; }
+        string SubentriesPath { get; }
     }
 
     public class BreadcrumbCore : ItemsControl
@@ -69,42 +73,67 @@ namespace FileExplorer.BaseControls
             //    //args.Handled = true;
             //});
 
+            this.AddValueChanged(ItemsSourceProperty, (o, e) =>
+                {
+                    if (this.Items.Count > 0)
+                    {
+                        BreadcrumbItem firstItem = this.ItemContainerGenerator.ContainerFromIndex(0) as BreadcrumbItem;
+                        if (firstItem != null)
+                        {
+                            firstItem.ShowCaption = firstItem.ShowToggle = this.Items.Count == 1;
+                        }
+                    }
+                    updateOverflowedItems();
+                });
+
             AddHandler(BreadcrumbItem.SelectedEvent, (RoutedEventHandler)((o, e) =>
             {
                 SelectedItem = e.OriginalSource as BreadcrumbItem;
                 if (SelectedItem is BreadcrumbItem)
                 {
                     var item = (SelectedItem as BreadcrumbItem);
-                    SelectedValue = item.DataContext;
+                    SetValue(SelectedValueProperty,item.DataContext);
                 }
-                RaiseEvent(new RoutedEventArgs(SelectedValueChangedEvent));
                 this.SetValue(IsDropDownOpenProperty, false); //Close << drop down when selected.
+                RaiseEvent(new RoutedEventArgs(SelectedValueChangedEvent));
                 e.Handled = true;
             }));
         }
 
         #endregion
 
-        #region Methods        
+        #region Methods
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate, IconTemplate = this.IconTemplate, IsTopLevel=true };
+            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate, IconTemplate = this.IconTemplate, IsTopLevel = true };
+        }
+
+        private void updateOverflowedItems()
+        {
+            Stack<Object> overflowedItems = new Stack<object>();
+            for (int i = 0; i < Math.Min(LastNonVisible + 1, Items.Count); i++)
+            {
+                overflowedItems.Push(Items[i]);
+            }
+            SetValue(OverflowedItemsProperty, overflowedItems);
+            SetValue(IsOverflowedProperty, overflowedItems.Count() > DefaultLastNonVisibleIndex + 1);
         }
 
         public static void OnLastNonVisibleIndexChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
             BreadcrumbCore bcore = sender as BreadcrumbCore;
-
-            List<Object> overflowedItems = new List<object>();
-            for (int i = 0; i < Math.Min((int)args.NewValue + 1, bcore.Items.Count) ; i++)
-            {
-                overflowedItems.Add(bcore.Items[i]);
-            }
-
-            bcore.SetValue(OverflowedItemsProperty, overflowedItems);
+            bcore.updateOverflowedItems();
         }
 
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Used by BreadcrumbCorePanel, default (0) the root item is showed in OverflowPanel.
+        /// </summary>
+        public int DefaultLastNonVisibleIndex { get { return 0; } } 
         #endregion
 
         #region Dependency properties
@@ -117,7 +146,7 @@ namespace FileExplorer.BaseControls
         {
             add { AddHandler(SelectedValueChangedEvent, value); }
             remove { RemoveHandler(SelectedValueChangedEvent, value); }
-        }               
+        }
 
         public static DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem",
           typeof(Object), typeof(BreadcrumbCore), new PropertyMetadata(null));
@@ -137,18 +166,40 @@ namespace FileExplorer.BaseControls
             set { SetValue(SelectedValueProperty, value); }
         }
 
+        #region OverflowedItems, IsOverflowed, RootItems
         public static DependencyProperty OverflowedItemsProperty = DependencyProperty.Register("OverflowedItems",
-           typeof(IList<Object>), typeof(BreadcrumbCore), new PropertyMetadata(null));
+           typeof(IEnumerable), typeof(BreadcrumbCore), new PropertyMetadata(null));
 
-        public IList<Object> OverflowedItems
+        public IEnumerable OverflowedItems
         {
-            get { return (IList<Object>)GetValue(OverflowedItemsProperty); }
+            get { return (ICollection)GetValue(OverflowedItemsProperty); }
             set { SetValue(OverflowedItemsProperty, value); }
         }
 
+        public static DependencyProperty IsOverflowedProperty = DependencyProperty.Register("IsOverflowed",
+           typeof(bool), typeof(BreadcrumbCore), new PropertyMetadata(false));
+
+        /// <summary>
+        /// Only if Overflowed items is more than DefaultLastNonVisibleIndex + 1
+        /// </summary>
+        public bool IsOverflowed
+        {
+            get { return (bool)GetValue(IsOverflowedProperty); }
+            set { SetValue(IsOverflowedProperty, value); }
+        }
 
         public static readonly DependencyProperty RootItemsProperty = DependencyProperty.Register("RootItems",
             typeof(IEnumerable), typeof(BreadcrumbCore), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Assigned by Breadcrumb
+        /// </summary>
+        public IEnumerable RootItems
+        {
+            get { return (ICollection)GetValue(RootItemsProperty); }
+            set { SetValue(RootItemsProperty, value); }
+        }
+        #endregion
 
         public static readonly DependencyProperty IsDropDownOpenProperty =
           ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbCore),
@@ -164,14 +215,7 @@ namespace FileExplorer.BaseControls
         }
 
 
-        /// <summary>
-        /// Assigned by Breadcrumb
-        /// </summary>
-        public IEnumerable RootItems
-        {
-            get { return (IEnumerable)GetValue(RootItemsProperty); }
-            set { SetValue(RootItemsProperty, value); }
-        }
+       
 
         public static DependencyProperty LastNonVisibleIndexProperty = DependencyProperty.Register("LastNonVisibleIndex",
            typeof(int), typeof(BreadcrumbCore), new PropertyMetadata(0, OnLastNonVisibleIndexChanged));
@@ -195,7 +239,7 @@ namespace FileExplorer.BaseControls
             set { SetValue(HeaderTemplateProperty, value); }
         }
 
-        public static readonly DependencyProperty IconTemplateProperty = 
+        public static readonly DependencyProperty IconTemplateProperty =
             DependencyProperty.Register("IconTemplate", typeof(DataTemplate), typeof(BreadcrumbCore));
 
         public DataTemplate IconTemplate
