@@ -62,7 +62,8 @@
                                                       >
                                 <ItemsPresenter x:Name="itemList" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
                                                      SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"                                                      
-                                                     MaxHeight="200"  
+                                                     MaxHeight="{Binding DropDownHeight, RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" 
+                                                        Width="{Binding DropDownWidth, RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" 
                                                      KeyboardNavigation.DirectionalNavigation="None"
                                                      VirtualizingStackPanel.IsVirtualizing="True" 
                                                      VirtualizingStackPanel.VirtualizationMode="Standard"                                                     
@@ -185,7 +186,7 @@
 
     <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
            TargetType="{x:Type bc:BreadcrumbCore}" >
-        <Setter Property="Height" Value="30" />
+        <Setter Property="MinHeight" Value="30" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
@@ -197,7 +198,6 @@
 
         <Setter Property="Template">
             <Setter.Value>
-
                 <ControlTemplate TargetType="{x:Type bc:BreadcrumbCore}">
                     <Border BorderBrush="{TemplateBinding BorderBrush}" IsHitTestVisible="True"  
                             BorderThickness="{TemplateBinding BorderThickness}" MinHeight="25">
@@ -222,12 +222,17 @@
                                 </bc:DropDown.Header>
                                 <bc:DropDown.Content>
 
-                                    <ScrollViewer MaxHeight="200" MinWidth="150" 
+                                    <ScrollViewer MaxHeight="{TemplateBinding DropDownHeight}" 
+                                                  Width="{TemplateBinding DropDownWidth}"
                                                   HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                                         <StackPanel Orientation="Vertical" >
                                             <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding OverflowedItems}" />
-                                            <Separator HorizontalAlignment="Stretch" />
+                                            <Separator HorizontalAlignment="Stretch" 
+                                                       Visibility="{Binding IsOverflowed, 
+                                                            RelativeSource={RelativeSource TemplatedParent},
+                                                            Converter={StaticResource btv}}" />
                                             <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding RootItems}" />
+
                                         </StackPanel>
 
                                     </ScrollViewer>

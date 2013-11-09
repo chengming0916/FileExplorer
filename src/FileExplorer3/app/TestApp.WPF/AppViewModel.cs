@@ -28,8 +28,8 @@ namespace TestApp.WPF
 
             IProfile profile = new FileSystemInfoProfile();
             ExplorerModel = new ExplorerViewModel(events,
-                EntryViewModel.FromEntryModel(profile.ParseAsync(rootPath).Result),
-                EntryViewModel.FromEntryModel(profile.ParseAsync(rootPath2).Result)
+                profile.ParseAsync(rootPath).Result,
+                profile.ParseAsync(rootPath2).Result
                 );
 
 

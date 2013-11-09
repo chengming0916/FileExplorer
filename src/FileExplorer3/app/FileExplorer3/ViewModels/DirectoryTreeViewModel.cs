@@ -13,11 +13,11 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public DirectoryTreeViewModel(IEventAggregator events, params IEntryViewModel[] rootModels)
+        public DirectoryTreeViewModel(IEventAggregator events, params IEntryModel[] rootModels)
         {
             _events = events;
             _rootViewModel = new BindableCollection<IDirectoryNodeViewModel>(rootModels
-                .Select(r => new DirectoryNodeViewModel(events, this, r.EntryModel)));
+                .Select(r => new DirectoryNodeViewModel(events, this, r)));
         }
 
         #endregion
@@ -62,7 +62,6 @@ namespace FileExplorer.ViewModels
         }
 
         public IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get { return _rootViewModel; } }
-
 
         #endregion
 

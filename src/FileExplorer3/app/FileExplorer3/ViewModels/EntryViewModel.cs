@@ -93,11 +93,10 @@ namespace FileExplorer.ViewModels
             {
                 _isEditable = value;
                 NotifyOfPropertyChange(() => IsEditable);
-
             }
         }
-
-        public IEntryModel EntryModel { get; private set; }
+                
+        public IEntryModel EntryModel { get; private set; }        
 
         public Lazy<ImageSource> Icon { get { return _icon; } }
 

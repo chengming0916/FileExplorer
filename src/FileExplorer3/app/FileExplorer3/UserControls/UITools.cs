@@ -23,20 +23,14 @@ namespace FileExplorer.BaseControls
 
         public static T FindAncestor<T>(DependencyObject obj) where T : DependencyObject
         {
-
             while (obj != null)
             {
-
                 T o = obj as T;
-
                 if (o != null)
-
                     return o;
-
                 obj = VisualTreeHelper.GetParent(obj);
             }
             return default(T);
-
         }
 
         public static T FindLogicalAncestor<T>(DependencyObject obj) where T : DependencyObject

@@ -16,11 +16,12 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public ExplorerViewModel(IEventAggregator events, params IEntryViewModel[] rootModels)
+        public ExplorerViewModel(IEventAggregator events, params IEntryModel[] rootModels)
         {
             _events = events;
             _rootModels = rootModels;
 
+            BreadcrumbModel = new BreadcrumbViewModel(this, events, rootModels);
             FileListModel = new FileListViewModel(events, true);
             DirectoryTreeModel = new DirectoryTreeViewModel(events, rootModels);
             StatusbarModel = new StatusbarViewModel(this, events);
@@ -38,7 +39,7 @@ namespace FileExplorer.ViewModels
         {
             foreach (var evm in _rootModels)
             {
-                var model = evm.EntryModel.Profile.ParseAsync(gotoPath).Result;
+                var model = evm.Profile.ParseAsync(gotoPath).Result;
                 if (model != null)
                 {
                     DirectoryTreeModel.Select(model);
@@ -69,13 +70,14 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        private IEntryViewModel[] _rootModels;
+        private IEntryModel[] _rootModels;
         private IEventAggregator _events;
 
         #endregion
 
         #region Public Properties
-        
+
+        public IBreadcrumbViewModel BreadcrumbModel { get; private set; }
         public IDirectoryTreeViewModel DirectoryTreeModel { get; private set; }
         public IFileListViewModel FileListModel { get; private set; }
         public IStatusbarViewModel StatusbarModel { get; private set; }

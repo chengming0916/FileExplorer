@@ -57,7 +57,7 @@ namespace TestTemplate.WPF
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            
+
             //BreadcrumbCore Test
             FakeViewModel fvm = new FakeViewModel("Root");            
             for (int i = 1; i < 10; i++)
@@ -74,8 +74,8 @@ namespace TestTemplate.WPF
             suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value, suggest based on HierarchyLister.List()
 
             //breadcrumb
-            breadcrumb1.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));            
-            breadcrumb2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            breadcrumb1.RootItems = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            breadcrumb2.RootItems = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
 
             bool UseGenericHierarchyHelper = true;
 

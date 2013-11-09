@@ -61,6 +61,7 @@
                 </uc:StatusbarEx>
             </WrapPanel>
         </TabItem>
+        
         <TabItem Header="Breadcrumb" IsSelected="True">
             <Grid>
                 <Grid.Resources>
@@ -72,7 +73,14 @@
                         <DataTemplate x:Key="FakeVMIconTemplate">
                             <Image Source="folder.ico" DockPanel.Dock="Left" Height="16" Width="16" />
                         </DataTemplate>
-                <!-- Debug-->
+                        <HierarchicalDataTemplate x:Key="FakeVMHeaderTemplateXL" ItemsSource="{Binding SubDirectories}"  >
+                            <TextBlock Text="{Binding Header}" Margin="5,0" FontSize="20"
+                                       VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                        </HierarchicalDataTemplate>
+                        <DataTemplate x:Key="FakeVMIconTemplateXL">
+                            <Image Source="folder.ico" DockPanel.Dock="Left" Height="32" Width="32" />
+                        </DataTemplate>
+                        <!-- Debug-->
                         <!--<HierarchicalDataTemplate x:Key="FakeVMHeaderTemplate" ItemsSource="{Binding SubDirectories}"  >
                             <TextBlock Text="Header" />
                         </HierarchicalDataTemplate>
@@ -88,7 +96,7 @@
                 <StackPanel VerticalAlignment="Stretch">
 
                     <TextBlock Text="Breadcrumb Core Only" />
-                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left" 
+                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left"  Height="30"
                                        IconTemplate="{StaticResource FakeVMIconTemplate}"
                                        HeaderTemplate="{StaticResource FakeVMHeaderTemplate}">
                     </bc:BreadcrumbCore>
@@ -110,14 +118,39 @@
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
                                    >
                     </uc:Breadcrumb>
+                    <!--<uc:Breadcrumb x:Name="breadcrumb2" Height="60" DropDownHeight="500" DropDownWidth="300"
+                                   ParentPath="Parent" ValuePath="Value" SubEntriesPath="SubDirectories" 
+                                   SelectedPathValue="{Binding SelectedPathValue, ElementName=breadcrumb1, Mode=TwoWay}"
+                                   IconTemplate="{StaticResource FakeVMIconTemplateXL}"
+                                   HeaderTemplate="{StaticResource FakeVMHeaderTemplateXL}"
+                                   >
+                    </uc:Breadcrumb>-->
+
                     <uc:Breadcrumb x:Name="breadcrumb2" 
                                    ParentPath="Parent" ValuePath="Value" SubEntriesPath="SubDirectories" 
                                    SelectedPathValue="{Binding SelectedPathValue, ElementName=breadcrumb1, Mode=TwoWay}"
                                    IconTemplate="{StaticResource FakeVMIconTemplate}"
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
+                                   IsProgressbarVisible="True" IsIndeterminate="False"
                                    >
+                        <uc:Breadcrumb.LayoutTransform>
+                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                        </uc:Breadcrumb.LayoutTransform>
+                        
+                            <Button Padding="0,0,2,0">
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Path Stroke="#FF000000" StrokeThickness="1" Data="{StaticResource RefreshBranch}"   />
+                                    <Path Fill="#FF000000" Data="{StaticResource RefreshArrow}"   />
+                                </Grid>
+                            </Button>
+                        
                     </uc:Breadcrumb>
-
+                    
+                    <DockPanel >
+                        <CheckBox IsChecked="{Binding IsIndeterminate, ElementName=breadcrumb2}" Content="IsIndeterminate"  DockPanel.Dock= "Right" />
+                        <Slider Value="{Binding Progress, ElementName=breadcrumb2}" Minimum="0" Maximum="100"  />
+                        
+                    </DockPanel>
                 </StackPanel>
                 <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="5" Grid.Column="1" />
                 <StackPanel Grid.Column="1" Orientation="Vertical" >

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -129,7 +130,7 @@ namespace FileExplorer.BaseControls
             var txtBindingExpr = this.GetBindingExpression(TextBox.TextProperty);
             if (txtBindingExpr == null)
                 return;
-            var value = HierarchyHelper.GetItem(DataContext, Text);
+            var value = HierarchyHelper.GetItem(RootItems, Text);
             if (value != null)
             {
                 if (txtBindingExpr != null)
@@ -224,7 +225,7 @@ namespace FileExplorer.BaseControls
             var suggestSource = SuggestSource;
             var hierarchyHelper = HierarchyHelper;
             string text = Text;
-            object data = DataContext;
+            object data = RootItems;
             IsHintVisible = String.IsNullOrEmpty(text);
             if (suggestSource != null)
                 Task.Run(async () =>
@@ -299,6 +300,15 @@ namespace FileExplorer.BaseControls
         {
             get { return (ISuggestSource)GetValue(SuggestSourceProperty); }
             set { SetValue(SuggestSourceProperty, value); }
+        }
+
+        public static readonly DependencyProperty RootItemsProperty = DependencyProperty.Register(
+            "RootItems", typeof(IEnumerable), typeof(SuggestBox));
+
+        public IEnumerable RootItems
+        {
+            get { return (IEnumerable)GetValue(RootItemsProperty); }
+            set { SetValue(RootItemsProperty, value); }
         }
         #endregion
 

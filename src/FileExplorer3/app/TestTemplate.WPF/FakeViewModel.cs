@@ -29,12 +29,17 @@ namespace TestTemplate.WPF
                 }
         }
 
-        public static FakeViewModel GenerateFakeViewModels(TimeSpan latency)
+        public static FakeViewModel[] GenerateFakeViewModels(TimeSpan latency)
         {
             var root = new FakeViewModel() { Latency = latency };
             generate(root, 5);
-            return root;
+            foreach (var r in root.SubDirectories)
+                r.Parent = null;
+
+            return root.SubDirectories.ToArray();
         }
+
+
 
         public FakeViewModel(params FakeViewModel[] rootModels)
         {

@@ -34,12 +34,12 @@ namespace FileExplorer.BaseControls
         /// <summary>
         /// Get Item from path.
         /// </summary>
-        /// <param name="rootItem">RootItem or ItemSource which can be used to lookup from.</param>
+        /// <param name="rootItem">DataContext which can be used to lookup from.</param>
         /// <param name="path"></param>
         /// <returns></returns>
-        object GetItem(object rootItem, string path);
+        object GetItem(object rootItem, string path); //To-Do: Async
 
-        IEnumerable List(object item);
+        IEnumerable List(object item); //To-Do: Async
 
         string ExtractPath(string pathName);
 
@@ -71,13 +71,11 @@ namespace FileExplorer.BaseControls
 
             this.AddValueChanged(ItemsSourceProperty, (o, e) =>
                 {
-                    if (this.Items.Count > 0)
+                    for (var i = 0; i < Items.Count; i++)                        
                     {
-                        BreadcrumbItem firstItem = this.ItemContainerGenerator.ContainerFromIndex(0) as BreadcrumbItem;
+                        BreadcrumbItem firstItem = this.ItemContainerGenerator.ContainerFromIndex(i) as BreadcrumbItem;
                         if (firstItem != null)
-                        {
-                            firstItem.ShowCaption = firstItem.ShowToggle = this.Items.Count == 1;
-                        }
+                            firstItem.ShowCaption = firstItem.ShowToggle = i > DefaultLastNonVisibleIndex || Items.Count == 1;
                     }
                     updateOverflowedItems();
                 });
@@ -127,9 +125,10 @@ namespace FileExplorer.BaseControls
         #region Public Properties
 
         /// <summary>
-        /// Used by BreadcrumbCorePanel, default (0) the root item is showed in OverflowPanel.
+        /// Used by BreadcrumbCorePanel, default (-1) the root item is showed in OverflowPanel.
         /// </summary>
-        public int DefaultLastNonVisibleIndex { get { return 0; } } 
+        public int DefaultLastNonVisibleIndex { get { return -1; } } 
+        
         #endregion
 
         #region Dependency properties
@@ -227,6 +226,30 @@ namespace FileExplorer.BaseControls
         {
             get { return (bool)GetValue(IsDropDownOpenProperty); }
             set { SetValue(IsDropDownOpenProperty, value); }
+        }
+
+        public static readonly DependencyProperty DropDownHeightProperty =
+         DependencyProperty.Register("DropDownHeight", typeof(double), typeof(BreadcrumbCore), new UIPropertyMetadata(200d));         
+
+        /// <summary>
+        /// Is current dropdown (combobox) opened, this apply to the first &lt;&lt; button only
+        /// </double>
+        public double DropDownHeight
+        {
+            get { return (double)GetValue(DropDownHeightProperty); }
+            set { SetValue(DropDownHeightProperty, value); }
+        }
+
+        public static readonly DependencyProperty DropDownWidthProperty =
+        DependencyProperty.Register("DropDownWidth", typeof(double), typeof(BreadcrumbCore), new UIPropertyMetadata(100d));
+
+        /// <summary>
+        /// Is current dropdown (combobox) opened, this apply to the first &lt;&lt; button only
+        /// </summary>
+        public double DropDownWidth
+        {
+            get { return (double)GetValue(DropDownWidthProperty); }
+            set { SetValue(DropDownWidthProperty, value); }
         }
 
         public static readonly DependencyProperty RootItemsProperty = DependencyProperty.Register("RootItems",
