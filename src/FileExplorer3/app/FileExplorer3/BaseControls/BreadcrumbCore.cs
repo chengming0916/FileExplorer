@@ -88,7 +88,7 @@ namespace FileExplorer.BaseControls
                 if (SelectedBreadcrumbItem is BreadcrumbItem)
                 {
                     var item = (SelectedBreadcrumbItem as BreadcrumbItem);
-                    SetValue(SelectedValueProperty,item.DataContext);
+                    SetValue(SelectedValueProperty, item.DataContext);
                 }
                 this.SetValue(IsDropDownOpenProperty, false); //Close << drop down when selected.
                 RaiseEvent(new RoutedEventArgs(SelectedValueChangedEvent));
@@ -122,6 +122,7 @@ namespace FileExplorer.BaseControls
             bcore.updateOverflowedItems();
         }
 
+
         #endregion
 
         #region Public Properties
@@ -129,7 +130,7 @@ namespace FileExplorer.BaseControls
         /// <summary>
         /// Used by BreadcrumbCorePanel, default (0) the root item is showed in OverflowPanel.
         /// </summary>
-        public int DefaultLastNonVisibleIndex { get { return 0; } } 
+        public int DefaultLastNonVisibleIndex { get { return 0; } }
         #endregion
 
         #region Dependency properties
@@ -161,7 +162,7 @@ namespace FileExplorer.BaseControls
             get { return (BreadcrumbItem)GetValue(SelectedBreadcrumbItemProperty); }
             set { SetValue(SelectedBreadcrumbItemProperty, value); }
         }
-       
+
         public static DependencyProperty SelectedValueProperty = DependencyProperty.Register("SelectedValue",
          typeof(Object), typeof(BreadcrumbCore), new PropertyMetadata(null));
 
@@ -172,6 +173,18 @@ namespace FileExplorer.BaseControls
         {
             get { return (Object)GetValue(SelectedValueProperty); }
             set { SetValue(SelectedValueProperty, value); }
+        }
+
+        public static DependencyProperty IsRootSelectedProperty = DependencyProperty.Register("IsRootSelected",
+         typeof(bool), typeof(BreadcrumbCore), new PropertyMetadata(true));
+
+        /// <summary>
+        /// Datacontext of the selected item.
+        /// </summary>
+        public bool IsRootSelected
+        {
+            get { return (bool)GetValue(IsRootSelectedProperty); }
+            set { SetValue(IsRootSelectedProperty, value); }
         }
         #endregion
 
@@ -214,7 +227,7 @@ namespace FileExplorer.BaseControls
 
         #endregion
 
-        #region IsDropDownOpen, RootItems
+        #region IsDropDownOpen, DropDownWidth, DropDownHeight, RootItems
 
         public static readonly DependencyProperty IsDropDownOpenProperty =
           ComboBox.IsDropDownOpenProperty.AddOwner(typeof(BreadcrumbCore),
@@ -229,6 +242,44 @@ namespace FileExplorer.BaseControls
             set { SetValue(IsDropDownOpenProperty, value); }
         }
 
+        public static readonly DependencyProperty ShowDropDownProperty =
+          DependencyProperty.Register("ShowDropDown", typeof(bool), typeof(BreadcrumbCore),
+          new PropertyMetadata(true));
+
+        /// <summary>
+        /// Whether the first dropdown is shown, set by Breadcrumb.
+        /// </summary>
+        public bool ShowDropDown
+        {
+            get { return (bool)GetValue(ShowDropDownProperty); }
+            set { SetValue(ShowDropDownProperty, value); }
+        }
+
+        public static readonly DependencyProperty DropDownHeightProperty =
+            DependencyProperty.Register("DropDownHeight", typeof(double), typeof(BreadcrumbCore), new UIPropertyMetadata(200d));
+
+        /// <summary>
+        /// Is current dropdown (combobox) opened, this apply to the first &lt;&lt; button only
+        /// </double>
+        public double DropDownHeight
+        {
+            get { return (double)GetValue(DropDownHeightProperty); }
+            set { SetValue(DropDownHeightProperty, value); }
+        }
+
+        public static readonly DependencyProperty DropDownWidthProperty =
+        DependencyProperty.Register("DropDownWidth", typeof(double), typeof(BreadcrumbCore), new UIPropertyMetadata(100d));
+
+        /// <summary>
+        /// Is current dropdown (combobox) opened, this apply to the first &lt;&lt; button only
+        /// </summary>
+        public double DropDownWidth
+        {
+            get { return (double)GetValue(DropDownWidthProperty); }
+            set { SetValue(DropDownWidthProperty, value); }
+        }
+
+
         public static readonly DependencyProperty RootItemsProperty = DependencyProperty.Register("RootItems",
             typeof(IEnumerable), typeof(BreadcrumbCore), new PropertyMetadata(null));
 
@@ -237,7 +288,7 @@ namespace FileExplorer.BaseControls
         /// </summary>
         public IEnumerable RootItems
         {
-            get { return (ICollection)GetValue(RootItemsProperty); }
+            get { return (IEnumerable)GetValue(RootItemsProperty); }
             set { SetValue(RootItemsProperty, value); }
         }
 

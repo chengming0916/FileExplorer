@@ -14,13 +14,37 @@ namespace FileExplorer.Utils
     //Thomas Levesque - http://stackoverflow.com/questions/3577802/wpf-getting-a-property-value-from-a-binding-path
     public static class PropertyPathHelper
     {
+        internal static Dictionary<Tuple<Type, string>, PropertyInfo> _cacheDic
+            = new Dictionary<Tuple<Type, string>, PropertyInfo>();
+        public static object GetValueFromPropertyInfo(object obj, string[] propPaths)
+        {
+            var current = obj;
+            foreach (var ppath in propPaths)
+            {
+                Type type = current.GetType();
+                var key = new Tuple<Type, string>(type, ppath);
+
+                PropertyInfo pInfo = null;
+                lock (_cacheDic)
+                {
+                    if (!(_cacheDic.ContainsKey(key)))
+                    {
+                        pInfo = type.GetProperty(ppath);
+                        _cacheDic.Add(key, pInfo);
+                    }
+                    pInfo = _cacheDic[key];
+                }
+
+                if (pInfo == null)
+                    return null;
+                current = pInfo.GetValue(current);
+            }
+            return current;
+        }
+
         public static object GetValueFromPropertyInfo(object obj, string propertyPath)
         {
-            Type type = obj.GetType();
-            var pInfo = type.GetProperty(propertyPath);
-            if (pInfo != null)
-                return pInfo.GetValue(obj);
-            return null;
+            return GetValueFromPropertyInfo(obj, propertyPath.Split('.'));
         }
 
         public static object GetValue(object obj, string propertyPath)

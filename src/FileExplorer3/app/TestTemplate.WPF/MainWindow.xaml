@@ -113,10 +113,28 @@
                     <uc:Breadcrumb x:Name="breadcrumb2" 
                                    ParentPath="Parent" ValuePath="Value" SubEntriesPath="SubDirectories" 
                                    SelectedPathValue="{Binding SelectedPathValue, ElementName=breadcrumb1, Mode=TwoWay}"
-                                   IconTemplate="{StaticResource FakeVMIconTemplate}"
+                                   IconTemplate="{StaticResource FakeVMIconTemplate}" 
+                                   IsProgressbarVisible="True" IsIndeterminate="False"
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
                                    >
+                        <uc:Breadcrumb.LayoutTransform>
+                            <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                        </uc:Breadcrumb.LayoutTransform>
+
+
+                        <Button Padding="0,0,2,0">
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Path Stroke="#FF000000" StrokeThickness="1" Data="{StaticResource RefreshBranch}"   />
+                                <Path Fill="#FF000000" Data="{StaticResource RefreshArrow}"   />
+                            </Grid>
+                        </Button>
+
                     </uc:Breadcrumb>
+                    <DockPanel >
+                        <CheckBox IsChecked="{Binding IsIndeterminate, ElementName=breadcrumb2}" Content="IsIndeterminate"  DockPanel.Dock= "Right" />
+                        <Slider Value="{Binding Progress, ElementName=breadcrumb2}" Minimum="0" Maximum="100"  />
+
+                    </DockPanel>
 
                 </StackPanel>
                 <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="5" Grid.Column="1" />

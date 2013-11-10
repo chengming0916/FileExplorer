@@ -119,7 +119,7 @@
     <Compile Include="Themes\ThirdParty\BlueDot.xaml.cs" />
     <Compile Include="Themes\ThirdParty\LoadingAnimation.xaml.cs" />
     <Compile Include="Themes\ThirdParty\SilverLightMain.xaml.cs" />
-    <Compile Include="UnitTests\ActionTest2.cs" />
+    <Compile Include="UnitTests\UtilTest.cs" />
     <Compile Include="UnitTests\ActionTest.cs" />
     <Compile Include="BaseControls\StackPanelView.cs" />
     <Compile Include="BaseControls\DisplayTemplateSelector.cs" />

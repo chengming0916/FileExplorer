@@ -22,11 +22,18 @@
             <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
                 <Grid x:Name="BreadcrumbBackgroundGrid" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
+                    <ProgressBar Background="Transparent" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"
+                             IsIndeterminate="{Binding IsIndeterminate, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0.5" Grid.ColumnSpan="3"
+                             Visibility="{Binding IsProgressbarVisible, RelativeSource={RelativeSource TemplatedParent}, 
+                                Converter={StaticResource btv}}"
+                             Value="{Binding Progress, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                    
                     <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Stretch"
                                   IsChecked="{Binding IsBreadcrumbVisible, RelativeSource={RelativeSource TemplatedParent}}" 
                                   Template="{StaticResource BaseButton}" Background="Transparent" >
@@ -46,19 +53,40 @@
                     </bc:SuggestBox>
                     
                     <bc:BreadcrumbCore x:Name="PART_BreadcrumbCore" Grid.Column="1"
+                                   DropDownHeight="{TemplateBinding DropDownHeight}"
+                                   DropDownWidth="{TemplateBinding DropDownWidth}"
                                    HeaderTemplate="{TemplateBinding HeaderTemplate}"
                                    IconTemplate="{TemplateBinding IconTemplate}"
                                    Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource btvc}, 
                                             RelativeSource={RelativeSource TemplatedParent}}">                        
                     </bc:BreadcrumbCore>
+
+                    <ItemsPresenter Grid.Column="2" VerticalAlignment="Stretch" Margin="2,0" />
+
                 </Grid>
             </Border>
         </Border>
     </ControlTemplate>
     
     <Style TargetType="{x:Type uc:Breadcrumb}">
+        <Style.Resources>
+            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}" >
+                <Setter Property="Margin" Value="1" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Template" Value="{StaticResource BaseButton}" />
+            </Style>
+        </Style.Resources>
         <Setter Property="Template" Value="{StaticResource BreadcrumbTemplate}" />
         <Setter Property="Height" Value="30" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+
     </Style>
     
 </ResourceDictionary>

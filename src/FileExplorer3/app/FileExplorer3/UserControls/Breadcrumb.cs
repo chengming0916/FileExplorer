@@ -13,7 +13,7 @@ namespace FileExplorer.UserControls
 
 
     public class Breadcrumb : ItemsControl
-    {
+    {        
         #region Constructor
 
         static Breadcrumb()
@@ -38,7 +38,7 @@ namespace FileExplorer.UserControls
             toggle = this.Template.FindName("PART_Toggle", this) as ToggleButton;
 
 
-            UpdateSelectedValue(DataContext);
+            UpdateSelectedValue(RootItem);
 
             #region BreadcrumbCore related handlers
             //When Breadcrumb select a value, update it.
@@ -78,24 +78,28 @@ namespace FileExplorer.UserControls
             #endregion
 
             
-            this.AddValueChanged(DataContextProperty, OnDataContextChanged);
-            OnDataContextChanged(this, EventArgs.Empty);
+            this.AddValueChanged(RootItemProperty, OnRootItemChanged);
+            OnRootItemChanged(this, EventArgs.Empty);
         }
 
         public void UpdateSelectedValue(object value)
         {
             if (bcore != null && value != null)
             {
-                var hierarchy = HierarchyHelper.GetHierarchy(value, true).Reverse().ToList();
+                var hierarchy = HierarchyHelper.GetHierarchy(value, true).Reverse().ToList();                
                 bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);                
                 SelectedPathValue = HierarchyHelper.GetPath(value);
+                bcore.SetValue(BreadcrumbCore.ShowDropDownProperty, SelectedPathValue != "");
             }
         }
 
-        public void OnDataContextChanged(object sender, EventArgs args)
+        public void OnRootItemChanged(object sender, EventArgs args)
         {
-            if (DataContext != null)
-                bcore.RootItems = this.HierarchyHelper.List(DataContext);
+            if (RootItem != null)
+            {
+                bcore.RootItems = tbox.RootItems = this.HierarchyHelper.List(RootItem);
+                bcore.ShowDropDown = false;
+            }
         }
 
         public static void OnSelectedValueChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -109,7 +113,7 @@ namespace FileExplorer.UserControls
         {
             var bread = sender as Breadcrumb;
             if (bread.bcore != null && !e.NewValue.Equals(e.OldValue))
-                bread.UpdateSelectedValue(bread.HierarchyHelper.GetItem(bread.DataContext, e.NewValue as string));
+                bread.UpdateSelectedValue(bread.HierarchyHelper.GetItem(bread.RootItem, e.NewValue as string));
         }
 
          public static void OnHierarchyHelperPropChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -160,8 +164,50 @@ namespace FileExplorer.UserControls
 
         #endregion
 
-        #region IsBreadcrumbVisible
-        
+        #region ProgressBar related - IsIndeterminate, IsProgressbarVisible, ProgressBarValue
+        /// <summary>
+        /// Toggle whether the progress bar is indertminate
+        /// </summary>
+        public bool IsIndeterminate
+        {
+            get { return (bool)GetValue(IsIndeterminateProperty); }
+            set { SetValue(IsIndeterminateProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsIndeterminateProperty =
+            DependencyProperty.Register("IsIndeterminate", typeof(bool),
+            typeof(Breadcrumb), new UIPropertyMetadata(true));
+
+        /// <summary>
+        /// Toggle whether Progressbar visible
+        /// </summary>
+        public bool IsProgressbarVisible
+        {
+            get { return (bool)GetValue(IsProgressbarVisibleProperty); }
+            set { SetValue(IsProgressbarVisibleProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsProgressbarVisibleProperty =
+            DependencyProperty.Register("IsProgressbarVisible", typeof(bool),
+            typeof(Breadcrumb), new UIPropertyMetadata(false));
+
+        /// <summary>
+        /// Value of Progressbar.
+        /// </summary>
+        public int Progress
+        {
+            get { return (int)GetValue(ProgressProperty); }
+            set { SetValue(ProgressProperty, value); }
+        }
+
+        public static readonly DependencyProperty ProgressProperty =
+            DependencyProperty.Register("Progress", typeof(int),
+            typeof(Breadcrumb), new UIPropertyMetadata(0));
+
+        #endregion
+
+        #region IsBreadcrumbVisible, DropDownHeight, DropDownWidth
+
         /// <summary>
         /// Toggle whether Breadcrumb (or SuggestBox) visible
         /// </summary>
@@ -175,7 +221,32 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("IsBreadcrumbVisible", typeof(bool),
             typeof(Breadcrumb), new UIPropertyMetadata(true));
 
+        public static readonly DependencyProperty DropDownHeightProperty =
+              BreadcrumbCore.DropDownHeightProperty.AddOwner(typeof(Breadcrumb));
+
+        /// <summary>
+        /// Is current dropdown (combobox) opened, this apply to the first &lt;&lt; button only
+        /// </summary>
+        public double DropDownHeight
+        {
+            get { return (double)GetValue(DropDownHeightProperty); }
+            set { SetValue(DropDownHeightProperty, value); }
+        }
+
+        public static readonly DependencyProperty DropDownWidthProperty =
+            BreadcrumbCore.DropDownWidthProperty.AddOwner(typeof(Breadcrumb));
+
+        /// <summary>
+        /// Is current dropdown (combobox) opened, this apply to the first &lt;&lt; button only
+        /// </summary>
+        public double DropDownWidth
+        {
+            get { return (double)GetValue(DropDownWidthProperty); }
+            set { SetValue(DropDownWidthProperty, value); }
+        }
+
         #endregion
+
 
         #region Header/Icon Template, DisplayMemberPath
         public static readonly DependencyProperty HeaderTemplateProperty =
@@ -200,6 +271,19 @@ namespace FileExplorer.UserControls
         {
             get { return (DataTemplate)GetValue(IconTemplateProperty); }
             set { SetValue(IconTemplateProperty, value); }
+        }
+
+        public static readonly DependencyProperty RootItemProperty =
+         DependencyProperty.Register("RootItem", typeof(object), typeof(Breadcrumb), 
+         new PropertyMetadata(null));
+
+        /// <summary>
+        /// Root item of the breadcrumbnail
+        /// </summary>
+        public object RootItem
+        {
+            get { return (object)GetValue(RootItemProperty); }
+            set { SetValue(RootItemProperty, value); }
         }
 
         #endregion
@@ -269,6 +353,8 @@ namespace FileExplorer.UserControls
             typeof(Breadcrumb), new UIPropertyMetadata(new AutoSuggestSource()));
 
         #endregion
+
+
         #endregion
     }
 }
