@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FileExplorer.Models.FileSystemInfoModel">
+    <Position X="0.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FileSystemInfoModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileExplorer.Models.EntryModelBase">
+    <Position X="0.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAIAAAEEAgAAAAgAAQQAQAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\EntryModelBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.EntryViewModel">
+    <Position X="5.25" Y="1.25" Width="1.5" />
+    <Members>
+      <Method Name="EntryViewModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAQAAAEAAgAAAAIACAAgAAAACAAhABAAEAAAA=</HashCode>
+      <FileName>ViewModels\EntryViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.FileListViewModel">
+    <Position X="7.5" Y="1.25" Width="1.5" />
+    <Members>
+      <Field Name="_colFilters" Hidden="true" />
+      <Field Name="_colList" Hidden="true" />
+      <Field Name="_items" Hidden="true" />
+      <Field Name="_itemSize" Hidden="true" />
+      <Field Name="_processedVms" Hidden="true" />
+      <Field Name="_profile" Hidden="true" />
+      <Field Name="_selectedVms" Hidden="true" />
+      <Field Name="_sortBy" Hidden="true" />
+      <Field Name="_sortDirection" Hidden="true" />
+      <Field Name="_viewMode" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAiAAEgAiCCABAAAACAAAIE3AggAAAABkQACACAAA=</HashCode>
+      <FileName>ViewModels\FileListViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="FileExplorer.Models.IEntryModel">
+    <Position X="0.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAEAAgAAAAAAAQQAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IEntryModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FileExplorer.Models.IProfile">
+    <Position X="2.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAACAABAAAAAAAAAAAAIAAAAQAAAAAAgAA=</HashCode>
+      <FileName>Models\IProfile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
