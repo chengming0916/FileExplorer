@@ -186,7 +186,7 @@
 
     <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
            TargetType="{x:Type bc:BreadcrumbCore}" >
-        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Height" Value="30" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ItemsPanel">
             <Setter.Value>

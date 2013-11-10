@@ -39,7 +39,7 @@ namespace FileExplorer.UserControls
             toggle = this.Template.FindName("PART_Toggle", this) as ToggleButton;
 
 
-            UpdateSelectedValue(RootItems);
+            UpdateSelectedValue(ItemsSource);
 
             #region BreadcrumbCore related handlers
             //When Breadcrumb select a value, update it.
@@ -83,7 +83,7 @@ namespace FileExplorer.UserControls
         {
             if (bcore != null)
             {
-                if (value == RootItems) // Root
+                if (value == ItemsSource) // Root
                 {
                     bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, new List<object>());
                     SelectedPathValue = "";
@@ -108,7 +108,7 @@ namespace FileExplorer.UserControls
         {
             var bread = sender as Breadcrumb;
             if (bread.bcore != null && !e.NewValue.Equals(e.OldValue))
-                bread.UpdateSelectedValue(bread.HierarchyHelper.GetItem(bread.RootItems, e.NewValue as string));
+                bread.UpdateSelectedValue(bread.HierarchyHelper.GetItem(bread.ItemsSource, e.NewValue as string));
         }
 
          public static void OnHierarchyHelperPropChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -267,19 +267,19 @@ namespace FileExplorer.UserControls
             set { SetValue(IconTemplateProperty, value); }
         }
 
+        public static readonly DependencyProperty ButtonsProperty =
+            DependencyProperty.Register("Buttons", typeof(object), typeof(Breadcrumb), new PropertyMetadata(null));
+
+        public object Buttons
+        {
+            get { return (object)GetValue(ButtonsProperty); }
+            set { SetValue(ButtonsProperty, value); }
+        }
 
         #endregion
 
-        #region RootItems, HierarchyHelper, ParentPath, ValuePath, SubEntriesPath, SuggestSource
+        #region HierarchyHelper, ParentPath, ValuePath, SubEntriesPath, SuggestSource
 
-        public static readonly DependencyProperty RootItemsProperty = 
-            SuggestBox.RootItemsProperty.AddOwner(typeof(Breadcrumb));
-
-        public IEnumerable RootItems
-        {
-            get { return (IEnumerable)GetValue(RootItemsProperty); }
-            set { SetValue(RootItemsProperty, value); }
-        }
 
         /// <summary>
         /// Uses to navigate the hierarchy, one can also set the ParentPath/ValuePath and SubEntriesPath instead.

@@ -18,7 +18,7 @@ namespace FileExplorer.ViewModels
             _rootViewModel = new BindableCollection<IEntryViewModel>(rootModels
                 .Select(m => EntryViewModel.FromEntryModel(m)));
             
-            HierarchyHelper = new EntryViewModelHierarchyHelper(rootModels, m => EntryViewModel.FromEntryModel(m), m => m.IsDirectory);
+            //HierarchyHelper = new EntryViewModelHierarchyHelper(rootModels, m => EntryViewModel.FromEntryModel(m), m => m.IsDirectory);
         }
         
         #endregion

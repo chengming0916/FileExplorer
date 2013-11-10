@@ -130,7 +130,7 @@ namespace FileExplorer.BaseControls
             var txtBindingExpr = this.GetBindingExpression(TextBox.TextProperty);
             if (txtBindingExpr == null)
                 return;
-            var value = HierarchyHelper.GetItem(RootItems, Text);
+            var value = HierarchyHelper.GetItem(ItemsSource, Text);
             if (value != null)
             {
                 if (txtBindingExpr != null)
@@ -225,7 +225,7 @@ namespace FileExplorer.BaseControls
             var suggestSource = SuggestSource;
             var hierarchyHelper = HierarchyHelper;
             string text = Text;
-            object data = RootItems;
+            object data = ItemsSource;
             IsHintVisible = String.IsNullOrEmpty(text);
             if (suggestSource != null)
                 Task.Run(async () =>
@@ -303,9 +303,9 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty RootItemsProperty = DependencyProperty.Register(
-            "RootItems", typeof(IEnumerable), typeof(SuggestBox));
+            "ItemsSource", typeof(IEnumerable), typeof(SuggestBox));
 
-        public IEnumerable RootItems
+        public IEnumerable ItemsSource
         {
             get { return (IEnumerable)GetValue(RootItemsProperty); }
             set { SetValue(RootItemsProperty, value); }

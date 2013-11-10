@@ -8,6 +8,20 @@
              xmlns:uc="clr-namespace:FileExplorer.UserControls"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <uc:Breadcrumb HierarchyHelper="{Binding HierarchyHelper}" RootItems="{Binding RootViewModels}" />
+        <uc:Breadcrumb HierarchyHelper="{Binding HierarchyHelper}" 
+                       
+                       ItemsSource="{Binding RootViewModels}" >
+            <uc:Breadcrumb.HeaderTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding SubDirectories}">
+                    <TextBlock Text="{Binding CurrentDirectory.EntryModel.Label}" />
+                </HierarchicalDataTemplate>
+            </uc:Breadcrumb.HeaderTemplate>
+
+            <uc:Breadcrumb.IconTemplate>
+                <DataTemplate>
+                    <TextBlock Text="Icon" />
+                </DataTemplate>
+            </uc:Breadcrumb.IconTemplate>
+        </uc:Breadcrumb>
     </Grid>
 </UserControl>

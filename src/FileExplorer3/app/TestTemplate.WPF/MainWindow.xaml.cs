@@ -52,8 +52,6 @@ namespace TestTemplate.WPF
          
         }
 
-
-
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -74,8 +72,8 @@ namespace TestTemplate.WPF
             suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value, suggest based on HierarchyLister.List()
 
             //breadcrumb
-            breadcrumb1.RootItems = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
-            breadcrumb2.RootItems = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            breadcrumb1.ItemsSource = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
+            breadcrumb2.ItemsSource = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
 
             bool UseGenericHierarchyHelper = true;
 

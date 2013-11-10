@@ -39,7 +39,12 @@ namespace TestTemplate.WPF
             return root.SubDirectories.ToArray();
         }
 
-
+        public static FakeViewModel GenerateRootFakeViewModel(TimeSpan latency)
+        {
+            var root = new FakeViewModel() { Latency = latency };
+            generate(root, 5);
+            return root;
+        }
 
         public FakeViewModel(params FakeViewModel[] rootModels)
         {
