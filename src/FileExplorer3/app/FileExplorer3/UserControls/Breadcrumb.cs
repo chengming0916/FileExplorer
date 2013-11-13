@@ -13,7 +13,7 @@ namespace FileExplorer.UserControls
 
 
     public class Breadcrumb : ItemsControl
-    {        
+    {
         #region Constructor
 
         static Breadcrumb()
@@ -74,10 +74,10 @@ namespace FileExplorer.UserControls
             {
                 toggle.SetValue(ToggleButton.IsCheckedProperty, true); //Show Breadcrumb
             });
-            
+
             #endregion
 
-            
+
             this.AddValueChanged(RootItemProperty, OnRootItemChanged);
             OnRootItemChanged(this, EventArgs.Empty);
         }
@@ -86,8 +86,9 @@ namespace FileExplorer.UserControls
         {
             if (bcore != null && value != null)
             {
-                var hierarchy = HierarchyHelper.GetHierarchy(value, true).Reverse().ToList();                
-                bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);                
+                var hierarchy = HierarchyHelper.GetHierarchy(value, true).Reverse().ToList();
+                bcore.SetValue(BreadcrumbCore.ItemsSourceProperty, hierarchy);
+                SelectedValue = value;
                 SelectedPathValue = HierarchyHelper.GetPath(value);
                 bcore.SetValue(BreadcrumbCore.ShowDropDownProperty, SelectedPathValue != "");
             }
@@ -98,34 +99,63 @@ namespace FileExplorer.UserControls
             if (RootItem != null)
             {
                 bcore.RootItems = tbox.RootItems = this.HierarchyHelper.List(RootItem);
-                bcore.ShowDropDown = false;
+                //bcore.ShowDropDown = false;
             }
         }
 
         public static void OnSelectedValueChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var bread = sender as Breadcrumb;
-            if (bread.bcore != null && !e.NewValue.Equals(e.OldValue))
+            if (bread.bcore != null && (e.NewValue == null || !e.NewValue.Equals(e.OldValue)))
                 bread.UpdateSelectedValue(e.NewValue);
         }
 
         public static void OnSelectedPathValueChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var bread = sender as Breadcrumb;
-            if (bread.bcore != null && !e.NewValue.Equals(e.OldValue))
+            if (bread.bcore != null &&
+                (e.NewValue == null || !e.NewValue.Equals(bread.HierarchyHelper.GetPath(bread.SelectedValue))))
                 bread.UpdateSelectedValue(bread.HierarchyHelper.GetItem(bread.RootItem, e.NewValue as string));
         }
 
-         public static void OnHierarchyHelperPropChanged(object sender, DependencyPropertyChangedEventArgs e)
+        public static void OnHierarchyHelperPropChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var bread = sender as Breadcrumb;
-            bread.HierarchyHelper = new PathHierarchyHelper(bread.ParentPath, bread.ValuePath, bread.SubEntriesPath);
+            //If HierarchyHelper changed, update Parent/Value/Subentries path, vice versa.
+            if (!bread._updatingHierarchyHelper)
+            {
+                bread._updatingHierarchyHelper = true;
+                try
+                {
+                    if (e.Property.Equals(HierarchyHelperProperty))
+                    {
+                        if (bread.HierarchyHelper.ParentPath != bread.ParentPath)
+                            bread.ParentPath = bread.HierarchyHelper.ParentPath;
+
+                        if (bread.HierarchyHelper.ValuePath != bread.ValuePath)
+                            bread.ValuePath = bread.HierarchyHelper.ValuePath;
+
+                        if (bread.HierarchyHelper.SubentriesPath != bread.SubentriesPath)
+                            bread.SubentriesPath = bread.HierarchyHelper.SubentriesPath;
+                    }
+                    else
+                    {
+
+                        bread.HierarchyHelper = new PathHierarchyHelper(bread.ParentPath, bread.ValuePath, bread.SubentriesPath);
+                    }
+                }
+                finally
+                {
+                    bread._updatingHierarchyHelper = false;
+                }
+            }
         }
 
         #endregion
 
         #region Data
 
+        bool _updatingHierarchyHelper = false;
         BreadcrumbCore bcore;
         SuggestBox tbox;
         ToggleButton toggle;
@@ -274,7 +304,7 @@ namespace FileExplorer.UserControls
         }
 
         public static readonly DependencyProperty RootItemProperty =
-         DependencyProperty.Register("RootItem", typeof(object), typeof(Breadcrumb), 
+         DependencyProperty.Register("RootItem", typeof(object), typeof(Breadcrumb),
          new PropertyMetadata(null));
 
         /// <summary>
@@ -301,7 +331,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty HierarchyHelperProperty =
             DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
-            typeof(Breadcrumb), new PropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubEntries")));
+            typeof(Breadcrumb), new PropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubEntries"), OnHierarchyHelperPropChanged));
 
         /// <summary>
         /// The path of view model to access parent.
@@ -312,8 +342,9 @@ namespace FileExplorer.UserControls
             set { SetValue(ParentPathProperty, value); }
         }
 
-        public static readonly DependencyProperty ParentPathProperty =
-             SuggestBox.ParentPathProperty.AddOwner(typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
+        public static readonly DependencyProperty ParentPathProperty = 
+            DependencyProperty.Register("Parent", typeof(string),
+            typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
 
         /// <summary>
         /// The path of view model to access value.
@@ -325,19 +356,21 @@ namespace FileExplorer.UserControls
         }
 
         public static readonly DependencyProperty ValuePathProperty =
-            SuggestBox.ValuePathProperty.AddOwner(typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
+            DependencyProperty.Register("Value", typeof(string),
+            typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
 
         /// <summary>
         /// The path of view model to access sub entries.
         /// </summary>
-        public string SubEntriesPath
+        public string SubentriesPath
         {
-            get { return (string)GetValue(SubEntriesPathProperty); }
-            set { SetValue(SubEntriesPathProperty, value); }
+            get { return (string)GetValue(SubentriesPathProperty); }
+            set { SetValue(SubentriesPathProperty, value); }
         }
 
-        public static readonly DependencyProperty SubEntriesPathProperty =
-           SuggestBox.SubEntriesPathProperty.AddOwner(typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
+        public static readonly DependencyProperty SubentriesPathProperty =
+           DependencyProperty.Register("SubentriesPath", typeof(string),
+            typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
 
         /// <summary>
         /// Uses by SuggestBox to suggest options.

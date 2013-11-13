@@ -151,9 +151,24 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource focusVisualStyle}" />
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="IsDropDownOpen" Value="{Binding IsExpanded, Mode=TwoWay}"  />
+        <Setter Property="ItemContainerStyle" 
+                Value="{Binding ItemContainerStyle, 
+            RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
         <Setter Property="Template" Value="{StaticResource BreadcrumbItemTemplate}" />
         <Setter Property="MaxHeight" Value="{Binding ActualHeight, Mode=OneWay,
             RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel IsItemsHost="True" Orientation="Vertical" 
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.IsContainerVirtualizable="True"
+                                VirtualizingPanel.VirtualizationMode="Standard"
+                                />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
         <!--<Setter Property="HeaderTemplate" Value="{Binding HeaderTemplate, Mode=OneWay,
             RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
         <Setter Property="IconTemplate" Value="{Binding IconTemplate, Mode=OneWay,
@@ -170,11 +185,15 @@
         <Setter Property="IconTemplate" Value="{Binding IconTemplate, 
                                                     RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
 
-        <Setter Property="ItemContainerStyle" Value="{StaticResource {x:Type bc:BreadcrumbItem}}" />
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Type bc:BreadcrumbItem}}" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel IsItemsHost="True" Orientation="Vertical" />
+                    <StackPanel IsItemsHost="True" Orientation="Vertical" 
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.IsContainerVirtualizable="True"
+                                VirtualizingPanel.VirtualizationMode="Standard"
+                                />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -188,6 +207,7 @@
            TargetType="{x:Type bc:BreadcrumbCore}" >
         <Setter Property="Height" Value="30" />
         <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Type bc:BreadcrumbItem}}" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>

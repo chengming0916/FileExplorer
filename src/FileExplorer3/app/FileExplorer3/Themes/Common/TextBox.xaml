@@ -44,8 +44,7 @@
                                    >
                    
                     <Border x:Name="DropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"  
-                                            Width="{Binding ActualWidth, ElementName=PART_ContentHost}" 
-                                            
+                                            Width="{Binding ActualWidth, ElementName=PART_ContentHost}"                                             
                                             MaxHeight="100"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="1,0,1,1">
@@ -53,7 +52,7 @@
                         <ListBox x:Name="PART_ItemList" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"                                                             
                                                      VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                                                      DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
-                                                     SelectedValuePath="{TemplateBinding ValuePath}"                                                   
+                                                     SelectedValuePath="{Binding HierarchyHelper.ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                                   
                                                      ItemTemplate="{TemplateBinding HeaderTemplate}"
                                                      ItemsSource="{Binding Suggestions, RelativeSource={RelativeSource TemplatedParent}}"
                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 

@@ -28,10 +28,12 @@ namespace FileExplorer.ViewModels
 
         }
 
-        public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel)
+        public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel, 
+            IDirectoryNodeViewModel parentNode)
             : base(events, false)
         {
             TreeModel = rootModel;
+            ParentNode = parentNode;
             CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
 
             this.ColumnList =
@@ -66,15 +68,17 @@ namespace FileExplorer.ViewModels
             {
                 if (State == NodeState.IsLoaded && !force)
                     return;
+                Debug.WriteLine(CurrentDirectory.EntryModel.FullPath);
                 try
                 {
                     State = NodeState.IsLoading;
                     var entryModels = await base.LoadAsync(CurrentDirectory.EntryModel, em => em.IsDirectory);
-                    replaceEntryList(Subdirectories, entryModels, evm => CreateSubmodel(evm));
+                    replaceEntryList(_subdirs, entryModels, evm => CreateSubmodel(evm));
                     State = NodeState.IsLoaded;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    
                     State = NodeState.IsError;
                 }
             }
@@ -87,12 +91,12 @@ namespace FileExplorer.ViewModels
 
         public override string ToString()
         {
-            return "node-" + CurrentDirectory.ToString();
+            return "node-" + CurrentDirectory == null ? "??" : CurrentDirectory.ToString();
         }
 
-        public IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel)
+        public virtual IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel)
         {
-            return new DirectoryNodeViewModel(Events, TreeModel, entryModel);
+            return new DirectoryNodeViewModel(Events, TreeModel, entryModel, this);
         }
         
         public async Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action)
@@ -151,7 +155,8 @@ namespace FileExplorer.ViewModels
         string _error = null;
         bool _isSelected = false;
         bool _isExpanded = false;
-        
+
+        IDirectoryNodeViewModel _parentNode;
         IObservableCollection<IDirectoryNodeViewModel> _subdirs = new BindableCollection<IDirectoryNodeViewModel>();
 
         #endregion
@@ -172,10 +177,18 @@ namespace FileExplorer.ViewModels
             private set { _error = value; NotifyOfPropertyChange(() => Error); }
         }
 
+        public IDirectoryNodeViewModel ParentNode
+        {
+            get { return _parentNode; }
+            set { _parentNode = value; }
+        }
+
+
         
-        public IObservableCollection<IDirectoryNodeViewModel> Subdirectories
+        public virtual IObservableCollection<IDirectoryNodeViewModel> Subdirectories
         {
             get { return _subdirs; }
+            set { _subdirs = value; NotifyOfPropertyChange(() => Subdirectories); } 
         }
 
 

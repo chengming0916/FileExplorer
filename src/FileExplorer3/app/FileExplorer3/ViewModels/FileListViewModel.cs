@@ -110,11 +110,16 @@ namespace FileExplorer.ViewModels
 
         #region Actions
 
+        public virtual Task<IList<IEntryModel>> ListAsync(Func<IEntryModel, bool> filter = null)
+        {
+            return listAsync(CurrentDirectory, filter);
+        }
+
         public async Task<IList<IEntryModel>> LoadAsync(IEntryModel em, Func<IEntryModel, bool> filter = null)
         {
             CurrentDirectory = EntryViewModel.FromEntryModel(em);
             SelectedItems.Clear();
-            var entryModels = await listAsync(CurrentDirectory, filter);
+            var entryModels = await ListAsync(filter);
             replaceEntryList(this.Items, entryModels, (subem) => EntryViewModel.FromEntryModel(subem));
             calculateColumnHeaderCount(ColumnFilters, entryModels);
             Events.Publish(new ListCompletedEvent(this, Items));

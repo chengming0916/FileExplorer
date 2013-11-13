@@ -21,6 +21,9 @@ namespace FileExplorer.Utils
             var current = obj;
             foreach (var ppath in propPaths)
             {
+                if (current == null)
+                    return null;
+
                 Type type = current.GetType();
                 var key = new Tuple<Type, string>(type, ppath);
 
@@ -29,7 +32,7 @@ namespace FileExplorer.Utils
                 {
                     if (!(_cacheDic.ContainsKey(key)))
                     {
-                        pInfo = type.GetProperty(ppath);
+                        pInfo = type.GetProperty(ppath);                      
                         _cacheDic.Add(key, pInfo);
                     }
                     pInfo = _cacheDic[key];

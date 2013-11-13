@@ -35,6 +35,9 @@ namespace FileExplorer.BaseControls
             string valueName = helper.ExtractName(input);
             if (String.IsNullOrEmpty(valueName) && input.EndsWith(helper.Separator + ""))
                 valueName += helper.Separator;
+
+            if (valuePath == "" && input.EndsWith("" + helper.Separator))
+                valuePath = valueName;
             var found = helper.GetItem(data, valuePath);
             List<object> retVal = new List<object>();
 

@@ -13,11 +13,11 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public DirectoryTreeViewModel(IEventAggregator events, params IEntryViewModel[] rootModels)
+        public DirectoryTreeViewModel(IEventAggregator events, params IEntryModel[] rootModels)
         {
             _events = events;
             _rootViewModel = new BindableCollection<IDirectoryNodeViewModel>(rootModels
-                .Select(r => new DirectoryNodeViewModel(events, this, r.EntryModel)));
+                .Select(r => new DirectoryNodeViewModel(events, this, r, null)));
         }
 
         #endregion
@@ -27,7 +27,7 @@ namespace FileExplorer.ViewModels
         public void NotifySelected(DirectoryNodeViewModel node)
         {
             _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { node.CurrentDirectory }));
-            
+
             _selectedViewModel = node;
             NotifyOfPropertyChange(() => SelectedEntry);
             NotifyOfPropertyChange(() => SelectedViewModel);
@@ -47,7 +47,7 @@ namespace FileExplorer.ViewModels
         IDirectoryNodeViewModel _selectedViewModel = null;
         IEntryModel _selectedEntry = null;
         IEventAggregator _events;
-        IObservableCollection<IDirectoryNodeViewModel> _rootViewModel;
+        protected IObservableCollection<IDirectoryNodeViewModel> _rootViewModel;
 
         #endregion
 
@@ -61,8 +61,7 @@ namespace FileExplorer.ViewModels
             set { Select(_selectedEntry); }
         }
 
-        public IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get { return _rootViewModel; } }
-
+        public virtual IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get { return _rootViewModel; } }
 
         #endregion
 

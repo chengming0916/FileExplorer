@@ -35,6 +35,8 @@ namespace FileExplorer.Models
 
         Task<ImageSource> GetIconAsync(IEntryModel entry, int size);
 
+        string RootDisplayName { get; }
+
         /// <summary>
         /// Transfer the source entries to dest directory.
         /// </summary>

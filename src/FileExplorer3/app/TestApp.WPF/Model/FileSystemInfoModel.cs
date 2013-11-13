@@ -16,8 +16,8 @@ namespace FileExplorer.Models
         {
             this.Label = fsi.Name;
             this.Attributes = fsi.Attributes;
-            this.FullPath = fsi.FullName;
-            this.Name = fsi.Name;
+            this.FullPath = fsi.FullName.TrimEnd('\\');
+            this.Name = fsi.Name.TrimEnd('\\');
             this.IsRenamable = true;
             this.IsDirectory = fsi is DirectoryInfo;
             if (fsi is FileInfo)
@@ -40,8 +40,7 @@ namespace FileExplorer.Models
         #region Public Properties
 
         public FileAttributes Attributes { get; protected set; }
-        public long Size { get; protected set; }
-
+        public long Size { get; protected set; }       
 
         #endregion
     }
