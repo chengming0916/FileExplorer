@@ -20,8 +20,9 @@ namespace FileExplorer.BaseControls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BreadcrumbItem), new FrameworkPropertyMetadata(typeof(BreadcrumbItem)));
         }
 
-        public BreadcrumbItem()
+        public BreadcrumbItem(bool isTopLevel = false)
         {
+            _isTopLevel = isTopLevel;
             //this.Loaded += delegate { _loaded = true; };
             
         }
@@ -79,20 +80,21 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            BreadcrumbItem retVal = new BreadcrumbItem()
+            BreadcrumbItem retVal = new BreadcrumbItem(false)
             {
                 HeaderTemplate = HeaderTemplate,
                 IconTemplate = IconTemplate,
-                IsTopLevel = false
             };
             retVal.ShowToggle = false;
-            retVal.IsTopLevel = false;
             return retVal;
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
+            SetValue(IsTopLevelProperty, _isTopLevel);
+            SetValue(ShowIconProperty, !_isTopLevel);
             //if (!ShowCaption)
             //    raiseShowCaptionEvent(ShowCaption);
 
@@ -110,16 +112,17 @@ namespace FileExplorer.BaseControls
             {
                 this.SetValue(IsDropDownOpenProperty, false); 
             });
+
         }
 
         public static void OnIsTopLevelChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
-            (sender as BreadcrumbItem).ShowIcon = !(bool)args.NewValue;
+            (sender as BreadcrumbItem).SetValue(ShowIconProperty, !(bool)args.NewValue);
         }
 
         public static void OnIsOverflowedChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
-            (sender as BreadcrumbItem).ShowIcon = (bool)args.NewValue;
+            (sender as BreadcrumbItem).SetValue(ShowIconProperty, (bool)args.NewValue);
         }
 
 
@@ -204,7 +207,7 @@ namespace FileExplorer.BaseControls
         #region IsTopLevel, IsOverflowed, IsShadowItem(Unused), IsSeparator, IsLoading (Unused)
         public static readonly DependencyProperty IsTopLevelProperty =
                     DependencyProperty.Register("IsTopLevel", typeof(bool), typeof(BreadcrumbItem),
-                    new UIPropertyMetadata(true, OnIsTopLevelChanged));
+                    new UIPropertyMetadata(OnIsTopLevelChanged));
 
         /// <summary>
         /// IsTopLevel?
@@ -313,6 +316,7 @@ namespace FileExplorer.BaseControls
         //HotTrack _headerHL;
         //bool _loaded = false;
         //bool _showCaptionHandled = false;
+        bool _isTopLevel = false;
 
         #endregion
     }

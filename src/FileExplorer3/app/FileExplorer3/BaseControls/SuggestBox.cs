@@ -227,7 +227,8 @@ namespace FileExplorer.BaseControls
             string text = Text;
             object data = RootItems;
             IsHintVisible = String.IsNullOrEmpty(text);
-            if (suggestSource != null)
+
+            if (IsEnabled && suggestSource != null)
                 Task.Run(async () =>
                     {
                         return await suggestSource.SuggestAsync(data, text, hierarchyHelper);
@@ -245,12 +246,6 @@ namespace FileExplorer.BaseControls
             SuggestBox sbox = sender as SuggestBox;
             if (args.OldValue != args.NewValue)
                 sbox.popupIfSuggest();
-        }
-
-        public static void OnHierarchyHelperPropChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            var sbox = sender as SuggestBox;
-            sbox.HierarchyHelper = new PathHierarchyHelper(sbox.ParentPath, sbox.ValuePath, sbox.SubEntriesPath);
         }
 
         #endregion
@@ -304,14 +299,6 @@ namespace FileExplorer.BaseControls
         #endregion
 
         #region ParentPath, DisplayMemberPath, ValuePath, SubEntriesPath
-        /// <summary>
-        /// The path of view model to access parent.
-        /// </summary>
-        public string ParentPath
-        {
-            get { return (string)GetValue(ParentPathProperty); }
-            set { SetValue(ParentPathProperty, value); }
-        }
 
         public static readonly DependencyProperty DisplayMemberPathProperty = DependencyProperty.Register(
             "DisplayMemberPath", typeof(string), typeof(SuggestBox), new PropertyMetadata("Header"));
@@ -322,35 +309,7 @@ namespace FileExplorer.BaseControls
             set { SetValue(DisplayMemberPathProperty, value); }
         }
 
-        public static readonly DependencyProperty ParentPathProperty =
-            DependencyProperty.Register("ParentPath", typeof(string),
-            typeof(SuggestBox), new PropertyMetadata("Parent", OnHierarchyHelperPropChanged));
-
-        /// <summary>
-        /// The path of view model to access value.
-        /// </summary>
-        public string ValuePath
-        {
-            get { return (string)GetValue(ValuePathProperty); }
-            set { SetValue(ValuePathProperty, value); }
-        }
-
-        public static readonly DependencyProperty ValuePathProperty =
-            DependencyProperty.Register("ValuePath", typeof(string),
-            typeof(SuggestBox), new PropertyMetadata("Value", OnHierarchyHelperPropChanged));
-
-        /// <summary>
-        /// The path of view model to access sub entries.
-        /// </summary>
-        public string SubEntriesPath
-        {
-            get { return (string)GetValue(SubEntriesPathProperty); }
-            set { SetValue(SubEntriesPathProperty, value); }
-        }
-
-        public static readonly DependencyProperty SubEntriesPathProperty =
-            DependencyProperty.Register("SubEntriesPath", typeof(string),
-            typeof(SuggestBox), new PropertyMetadata("SubEntries", OnHierarchyHelperPropChanged));
+     
         #endregion
 
         #region Suggestions

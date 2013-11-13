@@ -36,14 +36,17 @@
                     
                     <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Stretch"
                                   IsChecked="{Binding IsBreadcrumbVisible, RelativeSource={RelativeSource TemplatedParent}}" 
+                                  Width="{TemplateBinding ActualHeight}"
                                   Template="{StaticResource BaseButton}" Background="Transparent" >
                         <ContentControl ContentTemplate="{TemplateBinding IconTemplate}"  
                                         Content="{Binding SelectedValue, RelativeSource={RelativeSource TemplatedParent}}" />                        
                     </ToggleButton>
 
                     <bc:SuggestBox x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
-                                   HierarchyHelper="{TemplateBinding HierarchyHelper}"
-                                   DisplayMemberPath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                
+                                   HierarchyHelper="{TemplateBinding HierarchyHelper}"                                   
+                                   DisplayMemberPath="{Binding HierarchyHelper.ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                
+                                   IsEnabled="{Binding IsBreadcrumbVisible, Converter={StaticResource fb}, 
+                                              RelativeSource={RelativeSource TemplatedParent}}" 
                                    Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
                                             RelativeSource={RelativeSource TemplatedParent}}" >
                         <bc:SuggestBox.Text>

@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="FileExplorer.Views.BreadcrumbView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:bc="clr-namespace:FileExplorer.BaseControls"
+             xmlns:uc="clr-namespace:FileExplorer.UserControls"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbParts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <uc:Breadcrumb HierarchyHelper="{Binding HierarchyHelper}"
+                       RootItem="{Binding}"
+                        >
+            <uc:Breadcrumb.Resources>
+                <Style x:Key="{x:Type bc:BreadcrumbItem}"
+                    TargetType="{x:Type bc:BreadcrumbItem}" 
+                    BasedOn="{StaticResource {x:Type bc:BreadcrumbItem}}" >
+                    <Setter Property="Background" Value="BurlyWood" />
+                    <Setter Property="IsDropDownOpen" Value="{Binding IsExpanded, Mode=TwoWay}"  />
+                    <Setter Property="IsTopLevel" Value="{Binding IsTopLevel, Mode=OneWayToSource}"  />
+                </Style>
+            </uc:Breadcrumb.Resources>
+            <uc:Breadcrumb.HeaderTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Subdirectories}">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="{Binding Label}" />
+                </HierarchicalDataTemplate>
+            </uc:Breadcrumb.HeaderTemplate>
+            <uc:Breadcrumb.IconTemplate>
+                <DataTemplate>
+                    <Image
+                        Source="{Binding Icon, IsAsync=True, Mode=OneWay}" 
+                        Grid.Column="0" />
+                    <!--<TextBlock Text="Icon" />-->
+                </DataTemplate>
+            </uc:Breadcrumb.IconTemplate>
+
+        </uc:Breadcrumb>
+    </Grid>
+</UserControl>

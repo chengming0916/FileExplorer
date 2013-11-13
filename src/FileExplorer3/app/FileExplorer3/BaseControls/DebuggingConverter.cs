@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.BaseControls
 {
     public class DebuggingConverter : IValueConverter
     {

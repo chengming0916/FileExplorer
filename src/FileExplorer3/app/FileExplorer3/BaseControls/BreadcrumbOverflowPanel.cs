@@ -25,8 +25,10 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate, IconTemplate = this.IconTemplate, 
-                ShowToggle = false, IsTopLevel = false };
+            return new BreadcrumbItem(false) { HeaderTemplate = this.HeaderTemplate, 
+                IconTemplate = this.IconTemplate, 
+                ShowToggle = false 
+            };
         }
 
         #endregion

@@ -30,14 +30,26 @@ namespace FileExplorer.Models
             return new ValueComparer<IEntryModel>(p => p.FullPath);
         }
 
+        private DirectoryInfo createDirectoryInfo(string path)
+        {
+            if (path.EndsWith(":"))
+                return new DirectoryInfo(path + "\\");
+            else return new DirectoryInfo(path);
+        }
+
+        private FileInfo createFileInfo(string path)
+        {
+            return new FileInfo(path);
+        }
+
         public Task<IEntryModel> ParseAsync(string path)
         {
             IEntryModel retVal = null;
             if (Directory.Exists(path))
-                retVal = new FileSystemInfoModel(this, new DirectoryInfo(path));
+                retVal = new FileSystemInfoModel(this, createDirectoryInfo(path));
             else
                 if (File.Exists(path))
-                    retVal = new FileSystemInfoModel(this, new FileInfo(path));
+                    retVal = new FileSystemInfoModel(this, createFileInfo(path));
             return Task.FromResult<IEntryModel>(retVal);
         }
 
@@ -46,7 +58,7 @@ namespace FileExplorer.Models
             List<IEntryModel> retVal = new List<IEntryModel>();
             if (entry.IsDirectory)
             {
-                DirectoryInfo di = new DirectoryInfo(entry.FullPath);
+                DirectoryInfo di = createDirectoryInfo(entry.FullPath);
                 retVal.AddRange(from fsi in di.GetFileSystemInfos() select new FileSystemInfoModel(this, fsi));
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
@@ -60,7 +72,7 @@ namespace FileExplorer.Models
 
         public Task<ImageSource> GetIconAsync(IEntryModel entry, int size)
         {
-            using (var icon = entry.IsDirectory ?
+            using (var icon = entry == null || entry.IsDirectory ?
                 getFolderIcon() :
                 System.Drawing.Icon.ExtractAssociatedIcon(entry.FullPath))
             using (var bitmap = icon.ToBitmap())
@@ -88,6 +100,10 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        public string RootDisplayName
+        {
+            get { return "Root"; }
+        }
         public IEntryHierarchyComparer HierarchyComparer { get; private set; }
         public IMetadataProvider MetadataProvider { get; private set; }
 
@@ -114,5 +130,8 @@ namespace FileExplorer.Models
 
 
 
+
+
+      
     }
 }

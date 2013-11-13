@@ -47,6 +47,10 @@ namespace FileExplorer.BaseControls
 
         char Separator { get; }
         StringComparison StringComparisonOption { get; }
+
+        string ParentPath { get; }
+        string ValuePath { get; }
+        string SubentriesPath { get; }
     }
 
     public class BreadcrumbCore : ItemsControl
@@ -102,7 +106,13 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbItem() { HeaderTemplate = this.HeaderTemplate, IconTemplate = this.IconTemplate, IsTopLevel = true };
+            var retVal = new BreadcrumbItem(true)
+            {
+                HeaderTemplate = this.HeaderTemplate,
+                IconTemplate = this.IconTemplate
+            };
+
+            return retVal;
         }
 
         private void updateOverflowedItems()

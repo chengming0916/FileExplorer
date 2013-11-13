@@ -30,7 +30,7 @@ namespace FileExplorer.BaseControls
         #region Methods
 
         #region Utils Func - extractPath/Name
-        public string ExtractPath(string pathName)
+        public virtual string ExtractPath(string pathName)
         {
             if (String.IsNullOrEmpty(pathName))
                 return "";
@@ -39,7 +39,7 @@ namespace FileExplorer.BaseControls
             else return pathName.Substring(0, pathName.LastIndexOf(Separator));
         }
 
-        public string ExtractName(string pathName)
+        public virtual string ExtractName(string pathName)
         {
             if (String.IsNullOrEmpty(pathName))
                 return "";
