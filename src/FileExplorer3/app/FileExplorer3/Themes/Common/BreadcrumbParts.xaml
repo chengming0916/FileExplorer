@@ -81,7 +81,7 @@
                                             Converter={StaticResource btvc}}"
                                  IsDragging="{Binding IsMouseOver, ElementName=headerToggleHL}">
                         <Button x:Name="buttonCurrent"  HorizontalAlignment="Stretch"                                                  
-                                                Height="{TemplateBinding ActualHeight}" Template="{StaticResource BaseButton}" 
+                                                Template="{StaticResource BaseButton}" 
                                                 Grid.RowSpan="2" >
                             <Button.Content>
                                 <DockPanel>
@@ -205,7 +205,7 @@
 
     <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
            TargetType="{x:Type bc:BreadcrumbCore}" >
-        <Setter Property="Height" Value="30" />
+        <!--<Setter Property="Height" Value="30" />-->
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ItemContainerStyle" Value="{DynamicResource {x:Type bc:BreadcrumbItem}}" />
         <Setter Property="ItemsPanel">

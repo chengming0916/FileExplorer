@@ -25,11 +25,6 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <ToggleButton x:Name="Expander" ClickMode="Press" 
-                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" 
-                          Style="{StaticResource ExpandCollapseToggleStyle}"/>
-
-            
             <bc:HotTrack Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2" 
                          IsSelected="{TemplateBinding IsSelected}" FillFullRow="True">
                 <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch"  
@@ -37,6 +32,13 @@
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" 
                                   Margin="{TemplateBinding BorderThickness}"/>
             </bc:HotTrack>
+            
+            <ToggleButton x:Name="Expander" ClickMode="Press" 
+                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" 
+                          Style="{StaticResource ExpandCollapseToggleStyle}"/>
+
+            
+      
             <ItemsPresenter x:Name="ItemsHost" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1"/>
 
         </Grid>

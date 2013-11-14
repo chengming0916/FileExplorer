@@ -23,6 +23,8 @@ namespace FileExplorer.BaseControls
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            if (availableSize.Height == double.PositiveInfinity)
+                availableSize = new Size(availableSize.Width, 30);
             Size resultSize = new Size(0, 0);
             
             if (Children.Count > 0)

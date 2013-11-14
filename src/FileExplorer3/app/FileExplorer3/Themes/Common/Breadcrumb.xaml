@@ -81,7 +81,7 @@
             </Style>
         </Style.Resources>
         <Setter Property="Template" Value="{StaticResource BreadcrumbTemplate}" />
-        <Setter Property="Height" Value="30" />
+        <!--<Setter Property="Height" Value="30" />-->
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>

@@ -88,9 +88,12 @@
                 <StackPanel VerticalAlignment="Stretch">
 
                     <TextBlock Text="Breadcrumb Core Only" />
-                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left" 
+                    <bc:BreadcrumbCore x:Name="breadcrumbCore" HorizontalAlignment="Left" Height="20"
                                        IconTemplate="{StaticResource FakeVMIconTemplate}"
                                        HeaderTemplate="{StaticResource FakeVMHeaderTemplate}">
+                        <bc:BreadcrumbCore.LayoutTransform>
+                            <ScaleTransform ScaleX="2" ScaleY="2" />
+                        </bc:BreadcrumbCore.LayoutTransform>
                     </bc:BreadcrumbCore>
 
                     <TextBlock Text="SuggestBox Only" />

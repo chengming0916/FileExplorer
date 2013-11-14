@@ -45,7 +45,8 @@ namespace FileExplorer.Models
         #region Data
 
         private string _name;
-        private bool _isRenamable = false;
+        private bool _isRenamable = false;        
+        protected Lazy<IEntryModel> _parentFunc = new Lazy<IEntryModel>(() => null);
 
         #endregion
 
@@ -53,7 +54,7 @@ namespace FileExplorer.Models
 
         public IProfile Profile { get; protected set; }
         public bool IsDirectory { get; protected set; }
-        public IEntryModel Parent { get; protected set; }
+        public IEntryModel Parent { get { return _parentFunc.Value; } }
         public string Name { get { return _name; } set { string org = _name; _name = value; OnRenamed(org, _name); } }
         public string Label { get; protected set; }
         public bool IsRenamable { get { return _isRenamable; } set { _isRenamable = value; NotifyOfPropertyChange(() => IsRenamable); } }
