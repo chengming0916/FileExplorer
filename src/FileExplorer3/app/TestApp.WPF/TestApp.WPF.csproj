@@ -39,6 +39,12 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
+    <Reference Include="ExifLib">
+      <HintPath>..\..\..\..\..\COFE\lib\ExifLib.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickZip.IO.PIDL">
+      <HintPath>..\..\..\..\..\COFE\lib\QuickZip.IO.PIDL.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -68,12 +74,20 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppViewModel.cs" />
+    <Compile Include="Model\FileSystemInfoExMetadataProvider.cs" />
+    <Compile Include="Utils\ExIconExtractor.cs" />
+    <Compile Include="Utils\ImageTools.cs" />
+    <Compile Include="Utils\SystemImageList.cs" />
+    <Compile Include="Utils\Win32API.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Model\FileSystemInfoExModel.cs" />
+    <Compile Include="Model\FileSystemInfoExProfile.cs" />
     <Compile Include="Model\FileSystemInfoMetadataProvider.cs" />
     <Compile Include="Model\FileSystemInfoModel.cs" />
     <Compile Include="Model\FileSystemInfoProfile.cs" />
+    <Compile Include="Utils\IconExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoModel : EntryModelBase
+    public class FileSystemInfoExModel : EntryModelBase
     {
         #region Cosntructor
 
-        public FileSystemInfoModel(IProfile profile, FileSystemInfo fsi)
+        public FileSystemInfoExModel(IProfile profile, FileSystemInfoEx fsi)
             : base(profile)
         {
-            this.Label = fsi.Name;
+            this.Label = fsi.Label;
             this.Attributes = fsi.Attributes;
             this.FullPath = fsi.FullName;
             this.Name = fsi.Name;
             this.IsRenamable = true;
-            this.IsDirectory = fsi is DirectoryInfo;
-            if (fsi is FileInfo)
-                Size = (fsi as FileInfo).Length;
-            string parentPath = Path.GetDirectoryName(fsi.FullName);
+            this.IsDirectory = fsi.IsFolder;
+            if (fsi is FileInfoEx)
+                Size = (fsi as FileInfoEx).Length;
+            string parentPath = PathEx.GetDirectoryName(fsi.FullName);
             this._parentFunc = 
                 new Lazy<IEntryModel>(() => {
                     return String.IsNullOrEmpty(parentPath) ? null :
-                    new FileSystemInfoModel(profile,
-                        (profile as FileSystemInfoProfile).createDirectoryInfo(parentPath));
+                    new FileSystemInfoExModel(profile,
+                        (profile as FileSystemInfoExProfile).createDirectoryInfo(parentPath));
                 });
             this.Description = fsi.GetType().ToString();
         }

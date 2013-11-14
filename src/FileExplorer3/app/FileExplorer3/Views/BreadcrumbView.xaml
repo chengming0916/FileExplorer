@@ -20,8 +20,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <uc:Breadcrumb HierarchyHelper="{Binding HierarchyHelper}"
-                       RootItem="{Binding}"
+        <uc:Breadcrumb x:Name="bcrumb" HierarchyHelper="{Binding HierarchyHelper}"
+                       RootItem="{Binding}" DropDownHeight="200" DropDownWidth="300"
                         >
             <uc:Breadcrumb.Resources>
                 <Style x:Key="{x:Type bc:BreadcrumbItem}"
@@ -35,7 +35,7 @@
             <uc:Breadcrumb.HeaderTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Subdirectories}">
                     <TextBlock
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Center" 
                         Text="{Binding Label}" />
                 </HierarchicalDataTemplate>
             </uc:Breadcrumb.HeaderTemplate>

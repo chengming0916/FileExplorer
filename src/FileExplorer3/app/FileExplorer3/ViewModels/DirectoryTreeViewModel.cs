@@ -24,17 +24,14 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        public void NotifySelected(DirectoryNodeViewModel node)
+        public virtual void NotifySelected(DirectoryNodeViewModel node)
         {
             _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { node.CurrentDirectory }));
-
-            _selectedViewModel = node;
-            NotifyOfPropertyChange(() => SelectedEntry);
-            NotifyOfPropertyChange(() => SelectedViewModel);
+            SelectedViewModel = node;
         }
 
 
-        public void Select(IEntryModel model)
+        public virtual void Select(IEntryModel model)
         {
             foreach (var sub in Subdirectories)
                 sub.BroadcastSelectAsync(model, evm => { evm.IsSelected = true; });
@@ -53,7 +50,13 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IDirectoryNodeViewModel SelectedViewModel { get { return _selectedViewModel; } }
+        public IDirectoryNodeViewModel SelectedViewModel { 
+            get { return _selectedViewModel; }
+            protected set { _selectedViewModel = value; 
+                NotifyOfPropertyChange(() => SelectedViewModel);
+                NotifyOfPropertyChange(() => SelectedEntry);
+            }
+        }
 
         public IEntryModel SelectedEntry
         {

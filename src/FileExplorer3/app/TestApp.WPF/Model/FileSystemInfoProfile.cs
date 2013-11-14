@@ -18,7 +18,7 @@ namespace FileExplorer.Models
         public FileSystemInfoProfile()
         {
             HierarchyComparer = PathComparer.Default;
-            MetadataProvider = new FileSystemInfoMetadataProvider();
+            MetadataProvider = new FileSystemInfoExMetadataProvider();
         }
 
         #endregion
@@ -30,14 +30,14 @@ namespace FileExplorer.Models
             return new ValueComparer<IEntryModel>(p => p.FullPath);
         }
 
-        private DirectoryInfo createDirectoryInfo(string path)
+        internal DirectoryInfo createDirectoryInfo(string path)
         {
             if (path.EndsWith(":"))
                 return new DirectoryInfo(path + "\\");
             else return new DirectoryInfo(path);
         }
 
-        private FileInfo createFileInfo(string path)
+        internal FileInfo createFileInfo(string path)
         {
             return new FileInfo(path);
         }
