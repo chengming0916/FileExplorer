@@ -29,8 +29,8 @@ namespace TestApp.WPF
             IProfile profile = new FileSystemInfoProfile();
             IProfile profileEx = new FileSystemInfoExProfile();
             ExplorerModel = new ExplorerViewModel(events,                
-                profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result
-                //profile.ParseAsync(rootPath).Result
+                //profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result
+                profile.ParseAsync(rootPath).Result
                 );
 
 

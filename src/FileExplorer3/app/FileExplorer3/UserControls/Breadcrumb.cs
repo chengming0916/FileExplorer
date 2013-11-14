@@ -34,7 +34,7 @@ namespace FileExplorer.UserControls
         {
             base.OnApplyTemplate();
             bcore = this.Template.FindName("PART_BreadcrumbCore", this) as BreadcrumbCore;
-            tbox = this.Template.FindName("PART_TextBox", this) as SuggestBox;
+            tbox = this.Template.FindName("PART_TextBox", this) as SuggestBoxBase;
             toggle = this.Template.FindName("PART_Toggle", this) as ToggleButton;
 
 
@@ -61,6 +61,28 @@ namespace FileExplorer.UserControls
                     tbox.Focus();
                     tbox.SelectAll();
                 });
+
+            //Update Suggestions when text changed.
+            tbox.AddHandler(TextBox.TextChangedEvent, (RoutedEventHandler)((o, e) =>
+                {
+                    if (tbox.IsEnabled)
+                    {
+                        var suggestSource = SuggestSource;
+                        var hierarchyHelper = HierarchyHelper;
+                        string text = tbox.Text;
+                        object data = RootItem;
+                        Task.Run(async () =>
+                        {
+                            return await suggestSource.SuggestAsync(data, text, hierarchyHelper);
+                        }).ContinueWith(
+                        (pTask) =>
+                        {
+                            if (!pTask.IsFaulted)
+                                tbox.SetValue(SuggestBox.SuggestionsProperty, pTask.Result);
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
+                    }
+                }));
+
             //When changed selected (path) value, hide textbox.
             AddHandler(SuggestBox.ValueChangedEvent, (RoutedEventHandler)((o, e) =>
                 {
@@ -98,7 +120,7 @@ namespace FileExplorer.UserControls
         {
             if (RootItem != null)
             {
-                bcore.RootItems = tbox.RootItems = this.HierarchyHelper.List(RootItem);
+                //bcore.RootItems = tbox.RootItems = this.HierarchyHelper.List(RootItem);
                 //bcore.ShowDropDown = false;
             }
         }
@@ -157,7 +179,7 @@ namespace FileExplorer.UserControls
 
         bool _updatingHierarchyHelper = false;
         BreadcrumbCore bcore;
-        SuggestBox tbox;
+        SuggestBoxBase tbox;
         ToggleButton toggle;
 
         #endregion
@@ -342,7 +364,7 @@ namespace FileExplorer.UserControls
             set { SetValue(ParentPathProperty, value); }
         }
 
-        public static readonly DependencyProperty ParentPathProperty = 
+        public static readonly DependencyProperty ParentPathProperty =
             DependencyProperty.Register("Parent", typeof(string),
             typeof(Breadcrumb), new PropertyMetadata(OnHierarchyHelperPropChanged));
 

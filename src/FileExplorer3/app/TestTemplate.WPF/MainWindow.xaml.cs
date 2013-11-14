@@ -67,11 +67,15 @@ namespace TestTemplate.WPF
 
             //SuggestBoxes            
             suggestBoxDummy.SuggestSource = new DummySuggestSource();
-            suggestBoxAuto.DataContext = fvm;            
+            suggestBoxAuto.RootItem = fvm;
+
+            suggestBoxAuto2.HierarchyHelper = suggestBoxAuto.HierarchyHelper =  
+                new PathHierarchyHelper("Parent", "Value", "SubDirectories");
 
             //suggestBoxAuto2
-            suggestBoxAuto2.DataContext = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));            
+            suggestBoxAuto2.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));            
             suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value, suggest based on HierarchyLister.List()
+            
 
             //breadcrumb
             breadcrumb1.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));            
@@ -84,8 +88,8 @@ namespace TestTemplate.WPF
                 //Generic version is faster than Nongeneric PathHierarchyHelper.
                 //This replaced the ParentPath, ValuePath and SubEntriesPath in markup.
                 IHierarchyHelper hierarchyHelper = new PathHierarchyHelper<FakeViewModel>("Parent", "Value", "SubDirectories");
-                suggestBoxAuto.HierarchyHelper = hierarchyHelper;
-                suggestBoxAuto2.HierarchyHelper = hierarchyHelper;
+                //suggestBoxAuto.HierarchyHelper = hierarchyHelper;
+                //suggestBoxAuto2.HierarchyHelper = hierarchyHelper;
                 breadcrumb1.HierarchyHelper = hierarchyHelper;
                 breadcrumb2.HierarchyHelper = hierarchyHelper;
             }

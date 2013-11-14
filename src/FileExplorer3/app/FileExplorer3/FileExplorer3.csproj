@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
+    <Compile Include="BaseControls\SuggestBoxBase.cs" />
     <Compile Include="BaseControls\MultiContentControl.cs" />
     <Compile Include="BaseControls\PathExistsValidationRule.cs" />
     <Compile Include="BaseControls\PathHierarchyHelper.cs" />
