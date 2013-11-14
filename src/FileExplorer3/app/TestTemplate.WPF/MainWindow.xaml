@@ -72,7 +72,7 @@
                         <DataTemplate x:Key="FakeVMIconTemplate">
                             <Image Source="folder.ico" DockPanel.Dock="Left" Height="16" Width="16" />
                         </DataTemplate>
-                <!-- Debug-->
+                        <!-- Debug-->
                         <!--<HierarchicalDataTemplate x:Key="FakeVMHeaderTemplate" ItemsSource="{Binding SubDirectories}"  >
                             <TextBlock Text="Header" />
                         </HierarchicalDataTemplate>
@@ -105,13 +105,13 @@
 
                     <TextBlock Text="Breadcrumb" />
                     <!-- Have to bind using SelectedPathValue, SelectedValue doesn't bind for unknown reason -->
-                    <uc:Breadcrumb x:Name="breadcrumb1"  
+                    <uc:Breadcrumb x:Name="breadcrumb1"  Height="30"
                                    ParentPath="Parent" ValuePath="Value" SubentriesPath="SubDirectories" 
                                    IconTemplate="{StaticResource FakeVMIconTemplate}"
                                    HeaderTemplate="{StaticResource FakeVMHeaderTemplate}"
                                    >
                     </uc:Breadcrumb>
-                    <uc:Breadcrumb x:Name="breadcrumb2" 
+                    <uc:Breadcrumb x:Name="breadcrumb2"  Height="30"
                                    ParentPath="Parent" ValuePath="Value" SubentriesPath="SubDirectories" 
                                    SelectedPathValue="{Binding SelectedPathValue, ElementName=breadcrumb1, Mode=TwoWay}"
                                    IconTemplate="{StaticResource FakeVMIconTemplate}" 
@@ -121,15 +121,14 @@
                         <uc:Breadcrumb.LayoutTransform>
                             <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
                         </uc:Breadcrumb.LayoutTransform>
-
-
-                        <Button Padding="0,0,2,0">
-                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Path Stroke="#FF000000" StrokeThickness="1" Data="{StaticResource RefreshBranch}"   />
-                                <Path Fill="#FF000000" Data="{StaticResource RefreshArrow}"   />
-                            </Grid>
-                        </Button>
-
+                        <uc:Breadcrumb.Buttons>
+                            <Button Padding="0,0,2,0">
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Path Stroke="#FF000000" StrokeThickness="1" Data="{StaticResource RefreshBranch}"   />
+                                    <Path Fill="#FF000000" Data="{StaticResource RefreshArrow}"   />
+                                </Grid>
+                            </Button>
+                        </uc:Breadcrumb.Buttons>
                     </uc:Breadcrumb>
                     <DockPanel >
                         <CheckBox IsChecked="{Binding IsIndeterminate, ElementName=breadcrumb2}" Content="IsIndeterminate"  DockPanel.Dock= "Right" />

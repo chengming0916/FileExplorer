@@ -131,6 +131,7 @@
     <Compile Include="BaseControls\BreadcrumbItem.cs" />
     <Compile Include="BaseControls\BreadcrumbOverflowPanel.cs" />
     <Compile Include="UserControls\Breadcrumb.cs" />
+    <Compile Include="UserControls\BreadcrumbBase.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
     <Compile Include="BaseControls\GridViewColumnEx.cs" />

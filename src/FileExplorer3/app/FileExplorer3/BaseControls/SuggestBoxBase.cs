@@ -258,7 +258,14 @@ namespace FileExplorer.BaseControls
             set { SetValue(DisplayMemberPathProperty, value); }
         }
 
+        public static readonly DependencyProperty ValuePathProperty = DependencyProperty.Register(
+            "ValuePath", typeof(string), typeof(SuggestBoxBase), new PropertyMetadata("Value"));
 
+        public string ValuePath
+        {
+            get { return (string)GetValue(ValuePathProperty); }
+            set { SetValue(ValuePathProperty, value); }
+        }
      
         #endregion
 

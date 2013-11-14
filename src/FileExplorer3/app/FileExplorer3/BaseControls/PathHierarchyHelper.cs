@@ -85,7 +85,7 @@ namespace FileExplorer.BaseControls
 
         public string GetPath(object item)
         {
-            return getValuePath(item);
+            return item == null ? "" : getValuePath(item);
         }
 
         public IEnumerable List(object item)

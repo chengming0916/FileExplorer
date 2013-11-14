@@ -63,7 +63,7 @@ namespace TestTemplate.WPF
             for (int i = 1; i < 10; i++)
                 fvm.SubDirectories.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));
             breadcrumbCore.ItemsSource = fvm.SubDirectories;
-            breadcrumbCore.RootItems = fvm.SubDirectories;
+            breadcrumbCore.RootItemsSource = fvm.SubDirectories;
 
             //SuggestBoxes            
             suggestBoxDummy.SuggestSource = new DummySuggestSource();
