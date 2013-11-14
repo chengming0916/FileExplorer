@@ -17,9 +17,25 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
+        private class ExHierarchyComparer : IEntryHierarchyComparer
+        {
+            public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
+            {
+                FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);
+                FileSystemInfoEx fsib = FileSystemInfoEx.FromString(b.FullPath);
+                if (a.FullPath == b.FullPath)
+                    return HierarchicalResult.Current;
+                if (IOTools.HasParent(fsib, fsia.FullName))
+                    return HierarchicalResult.Child;
+                if (IOTools.HasParent(fsia, fsib.FullName))
+                    return HierarchicalResult.Parent;
+                return HierarchicalResult.Unrelated;
+            }
+        }
+
         public FileSystemInfoExProfile()
         {
-            HierarchyComparer = PathComparer.Default;
+            HierarchyComparer = new ExHierarchyComparer();
             MetadataProvider = new FileSystemInfoMetadataProvider();
         }
 
