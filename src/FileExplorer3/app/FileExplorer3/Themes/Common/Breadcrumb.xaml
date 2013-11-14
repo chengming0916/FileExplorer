@@ -42,18 +42,17 @@
                                         Content="{Binding SelectedValue, RelativeSource={RelativeSource TemplatedParent}}" />                        
                     </ToggleButton>
 
-                    <bc:SuggestBox x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
-                                   HierarchyHelper="{TemplateBinding HierarchyHelper}"                                   
+                    <bc:SuggestBoxBase x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
                                    DisplayMemberPath="{Binding HierarchyHelper.ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                
                                    IsEnabled="{Binding IsBreadcrumbVisible, Converter={StaticResource fb}, 
                                               RelativeSource={RelativeSource TemplatedParent}}" 
                                    Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
                                             RelativeSource={RelativeSource TemplatedParent}}" >
-                        <bc:SuggestBox.Text>
+                        <bc:SuggestBoxBase.Text>
                             <Binding Path="SelectedPathValue" RelativeSource="{RelativeSource TemplatedParent}" UpdateSourceTrigger="Explicit">                                
                             </Binding>
-                        </bc:SuggestBox.Text>
-                    </bc:SuggestBox>
+                        </bc:SuggestBoxBase.Text>
+                    </bc:SuggestBoxBase>
                     
                     <bc:BreadcrumbCore x:Name="PART_BreadcrumbCore" Grid.Column="1"
                                    DropDownHeight="{TemplateBinding DropDownHeight}"
