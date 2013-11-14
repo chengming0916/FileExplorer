@@ -43,7 +43,9 @@
                     </ToggleButton>
 
                     <bc:SuggestBoxBase x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
-                                   DisplayMemberPath="{Binding HierarchyHelper.ValuePath, RelativeSource={RelativeSource TemplatedParent}}"                                
+                                   DisplayMemberPath="{Binding DisplayMemberPath, RelativeSource={RelativeSource TemplatedParent}}"
+                                   ValuePath ="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Suggestions="{Binding Suggestions, RelativeSource={RelativeSource TemplatedParent}}"
                                    IsEnabled="{Binding IsBreadcrumbVisible, Converter={StaticResource fb}, 
                                               RelativeSource={RelativeSource TemplatedParent}}" 
                                    Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
@@ -55,6 +57,8 @@
                     </bc:SuggestBoxBase>
                     
                     <bc:BreadcrumbCore x:Name="PART_BreadcrumbCore" Grid.Column="1"
+                                   ItemsSource="{TemplateBinding ItemsSource}"
+                                   RootItemsSource="{TemplateBinding RootItemsSource}"
                                    DropDownHeight="{TemplateBinding DropDownHeight}"
                                    DropDownWidth="{TemplateBinding DropDownWidth}"
                                    HeaderTemplate="{TemplateBinding HeaderTemplate}"
@@ -63,14 +67,14 @@
                                             RelativeSource={RelativeSource TemplatedParent}}">                        
                     </bc:BreadcrumbCore>
 
-                    <ItemsPresenter Grid.Column="2" VerticalAlignment="Stretch" Margin="2,0" />
+                    <ContentControl Content="{TemplateBinding Buttons}" Grid.Column="2" VerticalAlignment="Stretch" Margin="2,0" />
 
                 </Grid>
             </Border>
         </Border>
     </ControlTemplate>
     
-    <Style TargetType="{x:Type uc:Breadcrumb}">
+    <Style TargetType="{x:Type uc:BreadcrumbBase}">
         <Style.Resources>
             <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}" >
                 <Setter Property="Margin" Value="1" />

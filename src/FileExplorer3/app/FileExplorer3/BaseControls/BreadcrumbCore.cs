@@ -290,17 +290,18 @@ namespace FileExplorer.BaseControls
         }
 
 
-        public static readonly DependencyProperty RootItemsProperty = DependencyProperty.Register("RootItems",
+        public static readonly DependencyProperty RootItemsSourceProperty = DependencyProperty.Register("RootItemsSource",
             typeof(IEnumerable), typeof(BreadcrumbCore), new PropertyMetadata(null));
 
         /// <summary>
         /// Assigned by Breadcrumb
         /// </summary>
-        public IEnumerable RootItems
+        public IEnumerable RootItemsSource
         {
-            get { return (IEnumerable)GetValue(RootItemsProperty); }
-            set { SetValue(RootItemsProperty, value); }
+            get { return (IEnumerable)GetValue(RootItemsSourceProperty); }
+            set { SetValue(RootItemsSourceProperty, value); }
         }
+
 
         #endregion
 

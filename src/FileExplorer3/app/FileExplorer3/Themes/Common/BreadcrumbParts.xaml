@@ -252,7 +252,7 @@
                                             <Separator HorizontalAlignment="Stretch" Visibility="{Binding IsOverflowed, 
                                                             RelativeSource={RelativeSource TemplatedParent},
                                                             Converter={StaticResource btv}}" />
-                                            <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding RootItems}" />
+                                            <bc:BreadcrumbOverflowPanel ItemsSource="{TemplateBinding RootItemsSource}" />
                                         </StackPanel>
 
                                     </ScrollViewer>
