@@ -73,12 +73,15 @@ namespace FileExplorer.Models
 
         public Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
         {
+            if (filter == null)
+                filter = (m) => true;
             List<IEntryModel> retVal = new List<IEntryModel>();
             if (entry.IsDirectory)
             {
                 DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
                 retVal.AddRange(from fsi in di.GetFileSystemInfos()
-                                select new FileSystemInfoExModel(this, fsi));
+                                let m = new FileSystemInfoExModel(this, fsi)
+                                where filter(m) select m);
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }

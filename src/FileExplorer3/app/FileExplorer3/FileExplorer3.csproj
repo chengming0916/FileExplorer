@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
+    <Compile Include="BaseControls\BreadcrumbTree.cs" />
+    <Compile Include="BaseControls\BreadcrumbTreeItem.cs" />
     <Compile Include="BaseControls\SuggestBoxBase.cs" />
     <Compile Include="BaseControls\MultiContentControl.cs" />
     <Compile Include="BaseControls\PathExistsValidationRule.cs" />
@@ -164,6 +166,7 @@
     <None Include="ViewModels\Helpers\IEntryListHelper.cs" />
     <Compile Include="ViewModels\BreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbViewModel.cs" />
+    <Compile Include="ViewModels\ExtensionMethods.cs" />
     <Compile Include="ViewModels\IBreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\IMetadataViewModel.cs" />
     <Compile Include="ViewModels\IBreadcrumbViewModel.cs" />
@@ -228,6 +231,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Common\ContentControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\BreadcrumbTreeParts.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

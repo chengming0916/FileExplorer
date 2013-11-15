@@ -107,13 +107,13 @@ namespace FileExplorer.ViewModels
                 case HierarchicalResult.Current: 
                     action(this); break;
                 case HierarchicalResult.Parent :
-                    if (Debugger.IsAttached)
-                        Debugger.Break(); 
+                    //if (Debugger.IsAttached)
+                    //    Debugger.Break(); 
                     break;
                 case HierarchicalResult.Child :
                     ActionExecutionContext context = new ActionExecutionContext();
                     await LoadAsync();
-                    IsExpanded = true;
+                    if (_expandWhenBroadcastSelect) IsExpanded = true;
                     var matched = findMatched(model, this.Subdirectories,
                         (nvm, evm) => 
                                 { 
@@ -125,6 +125,12 @@ namespace FileExplorer.ViewModels
                         await matched.BroadcastSelectAsync(model, action);
                     break;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is DirectoryNodeViewModel && this.CurrentDirectory != null &&
+                this.CurrentDirectory.Equals((obj as IDirectoryNodeViewModel).CurrentDirectory);
         }
 
         protected void OnExpanded()
@@ -155,6 +161,7 @@ namespace FileExplorer.ViewModels
         string _error = null;
         bool _isSelected = false;
         bool _isExpanded = false;
+        protected bool _expandWhenBroadcastSelect = true;
 
         IDirectoryNodeViewModel _parentNode;
         IObservableCollection<IDirectoryNodeViewModel> _subdirs = new BindableCollection<IDirectoryNodeViewModel>();
@@ -198,7 +205,8 @@ namespace FileExplorer.ViewModels
             set
             {
                 _isExpanded = value;
-                NotifyOfPropertyChange(() => IsExpanded); if (IsExpanded) OnExpanded(); else OnCollapsed();
+                NotifyOfPropertyChange(() => IsExpanded); 
+                if (IsExpanded) OnExpanded(); else OnCollapsed();
             }
         }
 

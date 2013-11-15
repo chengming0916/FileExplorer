@@ -32,7 +32,8 @@
         
         <uc:TreeViewEx x:Name="Subdirectories" Grid.Row="0" >
             <uc:TreeViewEx.ItemContainerStyle>
-                <Style TargetType="{x:Type uc:TreeViewItemEx}" BasedOn="{StaticResource TreeViewItemExStyle}" >
+                <Style TargetType="{x:Type uc:TreeViewItemEx}" 
+                       BasedOn="{StaticResource TreeViewItemExStyle}" >
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
                 </Style>

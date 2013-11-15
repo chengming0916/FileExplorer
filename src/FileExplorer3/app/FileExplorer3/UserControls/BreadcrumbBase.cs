@@ -27,7 +27,7 @@ namespace FileExplorer.UserControls
 
         public virtual void Select(object value)
         {
-         
+            SelectedValue = value;
         }
 
 
@@ -102,6 +102,10 @@ namespace FileExplorer.UserControls
         #endregion
 
         #region Public Properties
+
+        public SuggestBoxBase PART_SuggestBox { get { return tbox; } }
+        public BreadcrumbCore PART_BreadcrumbCore { get { return bcore; } }
+        public ToggleButton PART_Toggle { get { return toggle; } }
 
         /// <summary>
         /// Selected value object, it's path is retrieved from HierarchyHelper.GetPath(), not bindable at this time
@@ -264,6 +268,19 @@ namespace FileExplorer.UserControls
         {
             get { return (IList<object>)GetValue(SuggestionsProperty); }
             set { SetValue(SuggestionsProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty TextProperty =
+        SuggestBox.TextProperty.AddOwner(typeof(BreadcrumbBase));
+
+        /// <summary>
+        /// Text shown on the SuggestionBox
+        /// </summary>
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
         }
 
 

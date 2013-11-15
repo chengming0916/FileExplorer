@@ -12,7 +12,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
-
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeParts.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -61,7 +61,7 @@
                 </uc:StatusbarEx>
             </WrapPanel>
         </TabItem>
-        <TabItem Header="Breadcrumb" IsSelected="True">
+        <TabItem Header="Breadcrumb" >
             <Grid>
                 <Grid.Resources>
                     <ResourceDictionary>
@@ -146,6 +146,23 @@
                     <TextBlock x:Name="txtBreadcrumb" Text="{Binding SelectedPathValue,ElementName=breadcrumb1}"  />
                 </StackPanel>
             </Grid>
+        </TabItem>
+        <TabItem Header="BreadcrumbTree" IsSelected="True">
+            <bc:BreadcrumbTree x:Name="btree">
+                <bc:BreadcrumbTree.ItemContainerStyle>
+                    <Style TargetType="{x:Type bc:BreadcrumbTreeItem}" 
+                       BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
+                    </Style>
+                </bc:BreadcrumbTree.ItemContainerStyle>
+                                  
+                <bc:BreadcrumbTree.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Subitems}">
+                        <TextBlock Text="{Binding Header}" />
+                    </HierarchicalDataTemplate>
+                </bc:BreadcrumbTree.ItemTemplate>
+            </bc:BreadcrumbTree>
         </TabItem>
         <TabItem Header="Panels">
             <ItemsControl>
