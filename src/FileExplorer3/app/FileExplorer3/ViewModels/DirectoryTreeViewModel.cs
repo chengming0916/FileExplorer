@@ -30,11 +30,10 @@ namespace FileExplorer.ViewModels
             SelectedViewModel = node;
         }
 
-
-        public virtual void Select(IEntryModel model)
+        public virtual async Task SelectAsync(IEntryModel model)
         {
             foreach (var sub in Subdirectories)
-                sub.BroadcastSelectAsync(model, evm => { evm.IsSelected = true; });
+                await sub.BroadcastSelectAsync(model, evm => { evm.IsSelected = true; });
         }
 
         #endregion
@@ -44,7 +43,7 @@ namespace FileExplorer.ViewModels
         IDirectoryNodeViewModel _selectedViewModel = null;
         IEntryModel _selectedEntry = null;
         IEventAggregator _events;
-        protected IObservableCollection<IDirectoryNodeViewModel> _rootViewModel;
+        IObservableCollection<IDirectoryNodeViewModel> _rootViewModel;
 
         #endregion
 
@@ -61,10 +60,13 @@ namespace FileExplorer.ViewModels
         public IEntryModel SelectedEntry
         {
             get { return _selectedViewModel == null ? null : _selectedViewModel.CurrentDirectory.EntryModel; }
-            set { Select(_selectedEntry); }
+            set { SelectAsync(_selectedEntry); }
         }
 
-        public virtual IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get { return _rootViewModel; } }
+        public virtual IObservableCollection<IDirectoryNodeViewModel> Subdirectories { 
+            get { return _rootViewModel; }
+            protected set { _rootViewModel = value; NotifyOfPropertyChange(() => Subdirectories); }
+        }
 
         #endregion
 

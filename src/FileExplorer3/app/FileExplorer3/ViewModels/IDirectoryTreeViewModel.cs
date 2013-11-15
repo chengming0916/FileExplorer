@@ -11,7 +11,7 @@ namespace FileExplorer.ViewModels
     public interface IDirectoryTreeViewModel
     {
         void NotifySelected(DirectoryNodeViewModel node);
-        void Select(IEntryModel model);
+        Task SelectAsync(IEntryModel model);
     }
 
     public interface IDirectoryNodeViewModel
@@ -25,6 +25,8 @@ namespace FileExplorer.ViewModels
         bool IsSelected { get; set; }
 
         IEntryViewModel CurrentDirectory { get; }
+
+        IDirectoryNodeViewModel ParentNode { get; }
 
         IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get; }
     }

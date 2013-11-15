@@ -19,6 +19,22 @@ namespace FileExplorer.ViewModels
             : base(events, rootModel, curDirModel, parentModel)
         {
             base.Subdirectories.Clear();
+            _expandWhenBroadcastSelect = false;
+        }
+
+        public static BreadcrumbItemViewModel FromEntryModel(IEventAggregator events,
+            IDirectoryTreeViewModel rootModel, IEntryModel curDirModel)
+        {
+            BreadcrumbItemViewModel parentModel = null;
+            foreach (var parent in curDirModel.GetHierarchy(false).Reverse())            
+                parentModel = new BreadcrumbItemViewModel(events, rootModel, parent, parentModel);
+            return new BreadcrumbItemViewModel(events, rootModel, curDirModel, parentModel);
+        }
+
+        public static BreadcrumbItemViewModel FromEntryModel(IEventAggregator events,
+           IDirectoryTreeViewModel rootModel, IEntryModel curDirModel, IDirectoryNodeViewModel parentModel)
+        {
+            return new BreadcrumbItemViewModel(events, rootModel, curDirModel, parentModel);
         }
 
         #endregion

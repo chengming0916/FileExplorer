@@ -55,6 +55,15 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
+        public override bool Equals(object obj)
+        {
+            return
+                obj is EntryViewModel &&
+                this.EntryModel.Profile.HierarchyComparer
+                .CompareHierarchy(this.EntryModel, (obj as EntryViewModel).EntryModel)
+                == Defines.HierarchicalResult.Current;
+        }
+
         public override object GetView(object context = null)
         {
             return base.GetView(context);

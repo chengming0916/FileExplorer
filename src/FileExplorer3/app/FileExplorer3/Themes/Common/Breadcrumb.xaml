@@ -17,7 +17,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbParts.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="BreadcrumbTemplate" TargetType="{x:Type uc:Breadcrumb}">
+    <ControlTemplate x:Key="BreadcrumbTemplate" TargetType="{x:Type uc:BreadcrumbBase}">
         <Border x:Name="bdr">
             <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1">
                 <Grid x:Name="BreadcrumbBackgroundGrid" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" >
@@ -45,20 +45,21 @@
                     <bc:SuggestBoxBase x:Name="PART_TextBox" Grid.Column="1" BorderBrush="Transparent"
                                    DisplayMemberPath="{Binding DisplayMemberPath, RelativeSource={RelativeSource TemplatedParent}}"
                                    ValuePath ="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
                                    Suggestions="{Binding Suggestions, RelativeSource={RelativeSource TemplatedParent}}"
                                    IsEnabled="{Binding IsBreadcrumbVisible, Converter={StaticResource fb}, 
                                               RelativeSource={RelativeSource TemplatedParent}}" 
                                    Visibility="{Binding IsBreadcrumbVisible, Converter={StaticResource fbtvc}, 
                                             RelativeSource={RelativeSource TemplatedParent}}" >
-                        <bc:SuggestBoxBase.Text>
+                        <!--<bc:SuggestBoxBase.Text>
                             <Binding Path="SelectedPathValue" RelativeSource="{RelativeSource TemplatedParent}" UpdateSourceTrigger="Explicit">                                
                             </Binding>
-                        </bc:SuggestBoxBase.Text>
+                        </bc:SuggestBoxBase.Text>-->
                     </bc:SuggestBoxBase>
                     
                     <bc:BreadcrumbCore x:Name="PART_BreadcrumbCore" Grid.Column="1"
-                                   ItemsSource="{TemplateBinding ItemsSource}"
-                                   RootItemsSource="{TemplateBinding RootItemsSource}"
+                                   ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
+                                   RootItemsSource="{Binding RootItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
                                    DropDownHeight="{TemplateBinding DropDownHeight}"
                                    DropDownWidth="{TemplateBinding DropDownWidth}"
                                    HeaderTemplate="{TemplateBinding HeaderTemplate}"

@@ -20,10 +20,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <uc:Breadcrumb x:Name="bcrumb" HierarchyHelper="{Binding HierarchyHelper}"
-                       RootItem="{Binding}" DropDownHeight="200" DropDownWidth="300"
+        <uc:BreadcrumbBase x:Name="bcrumb" 
+                           RootItemsSource="{Binding Subdirectories}" 
+                           DropDownHeight="200" DropDownWidth="300"
                         >
-            <uc:Breadcrumb.Resources>
+            <uc:BreadcrumbBase.Resources>
                 <Style x:Key="{x:Type bc:BreadcrumbItem}"
                     TargetType="{x:Type bc:BreadcrumbItem}" 
                     BasedOn="{StaticResource {x:Type bc:BreadcrumbItem}}" >
@@ -31,23 +32,23 @@
                     <Setter Property="IsDropDownOpen" Value="{Binding IsExpanded, Mode=TwoWay}"  />
                     <Setter Property="IsTopLevel" Value="{Binding IsTopLevel, Mode=OneWayToSource}"  />
                 </Style>
-            </uc:Breadcrumb.Resources>
-            <uc:Breadcrumb.HeaderTemplate>
+            </uc:BreadcrumbBase.Resources>
+            <uc:BreadcrumbBase.HeaderTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Subdirectories}">
                     <TextBlock
                         VerticalAlignment="Center" 
                         Text="{Binding Label}" />
                 </HierarchicalDataTemplate>
-            </uc:Breadcrumb.HeaderTemplate>
-            <uc:Breadcrumb.IconTemplate>
+            </uc:BreadcrumbBase.HeaderTemplate>
+            <uc:BreadcrumbBase.IconTemplate>
                 <DataTemplate>
                     <Image
                         Source="{Binding Icon, IsAsync=True, Mode=OneWay}" 
                         Grid.Column="0" />
                     <!--<TextBlock Text="Icon" />-->
                 </DataTemplate>
-            </uc:Breadcrumb.IconTemplate>
+            </uc:BreadcrumbBase.IconTemplate>
 
-        </uc:Breadcrumb>
+        </uc:BreadcrumbBase>
     </Grid>
 </UserControl>

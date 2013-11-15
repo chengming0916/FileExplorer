@@ -68,7 +68,6 @@ namespace FileExplorer.UserControls
             {
                 var hierarchy = HierarchyHelper.GetHierarchy(value, true).Reverse().ToList();
                 this.SetValue(ItemsSourceProperty, hierarchy);
-                SelectedValue = value;
                 SelectedPathValue = HierarchyHelper.GetPath(value);
                 bcore.SetValue(BreadcrumbCore.ShowDropDownProperty, SelectedPathValue != "");
             }

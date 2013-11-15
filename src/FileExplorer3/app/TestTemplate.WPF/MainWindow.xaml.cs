@@ -59,7 +59,20 @@ namespace TestTemplate.WPF
             base.OnApplyTemplate();
             
             //BreadcrumbCore Test
-            FakeViewModel fvm = new FakeViewModel("Root");            
+
+            setupBreadcrumb();
+            setupBreadcrumbTree();
+        }
+
+        private void setupBreadcrumbTree()
+        {
+            btree.ItemsSource = FakeTreeViewModel.GenerateFakeTreeViewModels().Subitems;
+        }
+
+
+        private void setupBreadcrumb()
+        {
+            FakeViewModel fvm = new FakeViewModel("Root");
             for (int i = 1; i < 10; i++)
                 fvm.SubDirectories.Add(new FakeViewModel("Sub" + i.ToString(), "Sub" + i.ToString() + "1", "Sub" + i.ToString() + "2"));
             breadcrumbCore.ItemsSource = fvm.SubDirectories;
@@ -69,16 +82,16 @@ namespace TestTemplate.WPF
             suggestBoxDummy.SuggestSource = new DummySuggestSource();
             suggestBoxAuto.RootItem = fvm;
 
-            suggestBoxAuto2.HierarchyHelper = suggestBoxAuto.HierarchyHelper =  
+            suggestBoxAuto2.HierarchyHelper = suggestBoxAuto.HierarchyHelper =
                 new PathHierarchyHelper("Parent", "Value", "SubDirectories");
 
             //suggestBoxAuto2
-            suggestBoxAuto2.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));            
+            suggestBoxAuto2.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));
             suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value, suggest based on HierarchyLister.List()
-            
+
 
             //breadcrumb
-            breadcrumb1.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));            
+            breadcrumb1.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
             breadcrumb2.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0));
 
             bool UseGenericHierarchyHelper = true;
@@ -96,7 +109,6 @@ namespace TestTemplate.WPF
 
 
         }
-
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

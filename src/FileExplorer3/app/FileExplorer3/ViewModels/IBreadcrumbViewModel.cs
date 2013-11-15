@@ -9,6 +9,6 @@ namespace FileExplorer.ViewModels
 {
     public interface IBreadcrumbViewModel
     {
-        void Select(IEntryModel model);
+        Task SelectAsync(IEntryModel model);
     }
 }

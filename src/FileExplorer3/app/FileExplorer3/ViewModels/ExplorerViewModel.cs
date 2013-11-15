@@ -42,7 +42,7 @@ namespace FileExplorer.ViewModels
                 var model = evm.Profile.ParseAsync(gotoPath).Result;
                 if (model != null)
                 {
-                    DirectoryTreeModel.Select(model);
+                    DirectoryTreeModel.SelectAsync(model);
                     return;
                 }
             }
@@ -61,13 +61,13 @@ namespace FileExplorer.ViewModels
             {
                 var selectedDirectory = message.SelectedModels.First();
                 FileListModel.LoadAsync(selectedDirectory, null);
-                BreadcrumbModel.Select(selectedDirectory);
+                BreadcrumbModel.SelectAsync(selectedDirectory);
             }
             else if (message.Sender.Equals(BreadcrumbModel))
             {
                 var selectedDirectory = message.SelectedModels.FirstOrDefault();
                 if (selectedDirectory != null)
-                    DirectoryTreeModel.Select(selectedDirectory);
+                    DirectoryTreeModel.SelectAsync(selectedDirectory);
             }
 
         }

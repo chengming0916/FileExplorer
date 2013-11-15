@@ -17,22 +17,27 @@ namespace FileExplorer.ViewModels
     {
         #region Constructor
 
-        public BreadcrumbViewModel(IExplorerViewModel explorerModel, IEventAggregator events, 
+        public BreadcrumbViewModel(IExplorerViewModel explorerModel, IEventAggregator events,
             IEntryModel[] rootModels)
             : base(events, rootModels)
         {
-            Label = Subdirectories.First().CurrentDirectory.EntryModel.Profile.RootDisplayName;
-            Icon = Subdirectories.First().CurrentDirectory.EntryModel.Profile.GetIconAsync(null, 32).Result;
+            //Label = Subdirectories.First().CurrentDirectory.EntryModel.Profile.RootDisplayName;
+            //Icon = Subdirectories.First().CurrentDirectory.EntryModel.Profile.GetIconAsync(null, 32).Result;
 
             _events = events;
-            _rootViewModel = new BindableCollection<IDirectoryNodeViewModel>(rootModels
+            rootModels =
+                rootModels.Union(
+                    rootModels.SelectMany(r => r.Profile.ListAsync(r, m => m.IsDirectory).Result))
+                .ToArray();
+            Subdirectories = new BindableCollection<IDirectoryNodeViewModel>(rootModels
                 .Select(r => new BreadcrumbItemViewModel(events, this, r, null)));
+
 
             //_rootViewModel = new BreadcrumbItemViewModel(events, this, rootModels);
 
-            HierarchyHelper = new BreadcrumbHierarchyHelper(this);
-                
-                //new EntryViewModelHierarchyHelper(rootModels, m => EntryViewModel.FromEntryModel(m), m => m.IsDirectory);
+            //HierarchyHelper = new BreadcrumbHierarchyHelper(this);
+
+            //new EntryViewModelHierarchyHelper(rootModels, m => EntryViewModel.FromEntryModel(m), m => m.IsDirectory);
         }
 
         #endregion
@@ -43,21 +48,61 @@ namespace FileExplorer.ViewModels
         {
             base.OnViewAttached(view, context);
             _bcrumb = (view as FileExplorer.Views.BreadcrumbView).bcrumb;
-            _bcrumb.AddValueChanged(Breadcrumb.SelectedValueProperty, (o, e) =>
+            _bcrumb.AddValueChanged(BreadcrumbBase.SelectedValueProperty, (o, e) =>
                 {
-                    Debug.WriteLine((o as Breadcrumb).SelectedValue);
-                    SelectedViewModel = (o as Breadcrumb).SelectedValue as IDirectoryNodeViewModel;    
-                    if (SelectedViewModel == null) //Root                    
-                        _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] {}));
-                    else _events.Publish(new SelectionChangedEvent(this, 
-                        new IEntryViewModel[] { SelectedViewModel.CurrentDirectory }));
+                    Debug.WriteLine(_bcrumb.SelectedValue);
+                    if (SelectedViewModel == null || !SelectedViewModel.Equals(_bcrumb.SelectedValue))
+                    {
+                        SelectedViewModel = _bcrumb.SelectedValue as IDirectoryNodeViewModel;
+                        updateBreadcrumb(SelectedViewModel);
+                        updateExternal(SelectedViewModel);
+                    }
                 });
+            updateBreadcrumb(base.Subdirectories.FirstOrDefault());
         }
 
-
-        public override void Select(IEntryModel model)
+        /// <summary>
+        /// Update Breadcrumb for SelectedValue or Hierarchy.
+        /// </summary>
+        /// <param name="selectedViewModel"></param>
+        protected void updateBreadcrumb(IDirectoryNodeViewModel selectedViewModel)
         {
-            _bcrumb.SelectedPathValue = model.FullPath;
+            _bcrumb.SetValue(BreadcrumbBase.SelectedValueProperty, selectedViewModel);
+            if (selectedViewModel == null)
+                _bcrumb.SetValue(BreadcrumbBase.ItemsSourceProperty, null);
+            else _bcrumb.SetValue(BreadcrumbBase.ItemsSourceProperty,
+                 selectedViewModel.GetHierarchy(true).Reverse());
+
+            _bcrumb.SetValue(BreadcrumbBase.TextProperty,
+                selectedViewModel == null ? "" : selectedViewModel.CurrentDirectory.EntryModel.FullPath);
+        }
+
+        /// <summary>
+        /// Breadcrumb selected, so update external (by raising event)
+        /// </summary>
+        /// <param name="selectedViewModel"></param>
+        protected void updateExternal(IDirectoryNodeViewModel selectedViewModel)
+        {
+            if (selectedViewModel == null) //Root   
+                _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { }));
+            else _events.Publish(new SelectionChangedEvent(this,
+               new IEntryViewModel[] { selectedViewModel.CurrentDirectory }));
+        }
+
+        public override async Task SelectAsync(IEntryModel model)
+        {
+            if (_bcrumb.RootItemsSource != null)
+                foreach (var rootNodes in _bcrumb.RootItemsSource.Cast<IDirectoryNodeViewModel>())
+                {
+                    await rootNodes.BroadcastSelectAsync(model, (foundModel) =>
+                        {
+                            SelectedViewModel = foundModel;
+                            updateBreadcrumb(SelectedViewModel);
+                        });
+                }
+
+            //SelectedViewModel = BreadcrumbItemViewModel.FromEntryModel(_events, this, model);
+            //updateBreadcrumb(SelectedViewModel);
         }
 
         //public void NotifySelected(DirectoryNodeViewModel node)
@@ -74,54 +119,27 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        Breadcrumb _bcrumb = null;
+        BreadcrumbBase _bcrumb = null;
         //BreadcrumbItemViewModel _rootViewModel;
-        IHierarchyHelper _hierarchyHelper;
-        object _selectedValue;
+        //IHierarchyHelper _hierarchyHelper;
+        //object _selectedValue;
         private IEventAggregator _events;
 
         #endregion
 
         #region Public Properties
-        
-        public IHierarchyHelper HierarchyHelper { get { return _hierarchyHelper; } set { _hierarchyHelper = value; NotifyOfPropertyChange(() => HierarchyHelper); } }
+
+        //public IHierarchyHelper HierarchyHelper { get { return _hierarchyHelper; } set { _hierarchyHelper = value; NotifyOfPropertyChange(() => HierarchyHelper); } }
         //public BreadcrumbItemViewModel RootViewModel { get { return _rootViewModel; } set { _rootViewModel = value; NotifyOfPropertyChange(() => RootViewModel); } }
 
 
-        //public IEntryModel SelectedEntry
-        //{
-        //    get { return _selectedViewModel == null ? null : _selectedViewModel.CurrentDirectory.EntryModel; }
-        //    set { Select(_selectedEntry); }
-        //}
-
-        public string Label
-        {
-            get;
-            set; 
-        }
-
-        public string Value
-        {
-            get { return ""; }
-        }
-
-        public ImageSource Icon
-        {
-            get;
-            set; 
-        }
-
-
-        public override IObservableCollection<IDirectoryNodeViewModel> Subdirectories
-        {
-            get { return base.Subdirectories; }
-        }
-
-        //public IObservableCollection<IDirectoryNodeViewModel> SubdirectoriesChecked
+        //public override IObservableCollection<IDirectoryNodeViewModel> Subdirectories
         //{
         //    get { return base.Subdirectories; }
         //}
 
         #endregion
+
+
     }
 }

@@ -5,9 +5,11 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/ThirdParty/ThirdParty.xaml" />
         
-        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />        
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
 
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeParts.xaml" />
+        
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ContentControl.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Panels.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/EditBox.xaml" />
