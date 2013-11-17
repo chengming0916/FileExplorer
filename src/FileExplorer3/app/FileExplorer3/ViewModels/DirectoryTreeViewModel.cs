@@ -50,8 +50,9 @@ namespace FileExplorer.ViewModels
             if (model != null || _selectingEntry == null || !_selectingEntry.Equals(model))
             {
                 _selectingEntry = model;
+                var handlers = getBroadcastHandlers(model);
                 foreach (var sub in Subdirectories)
-                    await sub.BroadcastSelectAsync(this, model, getBroadcastHandlers(model));
+                    await sub.BroadcastSelectAsync(this, model, handlers);
             }
         }
 

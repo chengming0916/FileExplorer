@@ -12,7 +12,7 @@
 
     <DataTemplate x:Key="GridLabelTemplate" >
         <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Icon.Value, Mode=OneWay}" Width="30" Height="30"  />
+            <Image Source="{Binding Icon, Mode=OneWay}" Width="30" Height="30"  />
 
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
@@ -27,7 +27,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="IconOnlyTemplate">
-        <Image Source="{Binding Icon.Value, Mode=OneWay}"  />
+        <Image Source="{Binding Icon, Mode=OneWay}"  />
     </DataTemplate>
 
     <DataTemplate x:Key="IconItemTemplate">
@@ -42,7 +42,7 @@
                         />
             <!--<TextBlock x:Name="Label" TextAlignment="Center" 
                        Text="{Binding EntryModel.Label}" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" />-->
-            <Image Source="{Binding Icon.Value, Mode=OneWay}"  />
+            <Image Source="{Binding Icon, Mode=OneWay}"  />
         </DockPanel>
     </DataTemplate>
 
@@ -52,7 +52,7 @@
                 <ColumnDefinition Width="32" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Source="{Binding Icon.Value, Mode=OneWay}" Grid.Column="0" />
+            <Image Source="{Binding Icon, Mode=OneWay}" Grid.Column="0" />
 
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 

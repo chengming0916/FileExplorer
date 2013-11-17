@@ -22,41 +22,17 @@ namespace FileExplorer.ViewModels
         #region Cosntructor
 
         public static IEntryViewModel DummyNode = new EntryViewModel() { EntryModel = EntryModelBase.DummyModel };
-        private static ImageSource FileIcon { get; set; }
-        private static ImageSource FolderIcon { get; set; }
 
-        static EntryViewModel()
-        {
-            BitmapImage fileIcon = new BitmapImage();
-            fileIcon.BeginInit();
-            fileIcon.UriSource = new Uri("pack://application:,,,/FileExplorer3;component/Themes/Resources/file.ico");
-            fileIcon.EndInit();
-            FileIcon = fileIcon;
-            BitmapImage folderIcon = new BitmapImage();
-            folderIcon.BeginInit();
-            folderIcon.UriSource = new Uri("pack://application:,,,/FileExplorer3;component/Themes/Resources/folder.ico");
-            folderIcon.EndInit();
-            FolderIcon = folderIcon;
-        }
 
         private EntryViewModel()
         {
-            Func<ImageSource> _getIcon = () => {
-                var icon = EntryModel.Profile.GetIconAsync(EntryModel, 32).Result;
-                if (icon != null)
-                    icon.Freeze();
-                return icon;
-
-            };
-            //if (Profile == null)
-            //    _getIcon = () => null;
-            _icon = new Lazy<ImageSource>(_getIcon);
+            _iconExtractSequences = new IEntryModelIconExtractor[] { GetDefaultIcon.Instance, GetFromProfile.Instance };
         }
 
         public static EntryViewModel FromEntryModel(IEntryModel model)
         {
             return new EntryViewModel()
-            {                
+            {
                 EntryModel = model,
                 IsEditable = model.IsRenamable
             };
@@ -72,6 +48,18 @@ namespace FileExplorer.ViewModels
 
 
         #region Methods
+
+        private async Task loadIcon()
+        {
+            Action<Task<ImageSource>> updateIcon = (tsk) =>
+                {
+                    if (tsk.IsCompleted && !tsk.IsFaulted)
+                        Icon = tsk.Result;
+                };
+
+            foreach (var ext in _iconExtractSequences)
+                await ext.GetIconForModel(EntryModel).ContinueWith(updateIcon);
+        }
 
         public override bool Equals(object obj)
         {
@@ -96,9 +84,9 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        bool _isSelected = false, _isEditing = false, _isEditable = false;
-
-        private Lazy<ImageSource> _icon;
+        bool _isSelected = false, _isEditing = false, _isEditable = false, _isIconLoaded = false;
+        private ImageSource _icon = null;
+        private IEntryModelIconExtractor[] _iconExtractSequences;
 
         #endregion
 
@@ -127,7 +115,19 @@ namespace FileExplorer.ViewModels
 
         public IEntryModel EntryModel { get; private set; }
 
-        public Lazy<ImageSource> Icon { get { return _icon; } }
+        public ImageSource Icon
+        {
+            get
+            {
+                if (!_isIconLoaded)
+                {
+                    _isIconLoaded = true;
+                    loadIcon();
+                }
+                return _icon;
+            }
+            set { _icon = value; NotifyOfPropertyChange(() => Icon); }
+        }
 
         public bool IsSelected { get { return _isSelected; } set { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); } }
 
