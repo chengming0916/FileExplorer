@@ -36,8 +36,10 @@
                                  BorderThickness="{TemplateBinding BorderThickness}"
                                  SelectedBorderBrush="Transparent"
                                 >-->
-                    <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch" VerticalAlignment="Center"                                   
+                    <Button Template="{StaticResource BaseButton}">
+                        <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch" VerticalAlignment="Center"                                   
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" />
+                    </Button>
                     <!--</bc:HotTrack>-->
 
                     <bc:HotTrack x:Name="headerToggleHL"  
@@ -101,7 +103,7 @@
                 <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
                 <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
             </Trigger>
-            
+
         </Style.Triggers>
     </Style>
 
