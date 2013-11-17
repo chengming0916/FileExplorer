@@ -12,6 +12,8 @@ namespace FileExplorer.ViewModels
     {
         void NotifySelected(DirectoryNodeViewModel node);
         Task SelectAsync(IEntryModel model);
+        IEntryModel SelectedEntry { get; set; }
+        IEntryModel SelectingEntry { get; }
     }
 
     public interface IDirectoryNodeViewModel
@@ -19,11 +21,20 @@ namespace FileExplorer.ViewModels
         IDirectoryTreeViewModel TreeModel { get; }
 
         IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel);
-        
+
+        Task LoadAsync(bool force = false);
+
         Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action);
+        Task BroadcastSelectAsync(IDirectoryTreeViewModel sender, IEntryModel model, params IDirectoryNodeBroadcastHandler[] allHandlers);
+        
+        Task NotifyChildSelectedAsync(IDirectoryNodeViewModel node, bool selected);
 
         bool IsSelected { get; set; }
+        bool IsExpanded { get; set; }
 
+        bool IsChildSelected { get; set; }
+
+        bool IsDummyNode { get; }
         IEntryViewModel CurrentDirectory { get; }
 
         IDirectoryNodeViewModel ParentNode { get; }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:bc="clr-namespace:FileExplorer.BaseControls"
               xmlns:uc="clr-namespace:FileExplorer.UserControls"
              xmlns:m="clr-namespace:FileExplorer.Models"
              mc:Ignorable="d" 
@@ -18,7 +19,7 @@
             
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <DockPanel>
         <!--<Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
@@ -28,7 +29,7 @@
             <ContentPresenter ContentTemplate="{StaticResource GridLabelTemplate}" 
                           Content="{Binding SelectedViewModel.CurrentDirectory}" />
         </StackPanel>-->
-        
+      
         
         <uc:TreeViewEx x:Name="Subdirectories" Grid.Row="0" >
             <uc:TreeViewEx.ItemContainerStyle>
@@ -39,5 +40,5 @@
                 </Style>
             </uc:TreeViewEx.ItemContainerStyle>
         </uc:TreeViewEx>
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -80,6 +80,9 @@
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
     <Compile Include="BaseControls\BreadcrumbTree.cs" />
     <Compile Include="BaseControls\BreadcrumbTreeItem.cs" />
+    <Compile Include="BaseControls\DropDownList.cs" />
+    <None Include="Obsoluted\OverflowPanel.cs" />
+    <None Include="Obsoluted\OverflowItem.cs" />
     <Compile Include="BaseControls\SuggestBoxBase.cs" />
     <Compile Include="BaseControls\MultiContentControl.cs" />
     <Compile Include="BaseControls\PathExistsValidationRule.cs" />
@@ -166,6 +169,7 @@
     <None Include="ViewModels\Helpers\IEntryListHelper.cs" />
     <Compile Include="ViewModels\BreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
     <Compile Include="ViewModels\ExtensionMethods.cs" />
     <Compile Include="ViewModels\IBreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\IMetadataViewModel.cs" />
@@ -201,9 +205,6 @@
     <Compile Include="ViewModels\IStatusbarViewModel.cs" />
     <Compile Include="ViewModels\StatusbarViewModel.cs" />
     <Compile Include="ViewModels\TaskUtils.cs" />
-    <Compile Include="Views\DirectoryNodeView.xaml.cs">
-      <DependentUpon>DirectoryNodeView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\DirectoryTreeView.xaml.cs">
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
     </Compile>
@@ -223,6 +224,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Themes\Common\TreeViewItemCopy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Obsoluted\OverflowPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
@@ -374,10 +379,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DirectoryNodeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\DirectoryTreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -418,7 +419,9 @@
     <Resource Include="Themes\Resources\ViewMode\tile_16_2.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="file.ico" />
     <Content Include="Themes\Common\BrushUpdate.txt" />
+    <Resource Include="Themes\Resources\file.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

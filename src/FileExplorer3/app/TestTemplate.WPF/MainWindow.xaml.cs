@@ -56,17 +56,20 @@ namespace TestTemplate.WPF
 
         public override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-            
-            //BreadcrumbCore Test
-
-            setupBreadcrumb();
+            base.OnApplyTemplate();            
+            //setupBreadcrumb();
             setupBreadcrumbTree();
         }
 
         private void setupBreadcrumbTree()
         {
-            btree.ItemsSource = FakeTreeViewModel.GenerateFakeTreeViewModels().Subitems;
+            var items = TreeNodeViewModel.GenerateFakeTreeViewModels().Subitems;
+            items[1].IsExpanded = true;
+            items[1].Subitems[2].IsExpanded = true;
+            items[1].Subitems[2].Subitems[3].IsExpanded = true;
+            items[1].Subitems[2].Subitems[3].Subitems[4].IsSelected = true;
+            btree.ItemsSource = items;
+
         }
 
 

@@ -28,7 +28,7 @@ namespace FileExplorer.ViewModels
 
         }
 
-        public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel, 
+        public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel,
             IDirectoryNodeViewModel parentNode)
             : base(events, false)
         {
@@ -50,7 +50,7 @@ namespace FileExplorer.ViewModels
             this.Subdirectories.Add(DirectoryNodeViewModel.DummyNode);
         }
 
-     
+
 
         #endregion
 
@@ -58,10 +58,10 @@ namespace FileExplorer.ViewModels
 
         #region Utils
 
-        
+
 
         #endregion
-       
+
         public async Task LoadAsync(bool force = false)
         {
             if (State != NodeState.IsLoading)
@@ -78,7 +78,6 @@ namespace FileExplorer.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    
                     State = NodeState.IsError;
                 }
             }
@@ -98,33 +97,73 @@ namespace FileExplorer.ViewModels
         {
             return new DirectoryNodeViewModel(Events, TreeModel, entryModel, this);
         }
-        
-        public async Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action)
+
+        protected async Task BroadcastChildSelectedAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action,
+            bool load = false, Func<IDirectoryNodeViewModel, IEntryModel, bool> matchFilter = null)
         {
-            
+            if (load)
+                await LoadAsync();
+            if (matchFilter == null)
+                foreach (var subdir in Subdirectories)
+                    await subdir.BroadcastSelectAsync(model, action);
+            else
+            {
+                var matched = findMatched(model, this.Subdirectories, matchFilter);
+                if (matched != null)
+                    await matched.BroadcastSelectAsync(model, action);
+            }
+        }
+
+
+        public virtual async Task BroadcastSelectAsync(IDirectoryTreeViewModel sender, IEntryModel model, IDirectoryNodeBroadcastHandler[] allHandlers)
+        {
+            var result = model == null || CurrentDirectory == null ? HierarchicalResult.Unrelated :
+                model.Profile.HierarchyComparer.CompareHierarchy(CurrentDirectory.EntryModel, model);
+            foreach (var handler in allHandlers)
+                if (handler.AppliedResult.HasFlag(result))
+                    await handler.HandleBroadcastAsync(sender, this, result, allHandlers);
+        }
+
+        public virtual async Task BroadcastSelectAsync(IEntryModel model,
+            Action<IDirectoryNodeViewModel> currentAction)
+        {
             switch (model.Profile.HierarchyComparer.CompareHierarchy(CurrentDirectory.EntryModel, model))
             {
-                case HierarchicalResult.Current: 
-                    action(this); break;
-                case HierarchicalResult.Parent :
-                    //if (Debugger.IsAttached)
-                    //    Debugger.Break(); 
+                case HierarchicalResult.Current:
+                    currentAction(this); 
                     break;
-                case HierarchicalResult.Child :
-                    ActionExecutionContext context = new ActionExecutionContext();
-                    await LoadAsync();
-                    if (_expandWhenBroadcastSelect) IsExpanded = true;
-                    var matched = findMatched(model, this.Subdirectories,
-                        (nvm, evm) => 
-                                { 
-                                    var result = 
-                                        model.Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
-                                    return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
-                                });
-                    if (matched != null)
-                        await matched.BroadcastSelectAsync(model, action);
+                case HierarchicalResult.Parent:
+                    break;
+                case HierarchicalResult.Child:
+                    await BroadcastChildSelectedAsync(model, currentAction, true,
+                        (nvm, evm) =>
+                        {
+                            var result =
+                                model.Profile.HierarchyComparer.CompareHierarchy(nvm.CurrentDirectory.EntryModel, model);
+                            return result == HierarchicalResult.Child || result == HierarchicalResult.Current;
+                        });
+                    break;
+                default:
                     break;
             }
+        }
+
+        public async Task NotifyChildSelectedAsync(IDirectoryNodeViewModel node, bool selected)
+        {
+            var model = node.CurrentDirectory.EntryModel;
+            IsChildSelected = selected;
+            SelectedChild = null;
+
+            //foreach (var sub in Subdirectories)
+            //    if (model.Profile.HierarchyComparer.CompareHierarchy(model, sub.CurrentDirectory.EntryModel)
+            //        == HierarchicalResult.Unrelated)
+            //    {
+            //        sub.IsChildSelected = false;
+            //        sub.IsSelected = false;
+            //    }
+
+            if (ParentNode != null)
+                await ParentNode.NotifyChildSelectedAsync(node, selected);
         }
 
         public override bool Equals(object obj)
@@ -146,11 +185,14 @@ namespace FileExplorer.ViewModels
         protected void OnSelected()
         {
             TreeModel.NotifySelected(this);
+            if (ParentNode != null)
+                ParentNode.NotifyChildSelectedAsync(this, true);
         }
 
         protected void OnDeselected()
         {
-
+            if (ParentNode != null)
+                ParentNode.NotifyChildSelectedAsync(this, false);
         }
 
         #endregion
@@ -160,7 +202,9 @@ namespace FileExplorer.ViewModels
         NodeState _state = NodeState.IsCreated;
         string _error = null;
         bool _isSelected = false;
-        bool _isExpanded = false;
+        bool _isExpanded = false, _isExpanded2 = false;
+        bool _isChildSelected = false;
+        object _selectedChild = null;
         protected bool _expandWhenBroadcastSelect = true;
 
         IDirectoryNodeViewModel _parentNode;
@@ -191,11 +235,11 @@ namespace FileExplorer.ViewModels
         }
 
 
-        
+
         public virtual IObservableCollection<IDirectoryNodeViewModel> Subdirectories
         {
             get { return _subdirs; }
-            set { _subdirs = value; NotifyOfPropertyChange(() => Subdirectories); } 
+            set { _subdirs = value; NotifyOfPropertyChange(() => Subdirectories); }
         }
 
 
@@ -205,18 +249,56 @@ namespace FileExplorer.ViewModels
             set
             {
                 _isExpanded = value;
-                NotifyOfPropertyChange(() => IsExpanded); 
+                NotifyOfPropertyChange(() => IsExpanded);
                 if (IsExpanded) OnExpanded(); else OnCollapsed();
             }
         }
+
+        public bool IsExpanded2
+        {
+            get { return _isExpanded2; }
+            set
+            {
+                _isExpanded2 = value;
+                NotifyOfPropertyChange(() => IsExpanded2);
+                if (IsExpanded2) OnExpanded(); else OnCollapsed();
+            }
+        }
+
+        public bool IsDummyNode { get { return CurrentDirectory == null; } }
 
         public bool IsSelected
         {
             get { return _isSelected; }
             set
             {
-                _isSelected = value;
-                NotifyOfPropertyChange(() => IsSelected); if (IsSelected) OnSelected(); else OnDeselected();
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    NotifyOfPropertyChange(() => IsSelected); if (IsSelected) OnSelected(); else OnDeselected();
+                }
+            }
+        }
+
+        public bool IsChildSelected
+        {
+            get { return _isChildSelected; }
+            set
+            {
+                _isChildSelected = value;
+                NotifyOfPropertyChange(() => IsChildSelected);
+            }
+        }
+
+        public object SelectedChild
+        {
+            get { return _selectedChild; }
+            set
+            {
+                _selectedChild = value;
+                NotifyOfPropertyChange(() => SelectedChild);
+                if (value is DirectoryNodeViewModel)
+                    (value as DirectoryNodeViewModel).IsSelected = true;
             }
         }
 
@@ -229,6 +311,6 @@ namespace FileExplorer.ViewModels
 
 
 
-        
+
     }
 }

@@ -77,4 +77,31 @@
         </Setter>
     </Style>
 
+    <Style x:Key="{x:Type local:DropDownList}" 
+           TargetType="{x:Type local:DropDownList}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DropDownList}">
+                    <local:DropDown IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay,
+                        RelativeSource={RelativeSource TemplatedParent}}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Header="{Binding Header,RelativeSource={RelativeSource TemplatedParent}}">
+                        <ScrollViewer x:Name="DropDownScrollViewer">
+                            <ItemsPresenter x:Name="ItemsPresenter" 
+                                        KeyboardNavigation.DirectionalNavigation="Contained" 
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </ScrollViewer>
+                    </local:DropDown>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 </ResourceDictionary>

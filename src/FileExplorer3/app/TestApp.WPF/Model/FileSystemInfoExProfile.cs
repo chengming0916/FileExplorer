@@ -21,6 +21,8 @@ namespace FileExplorer.Models
         {
             public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
             {
+                if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
+                    return PathComparer.Default.CompareHierarchy(a, b);
                 FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);
                 FileSystemInfoEx fsib = FileSystemInfoEx.FromString(b.FullPath);
                 if (a.FullPath == b.FullPath)

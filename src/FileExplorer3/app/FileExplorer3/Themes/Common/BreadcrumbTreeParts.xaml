@@ -16,8 +16,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-
-    <ControlTemplate x:Key="breadcrumbTreeItemTemplate" TargetType="{x:Type bc:BreadcrumbTreeItem}">
+    <ControlTemplate x:Key="BreadcrumbTreeItemTemplate" TargetType="{x:Type bc:BreadcrumbTreeItem}">
         <Grid HorizontalAlignment="Stretch" x:Name="baseGrid" >
             <Grid.ColumnDefinitions>
                 <!-- Header -->
@@ -28,53 +27,81 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <bc:HotTrack Grid.Column="0" Grid.Row="0"  Grid.ColumnSpan="2" 
-                         IsSelected="{TemplateBinding IsSelected}" FillFullRow="True">
-                <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch"  
-                                  Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" 
-                                  Margin="{TemplateBinding BorderThickness}"/>
+            <bc:HotTrack Grid.Column="0" Grid.Row="0"   x:Name="headerHL"  
+                         SelectedBorderBrush="{TemplateBinding BorderBrush}" 
+                         BorderThickness="{TemplateBinding BorderThickness}" >
+                <StackPanel Orientation="Horizontal">
+
+                    <!--<bc:HotTrack x:Name="headerHL"  
+                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                 SelectedBorderBrush="Transparent"
+                                >-->
+                    <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch" VerticalAlignment="Center"                                   
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" />
+                    <!--</bc:HotTrack>-->
+
+                    <bc:HotTrack x:Name="headerToggleHL"  
+                                 BorderThickness="1,0,0,0"
+                                 SelectedBorderBrush="Transparent"
+                                 Visibility="{Binding ShowToggle, RelativeSource={RelativeSource TemplatedParent}, 
+                                        Converter={StaticResource btvc}}"
+                                >
+                        <bc:DropDownList ItemsSource="{TemplateBinding ItemsSource}" 
+                                         Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
+                                        Converter={StaticResource btvc}}" 
+                                  IsDropDownOpen="{Binding IsExpanded, Mode=TwoWay, 
+                                        RelativeSource={RelativeSource TemplatedParent}}"
+                                  SelectedValue="{Binding SelectedChild, Mode=TwoWay, 
+                                        RelativeSource={RelativeSource TemplatedParent}}"
+                                  ItemTemplate="{TemplateBinding ItemTemplate}" />
+                    </bc:HotTrack>
+                </StackPanel>
             </bc:HotTrack>
 
-            <!--<ToggleButton x:Name="Expander" ClickMode="Press" 
-                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" 
-                          Style="{StaticResource ExpandCollapseToggleStyle}"/>-->
+
 
             <ItemsPresenter x:Name="ItemsHost" Grid.Column="2" />
 
         </Grid>
         <ControlTemplate.Triggers>
-            <Trigger Property="IsExpanded" Value="false">
-                <Setter Property="Visibility" Value="Collapsed"/>
+            <MultiTrigger >
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsChildSelected" Value="false" />
+                    <Condition Property="IsCurrentSelected" Value="false" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+            <Trigger  SourceName="headerHL" Property="IsMouseDirectlyOver" Value="True">
+                <Setter TargetName="headerToggleHL" Property="IsEnabled" Value="False" />
             </Trigger>
+            <!--<Trigger Property="IsExpanded" Value="true">
+                <Setter Property="Visibility" Value="Visible"/>
+            </Trigger>-->
             <!--<Trigger Property="HasItems" Value="false">
                 <Setter Property="Visibility" TargetName="Expander" Value="Hidden"/>
-            </Trigger>-->            
+            </Trigger>-->
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style x:Key="BreadcrumbTreeItemStyle" TargetType="{x:Type bc:BreadcrumbTreeItem}">
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
+        <Setter Property="OverflowedItemContainerStyle" Value="{Binding OverflowedItemContainerStyle, 
+            RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbTree}}}" />
         <!--<Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>-->
         <Setter Property="Padding" Value="1,0,0,0"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-        <Setter Property="Template" Value="{StaticResource breadcrumbTreeItemTemplate}" />
+        <Setter Property="Template" Value="{StaticResource BreadcrumbTreeItemTemplate}" />
         <Style.Triggers>
             <!--This trigger is needed, because RelativeSource binding can only succeeds if the current MenuItem is already connected to its visual parent-->
             <Trigger Property="IsVisible" Value="True">
                 <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
                 <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
             </Trigger>
-
-            <Trigger Property="VirtualizingStackPanel.IsVirtualizing" Value="true">
-                <Setter Property="ItemsPanel">
-                    <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
-                        </ItemsPanelTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
+            
         </Style.Triggers>
     </Style>
 
@@ -82,6 +109,14 @@
         <!--<Setter Property="Background" Value="Gray"></Setter>-->
         <!--<Setter Property="ItemTemplate" Value="{StaticResource breadcrumbTreeItemTemplate}" />-->
         <Setter Property="ItemContainerStyle" Value="{StaticResource BreadcrumbTreeItemStyle}" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
+                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 

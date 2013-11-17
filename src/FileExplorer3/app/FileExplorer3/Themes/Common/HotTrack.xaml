@@ -37,6 +37,18 @@
                                              Storyboard.TargetProperty="Opacity"  To="0.5" />
                         </Storyboard>
                     </VisualState>
+                    <VisualState x:Name="MouseOverGrayed">
+                        <Storyboard>
+                            <!--<ColorAnimation  
+                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" 
+                                Storyboard.TargetName="borderCurrent" Duration="0" To="Black" />-->
+
+                            <DoubleAnimation Storyboard.TargetName="background"  Duration="0:0:0.1"
+                                             Storyboard.TargetProperty="Opacity"  To="0.015" />
+                            <DoubleAnimation Storyboard.TargetName="highlight"  Duration="0:0:0.1"
+                                             Storyboard.TargetProperty="Opacity"  To="0.05" />
+                        </Storyboard>
+                    </VisualState>
                     <VisualState x:Name="Dragging">
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="background"  Duration="0:0:0.1"

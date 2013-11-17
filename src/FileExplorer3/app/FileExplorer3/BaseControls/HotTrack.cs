@@ -71,15 +71,16 @@ namespace FileExplorer.BaseControls
 
         private void UpdateStates(bool useTransition)
         {
-
-
+           
             if (IsSelected)
                 VisualStateManager.GoToState(this, "Selected", useTransition);
             else
                 if (IsDragging)
                     VisualStateManager.GoToState(this, "Dragging", useTransition);
                 else if (IsMouseOver)
-                    VisualStateManager.GoToState(this, "MouseOver", useTransition);
+                    if (IsEnabled)
+                        VisualStateManager.GoToState(this, "MouseOver", useTransition);
+                    else VisualStateManager.GoToState(this, "MouseOverGrayed", useTransition);
                 else VisualStateManager.GoToState(this, "Normal", useTransition);
 
             //if (IsFocused)

@@ -11,7 +11,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <Image Source="{Binding Icon.Value, IsAsync=True, Mode=OneWay}" Grid.Row="0" />
+        <Image Source="{Binding Icon.Value, Mode=OneWay}" Grid.Row="0" />
         <TextBlock x:Name="Label" Text="{Binding EntryModel.Label}" Grid.Row="1" />
     </Grid>
 </UserControl>

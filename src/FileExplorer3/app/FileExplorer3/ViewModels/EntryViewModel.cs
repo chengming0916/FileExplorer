@@ -11,6 +11,8 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Models;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace FileExplorer.ViewModels
 {
@@ -20,10 +22,27 @@ namespace FileExplorer.ViewModels
         #region Cosntructor
 
         public static IEntryViewModel DummyNode = new EntryViewModel() { EntryModel = EntryModelBase.DummyModel };
+        private static ImageSource FileIcon { get; set; }
+        private static ImageSource FolderIcon { get; set; }
+
+        static EntryViewModel()
+        {
+            BitmapImage fileIcon = new BitmapImage();
+            fileIcon.BeginInit();
+            fileIcon.UriSource = new Uri("pack://application:,,,/FileExplorer3;component/Themes/Resources/file.ico");
+            fileIcon.EndInit();
+            FileIcon = fileIcon;
+            BitmapImage folderIcon = new BitmapImage();
+            folderIcon.BeginInit();
+            folderIcon.UriSource = new Uri("pack://application:,,,/FileExplorer3;component/Themes/Resources/folder.ico");
+            folderIcon.EndInit();
+            FolderIcon = folderIcon;
+        }
 
         private EntryViewModel()
         {
             Func<ImageSource> _getIcon = () => {
+                return FileIcon;
                 var icon = EntryModel.Profile.GetIconAsync(EntryModel, 32).Result;
                 if (icon != null)
                     icon.Freeze();

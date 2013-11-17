@@ -154,14 +154,18 @@
                        BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
-                    </Style>
+                    </Style>                    
                 </bc:BreadcrumbTree.ItemContainerStyle>
-                                  
+                   
+                
                 <bc:BreadcrumbTree.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Subitems}">
                         <TextBlock Text="{Binding Header}" />
                     </HierarchicalDataTemplate>
                 </bc:BreadcrumbTree.ItemTemplate>
+                <bc:BreadcrumbTree.LayoutTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" />
+                </bc:BreadcrumbTree.LayoutTransform>
             </bc:BreadcrumbTree>
         </TabItem>
         <TabItem Header="Panels">
