@@ -5,15 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using FileExplorer.Models;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.Models
 {
-    public interface IEntryModelIconExtractor
-    {
-        Task<ImageSource> GetIconForModel(IEntryModel model);
-    }
-
+ 
     public class GetDefaultIcon : IEntryModelIconExtractor
     {
         private static ImageSource FileIcon { get; set; }
@@ -42,15 +37,15 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    public class GetFromProfile : IEntryModelIconExtractor
-    {
-        public static GetFromProfile Instance = new GetFromProfile();
+    //public class GetFromProfile : IEntryModelIconExtractor
+    //{
+    //    public static GetFromProfile Instance = new GetFromProfile();
 
-        public async Task<ImageSource> GetIconForModel(IEntryModel model)
-        {
-            var icon = await model.Profile.GetIconAsync(model, 32);
-            icon.Freeze();
-            return icon;
-        }
-    }
+    //    public async Task<ImageSource> GetIconForModel(IEntryModel model)
+    //    {
+    //        var icon = await model.Profile.GetIconAsync(model, 32);
+    //        icon.Freeze();
+    //        return icon;
+    //    }
+    //}
 }

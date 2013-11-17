@@ -25,8 +25,7 @@ namespace FileExplorer.ViewModels
 
 
         private EntryViewModel()
-        {
-            _iconExtractSequences = new IEntryModelIconExtractor[] { GetDefaultIcon.Instance, GetFromProfile.Instance };
+        {            
         }
 
         public static EntryViewModel FromEntryModel(IEntryModel model)
@@ -34,6 +33,7 @@ namespace FileExplorer.ViewModels
             return new EntryViewModel()
             {
                 EntryModel = model,
+                _iconExtractSequences = model.Profile.GetIconExtractSequence(model),
                 IsEditable = model.IsRenamable
             };
         }
@@ -53,7 +53,7 @@ namespace FileExplorer.ViewModels
         {
             Action<Task<ImageSource>> updateIcon = (tsk) =>
                 {
-                    if (tsk.IsCompleted && !tsk.IsFaulted)
+                    if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
                         Icon = tsk.Result;
                 };
 
@@ -86,7 +86,7 @@ namespace FileExplorer.ViewModels
 
         bool _isSelected = false, _isEditing = false, _isEditable = false, _isIconLoaded = false;
         private ImageSource _icon = null;
-        private IEntryModelIconExtractor[] _iconExtractSequences;
+        private IEnumerable<IEntryModelIconExtractor> _iconExtractSequences;
 
         #endregion
 

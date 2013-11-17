@@ -88,30 +88,10 @@ namespace FileExplorer.Models
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }
 
-        private Icon getFolderIcon()
+        public IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
         {
-            return new Icon(System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("TestApp.WPF.Model.folder.ico"));
-        }
-
-        public Task<ImageSource> GetIconAsync(IEntryModel entry, int size)
-        {
-            if (entry != null)
-            {
-                using (FileSystemInfoEx fsi = FileSystemInfoEx.FromString(entry.FullPath))
-                {
-                    Bitmap bitmap = null;
-                    if (fsi != null && fsi.PIDL != null)
-                    {
-                        bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
-                            fsi.PIDL.Ptr, entry.IsDirectory, false);
-                        return Task.FromResult<ImageSource>(
-                            Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
-                    }
-                }
-            }
-            
-            return Task.FromResult<ImageSource>(null);
+            yield return GetDefaultIcon.Instance;
+            yield return GetFromSystemImageList.Instance;
         }
 
         public Task<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
@@ -156,5 +136,8 @@ namespace FileExplorer.Models
 
 
 
+
+
+        
     }
 }

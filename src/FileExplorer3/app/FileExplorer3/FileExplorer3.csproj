@@ -115,6 +115,7 @@
     <Compile Include="Models\IColumnFilter.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IEntryHierarchyComparer.cs" />
+    <Compile Include="Models\IEntryModelIconExtractor.cs" />
     <Compile Include="Models\IMetadata.cs" />
     <Compile Include="Models\IMetadataProvider.cs" />
     <Compile Include="Models\IProfile.cs" />
@@ -170,7 +171,7 @@
     <Compile Include="ViewModels\BreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbViewModel.cs" />
     <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
-    <Compile Include="ViewModels\EntryModelIconExtractor.cs" />
+    <Compile Include="Models\EntryModelIconExtractor.cs" />
     <Compile Include="ViewModels\ExtensionMethods.cs" />
     <Compile Include="ViewModels\IBreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\IMetadataViewModel.cs" />
