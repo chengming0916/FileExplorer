@@ -18,8 +18,6 @@ namespace FileExplorer.BaseControls
         #region Constructor
         static DropDown()
         {
-            //DefaultStyleKeyProperty.OverrideMetadata(typeof(BasicMediaPlayer),
-            //new FrameworkPropertyMetadata(typeof(BasicMediaPlayer)));
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DropDown),
                 new System.Windows.FrameworkPropertyMetadata(typeof(DropDown)));
         }

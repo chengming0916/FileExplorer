@@ -7,8 +7,7 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IBreadcrumbViewModel
+    public interface IBreadcrumbViewModel : IDirectoryTreeViewModel
     {
-        Task SelectAsync(IEntryModel model);
     }
 }

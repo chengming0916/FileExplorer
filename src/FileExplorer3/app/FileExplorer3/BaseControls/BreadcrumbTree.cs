@@ -24,9 +24,9 @@ namespace FileExplorer.BaseControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbTreeItem();
+            return new BreadcrumbTreeItem() { IsChildSelected = true };
         }
-        
+
         #endregion
 
         #region Data
@@ -34,6 +34,15 @@ namespace FileExplorer.BaseControls
         #endregion
 
         #region Public Properties
+
+        public static readonly DependencyProperty OverflowedItemContainerStyleProperty =
+                   DependencyProperty.Register("OverflowedItemContainerStyle", typeof(Style), typeof(BreadcrumbTree));
+
+        public Style OverflowedItemContainerStyle
+        {
+            get { return (Style)GetValue(OverflowedItemContainerStyleProperty); }
+            set { SetValue(OverflowedItemContainerStyleProperty, value); }
+        }
         
         #endregion
     }

@@ -14,13 +14,28 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbParts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeParts.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <uc:BreadcrumbBase x:Name="bcrumb" 
+        <bc:BreadcrumbTree ItemsSource="{Binding Subdirectories}" DockPanel.Dock="Top"
+                           ItemTemplate="{StaticResource DirectoryNodeItemTemplate}"
+                           >
+            <bc:BreadcrumbTree.ItemContainerStyle>
+                <Style TargetType="{x:Type bc:BreadcrumbTreeItem}" 
+                       BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded2, Mode=TwoWay}"  />
+                    <Setter Property="IsCurrentSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
+                    <Setter Property="SelectedChild" Value="{Binding SelectedChild, Mode=TwoWay}"  />
+                    <Setter Property="IsChildSelected" Value="{Binding IsChildSelected, Mode=TwoWay}"  />
+                </Style>
+            </bc:BreadcrumbTree.ItemContainerStyle>
+
+        </bc:BreadcrumbTree>
+        <!--<uc:BreadcrumbBase x:Name="bcrumb" 
                            RootItemsSource="{Binding Subdirectories}" 
                            DropDownHeight="200" DropDownWidth="300"
                         >
@@ -44,11 +59,10 @@
                 <DataTemplate>
                     <Image
                         Source="{Binding Icon, IsAsync=True, Mode=OneWay}" 
-                        Grid.Column="0" />
-                    <!--<TextBlock Text="Icon" />-->
+                        Grid.Column="0" />                    
                 </DataTemplate>
             </uc:BreadcrumbBase.IconTemplate>
 
-        </uc:BreadcrumbBase>
+        </uc:BreadcrumbBase>-->
     </Grid>
 </UserControl>
