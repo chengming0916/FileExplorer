@@ -419,8 +419,8 @@
     <Resource Include="Themes\Resources\ViewMode\tile_16_2.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="file.ico" />
     <Content Include="Themes\Common\BrushUpdate.txt" />
+    <Resource Include="Themes\Resources\folder.ico" />
     <Resource Include="Themes\Resources\file.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

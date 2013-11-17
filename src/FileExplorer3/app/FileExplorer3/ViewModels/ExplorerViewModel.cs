@@ -66,6 +66,7 @@ namespace FileExplorer.ViewModels
             else if (message.Sender.Equals(BreadcrumbModel))
             {
                 var selectedDirectory = message.SelectedModels.FirstOrDefault();
+                FileListModel.LoadAsync(selectedDirectory, null);
                 if (selectedDirectory != null)
                     DirectoryTreeModel.SelectAsync(selectedDirectory);
             }

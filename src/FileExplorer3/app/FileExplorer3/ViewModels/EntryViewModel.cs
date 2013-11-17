@@ -42,7 +42,6 @@ namespace FileExplorer.ViewModels
         private EntryViewModel()
         {
             Func<ImageSource> _getIcon = () => {
-                return FileIcon;
                 var icon = EntryModel.Profile.GetIconAsync(EntryModel, 32).Result;
                 if (icon != null)
                     icon.Freeze();
