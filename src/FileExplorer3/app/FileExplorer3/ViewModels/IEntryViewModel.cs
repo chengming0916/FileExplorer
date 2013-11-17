@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels
         bool IsEditing { get; set; }
         bool IsSelected { get; set; }
 
-        Lazy<ImageSource> Icon { get; }
+        ImageSource Icon { get; }
 
         IEntryViewModel Clone();
     }

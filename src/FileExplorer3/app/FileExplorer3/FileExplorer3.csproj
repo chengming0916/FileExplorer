@@ -170,6 +170,7 @@
     <Compile Include="ViewModels\BreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbViewModel.cs" />
     <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
+    <Compile Include="ViewModels\EntryModelIconExtractor.cs" />
     <Compile Include="ViewModels\ExtensionMethods.cs" />
     <Compile Include="ViewModels\IBreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\IMetadataViewModel.cs" />
