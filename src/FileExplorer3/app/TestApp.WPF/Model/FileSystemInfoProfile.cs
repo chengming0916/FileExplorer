@@ -70,14 +70,12 @@ namespace FileExplorer.Models
                 .GetManifestResourceStream("TestApp.WPF.Model.folder.ico"));
         }
 
-        public Task<ImageSource> GetIconAsync(IEntryModel entry, int size)
+
+        public IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
         {
-            using (var icon = entry == null || entry.IsDirectory ?
-                getFolderIcon() :
-                System.Drawing.Icon.ExtractAssociatedIcon(entry.FullPath))
-            using (var bitmap = icon.ToBitmap())
-                return Task.FromResult<ImageSource>(
-                    Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
+            yield return GetDefaultIcon.Instance;
+            if (entry.IsDirectory)
+                yield return GetFromIconExtractIcon.Instance;
         }
 
         public IResult<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
@@ -132,6 +130,6 @@ namespace FileExplorer.Models
 
 
 
-      
+
     }
 }

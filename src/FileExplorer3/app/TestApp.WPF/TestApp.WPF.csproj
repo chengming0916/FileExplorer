@@ -74,6 +74,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppViewModel.cs" />
+    <Compile Include="Model\EntryModelIconExtractors.cs" />
     <Compile Include="Model\FileSystemInfoExMetadataProvider.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />
     <Compile Include="Utils\ImageTools.cs" />

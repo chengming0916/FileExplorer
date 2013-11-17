@@ -33,7 +33,16 @@ namespace FileExplorer.Models
 
         Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
 
-        Task<ImageSource> GetIconAsync(IEntryModel entry, int size);
+        //Task<ImageSource> GetIconAsync(IEntryModel entry, int size);
+
+        /// <summary>
+        /// Return the sequence of icon is extracted and returned, EntryViewModel will run each extractor 
+        /// and set Icon to it's GetIconForModel() result.
+        /// Default is GetDefaultIcon.Instance then GetFromProfile.Instance.
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry);
 
         string RootDisplayName { get; }
 
