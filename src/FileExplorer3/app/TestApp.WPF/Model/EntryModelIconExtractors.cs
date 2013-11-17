@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Tools;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,12 +27,33 @@ namespace FileExplorer.Models
                     {
                         bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
                             fsi.PIDL.Ptr, model.IsDirectory, false);
-                        return Task.FromResult<ImageSource>(
-                            Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
+                        if (bitmap != null)
+                            return Task.FromResult<ImageSource>(
+                                Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
                     }
                 }
 
             return Task.FromResult<ImageSource>(null);
+        }
+    }
+
+    public class GetImageFromImageExtractor : IEntryModelIconExtractor
+    {
+        public static GetImageFromImageExtractor Instance = new GetImageFromImageExtractor();
+
+        public Task<ImageSource> GetIconForModel(IEntryModel model)
+        {
+            return Task<ImageSource>.Run(() =>
+                {
+                    if (model != null && !String.IsNullOrEmpty(model.FullPath))
+                    {
+                        var bitmap = ImageExtractor.ExtractImage(model.FullPath, new Size(120, 90), true);
+                        if (bitmap != null)
+                            return (ImageSource)Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap);
+                    }
+                    return null;
+                });
+
         }
     }
 

@@ -83,7 +83,8 @@ namespace FileExplorer.Models
                 DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
                 retVal.AddRange(from fsi in di.GetFileSystemInfos()
                                 let m = new FileSystemInfoExModel(this, fsi)
-                                where filter(m) select m);
+                                where filter(m)
+                                select m);
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }
@@ -92,6 +93,12 @@ namespace FileExplorer.Models
         {
             yield return GetDefaultIcon.Instance;
             yield return GetFromSystemImageList.Instance;
+            if (!entry.IsDirectory)
+                if (entry.FullPath.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
+                    entry.FullPath.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||
+                    entry.FullPath.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase)
+                    )
+                    yield return GetImageFromImageExtractor.Instance;
         }
 
         public Task<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
@@ -138,6 +145,6 @@ namespace FileExplorer.Models
 
 
 
-        
+
     }
 }
