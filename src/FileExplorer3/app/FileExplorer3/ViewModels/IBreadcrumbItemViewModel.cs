@@ -21,6 +21,8 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
+
+        bool ShowCaption { get; set; }
         
         #endregion
     }

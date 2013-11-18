@@ -148,22 +148,15 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        public async Task NotifyChildSelectedAsync(IDirectoryNodeViewModel node, bool selected)
+        public async Task NotifyChildSelectionChangedAsync(IDirectoryNodeViewModel node, bool selected, Stack<IDirectoryNodeViewModel> path)
         {
             var model = node.CurrentDirectory.EntryModel;
-            IsChildSelected = selected;
-            SelectedChild = null;
-
-            //foreach (var sub in Subdirectories)
-            //    if (model.Profile.HierarchyComparer.CompareHierarchy(model, sub.CurrentDirectory.EntryModel)
-            //        == HierarchicalResult.Unrelated)
-            //    {
-            //        sub.IsChildSelected = false;
-            //        sub.IsSelected = false;
-            //    }
-
+            
+            path.Push(this);
             if (ParentNode != null)
-                await ParentNode.NotifyChildSelectedAsync(node, selected);
+                await ParentNode.NotifyChildSelectionChangedAsync(node, selected, path);
+            else //Root directory 
+                TreeModel.NotifySelectionChanged(path, selected);
         }
 
         public override bool Equals(object obj)
@@ -184,15 +177,14 @@ namespace FileExplorer.ViewModels
 
         protected void OnSelected()
         {
-            TreeModel.NotifySelected(this);
-            if (ParentNode != null)
-                ParentNode.NotifyChildSelectedAsync(this, true);
+            NotifyChildSelectionChangedAsync(this, true, 
+                    new Stack<IDirectoryNodeViewModel>());
         }
 
         protected void OnDeselected()
         {
-            if (ParentNode != null)
-                ParentNode.NotifyChildSelectedAsync(this, false);
+            NotifyChildSelectionChangedAsync(this, false, 
+                    new Stack<IDirectoryNodeViewModel>());
         }
 
         #endregion

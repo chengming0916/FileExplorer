@@ -24,17 +24,32 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        public virtual void NotifySelected(DirectoryNodeViewModel node)
+        public virtual void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected)
         {
-            if (SelectedViewModel != null)
-                SelectedViewModel.IsSelected = false;
-
-            if (_selectingEntry == null || !(_selectingEntry.Equals(node.CurrentDirectory.EntryModel)))
+            if (selected)
             {
-                _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { node.CurrentDirectory }));
+                
+
+                var selectedNode = path.Last();
+                if (SelectedViewModel != null)
+                    SelectedViewModel.IsSelected = false;
+
+                if (_selectingEntry == null || !(_selectingEntry.Equals(selectedNode.CurrentDirectory.EntryModel)))
+                    _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { selectedNode.CurrentDirectory }));
+
+                foreach (var item in _prevSelectedNodes)
+                    item.IsChildSelected = path.Contains(item);
+                foreach (var item in path)
+                    item.IsChildSelected = true;
+             
+
+                _selectingEntry = null;
+                SelectedViewModel = selectedNode;
             }
-            _selectingEntry = null;
-            SelectedViewModel = node;
+            else
+            {
+                _prevSelectedNodes = path;
+            }
         }
 
         protected virtual IDirectoryNodeBroadcastHandler[] getBroadcastHandlers(IEntryModel model)
@@ -47,6 +62,12 @@ namespace FileExplorer.ViewModels
 
         public virtual async Task SelectAsync(IEntryModel model)
         {
+            if (SelectedViewModel != null)
+            {
+                SelectedViewModel.IsSelected = false;
+                SelectedViewModel = null;
+            }
+
             if (model != null || _selectingEntry == null || !_selectingEntry.Equals(model))
             {
                 _selectingEntry = model;
@@ -60,6 +81,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
+        IEnumerable<IDirectoryNodeViewModel> _prevSelectedNodes = new List<IDirectoryNodeViewModel>();
         IDirectoryNodeViewModel _selectedViewModel = null;
         IEntryModel _selectingEntry = null, _currentBroadcast = null;
         IEventAggregator _events;

@@ -16,8 +16,25 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="BreadcrumbTreeItemTemplate" TargetType="{x:Type bc:BreadcrumbTreeItem}">
+    <ControlTemplate x:Key="BreadcrumbTreeItemTemplate" TargetType="{x:Type uc:BreadcrumbTreeItem}">
         <Grid HorizontalAlignment="Stretch" x:Name="baseGrid" >
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CaptionStates">
+                    <VisualState x:Name="ShowCaption" >
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="PART_CaptionButton"  Duration="0:0:1"
+                                             Storyboard.TargetProperty="MaxWidth" 
+                                             To="{Binding ActualWidth, ElementName=PART_CaptionButton}" />
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="HideCaption" >
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="PART_CaptionButton"  Duration="0:0:1"
+                                             Storyboard.TargetProperty="MaxWidth" To="0"  />
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
             <Grid.ColumnDefinitions>
                 <!-- Header -->
                 <ColumnDefinition Width="Auto"/>
@@ -36,7 +53,9 @@
                                  BorderThickness="{TemplateBinding BorderThickness}"
                                  SelectedBorderBrush="Transparent"
                                 >-->
-                    <Button Template="{StaticResource BaseButton}">
+                    <Button Template="{StaticResource BaseButton}" x:Name="PART_CaptionButton"
+                            MaxWidth="200"
+                            >
                         <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch" VerticalAlignment="Center"                                   
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" />
                     </Button>
@@ -87,16 +106,22 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <Style x:Key="BreadcrumbTreeItemStyle" TargetType="{x:Type bc:BreadcrumbTreeItem}">
+    <ItemsPanelTemplate x:Key="StackItemPanelTemplate">
+        <VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
+                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
+    </ItemsPanelTemplate>
+
+    <Style x:Key="BreadcrumbTreeItemStyle" TargetType="{x:Type uc:BreadcrumbTreeItem}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
         <Setter Property="OverflowedItemContainerStyle" Value="{Binding OverflowedItemContainerStyle, 
-            RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbTree}}}" />
+            RelativeSource={RelativeSource AncestorType={x:Type uc:BreadcrumbTree}}}" />
         <!--<Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>-->
         <Setter Property="Padding" Value="1,0,0,0"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="Template" Value="{StaticResource BreadcrumbTreeItemTemplate}" />
+        <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />
         <Style.Triggers>
             <!--This trigger is needed, because RelativeSource binding can only succeeds if the current MenuItem is already connected to its visual parent-->
             <Trigger Property="IsVisible" Value="True">
@@ -105,21 +130,10 @@
             </Trigger>
 
         </Style.Triggers>
+        
     </Style>
 
-    <Style TargetType="{x:Type bc:BreadcrumbTree}">
-        <!--<Setter Property="Background" Value="Gray"></Setter>-->
-        <!--<Setter Property="ItemTemplate" Value="{StaticResource breadcrumbTreeItemTemplate}" />-->
-        <Setter Property="ItemContainerStyle" Value="{StaticResource BreadcrumbTreeItemStyle}" />
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
-                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+  
 
 
 </ResourceDictionary>

@@ -148,25 +148,25 @@
             </Grid>
         </TabItem>
         <TabItem Header="BreadcrumbTree" IsSelected="True">
-            <bc:BreadcrumbTree x:Name="btree">
-                <bc:BreadcrumbTree.ItemContainerStyle>
-                    <Style TargetType="{x:Type bc:BreadcrumbTreeItem}" 
+            <uc:BreadcrumbTree x:Name="btree">
+                <uc:BreadcrumbTree.ItemContainerStyle>
+                    <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
                        BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
                     </Style>                    
-                </bc:BreadcrumbTree.ItemContainerStyle>
+                </uc:BreadcrumbTree.ItemContainerStyle>
                    
                 
-                <bc:BreadcrumbTree.ItemTemplate>
+                <uc:BreadcrumbTree.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Subitems}">
                         <TextBlock Text="{Binding Header}" />
                     </HierarchicalDataTemplate>
-                </bc:BreadcrumbTree.ItemTemplate>
-                <bc:BreadcrumbTree.LayoutTransform>
+                </uc:BreadcrumbTree.ItemTemplate>
+                <uc:BreadcrumbTree.LayoutTransform>
                     <ScaleTransform ScaleX="2" ScaleY="2" />
-                </bc:BreadcrumbTree.LayoutTransform>
-            </bc:BreadcrumbTree>
+                </uc:BreadcrumbTree.LayoutTransform>
+            </uc:BreadcrumbTree>
         </TabItem>
         <TabItem Header="Panels">
             <ItemsControl>
