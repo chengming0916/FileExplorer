@@ -11,7 +11,7 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels
 {
-    public class BreadcrumbItemViewModel : DirectoryNodeViewModel
+    public class BreadcrumbItemViewModel : DirectoryNodeViewModel, IBreadcrumbItemViewModel
     {
         #region Constructor
 
@@ -19,26 +19,34 @@ namespace FileExplorer.ViewModels
             IEntryModel curDirModel, IDirectoryNodeViewModel parentModel)
             : base(events, rootModel, curDirModel, parentModel)
         {
-        
+
         }
 
         #endregion
 
         #region Methods
 
-       
-      
+        public override IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel)
+        {
+            return new BreadcrumbItemViewModel(Events, TreeModel, entryModel, this);
+        }
+
+
         #endregion
 
         #region Data
 
-
+        bool _showCaption = true;
 
         #endregion
 
         #region Public Properties
 
-    
+        public bool ShowCaption
+        {
+            get { return _showCaption; }
+            set { _showCaption = value; NotifyOfPropertyChange(() => ShowCaption); }
+        }
 
         #endregion
     }

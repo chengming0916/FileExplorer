@@ -78,8 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
-    <Compile Include="BaseControls\BreadcrumbTree.cs" />
-    <Compile Include="BaseControls\BreadcrumbTreeItem.cs" />
+    <Compile Include="UserControls\BreadcrumbTree.cs" />
+    <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
     <Compile Include="BaseControls\DropDownList.cs" />
     <None Include="Obsoluted\OverflowPanel.cs" />
     <None Include="Obsoluted\OverflowItem.cs" />
@@ -241,7 +241,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Common\BreadcrumbTreeParts.xaml">
+    <Page Include="Themes\Common\BreadcrumbTree.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\BreadcrumbTreeItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -28,7 +28,7 @@ namespace FileExplorer.ViewModels
             //rootModels =
             //    rootModels.Union(
             //        rootModels.SelectMany(r => r.Profile.ListAsync(r, m => m.IsDirectory).Result))
-                //.ToArray();
+            //.ToArray();
             Subdirectories = new BindableCollection<IDirectoryNodeViewModel>(rootModels
                 .Select(r => new BreadcrumbItemViewModel(events, this, r, null)));
 
@@ -51,78 +51,24 @@ namespace FileExplorer.ViewModels
                          UpdateIsSelected.Instance
             };
         }
-    
-        protected override void OnViewAttached(object view, object context)
+
+        
+
+        public override void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected)
         {
-            base.OnViewAttached(view, context);
-            //_bcrumb = (view as FileExplorer.Views.BreadcrumbView).bcrumb;
-            //_bcrumb.AddValueChanged(BreadcrumbBase.SelectedValueProperty, (o, e) =>
-            //    {
-            //        Debug.WriteLine(_bcrumb.SelectedValue);
-            //        if (SelectedViewModel == null || !SelectedViewModel.Equals(_bcrumb.SelectedValue))
-            //        {
-            //            SelectedViewModel = _bcrumb.SelectedValue as IDirectoryNodeViewModel;
-            //            updateBreadcrumb(SelectedViewModel);
-            //            updateExternal(SelectedViewModel);
-            //        }
-            //    });
-            //updateBreadcrumb(base.Subdirectories.FirstOrDefault());
+            base.NotifySelectionChanged(path, selected);
+            if (selected)
+            {
+                if (path.Count() > 0)
+                    (path.First() as IBreadcrumbItemViewModel).ShowCaption = (path.Count() <= 1);
+            }
         }
 
-        /// <summary>
-        /// Update Breadcrumb for SelectedValue or Hierarchy.
-        /// </summary>
-        /// <param name="selectedViewModel"></param>
-        protected void updateBreadcrumb(IDirectoryNodeViewModel selectedViewModel)
+
+        public override async Task SelectAsync(IEntryModel model)
         {
-            //_bcrumb.SetValue(BreadcrumbBase.SelectedValueProperty, selectedViewModel);
-            //if (selectedViewModel == null)
-            //    _bcrumb.SetValue(BreadcrumbBase.ItemsSourceProperty, null);
-            //else _bcrumb.SetValue(BreadcrumbBase.ItemsSourceProperty,
-            //     selectedViewModel.GetHierarchy(true).Reverse());
-
-            //_bcrumb.SetValue(BreadcrumbBase.TextProperty,
-            //    selectedViewModel == null ? "" : selectedViewModel.CurrentDirectory.EntryModel.FullPath);
+            await base.SelectAsync(model);
         }
-
-        /// <summary>
-        /// Breadcrumb selected, so update external (by raising event)
-        /// </summary>
-        /// <param name="selectedViewModel"></param>
-        protected void updateExternal(IDirectoryNodeViewModel selectedViewModel)
-        {
-            //if (selectedViewModel == null) //Root   
-            //    _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { }));
-            //else _events.Publish(new SelectionChangedEvent(this,
-            //   new IEntryViewModel[] { selectedViewModel.CurrentDirectory }));
-        }
-
-        //protected override async Task SelectAsync(IEntryModel model)
-        //{
-        //    await base.SelectAsync(model);
-        //    //if (_bcrumb.RootItemsSource != null)
-        //    //    foreach (var rootNodes in _bcrumb.RootItemsSource.Cast<IDirectoryNodeViewModel>())
-        //    //    {
-        //    //        await rootNodes.BroadcastSelectAsync(model, (foundModel) =>
-        //    //            {
-        //    //                SelectedViewModel = foundModel;
-        //    //                updateBreadcrumb(SelectedViewModel);
-        //    //            });
-        //    //    }
-
-        //    //SelectedViewModel = BreadcrumbItemViewModel.FromEntryModel(_events, this, model);
-        //    //updateBreadcrumb(SelectedViewModel);
-        //}
-
-        //public void NotifySelected(DirectoryNodeViewModel node)
-        //{
-        //    _events.Publish(new SelectionChangedEvent(this,
-        //        new IEntryViewModel[] { node.CurrentDirectory }));
-
-        //    _selectedViewModel = node;
-        //    NotifyOfPropertyChange(() => SelectedEntry);
-        //    NotifyOfPropertyChange(() => SelectedViewModel);
-        //}
 
         #endregion
 

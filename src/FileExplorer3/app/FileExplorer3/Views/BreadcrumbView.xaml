@@ -14,27 +14,28 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbParts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeParts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <bc:BreadcrumbTree ItemsSource="{Binding Subdirectories}" DockPanel.Dock="Top"
+        <uc:BreadcrumbTree ItemsSource="{Binding Subdirectories}" DockPanel.Dock="Top"
                            ItemTemplate="{StaticResource DirectoryNodeItemTemplate}"
                            >
-            <bc:BreadcrumbTree.ItemContainerStyle>
-                <Style TargetType="{x:Type bc:BreadcrumbTreeItem}" 
+            <uc:BreadcrumbTree.ItemContainerStyle>
+                <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
                        BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded2, Mode=TwoWay}"  />
-                    <Setter Property="IsCurrentSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
+                    <Setter Property="IsCurrentSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />                    
                     <Setter Property="SelectedChild" Value="{Binding SelectedChild, Mode=TwoWay}"  />
                     <Setter Property="IsChildSelected" Value="{Binding IsChildSelected, Mode=TwoWay}"  />
+                    <Setter Property="IsCaptionVisible" Value="{Binding ShowCaption, Mode=TwoWay}"  />
                 </Style>
-            </bc:BreadcrumbTree.ItemContainerStyle>
+            </uc:BreadcrumbTree.ItemContainerStyle>
 
-        </bc:BreadcrumbTree>
+        </uc:BreadcrumbTree>
         <!--<uc:BreadcrumbBase x:Name="bcrumb" 
                            RootItemsSource="{Binding Subdirectories}" 
                            DropDownHeight="200" DropDownWidth="300"
