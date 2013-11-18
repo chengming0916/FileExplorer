@@ -13,6 +13,7 @@
     <conv:FormatFileSizeConverter x:Key="ffs" />
     <conv:BoolToVisibilityCollapsedConverter x:Key="btvc" />
     <conv:FlipBoolConverter x:Key="fb" />
+    <conv:VisibilityToBoolConverter x:Key="vtb" />
     
     <!--
     

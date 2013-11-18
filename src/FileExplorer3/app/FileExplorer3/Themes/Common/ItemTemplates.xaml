@@ -73,5 +73,18 @@
             ContentTemplate="{StaticResource GridLabelTemplate}" />
     </HierarchicalDataTemplate>
 
+    <HierarchicalDataTemplate x:Key="BreadcrumbMenuNodeItemTemplate"  
+                              ItemsSource="{Binding Subdirectories}"
+                              DataType="{x:Type vm:DirectoryNodeViewModel}">
+        <ContentPresenter Content="{Binding CurrentDirectory}" Height="16"
+            ContentTemplate="{StaticResource SmallIconItemTemplate}" />
+    </HierarchicalDataTemplate>
+
+    <HierarchicalDataTemplate x:Key="BreadcrumbNodeItemTemplate"  
+                              ItemsSource="{Binding Subdirectories}"
+                              DataType="{x:Type vm:DirectoryNodeViewModel}">
+        <TextBlock Text="{Binding CurrentDirectory.EntryModel.Label}" Padding="2,0" />
+    </HierarchicalDataTemplate>
+
 
 </ResourceDictionary>

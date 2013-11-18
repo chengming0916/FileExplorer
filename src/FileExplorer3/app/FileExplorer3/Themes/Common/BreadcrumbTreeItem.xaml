@@ -46,7 +46,7 @@
 
             <bc:HotTrack Grid.Column="0" Grid.Row="0"   x:Name="headerHL"  
                          SelectedBorderBrush="{TemplateBinding BorderBrush}" 
-                         BorderThickness="{TemplateBinding BorderThickness}" >
+                         BorderThickness="1,0" >
                 <StackPanel Orientation="Horizontal">
 
                     <!--<bc:HotTrack x:Name="headerHL"  
@@ -74,7 +74,7 @@
                                         RelativeSource={RelativeSource TemplatedParent}}"
                                   SelectedValue="{Binding SelectedChild, Mode=TwoWay, 
                                         RelativeSource={RelativeSource TemplatedParent}}"
-                                  ItemTemplate="{TemplateBinding ItemTemplate}" />
+                                  ItemTemplate="{TemplateBinding MenuItemTemplate}" />
                     </bc:HotTrack>
                 </StackPanel>
             </bc:HotTrack>
@@ -122,6 +122,8 @@
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="Template" Value="{StaticResource BreadcrumbTreeItemTemplate}" />
         <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />
+        <Setter Property="MenuItemTemplate" Value="{Binding MenuItemTemplate, 
+            RelativeSource={RelativeSource AncestorType={x:Type uc:BreadcrumbTree}}}" />
         <Style.Triggers>
             <!--This trigger is needed, because RelativeSource binding can only succeeds if the current MenuItem is already connected to its visual parent-->
             <Trigger Property="IsVisible" Value="True">

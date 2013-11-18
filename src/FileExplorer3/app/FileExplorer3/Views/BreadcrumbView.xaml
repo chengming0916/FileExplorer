@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbParts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Switch.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -21,21 +22,41 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <uc:BreadcrumbTree ItemsSource="{Binding Subdirectories}" DockPanel.Dock="Top"
-                           ItemTemplate="{StaticResource DirectoryNodeItemTemplate}"
+        <bc:Switch Template="{StaticResource BreadcrumbSwitchTemplate}"
+                   BorderBrush="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"
+                   BorderThickness="1"
+                   >
+            <bc:Switch.Header>
+                <Image Source="{Binding SelectedViewModel.CurrentDirectory.Icon}" />
+            </bc:Switch.Header>
+            <bc:Switch.ContentOn>
+                <uc:BreadcrumbTree x:Name="btree" ItemsSource="{Binding Subdirectories}" DockPanel.Dock="Top" BorderThickness="0"
+                           MenuItemTemplate="{StaticResource BreadcrumbMenuNodeItemTemplate}"
+                           ItemTemplate="{StaticResource BreadcrumbNodeItemTemplate}"
                            >
-            <uc:BreadcrumbTree.ItemContainerStyle>
-                <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
-                       BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded2, Mode=TwoWay}"  />
-                    <Setter Property="IsCurrentSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />                    
-                    <Setter Property="SelectedChild" Value="{Binding SelectedChild, Mode=TwoWay}"  />
-                    <Setter Property="IsChildSelected" Value="{Binding IsChildSelected, Mode=TwoWay}"  />
-                    <Setter Property="IsCaptionVisible" Value="{Binding ShowCaption, Mode=TwoWay}"  />
-                </Style>
-            </uc:BreadcrumbTree.ItemContainerStyle>
+                    <uc:BreadcrumbTree.ItemContainerStyle>
+                        <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
+                       BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >                            
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
+                            <Setter Property="IsCurrentSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
+                            <Setter Property="SelectedChild" Value="{Binding SelectedChild, Mode=TwoWay}"  />
+                            <Setter Property="IsChildSelected" Value="{Binding IsChildSelected, Mode=TwoWay}"  />
+                            <Setter Property="IsCaptionVisible" Value="{Binding ShowCaption, Mode=TwoWay}"  />
+                        </Style>
+                    </uc:BreadcrumbTree.ItemContainerStyle>
 
-        </uc:BreadcrumbTree>
+                </uc:BreadcrumbTree>
+            </bc:Switch.ContentOn>
+            <bc:Switch.ContentOff>
+                <bc:SuggestBoxBase x:Name="sbox" BorderThickness="0" Text="{Binding SelectedEntryPath}" >
+                    
+                </bc:SuggestBoxBase>
+            </bc:Switch.ContentOff>
+            <bc:Switch.LayoutTransform>
+                <ScaleTransform ScaleX="2" ScaleY="2" />
+            </bc:Switch.LayoutTransform>
+        </bc:Switch>
+       
         <!--<uc:BreadcrumbBase x:Name="bcrumb" 
                            RootItemsSource="{Binding Subdirectories}" 
                            DropDownHeight="200" DropDownWidth="300"

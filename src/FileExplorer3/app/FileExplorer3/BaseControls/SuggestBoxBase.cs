@@ -279,7 +279,7 @@ namespace FileExplorer.BaseControls
             get { return (IList<object>)GetValue(SuggestionsProperty); }
             set { SetValue(SuggestionsProperty, value); }
         }
-
+        
         #endregion
 
         #region HeaderTemplate

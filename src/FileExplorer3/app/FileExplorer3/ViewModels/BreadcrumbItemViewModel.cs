@@ -36,11 +36,17 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        bool _showCaption = true;
+        bool _showCaption = true; bool _isShown = false;
 
         #endregion
 
         #region Public Properties
+
+        public bool IsShown
+        {
+            get { return _isShown; }
+            set { _isShown = value; if (value) LoadAsync(false); NotifyOfPropertyChange(() => IsShown); }
+        }
 
         public bool ShowCaption
         {
