@@ -14,6 +14,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Panels.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/EditBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Switch.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/HotTrack.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TextBox.xaml" />
         

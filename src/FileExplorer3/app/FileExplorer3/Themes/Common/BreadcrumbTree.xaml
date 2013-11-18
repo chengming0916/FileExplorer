@@ -18,11 +18,21 @@
     </ResourceDictionary.MergedDictionaries>
 
 
+    <ControlTemplate x:Key="BreadcrumbTreeTemplate" TargetType="{x:Type uc:BreadcrumbTree}">
+        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+            <Grid>
+                <ItemsPresenter />
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
     <Style TargetType="{x:Type uc:BreadcrumbTree}">
         <!--<Setter Property="Background" Value="Gray"></Setter>-->
         <!--<Setter Property="ItemTemplate" Value="{StaticResource breadcrumbTreeItemTemplate}" />-->
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource BreadcrumbTreeItemStyle}" />
         <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />
+        <Setter Property="Template" Value="{StaticResource BreadcrumbTreeTemplate}" />
     </Style>
 
 

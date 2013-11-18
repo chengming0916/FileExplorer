@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
+    <Compile Include="BaseControls\Switch.cs" />
+    <Compile Include="Defines\Converters\VisibilityToBoolConverter.cs" />
     <Compile Include="UserControls\BreadcrumbTree.cs" />
     <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
     <Compile Include="BaseControls\DropDownList.cs" />
@@ -246,6 +248,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Common\BreadcrumbTreeItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Switch.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

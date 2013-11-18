@@ -14,8 +14,8 @@ namespace FileExplorer.UserControls
 
         static BreadcrumbTree()
         {
-            //DefaultStyleKeyProperty.OverrideMetadata(typeof(BreadcrumbTree),
-            //    new FrameworkPropertyMetadata(typeof(BreadcrumbTree)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(BreadcrumbTree),
+                new FrameworkPropertyMetadata(typeof(BreadcrumbTree)));
         }
 
         #endregion
@@ -42,6 +42,15 @@ namespace FileExplorer.UserControls
         {
             get { return (Style)GetValue(OverflowedItemContainerStyleProperty); }
             set { SetValue(OverflowedItemContainerStyleProperty, value); }
+        }
+
+        public static readonly DependencyProperty MenuItemTemplateProperty =
+                 DependencyProperty.Register("MenuItemTemplate", typeof(DataTemplate), typeof(BreadcrumbTree));
+
+        public DataTemplate MenuItemTemplate
+        {
+            get { return (DataTemplate)GetValue(MenuItemTemplateProperty); }
+            set { SetValue(MenuItemTemplateProperty, value); }
         }
         
         #endregion

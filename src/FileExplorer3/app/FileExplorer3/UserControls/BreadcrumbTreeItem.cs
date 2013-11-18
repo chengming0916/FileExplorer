@@ -20,6 +20,11 @@ namespace FileExplorer.UserControls
                 new FrameworkPropertyMetadata(typeof(BreadcrumbTreeItem)));
         }
 
+        public BreadcrumbTreeItem()
+        {
+     
+        }
+
         #endregion
 
         #region Methods
@@ -122,6 +127,15 @@ namespace FileExplorer.UserControls
         {
             get { return (bool)GetValue(IsCaptionVisibleProperty); }
             set { SetValue(IsCaptionVisibleProperty, value); }
+        }
+
+        public static readonly DependencyProperty MenuItemTemplateProperty =
+                BreadcrumbTree.MenuItemTemplateProperty.AddOwner(typeof(BreadcrumbTreeItem));
+
+        public DataTemplate MenuItemTemplate
+        {
+            get { return (DataTemplate)GetValue(MenuItemTemplateProperty); }
+            set { SetValue(MenuItemTemplateProperty, value); }
         }
 
         

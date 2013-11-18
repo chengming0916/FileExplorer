@@ -21,23 +21,8 @@ namespace FileExplorer.ViewModels
             IEntryModel[] rootModels)
             : base(events, rootModels)
         {
-            //Label = Subdirectories.First().CurrentDirectory.EntryModel.Profile.RootDisplayName;
-            //Icon = Subdirectories.First().CurrentDirectory.EntryModel.Profile.GetIconAsync(null, 32).Result;
-
-            //_events = events;
-            //rootModels =
-            //    rootModels.Union(
-            //        rootModels.SelectMany(r => r.Profile.ListAsync(r, m => m.IsDirectory).Result))
-            //.ToArray();
             Subdirectories = new BindableCollection<IDirectoryNodeViewModel>(rootModels
                 .Select(r => new BreadcrumbItemViewModel(events, this, r, null)));
-
-
-            //_rootViewModel = new BreadcrumbItemViewModel(events, this, rootModels);
-
-            //HierarchyHelper = new BreadcrumbHierarchyHelper(this);
-
-            //new EntryViewModelHierarchyHelper(rootModels, m => EntryViewModel.FromEntryModel(m), m => m.IsDirectory);
         }
 
         #endregion
@@ -52,7 +37,10 @@ namespace FileExplorer.ViewModels
             };
         }
 
-        
+        public override void NotifyOfPropertyChange(string propertyName = "")
+        {
+            base.NotifyOfPropertyChange(propertyName);
+        }
 
         public override void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected)
         {
@@ -74,24 +62,18 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        //BreadcrumbBase _bcrumb = null;
-        //BreadcrumbItemViewModel _rootViewModel;
-        //IHierarchyHelper _hierarchyHelper;
-        //object _selectedValue;
-        private IEventAggregator _events;
+        private string _selectedEntryPath;
 
         #endregion
 
         #region Public Properties
 
-        //public IHierarchyHelper HierarchyHelper { get { return _hierarchyHelper; } set { _hierarchyHelper = value; NotifyOfPropertyChange(() => HierarchyHelper); } }
-        //public BreadcrumbItemViewModel RootViewModel { get { return _rootViewModel; } set { _rootViewModel = value; NotifyOfPropertyChange(() => RootViewModel); } }
 
-
-        //public override IObservableCollection<IDirectoryNodeViewModel> Subdirectories
-        //{
-        //    get { return base.Subdirectories; }
-        //}
+        public string SelectedEntryPath
+        {
+            get { return _selectedEntryPath; }
+            set { _selectedEntryPath = value; NotifyOfPropertyChange(() => SelectedEntryPath); }
+        }
 
         #endregion
 

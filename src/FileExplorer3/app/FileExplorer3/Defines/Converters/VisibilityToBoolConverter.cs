@@ -12,8 +12,8 @@ namespace QuickZip.Converters
     /// This class simply converts a Boolean to a Visibility
     /// with an optional invert
     /// </summary>
-    [ValueConversion(typeof(Boolean), typeof(Visibility))]
-    public class BoolToVisibilityConverter : IValueConverter
+    [ValueConversion(typeof(Visibility), typeof(Boolean))]
+    public class VisibilityToBoolConverter : IValueConverter
     {
         #region IValueConverter implementation
         /// <summary>
@@ -25,19 +25,12 @@ namespace QuickZip.Converters
             if (value == null)
                 return Binding.DoNothing;
 
-            Boolean input = false;
-            Boolean.TryParse(value.ToString(), out input);
+            Visibility visibility = Visibility.Visible;
+            Enum.TryParse(value.ToString(), out visibility);
 
-            Boolean invertActive = true;
-            if (parameter != null)
-                Boolean.TryParse(parameter.ToString(), out invertActive);
-
-            if (input)
-            {
-                return invertActive ? Visibility.Visible : Visibility.Collapsed;
-            }
-            else
-                return invertActive ? Visibility.Collapsed : Visibility.Visible;
+            if (visibility == Visibility.Visible)
+                return true;
+            return false;
 
         }
 
@@ -47,9 +40,7 @@ namespace QuickZip.Converters
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
-            if ((Visibility)value != Visibility.Hidden)
-                return true;
-            return false;
+            throw new NotImplementedException("Not implemented");
         }
         #endregion
     }
