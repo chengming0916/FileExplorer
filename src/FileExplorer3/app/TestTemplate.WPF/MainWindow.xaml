@@ -12,7 +12,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeParts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTree.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -148,16 +148,23 @@
             </Grid>
         </TabItem>
         <TabItem Header="BreadcrumbTree" IsSelected="True">
-            <uc:BreadcrumbTree x:Name="btree">
+            <uc:BreadcrumbTree x:Name="btree" Height="30">
                 <uc:BreadcrumbTree.ItemContainerStyle>
                     <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
                        BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
-                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
-                    </Style>                    
+                        <Setter Property="IsCurrentSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
+                        <Setter Property="SelectedChild" Value="{Binding SelectedChild, Mode=TwoWay}"  />
+                        <Setter Property="IsChildSelected" Value="{Binding IsChildSelected, Mode=TwoWay}"  />
+                        <!--<Setter Property="IsCaptionVisible" Value="{Binding ShowCaption, Mode=TwoWay}"  />-->                       
+                    </Style>
                 </uc:BreadcrumbTree.ItemContainerStyle>
-                   
-                
+                <uc:BreadcrumbTree.MenuItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Header}" />
+                    </DataTemplate>
+                </uc:BreadcrumbTree.MenuItemTemplate>
+
                 <uc:BreadcrumbTree.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Subitems}">
                         <TextBlock Text="{Binding Header}" />

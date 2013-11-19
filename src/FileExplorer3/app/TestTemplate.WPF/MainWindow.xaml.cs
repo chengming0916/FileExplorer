@@ -57,7 +57,7 @@ namespace TestTemplate.WPF
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();            
-            //setupBreadcrumb();
+            setupBreadcrumb();
             setupBreadcrumbTree();
         }
 
