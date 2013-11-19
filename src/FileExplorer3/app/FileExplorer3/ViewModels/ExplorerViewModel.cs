@@ -11,7 +11,6 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels
 {
-
     public class ExplorerViewModel : Screen, IExplorerViewModel, IHandle<SelectionChangedEvent>
     {
         #region Cosntructor
@@ -43,6 +42,8 @@ namespace FileExplorer.ViewModels
                 if (model != null)
                 {
                     DirectoryTreeModel.SelectAsync(model);
+                    FileListModel.LoadAsync(model, null);
+                    BreadcrumbModel.SelectAsync(model);
                     return;
                 }
             }

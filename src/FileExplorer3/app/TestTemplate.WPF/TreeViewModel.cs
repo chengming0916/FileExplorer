@@ -80,8 +80,9 @@ namespace TestTemplate.WPF
 
         private string _header = "Header";
         private string _path = "";
-        private bool _isExpanded = false;
+        private bool _isExpanded = false, _isChildSelected = false;
         private bool _isSelected = false;
+        private object _selectedChild = null;
         private TreeNodeViewModel _parent = null;
         private ObservableCollection<TreeNodeViewModel> _subItems = new ObservableCollection<TreeNodeViewModel>();
 
@@ -93,6 +94,31 @@ namespace TestTemplate.WPF
         public string Path { get { return _path; } set { _path = value; PropertyChanged(this, new PropertyChangedEventArgs("Path")); } }
         public bool IsExpanded { get { return _isExpanded; } set { _isExpanded = value; PropertyChanged(this, new PropertyChangedEventArgs("IsExpanded")); } }
         public bool IsSelected { get { return _isSelected; } set { _isSelected = value; PropertyChanged(this, new PropertyChangedEventArgs("IsSelected")); } }
+        public virtual bool IsChildSelected
+        {
+            get { return _isChildSelected; }
+            set
+            {
+                if (_isChildSelected != value)
+                {
+                    _isChildSelected = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("IsChildSelected"));
+                }
+            }
+        }
+
+        public object SelectedChild
+        {
+            get { return _selectedChild; }
+            set
+            {
+                _selectedChild = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("SelectedChild"));
+                if (value is TreeNodeViewModel)
+
+                    (value as TreeNodeViewModel).IsSelected = true;
+            }
+        }
         public ObservableCollection<TreeNodeViewModel> Subitems { get { return _subItems; } }
 
         public event PropertyChangedEventHandler PropertyChanged = (o, e) => { };
