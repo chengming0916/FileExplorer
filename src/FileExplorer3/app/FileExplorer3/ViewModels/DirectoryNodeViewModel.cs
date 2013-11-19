@@ -187,6 +187,8 @@ namespace FileExplorer.ViewModels
                     new Stack<IDirectoryNodeViewModel>());
         }
 
+  
+
         #endregion
 
         #region Data
@@ -194,7 +196,7 @@ namespace FileExplorer.ViewModels
         NodeState _state = NodeState.IsCreated;
         string _error = null;
         bool _isSelected = false;
-        bool _isExpanded = false, _isExpanded2 = false;
+        bool _isExpanded = false;
         bool _isChildSelected = false;
         object _selectedChild = null;
         protected bool _expandWhenBroadcastSelect = true;
@@ -246,16 +248,7 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        public bool IsExpanded2
-        {
-            get { return _isExpanded2; }
-            set
-            {
-                _isExpanded2 = value;
-                NotifyOfPropertyChange(() => IsExpanded2);
-                if (IsExpanded2) OnExpanded(); else OnCollapsed();
-            }
-        }
+      
 
         public bool IsDummyNode { get { return CurrentDirectory == null; } }
 
@@ -267,18 +260,22 @@ namespace FileExplorer.ViewModels
                 if (_isSelected != value)
                 {
                     _isSelected = value;
-                    NotifyOfPropertyChange(() => IsSelected); if (IsSelected) OnSelected(); else OnDeselected();
+                    NotifyOfPropertyChange(() => IsSelected);
+                    if (IsSelected) OnSelected(); else OnDeselected();
                 }
             }
         }
 
-        public bool IsChildSelected
+        public virtual bool IsChildSelected
         {
             get { return _isChildSelected; }
             set
             {
-                _isChildSelected = value;
-                NotifyOfPropertyChange(() => IsChildSelected);
+                if (_isChildSelected != value)
+                {
+                    _isChildSelected = value;
+                    NotifyOfPropertyChange(() => IsChildSelected);
+                }
             }
         }
 

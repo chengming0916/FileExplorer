@@ -27,8 +27,8 @@ namespace FileExplorer.ViewModels
             StatusbarModel = new StatusbarViewModel(this, events);
 
             events.Subscribe(this);
-
         }
+            
 
         #endregion
 

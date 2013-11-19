@@ -29,7 +29,7 @@
                 </Grid.ColumnDefinitions>
 
                 <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Stretch"
-                                  IsChecked="{Binding IsSwitchOn, RelativeSource={RelativeSource TemplatedParent}}" 
+                                  IsChecked="{Binding IsSwitchOn, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" 
                                   Width="{Binding ActualHeight, ElementName=PART_Toggle}"
                                   Template="{StaticResource BaseButton}" Background="Transparent" >
                     <ContentControl ContentTemplate="{TemplateBinding HeaderTemplate}"  
@@ -40,9 +40,9 @@
                     <ContentPresenter Content="{TemplateBinding ContentOn}" 
                               Visibility="{Binding IsSwitchOn,
                                 RelativeSource={RelativeSource TemplatedParent},
-                                Converter={StaticResource btvc}}" />
+                                Converter={StaticResource btvc},Mode=OneWay}" />
                     <ContentPresenter Content="{TemplateBinding ContentOff}" Visibility="{Binding IsSwitchOn,
-                RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource fbtvc}}" />
+                RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource fbtvc},Mode=OneWay}" />
                 </Grid>
             </Grid>
         </Border>

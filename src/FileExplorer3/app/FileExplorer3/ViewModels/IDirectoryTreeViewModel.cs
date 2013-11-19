@@ -14,6 +14,8 @@ namespace FileExplorer.ViewModels
         Task SelectAsync(IEntryModel model);
         IEntryModel SelectedEntry { get; set; }
         IEntryModel SelectingEntry { get; }
+
+        IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get; }
     }
 
     public interface IDirectoryNodeViewModel

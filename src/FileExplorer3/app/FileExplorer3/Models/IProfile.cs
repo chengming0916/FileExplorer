@@ -10,6 +10,7 @@ using System.Windows.Media;
 #endif
 using Caliburn.Micro;
 using FileExplorer.Defines;
+using FileExplorer.BaseControls;
 
 namespace FileExplorer.Models
 {
@@ -21,6 +22,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Methods
+
+        ISuggestSource GetSuggestSource();
 
         IComparer<IEntryModel> GetComparer(ColumnInfo column);
 

@@ -43,8 +43,12 @@ namespace FileExplorer.BaseControls
             var txtBindingExpr = this.GetBindingExpression(TextBox.TextProperty);
             if (txtBindingExpr == null)
                 return;
-            var value = HierarchyHelper.GetItem(RootItem, Text);
-            if (value != null)
+
+            bool valid = true;
+            if (HierarchyHelper != null)
+                valid = HierarchyHelper.GetItem(RootItem, Text) != null;
+
+            if (valid)
             {
                 if (txtBindingExpr != null)
                     txtBindingExpr.UpdateSource();
@@ -65,16 +69,19 @@ namespace FileExplorer.BaseControls
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
             base.OnTextChanged(e);
-            var suggestSource = SuggestSource;
+            var suggestSources = SuggestSources;
             var hierarchyHelper = HierarchyHelper;
             string text = Text;
             object data = RootItem;
             IsHintVisible = String.IsNullOrEmpty(text);
 
-            if (IsEnabled && suggestSource != null)
+            if (IsEnabled && suggestSources != null)
                 Task.Run(async () =>
                     {
-                        return await suggestSource.SuggestAsync(data, text, hierarchyHelper);
+                        var tasks = from s in suggestSources select
+                                     s.SuggestAsync(data, text, hierarchyHelper);
+                        await Task.WhenAll(tasks);
+                        return tasks.SelectMany(tsk => tsk.Result).Distinct().ToList();
                     }).ContinueWith(
                     (pTask) =>
                     {
@@ -114,13 +121,14 @@ namespace FileExplorer.BaseControls
             DependencyProperty.Register("HierarchyHelper", typeof(IHierarchyHelper),
             typeof(SuggestBox), new UIPropertyMetadata(new PathHierarchyHelper("Parent", "Value", "SubEntries")));
 
-        public static readonly DependencyProperty SuggestSourceProperty = DependencyProperty.Register(
-            "SuggestSource", typeof(ISuggestSource), typeof(SuggestBox), new PropertyMetadata(new AutoSuggestSource()));
+        public static readonly DependencyProperty SuggestSourcesProperty = DependencyProperty.Register(
+            "SuggestSources", typeof(IEnumerable<ISuggestSource>), typeof(SuggestBox), new PropertyMetadata(
+                new List<ISuggestSource>(new [] { new AutoSuggestSource() })));
 
-        public ISuggestSource SuggestSource
+        public IEnumerable<ISuggestSource> SuggestSources
         {
-            get { return (ISuggestSource)GetValue(SuggestSourceProperty); }
-            set { SetValue(SuggestSourceProperty, value); }
+            get { return (IEnumerable<ISuggestSource>)GetValue(SuggestSourcesProperty); }
+            set { SetValue(SuggestSourcesProperty, value); }
         }
         #endregion
 

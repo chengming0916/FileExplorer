@@ -24,7 +24,7 @@
     <Grid>
         <bc:Switch Template="{StaticResource BreadcrumbSwitchTemplate}"
                    BorderBrush="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"
-                   BorderThickness="1"
+                   BorderThickness="1" IsSwitchOn="{Binding ShowBreadcrumb, Mode=TwoWay}"
                    >
             <bc:Switch.Header>
                 <Image Source="{Binding SelectedViewModel.CurrentDirectory.Icon}" />
@@ -48,13 +48,15 @@
                 </uc:BreadcrumbTree>
             </bc:Switch.ContentOn>
             <bc:Switch.ContentOff>
-                <bc:SuggestBoxBase x:Name="sbox" BorderThickness="0" Text="{Binding SelectedEntryPath}" >
+                <bc:SuggestBox x:Name="sbox" BorderThickness="0" Text="{Binding SuggestedPath, UpdateSourceTrigger=Explicit}"
+                               DisplayMemberPath="FullPath" ValuePath="FullPath" IsEnabled="{Binding ShowBreadcrumb, Mode=OneWayToSource}"
+                               SuggestSources="{Binding SuggestSources}" HierarchyHelper="{x:Null}">
                     
-                </bc:SuggestBoxBase>
+                </bc:SuggestBox>
             </bc:Switch.ContentOff>
-            <bc:Switch.LayoutTransform>
+            <!--<bc:Switch.LayoutTransform>
                 <ScaleTransform ScaleX="2" ScaleY="2" />
-            </bc:Switch.LayoutTransform>
+            </bc:Switch.LayoutTransform>-->
         </bc:Switch>
        
         <!--<uc:BreadcrumbBase x:Name="bcrumb" 

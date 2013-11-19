@@ -24,27 +24,35 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
+        protected void BroadcastDirectoryChanged(IEntryViewModel viewModel)
+        {
+            _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { viewModel }));
+        }
+
         public virtual void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected)
         {
             if (selected)
             {
-                
-
                 var selectedNode = path.Last();
+
                 if (SelectedViewModel != null)
                     SelectedViewModel.IsSelected = false;
 
-                if (_selectingEntry == null || !(_selectingEntry.Equals(selectedNode.CurrentDirectory.EntryModel)))
-                    _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { selectedNode.CurrentDirectory }));
+                if (_selectingEntry == null ||
+                    !(_selectingEntry.Equals(selectedNode.CurrentDirectory.EntryModel)))
+                {
+                    BroadcastDirectoryChanged(selectedNode.CurrentDirectory);
+                }
 
                 foreach (var item in _prevSelectedNodes)
                     item.IsChildSelected = path.Contains(item);
                 foreach (var item in path)
                     item.IsChildSelected = true;
-             
+
 
                 _selectingEntry = null;
                 SelectedViewModel = selectedNode;
+                
             }
             else
             {
@@ -62,11 +70,11 @@ namespace FileExplorer.ViewModels
 
         public virtual async Task SelectAsync(IEntryModel model)
         {
-            if (SelectedViewModel != null)
-            {
-                SelectedViewModel.IsSelected = false;
-                SelectedViewModel = null;
-            }
+            //if (SelectedViewModel != null)
+            //{
+            //    SelectedViewModel.IsSelected = false;
+            //    SelectedViewModel = null;
+            //}
 
             if (model != null || _selectingEntry == null || !_selectingEntry.Equals(model))
             {
@@ -114,8 +122,7 @@ namespace FileExplorer.ViewModels
             get { return _selectedViewModel == null ? null : _selectedViewModel.CurrentDirectory.EntryModel; }
             set
             {
-               
-                    SelectAsync(value);
+                SelectAsync(value);
             }
         }
 
