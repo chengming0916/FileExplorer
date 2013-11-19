@@ -76,6 +76,7 @@
     <Compile Include="AppViewModel.cs" />
     <Compile Include="Model\EntryModelIconExtractors.cs" />
     <Compile Include="Model\FileSystemInfoExMetadataProvider.cs" />
+    <Compile Include="Model\ProfileSuggestionSource.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />
     <Compile Include="Utils\ImageTools.cs" />
     <Compile Include="Utils\SystemImageList.cs" />

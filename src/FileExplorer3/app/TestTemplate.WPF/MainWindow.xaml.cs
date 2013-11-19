@@ -82,7 +82,7 @@ namespace TestTemplate.WPF
             breadcrumbCore.RootItemsSource = fvm.SubDirectories;
 
             //SuggestBoxes            
-            suggestBoxDummy.SuggestSource = new DummySuggestSource();
+            suggestBoxDummy.SuggestSources = new List<ISuggestSource>(new [] { new DummySuggestSource() });
             suggestBoxAuto.RootItem = fvm;
 
             suggestBoxAuto2.HierarchyHelper = suggestBoxAuto.HierarchyHelper =
@@ -90,7 +90,7 @@ namespace TestTemplate.WPF
 
             //suggestBoxAuto2
             suggestBoxAuto2.RootItem = FakeViewModel.GenerateFakeViewModels(TimeSpan.FromSeconds(0.5));
-            suggestBoxAuto2.SuggestSource = new AutoSuggestSource(); //This is default value, suggest based on HierarchyLister.List()
+            suggestBoxAuto2.SuggestSources = new List<ISuggestSource>(new[] { new AutoSuggestSource() }); //This is default value, suggest based on HierarchyLister.List()
 
 
             //breadcrumb

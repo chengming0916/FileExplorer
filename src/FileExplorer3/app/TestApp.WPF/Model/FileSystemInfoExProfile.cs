@@ -45,6 +45,16 @@ namespace FileExplorer.Models
 
         #region Methods
 
+        public override bool Equals(object obj)
+        {
+            return obj is FileSystemInfoExProfile;
+        }
+
+        public BaseControls.ISuggestSource GetSuggestSource()
+        {
+            return new ProfileSuggestionSource(this);
+        }
+
         public IComparer<IEntryModel> GetComparer(ColumnInfo column)
         {
             return new ValueComparer<IEntryModel>(p => p.FullPath);
@@ -146,5 +156,7 @@ namespace FileExplorer.Models
 
 
 
+
+        
     }
 }

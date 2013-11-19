@@ -31,6 +31,9 @@ namespace FileExplorer.BaseControls
    
         public Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
         {
+            if (helper == null)
+                return Task.FromResult<IList<object>>(new List<Object>());
+
             string valuePath = helper.ExtractPath(input);
             string valueName = helper.ExtractName(input);
             if (String.IsNullOrEmpty(valueName) && input.EndsWith(helper.Separator + ""))
