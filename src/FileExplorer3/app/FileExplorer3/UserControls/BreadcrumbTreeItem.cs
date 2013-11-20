@@ -94,6 +94,16 @@ namespace FileExplorer.UserControls
             get { return (object)GetValue(SelectedChildProperty); }
             set { SetValue(SelectedChildProperty, value); }
         }
+
+        public static readonly DependencyProperty ValuePathProperty =
+         DependencyProperty.Register("ValuePath", typeof(string), typeof(BreadcrumbTreeItem),
+             new UIPropertyMetadata(""));
+
+        public string ValuePath
+        {
+            get { return (string)GetValue(ValuePathProperty); }
+            set { SetValue(ValuePathProperty, value); }
+        }
         
 
         public static readonly DependencyProperty IsChildSelectedProperty =

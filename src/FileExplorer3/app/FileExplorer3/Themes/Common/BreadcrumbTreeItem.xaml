@@ -70,6 +70,7 @@
                         <bc:DropDownList ItemsSource="{TemplateBinding ItemsSource}" 
                                          Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btvc}}" 
+                                         SelectedValuePath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
                                   IsDropDownOpen="{Binding IsExpanded, Mode=TwoWay, 
                                         RelativeSource={RelativeSource TemplatedParent}}"
                                   SelectedValue="{Binding SelectedChild, Mode=TwoWay, 
