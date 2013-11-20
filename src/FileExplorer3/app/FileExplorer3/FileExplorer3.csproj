@@ -176,6 +176,8 @@
     <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
     <Compile Include="Models\EntryModelIconExtractor.cs" />
     <Compile Include="ViewModels\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\Helpers\TreeNodeSelectionHelper.cs" />
+    <Compile Include="ViewModels\Helpers\TreeSelectionHelper.cs" />
     <Compile Include="ViewModels\IBreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\IMetadataViewModel.cs" />
     <Compile Include="ViewModels\IBreadcrumbViewModel.cs" />

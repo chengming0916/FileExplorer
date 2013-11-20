@@ -63,12 +63,18 @@ namespace TestTemplate.WPF
 
         private void setupBreadcrumbTree()
         {
-            var items = TreeNodeViewModel.GenerateFakeTreeViewModels().Subitems;
-            items[1].IsExpanded = true;
-            items[1].Subitems[2].IsExpanded = true;
-            items[1].Subitems[2].Subitems[3].IsExpanded = true;
-            items[1].Subitems[2].Subitems[3].Subitems[4].IsSelected = true;
-            btree.ItemsSource = items;
+            var tvModel = new TreeViewModel();
+            btreeTab.DataContext = tvModel;
+            selectBTreeItem.Click += (RoutedEventHandler)((o, e) =>
+                {
+                    tvModel.SelectionHelper.SelectAsync("Sub1\\Sub2\\Sub3");
+                });
+            //var items = TreeViewModel.GenerateFakeTreeViewModels().RootItems;
+            //items[0].Subitems[1].IsExpanded = true;
+            //items[0].Subitems[1].Subitems[2].IsExpanded = true;
+            //items[0].Subitems[1].Subitems[2].Subitems[3].IsExpanded = true;
+            //items[0].Subitems[1].Subitems[2].Subitems[3].Subitems[4].SelectionHelper.IsSelected = true;
+            //btree.ItemsSource = items;
 
         }
 
