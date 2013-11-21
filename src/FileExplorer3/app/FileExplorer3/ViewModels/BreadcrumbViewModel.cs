@@ -11,36 +11,49 @@ using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.UserControls;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class BreadcrumbViewModel : DirectoryTreeViewModel, IBreadcrumbViewModel
+    public class BreadcrumbViewModel : Screen, IBreadcrumbViewModel
     {
         #region Constructor
 
         public BreadcrumbViewModel(IExplorerViewModel explorerModel, IEventAggregator events,
-            IEntryModel[] rootModels)
-            : base(events, rootModels)
+            IEntryModel[] rootModels)            
         {
-            Subdirectories = new BindableCollection<IDirectoryNodeViewModel>(rootModels
-                .Select(r => new BreadcrumbItemViewModel(events, this, r, null)));
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
-            SuggestSources = _profiles.Select(p => p.GetSuggestSource());
-            if (Subdirectories.Count > 0)
-                Subdirectories[0].IsSelected = true;
+            _events = events;
+
+            Entries = new SubEntriesHelper<IBreadcrumbItemViewModel>();
+            Selection = new TreeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
+                _profiles.First().HierarchyComparer.CompareHierarchy, vm => vm.Selection);
+            Selection.SelectionChanged += (o, e) =>
+                {
+                    BroadcastDirectoryChanged(EntryViewModel.FromEntryModel( Selection.SelectedValue));
+                };
+
+
+            Entries.SetEntries(rootModels
+                .Select(r => new BreadcrumbItemViewModel(events, this, r, null)).ToArray());   
         }
 
         #endregion
 
         #region Methods
 
-        protected override IDirectoryNodeBroadcastHandler[] getBroadcastHandlers(IEntryModel model)
+        protected void BroadcastDirectoryChanged(IEntryViewModel viewModel)
         {
-            return new IDirectoryNodeBroadcastHandler[] {
-                BroadcastSubEntry.All(model, (nvm,hr) => hr == HierarchicalResult.Child),
-                         UpdateIsSelected.Instance
-            };
+            _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { viewModel }));
         }
+
+        //protected override IDirectoryNodeBroadcastHandler[] getBroadcastHandlers(IEntryModel model)
+        //{
+        //    return new IDirectoryNodeBroadcastHandler[] {
+        //        BroadcastSubEntry.All(model, (nvm,hr) => hr == HierarchicalResult.Child),
+        //                 UpdateIsSelected.Instance
+        //    };
+        //}
 
         protected override void OnViewAttached(object view, object context)
         {
@@ -53,23 +66,23 @@ namespace FileExplorer.ViewModels
         }
 
 
-        public override void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected)
-        {
-            base.NotifySelectionChanged(path, selected);
-            if (selected)
-            {
-                if (path.Count() > 0)
-                    (path.First() as IBreadcrumbItemViewModel).ShowCaption = (path.Count() <= 1);
-            }
-        }
+        //public override void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected)
+        //{
+        //    base.NotifySelectionChanged(path, selected);
+        //    if (selected)
+        //    {
+        //        if (path.Count() > 0)
+        //            (path.First() as IBreadcrumbItemViewModel).ShowCaption = (path.Count() <= 1);
+        //    }
+        //}
 
 
-        public override async Task SelectAsync(IEntryModel model)
-        {
-            await base.SelectAsync(model);
-            _suggestedPath = model.FullPath;
-            NotifyOfPropertyChange(() => SuggestedPath);
-        }
+        //public override async Task SelectAsync(IEntryModel model)
+        //{
+        //    await base.SelectAsync(model);
+        //    _suggestedPath = model.FullPath;
+        //    NotifyOfPropertyChange(() => SuggestedPath);
+        //}
 
         void OnSuggestPathChanged()
         {
@@ -83,8 +96,8 @@ namespace FileExplorer.ViewModels
                     if (found != null)
                     {
                         ShowBreadcrumb = true;
-                        base.SelectAsync(found);
-                        BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
+                        //base.SelectAsync(found);
+                        //BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
                     }
                     //else not found
                 }
@@ -99,10 +112,16 @@ namespace FileExplorer.ViewModels
         private string _suggestedPath;
         private bool _showBreadcrumb = true;
         private IEnumerable<ISuggestSource> _suggestSources;
+        private IEventAggregator _events;
 
         #endregion
 
         #region Public Properties
+
+        public ITreeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
+        public ISubEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
+        
+
         public bool ShowBreadcrumb
         {
             get { return _showBreadcrumb; }

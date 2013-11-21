@@ -8,27 +8,40 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class BreadcrumbItemViewModel : DirectoryNodeViewModel, IBreadcrumbItemViewModel
+    public class BreadcrumbItemViewModel : Screen, IBreadcrumbItemViewModel
     {
         #region Constructor
 
-        public BreadcrumbItemViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel,
-            IEntryModel curDirModel, IDirectoryNodeViewModel parentModel)
-            : base(events, rootModel, curDirModel, parentModel)
+        public BreadcrumbItemViewModel(IEventAggregator events, IBreadcrumbViewModel rootModel,
+            IEntryModel curDirModel, IBreadcrumbItemViewModel parentModel)
         {
+            _events = events;
+            _rootModel = rootModel;
 
+            CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
+            Entries = new SubEntriesHelper<IBreadcrumbItemViewModel>(loadEntriesTask);
+            Selection = new TreeNodeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>(curDirModel, this, rootModel.Selection,
+                parentModel == null ? null : parentModel.Selection, Entries);
         }
 
         #endregion
 
         #region Methods
 
-        public override IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel)
+        async Task<IEnumerable<IBreadcrumbItemViewModel>> loadEntriesTask()
         {
-            return new BreadcrumbItemViewModel(Events, TreeModel, entryModel, this);
+            IEntryModel currentDir = Selection.Value;
+            var subDir = await currentDir.Profile.ListAsync(currentDir, em => em.IsDirectory);
+            return subDir.Select(s => CreateSubmodel(s));
+        }
+
+        public IBreadcrumbItemViewModel CreateSubmodel(IEntryModel entryModel)
+        {
+            return new BreadcrumbItemViewModel(_events, _rootModel, entryModel, this);
         }
 
 
@@ -36,16 +49,23 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
+        IEventAggregator _events;
         bool _showCaption = true; bool _isShown = false;
+        private IBreadcrumbViewModel _rootModel;
+        
 
         #endregion
 
         #region Public Properties
+        
+        public IEntryViewModel CurrentDirectory { get; set; }
+        public ITreeNodeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
+        public ISubEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
 
         public bool IsShown
         {
             get { return _isShown; }
-            set { _isShown = value; if (value) LoadAsync(false); NotifyOfPropertyChange(() => IsShown); }
+            set { _isShown = value; if (value) Entries.LoadAsync(false); NotifyOfPropertyChange(() => IsShown); }
         }
 
         public bool ShowCaption

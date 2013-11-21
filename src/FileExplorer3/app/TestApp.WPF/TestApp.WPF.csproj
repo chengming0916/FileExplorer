@@ -42,8 +42,9 @@
     <Reference Include="ExifLib">
       <HintPath>..\..\..\..\..\COFE\lib\ExifLib.dll</HintPath>
     </Reference>
-    <Reference Include="QuickZip.IO.PIDL">
-      <HintPath>..\..\..\..\..\COFE\lib\QuickZip.IO.PIDL.dll</HintPath>
+    <Reference Include="QuickZip.IO.PIDL, Version=1.0.23.1, Culture=neutral, PublicKeyToken=7a52fb7ab4a7da68, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\QuickZip.IO.PIDL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

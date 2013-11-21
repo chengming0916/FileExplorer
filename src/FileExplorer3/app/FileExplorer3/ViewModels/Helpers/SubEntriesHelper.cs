@@ -9,17 +9,17 @@ using Caliburn.Micro;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeEntryHelper<VM> : INotifyPropertyChanged
+    public class SubEntriesHelper<VM> : NotifyPropertyChanged, ISubEntriesHelper<VM>
     {
         #region Constructor
 
-        public TreeEntryHelper(Func<Task<IEnumerable<VM>>> loadSubEntryFunc)
+        public SubEntriesHelper(Func<Task<IEnumerable<VM>>> loadSubEntryFunc)
         {
             _loadSubEntryFunc = loadSubEntryFunc;
             All.Add(default(VM));
         }
 
-        public TreeEntryHelper(params VM[] entries)
+        public SubEntriesHelper(params VM[] entries)
         {
             _isLoaded = true;
             All.Clear();
@@ -32,24 +32,29 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
 
-        public async Task<IEnumerable<VM>> LoadAsync()
+        public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
-            if (!_isLoaded) //NotLoaded
+            if (!_isLoaded || force) //NotLoaded
             {
+                while (_isLoading)                
+                    await Task.Delay(100);                
+
+                _isLoading = true;
                 _isLoaded = true;
-                All.Clear();
-                _subItemList = await _loadSubEntryFunc();
-                foreach (VM item in _subItemList)
-                    All.Add(item);
+                try
+                {
+                    All.Clear();
+                    _subItemList = (await _loadSubEntryFunc()).ToList();
+                    foreach (VM item in _subItemList)
+                        All.Add(item);
+                }
+                finally
+                {
+                    _isLoading = false;
+                }
             }
             return _subItemList;
         }        
-
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(null, new PropertyChangedEventArgs(propertyName));
-        }
 
         public void SetEntries(params VM[] viewModels)
         {
@@ -63,12 +68,12 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Data
 
+        private bool _isLoading = false;
         private bool _isLoaded = false;
         private bool _isExpanded = false;
         private IEnumerable<VM> _subItemList;
         private Func<Task<IEnumerable<VM>>> _loadSubEntryFunc;
-        private ObservableCollection<VM> _subItems = new ObservableCollection<VM>();
-        public event PropertyChangedEventHandler PropertyChanged;
+        private ObservableCollection<VM> _subItems = new ObservableCollection<VM>();        
 
         #endregion
 
@@ -79,16 +84,16 @@ namespace FileExplorer.ViewModels.Helpers
             get { return _isExpanded; }
             set
             {
-                if (value) LoadAsync();
-                _isExpanded = value; 
-                NotifyPropertyChanged("IsExpanded");
+                if (value && !_isExpanded) LoadAsync();
+                _isExpanded = value;
+                NotifyOfPropertyChanged(() => IsExpanded);                
             }
         }
 
         public bool IsLoaded
         {
             get { return _isLoaded; }
-            set { _isLoaded = value; NotifyPropertyChanged("IsLoaded"); }
+            set { _isLoaded = value; NotifyOfPropertyChanged(() => IsLoaded); }
         }
 
 

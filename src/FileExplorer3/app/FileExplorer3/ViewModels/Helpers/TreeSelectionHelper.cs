@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeSelectionHelper<VM,T> : PropertyChangedBase
+    public class TreeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeSelectionHelper<VM, T>
     {
         #region Constructor
 
-        public TreeSelectionHelper(TreeEntryHelper<VM> entryHelper,
-            Func<T, T, HierarchicalResult> compareFunc, Func<VM, TreeNodeSelectionHelper<VM,T>> getSelectionHelperFunc)
+        public TreeSelectionHelper(ISubEntriesHelper<VM> entryHelper,
+            Func<T, T, HierarchicalResult> compareFunc, Func<VM, ITreeNodeSelectionHelper<VM,T>> getSelectionHelperFunc)
         {
             _entryHelper = entryHelper;
             _compareFunc = compareFunc;
@@ -24,9 +24,11 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
 
-        internal async void ReportChildSelected(Stack<TreeNodeSelectionHelper<VM, T>> path)
+        public async void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
-            T _prevSelectedValue = _selectedValue;           
+            T _prevSelectedValue = _selectedValue;
+
+            _selectedViewModel = path.Last().ViewModel;
             _selectedValue = path.Last().Value;
             if (_prevSelectedValue != null && !_prevSelectedValue.Equals(path.Last().Value))
             {
@@ -34,15 +36,18 @@ namespace FileExplorer.ViewModels.Helpers
                 if (found != null)
                     found.IsSelected = false;
             }
-            NotifyOfPropertyChange(() => SelectedValue);
+            NotifyOfPropertyChanged(() => SelectedValue);
+            NotifyOfPropertyChanged(() => SelectedViewModel);
+            if (SelectionChanged != null)
+                SelectionChanged(this, EventArgs.Empty);
         }
 
-        internal void ReportChildDeselected(Stack<TreeNodeSelectionHelper<VM, T>> path)
+        public async void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
 
         }
 
-        public async Task<TreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNodeOnly = false)
+        public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNodeOnly = false)
         {
             foreach (var current in await _entryHelper.LoadAsync())
             {
@@ -72,30 +77,38 @@ namespace FileExplorer.ViewModels.Helpers
         #region Data
 
         T _selectedValue = default(T);
-        object _owner = null;
-        Func<object, Task<TreeNodeSelectionHelper<VM, T>>> _findChildFunc;
+        VM _selectedViewModel = default(VM);
+        //object _owner = null;
+        //Func<object, Task<TreeNodeSelectionHelper<VM, T>>> _findChildFunc;
         private Func<T, T, HierarchicalResult> _compareFunc;
-        private TreeEntryHelper<VM> _entryHelper;
-        private Func<VM, TreeNodeSelectionHelper<VM, T>> _getSelectionHelperFunc;
-
-
+        private ISubEntriesHelper<VM> _entryHelper;
+        private Func<VM, ITreeNodeSelectionHelper<VM, T>> _getSelectionHelperFunc;
+        
         #endregion
 
         #region Public Properties
 
+        public event EventHandler SelectionChanged;
+
+        public VM SelectedViewModel
+        {
+            get { return _selectedViewModel; }
+            set { SelectAsync(_getSelectionHelperFunc(_selectedViewModel).Value); }
+        }
 
         public T SelectedValue
         {
             get { return _selectedValue; }
             set { SelectAsync(value); }
-        }
-        //public IEnumerable<TreeNodeSelectionHelper> RootItems { get; set; }
+        }        
 
         public Func<T, T, HierarchicalResult> CompareFunc { get { return _compareFunc; } }
 
-        public Func<VM, TreeNodeSelectionHelper<VM, T>> GetSelectionHelperFunc { get { return _getSelectionHelperFunc; } }
+        public Func<VM, ITreeNodeSelectionHelper<VM, T>> GetSelectionHelperFunc { get { return _getSelectionHelperFunc; } }
 
 
         #endregion
+
+        
     }
 }
