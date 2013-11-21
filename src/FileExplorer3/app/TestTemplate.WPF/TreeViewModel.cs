@@ -14,8 +14,10 @@ namespace TestTemplate.WPF
     {
         public TreeViewModel()
         {
+            //Submodel is TreeNodeViewModel,
             Entries = new TreeEntryHelper<TreeNodeViewModel>();
-            SelectionHelper = new TreeSelectionHelper<TreeNodeViewModel, string>(Entries, compareFunc, (vm) => vm.SelectionHelper);
+            //Value is based on string
+            Selection = new TreeSelectionHelper<TreeNodeViewModel, string>(Entries, compareFunc, (vm) => vm.Selection);
 
             Entries.SetEntries(new TreeNodeViewModel("", "Root", this, null));            
 
@@ -32,7 +34,7 @@ namespace TestTemplate.WPF
             return HierarchicalResult.Unrelated;
         }    
         
-        public TreeSelectionHelper<TreeNodeViewModel, string> SelectionHelper { get; set; }
+        public TreeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
         public TreeEntryHelper<TreeNodeViewModel> Entries { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -40,9 +42,7 @@ namespace TestTemplate.WPF
 
 
     public class TreeNodeViewModel : INotifyPropertyChanged
-    {
-        //public static TreeNodeViewModel DummyNode = new TreeNodeViewModel();
-
+    {        
         public override string ToString()
         {
             if (String.IsNullOrEmpty(Header))
@@ -57,7 +57,7 @@ namespace TestTemplate.WPF
         {
             if (root == null || value == null)
                 throw new ArgumentException();
-            this.Path = value as string;
+            _path = value;
             _root = root;
             _parent = parentNode;
             _header = header;
@@ -74,8 +74,8 @@ namespace TestTemplate.WPF
                     );
             }));
 
-            SelectionHelper = new TreeNodeSelectionHelper<TreeNodeViewModel, string>(
-                value,  root.SelectionHelper, parentNode == null ? null : parentNode.SelectionHelper, Entries);           
+            Selection = new TreeNodeSelectionHelper<TreeNodeViewModel, string>(
+                value,  root.Selection, parentNode == null ? null : parentNode.Selection, Entries);           
         }
 
         #region Constructor
@@ -101,22 +101,13 @@ namespace TestTemplate.WPF
 
         private TreeViewModel _root = null;
         private TreeNodeViewModel _parent = null;
-        private TreeNodeSelectionHelper<TreeNodeViewModel, string> _selectionHelper;
-        private TreeEntryHelper<TreeNodeViewModel> _entryHelper;
 
         #endregion
 
         #region Public Properties
-        public TreeNodeSelectionHelper<TreeNodeViewModel, string> SelectionHelper
-        {
-            get { return _selectionHelper; }
-            set { _selectionHelper = value; NotifyPropertyChanged("SelectionHelper"); }
-        }
-        public TreeEntryHelper<TreeNodeViewModel> Entries
-        {
-            get { return _entryHelper; }
-            set { _entryHelper = value; NotifyPropertyChanged("Entries"); }
-        }
+
+        public TreeNodeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
+        public TreeEntryHelper<TreeNodeViewModel> Entries { get; set; }
 
         public string Header { get { return _header; } set { _header = value; NotifyPropertyChanged("Header"); } }
         public string Path { get { return _path; } set { _path = value; NotifyPropertyChanged("Path"); } }

@@ -67,7 +67,7 @@ namespace TestTemplate.WPF
             btreeTab.DataContext = tvModel;
             selectBTreeItem.Click += (RoutedEventHandler)((o, e) =>
                 {
-                    tvModel.SelectionHelper.SelectAsync(selectBTreeCombo.Text);
+                    tvModel.Selection.SelectAsync(selectBTreeCombo.Text);
                 });
             //var items = TreeViewModel.GenerateFakeTreeViewModels().RootItems;
             //items[0].Subitems[1].IsExpanded = true;

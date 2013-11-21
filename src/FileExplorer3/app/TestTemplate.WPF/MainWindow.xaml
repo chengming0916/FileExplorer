@@ -155,9 +155,9 @@
                        BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
                             <Setter Property="ValuePath" Value="Path" />
                             <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
-                            <Setter Property="IsCurrentSelected" Value="{Binding SelectionHelper.IsSelected, Mode=TwoWay}"  />
-                            <Setter Property="SelectedChild" Value="{Binding SelectionHelper.SelectedChild, Mode=TwoWay}"  />
-                            <Setter Property="IsChildSelected" Value="{Binding SelectionHelper.IsChildSelected, Mode=OneWay}"  />
+                            <Setter Property="IsCurrentSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
+                            <Setter Property="SelectedChild" Value="{Binding Selection.SelectedChild, Mode=TwoWay}"  />
+                            <Setter Property="IsChildSelected" Value="{Binding Selection.IsChildSelected, Mode=OneWay}"  />
                             <!--<Setter Property="IsCaptionVisible" Value="{Binding ShowCaption, Mode=TwoWay}"  />-->
                         </Style>
                     </uc:BreadcrumbTree.ItemContainerStyle>
@@ -189,17 +189,17 @@
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" 
                        BasedOn="{StaticResource {x:Type TreeViewItem}}" >
-                            <Setter Property="IsExpanded" Value="{Binding SelectionHelper.IsChildSelected, Mode=OneWay}"  />
-                            <Setter Property="IsSelected" Value="{Binding SelectionHelper.IsSelected, Mode=OneWay}"  />
+                            <Setter Property="IsExpanded" Value="{Binding Selection.IsChildSelected, Mode=OneWay}"  />
+                            <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=OneWay}"  />
                             <!--<Setter Property="IsCaptionVisible" Value="{Binding ShowCaption, Mode=TwoWay}"  />-->
                         </Style>
                     </TreeView.ItemContainerStyle>
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Entries.All}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="[e]" Foreground="Red" Visibility="{Binding Entries.IsExpanded, Converter={StaticResource btvc}}" />
-                                <TextBlock Text="[s]" Foreground="Green"  Visibility="{Binding SelectionHelper.IsSelected, Converter={StaticResource btvc}}" />
-                                <TextBlock Text="[c]" Foreground="Blue" Visibility="{Binding SelectionHelper.IsChildSelected, Converter={StaticResource btvc}}" />                                
+                                <TextBlock Text="[e]" Foreground="Red" Visibility="{Binding Entries.IsExpanded, Converter={StaticResource btvc}, Mode=OneWay}" />
+                                <TextBlock Text="[s]" Foreground="Green"  Visibility="{Binding Selection.IsSelected, Converter={StaticResource btvc}, Mode=OneWay}" />
+                                <TextBlock Text="[c]" Foreground="Blue" Visibility="{Binding Selection.IsChildSelected, Converter={StaticResource btvc}, Mode=OneWay}" />                                
                                 <TextBlock Text="{Binding Header}" Margin="5,0" />
                             </StackPanel>
                         </HierarchicalDataTemplate>
