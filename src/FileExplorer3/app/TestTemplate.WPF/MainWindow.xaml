@@ -149,12 +149,12 @@
         </TabItem>
         <TabItem Header="BreadcrumbTree" x:Name="btreeTab" IsSelected="True">
             <DockPanel>
-                <uc:BreadcrumbTree x:Name="btree" Height="30" ItemsSource="{Binding RootItems}" DockPanel.Dock="Top">
+                <uc:BreadcrumbTree x:Name="btree" Height="30" ItemsSource="{Binding Entries.All}" DockPanel.Dock="Top">
                     <uc:BreadcrumbTree.ItemContainerStyle>
                         <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
                        BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
                             <Setter Property="ValuePath" Value="Path" />
-                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
+                            <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
                             <Setter Property="IsCurrentSelected" Value="{Binding SelectionHelper.IsSelected, Mode=TwoWay}"  />
                             <Setter Property="SelectedChild" Value="{Binding SelectionHelper.SelectedChild, Mode=TwoWay}"  />
                             <Setter Property="IsChildSelected" Value="{Binding SelectionHelper.IsChildSelected, Mode=OneWay}"  />
@@ -168,18 +168,24 @@
                     </uc:BreadcrumbTree.MenuItemTemplate>
 
                     <uc:BreadcrumbTree.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Subitems}">
+                        <HierarchicalDataTemplate ItemsSource="{Binding Entries.All}">
                             <TextBlock Text="{Binding Header}" />
                         </HierarchicalDataTemplate>
                     </uc:BreadcrumbTree.ItemTemplate>
-                    <uc:BreadcrumbTree.LayoutTransform>
+                    <!--<uc:BreadcrumbTree.LayoutTransform>
                         <ScaleTransform ScaleX="2" ScaleY="2" />
-                    </uc:BreadcrumbTree.LayoutTransform>
+                    </uc:BreadcrumbTree.LayoutTransform>-->
                 </uc:BreadcrumbTree>
-                
+
                 <TextBlock Text="{Binding SelectionHelper.SelectedValue}" DockPanel.Dock="Top" />
-                <Button DockPanel.Dock="Top" x:Name="selectBTreeItem" >Select Sub1\Sub2\Sub3</Button>                
-                <TreeView ItemsSource="{Binding RootItems}" >
+                <ComboBox x:Name="selectBTreeCombo" DockPanel.Dock="Top">
+                    <ComboBoxItem IsSelected="True">Sub1\Sub2\Sub3\Sub4\Sub5\Sub6\Sub7\Sub8\Sub9</ComboBoxItem>
+                    <ComboBoxItem>Sub1\Sub2\Sub3\Sub3\Sub2\Sub1</ComboBoxItem>
+                    <ComboBoxItem>Sub1\Sub2\Sub3\Sub4\Sub5\Sub6</ComboBoxItem>
+                    <ComboBoxItem></ComboBoxItem>
+                </ComboBox>
+                <Button DockPanel.Dock="Top" x:Name="selectBTreeItem" >Select</Button>
+                <TreeView ItemsSource="{Binding Entries.All}" >
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" 
                        BasedOn="{StaticResource {x:Type TreeViewItem}}" >
@@ -189,8 +195,13 @@
                         </Style>
                     </TreeView.ItemContainerStyle>
                     <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Subitems}">
-                            <TextBlock Text="{Binding Header}" />
+                        <HierarchicalDataTemplate ItemsSource="{Binding Entries.All}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="[e]" Foreground="Red" Visibility="{Binding Entries.IsExpanded, Converter={StaticResource btvc}}" />
+                                <TextBlock Text="[s]" Foreground="Green"  Visibility="{Binding SelectionHelper.IsSelected, Converter={StaticResource btvc}}" />
+                                <TextBlock Text="[c]" Foreground="Blue" Visibility="{Binding SelectionHelper.IsChildSelected, Converter={StaticResource btvc}}" />                                
+                                <TextBlock Text="{Binding Header}" Margin="5,0" />
+                            </StackPanel>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
@@ -210,7 +221,7 @@
         </TabItem>
         <TabItem Header="ListView">
             <uc:ListViewEx x:Name="listView">
-                
+
             </uc:ListViewEx>
         </TabItem>
     </TabControl>
