@@ -15,7 +15,7 @@ namespace TestTemplate.WPF
         public TreeViewModel()
         {
             //Submodel is TreeNodeViewModel,
-            Entries = new TreeEntryHelper<TreeNodeViewModel>();
+            Entries = new SubEntriesHelper<TreeNodeViewModel>();
             //Value is based on string
             Selection = new TreeSelectionHelper<TreeNodeViewModel, string>(Entries, compareFunc, (vm) => vm.Selection);
 
@@ -34,8 +34,8 @@ namespace TestTemplate.WPF
             return HierarchicalResult.Unrelated;
         }    
         
-        public TreeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
-        public TreeEntryHelper<TreeNodeViewModel> Entries { get; set; }
+        public ITreeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
+        public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
     }
@@ -63,7 +63,7 @@ namespace TestTemplate.WPF
             _header = header;
 
 
-            Entries = new TreeEntryHelper<TreeNodeViewModel>(() => Task.Run(() =>
+            Entries = new SubEntriesHelper<TreeNodeViewModel>(() => Task.Run(() =>
             {
                 return (IEnumerable<TreeNodeViewModel>)new List<TreeNodeViewModel>(
                     from i in Enumerable.Range(1, 9)
@@ -75,7 +75,7 @@ namespace TestTemplate.WPF
             }));
 
             Selection = new TreeNodeSelectionHelper<TreeNodeViewModel, string>(
-                value,  root.Selection, parentNode == null ? null : parentNode.Selection, Entries);           
+                value, this, root.Selection, parentNode == null ? null : parentNode.Selection, Entries);           
         }
 
         #region Constructor
@@ -106,8 +106,8 @@ namespace TestTemplate.WPF
 
         #region Public Properties
 
-        public TreeNodeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
-        public TreeEntryHelper<TreeNodeViewModel> Entries { get; set; }
+        public ITreeNodeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
+        public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
         public string Header { get { return _header; } set { _header = value; NotifyPropertyChanged("Header"); } }
         public string Path { get { return _path; } set { _path = value; NotifyPropertyChanged("Path"); } }

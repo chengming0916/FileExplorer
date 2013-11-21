@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels
                 {
                     DirectoryTreeModel.SelectAsync(model);
                     FileListModel.LoadAsync(model, null);
-                    BreadcrumbModel.SelectAsync(model);
+                    BreadcrumbModel.Selection.SelectAsync(model);
                     return;
                 }
             }
@@ -62,7 +62,7 @@ namespace FileExplorer.ViewModels
             {
                 var selectedDirectory = message.SelectedModels.First();
                 FileListModel.LoadAsync(selectedDirectory, null);
-                BreadcrumbModel.SelectAsync(selectedDirectory);
+                BreadcrumbModel.Selection.SelectAsync(selectedDirectory);
             }
             else if (message.Sender.Equals(BreadcrumbModel))
             {

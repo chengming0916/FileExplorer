@@ -153,7 +153,8 @@
                     <uc:BreadcrumbTree.ItemContainerStyle>
                         <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
                        BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
-                            <Setter Property="ValuePath" Value="Path" />
+                            <!-- SelectionHelper's Value property -->
+                            <Setter Property="ValuePath" Value="Selection.Value" />
                             <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
                             <Setter Property="IsCurrentSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
                             <Setter Property="SelectedChild" Value="{Binding Selection.SelectedChild, Mode=TwoWay}"  />
