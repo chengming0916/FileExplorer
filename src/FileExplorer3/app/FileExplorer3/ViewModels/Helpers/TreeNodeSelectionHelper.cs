@@ -118,10 +118,10 @@ namespace FileExplorer.ViewModels.Helpers
                     var originalSelected = LookupAsync(_selectedValue, true).Result;
                     if (originalSelected != null)
                     {
-                        originalSelected.OnSelected(false);
+                        originalSelected.IsSelected = false; // (false);
                         //originalSelected._isSelected = false;
                         //NotifyOfPropertyChange(() =>IsSelected);
-                        originalSelected.OnChildSelected(default(T));
+                        originalSelected.SelectedChild = default(T);// OnChildSelected(default(T));
                     }
                 }
 
