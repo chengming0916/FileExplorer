@@ -9,29 +9,41 @@ using Caliburn.Micro;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeEntryHelper<T> : INotifyPropertyChanged
+    public class TreeEntryHelper<VM> : INotifyPropertyChanged
     {
         #region Constructor
 
-        public TreeEntryHelper(Func<Task<IList<T>>> loadSubEntryFunc)
+        public TreeEntryHelper(Func<Task<IEnumerable<VM>>> loadSubEntryFunc)
         {
             _loadSubEntryFunc = loadSubEntryFunc;
-            Subitems.Add(default(T));
+            All.Add(default(VM));
+        }
+
+        public TreeEntryHelper(params VM[] entries)
+        {
+            _isLoaded = true;
+            All.Clear();
+            _subItemList = entries;
+            foreach (var entry in entries)
+                All.Add(entry);
         }
 
         #endregion
 
         #region Methods
 
-        public async Task LoadAsync()
+        public async Task<IEnumerable<VM>> LoadAsync()
         {
-            if (!_loaded) //NotLoaded
+            if (!_isLoaded) //NotLoaded
             {
-                Subitems.Clear();
-                foreach (T item in await _loadSubEntryFunc())
-                    Subitems.Add(item);
+                _isLoaded = true;
+                All.Clear();
+                _subItemList = await _loadSubEntryFunc();
+                foreach (VM item in _subItemList)
+                    All.Add(item);
             }
-        }
+            return _subItemList;
+        }        
 
         public void NotifyPropertyChanged(string propertyName)
         {
@@ -39,14 +51,23 @@ namespace FileExplorer.ViewModels.Helpers
                 PropertyChanged(null, new PropertyChangedEventArgs(propertyName));
         }
 
+        public void SetEntries(params VM[] viewModels)
+        {
+            foreach (var vm in viewModels)
+                All.Add(vm);
+            _subItemList = viewModels.ToList();
+            _isExpanded = true;
+        }
+
         #endregion
 
         #region Data
 
-        private bool _loaded = false;
+        private bool _isLoaded = false;
         private bool _isExpanded = false;
-        private Func<Task<IList<T>>> _loadSubEntryFunc;
-        private ObservableCollection<T> _subItems = new ObservableCollection<T>();
+        private IEnumerable<VM> _subItemList;
+        private Func<Task<IEnumerable<VM>>> _loadSubEntryFunc;
+        private ObservableCollection<VM> _subItems = new ObservableCollection<VM>();
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
@@ -64,7 +85,14 @@ namespace FileExplorer.ViewModels.Helpers
             }
         }
 
-        public ObservableCollection<T> Subitems { get { return _subItems; } }
+        public bool IsLoaded
+        {
+            get { return _isLoaded; }
+            set { _isLoaded = value; NotifyPropertyChanged("IsLoaded"); }
+        }
+
+
+        public ObservableCollection<VM> All { get { return _subItems; } }        
 
         #endregion
 
