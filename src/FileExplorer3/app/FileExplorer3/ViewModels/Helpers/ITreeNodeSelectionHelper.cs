@@ -34,7 +34,10 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="pathAction">Run when lookup along the path (e.g. when HierarchicalResult = Child or Current)</param>
         /// <param name="nextNodeOnly"></param>
         /// <returns></returns>
-        Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNodeOnly = false);
+        Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
+            params ITreeSelectionProcessor<VM, T>[] processors);
+
+        Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNode = false);
 
         /// <summary>
         /// Whether current view model is selected.
@@ -51,6 +54,9 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         T SelectedChild { get; set; }
 
+        void SetIsSelected(bool value);
+        void SetSelectedChild(T value);
+
         /// <summary>
         /// The owner view model of this selection helper.
         /// </summary>
@@ -60,6 +66,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// The represented value of this selection helper.
         /// </summary>
         T Value { get; }
+
+        ITreeNodeSelectionHelper<VM, T> ParentSelectionHelper { get; }
 
     }
 }

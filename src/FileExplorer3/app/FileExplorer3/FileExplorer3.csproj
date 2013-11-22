@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
+    <Compile Include="BaseControls\OneItemPanel.cs" />
     <Compile Include="BaseControls\OverflowablePanel.cs" />
     <Compile Include="BaseControls\Switch.cs" />
     <Compile Include="Defines\Converters\VisibilityToBoolConverter.cs" />

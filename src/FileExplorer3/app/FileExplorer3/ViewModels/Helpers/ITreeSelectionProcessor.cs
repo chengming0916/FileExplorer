@@ -37,9 +37,31 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
+    public class SetNotSelected<VM, T> : ITreeSelectionProcessor<VM, T>
+    {
+        public static SetNotSelected<VM, T> WhenCurrent = new SetNotSelected<VM, T>(HierarchicalResult.Current);
+        public static SetNotSelected<VM, T> WhenNotCurrent = new SetNotSelected<VM, T>(
+            HierarchicalResult.Child | HierarchicalResult.Parent | HierarchicalResult.Unrelated);
+
+        public SetNotSelected(HierarchicalResult hr)
+        {
+            _hr = hr;
+        }
+
+        private HierarchicalResult _hr;
+
+        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        {
+            if (_hr.HasFlag(hr))
+                if (viewModel is ISupportNodeSelectionHelper<VM, T>)
+                    (viewModel as ISupportNodeSelectionHelper<VM, T>).Selection.IsSelected = false;
+            return true;
+        }
+    }
+
     public class SetExpanded<VM, T> : ITreeSelectionProcessor<VM, T>
     {
-        public static SetSelected<VM, T> Instance = new SetSelected<VM, T>();
+        public static SetExpanded<VM, T> Instance = new SetExpanded<VM, T>();
 
         public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
@@ -58,9 +80,35 @@ namespace FileExplorer.ViewModels.Helpers
         {
             if (hr == HierarchicalResult.Child)
                 if (parentViewModel is ISupportNodeSelectionHelper<VM, T>)
-                    (parentViewModel as ISupportNodeSelectionHelper<VM, T>).Selection.SelectedChild = 
-                        (viewModel as ISupportNodeSelectionHelper<VM,T>).Selection.Value;
+                {
+                    (parentViewModel as ISupportNodeSelectionHelper<VM, T>).Selection.SetSelectedChild(
+                        (viewModel as ISupportNodeSelectionHelper<VM, T>).Selection.Value);
+                }
             return true;
         }
     }
+
+    public class SetChildNotSelected<VM, T> : ITreeSelectionProcessor<VM, T>
+    {
+        public static SetChildNotSelected<VM, T> WhenChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Child);
+        public static SetChildNotSelected<VM, T> WhenNotChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Current | 
+            HierarchicalResult.Parent | HierarchicalResult.Unrelated);
+
+
+        public SetChildNotSelected(HierarchicalResult hr)
+        {
+            _hr = hr;
+        }
+
+        private HierarchicalResult _hr;
+
+        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        {
+            if (_hr.HasFlag(hr))
+                if (viewModel is ISupportNodeSelectionHelper<VM, T>)
+                    (viewModel as ISupportNodeSelectionHelper<VM, T>).Selection.SetSelectedChild(default(T));
+            return true;
+        }
+    }
+   
 }

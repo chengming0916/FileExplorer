@@ -41,13 +41,21 @@ namespace FileExplorer.ViewModels
             _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { viewModel }));
         }
 
+        public async Task SelectAsync(IEntryModel value)
+        {
+            await Selection.SelectAsync(value,
+                RecrusiveSearchUntilFound<IDirectoryNodeViewModel, IEntryModel>.Instance,
+                SetSelected<IDirectoryNodeViewModel, IEntryModel>.Instance,
+                SetExpanded<IDirectoryNodeViewModel, IEntryModel>.Instance);
+
+        }
+
         
         #endregion
 
         #region Data
 
-    
-        private bool _showBreadcrumb = true;
+           
         private IEnumerable<IProfile> _profiles;
         private IEventAggregator _events;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,19 +20,63 @@ namespace FileExplorer.Models
 
         private class ExHierarchyComparer : IEntryHierarchyComparer
         {
-            public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
+            private bool HasParent(FileSystemInfoEx child, DirectoryInfoEx parent)
+            {
+                DirectoryInfoEx current = child.Parent;
+                while (current != null)
+                {
+                    if (current.Equals(parent))
+                        return true;
+                    current = current.Parent;
+                }
+                return false;
+            }
+
+            public HierarchicalResult CompareHierarchyInner(IEntryModel a, IEntryModel b)
             {
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
-                    return PathComparer.Default.CompareHierarchy(a, b);
+                    return PathComparer.Default.CompareHierarchy(a, b);                
                 FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);
                 FileSystemInfoEx fsib = FileSystemInfoEx.FromString(b.FullPath);
                 if (a.FullPath == b.FullPath)
                     return HierarchicalResult.Current;
+
+                //if (fsia is DirectoryInfoEx && HasParent(fsib, fsia as DirectoryInfoEx))
+                //    return HierarchicalResult.Child;
+                //if (fsib is DirectoryInfoEx && HasParent(fsia, fsib as DirectoryInfoEx))
+                //    return HierarchicalResult.Parent;
+
+                //if (a.FullPath.EndsWith(":\\") &&
+                //    b.IsDirectory && (b as FileSystemInfoExModel).DirectoryType
+                //    != DirectoryInfoEx.DirectoryTypeEnum.dtFolder)
+                //    return HierarchicalResult.Unrelated;
+
+                //if (b.FullPath.EndsWith(":\\") &&
+                //    a.IsDirectory && (a as FileSystemInfoExModel).DirectoryType
+                //    != DirectoryInfoEx.DirectoryTypeEnum.dtFolder)
+                //    return HierarchicalResult.Unrelated;
+
+                //if (a.FullPath.EndsWith(":\\") &&
+                //   b.FullPath.StartsWith("c:\\Temp\\Cofe3", StringComparison.CurrentCultureIgnoreCase))
+                //    return HierarchicalResult.Unrelated;
+
+                //if (b.FullPath.EndsWith(":\\") &&
+                //    (a as FileSystemInfoExModel).ParentFullPath != null &&
+                //    (!(a as FileSystemInfoExModel).ParentFullPath.Equals(b.FullPath)))
+                //    return HierarchicalResult.Unrelated;
+
                 if (IOTools.HasParent(fsib, fsia.FullName))
                     return HierarchicalResult.Child;
                 if (IOTools.HasParent(fsia, fsib.FullName))
                     return HierarchicalResult.Parent;
                 return HierarchicalResult.Unrelated;
+            }
+
+            public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
+            {
+                HierarchicalResult retVal = CompareHierarchyInner(a, b);
+                //Debug.WriteLine(String.Format("{2} {0},{1}", a.FullPath, b.FullPath, retVal));
+                return retVal;
             }
         }
 

@@ -19,15 +19,17 @@ namespace FileExplorer.Models
             this.FullPath = fsi.FullName;
             this.Name = fsi.Name;
             this.IsRenamable = true;
+            if (fsi is DirectoryInfoEx)
+                this.DirectoryType = (fsi as DirectoryInfoEx).DirectoryType;
             this.IsDirectory = fsi.IsFolder;
             if (fsi is FileInfoEx)
                 Size = (fsi as FileInfoEx).Length;
-            string parentPath = PathEx.GetDirectoryName(fsi.FullName);
+            ParentFullPath = fsi.Parent == null ? null : fsi.Parent.FullName;
             this._parentFunc = 
                 new Lazy<IEntryModel>(() => {
-                    return String.IsNullOrEmpty(parentPath) ? null :
+                    return String.IsNullOrEmpty(ParentFullPath) ? null :
                     new FileSystemInfoExModel(profile,
-                        (profile as FileSystemInfoExProfile).createDirectoryInfo(parentPath));
+                        (profile as FileSystemInfoExProfile).createDirectoryInfo(ParentFullPath));
                 });
             this.Description = fsi.GetType().ToString();
         }
@@ -45,7 +47,9 @@ namespace FileExplorer.Models
         #region Public Properties
 
         public FileAttributes Attributes { get; protected set; }
-        public long Size { get; protected set; }       
+        public long Size { get; protected set; }
+        public string ParentFullPath { get; protected set; }
+        public DirectoryInfoEx.DirectoryTypeEnum DirectoryType { get; protected set; }
 
         #endregion
     }

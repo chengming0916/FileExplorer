@@ -66,23 +66,13 @@ namespace FileExplorer.ViewModels
         }
 
 
-        //public override void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected)
-        //{
-        //    base.NotifySelectionChanged(path, selected);
-        //    if (selected)
-        //    {
-        //        if (path.Count() > 0)
-        //            (path.First() as IBreadcrumbItemViewModel).ShowCaption = (path.Count() <= 1);
-        //    }
-        //}
-
-
-        //public override async Task SelectAsync(IEntryModel model)
-        //{
-        //    await base.SelectAsync(model);
-        //    _suggestedPath = model.FullPath;
-        //    NotifyOfPropertyChange(() => SuggestedPath);
-        //}
+        public async Task SelectAsync(IEntryModel value)
+        {
+            await Selection.SelectAsync(value,
+                RecrusiveSearchUntilFound<IBreadcrumbItemViewModel, IEntryModel>.Instance,
+                SetSelected<IBreadcrumbItemViewModel, IEntryModel>.Instance,
+                SetChildSelected<IBreadcrumbItemViewModel, IEntryModel>.Instance);
+        }
 
         void OnSuggestPathChanged()
         {
