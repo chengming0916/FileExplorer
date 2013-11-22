@@ -108,6 +108,7 @@
     </ControlTemplate>
 
     <ItemsPanelTemplate x:Key="StackItemPanelTemplate">
+        <!--<bc:OneItemPanel />-->
         <VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
                                             HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
     </ItemsPanelTemplate>

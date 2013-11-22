@@ -183,6 +183,7 @@
                     <ComboBoxItem IsSelected="True">Sub1\Sub2\Sub3\Sub4\Sub5\Sub6\Sub7\Sub8\Sub9</ComboBoxItem>
                     <ComboBoxItem>Sub1\Sub2\Sub3\Sub3\Sub2\Sub1</ComboBoxItem>
                     <ComboBoxItem>Sub1\Sub2\Sub3\Sub4\Sub5\Sub6</ComboBoxItem>
+                    <ComboBoxItem>Sub9\Sub8\Sub7\Sub6\Sub5\Sub4\Sub3\Sub2\Sub1</ComboBoxItem>
                     <ComboBoxItem></ComboBoxItem>
                 </ComboBox>
                 <Button DockPanel.Dock="Top" x:Name="selectBTreeItem" >Select</Button>

@@ -43,10 +43,18 @@ namespace FileExplorer.ViewModels.Helpers
         /// Select a tree node by value.
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="pathFunc">Run when lookup along the path (e.g. HierarchicalResult = Current/Child), 
-        /// return false to abort lookup.</param>
         /// <returns></returns>
         Task SelectAsync(T value);
+
+        /// <summary>
+        /// Select a tree node by value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="lookupProc"></param>
+        /// <param name="processors"></param>
+        /// <returns></returns>
+        Task SelectAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
+            params ITreeSelectionProcessor<VM, T>[] processors);
 
         /// <summary>
         /// Raised when a node is selected, use SelectedValue/ViewModel to return the selected item.
@@ -56,7 +64,7 @@ namespace FileExplorer.ViewModels.Helpers
         /// <summary>
         /// Selected node.
         /// </summary>
-        VM SelectedViewModel { get; set; }
+        VM SelectedViewModel { get;  }
 
         /// <summary>
         /// Value of SelectedViewModel.

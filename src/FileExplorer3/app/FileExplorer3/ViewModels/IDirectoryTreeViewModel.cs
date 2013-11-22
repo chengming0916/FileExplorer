@@ -10,15 +10,13 @@ using FileExplorer.ViewModels.Helpers;
 namespace FileExplorer.ViewModels
 {
     public interface IDirectoryTreeViewModel : ISupportSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
-    {        
-        ISubEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
+    {
+        Task SelectAsync(IEntryModel value);
     }
 
     public interface IDirectoryNodeViewModel : ISupportNodeSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
     {
         bool ShowCaption { get; set; }
-        
-        ISubEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
     }
 
 }
