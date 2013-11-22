@@ -13,11 +13,10 @@ namespace FileExplorer.ViewModels.Helpers
         #region Constructor
 
         public TreeSelectionHelper(ISubEntriesHelper<VM> entryHelper,
-            Func<T, T, HierarchicalResult> compareFunc, Func<VM, ITreeNodeSelectionHelper<VM,T>> getSelectionHelperFunc)
+            Func<T, T, HierarchicalResult> compareFunc)
         {
             _entryHelper = entryHelper;
             _compareFunc = compareFunc;
-            _getSelectionHelperFunc = getSelectionHelperFunc;
         }
 
         #endregion
@@ -51,7 +50,7 @@ namespace FileExplorer.ViewModels.Helpers
         {
             foreach (var current in await _entryHelper.LoadAsync())
             {
-                var currentSelectionHelper = _getSelectionHelperFunc(current);
+                var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
                 switch (_compareFunc(currentSelectionHelper.Value, value))
                 {
                     case HierarchicalResult.Child:
@@ -67,9 +66,12 @@ namespace FileExplorer.ViewModels.Helpers
 
         public async Task SelectAsync(T value)
         {
-            var found = await LookupAsync(value);
-            if (found != null)
-                found.IsSelected = true;
+            if (_selectedValue == null || _compareFunc(_selectedValue, value) != HierarchicalResult.Current)
+            {
+                var found = await LookupAsync(value);
+                if (found != null)
+                    found.IsSelected = true;
+            }
         }
 
         #endregion
@@ -77,12 +79,9 @@ namespace FileExplorer.ViewModels.Helpers
         #region Data
 
         T _selectedValue = default(T);
-        VM _selectedViewModel = default(VM);
-        //object _owner = null;
-        //Func<object, Task<TreeNodeSelectionHelper<VM, T>>> _findChildFunc;
+        VM _selectedViewModel = default(VM);        
         private Func<T, T, HierarchicalResult> _compareFunc;
-        private ISubEntriesHelper<VM> _entryHelper;
-        private Func<VM, ITreeNodeSelectionHelper<VM, T>> _getSelectionHelperFunc;
+        private ISubEntriesHelper<VM> _entryHelper;        
         
         #endregion
 
@@ -92,8 +91,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public VM SelectedViewModel
         {
-            get { return _selectedViewModel; }
-            set { SelectAsync(_getSelectionHelperFunc(_selectedViewModel).Value); }
+            get { return _selectedViewModel; }            
         }
 
         public T SelectedValue
@@ -103,9 +101,6 @@ namespace FileExplorer.ViewModels.Helpers
         }        
 
         public Func<T, T, HierarchicalResult> CompareFunc { get { return _compareFunc; } }
-
-        public Func<VM, ITreeNodeSelectionHelper<VM, T>> GetSelectionHelperFunc { get { return _getSelectionHelperFunc; } }
-
 
         #endregion
 

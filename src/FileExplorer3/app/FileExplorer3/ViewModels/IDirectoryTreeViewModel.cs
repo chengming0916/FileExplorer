@@ -5,43 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Models;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IDirectoryTreeViewModel
-    {
-        void NotifySelectionChanged(IEnumerable<IDirectoryNodeViewModel> path, bool selected);
-        Task SelectAsync(IEntryModel model);
-        IEntryModel SelectedEntry { get; set; }
-        IEntryModel SelectingEntry { get; }
-
-        IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get; }
+    public interface IDirectoryTreeViewModel : ISupportSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
+    {        
+        ISubEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
     }
 
-    public interface IDirectoryNodeViewModel
+    public interface IDirectoryNodeViewModel : ISupportNodeSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
     {
-        IDirectoryTreeViewModel TreeModel { get; }
-
-        IDirectoryNodeViewModel CreateSubmodel(IEntryModel entryModel);
-
-        Task LoadAsync(bool force = false);
-
-        Task BroadcastSelectAsync(IEntryModel model, Action<IDirectoryNodeViewModel> action);
-        Task BroadcastSelectAsync(IDirectoryTreeViewModel sender, IEntryModel model, params IDirectoryNodeBroadcastHandler[] allHandlers);
+        bool ShowCaption { get; set; }
         
-        Task NotifyChildSelectionChangedAsync(IDirectoryNodeViewModel node, bool selected, Stack<IDirectoryNodeViewModel> path);
-
-        bool IsSelected { get; set; }
-        bool IsExpanded { get; set; }
-
-        bool IsChildSelected { get; set; }
-
-        bool IsDummyNode { get; }
-        IEntryViewModel CurrentDirectory { get; }
-
-        IDirectoryNodeViewModel ParentNode { get; }
-
-        IObservableCollection<IDirectoryNodeViewModel> Subdirectories { get; }
+        ISubEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
     }
 
 }

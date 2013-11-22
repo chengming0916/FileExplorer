@@ -14,6 +14,7 @@ namespace FileExplorer.ViewModels.Helpers
 
 
     public class TreeNodeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeNodeSelectionHelper<VM,T>
+        
     {
         #region Constructor
 
@@ -80,18 +81,19 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="model"></param>
         /// <param name="currentAction"></param>
         /// <returns></returns>
-        public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNodeOnly = false)
+        public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value,
+            bool nextNodeOnly = false)
         {
             foreach (var current in await _entryHelper.LoadAsync())
             {
-                var currentSelectionHelper = _rootSelectionHelper.GetSelectionHelperFunc(current);
+                var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
                 switch (_rootSelectionHelper.CompareFunc(currentSelectionHelper.Value, value))
                 {
                     case HierarchicalResult.Child:
-                        if (nextNodeOnly)
-                            return currentSelectionHelper;
-                        else return await currentSelectionHelper.LookupAsync(value, nextNodeOnly);
 
+                            if (nextNodeOnly)
+                                return currentSelectionHelper;
+                            else return await currentSelectionHelper.LookupAsync(value, nextNodeOnly);
                     case HierarchicalResult.Current:
                         return currentSelectionHelper;
                 }

@@ -96,6 +96,7 @@ namespace FileExplorer.ViewModels.Helpers
             set { _isLoaded = value; NotifyOfPropertyChanged(() => IsLoaded); }
         }
 
+        public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }
 
         public ObservableCollection<VM> All { get { return _subItems; } }        
 

@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels.Helpers
 {
+    public interface ISupportSubEntriesHelper<VM>
+    {
+        ISubEntriesHelper<VM> Entries { get; set; }
+    }
+
     /// <summary>
     /// Helper view model class that provide support of loading sub-entries.
     /// </summary>
@@ -36,6 +41,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// Whether subentries loaded.
         /// </summary>
         bool IsLoaded { get; }
+
+        IEnumerable<VM> AllNonBindable { get; }
 
         /// <summary>
         /// A list of sub-entries, after loaded.

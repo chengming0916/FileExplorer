@@ -27,7 +27,7 @@ namespace FileExplorer.ViewModels
 
             Entries = new SubEntriesHelper<IBreadcrumbItemViewModel>();
             Selection = new TreeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
-                _profiles.First().HierarchyComparer.CompareHierarchy, vm => vm.Selection);
+                _profiles.First().HierarchyComparer.CompareHierarchy);
             Selection.SelectionChanged += (o, e) =>
                 {
                     BroadcastDirectoryChanged(EntryViewModel.FromEntryModel( Selection.SelectedValue));

@@ -29,14 +29,14 @@
             <ContentPresenter ContentTemplate="{StaticResource GridLabelTemplate}" 
                           Content="{Binding SelectedViewModel.CurrentDirectory}" />
         </StackPanel>-->
-      
-        
-        <uc:TreeViewEx x:Name="Subdirectories" Grid.Row="0" >
+
+
+        <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" >
             <uc:TreeViewEx.ItemContainerStyle>
                 <Style TargetType="{x:Type uc:TreeViewItemEx}" 
                        BasedOn="{StaticResource TreeViewItemExStyle}" >
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"  />
-                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
+                    <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
+                    <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
                 </Style>
             </uc:TreeViewEx.ItemContainerStyle>
         </uc:TreeViewEx>

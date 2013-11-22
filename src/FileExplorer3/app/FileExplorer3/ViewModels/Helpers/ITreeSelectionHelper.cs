@@ -8,11 +8,21 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
+    public interface ISupportNodeSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
+    {
+        ITreeNodeSelectionHelper<VM, T> Selection { get; set; }
+    }
+
+    public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
+    {
+        ITreeSelectionHelper<VM, T> Selection { get; set; }
+    }
+
     /// <summary>
     /// Implemented in tree node view model, to provide selection support.
     /// </summary>
-    /// <typeparam name="VM"></typeparam>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="VM">ViewModel.</typeparam>
+    /// <typeparam name="T">Value</typeparam>
     public interface ITreeSelectionHelper<VM,T> : INotifyPropertyChanged
     {
         /// <summary>
@@ -33,6 +43,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// Select a tree node by value.
         /// </summary>
         /// <param name="value"></param>
+        /// <param name="pathFunc">Run when lookup along the path (e.g. HierarchicalResult = Current/Child), 
+        /// return false to abort lookup.</param>
         /// <returns></returns>
         Task SelectAsync(T value);
 
@@ -56,10 +68,6 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         Func<T, T, HierarchicalResult> CompareFunc { get; }
 
-        /// <summary>
-        /// Given a ViewModel, return it's selection helper.
-        /// </summary>
-        Func<VM, ITreeNodeSelectionHelper<VM, T>> GetSelectionHelperFunc { get; }
 
     }
 }
