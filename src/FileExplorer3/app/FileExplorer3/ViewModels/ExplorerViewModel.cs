@@ -41,7 +41,7 @@ namespace FileExplorer.ViewModels
                 var model = evm.Profile.ParseAsync(gotoPath).Result;
                 if (model != null)
                 {
-                    DirectoryTreeModel.SelectAsync(model);
+                    DirectoryTreeModel.Selection.SelectAsync(model);
                     FileListModel.LoadAsync(model, null);
                     BreadcrumbModel.Selection.SelectAsync(model);
                     return;
@@ -69,7 +69,7 @@ namespace FileExplorer.ViewModels
                 var selectedDirectory = message.SelectedModels.FirstOrDefault();
                 FileListModel.LoadAsync(selectedDirectory, null);
                 if (selectedDirectory != null)
-                    DirectoryTreeModel.SelectAsync(selectedDirectory);
+                    DirectoryTreeModel.Selection.SelectAsync(selectedDirectory);
             }
 
         }

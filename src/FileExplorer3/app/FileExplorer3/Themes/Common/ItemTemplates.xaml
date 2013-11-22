@@ -67,7 +67,7 @@
     </DataTemplate>
 
     <HierarchicalDataTemplate x:Key="DirectoryNodeItemTemplate"  
-                              ItemsSource="{Binding Subdirectories}"
+                              ItemsSource="{Binding Entries.All}"
                               DataType="{x:Type vm:DirectoryNodeViewModel}">
         <ContentPresenter Content="{Binding CurrentDirectory}"
             ContentTemplate="{StaticResource GridLabelTemplate}" />

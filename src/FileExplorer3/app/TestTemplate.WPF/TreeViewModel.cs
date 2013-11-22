@@ -10,14 +10,14 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged
+    public class TreeViewModel : INotifyPropertyChanged, ISupportSelectionHelper<TreeNodeViewModel, string>
     {
         public TreeViewModel()
         {
             //Submodel is TreeNodeViewModel,
             Entries = new SubEntriesHelper<TreeNodeViewModel>();
             //Value is based on string
-            Selection = new TreeSelectionHelper<TreeNodeViewModel, string>(Entries, compareFunc, (vm) => vm.Selection);
+            Selection = new TreeSelectionHelper<TreeNodeViewModel, string>(Entries, compareFunc);
 
             Entries.SetEntries(new TreeNodeViewModel("", "Root", this, null));            
 
@@ -41,7 +41,7 @@ namespace TestTemplate.WPF
     }
 
 
-    public class TreeNodeViewModel : INotifyPropertyChanged
+    public class TreeNodeViewModel : INotifyPropertyChanged, ISupportNodeSelectionHelper<TreeNodeViewModel, string>
     {        
         public override string ToString()
         {
