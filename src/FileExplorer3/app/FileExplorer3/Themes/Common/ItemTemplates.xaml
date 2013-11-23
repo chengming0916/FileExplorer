@@ -7,6 +7,7 @@
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 
@@ -78,6 +79,15 @@
                               DataType="{x:Type vm:DirectoryNodeViewModel}">
         <ContentPresenter Content="{Binding CurrentDirectory}" Height="16"
             ContentTemplate="{StaticResource SmallIconItemTemplate}" />
+    </HierarchicalDataTemplate>
+
+    <HierarchicalDataTemplate x:Key="ExpanderItemTemplate"  
+                              ItemsSource="{Binding Entries.All}"
+                              DataType="{x:Type vm:DirectoryNodeViewModel}">        
+        <ContentPresenter Content="{Binding CurrentDirectory}" Height="16"
+            ContentTemplate="{StaticResource SmallIconItemTemplate}" 
+                          Visibility="{Binding IsOverflowed, Converter={StaticResource fbtvc}}"
+                          />
     </HierarchicalDataTemplate>
 
     <HierarchicalDataTemplate x:Key="BreadcrumbNodeItemTemplate"  

@@ -104,9 +104,9 @@
     </ControlTemplate>
 
     <ItemsPanelTemplate x:Key="StackItemPanelTemplate">
-        <bc:OneItemPanel />
-        <!--<VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
-                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />-->
+        <!--<bc:OneItemPanel />-->
+        <VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
+                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
     </ItemsPanelTemplate>
 
     <Style x:Key="BreadcrumbTreeItemStyle" TargetType="{x:Type uc:BreadcrumbTreeItem}">

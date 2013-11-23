@@ -42,7 +42,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <TabControl >
-        
+
         <TabItem Header="HotTrack">
             <WrapPanel>
                 <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
@@ -175,41 +175,47 @@
         </TabItem>
         <TabItem Header="BreadcrumbTree" x:Name="btreeTab" IsSelected="True">
             <DockPanel>
-                
-                <uc:BreadcrumbTree x:Name="btree" Height="30" 
-                                   ItemsSource="{Binding Entries.All}"                                    
-                                   DockPanel.Dock="Top">
-                    <uc:BreadcrumbTree.ItemContainerStyle>
-                        <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
-                       BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
-                            
-                            
-                            <Setter Property="ValuePath" Value="Selection.Value" />
-                            <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
-                            <Setter Property="IsCurrentSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
-                            <Setter Property="SelectedChild" Value="{Binding Selection.SelectedChild, Mode=TwoWay}"  />
-                            <Setter Property="IsChildSelected" Value="{Binding Selection.IsChildSelected, Mode=OneWay}"  />
-                            
-                            <!--Updated by BreadcrumbTreeItem and it's OverflowableStackPanel-->
-                            <Setter Property="IsOverflowed" Value="{Binding IsOverflowed, Mode=OneWayToSource}"  />
-                        </Style>
-                    </uc:BreadcrumbTree.ItemContainerStyle>
-                    <uc:BreadcrumbTree.MenuItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Header}" />
-                        </DataTemplate>
-                    </uc:BreadcrumbTree.MenuItemTemplate>
+                <DockPanel DockPanel.Dock="Top">
+                    
+                    <uc:BreadcrumbExpander DockPanel.Dock="Left" ItemsSource="{Binding Selection.OverflowedAndRootItems}"
+                                           ItemTemplate="{Binding ItemTemplate, ElementName=btree}"
+                                          
+                                           >                        
+                    </uc:BreadcrumbExpander>
 
-                    <uc:BreadcrumbTree.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Entries.All}">
-                            <TextBlock Text="{Binding Header}" />
-                        </HierarchicalDataTemplate>
-                    </uc:BreadcrumbTree.ItemTemplate>
-                    <!--<uc:BreadcrumbTree.LayoutTransform>
+                    <uc:BreadcrumbTree x:Name="btree" Height="30" 
+                                   ItemsSource="{Binding Entries.All}">
+                        <uc:BreadcrumbTree.ItemContainerStyle>
+                            <Style TargetType="{x:Type uc:BreadcrumbTreeItem}" 
+                       BasedOn="{StaticResource BreadcrumbTreeItemStyle}" >
+
+
+                                <Setter Property="ValuePath" Value="Selection.Value" />
+                                <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
+                                <Setter Property="IsCurrentSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
+                                <Setter Property="SelectedChild" Value="{Binding Selection.SelectedChild, Mode=TwoWay}"  />
+                                <Setter Property="IsChildSelected" Value="{Binding Selection.IsChildSelected, Mode=OneWay}"  />
+
+                                <!--Updated by BreadcrumbTreeItem and it's OverflowableStackPanel-->
+                                <Setter Property="IsOverflowed" Value="{Binding IsOverflowed, Mode=OneWayToSource}"  />
+                            </Style>
+                        </uc:BreadcrumbTree.ItemContainerStyle>
+                        <uc:BreadcrumbTree.MenuItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Header}" />
+                            </DataTemplate>
+                        </uc:BreadcrumbTree.MenuItemTemplate>
+
+                        <uc:BreadcrumbTree.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Entries.All}">
+                                <TextBlock Text="{Binding Header}" />
+                            </HierarchicalDataTemplate>
+                        </uc:BreadcrumbTree.ItemTemplate>
+                        <!--<uc:BreadcrumbTree.LayoutTransform>
                         <ScaleTransform ScaleX="2" ScaleY="2" />
                     </uc:BreadcrumbTree.LayoutTransform>-->
-                </uc:BreadcrumbTree>
-
+                    </uc:BreadcrumbTree>
+                </DockPanel>
                 <TextBlock Text="{Binding SelectionHelper.SelectedValue}" DockPanel.Dock="Top" />
                 <ComboBox x:Name="selectBTreeCombo" DockPanel.Dock="Top">
                     <ComboBoxItem IsSelected="True">Sub1\Sub2\Sub3\Sub4\Sub5\Sub6\Sub7\Sub8\Sub9</ComboBoxItem>
@@ -224,7 +230,7 @@
                         <Style TargetType="{x:Type TreeViewItem}" 
                        BasedOn="{StaticResource {x:Type TreeViewItem}}" >
                             <Setter Property="IsExpanded" Value="{Binding Selection.IsChildSelected, Mode=OneWay}"  />
-                            <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=OneWay}"  />                            
+                            <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=OneWay}"  />
                             <!--<Setter Property="IsCaptionVisible" Value="{Binding ShowCaption, Mode=TwoWay}"  />-->
                         </Style>
                     </TreeView.ItemContainerStyle>
@@ -250,7 +256,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />                    
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <ItemsControl Grid.Row="0" Grid.Column="0">
@@ -285,7 +291,7 @@
                     <TextBlock FontSize="20" Text="{Binding OverflowItemCount, 
                         RelativeSource={RelativeSource AncestorType={x:Type bc:OverflowableStackPanel}}}" />
                 </ItemsControl>
-                
+
             </Grid>
         </TabItem>
         <TabItem Header="ListView">

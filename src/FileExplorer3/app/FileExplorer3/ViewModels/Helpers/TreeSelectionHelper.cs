@@ -20,7 +20,7 @@ namespace FileExplorer.ViewModels.Helpers
         {
             _entryHelper = entryHelper;
             _compareFunc = compareFunc;
-            RootItems = new ObservableCollection<VM>();
+            OverflowedAndRootItems = new ObservableCollection<VM>();
         }
 
         #endregion
@@ -66,16 +66,16 @@ namespace FileExplorer.ViewModels.Helpers
             NotifyOfPropertyChanged(() => SelectedViewModel);
             if (SelectionChanged != null)
                 SelectionChanged(this, EventArgs.Empty);
-            
-            RootItems.Clear();
-            foreach (var p in path)
-                RootItems.Add(p.ViewModel);
+
+            OverflowedAndRootItems.Clear();
+            foreach (var p in path.Reverse())
+                OverflowedAndRootItems.Add(p.ViewModel);
         }
 
         public async void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
             _prevPath = path;
-            Debug.WriteLine(path);
+            //Debug.WriteLine(path);
         }
 
         public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
@@ -139,10 +139,10 @@ namespace FileExplorer.ViewModels.Helpers
 
         public event EventHandler SelectionChanged;
 
-        public ObservableCollection<VM> RootItems
+        public ObservableCollection<VM> OverflowedAndRootItems
         {
             get { return _rootItems; }
-            set { _rootItems = value; NotifyOfPropertyChanged(() => RootItems); }
+            set { _rootItems = value; NotifyOfPropertyChanged(() => OverflowedAndRootItems); }
         }
 
         public VM SelectedViewModel

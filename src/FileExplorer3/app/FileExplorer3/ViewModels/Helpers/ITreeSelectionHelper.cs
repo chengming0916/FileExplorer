@@ -77,7 +77,7 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         Func<T, T, HierarchicalResult> CompareFunc { get; }
 
-        ObservableCollection<VM> RootItems { get; set; }
+        ObservableCollection<VM> OverflowedAndRootItems { get; set; }
 
 
     }

@@ -13,25 +13,21 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTreeItem.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbExpander.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 
-    <ControlTemplate x:Key="BreadcrumbTreeTemplate" TargetType="{x:Type uc:BreadcrumbTree}">
-        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-            <ItemsPresenter />
-        </Border>
-    </ControlTemplate>
-
-    <Style TargetType="{x:Type uc:BreadcrumbTree}">
-        <!--<Setter Property="Background" Value="Gray"></Setter>-->
-        <!--<Setter Property="ItemTemplate" Value="{StaticResource breadcrumbTreeItemTemplate}" />-->
+    <Style TargetType="{x:Type uc:BreadcrumbExpander}" BasedOn="{StaticResource {x:Type bc:DropDownList}}">
+        <Setter Property="Header">
+            <Setter.Value>
+                <Path x:Name="path"  Stroke="Black" StrokeThickness="1.2" Data="{StaticResource ExpanderArrow}"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="True" />
+            </Setter.Value>
+        </Setter>
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="ItemContainerStyle" Value="{StaticResource BreadcrumbTreeItemStyle}" />
-        <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />
-        <Setter Property="Template" Value="{StaticResource BreadcrumbTreeTemplate}" />
     </Style>
 
 
