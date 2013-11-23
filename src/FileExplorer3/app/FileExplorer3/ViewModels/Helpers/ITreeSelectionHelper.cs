@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -75,6 +76,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// Compare Hierarchy of two value.
         /// </summary>
         Func<T, T, HierarchicalResult> CompareFunc { get; }
+
+        ObservableCollection<VM> RootItems { get; set; }
 
 
     }

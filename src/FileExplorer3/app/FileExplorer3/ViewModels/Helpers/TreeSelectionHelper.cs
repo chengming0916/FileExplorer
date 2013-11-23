@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace FileExplorer.ViewModels.Helpers
         {
             _entryHelper = entryHelper;
             _compareFunc = compareFunc;
+            RootItems = new ObservableCollection<VM>();
         }
 
         #endregion
@@ -64,6 +66,10 @@ namespace FileExplorer.ViewModels.Helpers
             NotifyOfPropertyChanged(() => SelectedViewModel);
             if (SelectionChanged != null)
                 SelectionChanged(this, EventArgs.Empty);
+            
+            RootItems.Clear();
+            foreach (var p in path)
+                RootItems.Add(p.ViewModel);
         }
 
         public async void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
@@ -125,12 +131,19 @@ namespace FileExplorer.ViewModels.Helpers
         Stack<ITreeNodeSelectionHelper<VM, T>> _prevPath = null;
         private Func<T, T, HierarchicalResult> _compareFunc;
         private ISubEntriesHelper<VM> _entryHelper;
+        private ObservableCollection<VM> _rootItems;
 
         #endregion
 
         #region Public Properties
 
         public event EventHandler SelectionChanged;
+
+        public ObservableCollection<VM> RootItems
+        {
+            get { return _rootItems; }
+            set { _rootItems = value; NotifyOfPropertyChanged(() => RootItems); }
+        }
 
         public VM SelectedViewModel
         {
