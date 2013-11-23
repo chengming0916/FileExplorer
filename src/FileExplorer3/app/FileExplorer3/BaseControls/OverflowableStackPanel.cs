@@ -23,6 +23,9 @@ namespace FileExplorer.BaseControls
     
         protected override Size MeasureOverride(Size constraint)
         {
+            if (double.IsPositiveInfinity(constraint.Width) || double.IsPositiveInfinity(constraint.Height))
+                return base.MeasureOverride(constraint);
+
             var items = InternalChildren.Cast<UIElement>();
 
             overflowableWH = 0;

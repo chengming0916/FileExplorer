@@ -64,8 +64,8 @@ namespace FileExplorer.ViewModels.Helpers
                 var lookupResult =
                     _rootSelectionHelper.SelectedValue == null ? null :
                     AsyncUtils.RunSync(() => this.LookupAsync(_rootSelectionHelper.SelectedValue,
-                        new SearchNextUsingReverseLookup<VM,T>(_rootSelectionHelper.SelectedViewModel)));
-                _selectedValue = lookupResult == null ? default(T) : lookupResult.Value;
+                        new SearchNextUsingReverseLookup<VM,T>(_rootSelectionHelper.SelectedViewModel)));                
+                SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
                 NotifyOfPropertyChanged(() => IsChildSelected);
                 NotifyOfPropertyChanged(() => SelectedChild);
             }
