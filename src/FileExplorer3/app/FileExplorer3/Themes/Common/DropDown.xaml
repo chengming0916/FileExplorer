@@ -92,9 +92,11 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         Header="{Binding Header,RelativeSource={RelativeSource TemplatedParent}}">
                         <ScrollViewer x:Name="DropDownScrollViewer">
+                            <StackPanel Orientation="Vertical">
                             <ItemsPresenter x:Name="ItemsPresenter" 
                                         KeyboardNavigation.DirectionalNavigation="Contained" 
                                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </StackPanel>
                         </ScrollViewer>
                     </local:DropDown>
 

@@ -30,7 +30,9 @@
                 <Image Source="{Binding Selection.SelectedViewModel.CurrentDirectory.Icon}" />
             </bc:Switch.Header>
             <bc:Switch.ContentOn>
-                <uc:BreadcrumbTree x:Name="btree" ItemsSource="{Binding Entries.All}" DockPanel.Dock="Top" BorderThickness="0"
+                <uc:BreadcrumbTree x:Name="btree" 
+                                   ItemsSource="{Binding Entries.All}"
+                                   DockPanel.Dock="Top" BorderThickness="0"
                            MenuItemTemplate="{StaticResource BreadcrumbMenuNodeItemTemplate}"
                            ItemTemplate="{StaticResource BreadcrumbNodeItemTemplate}"
                            >

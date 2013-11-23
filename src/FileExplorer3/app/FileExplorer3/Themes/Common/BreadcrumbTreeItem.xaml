@@ -17,7 +17,9 @@
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="BreadcrumbTreeItemTemplate" TargetType="{x:Type uc:BreadcrumbTreeItem}">
-        <Grid HorizontalAlignment="Stretch" x:Name="baseGrid" >
+        <bc:OverflowableStackPanel HorizontalAlignment="Stretch" Orientation="Horizontal" 
+                                   OverflowItemCount="{Binding OverflowItemCount, RelativeSource={RelativeSource TemplatedParent}
+                                                , Mode=OneWayToSource}" >
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CaptionStates">
                     <VisualState x:Name="ShowCaption" >
@@ -35,39 +37,31 @@
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
-            <Grid.ColumnDefinitions>
-                <!-- Header -->
-                <ColumnDefinition Width="Auto"/>
-                <!-- DropDown -->
-                <ColumnDefinition Width="Auto"/>
-                <!-- SubItems -->
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <bc:HotTrack Grid.Column="0" Grid.Row="0"   x:Name="headerHL"  
+            <bc:HotTrack Grid.Column="0" Grid.Row="0"   x:Name="headerHL" bc:OverflowableStackPanel.CanOverflow="True"
                          SelectedBorderBrush="{TemplateBinding BorderBrush}" 
                          BorderThickness="1,0" >
+
                 <StackPanel Orientation="Horizontal">
 
                     <!--<bc:HotTrack x:Name="headerHL"  
                                  BorderThickness="{TemplateBinding BorderThickness}"
                                  SelectedBorderBrush="Transparent"
                                 >-->
-                    <Button Template="{StaticResource BaseButton}" x:Name="PART_CaptionButton"
+                    <Button Template="{StaticResource BaseButton}" x:Name="PART_CaptionButton"  
                             MaxWidth="200"
                             >
                         <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch" VerticalAlignment="Center"                                   
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" />
                     </Button>
                     <!--</bc:HotTrack>-->
-
-                    <bc:HotTrack x:Name="headerToggleHL"  
+                    <bc:HotTrack x:Name="headerToggleHL"  bc:OverflowableStackPanel.CanOverflow="True"
                                  BorderThickness="1,0,0,0"
                                  SelectedBorderBrush="Transparent"
                                  Visibility="{Binding ShowToggle, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btvc}}"
                                 >
-                        <bc:DropDownList ItemsSource="{TemplateBinding ItemsSource}" 
+                        <bc:DropDownList ItemsSource="{TemplateBinding ItemsSource}"
                                          Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btvc}}" 
                                          SelectedValuePath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
@@ -75,16 +69,18 @@
                                         RelativeSource={RelativeSource TemplatedParent}}"
                                   SelectedValue="{Binding SelectedChild, Mode=TwoWay, 
                                         RelativeSource={RelativeSource TemplatedParent}}"
-                                  ItemTemplate="{TemplateBinding MenuItemTemplate}" />
+                                  ItemTemplate="{TemplateBinding MenuItemTemplate}" >
+                        </bc:DropDownList>
                     </bc:HotTrack>
+
                 </StackPanel>
             </bc:HotTrack>
 
+            
 
+            <ItemsPresenter x:Name="ItemsHost" Grid.Column="1" />
 
-            <ItemsPresenter x:Name="ItemsHost" Grid.Column="2" />
-
-        </Grid>
+        </bc:OverflowableStackPanel>
         <ControlTemplate.Triggers>
             <MultiTrigger >
                 <MultiTrigger.Conditions>
@@ -108,9 +104,9 @@
     </ControlTemplate>
 
     <ItemsPanelTemplate x:Key="StackItemPanelTemplate">
-        <!--<bc:OneItemPanel />-->
-        <VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
-                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
+        <bc:OneItemPanel />
+        <!--<VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
+                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />-->
     </ItemsPanelTemplate>
 
     <Style x:Key="BreadcrumbTreeItemStyle" TargetType="{x:Type uc:BreadcrumbTreeItem}">

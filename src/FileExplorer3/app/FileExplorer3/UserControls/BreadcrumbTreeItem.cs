@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
 {
@@ -61,6 +62,11 @@ namespace FileExplorer.UserControls
             (sender as BreadcrumbTreeItem).UpdateStates(true);
         }
 
+        public static void OnOverflowItemCountChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            (sender as BreadcrumbTreeItem).SetValue(IsOverflowedProperty, ((int)args.NewValue) > 0);
+        }
+
         private void UpdateStates(bool useTransition)
         {
             if (IsCaptionVisible)
@@ -75,6 +81,24 @@ namespace FileExplorer.UserControls
         #endregion
 
         #region Public Properties
+
+        public static DependencyProperty OverflowItemCountProperty = OverflowableStackPanel.OverflowItemCountProperty
+            .AddOwner(typeof(BreadcrumbTreeItem), new PropertyMetadata(OnOverflowItemCountChanged));
+
+        public int OverflowItemCount
+        {
+            get { return (int)GetValue(OverflowItemCountProperty); }
+            set { SetValue(OverflowItemCountProperty, value); }
+        }
+
+        public static DependencyProperty IsOverflowedProperty = DependencyProperty.Register("IsOverflowed", typeof(bool),
+         typeof(BreadcrumbTreeItem), new PropertyMetadata(false));
+
+        public bool IsOverflowed
+        {
+            get { return (bool)GetValue(IsOverflowedProperty); }
+            set { SetValue(IsOverflowedProperty, value); }
+        }
 
         public static readonly DependencyProperty OverflowedItemContainerStyleProperty =
                 BreadcrumbTree.OverflowedItemContainerStyleProperty.AddOwner(typeof(BreadcrumbTreeItem));

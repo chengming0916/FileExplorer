@@ -20,9 +20,7 @@
 
     <ControlTemplate x:Key="BreadcrumbTreeTemplate" TargetType="{x:Type uc:BreadcrumbTree}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-            <Grid>
-                <ItemsPresenter />
-            </Grid>
+            <ItemsPresenter />
         </Border>
     </ControlTemplate>
 

@@ -101,6 +101,7 @@ namespace TestTemplate.WPF
 
         private TreeViewModel _root = null;
         private TreeNodeViewModel _parent = null;
+        private bool _isOverflowed = false;
 
         #endregion
 
@@ -109,6 +110,7 @@ namespace TestTemplate.WPF
         public ITreeNodeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
+        public bool IsOverflowed { get { return _isOverflowed; } set { _isOverflowed = value; NotifyPropertyChanged("IsOverflowed"); } }
         public string Header { get { return _header; } set { _header = value; NotifyPropertyChanged("Header"); } }
         public string Path { get { return _path; } set { _path = value; NotifyPropertyChanged("Path"); } }
 
