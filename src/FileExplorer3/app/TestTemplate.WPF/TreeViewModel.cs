@@ -10,7 +10,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged, ISupportSelectionHelper<TreeNodeViewModel, string>
+    public class TreeViewModel : INotifyPropertyChanged, ISupportNodeSelectionHelper<TreeNodeViewModel, string>
     {
         public TreeViewModel()
         {
@@ -34,7 +34,7 @@ namespace TestTemplate.WPF
             return HierarchicalResult.Unrelated;
         }    
         
-        public ITreeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
+        public ITreeNodeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -75,7 +75,7 @@ namespace TestTemplate.WPF
             }));
 
             Selection = new TreeNodeSelectionHelper<TreeNodeViewModel, string>(
-                value, this, root.Selection, parentNode == null ? null : parentNode.Selection, Entries);           
+                value, this, parentNode == null ? root.Selection : parentNode.Selection, Entries);           
         }
 
         #region Constructor

@@ -11,12 +11,13 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeSelectionHelper<VM, T>
+    public class TreeSelectionHelper<VM, T> : TreeNodeSelectionHelper<VM,T>, ITreeSelectionHelper<VM, T>
     {
         #region Constructor
 
         public TreeSelectionHelper(ISubEntriesHelper<VM> entryHelper,
             Func<T, T, HierarchicalResult> compareFunc)
+            : base(entryHelper, compareFunc)
         {
             _entryHelper = entryHelper;
             _compareFunc = compareFunc;
@@ -27,7 +28,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
 
-        public async void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
+        public override void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
             VM _prevSelectedViewModel = _selectedViewModel;
             T _prevSelectedValue = _selectedValue;
@@ -36,6 +37,9 @@ namespace FileExplorer.ViewModels.Helpers
             _selectedValue = path.Last().Value;
             if (_prevSelectedValue != null && !_prevSelectedValue.Equals(path.Last().Value))
             {
+                AsyncUtils.RunSync(() => LookupAsync(_prevSelectedValue, 
+                    new ReceusiveSearchUsingReverseLookup<VM, T>(_prevPath), 
+                    SetChildNotSelected<VM,T>.WhenChild));
                 //var found = await LookupAsync(_prevSelectedValue,
                 //    RecrusiveBroadcastIfLoaded<VM, T>.Instance, SetNotSelected<VM, T>.WhenCurrent,
                 //    SetChildNotSelected<VM, T>.WhenChild);
@@ -72,35 +76,36 @@ namespace FileExplorer.ViewModels.Helpers
                 OverflowedAndRootItems.Add(p.ViewModel);
         }
 
-        public async void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
+        public override void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
-            _prevPath = path;
+            _prevPath = path;            
+
             //Debug.WriteLine(path);
         }
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors)
-        {
+        //public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
+        //    params ITreeSelectionProcessor<VM, T>[] processors)
+        //{
 
-            foreach (var current in await _entryHelper.LoadAsync())
-            {
-                var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
-                var compareResult = _compareFunc(currentSelectionHelper.Value, value);
+        //    foreach (var current in await _entryHelper.LoadAsync())
+        //    {
+        //        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+        //        var compareResult = _compareFunc(currentSelectionHelper.Value, value);
 
-                if (compareResult == HierarchicalResult.Child || compareResult == HierarchicalResult.Current)
-                    if (processors.Process(compareResult, default(VM), current))
-                        switch (compareResult)
-                        {
-                            case HierarchicalResult.Child:
-                                if (lookupProc is SearchNextLevelOnly<VM, T>)
-                                    return currentSelectionHelper;
-                                return await currentSelectionHelper.LookupAsync(value, lookupProc, processors);
-                            case HierarchicalResult.Current:
-                                return currentSelectionHelper;
-                        }
-            }
-            return null;
-        }
+        //        if (compareResult == HierarchicalResult.Child || compareResult == HierarchicalResult.Current)
+        //            if (processors.Process(compareResult, default(VM), current))
+        //                switch (compareResult)
+        //                {
+        //                    case HierarchicalResult.Child:
+        //                        if (lookupProc is SearchNextLevelOnly<VM, T>)
+        //                            return currentSelectionHelper;
+        //                        return await currentSelectionHelper.LookupAsync(value, lookupProc, processors);
+        //                    case HierarchicalResult.Current:
+        //                        return currentSelectionHelper;
+        //                }
+        //    }
+        //    return null;
+        //}
 
 
 

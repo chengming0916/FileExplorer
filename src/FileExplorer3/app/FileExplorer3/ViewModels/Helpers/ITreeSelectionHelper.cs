@@ -14,48 +14,14 @@ namespace FileExplorer.ViewModels.Helpers
         ITreeNodeSelectionHelper<VM, T> Selection { get; set; }
     }
 
-    public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
-    {
-        ITreeSelectionHelper<VM, T> Selection { get; set; }
-    }
-
     /// <summary>
     /// Implemented in tree node view model, to provide selection support.
     /// </summary>
     /// <typeparam name="VM">ViewModel.</typeparam>
     /// <typeparam name="T">Value</typeparam>
-    public interface ITreeSelectionHelper<VM,T> : INotifyPropertyChanged
+    public interface ITreeSelectionHelper<VM, T> : ITreeNodeSelectionHelper<VM,T>
     {
-        /// <summary>
-        /// Used by a tree node to report to it's root it's selected.
-        /// </summary>
-        /// <param name="path"></param>
-        void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path);
-
-        /// <summary>
-        /// Used by a tree node to report to it's parent it's deselected.
-        /// </summary>
-        /// <param name="path"></param>
-        void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path);
-
-        //Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNodeOnly = false);
-
-        /// <summary>
-        /// Select a tree node by value.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        Task SelectAsync(T value);
-
-        /// <summary>
-        /// Select a tree node by value.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="lookupProc"></param>
-        /// <param name="processors"></param>
-        /// <returns></returns>
-        Task SelectAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors);
+       
 
         /// <summary>
         /// Raised when a node is selected, use SelectedValue/ViewModel to return the selected item.

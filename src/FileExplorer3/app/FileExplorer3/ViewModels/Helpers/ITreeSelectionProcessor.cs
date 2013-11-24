@@ -9,16 +9,17 @@ namespace FileExplorer.ViewModels.Helpers
 {
     public interface ITreeSelectionProcessor<VM, T>
     {
-        bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel);
+        bool Process(HierarchicalResult hr, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper, 
+            ITreeNodeSelectionHelper<VM, T> selectionHelper);
     }
 
     public static class ITreeSelectionProcessorExtension
     {
-        public static bool Process<VM, T>(this ITreeSelectionProcessor<VM, T>[] processors, 
-            HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        public static bool Process<VM, T>(this ITreeSelectionProcessor<VM, T>[] processors,
+            HierarchicalResult hr, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper, ITreeNodeSelectionHelper<VM, T> selectionHelper)
         {
             foreach (var p in processors)
-                if (!p.Process(hr, parentViewModel, viewModel))
+                if (!p.Process(hr, parentSelectionHelper, selectionHelper))
                     return false;
             return true;
         }
@@ -28,11 +29,11 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static SetSelected<VM, T> Instance = new SetSelected<VM, T>();
 
-        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        public bool Process(HierarchicalResult hr, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
+            ITreeNodeSelectionHelper<VM, T> selectionHelper)
         {
             if (hr == HierarchicalResult.Current)
-                if (viewModel is ISupportNodeSelectionHelper<VM, T>)
-                    (viewModel as ISupportNodeSelectionHelper<VM, T>).Selection.IsSelected = true;
+                selectionHelper.IsSelected = true;
             return true;
         }
     }
@@ -50,11 +51,11 @@ namespace FileExplorer.ViewModels.Helpers
 
         private HierarchicalResult _hr;
 
-        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        public bool Process(HierarchicalResult hr, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
+            ITreeNodeSelectionHelper<VM, T> selectionHelper)
         {
             if (_hr.HasFlag(hr))
-                if (viewModel is ISupportNodeSelectionHelper<VM, T>)
-                    (viewModel as ISupportNodeSelectionHelper<VM, T>).Selection.IsSelected = false;
+                selectionHelper.IsSelected = false;
             return true;
         }
     }
@@ -63,11 +64,11 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static SetExpanded<VM, T> Instance = new SetExpanded<VM, T>();
 
-        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        public bool Process(HierarchicalResult hr, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
+            ITreeNodeSelectionHelper<VM, T> selectionHelper)
         {
             if (hr == HierarchicalResult.Child)
-                if (viewModel is ISupportNodeSelectionHelper<VM, T>)
-                    (viewModel as ISupportNodeSelectionHelper<VM, T>).Entries.IsExpanded = true;
+                selectionHelper.Entries.IsExpanded = true;
             return true;
         }
     }
@@ -76,23 +77,19 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static SetChildSelected<VM, T> Instance = new SetChildSelected<VM, T>();
 
-        public bool Process(HierarchicalResult hr, VM parentViewModel,VM viewModel)
+        public bool Process(HierarchicalResult hr, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
+            ITreeNodeSelectionHelper<VM, T> selectionHelper)
         {
-            if (hr == HierarchicalResult.Child)
-                if (parentViewModel is ISupportNodeSelectionHelper<VM, T>)
-                {
-                    (parentViewModel as ISupportNodeSelectionHelper<VM, T>).Selection.SetSelectedChild(
-                        (viewModel as ISupportNodeSelectionHelper<VM, T>).Selection.Value);
-                }
+            if (hr == HierarchicalResult.Child || hr == HierarchicalResult.Current)
+                parentSelectionHelper.SetSelectedChild(selectionHelper.Value);                
             return true;
         }
     }
 
     public class SetChildNotSelected<VM, T> : ITreeSelectionProcessor<VM, T>
     {
-        public static SetChildNotSelected<VM, T> WhenChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Child);
-        public static SetChildNotSelected<VM, T> WhenNotChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Current | 
-            HierarchicalResult.Parent | HierarchicalResult.Unrelated);
+        public static SetChildNotSelected<VM, T> WhenChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Current | HierarchicalResult.Child);
+        public static SetChildNotSelected<VM, T> WhenNotChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Parent | HierarchicalResult.Unrelated);
 
 
         public SetChildNotSelected(HierarchicalResult hr)
@@ -102,11 +99,12 @@ namespace FileExplorer.ViewModels.Helpers
 
         private HierarchicalResult _hr;
 
-        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        public bool Process(HierarchicalResult hr, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
+            ITreeNodeSelectionHelper<VM, T> selectionHelper)
         {
+            
             if (_hr.HasFlag(hr))
-                if (viewModel is ISupportNodeSelectionHelper<VM, T>)
-                    (viewModel as ISupportNodeSelectionHelper<VM, T>).Selection.SetSelectedChild(default(T));
+                parentSelectionHelper.SetSelectedChild(default(T));
             return true;
         }
     }
