@@ -47,6 +47,8 @@ namespace FileExplorer.ViewModels.Helpers
                     _subItemList = (await _loadSubEntryFunc()).ToList();
                     foreach (VM item in _subItemList)
                         All.Add(item);
+                    if (EntriesChanged != null)
+                        EntriesChanged(this, EventArgs.Empty);
                 }
                 finally
                 {
@@ -61,6 +63,8 @@ namespace FileExplorer.ViewModels.Helpers
             foreach (var vm in viewModels)
                 All.Add(vm);
             _subItemList = viewModels.ToList();
+            if (EntriesChanged != null)
+                EntriesChanged(this, EventArgs.Empty);
             _isExpanded = true;
         }
 
@@ -96,6 +100,8 @@ namespace FileExplorer.ViewModels.Helpers
             set { _isLoaded = value; NotifyOfPropertyChanged(() => IsLoaded); }
         }
 
+        public event EventHandler EntriesChanged;
+
         public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }
 
         public ObservableCollection<VM> All { get { return _subItems; } }        
@@ -103,6 +109,9 @@ namespace FileExplorer.ViewModels.Helpers
         #endregion
 
 
+
+
+    
     }
 
 }

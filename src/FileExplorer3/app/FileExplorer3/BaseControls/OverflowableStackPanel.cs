@@ -20,21 +20,29 @@ namespace FileExplorer.BaseControls
         {
             return orientation == Orientation.Horizontal ? size.Width : size.Height;
         }
+
+        private double getHW(Size size, Orientation orientation)
+        {
+            return orientation == Orientation.Vertical ? size.Width : size.Height;
+        }
+    
     
         protected override Size MeasureOverride(Size constraint)
         {
-            if (double.IsPositiveInfinity(constraint.Width) || double.IsPositiveInfinity(constraint.Height))
-                return base.MeasureOverride(constraint);
+            //if (double.IsPositiveInfinity(constraint.Width) || double.IsPositiveInfinity(constraint.Height))
+            //    return base.MeasureOverride(constraint);
 
             var items = InternalChildren.Cast<UIElement>();
 
             overflowableWH = 0;
             nonoverflowableWH = 0;
             int overflowCount = 0;
+            double maxHW = 0;
 
             foreach (var item in items)
             {
                 item.Measure(constraint);
+                maxHW = Math.Max(getHW(item.DesiredSize, Orientation), maxHW);
                 if (GetCanOverflow(item))
                     overflowableWH += getWH(item.DesiredSize, Orientation);
                 else nonoverflowableWH += getWH(item.DesiredSize, Orientation);
@@ -55,8 +63,8 @@ namespace FileExplorer.BaseControls
             SetValue(OverflowItemCountProperty, overflowCount);
 
             return Orientation == Orientation.Horizontal ?
-                    new Size(overflowableWH + nonoverflowableWH, constraint.Height) :
-                    new Size(constraint.Width, overflowableWH + nonoverflowableWH);
+                    new Size(overflowableWH + nonoverflowableWH, maxHW) :
+                    new Size(maxHW, overflowableWH + nonoverflowableWH);
 
         }
 

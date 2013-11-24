@@ -49,14 +49,14 @@ namespace TestTemplate.WPF
             }
 
             public bool RunInDispatcher { get { return false; } }
-         
+
         }
 
 
 
         public override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();            
+            base.OnApplyTemplate();
             setupBreadcrumb();
             setupBreadcrumbTree();
         }
@@ -65,6 +65,12 @@ namespace TestTemplate.WPF
         {
             var tvModel = new TreeViewModel();
             btreeTab.DataContext = tvModel;
+            bexp.AddValueChanged(ComboBox.SelectedValueProperty, (o, e) =>
+                {
+                    string path = bexp.SelectedValue as string;
+                    if (path != null)
+                        tvModel.Selection.SelectAsync(path);
+                });
             selectBTreeItem.Click += (RoutedEventHandler)((o, e) =>
                 {
                     tvModel.Selection.SelectAsync(selectBTreeCombo.Text);
@@ -88,7 +94,7 @@ namespace TestTemplate.WPF
             breadcrumbCore.RootItemsSource = fvm.SubDirectories;
 
             //SuggestBoxes            
-            suggestBoxDummy.SuggestSources = new List<ISuggestSource>(new [] { new DummySuggestSource() });
+            suggestBoxDummy.SuggestSources = new List<ISuggestSource>(new[] { new DummySuggestSource() });
             suggestBoxAuto.RootItem = fvm;
 
             suggestBoxAuto2.HierarchyHelper = suggestBoxAuto.HierarchyHelper =

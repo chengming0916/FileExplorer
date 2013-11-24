@@ -19,7 +19,7 @@ namespace TestTemplate.WPF
             //Value is based on string
             Selection = new TreeSelectionHelper<TreeNodeViewModel, string>(Entries, compareFunc);
 
-            Entries.SetEntries(new TreeNodeViewModel("", "Root", this, null));            
+            Entries.SetEntries(new TreeNodeViewModel("", "Root", this, null));
 
         }
 
@@ -32,17 +32,17 @@ namespace TestTemplate.WPF
             if (path2.StartsWith(path1, StringComparison.CurrentCultureIgnoreCase))
                 return HierarchicalResult.Child;
             return HierarchicalResult.Unrelated;
-        }    
-        
+        }
+
         public ITreeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
 
     public class TreeNodeViewModel : INotifyPropertyChanged, ISupportNodeSelectionHelper<TreeNodeViewModel, string>
-    {        
+    {
         public override string ToString()
         {
             if (String.IsNullOrEmpty(Header))
@@ -75,7 +75,7 @@ namespace TestTemplate.WPF
             }));
 
             Selection = new TreeNodeSelectionHelper<TreeNodeViewModel, string>(
-                value, this, root.Selection, parentNode == null ? null : parentNode.Selection, Entries);           
+                value, this, root.Selection, parentNode == null ? null : parentNode.Selection, Entries);
         }
 
         #region Constructor
@@ -90,7 +90,7 @@ namespace TestTemplate.WPF
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-   
+
 
         #endregion
 
@@ -110,7 +110,16 @@ namespace TestTemplate.WPF
         public ITreeNodeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
-        public bool IsOverflowed { get { return _isOverflowed; } set { _isOverflowed = value; NotifyPropertyChanged("IsOverflowed"); } }
+        public bool IsOverflowedOrRoot { get { return _isOverflowed || _parent == null; } set { } }
+        public bool IsOverflowed
+        {
+            get { return _isOverflowed; }
+            set
+            {
+                _isOverflowed = value;
+                NotifyPropertyChanged("IsOverflowed"); NotifyPropertyChanged("IsOverflowedOrRoot");
+            }
+        }
         public string Header { get { return _header; } set { _header = value; NotifyPropertyChanged("Header"); } }
         public string Path { get { return _path; } set { _path = value; NotifyPropertyChanged("Path"); } }
 

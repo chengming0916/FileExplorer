@@ -20,7 +20,6 @@ namespace FileExplorer.ViewModels.Helpers
         {
             _entryHelper = entryHelper;
             _compareFunc = compareFunc;
-            OverflowedAndRootItems = new ObservableCollection<VM>();
         }
 
         #endregion
@@ -31,6 +30,11 @@ namespace FileExplorer.ViewModels.Helpers
         {
             VM _prevSelectedViewModel = _selectedViewModel;
             T _prevSelectedValue = _selectedValue;
+
+            if (_prevPath != null)
+                _prevPath.Last().IsSelected = false;
+            _prevPath = path;
+
 
             _selectedViewModel = path.Last().ViewModel;
             _selectedValue = path.Last().Value;
@@ -48,7 +52,7 @@ namespace FileExplorer.ViewModels.Helpers
             //        var lookupResult =SelectedValue == null ? null :
             //                    AsyncUtils.RunSync(() => p.LookupAsync(SelectedValue, true));
             //        p.SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
-                    
+
             //    }
             //_prevPath = null;
 
@@ -67,14 +71,28 @@ namespace FileExplorer.ViewModels.Helpers
             if (SelectionChanged != null)
                 SelectionChanged(this, EventArgs.Empty);
 
-            OverflowedAndRootItems.Clear();
-            foreach (var p in path.Reverse())
-                OverflowedAndRootItems.Add(p.ViewModel);
+            UpdateRootItems(path);
+        }
+
+        private void UpdateRootItems(Stack<ITreeNodeSelectionHelper<VM, T>> path = null)
+        {
+            if (_rootItems == null)
+                _rootItems = new ObservableCollection<VM>();
+            else _rootItems.Clear();
+            if (path != null && path.Count() > 0)
+            {
+                foreach (var p in path.Reverse())
+                    if (!(this._entryHelper.AllNonBindable.Contains(p.ViewModel)))
+                        _rootItems.Add(p.ViewModel);
+                _rootItems.Add(default(VM)); //Separator
+            }
+            foreach (var e in this._entryHelper.AllNonBindable)
+                _rootItems.Add(e);
         }
 
         public async void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
-            _prevPath = path;
+
             //Debug.WriteLine(path);
         }
 
@@ -131,7 +149,7 @@ namespace FileExplorer.ViewModels.Helpers
         Stack<ITreeNodeSelectionHelper<VM, T>> _prevPath = null;
         private Func<T, T, HierarchicalResult> _compareFunc;
         private ISubEntriesHelper<VM> _entryHelper;
-        private ObservableCollection<VM> _rootItems;
+        private ObservableCollection<VM> _rootItems = null;
 
         #endregion
 
@@ -141,7 +159,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public ObservableCollection<VM> OverflowedAndRootItems
         {
-            get { return _rootItems; }
+            get { if (_rootItems == null) UpdateRootItems(); return _rootItems; }
             set { _rootItems = value; NotifyOfPropertyChanged(() => OverflowedAndRootItems); }
         }
 

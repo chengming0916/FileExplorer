@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
@@ -22,6 +23,7 @@ namespace FileExplorer.UserControls
 
         #region Methods
 
+
         #endregion
 
         #region Data
@@ -29,6 +31,15 @@ namespace FileExplorer.UserControls
         #endregion
 
         #region Public Properties
+
+        //public static readonly DependencyProperty BreadcrumbTreeProperty =
+        //        DependencyProperty.Register("BreadcrumbTree", typeof(BreadcrumbTree), typeof(BreadcrumbTree));
+
+        //public BreadcrumbTree BreadcrumbTree
+        //{
+        //    get { return (BreadcrumbTree)GetValue(BreadcrumbTreeProperty); }
+        //    set { SetValue(BreadcrumbTreeProperty, value); }
+        //}
 
         #endregion
     }

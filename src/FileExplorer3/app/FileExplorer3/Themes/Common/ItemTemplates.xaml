@@ -76,7 +76,7 @@
 
     <HierarchicalDataTemplate x:Key="BreadcrumbMenuNodeItemTemplate"  
                               ItemsSource="{Binding Entries.All}"
-                              DataType="{x:Type vm:DirectoryNodeViewModel}">
+                              DataType="{x:Type vm:DirectoryNodeViewModel}">        
         <ContentPresenter Content="{Binding CurrentDirectory}" Height="16"
             ContentTemplate="{StaticResource SmallIconItemTemplate}" />
     </HierarchicalDataTemplate>

@@ -176,12 +176,21 @@
         <TabItem Header="BreadcrumbTree" x:Name="btreeTab" IsSelected="True">
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top">
-                    
-                    <uc:BreadcrumbExpander DockPanel.Dock="Left" ItemsSource="{Binding Selection.OverflowedAndRootItems}"
-                                           ItemTemplate="{Binding ItemTemplate, ElementName=btree}"
-                                          
-                                           >                        
-                    </uc:BreadcrumbExpander>
+
+                    <bc:DropDownList x:Name="bexp" DockPanel.Dock="Left" ItemsSource="{Binding Selection.OverflowedAndRootItems}"
+                                           SelectedValuePath="Selection.Value"
+                                           ItemTemplate="{Binding ItemTemplate, ElementName=btree}">
+                        <bc:DropDownList.Header>
+                            <Path x:Name="path"  Stroke="Black" StrokeThickness="1.2" Data="{StaticResource ExpanderArrow}"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="True" />
+                        </bc:DropDownList.Header>
+                        <bc:DropDownList.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource ComboboxNullAsSeparatorStyle}">
+                                <Setter Property="Visibility" Value="{Binding IsOverflowedOrRoot, Mode=OneWay, Converter={StaticResource btvc}}"  />
+                            </Style>
+                        </bc:DropDownList.ItemContainerStyle>
+
+                    </bc:DropDownList>
 
                     <uc:BreadcrumbTree x:Name="btree" Height="30" 
                                    ItemsSource="{Binding Entries.All}">
@@ -202,7 +211,8 @@
                         </uc:BreadcrumbTree.ItemContainerStyle>
                         <uc:BreadcrumbTree.MenuItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Header}" />
+                                    <TextBlock Text="{Binding Header}" />
+
                             </DataTemplate>
                         </uc:BreadcrumbTree.MenuItemTemplate>
 

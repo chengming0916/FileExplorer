@@ -49,7 +49,7 @@
                                  SelectedBorderBrush="Transparent"
                                 >-->
                     <Button Template="{StaticResource BaseButton}" x:Name="PART_CaptionButton"  
-                            MaxWidth="200"
+                            MaxWidth="1000"
                             >
                         <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch" VerticalAlignment="Center"                                   
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" />
@@ -104,9 +104,9 @@
     </ControlTemplate>
 
     <ItemsPanelTemplate x:Key="StackItemPanelTemplate">
-        <!--<bc:OneItemPanel />-->
-        <VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
-                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />
+        <bc:OneItemPanel />
+        <!--<VirtualizingStackPanel VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard"  
+                                            HorizontalAlignment="Stretch" Orientation="Horizontal" VerticalAlignment="Stretch" />-->
     </ItemsPanelTemplate>
 
     <Style x:Key="BreadcrumbTreeItemStyle" TargetType="{x:Type uc:BreadcrumbTreeItem}">

@@ -37,6 +37,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         bool IsExpanded { get; set; }
 
+        event EventHandler EntriesChanged;
+
         /// <summary>
         /// Whether subentries loaded.
         /// </summary>

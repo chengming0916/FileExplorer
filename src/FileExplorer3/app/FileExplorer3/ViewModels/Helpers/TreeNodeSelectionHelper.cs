@@ -145,7 +145,7 @@ namespace FileExplorer.ViewModels.Helpers
                     if (_prevSelected == null)
                         Debug.WriteLine(String.Format("findChildFunc failed when looking for {0}", newValue));
                     else
-                        _prevSelected.SetIsSelected(true);
+                        _prevSelected.IsSelected = true;
                 }
             }
         }
