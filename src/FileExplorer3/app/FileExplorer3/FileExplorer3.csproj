@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{78B3E601-2449-4600-AF48-94AC53FBEE22}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FileExplorer</RootNamespace>
+    <AssemblyName>FileExplorer3</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.1.1309.1617\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core">
+      <HintPath>..\packages\NUnitTestAdapter.1.0\lib\nunit.core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\packages\NUnitTestAdapter.1.0\lib\nunit.core.interfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\packages\NUnitTestAdapter.1.0\lib\nunit.util.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NUnit.VisualStudio.TestAdapter">
+      <HintPath>..\packages\NUnitTestAdapter.1.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BaseControls\LambdaHierarchyHelper.cs" />
+    <Compile Include="BaseControls\OneItemPanel.cs" />
+    <Compile Include="BaseControls\OverflowablePanel.cs" />
+    <Compile Include="BaseControls\OverflowableStackPanel.cs" />
+    <Compile Include="BaseControls\Switch.cs" />
+    <Compile Include="Defines\Converters\VisibilityToBoolConverter.cs" />
+    <Compile Include="UserControls\BreadcrumbExpander.cs" />
+    <Compile Include="UserControls\BreadcrumbTree.cs" />
+    <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
+    <Compile Include="BaseControls\DropDownList.cs" />
+    <None Include="Obsoluted\OverflowPanel.cs" />
+    <None Include="Obsoluted\OverflowItem.cs" />
+    <Compile Include="BaseControls\SuggestBoxBase.cs" />
+    <Compile Include="BaseControls\MultiContentControl.cs" />
+    <Compile Include="BaseControls\PathExistsValidationRule.cs" />
+    <Compile Include="BaseControls\PathHierarchyHelper.cs" />
+    <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
+    <Compile Include="BaseControls\AutoSuggestSource.cs" />
+    <Compile Include="BaseControls\HotTrack.cs" />
+    <Compile Include="BaseControls\SuggestBox.cs" />
+    <Compile Include="Defines\Converters\BoolToVisibilityCollapsed.cs" />
+    <Compile Include="Defines\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Defines\Converters\FormatNumbers.cs" />
+    <Compile Include="Defines\Converters\EnumMatchToBooleanConverter.cs" />
+    <Compile Include="Defines\Converters\FlipBool.cs" />
+    <Compile Include="Defines\Converters\FlipBoolToVisibility.cs" />
+    <Compile Include="Defines\Converters\FlipBoolToVisibilityCollapsed.cs" />
+    <Compile Include="Defines\Converters\FormatDouble.cs" />
+    <Compile Include="Defines\Converters\FormatFileSize.cs" />
+    <Compile Include="Defines\Converters\FormatTime.cs" />
+    <Compile Include="Defines\Converters\IntAdd.cs" />
+    <Compile Include="Defines\Converters\IntSubstract.cs" />
+    <Compile Include="Defines\Converters\InvertSignConverter.cs" />
+    <Compile Include="Defines\Converters\StringArrayToString.cs" />
+    <Compile Include="Defines\Converters\TagToBold.cs" />
+    <Compile Include="Defines\Converters\ToStringConverter.cs" />
+    <Compile Include="Defines\Converters\UserFriendlyTextConverter.cs" />
+    <Compile Include="Defines\Enums.cs" />
+    <Compile Include="Defines\Structs.cs" />
+    <Compile Include="Models\ColumnFilter.cs" />
+    <Compile Include="Models\EntryModelBase.cs" />
+    <Compile Include="Models\IColumnFilter.cs" />
+    <Compile Include="Models\IEntryModel.cs" />
+    <Compile Include="Models\IEntryHierarchyComparer.cs" />
+    <Compile Include="Models\IEntryModelIconExtractor.cs" />
+    <Compile Include="Models\IMetadata.cs" />
+    <Compile Include="Models\IMetadataProvider.cs" />
+    <Compile Include="Models\IProfile.cs" />
+    <Compile Include="Models\Metadata.cs" />
+    <Compile Include="Models\NullMetadataProvider.cs" />
+    <Compile Include="Models\PathComparer.cs" />
+    <Compile Include="Models\RootEntryModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Themes\ThirdParty\Block.xaml.cs" />
+    <Compile Include="Themes\ThirdParty\BlueDot.xaml.cs" />
+    <Compile Include="Themes\ThirdParty\LoadingAnimation.xaml.cs" />
+    <Compile Include="Themes\ThirdParty\SilverLightMain.xaml.cs" />
+    <Compile Include="UnitTests\UtilTest.cs" />
+    <Compile Include="UnitTests\ActionTest.cs" />
+    <Compile Include="BaseControls\StackPanelView.cs" />
+    <Compile Include="BaseControls\DisplayTemplateSelector.cs" />
+    <Compile Include="BaseControls\DropDown.cs" />
+    <Compile Include="BaseControls\BreadcrumbCore.cs" />
+    <Compile Include="BaseControls\BreadcrumbItem.cs" />
+    <Compile Include="BaseControls\BreadcrumbOverflowPanel.cs" />
+    <Compile Include="UserControls\Breadcrumb.cs" />
+    <Compile Include="UserControls\BreadcrumbBase.cs" />
+    <Compile Include="UserControls\EditBox.cs" />
+    <Compile Include="UserControls\EditBoxAdorner.cs" />
+    <Compile Include="BaseControls\GridViewColumnEx.cs" />
+    <Compile Include="BaseControls\OverlappingPanel.cs" />
+    <Compile Include="UserControls\StatusbarEx.cs" />
+    <Compile Include="UserControls\TreeViewEx.cs" />
+    <Compile Include="UserControls\ExplorerCommands.cs" />
+    <Compile Include="BaseControls\VirtualizingWrapPanel.cs" />
+    <Compile Include="UnitTests\UnitTestExtensions.cs" />
+    <Compile Include="BaseControls\AnimatedVirtualizingPanel.cs" />
+    <Compile Include="BaseControls\DebuggingConverter.cs" />
+    <Compile Include="UserControls\ListViewEx.cs" />
+    <Compile Include="UserControls\ListViewColumnUtils.cs" />
+    <Compile Include="UserControls\SelectionHelper.cs" />
+    <Compile Include="UserControls\UITools.cs" />
+    <Compile Include="BaseControls\VirtualWrapPanel.cs" />
+    <Compile Include="BaseControls\VirutalStackPanel.cs" />
+    <Compile Include="BaseControls\VirutalStackPanelView.cs" />
+    <Compile Include="BaseControls\VirutalWrapPanelView.cs" />
+    <Compile Include="BaseControls\WrapPanelView.cs" />
+    <Compile Include="Utils\AsyncUtils.cs" />
+    <Compile Include="Utils\BitmapSourceUtils.cs" />
+    <Compile Include="UserControls\InputBindingTrigger.cs" />
+    <Compile Include="Utils\PropertyPathHelper.cs" />
+    <Compile Include="Utils\SimpleCommand.cs" />
+    <Compile Include="ValueComparer.cs" />
+    <Compile Include="ViewModels\Actions\AppendDirectoryTree.cs" />
+    <Compile Include="ViewModels\Actions\AppendEntryList.cs" />
+    <Compile Include="ViewModels\BreadcrumbItemViewModel.cs" />
+    <Compile Include="ViewModels\BreadcrumbViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
+    <Compile Include="Models\EntryModelIconExtractor.cs" />
+    <Compile Include="ViewModels\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\Helpers\ITreeSelectionLookup.cs" />
+    <Compile Include="ViewModels\Helpers\ISubEntriesHelper.cs" />
+    <Compile Include="ViewModels\Helpers\ITreeNodeSelectionHelper.cs" />
+    <Compile Include="ViewModels\Helpers\ITreeSelectionHelper.cs" />
+    <Compile Include="ViewModels\Helpers\ITreeSelectionProcessor.cs" />
+    <Compile Include="ViewModels\Helpers\NotifyPropertyChangedBase.cs" />
+    <Compile Include="ViewModels\Helpers\SubEntriesHelper.cs" />
+    <Compile Include="ViewModels\Helpers\TreeNodeSelectionHelper.cs" />
+    <Compile Include="ViewModels\Helpers\TreeSelectionHelper.cs" />
+    <Compile Include="ViewModels\IBreadcrumbItemViewModel.cs" />
+    <Compile Include="ViewModels\IMetadataViewModel.cs" />
+    <Compile Include="ViewModels\IBreadcrumbViewModel.cs" />
+    <Compile Include="ViewModels\MetadataViewModel.cs" />
+    <Compile Include="ViewModels\ViewModeViewModel.cs" />
+    <Compile Include="ViewModels\BreadcrumbHierarchyHelper.cs" />
+    <Compile Include="Views\BreadcrumbView.xaml.cs">
+      <DependentUpon>BreadcrumbView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StatusbarView.xaml.cs">
+      <DependentUpon>StatusbarView.xaml</DependentUpon>
+    </Compile>
+    <None Include="ViewModels\Actions\LoadIcon.cs" />
+    <Compile Include="ViewModels\Actions\CalculateColumnHeaderCount.cs" />
+    <Compile Include="ViewModels\Actions\FindMatched.cs" />
+    <Compile Include="ViewModels\Actions\DoSomething.cs" />
+    <Compile Include="ViewModels\Actions\ToggleRename.cs" />
+    <Compile Include="ViewModels\Actions\UnselectAll.cs" />
+    <Compile Include="ViewModels\Actions\WaitTillPropertyChanged.cs" />
+    <Compile Include="ViewModels\DirectoryNodeViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryTreeViewModel.cs" />
+    <Compile Include="ViewModels\EntryViewModel.cs" />
+    <Compile Include="ViewModels\EntryViewModelComparer.cs" />
+    <Compile Include="ViewModels\ExplorerViewModel.cs" />
+    <Compile Include="ViewModels\FileListViewModel.cs" />
+    <Compile Include="ViewModels\IDirectoryTreeViewModel.cs" />
+    <Compile Include="ViewModels\IExplorerViewModel.cs" />
+    <Compile Include="ViewModels\IFileListViewModel.cs" />
+    <Compile Include="ViewModels\IEntryViewModel.cs" />
+    <Compile Include="ViewModels\Actions\LoadEntryList.cs" />
+    <Compile Include="ViewModels\Actions\Loader.cs" />
+    <Compile Include="ViewModels\IStatusbarViewModel.cs" />
+    <Compile Include="ViewModels\StatusbarViewModel.cs" />
+    <Compile Include="ViewModels\TaskUtils.cs" />
+    <Compile Include="Views\DirectoryTreeView.xaml.cs">
+      <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EntryIconView.xaml.cs">
+      <DependentUpon>EntryIconView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExplorerView.xaml.cs">
+      <DependentUpon>ExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FileListView.xaml.cs">
+      <DependentUpon>FileListView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagrams\FileExplorer3.cd" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Themes\Common\TreeViewItemCopy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Obsoluted\OverflowPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <Page Include="Themes\Common\BreadcrumbParts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ContentControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\BreadcrumbTree.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\BreadcrumbTreeItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\BreadcrumbExpander.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Switch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\TextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\HotTrack.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ThirdParty\Block.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ThirdParty\ThirdParty.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ThirdParty\LoadingAnimation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Breadcrumb.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ThirdParty\BlueDot.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ThirdParty\SilverLightMain.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\GroupBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\RadioCombo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\StackPanelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\WrapPanelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\DisplayTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Statusbar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\StatusbarItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\DropDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ListViewItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ItemTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Panels.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\TreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\TreeViewItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Views.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Default\Brushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Default\Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Default\BrushesBackup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Default\Geometry.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\VirtualStackPanelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\VirtualWrapPanelView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\EditBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BreadcrumbView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DirectoryTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EntryIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FileListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StatusbarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Themes\Resources\ViewMode\collage_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\collage_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\grid_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\details_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\details_25.png" />
+    <Resource Include="Themes\Resources\ViewMode\extralarge_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\icon_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\Icon_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\large_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\list_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\list_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\organize_25.png" />
+    <Resource Include="Themes\Resources\ViewMode\smallicon_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\smallicon_16_2.png" />
+    <Resource Include="Themes\Resources\ViewMode\tile_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\tile_16_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Common\BrushUpdate.txt" />
+    <Resource Include="Themes\Resources\folder.ico" />
+    <Resource Include="Themes\Resources\file.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

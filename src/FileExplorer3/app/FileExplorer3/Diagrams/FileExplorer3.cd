@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FileExplorer.Models.FileSystemInfoModel">
+    <Position X="0.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\FileSystemInfoModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileExplorer.Models.EntryModelBase">
+    <Position X="0.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAIAAAEEAgAAAEgAAQQAQAAIAAAAAAADABAAAAAAg=</HashCode>
+      <FileName>Models\EntryModelBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.EntryViewModel">
+    <Position X="5.25" Y="1.25" Width="1.5" />
+    <Members>
+      <Method Name="EntryViewModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAQBAAEAAkgAAAIACAAgAgAACAAgABIAEAABI=</HashCode>
+      <FileName>ViewModels\EntryViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.FileListViewModel">
+    <Position X="7.5" Y="1.25" Width="1.5" />
+    <Members>
+      <Field Name="_colFilters" Hidden="true" />
+      <Field Name="_colList" Hidden="true" />
+      <Field Name="_items" Hidden="true" />
+      <Field Name="_itemSize" Hidden="true" />
+      <Field Name="_processedVms" Hidden="true" />
+      <Field Name="_selectedVms" Hidden="true" />
+      <Field Name="_sortBy" Hidden="true" />
+      <Field Name="_sortDirection" Hidden="true" />
+      <Field Name="_viewMode" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAACEAkgAhCKABEAhACAAAIE3AgoAIAADkQACACAAA=</HashCode>
+      <FileName>ViewModels\FileListViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.DirectoryNodeViewModel">
+    <Position X="11" Y="2.75" Width="3.25" />
+    <Members>
+      <Field Name="_error" Hidden="true" />
+      <Field Name="_expandWhenBroadcastSelect" Hidden="true" />
+      <Field Name="_isChildSelected" Hidden="true" />
+      <Field Name="_isExpanded" Hidden="true" />
+      <Field Name="_isSelected" Hidden="true" />
+      <Field Name="_parentNode" Hidden="true" />
+      <Field Name="_selectedChild" Hidden="true" />
+      <Field Name="_state" Hidden="true" />
+      <Field Name="_subdirs" Hidden="true" />
+      <Field Name="DummyNode" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Enum Name="FileExplorer.ViewModels.DirectoryNodeViewModel.NodeState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModels\DirectoryNodeViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAgAAQAgABAAkQIEwIAACAHAEBACIAAAAZAABAEwAAg=</HashCode>
+      <FileName>ViewModels\DirectoryNodeViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.DirectoryTreeViewModel">
+    <Position X="15" Y="2.75" Width="2.75" />
+    <Members>
+      <Field Name="_currentBroadcast" Hidden="true" />
+      <Field Name="_events" Hidden="true" />
+      <Field Name="_prevSelectedNodes" Hidden="true" />
+      <Field Name="_rootViewModel" Hidden="true" />
+      <Field Name="_selectedViewModel" Hidden="true" />
+      <Field Name="_selectingEntry" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AGAEBAGAAAwgAAAYACIAAAAAIBAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\DirectoryTreeViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="FileExplorer.Models.IEntryModel">
+    <Position X="0.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAEAAgAAAAAAAQQAAAAIAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Models\IEntryModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FileExplorer.Models.IProfile">
+    <Position X="2.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEBAAAAACAAAAAAAQAAAAAAAIAACAQAAAAAAgAI=</HashCode>
+      <FileName>Models\IProfile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
