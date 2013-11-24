@@ -67,7 +67,12 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         T Value { get; }
 
+        ISubEntriesHelper<VM> Entries { get; }
+
         ITreeNodeSelectionHelper<VM, T> ParentSelectionHelper { get; }
+
+
+        Func<T, T, HierarchicalResult> CompareFunc { get; }
 
     }
 }

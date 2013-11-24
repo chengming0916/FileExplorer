@@ -9,7 +9,7 @@ namespace FileExplorer.ViewModels.Helpers
 {
     public interface ITreeSelectionLookup<VM, T>
     {
-        Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
             Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors);
     }
 
@@ -17,26 +17,23 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static SearchNextLevelOnly<VM, T> Instance = new SearchNextLevelOnly<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
+             Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
-            if (parentViewModel is ISupportSubEntriesHelper<VM>)
-            {
-                var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
-                foreach (VM current in await entries.LoadAsync())
-                    if (current is ISupportNodeSelectionHelper<VM, T>)
+            foreach (VM current in await selectionHelper.Entries.LoadAsync())
+                if (current is ISupportNodeSelectionHelper<VM, T>)
+                {
+                    var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    switch (compareResult)
                     {
-                        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
-                        var compareResult = compareFunc(currentSelectionHelper.Value, value);
-                        switch (compareResult)
-                        {
-                            case HierarchicalResult.Current:
-                            case HierarchicalResult.Child:
-                                processors.Process(compareResult, parentViewModel, current);
-                                return currentSelectionHelper;
-                        }
+                        case HierarchicalResult.Current:
+                        case HierarchicalResult.Child:
+                            processors.Process(compareResult, selectionHelper, currentSelectionHelper);
+                            return currentSelectionHelper;
                     }
-            }
+                }
+
             return null;
         }
     }
@@ -57,30 +54,68 @@ namespace FileExplorer.ViewModels.Helpers
 
         VM _viewModel;
         Stack<ITreeNodeSelectionHelper<VM, T>> _hierarchy;
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
             Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
-            if (parentViewModel is ISupportSubEntriesHelper<VM>)
-            {
-                var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
-                if (entries.IsLoaded)
-                    foreach (VM current in entries.AllNonBindable)
+
+            if (selectionHelper.Entries.IsLoaded)
+                foreach (VM current in selectionHelper.Entries.AllNonBindable)
                     if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
                     {
                         var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
                         var compareResult = compareFunc(currentSelectionHelper.Value, value);
                         switch (compareResult)
                         {
-                            case HierarchicalResult.Child : 
-                            case HierarchicalResult.Current :
+                            case HierarchicalResult.Child:
+                            case HierarchicalResult.Current:
                                 if (_hierarchy.Contains(currentSelectionHelper))
                                 {
-                                    processors.Process(compareResult, parentViewModel, current);
+                                    processors.Process(compareResult, selectionHelper, currentSelectionHelper);
                                     return currentSelectionHelper;
                                 }
                                 break;
                         }
                     }
+            return null;
+        }
+    }
+
+    public class ReceusiveSearchUsingReverseLookup<VM, T> : ITreeSelectionLookup<VM, T>
+    {
+        public ReceusiveSearchUsingReverseLookup(IEnumerable<ITreeNodeSelectionHelper<VM, T>> path)
+        {
+            _path = path == null ? null : new Queue<ITreeNodeSelectionHelper<VM, T>>(path);
+        }
+
+        Queue<ITreeNodeSelectionHelper<VM, T>> _path;
+
+        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+        {
+            if (_path == null)
+                return null;
+
+            if (selectionHelper.Entries.IsLoaded)
+            {
+                var currentSelectionHelperFromPath = _path.Dequeue();
+                foreach (VM current in selectionHelper.Entries.AllNonBindable)
+                {
+                    var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+
+                    var compareResult = compareFunc(currentSelectionHelper.Value, currentSelectionHelperFromPath.Value);
+                    switch (compareResult)
+                    {
+                        case HierarchicalResult.Current:
+                            processors.Process(HierarchicalResult.Child, selectionHelper, currentSelectionHelper);
+                            if (_path.Count() == 0)
+                                return currentSelectionHelper;
+                            return await Lookup(value, currentSelectionHelper, compareFunc, processors);
+                        case HierarchicalResult.Child:
+                            throw new Exception();
+                    }
+                }
+
+                throw new KeyNotFoundException(currentSelectionHelperFromPath.Value.ToString());
             }
             return null;
         }
@@ -90,31 +125,27 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static RecrusiveSearchUntilFound<VM, T> Instance = new RecrusiveSearchUntilFound<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
-            if (parentViewModel is ISupportSubEntriesHelper<VM>)
-            {
-                var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
-                foreach (VM current in await entries.LoadAsync())
-                    if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+            foreach (VM current in await selectionHelper.Entries.LoadAsync())
+                if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+                {
+                    var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    switch (compareResult)
                     {
-                        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
-                        var compareResult = compareFunc(currentSelectionHelper.Value, value);
-                        switch (compareResult)
-                        {
-                            case HierarchicalResult.Current:
-                                processors.Process(compareResult, parentViewModel, current);
-                                return currentSelectionHelper;
+                        case HierarchicalResult.Current:
+                            processors.Process(compareResult, selectionHelper, currentSelectionHelper);
+                            return currentSelectionHelper;
 
-                            case HierarchicalResult.Child:
-                                if (processors.Process(compareResult, parentViewModel, current))
-                                    return await Lookup(value, current, compareFunc, processors);
+                        case HierarchicalResult.Child:
+                            if (processors.Process(compareResult, selectionHelper, currentSelectionHelper))
+                                return await Lookup(value, currentSelectionHelper, compareFunc, processors);
 
-                                break;
-                        }
+                            break;
                     }
-            }
+                }
             return null;
         }
     }
@@ -123,32 +154,28 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static RecrusiveSearchIfLoaded<VM, T> Instance = new RecrusiveSearchIfLoaded<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
-          Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
+           Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
-            if (parentViewModel is ISupportSubEntriesHelper<VM>)
-            {
-                var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
-                if (entries.IsLoaded)
-                    foreach (VM current in entries.AllNonBindable)
-                        if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+            if (selectionHelper.Entries.IsLoaded)
+                foreach (VM current in selectionHelper.Entries.AllNonBindable)
+                    if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+                    {
+                        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                        var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                        switch (compareResult)
                         {
-                            var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
-                            var compareResult = compareFunc(currentSelectionHelper.Value, value);
-                            switch (compareResult)
-                            {
-                                case HierarchicalResult.Current:
-                                    processors.Process(compareResult, parentViewModel, current);
-                                    return currentSelectionHelper;
+                            case HierarchicalResult.Current:
+                                processors.Process(compareResult, selectionHelper, currentSelectionHelper);
+                                return currentSelectionHelper;
 
-                                case HierarchicalResult.Child:
-                                    if (processors.Process(compareResult, parentViewModel, current))
-                                        return await Lookup(value, current, compareFunc, processors);
-                                    break;
-                            }
-
+                            case HierarchicalResult.Child:
+                                if (processors.Process(compareResult, selectionHelper, currentSelectionHelper))
+                                    return await Lookup(value, currentSelectionHelper, compareFunc, processors);
+                                break;
                         }
-            }
+
+                    }
             return null;
         }
     }
@@ -157,23 +184,20 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static RecrusiveBroadcastIfLoaded<VM, T> Instance = new RecrusiveBroadcastIfLoaded<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
-          Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
-            if (parentViewModel is ISupportSubEntriesHelper<VM>)
-            {
-                var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
-                if (entries.IsLoaded)
-                    foreach (VM current in entries.AllNonBindable)
-                        if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
-                        {
-                            var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
-                            var compareResult = compareFunc(currentSelectionHelper.Value, value);
-                            if (processors.Process(compareResult, parentViewModel, current))
-                                return await Lookup(value, current, compareFunc, processors);
-                            break;
-                        }
-            }
+
+            if (selectionHelper.Entries.IsLoaded)
+                foreach (VM current in selectionHelper.Entries.AllNonBindable)
+                    if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+                    {
+                        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                        var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                        if (processors.Process(compareResult, selectionHelper, currentSelectionHelper))
+                            return await Lookup(value, currentSelectionHelper, compareFunc, processors);
+                        break;
+                    }
             return null;
         }
     }

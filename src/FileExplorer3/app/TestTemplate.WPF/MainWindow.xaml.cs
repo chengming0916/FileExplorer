@@ -14,9 +14,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Cofe.Core.Utils;
 using FileExplorer.BaseControls;
 using FileExplorer.UserControls;
 using FileExplorer.Utils;
+using FileExplorer.ViewModels.Helpers;
 
 namespace TestTemplate.WPF
 {
@@ -67,7 +69,9 @@ namespace TestTemplate.WPF
             btreeTab.DataContext = tvModel;
             selectBTreeItem.Click += (RoutedEventHandler)((o, e) =>
                 {
-                    tvModel.Selection.SelectAsync(selectBTreeCombo.Text);
+                    AsyncUtils.RunSync(() => tvModel.Selection.LookupAsync(selectBTreeCombo.Text,
+                        RecrusiveSearchUntilFound<TreeNodeViewModel, string>.Instance,
+                    SetSelected<TreeNodeViewModel, string>.Instance, SetChildSelected<TreeNodeViewModel, string>.Instance));
                 });
             //var items = TreeViewModel.GenerateFakeTreeViewModels().RootItems;
             //items[0].Subitems[1].IsExpanded = true;
