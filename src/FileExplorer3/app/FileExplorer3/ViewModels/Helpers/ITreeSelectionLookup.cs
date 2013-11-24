@@ -80,46 +80,52 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class ReceusiveSearchUsingReverseLookup<VM, T> : ITreeSelectionLookup<VM, T>
-    {
-        public ReceusiveSearchUsingReverseLookup(IEnumerable<ITreeNodeSelectionHelper<VM, T>> path)
-        {
-            _path = path == null ? null : new Queue<ITreeNodeSelectionHelper<VM, T>>(path);
-        }
+    //public class ReceusiveSearchUsingReverseLookup<VM, T> : ITreeSelectionLookup<VM, T>
+    //{
+    //    public ReceusiveSearchUsingReverseLookup(IEnumerable<ITreeNodeSelectionHelper<VM, T>> path)
+    //    {
+    //        _path = path == null ? null : new Queue<ITreeNodeSelectionHelper<VM, T>>(path);
+    //    }
 
-        Queue<ITreeNodeSelectionHelper<VM, T>> _path;
+    //    Queue<ITreeNodeSelectionHelper<VM, T>> _path;
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
-        {
-            if (_path == null)
-                return null;
+    //    public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, ITreeNodeSelectionHelper<VM, T> selectionHelper,
+    //        Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+    //    {
+    //        if (_path == null)
+    //            return null;
 
-            if (selectionHelper.Entries.IsLoaded)
-            {
-                var currentSelectionHelperFromPath = _path.Dequeue();
-                foreach (VM current in selectionHelper.Entries.AllNonBindable)
-                {
-                    var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+    //        if (selectionHelper.Entries.IsLoaded)
+    //        {
+    //            var currentSelectionHelperFromPath = _path.Dequeue();
+    //            foreach (VM current in selectionHelper.Entries.AllNonBindable)
+    //            {
+    //                var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
 
-                    var compareResult = compareFunc(currentSelectionHelper.Value, currentSelectionHelperFromPath.Value);
-                    switch (compareResult)
-                    {
-                        case HierarchicalResult.Current:
-                            processors.Process(HierarchicalResult.Child, selectionHelper, currentSelectionHelper);
-                            if (_path.Count() == 0)
-                                return currentSelectionHelper;
-                            return await Lookup(value, currentSelectionHelper, compareFunc, processors);
-                        case HierarchicalResult.Child:
-                            throw new Exception();
-                    }
-                }
+    //                var compareResult2 = compareFunc(currentSelectionHelper.Value, currentSelectionHelperFromPath.Value);
+    //                var compareResult = compareFunc(currentSelectionHelper.Value, value);
+    //                switch (compareResult)
+    //                {
+    //                    case HierarchicalResult.Current:
+    //                        processors.Process(compareResult, selectionHelper, currentSelectionHelper);
+    //                        foreach (var p in _path)
+    //                            processors.Process(HierarchicalResult.Parent, p, null);
 
-                throw new KeyNotFoundException(currentSelectionHelperFromPath.Value.ToString());
-            }
-            return null;
-        }
-    }
+    //                        return currentSelectionHelper;
+
+    //                    case HierarchicalResult.Child:
+    //                        if (compareResult2 == HierarchicalResult.Current)
+    //                            if (processors.Process(compareResult, selectionHelper, currentSelectionHelper))
+    //                                return await Lookup(value, currentSelectionHelper, compareFunc, processors);
+    //                        break;
+    //                }
+    //            }
+
+    //            throw new KeyNotFoundException(currentSelectionHelperFromPath.Value.ToString());
+    //        }
+    //        return null;
+    //    }
+    //}
 
     public class RecrusiveSearchUntilFound<VM, T> : ITreeSelectionLookup<VM, T>
     {

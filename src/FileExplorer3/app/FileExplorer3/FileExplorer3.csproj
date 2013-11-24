@@ -83,6 +83,7 @@
     <Compile Include="BaseControls\OverflowableStackPanel.cs" />
     <Compile Include="BaseControls\Switch.cs" />
     <Compile Include="Defines\Converters\VisibilityToBoolConverter.cs" />
+    <Compile Include="UnitTests\TreeSelectionUnitTest.cs" />
     <Compile Include="UserControls\BreadcrumbExpander.cs" />
     <Compile Include="UserControls\BreadcrumbTree.cs" />
     <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
