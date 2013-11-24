@@ -23,9 +23,12 @@ namespace FileExplorer.ViewModels.Helpers
             _compareFunc = compareFunc;
         }
 
-        public TreeNodeSelectionHelper(T currentValue, VM currentViewModel, ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
+        public TreeNodeSelectionHelper(T currentValue, VM currentViewModel,
+            ITreeNodeSelectionHelper<VM, T> rootSelectionHelper,
+            ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
             ISubEntriesHelper<VM> entryHelper)
         {
+            _rootSelectionHelper = rootSelectionHelper;
             _parentSelectionHelper = parentSelectionHelper;
             _entryHelper = entryHelper;
             _currentValue = currentValue;
@@ -65,16 +68,16 @@ namespace FileExplorer.ViewModels.Helpers
 
         public virtual void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
-            //if (_entryHelper.IsLoaded)
-            //{
-            //    var lookupResult =
-            //        _rootSelectionHelper.SelectedValue == null ? null :
-            //        AsyncUtils.RunSync(() => this.LookupAsync(_rootSelectionHelper.SelectedValue,
-            //            new SearchNextUsingReverseLookup<VM, T>(_rootSelectionHelper.SelectedViewModel)));
-            //    SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
-            //    NotifyOfPropertyChanged(() => IsChildSelected);
-            //    NotifyOfPropertyChanged(() => SelectedChild);
-            //}
+            if (_entryHelper.IsLoaded)
+            {
+                var lookupResult =
+                    _rootSelectionHelper.SelectedValue == null ? null :
+                    AsyncUtils.RunSync(() => this.LookupAsync(_rootSelectionHelper.SelectedValue,
+                        new SearchNextUsingReverseLookup<VM, T>(_rootSelectionHelper.SelectedViewModel)));
+                SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
+                NotifyOfPropertyChanged(() => IsChildSelected);
+                NotifyOfPropertyChanged(() => SelectedChild);
+            }
             path.Push(this);
             if (_parentSelectionHelper != null)
                 _parentSelectionHelper.ReportChildDeselected(path);
@@ -105,7 +108,6 @@ namespace FileExplorer.ViewModels.Helpers
         {
             _isSelected = value;
             NotifyOfPropertyChanged(() => IsSelected);
-            SetSelectedChild(default(T));
         }
 
         public void OnSelected(bool selected)
@@ -166,6 +168,7 @@ namespace FileExplorer.ViewModels.Helpers
         T _currentValue = default(T);
         bool _isSelected = false;
         T _selectedValue = default(T);
+        ITreeNodeSelectionHelper<VM, T> _rootSelectionHelper = null;
         ITreeNodeSelectionHelper<VM, T> _prevSelected = null;
 
         private ITreeNodeSelectionHelper<VM, T> _parentSelectionHelper;

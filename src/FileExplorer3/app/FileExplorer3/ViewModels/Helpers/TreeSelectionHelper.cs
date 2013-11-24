@@ -11,7 +11,7 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeSelectionHelper<VM, T> : TreeNodeSelectionHelper<VM,T>, ITreeSelectionHelper<VM, T>
+    public class TreeSelectionHelper<VM, T> : TreeNodeSelectionHelper<VM, T>, ITreeSelectionHelper<VM, T>
     {
         #region Constructor
 
@@ -35,11 +35,31 @@ namespace FileExplorer.ViewModels.Helpers
 
             _selectedViewModel = path.Last().ViewModel;
             _selectedValue = path.Last().Value;
+
+
+
+            //if (_prevPath != null)
+            //    foreach (var p in _prevPath)
+            //    {
+            //        if (!(path.Contains(p)))
+            //        {
+            //            p.SetSelectedChild(default(T));
+            //        }
+            //        p.SetIsSelected(p.Value.Equals(_selectedValue));                    
+            //    }
+            //_prevPath = path;
+            //path.Last().SetSelectedChild(default(T));
+
             if (_prevSelectedValue != null && !_prevSelectedValue.Equals(path.Last().Value))
             {
-                AsyncUtils.RunSync(() => LookupAsync(_prevSelectedValue, 
-                    new ReceusiveSearchUsingReverseLookup<VM, T>(_prevPath), 
-                    SetChildNotSelected<VM,T>.WhenChild));
+              
+
+                //AsyncUtils.RunSync(() => LookupAsync(_prevSelectedValue,
+                //    new ReceusiveSearchUsingReverseLookup<VM, T>(_prevPath),
+                //    SetChildNotSelected<VM, T>.WhenChild));
+                //AsyncUtils.RunSync(() => LookupAsync(_selectedValue,
+                //    new ReceusiveSearchUsingReverseLookup<VM, T>(path),
+                //    SetChildSelected<VM, T>.Instance));
                 //var found = await LookupAsync(_prevSelectedValue,
                 //    RecrusiveBroadcastIfLoaded<VM, T>.Instance, SetNotSelected<VM, T>.WhenCurrent,
                 //    SetChildNotSelected<VM, T>.WhenChild);
@@ -52,7 +72,7 @@ namespace FileExplorer.ViewModels.Helpers
             //        var lookupResult =SelectedValue == null ? null :
             //                    AsyncUtils.RunSync(() => p.LookupAsync(SelectedValue, true));
             //        p.SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
-                    
+
             //    }
             //_prevPath = null;
 
@@ -78,7 +98,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public override void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
         {
-            _prevPath = path;            
+           
 
             //Debug.WriteLine(path);
         }
