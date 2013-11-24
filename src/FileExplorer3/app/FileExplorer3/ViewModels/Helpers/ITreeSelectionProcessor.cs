@@ -14,12 +14,32 @@ namespace FileExplorer.ViewModels.Helpers
 
     public static class ITreeSelectionProcessorExtension
     {
-        public static bool Process<VM, T>(this ITreeSelectionProcessor<VM, T>[] processors, 
+        public static bool Process<VM, T>(this ITreeSelectionProcessor<VM, T>[] processors,
             HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
             foreach (var p in processors)
                 if (!p.Process(hr, parentViewModel, viewModel))
                     return false;
+            return true;
+        }
+    }
+
+    public class TreeSelectionProcessor<VM, T> : ITreeSelectionProcessor<VM, T>
+    {
+
+        public TreeSelectionProcessor(HierarchicalResult appliedResult, Func<HierarchicalResult, VM, VM, bool> processFunc)
+        {
+            _processFunc = processFunc;
+            _appliedResult = appliedResult;
+        }
+
+        private Func<HierarchicalResult, VM, VM, bool> _processFunc;
+        private HierarchicalResult _appliedResult;
+
+        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
+        {
+            if (_appliedResult.HasFlag(hr))
+                return _processFunc(hr, parentViewModel, viewModel);
             return true;
         }
     }
@@ -36,6 +56,8 @@ namespace FileExplorer.ViewModels.Helpers
             return true;
         }
     }
+
+
 
     public class SetNotSelected<VM, T> : ITreeSelectionProcessor<VM, T>
     {
@@ -76,7 +98,7 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static SetChildSelected<VM, T> Instance = new SetChildSelected<VM, T>();
 
-        public bool Process(HierarchicalResult hr, VM parentViewModel,VM viewModel)
+        public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
             if (hr == HierarchicalResult.Child)
                 if (parentViewModel is ISupportNodeSelectionHelper<VM, T>)
@@ -91,7 +113,7 @@ namespace FileExplorer.ViewModels.Helpers
     public class SetChildNotSelected<VM, T> : ITreeSelectionProcessor<VM, T>
     {
         public static SetChildNotSelected<VM, T> WhenChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Child);
-        public static SetChildNotSelected<VM, T> WhenNotChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Current | 
+        public static SetChildNotSelected<VM, T> WhenNotChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Current |
             HierarchicalResult.Parent | HierarchicalResult.Unrelated);
 
 
@@ -110,5 +132,5 @@ namespace FileExplorer.ViewModels.Helpers
             return true;
         }
     }
-   
+
 }

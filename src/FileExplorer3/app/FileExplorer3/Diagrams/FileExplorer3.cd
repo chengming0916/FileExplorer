@@ -48,15 +48,6 @@
   <Class Name="FileExplorer.ViewModels.DirectoryNodeViewModel">
     <Position X="11" Y="2.75" Width="3.25" />
     <Members>
-      <Field Name="_error" Hidden="true" />
-      <Field Name="_expandWhenBroadcastSelect" Hidden="true" />
-      <Field Name="_isChildSelected" Hidden="true" />
-      <Field Name="_isExpanded" Hidden="true" />
-      <Field Name="_isSelected" Hidden="true" />
-      <Field Name="_parentNode" Hidden="true" />
-      <Field Name="_selectedChild" Hidden="true" />
-      <Field Name="_state" Hidden="true" />
-      <Field Name="_subdirs" Hidden="true" />
       <Field Name="DummyNode" Hidden="true" />
     </Members>
     <NestedTypes>
@@ -67,7 +58,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAgAAQAgABAAkQIEwIAACAHAEBACIAAAAZAABAEwAAg=</HashCode>
+      <HashCode>AEAAAAAAABCAACAEAAAAAAAAAAAAAAkAAAAAAAQAQAg=</HashCode>
       <FileName>ViewModels\DirectoryNodeViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -75,15 +66,10 @@
   <Class Name="FileExplorer.ViewModels.DirectoryTreeViewModel">
     <Position X="15" Y="2.75" Width="2.75" />
     <Members>
-      <Field Name="_currentBroadcast" Hidden="true" />
       <Field Name="_events" Hidden="true" />
-      <Field Name="_prevSelectedNodes" Hidden="true" />
-      <Field Name="_rootViewModel" Hidden="true" />
-      <Field Name="_selectedViewModel" Hidden="true" />
-      <Field Name="_selectingEntry" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AGAEBAGAAAwgAAAYACIAAAAAIBAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AGAAAAAAAACAACAIAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
       <FileName>ViewModels\DirectoryTreeViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

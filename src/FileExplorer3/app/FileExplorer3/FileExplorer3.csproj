@@ -87,6 +87,7 @@
     <Compile Include="UserControls\BreadcrumbTree.cs" />
     <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
     <Compile Include="BaseControls\DropDownList.cs" />
+    <None Include="Diagrams\TreeSelection.cd" />
     <None Include="Obsoluted\OverflowPanel.cs" />
     <None Include="Obsoluted\OverflowItem.cs" />
     <Compile Include="BaseControls\SuggestBoxBase.cs" />
