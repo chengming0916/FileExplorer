@@ -179,6 +179,7 @@
     <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
     <Compile Include="Models\EntryModelIconExtractor.cs" />
     <Compile Include="ViewModels\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\Helpers\ExtensionMethods.cs" />
     <Compile Include="ViewModels\Helpers\ITreeSelectionLookup.cs" />
     <Compile Include="ViewModels\Helpers\ISubEntriesHelper.cs" />
     <Compile Include="ViewModels\Helpers\ITreeNodeSelectionHelper.cs" />

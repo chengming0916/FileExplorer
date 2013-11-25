@@ -20,13 +20,13 @@ namespace FileExplorer.ViewModels
             _events = events;
 
             Entries = new SubEntriesHelper<IDirectoryNodeViewModel>();
-            Selection = new TreeSelectionHelper<IDirectoryNodeViewModel, IEntryModel>(Entries,
+            var selection = new TreeSelectionHelper<IDirectoryNodeViewModel, IEntryModel>(Entries,
                 _profiles.First().HierarchyComparer.CompareHierarchy);
-            Selection.SelectionChanged += (o, e) =>
+            selection.SelectionChanged += (o, e) =>
             {
-                BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(Selection.SelectedValue));
+                BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
             };
-
+            Selection = selection;
 
             Entries.SetEntries(rootModels
                 .Select(r => new DirectoryNodeViewModel(events, this, r, null)).ToArray());   
@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels
 
         public async Task SelectAsync(IEntryModel value)
         {
-            await Selection.SelectAsync(value,
+            await Selection.AsRoot().SelectAsync(value,
                 RecrusiveSearchUntilFound<IDirectoryNodeViewModel, IEntryModel>.Instance,
                 SetSelected<IDirectoryNodeViewModel, IEntryModel>.Instance,
                 SetExpanded<IDirectoryNodeViewModel, IEntryModel>.Instance);
@@ -63,7 +63,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public ITreeRootSelectionHelper<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
+        public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
         public ISubEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
 
 

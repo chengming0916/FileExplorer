@@ -24,7 +24,7 @@ namespace FileExplorer.ViewModels
 
             CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
             Entries = new SubEntriesHelper<IBreadcrumbItemViewModel>(loadEntriesTask);
-            Selection = new TreeNodeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>(curDirModel, this, rootModel.Selection,
+            Selection = new TreeNodeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>(curDirModel, this, rootModel.Selection.AsRoot(),
                 parentModel == null ? null : parentModel.Selection, Entries);
         }
 
@@ -59,7 +59,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
         
         public IEntryViewModel CurrentDirectory { get; set; }
-        public ITreeNodeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
+        public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
         public ISubEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
 
         public bool IsShown

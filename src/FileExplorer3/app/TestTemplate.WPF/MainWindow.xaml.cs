@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using FileExplorer.BaseControls;
 using FileExplorer.UserControls;
 using FileExplorer.Utils;
+using FileExplorer;
 
 namespace TestTemplate.WPF
 {
@@ -69,11 +70,11 @@ namespace TestTemplate.WPF
                 {
                     string path = bexp.SelectedValue as string;
                     if (path != null)
-                        tvModel.Selection.SelectAsync(path);
+                        tvModel.Selection.AsRoot().SelectAsync(path);
                 });
             selectBTreeItem.Click += (RoutedEventHandler)((o, e) =>
                 {
-                    tvModel.Selection.SelectAsync(selectBTreeCombo.Text);
+                    tvModel.Selection.AsRoot().SelectAsync(selectBTreeCombo.Text);
                 });
             //var items = TreeViewModel.GenerateFakeTreeViewModels().RootItems;
             //items[0].Subitems[1].IsExpanded = true;

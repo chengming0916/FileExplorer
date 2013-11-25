@@ -9,19 +9,19 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ITreeSelectionHelper<VM, T> : INotifyPropertyChanged
+    public interface ITreeSelector<VM, T> : INotifyPropertyChanged
     {
         /// <summary>
         /// Used by a tree node to report to it's root it's selected.
         /// </summary>
         /// <param name="path"></param>
-        void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path);
+        void ReportChildSelected(Stack<ITreeSelector<VM, T>> path);
 
         /// <summary>
         /// Used by a tree node to report to it's parent it's deselected.
         /// </summary>
         /// <param name="path"></param>
-        void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path);
+        void ReportChildDeselected(Stack<ITreeSelector<VM, T>> path);
 
         /// <summary>
         /// 
@@ -30,29 +30,62 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="pathAction">Run when lookup along the path (e.g. when HierarchicalResult = Child or Current)</param>
         /// <param name="nextNodeOnly"></param>
         /// <returns></returns>
-        Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
+        Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
             params ITreeSelectionProcessor<VM, T>[] processors);
 
-        
+        Task<ITreeSelector<VM, T>> LookupAsync(T value, bool nextNode = false);
+
+        /// <summary>
+        /// Whether current view model is selected.
+        /// </summary>
+        bool IsSelected { get; set; }
+
+        /// <summary>
+        /// Whether a child of current view model is selected.
+        /// </summary>
+        bool IsChildSelected { get; }
+
+        /// <summary>
+        /// The selected child of current view model.
+        /// </summary>
+        T SelectedChild { get; set; }
+
+        void SetIsSelected(bool value);
+        void SetSelectedChild(T value);
+
+        /// <summary>
+        /// The owner view model of this selection helper.
+        /// </summary>
+        VM ViewModel { get; }
+
+        /// <summary>
+        /// The represented value of this selection helper.
+        /// </summary>
+        T Value { get; }
+
+        ITreeSelector<VM, T> ParentSelectionHelper { get; }
+
     }
 
 
     public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
     {
-        ITreeNodeSelectionHelper<VM, T> Selection { get; set; }
+        ITreeSelector<VM, T> Selection { get; set; }
     }
 
-    public interface ISupportRootSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
-    {
-        ITreeRootSelectionHelper<VM, T> Selection { get; set; }
-    }
+   
+
+    //public interface ISupportRootSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM> 
+    //{
+    //    ITreeRootSelector<VM, T> Selection { get; set; }
+    //}
 
     /// <summary>
     /// Implemented in tree node view model, to provide selection support.
     /// </summary>
     /// <typeparam name="VM">ViewModel.</typeparam>
     /// <typeparam name="T">Value</typeparam>
-    public interface ITreeRootSelectionHelper<VM, T> : ITreeSelectionHelper<VM,T>
+    public interface ITreeRootSelector<VM, T> : ITreeSelector<VM,T>
     {
 
         
