@@ -11,7 +11,7 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeSelectionHelper<VM, T>
+    public class TreeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeRootSelectionHelper<VM, T>
     {
         #region Constructor
 
@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels.Helpers
                 //var found = await LookupAsync(_prevSelectedValue,
                 //    RecrusiveBroadcastIfLoaded<VM, T>.Instance, SetNotSelected<VM, T>.WhenCurrent,
                 //    SetChildNotSelected<VM, T>.WhenChild);
-                (_prevSelectedViewModel as ISupportNodeSelectionHelper<VM, T>).Selection.IsSelected = false;
+                (_prevSelectedViewModel as ISupportSelectionHelper<VM, T>).Selection.IsSelected = false;
             }
 
             //if (_prevPath != null)
@@ -102,7 +102,7 @@ namespace FileExplorer.ViewModels.Helpers
 
             foreach (var current in await _entryHelper.LoadAsync())
             {
-                var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                var currentSelectionHelper = (current as ISupportSelectionHelper<VM, T>).Selection;
                 var compareResult = _compareFunc(currentSelectionHelper.Value, value);
 
                 if (compareResult == HierarchicalResult.Child || compareResult == HierarchicalResult.Current)

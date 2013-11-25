@@ -34,14 +34,14 @@ namespace TestTemplate.WPF
             return HierarchicalResult.Unrelated;
         }
 
-        public ITreeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
+        public ITreeRootSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
 
-    public class TreeNodeViewModel : INotifyPropertyChanged, ISupportNodeSelectionHelper<TreeNodeViewModel, string>
+    public class TreeNodeViewModel : INotifyPropertyChanged, ISupportSelectionHelper<TreeNodeViewModel, string>
     {
         public override string ToString()
         {

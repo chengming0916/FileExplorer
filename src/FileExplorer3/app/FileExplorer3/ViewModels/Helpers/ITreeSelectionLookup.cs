@@ -24,9 +24,9 @@ namespace FileExplorer.ViewModels.Helpers
             {
                 var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
                 foreach (VM current in await entries.LoadAsync())
-                    if (current is ISupportNodeSelectionHelper<VM, T>)
+                    if (current is ISupportSelectionHelper<VM, T>)
                     {
-                        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                        var currentSelectionHelper = (current as ISupportSelectionHelper<VM, T>).Selection;
                         var compareResult = compareFunc(currentSelectionHelper.Value, value);
                         switch (compareResult)
                         {
@@ -47,7 +47,7 @@ namespace FileExplorer.ViewModels.Helpers
         {
             _viewModel = targetViewModel;
             _hierarchy = new Stack<ITreeNodeSelectionHelper<VM, T>>();
-            var current = (_viewModel as ISupportNodeSelectionHelper<VM, T>).Selection;
+            var current = (_viewModel as ISupportSelectionHelper<VM, T>).Selection;
             while (current != null)
             {
                 _hierarchy.Push(current);
@@ -65,9 +65,9 @@ namespace FileExplorer.ViewModels.Helpers
                 var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
                 if (entries.IsLoaded)
                     foreach (VM current in entries.AllNonBindable)
-                    if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+                    if (current is ISupportSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
                     {
-                        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                        var currentSelectionHelper = (current as ISupportSelectionHelper<VM, T>).Selection;
                         var compareResult = compareFunc(currentSelectionHelper.Value, value);
                         switch (compareResult)
                         {
@@ -97,9 +97,9 @@ namespace FileExplorer.ViewModels.Helpers
             {
                 var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
                 foreach (VM current in await entries.LoadAsync())
-                    if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+                    if (current is ISupportSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
                     {
-                        var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                        var currentSelectionHelper = (current as ISupportSelectionHelper<VM, T>).Selection;
                         var compareResult = compareFunc(currentSelectionHelper.Value, value);
                         switch (compareResult)
                         {
@@ -131,9 +131,9 @@ namespace FileExplorer.ViewModels.Helpers
                 var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
                 if (entries.IsLoaded)
                     foreach (VM current in entries.AllNonBindable)
-                        if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+                        if (current is ISupportSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
                         {
-                            var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                            var currentSelectionHelper = (current as ISupportSelectionHelper<VM, T>).Selection;
                             var compareResult = compareFunc(currentSelectionHelper.Value, value);
                             switch (compareResult)
                             {
@@ -165,9 +165,9 @@ namespace FileExplorer.ViewModels.Helpers
                 var entries = (parentViewModel as ISupportSubEntriesHelper<VM>).Entries;
                 if (entries.IsLoaded)
                     foreach (VM current in entries.AllNonBindable)
-                        if (current is ISupportNodeSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
+                        if (current is ISupportSelectionHelper<VM, T> && current is ISupportSubEntriesHelper<VM>)
                         {
-                            var currentSelectionHelper = (current as ISupportNodeSelectionHelper<VM, T>).Selection;
+                            var currentSelectionHelper = (current as ISupportSelectionHelper<VM, T>).Selection;
                             var compareResult = compareFunc(currentSelectionHelper.Value, value);
                             if (processors.Process(compareResult, parentViewModel, current))
                                 return await Lookup(value, current, compareFunc, processors);

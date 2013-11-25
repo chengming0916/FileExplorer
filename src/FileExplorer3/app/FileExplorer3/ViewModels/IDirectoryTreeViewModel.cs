@@ -14,7 +14,7 @@ namespace FileExplorer.ViewModels
         Task SelectAsync(IEntryModel value);
     }
 
-    public interface IDirectoryNodeViewModel : ISupportNodeSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
+    public interface IDirectoryNodeViewModel : ISupportSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
     {
         bool ShowCaption { get; set; }
     }
