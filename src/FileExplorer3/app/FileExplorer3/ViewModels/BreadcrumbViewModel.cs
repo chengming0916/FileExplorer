@@ -26,13 +26,13 @@ namespace FileExplorer.ViewModels
             _events = events;
 
             Entries = new SubEntriesHelper<IBreadcrumbItemViewModel>();
-            Selection = new TreeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
+            var selection = new TreeSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
                 _profiles.First().HierarchyComparer.CompareHierarchy);
-            Selection.SelectionChanged += (o, e) =>
+            selection.SelectionChanged += (o, e) =>
                 {
-                    BroadcastDirectoryChanged(EntryViewModel.FromEntryModel( Selection.SelectedValue));
+                    BroadcastDirectoryChanged(EntryViewModel.FromEntryModel( selection.SelectedValue));
                 };
-
+            Selection = selection;
 
             Entries.SetEntries(rootModels
                 .Select(r => new BreadcrumbItemViewModel(events, this, r, null)).ToArray());   
@@ -68,7 +68,7 @@ namespace FileExplorer.ViewModels
 
         public async Task SelectAsync(IEntryModel value)
         {
-            await Selection.SelectAsync(value,
+            await Selection.AsRoot().SelectAsync(value,
                 RecrusiveSearchUntilFound<IBreadcrumbItemViewModel, IEntryModel>.Instance,
                 SetSelected<IBreadcrumbItemViewModel, IEntryModel>.Instance,
                 SetChildSelected<IBreadcrumbItemViewModel, IEntryModel>.Instance);
@@ -108,7 +108,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public ITreeRootSelectionHelper<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
+        public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
         public ISubEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
         
 

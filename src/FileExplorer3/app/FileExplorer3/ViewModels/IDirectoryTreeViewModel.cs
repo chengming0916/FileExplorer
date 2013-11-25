@@ -9,7 +9,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IDirectoryTreeViewModel : ISupportRootSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
+    public interface IDirectoryTreeViewModel : ISupportSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
     {
         Task SelectAsync(IEntryModel value);
     }

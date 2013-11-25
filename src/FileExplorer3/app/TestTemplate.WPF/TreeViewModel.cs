@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Defines;
 using FileExplorer.ViewModels.Helpers;
+using FileExplorer;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged, ISupportRootSelectionHelper<TreeNodeViewModel, string>
+    public class TreeViewModel : INotifyPropertyChanged, ISupportSelectionHelper<TreeNodeViewModel, string>
     {
         public TreeViewModel()
         {
@@ -34,7 +35,7 @@ namespace TestTemplate.WPF
             return HierarchicalResult.Unrelated;
         }
 
-        public ITreeRootSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
+        public ITreeSelector<TreeNodeViewModel, string> Selection { get; set; }
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -77,7 +78,7 @@ namespace TestTemplate.WPF
             }));
 
             Selection = new TreeNodeSelectionHelper<TreeNodeViewModel, string>(
-                value, this, root.Selection, parentNode == null ? null : parentNode.Selection, Entries);
+                value, this, root.Selection.AsRoot(), parentNode == null ? null : parentNode.Selection, Entries);
         }
 
         #region Constructor
@@ -109,7 +110,7 @@ namespace TestTemplate.WPF
 
         #region Public Properties
 
-        public ITreeNodeSelectionHelper<TreeNodeViewModel, string> Selection { get; set; }
+        public ITreeSelector<TreeNodeViewModel, string> Selection { get; set; }
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
         public bool IsOverflowedOrRoot { get { return _isOverflowed || _parent == null; } set { } }

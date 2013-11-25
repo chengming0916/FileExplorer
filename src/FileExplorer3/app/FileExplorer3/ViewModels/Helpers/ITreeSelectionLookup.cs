@@ -9,7 +9,7 @@ namespace FileExplorer.ViewModels.Helpers
 {
     public interface ITreeSelectionLookup<VM, T>
     {
-        Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        Task<ITreeSelector<VM, T>> Lookup(T value, VM parentViewModel,
             Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors);
     }
 
@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static SearchNextLevelOnly<VM, T> Instance = new SearchNextLevelOnly<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        public async Task<ITreeSelector<VM, T>> Lookup(T value, VM parentViewModel,
             Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
             if (parentViewModel is ISupportSubEntriesHelper<VM>)
@@ -46,7 +46,7 @@ namespace FileExplorer.ViewModels.Helpers
         public SearchNextUsingReverseLookup(VM targetViewModel)
         {
             _viewModel = targetViewModel;
-            _hierarchy = new Stack<ITreeNodeSelectionHelper<VM, T>>();
+            _hierarchy = new Stack<ITreeSelector<VM, T>>();
             var current = (_viewModel as ISupportSelectionHelper<VM, T>).Selection;
             while (current != null)
             {
@@ -56,8 +56,8 @@ namespace FileExplorer.ViewModels.Helpers
         }
 
         VM _viewModel;
-        Stack<ITreeNodeSelectionHelper<VM, T>> _hierarchy;
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        Stack<ITreeSelector<VM, T>> _hierarchy;
+        public async Task<ITreeSelector<VM, T>> Lookup(T value, VM parentViewModel,
             Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
             if (parentViewModel is ISupportSubEntriesHelper<VM>)
@@ -90,7 +90,7 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static RecrusiveSearchUntilFound<VM, T> Instance = new RecrusiveSearchUntilFound<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        public async Task<ITreeSelector<VM, T>> Lookup(T value, VM parentViewModel,
            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
             if (parentViewModel is ISupportSubEntriesHelper<VM>)
@@ -123,7 +123,7 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static RecrusiveSearchIfLoaded<VM, T> Instance = new RecrusiveSearchIfLoaded<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        public async Task<ITreeSelector<VM, T>> Lookup(T value, VM parentViewModel,
           Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
             if (parentViewModel is ISupportSubEntriesHelper<VM>)
@@ -157,7 +157,7 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static RecrusiveBroadcastIfLoaded<VM, T> Instance = new RecrusiveBroadcastIfLoaded<VM, T>();
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> Lookup(T value, VM parentViewModel,
+        public async Task<ITreeSelector<VM, T>> Lookup(T value, VM parentViewModel,
           Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
         {
             if (parentViewModel is ISupportSubEntriesHelper<VM>)

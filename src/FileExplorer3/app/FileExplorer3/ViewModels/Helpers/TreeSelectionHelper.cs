@@ -11,7 +11,7 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeRootSelectionHelper<VM, T>
+    public class TreeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeRootSelector<VM, T>
     {
         #region Constructor
 
@@ -26,7 +26,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
 
-        public async void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
+        public async void ReportChildSelected(Stack<ITreeSelector<VM, T>> path)
         {
             VM _prevSelectedViewModel = _selectedViewModel;
             T _prevSelectedValue = _selectedValue;
@@ -74,7 +74,7 @@ namespace FileExplorer.ViewModels.Helpers
             UpdateRootItems(path);
         }
 
-        private void UpdateRootItems(Stack<ITreeNodeSelectionHelper<VM, T>> path = null)
+        private void UpdateRootItems(Stack<ITreeSelector<VM, T>> path = null)
         {
             if (_rootItems == null)
                 _rootItems = new ObservableCollection<VM>();
@@ -90,13 +90,13 @@ namespace FileExplorer.ViewModels.Helpers
                 _rootItems.Add(e);
         }
 
-        public async void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
+        public async void ReportChildDeselected(Stack<ITreeSelector<VM, T>> path)
         {
 
             //Debug.WriteLine(path);
         }
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
+        public async Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
             params ITreeSelectionProcessor<VM, T>[] processors)
         {
 
@@ -146,7 +146,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         T _selectedValue = default(T);
         VM _selectedViewModel = default(VM);
-        Stack<ITreeNodeSelectionHelper<VM, T>> _prevPath = null;
+        Stack<ITreeSelector<VM, T>> _prevPath = null;
         private Func<T, T, HierarchicalResult> _compareFunc;
         private ISubEntriesHelper<VM> _entryHelper;
         private ObservableCollection<VM> _rootItems = null;
@@ -179,5 +179,65 @@ namespace FileExplorer.ViewModels.Helpers
         #endregion
 
 
+
+
+        public Task<ITreeSelector<VM, T>> LookupAsync(T value, bool nextNode = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsSelected
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool IsChildSelected
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public T SelectedChild
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void SetIsSelected(bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetSelectedChild(T value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public VM ViewModel
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public T Value
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ITreeSelector<VM, T> ParentSelectionHelper
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

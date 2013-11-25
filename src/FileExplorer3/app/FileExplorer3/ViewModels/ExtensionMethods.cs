@@ -9,7 +9,7 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer
 {
-    public static class ExtensionMethods
+    public static partial class ExtensionMethods
     {
         //public static IEnumerable<IDirectoryNodeViewModel> GetHierarchy(
         //    this IDirectoryNodeViewModel node, bool includeCurrent)

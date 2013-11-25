@@ -13,12 +13,12 @@ namespace FileExplorer.ViewModels.Helpers
 {
 
 
-    public class TreeNodeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeNodeSelectionHelper<VM, T>
+    public class TreeNodeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeSelector<VM, T>
     {
         #region Constructor
 
-        public TreeNodeSelectionHelper(T currentValue, VM currentViewModel, ITreeRootSelectionHelper<VM, T> rootSelectionHelper,
-            ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
+        public TreeNodeSelectionHelper(T currentValue, VM currentViewModel, ITreeRootSelector<VM, T> rootSelectionHelper,
+            ITreeSelector<VM, T> parentSelectionHelper,
             ISubEntriesHelper<VM> entryHelper)
         {
             _rootSelectionHelper = rootSelectionHelper;
@@ -41,7 +41,7 @@ namespace FileExplorer.ViewModels.Helpers
         /// Bubble up to TreeSelectionHelper for selection.
         /// </summary>
         /// <param name="path"></param>
-        public void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
+        public void ReportChildSelected(Stack<ITreeSelector<VM, T>> path)
         {
             if (path.Count() > 0)
             {
@@ -57,7 +57,7 @@ namespace FileExplorer.ViewModels.Helpers
             else _rootSelectionHelper.ReportChildSelected(path);
         }
 
-        public void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path)
+        public void ReportChildDeselected(Stack<ITreeSelector<VM, T>> path)
         {
             if (_entryHelper.IsLoaded)
             {
@@ -89,14 +89,14 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="model"></param>
         /// <param name="currentAction"></param>
         /// <returns></returns>
-        public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value,
+        public async Task<ITreeSelector<VM, T>> LookupAsync(T value,
             ITreeSelectionLookup<VM, T> lookupProc,
             params ITreeSelectionProcessor<VM, T>[] processors)
         {
             return await lookupProc.Lookup(value, this.ViewModel, _rootSelectionHelper.CompareFunc, processors);
         }
 
-        public async Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value,
+        public async Task<ITreeSelector<VM, T>> LookupAsync(T value,
             bool nextNodeOnly)
         {
             return await LookupAsync(value, SearchNextLevelOnly<VM, T>.Instance);
@@ -112,8 +112,8 @@ namespace FileExplorer.ViewModels.Helpers
         public void OnSelected(bool selected)
         {
             if (selected)
-                ReportChildSelected(new Stack<ITreeNodeSelectionHelper<VM, T>>());
-            else ReportChildDeselected(new Stack<ITreeNodeSelectionHelper<VM, T>>());
+                ReportChildSelected(new Stack<ITreeSelector<VM, T>>());
+            else ReportChildDeselected(new Stack<ITreeSelector<VM, T>>());
         }
 
         public void SetSelectedChild(T newValue)
@@ -167,10 +167,10 @@ namespace FileExplorer.ViewModels.Helpers
         T _currentValue = default(T);
         bool _isSelected = false;
         T _selectedValue = default(T);
-        ITreeNodeSelectionHelper<VM, T> _prevSelected = null;
+        ITreeSelector<VM, T> _prevSelected = null;
 
-        private ITreeNodeSelectionHelper<VM, T> _parentSelectionHelper;
-        private ITreeRootSelectionHelper<VM, T> _rootSelectionHelper;
+        private ITreeSelector<VM, T> _parentSelectionHelper;
+        private ITreeRootSelector<VM, T> _rootSelectionHelper;
         private ISubEntriesHelper<VM> _entryHelper;
 
         #endregion
@@ -181,7 +181,7 @@ namespace FileExplorer.ViewModels.Helpers
         public T Value { get { return _currentValue; } }
         public VM ViewModel { get { return _currentViewModel; } }
         
-        public ITreeNodeSelectionHelper<VM, T> ParentSelectionHelper { get { return _parentSelectionHelper; } }        
+        public ITreeSelector<VM, T> ParentSelectionHelper { get { return _parentSelectionHelper; } }        
 
         public bool IsSelected
         {

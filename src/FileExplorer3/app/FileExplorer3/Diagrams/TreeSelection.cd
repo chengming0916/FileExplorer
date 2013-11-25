@@ -162,21 +162,21 @@
     <Position X="2" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
-      <FileName>ViewModels\Helpers\ITreeSelectionHelper.cs</FileName>
+      <FileName>ViewModels\Helpers\ITreeNodeSelectionHelper.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FileExplorer.ViewModels.Helpers.ISupportSelectionHelper&lt;VM, T&gt;" Collapsed="true">
     <Position X="4.25" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
-      <FileName>ViewModels\Helpers\ITreeSelectionHelper.cs</FileName>
+      <FileName>ViewModels\Helpers\ITreeNodeSelectionHelper.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="FileExplorer.ViewModels.Helpers.ITreeSelectionHelper&lt;VM, T&gt;" Collapsed="true">
+  <Interface Name="FileExplorer.ViewModels.Helpers.ITreeNodeSelectionHelper&lt;VM, T&gt;" Collapsed="true">
     <Position X="11.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>CAAAAAACAAAAAAAYACAAAAAAAAAAAAAAAAAgQAIAAAA=</HashCode>
-      <FileName>ViewModels\Helpers\ITreeSelectionHelper.cs</FileName>
+      <FileName>ViewModels\Helpers\ITreeNodeSelectionHelper.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FileExplorer.ViewModels.Helpers.ITreeSelectionLookup&lt;VM, T&gt;" Collapsed="true">
