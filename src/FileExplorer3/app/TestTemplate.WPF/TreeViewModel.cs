@@ -10,7 +10,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged, ISupportSelectionHelper<TreeNodeViewModel, string>
+    public class TreeViewModel : INotifyPropertyChanged, ISupportRootSelectionHelper<TreeNodeViewModel, string>
     {
         public TreeViewModel()
         {
@@ -38,6 +38,8 @@ namespace TestTemplate.WPF
         public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+    
     }
 
 
