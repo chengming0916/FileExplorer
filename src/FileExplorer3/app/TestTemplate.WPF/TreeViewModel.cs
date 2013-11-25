@@ -11,7 +11,7 @@ using FileExplorer;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged, ISupportSelectionHelper<TreeNodeViewModel, string>
+    public class TreeViewModel : INotifyPropertyChanged, ISupportTreeSelector<TreeNodeViewModel, string>
     {
         public TreeViewModel()
         {
@@ -36,7 +36,7 @@ namespace TestTemplate.WPF
         }
 
         public ITreeSelector<TreeNodeViewModel, string> Selection { get; set; }
-        public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
+        public IEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -44,7 +44,7 @@ namespace TestTemplate.WPF
     }
 
 
-    public class TreeNodeViewModel : INotifyPropertyChanged, ISupportSelectionHelper<TreeNodeViewModel, string>
+    public class TreeNodeViewModel : INotifyPropertyChanged, ISupportTreeSelector<TreeNodeViewModel, string>
     {
         public override string ToString()
         {
@@ -77,8 +77,9 @@ namespace TestTemplate.WPF
                     );
             }));
 
-            Selection = new TreeNodeSelectionHelper<TreeNodeViewModel, string>(
-                value, this, root.Selection.AsRoot(), parentNode == null ? null : parentNode.Selection, Entries);
+            Selection = new TreeSelector<TreeNodeViewModel, string>(
+                value, this, 
+                parentNode == null ? root.Selection : parentNode.Selection, Entries);
         }
 
         #region Constructor
@@ -111,7 +112,7 @@ namespace TestTemplate.WPF
         #region Public Properties
 
         public ITreeSelector<TreeNodeViewModel, string> Selection { get; set; }
-        public ISubEntriesHelper<TreeNodeViewModel> Entries { get; set; }
+        public IEntriesHelper<TreeNodeViewModel> Entries { get; set; }
 
         public bool IsOverflowedOrRoot { get { return _isOverflowed || _parent == null; } set { } }
         public bool IsOverflowed

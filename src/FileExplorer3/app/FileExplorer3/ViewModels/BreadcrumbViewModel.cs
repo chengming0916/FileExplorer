@@ -109,7 +109,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
 
         public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
-        public ISubEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
+        public IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
         
 
         public bool ShowBreadcrumb

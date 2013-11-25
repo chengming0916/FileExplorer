@@ -9,12 +9,12 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IDirectoryTreeViewModel : ISupportSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
+    public interface IDirectoryTreeViewModel : ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>
     {
         Task SelectAsync(IEntryModel value);
     }
 
-    public interface IDirectoryNodeViewModel : ISupportSelectionHelper<IDirectoryNodeViewModel, IEntryModel>
+    public interface IDirectoryNodeViewModel : ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>
     {
         bool ShowCaption { get; set; }
     }

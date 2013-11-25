@@ -8,8 +8,8 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IBreadcrumbViewModel : ISupportSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>
+    public interface IBreadcrumbViewModel : ISupportTreeSelector<IBreadcrumbItemViewModel, IEntryModel>
     {
-        ISubEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
+        IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
     }
 }

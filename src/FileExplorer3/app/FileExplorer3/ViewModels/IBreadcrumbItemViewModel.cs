@@ -8,7 +8,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IBreadcrumbItemViewModel : ISupportSelectionHelper<IBreadcrumbItemViewModel, IEntryModel>
+    public interface IBreadcrumbItemViewModel : ISupportTreeSelector<IBreadcrumbItemViewModel, IEntryModel>
     {
         #region Constructor
         
@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
 
         bool ShowCaption { get; set; }        
-        ISubEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
+        IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
         
         #endregion
     }
