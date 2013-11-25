@@ -11,11 +11,11 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeSelectionHelper<VM, T> : TreeSelector<VM,T>, ITreeRootSelector<VM, T>
+    public class TreeRootSelector<VM, T> : TreeSelector<VM,T>, ITreeRootSelector<VM, T>
     {
         #region Constructor
 
-        public TreeSelectionHelper(IEntriesHelper<VM> entryHelper,
+        public TreeRootSelector(IEntriesHelper<VM> entryHelper,
             Func<T, T, HierarchicalResult> compareFunc)
             : base(entryHelper)
         {
@@ -69,8 +69,8 @@ namespace FileExplorer.ViewModels.Helpers
 
      
 
-        public async Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors)
+        public async Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeLookup<VM, T> lookupProc,
+            params ITreeProcessor<VM, T>[] processors)
         {
 
             foreach (var current in await EntryHelper.LoadAsync())
@@ -104,8 +104,8 @@ namespace FileExplorer.ViewModels.Helpers
             }
         }
 
-        public async Task SelectAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors)
+        public async Task SelectAsync(T value, ITreeLookup<VM, T> lookupProc,
+            params ITreeProcessor<VM, T>[] processors)
         {
             if (_selectedValue == null || _compareFunc(_selectedValue, value) != HierarchicalResult.Current)
             {

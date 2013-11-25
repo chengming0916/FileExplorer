@@ -30,8 +30,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="pathAction">Run when lookup along the path (e.g. when HierarchicalResult = Child or Current)</param>
         /// <param name="nextNodeOnly"></param>
         /// <returns></returns>
-        Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors);
+        Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeLookup<VM, T> lookupProc,
+            params ITreeProcessor<VM, T>[] processors);
 
         Task<ITreeSelector<VM, T>> LookupAsync(T value, bool nextNode = false);
 
@@ -100,8 +100,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="lookupProc"></param>
         /// <param name="processors"></param>
         /// <returns></returns>
-        Task SelectAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors);
+        Task SelectAsync(T value, ITreeLookup<VM, T> lookupProc,
+            params ITreeProcessor<VM, T>[] processors);
 
         /// <summary>
         /// Raised when a node is selected, use SelectedValue/ViewModel to return the selected item.

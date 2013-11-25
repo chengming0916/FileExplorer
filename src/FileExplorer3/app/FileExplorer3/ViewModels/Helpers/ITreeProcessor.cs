@@ -7,14 +7,14 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ITreeSelectionProcessor<VM, T>
+    public interface ITreeProcessor<VM, T>
     {
         bool Process(HierarchicalResult hr, ITreeSelector<VM,T> parentSelector, ITreeSelector<VM,T> selector);
     }
 
     public static class ITreeSelectionProcessorExtension
     {
-        public static bool Process<VM, T>(this ITreeSelectionProcessor<VM, T>[] processors,
+        public static bool Process<VM, T>(this ITreeProcessor<VM, T>[] processors,
             HierarchicalResult hr, ITreeSelector<VM,T> parentSelector, ITreeSelector<VM,T> selector)
         {
             foreach (var p in processors)
@@ -24,7 +24,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class TreeSelectionProcessor<VM, T> : ITreeSelectionProcessor<VM, T>
+    public class TreeSelectionProcessor<VM, T> : ITreeProcessor<VM, T>
     {
 
         public TreeSelectionProcessor(HierarchicalResult appliedResult, 
@@ -45,7 +45,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class SetSelected<VM, T> : ITreeSelectionProcessor<VM, T>
+    public class SetSelected<VM, T> : ITreeProcessor<VM, T>
     {
         public static SetSelected<VM, T> Instance = new SetSelected<VM, T>();
 
@@ -59,7 +59,7 @@ namespace FileExplorer.ViewModels.Helpers
 
 
 
-    public class SetNotSelected<VM, T> : ITreeSelectionProcessor<VM, T>
+    public class SetNotSelected<VM, T> : ITreeProcessor<VM, T>
     {
         public static SetNotSelected<VM, T> WhenCurrent = new SetNotSelected<VM, T>(HierarchicalResult.Current);
         public static SetNotSelected<VM, T> WhenNotCurrent = new SetNotSelected<VM, T>(
@@ -80,7 +80,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class SetExpanded<VM, T> : ITreeSelectionProcessor<VM, T>
+    public class SetExpanded<VM, T> : ITreeProcessor<VM, T>
     {
         public static SetExpanded<VM, T> Instance = new SetExpanded<VM, T>();
 
@@ -92,7 +92,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class SetChildSelected<VM, T> : ITreeSelectionProcessor<VM, T>
+    public class SetChildSelected<VM, T> : ITreeProcessor<VM, T>
     {
         public static SetChildSelected<VM, T> Instance = new SetChildSelected<VM, T>();
 
@@ -104,7 +104,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class SetChildNotSelected<VM, T> : ITreeSelectionProcessor<VM, T>
+    public class SetChildNotSelected<VM, T> : ITreeProcessor<VM, T>
     {
         public static SetChildNotSelected<VM, T> WhenChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Child);
         public static SetChildNotSelected<VM, T> WhenNotChild = new SetChildNotSelected<VM, T>(HierarchicalResult.Current |

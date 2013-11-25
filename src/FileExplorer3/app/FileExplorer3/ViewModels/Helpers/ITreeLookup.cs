@@ -7,19 +7,19 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ITreeSelectionLookup<VM, T>
+    public interface ITreeLookup<VM, T>
     {
         Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors);
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors);
     }
    
 
-    public class SearchNextLevelOnly<VM, T> : ITreeSelectionLookup<VM, T>
+    public class SearchNextLevelOnly<VM, T> : ITreeLookup<VM, T>
     {
         public static SearchNextLevelOnly<VM, T> Instance = new SearchNextLevelOnly<VM, T>();
 
         public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
         {
                 foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
                     if (current is ISupportTreeSelector<VM, T>)
@@ -38,7 +38,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class SearchNextUsingReverseLookup<VM, T> : ITreeSelectionLookup<VM, T>
+    public class SearchNextUsingReverseLookup<VM, T> : ITreeLookup<VM, T>
     {
         public SearchNextUsingReverseLookup(VM targetViewModel)
         {
@@ -55,7 +55,7 @@ namespace FileExplorer.ViewModels.Helpers
         VM _viewModel;
         Stack<ITreeSelector<VM, T>> _hierarchy;
         public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
         {
                 if (parentSelector.EntryHelper.IsLoaded)
                     foreach (VM current in parentSelector.EntryHelper.AllNonBindable)
@@ -79,12 +79,12 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class RecrusiveSearchUntilFound<VM, T> : ITreeSelectionLookup<VM, T>
+    public class RecrusiveSearchUntilFound<VM, T> : ITreeLookup<VM, T>
     {
         public static RecrusiveSearchUntilFound<VM, T> Instance = new RecrusiveSearchUntilFound<VM, T>();
 
         public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-           Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+           Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
         {
 
             foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
@@ -109,12 +109,12 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class RecrusiveSearchIfLoaded<VM, T> : ITreeSelectionLookup<VM, T>
+    public class RecrusiveSearchIfLoaded<VM, T> : ITreeLookup<VM, T>
     {
         public static RecrusiveSearchIfLoaded<VM, T> Instance = new RecrusiveSearchIfLoaded<VM, T>();
 
         public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-          Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+          Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
         {
 
             if (parentSelector.EntryHelper.IsLoaded)
@@ -139,12 +139,12 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class RecrusiveBroadcastIfLoaded<VM, T> : ITreeSelectionLookup<VM, T>
+    public class RecrusiveBroadcastIfLoaded<VM, T> : ITreeLookup<VM, T>
     {
         public static RecrusiveBroadcastIfLoaded<VM, T> Instance = new RecrusiveBroadcastIfLoaded<VM, T>();
 
         public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-          Func<T, T, HierarchicalResult> compareFunc, params ITreeSelectionProcessor<VM, T>[] processors)
+          Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
         {
 
 

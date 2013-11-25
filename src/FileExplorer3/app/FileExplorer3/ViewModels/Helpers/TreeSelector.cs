@@ -93,8 +93,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="currentAction"></param>
         /// <returns></returns>
         public async Task<ITreeSelector<VM, T>> LookupAsync(T value,
-            ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors)
+            ITreeLookup<VM, T> lookupProc,
+            params ITreeProcessor<VM, T>[] processors)
         {
             return await lookupProc.Lookup(value, this, RootSelector.CompareFunc, processors);
         }
