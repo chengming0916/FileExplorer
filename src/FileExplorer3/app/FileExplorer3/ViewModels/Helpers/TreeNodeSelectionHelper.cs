@@ -61,11 +61,19 @@ namespace FileExplorer.ViewModels.Helpers
         {
             if (_entryHelper.IsLoaded)
             {
-                var lookupResult =
-                    _rootSelectionHelper.SelectedValue == null ? null :
-                    AsyncUtils.RunSync(() => this.LookupAsync(_rootSelectionHelper.SelectedValue,
-                        new SearchNextUsingReverseLookup<VM,T>(_rootSelectionHelper.SelectedViewModel)));                
-                SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
+                //Clear child node selection.
+                SetSelectedChild(default(T));
+                //And just in case if the new selected value is child of this node.
+                if (_rootSelectionHelper.SelectedValue != null) 
+                    this.LookupAsync(_rootSelectionHelper.SelectedValue,
+                        new SearchNextUsingReverseLookup<VM, T>(_rootSelectionHelper.SelectedViewModel),
+                        new TreeSelectionProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
+                            {
+                                SetSelectedChild(c == null ? default(T) : (c as ISupportNodeSelectionHelper<VM, T>).Selection.Value);
+                                return true;
+                            })
+                        );
+                //SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
                 NotifyOfPropertyChanged(() => IsChildSelected);
                 NotifyOfPropertyChanged(() => SelectedChild);
             }

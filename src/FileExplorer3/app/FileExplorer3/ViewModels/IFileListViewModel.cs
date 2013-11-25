@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace FileExplorer.ViewModels
 
         Task<IList<IEntryModel>> LoadAsync(IEntryModel em, Func<IEntryModel, bool> filter = null);
 
-        IObservableCollection<IEntryViewModel> Items { get; }
+        ObservableCollection<IEntryViewModel> Items { get; }
         IList<IEntryViewModel> SelectedItems { get; }
         CollectionView ProcessedItems { get; }
 

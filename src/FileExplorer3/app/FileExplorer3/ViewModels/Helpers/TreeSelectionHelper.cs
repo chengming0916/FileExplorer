@@ -31,8 +31,8 @@ namespace FileExplorer.ViewModels.Helpers
             VM _prevSelectedViewModel = _selectedViewModel;
             T _prevSelectedValue = _selectedValue;
 
-            if (_prevPath != null)
-                _prevPath.Last().IsSelected = false;
+            //if (_prevPath != null && !_prevPath.Last().IsSelected)
+            //    _prevPath.Last().IsSelected = false;
             _prevPath = path;
 
 
