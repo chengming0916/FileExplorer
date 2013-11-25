@@ -79,7 +79,7 @@ namespace FileExplorer.ViewModels.Helpers
                 var compareResult = _compareFunc(currentSelectionHelper.Value, value);
 
                 if (compareResult == HierarchicalResult.Child || compareResult == HierarchicalResult.Current)
-                    if (processors.Process(compareResult, default(VM), current))
+                    if (processors.Process(compareResult, this, currentSelectionHelper))
                         switch (compareResult)
                         {
                             case HierarchicalResult.Child:
