@@ -42,7 +42,7 @@ namespace FileExplorer.ViewModels.Helpers
         ITreeNodeSelectionHelper<VM, T> Selection { get; set; }
     }
 
-    public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
+    public interface ISupportRootSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
     {
         ITreeRootSelectionHelper<VM, T> Selection { get; set; }
     }
