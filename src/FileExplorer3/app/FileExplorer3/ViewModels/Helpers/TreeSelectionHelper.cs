@@ -11,14 +11,15 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeSelectionHelper<VM, T> : NotifyPropertyChanged, ITreeRootSelector<VM, T>
+    public class TreeSelectionHelper<VM, T> : TreeSelector<VM,T>, ITreeRootSelector<VM, T>
     {
         #region Constructor
 
-        public TreeSelectionHelper(ISubEntriesHelper<VM> entryHelper,
+        public TreeSelectionHelper(IEntriesHelper<VM> entryHelper,
             Func<T, T, HierarchicalResult> compareFunc)
+            : base(entryHelper)
         {
-            _entryHelper = entryHelper;
+            
             _compareFunc = compareFunc;
         }
 
@@ -26,52 +27,28 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
 
-        public async void ReportChildSelected(Stack<ITreeSelector<VM, T>> path)
+        public override void ReportChildSelected(Stack<ITreeSelector<VM, T>> path)
         {
             VM _prevSelectedViewModel = _selectedViewModel;
             T _prevSelectedValue = _selectedValue;
-
-            //if (_prevPath != null && !_prevPath.Last().IsSelected)
-            //    _prevPath.Last().IsSelected = false;
             _prevPath = path;
-
 
             _selectedViewModel = path.Last().ViewModel;
             _selectedValue = path.Last().Value;
             if (_prevSelectedValue != null && !_prevSelectedValue.Equals(path.Last().Value))
-            {
-                //var found = await LookupAsync(_prevSelectedValue,
-                //    RecrusiveBroadcastIfLoaded<VM, T>.Instance, SetNotSelected<VM, T>.WhenCurrent,
-                //    SetChildNotSelected<VM, T>.WhenChild);
-                (_prevSelectedViewModel as ISupportSelectionHelper<VM, T>).Selection.IsSelected = false;
+            {            
+                (_prevSelectedViewModel as ISupportTreeSelector<VM, T>).Selection.IsSelected = false;
             }
-
-            //if (_prevPath != null)
-            //    foreach (var p in _prevPath)
-            //    {
-            //        var lookupResult =SelectedValue == null ? null :
-            //                    AsyncUtils.RunSync(() => p.LookupAsync(SelectedValue, true));
-            //        p.SetSelectedChild(lookupResult == null ? default(T) : lookupResult.Value);
-
-            //    }
-            //_prevPath = null;
-
-            //if (_prevPath != null)
-            //{
-            //        if (!path.Contains(p))
-            //        {
-            //            p.SetIsSelected(false);
-            //            p.SetSelectedChild(default(T));
-            //        }
-            //}
-
-
             NotifyOfPropertyChanged(() => SelectedValue);
             NotifyOfPropertyChanged(() => SelectedViewModel);
             if (SelectionChanged != null)
                 SelectionChanged(this, EventArgs.Empty);
 
             UpdateRootItems(path);
+        }
+
+        public override void ReportChildDeselected(Stack<ITreeSelector<VM, T>> path)
+        {
         }
 
         private void UpdateRootItems(Stack<ITreeSelector<VM, T>> path = null)
@@ -82,27 +59,23 @@ namespace FileExplorer.ViewModels.Helpers
             if (path != null && path.Count() > 0)
             {
                 foreach (var p in path.Reverse())
-                    if (!(this._entryHelper.AllNonBindable.Contains(p.ViewModel)))
+                    if (!(this.EntryHelper.AllNonBindable.Contains(p.ViewModel)))
                         _rootItems.Add(p.ViewModel);
                 _rootItems.Add(default(VM)); //Separator
             }
-            foreach (var e in this._entryHelper.AllNonBindable)
+            foreach (var e in this.EntryHelper.AllNonBindable)
                 _rootItems.Add(e);
         }
 
-        public async void ReportChildDeselected(Stack<ITreeSelector<VM, T>> path)
-        {
-
-            //Debug.WriteLine(path);
-        }
+     
 
         public async Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
             params ITreeSelectionProcessor<VM, T>[] processors)
         {
 
-            foreach (var current in await _entryHelper.LoadAsync())
+            foreach (var current in await EntryHelper.LoadAsync())
             {
-                var currentSelectionHelper = (current as ISupportSelectionHelper<VM, T>).Selection;
+                var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
                 var compareResult = _compareFunc(currentSelectionHelper.Value, value);
 
                 if (compareResult == HierarchicalResult.Child || compareResult == HierarchicalResult.Current)
@@ -147,8 +120,7 @@ namespace FileExplorer.ViewModels.Helpers
         T _selectedValue = default(T);
         VM _selectedViewModel = default(VM);
         Stack<ITreeSelector<VM, T>> _prevPath = null;
-        private Func<T, T, HierarchicalResult> _compareFunc;
-        private ISubEntriesHelper<VM> _entryHelper;
+        private Func<T, T, HierarchicalResult> _compareFunc;        
         private ObservableCollection<VM> _rootItems = null;
 
         #endregion
@@ -181,63 +153,5 @@ namespace FileExplorer.ViewModels.Helpers
 
 
 
-        public Task<ITreeSelector<VM, T>> LookupAsync(T value, bool nextNode = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsSelected
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool IsChildSelected
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public T SelectedChild
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public void SetIsSelected(bool value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetSelectedChild(T value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public VM ViewModel
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public T Value
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public ITreeSelector<VM, T> ParentSelectionHelper
-        {
-            get { throw new NotImplementedException(); }
-        }
     }
 }

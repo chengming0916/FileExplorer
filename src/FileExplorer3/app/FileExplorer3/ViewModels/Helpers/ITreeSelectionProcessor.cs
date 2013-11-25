@@ -51,8 +51,8 @@ namespace FileExplorer.ViewModels.Helpers
         public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
             if (hr == HierarchicalResult.Current)
-                if (viewModel is ISupportSelectionHelper<VM, T>)
-                    (viewModel as ISupportSelectionHelper<VM, T>).Selection.IsSelected = true;
+                if (viewModel is ISupportTreeSelector<VM, T>)
+                    (viewModel as ISupportTreeSelector<VM, T>).Selection.IsSelected = true;
             return true;
         }
     }
@@ -75,8 +75,8 @@ namespace FileExplorer.ViewModels.Helpers
         public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
             if (_hr.HasFlag(hr))
-                if (viewModel is ISupportSelectionHelper<VM, T>)
-                    (viewModel as ISupportSelectionHelper<VM, T>).Selection.IsSelected = false;
+                if (viewModel is ISupportTreeSelector<VM, T>)
+                    (viewModel as ISupportTreeSelector<VM, T>).Selection.IsSelected = false;
             return true;
         }
     }
@@ -88,8 +88,8 @@ namespace FileExplorer.ViewModels.Helpers
         public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
             if (hr == HierarchicalResult.Child)
-                if (viewModel is ISupportSelectionHelper<VM, T>)
-                    (viewModel as ISupportSelectionHelper<VM, T>).Entries.IsExpanded = true;
+                if (viewModel is ISupportTreeSelector<VM, T>)
+                    (viewModel as ISupportTreeSelector<VM, T>).Entries.IsExpanded = true;
             return true;
         }
     }
@@ -101,10 +101,10 @@ namespace FileExplorer.ViewModels.Helpers
         public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
             if (hr == HierarchicalResult.Child)
-                if (parentViewModel is ISupportSelectionHelper<VM, T>)
+                if (parentViewModel is ISupportTreeSelector<VM, T>)
                 {
-                    (parentViewModel as ISupportSelectionHelper<VM, T>).Selection.SetSelectedChild(
-                        (viewModel as ISupportSelectionHelper<VM, T>).Selection.Value);
+                    (parentViewModel as ISupportTreeSelector<VM, T>).Selection.SetSelectedChild(
+                        (viewModel as ISupportTreeSelector<VM, T>).Selection.Value);
                 }
             return true;
         }
@@ -127,8 +127,8 @@ namespace FileExplorer.ViewModels.Helpers
         public bool Process(HierarchicalResult hr, VM parentViewModel, VM viewModel)
         {
             if (_hr.HasFlag(hr))
-                if (viewModel is ISupportSelectionHelper<VM, T>)
-                    (viewModel as ISupportSelectionHelper<VM, T>).Selection.SetSelectedChild(default(T));
+                if (viewModel is ISupportTreeSelector<VM, T>)
+                    (viewModel as ISupportTreeSelector<VM, T>).Selection.SetSelectedChild(default(T));
             return true;
         }
     }

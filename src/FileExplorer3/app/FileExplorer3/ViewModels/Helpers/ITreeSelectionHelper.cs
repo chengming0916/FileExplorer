@@ -63,22 +63,17 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         T Value { get; }
 
-        ITreeSelector<VM, T> ParentSelectionHelper { get; }
+        ITreeSelector<VM, T> ParentSelector { get; }
+        ITreeRootSelector<VM, T> RootSelector { get; }
+        IEntriesHelper<VM> EntryHelper { get; }
 
     }
 
 
-    public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
+    public interface ISupportTreeSelector<VM, T> : ISupportEntriesHelper<VM>       
     {
         ITreeSelector<VM, T> Selection { get; set; }
     }
-
-   
-
-    //public interface ISupportRootSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM> 
-    //{
-    //    ITreeRootSelector<VM, T> Selection { get; set; }
-    //}
 
     /// <summary>
     /// Implemented in tree node view model, to provide selection support.

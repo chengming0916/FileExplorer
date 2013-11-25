@@ -9,7 +9,7 @@ using Caliburn.Micro;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class SubEntriesHelper<VM> : NotifyPropertyChanged, ISubEntriesHelper<VM>
+    public class SubEntriesHelper<VM> : NotifyPropertyChanged, IEntriesHelper<VM>
     {
         #region Constructor
 

@@ -64,7 +64,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
 
         public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
-        public ISubEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
+        public IEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
 
 
         #endregion

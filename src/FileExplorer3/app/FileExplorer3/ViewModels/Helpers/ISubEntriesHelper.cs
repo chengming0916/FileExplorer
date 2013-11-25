@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ISupportSubEntriesHelper<VM>
+    public interface ISupportEntriesHelper<VM>
     {
-        ISubEntriesHelper<VM> Entries { get; set; }
+        IEntriesHelper<VM> Entries { get; set; }
     }
 
     /// <summary>
     /// Helper view model class that provide support of loading sub-entries.
     /// </summary>
     /// <typeparam name="VM"></typeparam>
-    public interface ISubEntriesHelper<VM> : INotifyPropertyChanged
+    public interface IEntriesHelper<VM> : INotifyPropertyChanged
     {
         /// <summary>
         /// Call to load sub-entries.
