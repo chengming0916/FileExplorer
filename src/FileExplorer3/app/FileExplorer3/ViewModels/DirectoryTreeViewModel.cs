@@ -20,7 +20,7 @@ namespace FileExplorer.ViewModels
             _events = events;
 
             Entries = new SubEntriesHelper<IDirectoryNodeViewModel>();
-            var selection = new TreeSelectionHelper<IDirectoryNodeViewModel, IEntryModel>(Entries,
+            var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries,
                 _profiles.First().HierarchyComparer.CompareHierarchy);
             selection.SelectionChanged += (o, e) =>
             {

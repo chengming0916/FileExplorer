@@ -18,7 +18,7 @@ namespace TestTemplate.WPF
             //Submodel is TreeNodeViewModel,
             Entries = new SubEntriesHelper<TreeNodeViewModel>();
             //Value is based on string
-            Selection = new TreeSelectionHelper<TreeNodeViewModel, string>(Entries, compareFunc);
+            Selection = new TreeRootSelector<TreeNodeViewModel, string>(Entries, compareFunc);
 
             Entries.SetEntries(new TreeNodeViewModel("", "Root", this, null));
 
