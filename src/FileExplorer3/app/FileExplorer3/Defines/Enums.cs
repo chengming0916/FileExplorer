@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Defines
 {
-    public enum HierarchicalResult : int { Parent = 0x1, Current, Child, Unrelated, All = Parent | Current | Child | Unrelated};
+    public enum HierarchicalResult : int { Parent = 0x1, Current, Child, Unrelated, 
+        Related = Parent | Current | Child ,
+        All = Related | Unrelated};
     
     public enum TransferMode { Copy, Move, Rename, Link }
 

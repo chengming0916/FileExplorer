@@ -168,6 +168,7 @@
     <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Utils\BitmapSourceUtils.cs" />
     <Compile Include="UserControls\InputBindingTrigger.cs" />
+    <Compile Include="Utils\FastObservableCollection.cs" />
     <Compile Include="Utils\PropertyPathHelper.cs" />
     <Compile Include="Utils\SimpleCommand.cs" />
     <Compile Include="ValueComparer.cs" />

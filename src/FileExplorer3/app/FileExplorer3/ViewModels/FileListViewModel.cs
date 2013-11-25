@@ -19,6 +19,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Collections;
 using FileExplorer.ViewModels.Actions;
+using FileExplorer.Utils;
+using System.Collections.ObjectModel;
 
 
 namespace FileExplorer.ViewModels
@@ -67,17 +69,23 @@ namespace FileExplorer.ViewModels
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        protected void appendEntryList<T>(IObservableCollection<T> collection, IList<IEntryModel> entryModels,
+        protected void appendEntryList<T>(ObservableCollection<T> collection, IList<IEntryModel> entryModels,
             Func<IEntryModel, T> conversion)
         {
-            foreach (var em in entryModels)
+            if (collection is FastObservableCollection<T>)
             {
-                collection.Add(conversion(em));
+                var fastCol = collection as FastObservableCollection<T>;
+                fastCol.AddItems((from em in entryModels select conversion(em)).ToList());
             }
+            else
+                foreach (var em in entryModels)
+                {
+                    collection.Add(conversion(em));
+                }
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        protected void replaceEntryList<T>(IObservableCollection<T> collection, IList<IEntryModel> entryModels,
+        protected void replaceEntryList<T>(ObservableCollection<T> collection, IList<IEntryModel> entryModels,
             Func<IEntryModel, T> conversion)
         {
             collection.Clear();
@@ -150,7 +158,7 @@ namespace FileExplorer.ViewModels
             if (CurrentDirectory == null)
                 return;
             var comparer = new EntryViewModelComparer(
-                col.Comparer != null ? col.Comparer : Profile.GetComparer(col), 
+                col.Comparer != null ? col.Comparer : Profile.GetComparer(col),
                 direction);
             _processedVms.CustomSort = comparer;
             _processedVms.GroupDescriptions.Add(new PropertyGroupDescription(col.ValuePath));
@@ -187,7 +195,7 @@ namespace FileExplorer.ViewModels
 
         private IEntryViewModel _parentVm = null;
 
-        private IObservableCollection<IEntryViewModel> _items = new BindableCollection<IEntryViewModel>();
+        private ObservableCollection<IEntryViewModel> _items = new FastObservableCollection<IEntryViewModel>();
         private IList<IEntryViewModel> _selectedVms = new List<IEntryViewModel>();
         private ListCollectionView _processedVms = null;
         private int _itemSize = 60;
@@ -295,7 +303,7 @@ namespace FileExplorer.ViewModels
 
         #region Items, ProcessedItems, SelectedItems
 
-        public IObservableCollection<IEntryViewModel> Items { get { return _items; } }
+        public ObservableCollection<IEntryViewModel> Items { get { return _items; } }
 
         public CollectionView ProcessedItems
         {
