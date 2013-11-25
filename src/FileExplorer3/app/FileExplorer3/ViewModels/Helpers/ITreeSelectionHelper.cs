@@ -9,22 +9,7 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ISupportNodeSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
-    {
-        ITreeNodeSelectionHelper<VM, T> Selection { get; set; }
-    }
-
-    public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
-    {
-        ITreeSelectionHelper<VM, T> Selection { get; set; }
-    }
-
-    /// <summary>
-    /// Implemented in tree node view model, to provide selection support.
-    /// </summary>
-    /// <typeparam name="VM">ViewModel.</typeparam>
-    /// <typeparam name="T">Value</typeparam>
-    public interface ITreeSelectionHelper<VM,T> : INotifyPropertyChanged
+    public interface ITreeSelectionHelper<VM, T> : INotifyPropertyChanged
     {
         /// <summary>
         /// Used by a tree node to report to it's root it's selected.
@@ -38,6 +23,39 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="path"></param>
         void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="pathAction">Run when lookup along the path (e.g. when HierarchicalResult = Child or Current)</param>
+        /// <param name="nextNodeOnly"></param>
+        /// <returns></returns>
+        Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
+            params ITreeSelectionProcessor<VM, T>[] processors);
+
+        
+    }
+
+
+    public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
+    {
+        ITreeNodeSelectionHelper<VM, T> Selection { get; set; }
+    }
+
+    public interface ISupportSelectionHelper<VM, T> : ISupportSubEntriesHelper<VM>       
+    {
+        ITreeRootSelectionHelper<VM, T> Selection { get; set; }
+    }
+
+    /// <summary>
+    /// Implemented in tree node view model, to provide selection support.
+    /// </summary>
+    /// <typeparam name="VM">ViewModel.</typeparam>
+    /// <typeparam name="T">Value</typeparam>
+    public interface ITreeRootSelectionHelper<VM, T> : ITreeSelectionHelper<VM,T>
+    {
+
+        
         //Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNodeOnly = false);
 
         /// <summary>

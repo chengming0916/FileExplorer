@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels.Helpers
     {
         #region Constructor
 
-        public TreeNodeSelectionHelper(T currentValue, VM currentViewModel, ITreeSelectionHelper<VM, T> rootSelectionHelper,
+        public TreeNodeSelectionHelper(T currentValue, VM currentViewModel, ITreeRootSelectionHelper<VM, T> rootSelectionHelper,
             ITreeNodeSelectionHelper<VM, T> parentSelectionHelper,
             ISubEntriesHelper<VM> entryHelper)
         {
@@ -69,7 +69,7 @@ namespace FileExplorer.ViewModels.Helpers
                         new SearchNextUsingReverseLookup<VM, T>(_rootSelectionHelper.SelectedViewModel),
                         new TreeSelectionProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
                             {
-                                SetSelectedChild(c == null ? default(T) : (c as ISupportNodeSelectionHelper<VM, T>).Selection.Value);
+                                SetSelectedChild(c == null ? default(T) : (c as ISupportSelectionHelper<VM, T>).Selection.Value);
                                 return true;
                             })
                         );
@@ -170,7 +170,7 @@ namespace FileExplorer.ViewModels.Helpers
         ITreeNodeSelectionHelper<VM, T> _prevSelected = null;
 
         private ITreeNodeSelectionHelper<VM, T> _parentSelectionHelper;
-        private ITreeSelectionHelper<VM, T> _rootSelectionHelper;
+        private ITreeRootSelectionHelper<VM, T> _rootSelectionHelper;
         private ISubEntriesHelper<VM> _entryHelper;
 
         #endregion

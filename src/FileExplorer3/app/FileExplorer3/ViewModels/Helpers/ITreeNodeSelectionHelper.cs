@@ -13,29 +13,9 @@ namespace FileExplorer.ViewModels.Helpers
     /// </summary>
     /// <typeparam name="VM"></typeparam>
     /// <typeparam name="T"></typeparam>
-    public interface ITreeNodeSelectionHelper<VM, T> : INotifyPropertyChanged
+    public interface ITreeNodeSelectionHelper<VM, T> : ITreeSelectionHelper<VM,T>
     {
-        /// <summary>
-        /// Used by a tree node to report to it's parent it's selected.
-        /// </summary>
-        /// <param name="path"></param>
-        void ReportChildSelected(Stack<ITreeNodeSelectionHelper<VM, T>> path);
 
-        /// <summary>
-        /// Used by a tree node to report to it's parent it's deselected.
-        /// </summary>
-        /// <param name="path"></param>
-        void ReportChildDeselected(Stack<ITreeNodeSelectionHelper<VM, T>> path);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="pathAction">Run when lookup along the path (e.g. when HierarchicalResult = Child or Current)</param>
-        /// <param name="nextNodeOnly"></param>
-        /// <returns></returns>
-        Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, ITreeSelectionLookup<VM, T> lookupProc,
-            params ITreeSelectionProcessor<VM, T>[] processors);
 
         Task<ITreeNodeSelectionHelper<VM, T>> LookupAsync(T value, bool nextNode = false);
 
