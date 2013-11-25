@@ -73,7 +73,7 @@ namespace FileExplorer.ViewModels.Helpers
                         new SearchNextUsingReverseLookup<VM, T>(RootSelector.SelectedViewModel),
                         new TreeSelectionProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
                             {
-                                SetSelectedChild(c == null ? default(T) : (c as ISupportTreeSelector<VM, T>).Selection.Value);
+                                SetSelectedChild(c == null ? default(T) : c.Value);
                                 return true;
                             })
                         );
@@ -96,7 +96,7 @@ namespace FileExplorer.ViewModels.Helpers
             ITreeSelectionLookup<VM, T> lookupProc,
             params ITreeSelectionProcessor<VM, T>[] processors)
         {
-            return await lookupProc.Lookup(value, this.ViewModel, RootSelector.CompareFunc, processors);
+            return await lookupProc.Lookup(value, this, RootSelector.CompareFunc, processors);
         }
 
         public async Task<ITreeSelector<VM, T>> LookupAsync(T value,
