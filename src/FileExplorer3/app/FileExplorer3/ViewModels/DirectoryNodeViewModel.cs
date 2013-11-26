@@ -36,7 +36,7 @@ namespace FileExplorer.ViewModels
             _rootModel = rootModel;
 
             CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
-            Entries = new SubEntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask);
+            Entries = new EntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask);
             Selection = new TreeSelector<IDirectoryNodeViewModel, IEntryModel>(curDirModel, this, 
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
         }

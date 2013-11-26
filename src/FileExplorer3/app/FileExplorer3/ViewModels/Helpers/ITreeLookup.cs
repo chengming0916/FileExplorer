@@ -9,156 +9,149 @@ namespace FileExplorer.ViewModels.Helpers
 {
     public interface ITreeLookup<VM, T>
     {
-        Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors);
+        Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors);
     }
-   
 
-    public class SearchNextLevelOnly<VM, T> : ITreeLookup<VM, T>
+    public class SearchNextLevel<VM, T> : ITreeLookup<VM, T>
     {
-        public static SearchNextLevelOnly<VM, T> Instance = new SearchNextLevelOnly<VM, T>();
+        public static SearchNextLevel<VM, T> LoadSubentriesIfNotLoaded = new SearchNextLevel<VM, T>();
 
-        public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
+        public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
         {
-                foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
-                    if (current is ISupportTreeSelector<VM, T>)
+            foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
+                if (current is ISupportTreeSelector<VM, T>)
+                {
+                    var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
+                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    switch (compareResult)
                     {
-                        var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                        var compareResult = compareFunc(currentSelectionHelper.Value, value);
-                        switch (compareResult)
-                        {
-                            case HierarchicalResult.Current:
-                            case HierarchicalResult.Child:
-                                processors.Process(compareResult, parentSelector, currentSelectionHelper);
-                                return currentSelectionHelper;
-                        }
-                    }            
-            return null;
+                        case HierarchicalResult.Current:
+                        case HierarchicalResult.Child:
+                            processors.Process(compareResult, parentSelector, currentSelectionHelper);
+                            return;
+                    }
+                }
         }
     }
 
     public class SearchNextUsingReverseLookup<VM, T> : ITreeLookup<VM, T>
     {
-        public SearchNextUsingReverseLookup(VM targetViewModel)
+        public SearchNextUsingReverseLookup(ITreeSelector<VM,T> targetSelector)
         {
-            _viewModel = targetViewModel;
+            _targetSelector = targetSelector;
             _hierarchy = new Stack<ITreeSelector<VM, T>>();
-            var current = (_viewModel as ISupportTreeSelector<VM, T>).Selection;
+            var current = targetSelector;
             while (current != null)
             {
                 _hierarchy.Push(current);
                 current = current.ParentSelector;
             }
         }
-
-        VM _viewModel;
+        
         Stack<ITreeSelector<VM, T>> _hierarchy;
-        public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
+        private ITreeSelector<VM, T> _targetSelector;
+        public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
         {
-                if (parentSelector.EntryHelper.IsLoaded)
-                    foreach (VM current in parentSelector.EntryHelper.AllNonBindable)
+            if (parentSelector.EntryHelper.IsLoaded)
+                foreach (VM current in parentSelector.EntryHelper.AllNonBindable)
                     if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
                     {
                         var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
                         var compareResult = compareFunc(currentSelectionHelper.Value, value);
                         switch (compareResult)
                         {
-                            case HierarchicalResult.Child : 
-                            case HierarchicalResult.Current :
+                            case HierarchicalResult.Child:
+                            case HierarchicalResult.Current:
                                 if (_hierarchy.Contains(currentSelectionHelper))
                                 {
                                     processors.Process(compareResult, parentSelector, currentSelectionHelper);
-                                    return currentSelectionHelper;
+                                    return;
                                 }
                                 break;
                         }
-                    }          
-            return null;
+                    }
         }
     }
 
-    public class RecrusiveSearchUntilFound<VM, T> : ITreeLookup<VM, T>
+    public class RecrusiveSearch<VM, T> : ITreeLookup<VM, T>
     {
-        public static RecrusiveSearchUntilFound<VM, T> Instance = new RecrusiveSearchUntilFound<VM, T>();
+        public static RecrusiveSearch<VM, T> LoadSubentriesIfNotLoaded = new RecrusiveSearch<VM, T>(true);
+        public static RecrusiveSearch<VM, T> SkipIfNotLoaded = new RecrusiveSearch<VM, T>(false);        
 
-        public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-           Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
+        bool _loadSubEntries;
+
+        public RecrusiveSearch(bool loadSubEntries)
         {
+            _loadSubEntries = loadSubEntries;
+        }
 
-            foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
-                    if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
+        public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
+           Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+        {
+            IEnumerable<VM> subentries = _loadSubEntries ?
+                await parentSelector.EntryHelper.LoadAsync() :
+                 parentSelector.EntryHelper.AllNonBindable;
+
+            foreach (VM current in subentries)
+                if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
+                {
+                    var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
+                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    switch (compareResult)
                     {
-                        var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                        var compareResult = compareFunc(currentSelectionHelper.Value, value);
-                        switch (compareResult)
-                        {
-                            case HierarchicalResult.Current:
-                                processors.Process(compareResult, parentSelector, currentSelectionHelper);
-                                return currentSelectionHelper;
+                        case HierarchicalResult.Current:
+                            processors.Process(compareResult, parentSelector, currentSelectionHelper);
+                            return;
 
-                            case HierarchicalResult.Child:
-                                if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
-                                    return await Lookup(value, currentSelectionHelper, compareFunc, processors);
-
-                                break;
-                        }
-            }
-            return null;
-        }
-    }
-
-    public class RecrusiveSearchIfLoaded<VM, T> : ITreeLookup<VM, T>
-    {
-        public static RecrusiveSearchIfLoaded<VM, T> Instance = new RecrusiveSearchIfLoaded<VM, T>();
-
-        public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-          Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
-        {
-
-            if (parentSelector.EntryHelper.IsLoaded)
-                    foreach (VM current in parentSelector.EntryHelper.AllNonBindable)
-                        if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
-                        {
-                            var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                            var compareResult = compareFunc(currentSelectionHelper.Value, value);
-                            switch (compareResult)
-                            {
-                                case HierarchicalResult.Current:
-                                    processors.Process(compareResult, parentSelector, currentSelectionHelper);
-                                    return currentSelectionHelper;
-
-                                case HierarchicalResult.Child:
-                                    if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
-                                        return await Lookup(value, currentSelectionHelper, compareFunc, processors);
-                                    break;
-                            }
-            }
-            return null;
-        }
-    }
-
-    public class RecrusiveBroadcastIfLoaded<VM, T> : ITreeLookup<VM, T>
-    {
-        public static RecrusiveBroadcastIfLoaded<VM, T> Instance = new RecrusiveBroadcastIfLoaded<VM, T>();
-
-        public async Task<ITreeSelector<VM, T>> Lookup(T value, ITreeSelector<VM,T> parentSelector,
-          Func<T, T, HierarchicalResult> compareFunc, params ITreeProcessor<VM, T>[] processors)
-        {
-
-
-            if (parentSelector.EntryHelper.IsLoaded)
-                foreach (VM current in parentSelector.EntryHelper.AllNonBindable)
-                        if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
-                        {
-                            var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                            var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                        case HierarchicalResult.Child:
                             if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
-                                return await Lookup(value, currentSelectionHelper, compareFunc, processors);
+                            {
+                                await Lookup(value, currentSelectionHelper, compareFunc, processors);
+
+                                return;
+                            }
+
                             break;
-                        }
-            return null;
+                    }
+                }
+        }
+    }
+
+
+    public class RecrusiveBroadcast<VM, T> : ITreeLookup<VM, T>
+    {
+        public static RecrusiveBroadcast<VM, T> LoadSubentriesIfNotLoaded = new RecrusiveBroadcast<VM, T>(false);
+        public static RecrusiveBroadcast<VM, T> SkipIfNotLoaded = new RecrusiveBroadcast<VM, T>(false);
+
+        bool _loadSubEntries;
+        public RecrusiveBroadcast(bool loadSubEntries)
+        {
+            _loadSubEntries = loadSubEntries;
+        }
+
+        public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
+          Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+        {
+
+            IEnumerable<VM> subentries = _loadSubEntries ?
+                await parentSelector.EntryHelper.LoadAsync() :
+                 parentSelector.EntryHelper.AllNonBindable;
+
+            foreach (VM current in subentries)
+                if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
+                {
+                    var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
+                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
+                    {
+                        await Lookup(value, currentSelectionHelper, compareFunc, processors);
+                        return;
+                    }
+                    break;
+                }
         }
     }
 }

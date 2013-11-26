@@ -23,7 +23,7 @@ namespace FileExplorer.ViewModels
             _rootModel = rootModel;
 
             CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
-            Entries = new SubEntriesHelper<IBreadcrumbItemViewModel>(loadEntriesTask);
+            Entries = new EntriesHelper<IBreadcrumbItemViewModel>(loadEntriesTask);
             Selection = new TreeSelector<IBreadcrumbItemViewModel, IEntryModel>(curDirModel, this, 
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
         }

@@ -43,32 +43,23 @@
                          BorderThickness="1,0" >
 
                 <StackPanel Orientation="Horizontal">
-
-                    <!--<bc:HotTrack x:Name="headerHL"  
-                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                 SelectedBorderBrush="Transparent"
-                                >-->
                     <Button Template="{StaticResource BaseButton}" x:Name="PART_CaptionButton"  
                             MaxWidth="1000"
                             >
                         <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch" VerticalAlignment="Center"                                   
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" />
                     </Button>
-                    <!--</bc:HotTrack>-->
                     <bc:HotTrack x:Name="headerToggleHL"  bc:OverflowableStackPanel.CanOverflow="True"
                                  BorderThickness="1,0,0,0"
                                  SelectedBorderBrush="Transparent"
                                  Visibility="{Binding ShowToggle, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btvc}}"
                                 >
-                        <bc:DropDownList ItemsSource="{TemplateBinding ItemsSource}"
-                                         Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
-                                        Converter={StaticResource btvc}}" 
-                                         SelectedValuePath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
-                                  IsDropDownOpen="{Binding IsExpanded, Mode=TwoWay, 
-                                        RelativeSource={RelativeSource TemplatedParent}}"
-                                  SelectedValue="{Binding SelectedChild, Mode=TwoWay, 
-                                        RelativeSource={RelativeSource TemplatedParent}}"
+                        <bc:DropDownList x:Name="PART_Toggle" ItemsSource="{TemplateBinding ItemsSource}"
+                                  Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btvc}}" 
+                                  SelectedValuePath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
+                                  IsDropDownOpen="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                  SelectedValue="{Binding SelectedChild, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                   ItemTemplate="{TemplateBinding MenuItemTemplate}" >
                         </bc:DropDownList>
                     </bc:HotTrack>

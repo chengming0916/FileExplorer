@@ -29,29 +29,29 @@ namespace FileExplorer.ViewModels.Helpers
 
         public override void ReportChildSelected(Stack<ITreeSelector<VM, T>> path)
         {
-            VM _prevSelectedViewModel = _selectedViewModel;
+            ITreeSelector<VM, T> _prevSelector = _selectedSelector;
             T _prevSelectedValue = _selectedValue;
             _prevPath = path;
 
-            _selectedViewModel = path.Last().ViewModel;
+            _selectedSelector = path.Last();
             _selectedValue = path.Last().Value;
             if (_prevSelectedValue != null && !_prevSelectedValue.Equals(path.Last().Value))
-            {            
-                (_prevSelectedViewModel as ISupportTreeSelector<VM, T>).Selection.IsSelected = false;
+            {
+                _prevSelector.IsSelected = false;
             }
             NotifyOfPropertyChanged(() => SelectedValue);
             NotifyOfPropertyChanged(() => SelectedViewModel);
             if (SelectionChanged != null)
                 SelectionChanged(this, EventArgs.Empty);
 
-            UpdateRootItems(path);
+            updateRootItems(path);
         }
 
         public override void ReportChildDeselected(Stack<ITreeSelector<VM, T>> path)
         {
         }
 
-        private void UpdateRootItems(Stack<ITreeSelector<VM, T>> path = null)
+        private void updateRootItems(Stack<ITreeSelector<VM, T>> path = null)
         {
             if (_rootItems == null)
                 _rootItems = new ObservableCollection<VM>();
@@ -66,59 +66,22 @@ namespace FileExplorer.ViewModels.Helpers
             foreach (var e in this.EntryHelper.AllNonBindable)
                 _rootItems.Add(e);
         }
-
      
-
-        public async Task<ITreeSelector<VM, T>> LookupAsync(T value, ITreeLookup<VM, T> lookupProc,
-            params ITreeProcessor<VM, T>[] processors)
-        {
-
-            foreach (var current in await EntryHelper.LoadAsync())
-            {
-                var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                var compareResult = _compareFunc(currentSelectionHelper.Value, value);
-
-                if (compareResult == HierarchicalResult.Child || compareResult == HierarchicalResult.Current)
-                    if (processors.Process(compareResult, this, currentSelectionHelper))
-                        switch (compareResult)
-                        {
-                            case HierarchicalResult.Child:
-                                if (lookupProc is SearchNextLevelOnly<VM, T>)
-                                    return currentSelectionHelper;
-                                return await currentSelectionHelper.LookupAsync(value, lookupProc, processors);
-                            case HierarchicalResult.Current:
-                                return currentSelectionHelper;
-                        }
-            }
-            return null;
-        }
-
-
-
         public async Task SelectAsync(T value)
         {
             if (_selectedValue == null || _compareFunc(_selectedValue, value) != HierarchicalResult.Current)
             {
-                await LookupAsync(value, RecrusiveSearchUntilFound<VM, T>.Instance,
-                    SetSelected<VM, T>.Instance, SetChildSelected<VM, T>.Instance);
+                await LookupAsync(value, RecrusiveSearch<VM, T>.LoadSubentriesIfNotLoaded,
+                    SetSelected<VM, T>.WhenSelected, SetChildSelected<VM, T>.ToSelectedChild);
             }
-        }
-
-        public async Task SelectAsync(T value, ITreeLookup<VM, T> lookupProc,
-            params ITreeProcessor<VM, T>[] processors)
-        {
-            if (_selectedValue == null || _compareFunc(_selectedValue, value) != HierarchicalResult.Current)
-            {
-                await LookupAsync(value, lookupProc, processors);
-            }
-        }
+        }      
 
         #endregion
 
         #region Data
 
         T _selectedValue = default(T);
-        VM _selectedViewModel = default(VM);
+        ITreeSelector<VM, T> _selectedSelector;
         Stack<ITreeSelector<VM, T>> _prevPath = null;
         private Func<T, T, HierarchicalResult> _compareFunc;        
         private ObservableCollection<VM> _rootItems = null;
@@ -131,13 +94,18 @@ namespace FileExplorer.ViewModels.Helpers
 
         public ObservableCollection<VM> OverflowedAndRootItems
         {
-            get { if (_rootItems == null) UpdateRootItems(); return _rootItems; }
+            get { if (_rootItems == null) updateRootItems(); return _rootItems; }
             set { _rootItems = value; NotifyOfPropertyChanged(() => OverflowedAndRootItems); }
+        }
+
+        public ITreeSelector<VM, T> SelectedSelector
+        {
+            get { return _selectedSelector; }
         }
 
         public VM SelectedViewModel
         {
-            get { return _selectedViewModel; }
+            get { return (SelectedSelector == null ? default(VM) : SelectedSelector.ViewModel); }
         }
 
         public T SelectedValue
