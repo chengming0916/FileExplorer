@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
             _events = events;
 
-            Entries = new SubEntriesHelper<IBreadcrumbItemViewModel>();
+            Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
             var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
                 _profiles.First().HierarchyComparer.CompareHierarchy);
             selection.SelectionChanged += (o, e) =>
@@ -68,10 +68,10 @@ namespace FileExplorer.ViewModels
 
         public async Task SelectAsync(IEntryModel value)
         {
-            await Selection.AsRoot().SelectAsync(value,
-                RecrusiveSearchUntilFound<IBreadcrumbItemViewModel, IEntryModel>.Instance,
-                SetSelected<IBreadcrumbItemViewModel, IEntryModel>.Instance,
-                SetChildSelected<IBreadcrumbItemViewModel, IEntryModel>.Instance);
+            await Selection.LookupAsync(value,
+                RecrusiveSearch<IBreadcrumbItemViewModel, IEntryModel>.LoadSubentriesIfNotLoaded,
+                SetSelected<IBreadcrumbItemViewModel, IEntryModel>.WhenSelected,
+                SetChildSelected<IBreadcrumbItemViewModel, IEntryModel>.ToSelectedChild);
         }
 
         void OnSuggestPathChanged()

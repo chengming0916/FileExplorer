@@ -23,7 +23,7 @@ namespace FileExplorer.ViewModels.Helpers
             RootSelector = this as ITreeRootSelector<VM, T>;
         }
 
-        public TreeSelector(T currentValue, VM currentViewModel, 
+        public TreeSelector(T currentValue, VM currentViewModel,
             ITreeSelector<VM, T> parentSelector,
             IEntriesHelper<VM> entryHelper)
         {
@@ -68,9 +68,9 @@ namespace FileExplorer.ViewModels.Helpers
                 //Clear child node selection.
                 SetSelectedChild(default(T));
                 //And just in case if the new selected value is child of this node.
-                if (RootSelector.SelectedValue != null) 
+                if (RootSelector.SelectedValue != null)
                     this.LookupAsync(RootSelector.SelectedValue,
-                        new SearchNextUsingReverseLookup<VM, T>(RootSelector.SelectedViewModel),
+                        new SearchNextUsingReverseLookup<VM, T>(RootSelector.SelectedSelector),
                         new TreeSelectionProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
                             {
                                 SetSelectedChild(c == null ? default(T) : c.Value);
@@ -92,17 +92,11 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="model"></param>
         /// <param name="currentAction"></param>
         /// <returns></returns>
-        public async Task<ITreeSelector<VM, T>> LookupAsync(T value,
+        public async Task LookupAsync(T value,
             ITreeLookup<VM, T> lookupProc,
-            params ITreeProcessor<VM, T>[] processors)
+            params ITreeLookupProcessor<VM, T>[] processors)
         {
-            return await lookupProc.Lookup(value, this, RootSelector.CompareFunc, processors);
-        }
-
-        public async Task<ITreeSelector<VM, T>> LookupAsync(T value,
-            bool nextNodeOnly)
-        {
-            return await LookupAsync(value, SearchNextLevelOnly<VM, T>.Instance);
+            await lookupProc.Lookup(value, this, RootSelector.CompareFunc, processors);
         }
 
         public void SetIsSelected(bool value)
@@ -122,7 +116,7 @@ namespace FileExplorer.ViewModels.Helpers
         public void SetSelectedChild(T newValue)
         {
             Debug.WriteLine(String.Format("SetSelectedChild of {0} to {1}", this.Value, newValue));
-            
+
             if (newValue == null && this.EntryHelper.IsLoaded && _selectedValue != null)
             {
                 //foreach (var node in _entryHelper.AllNonBindable)
@@ -134,7 +128,7 @@ namespace FileExplorer.ViewModels.Helpers
             }
 
             _selectedValue = newValue;
-            
+
             NotifyOfPropertyChanged(() => SelectedChild);
             NotifyOfPropertyChanged(() => IsChildSelected);
         }
@@ -145,18 +139,20 @@ namespace FileExplorer.ViewModels.Helpers
             {
                 if (_prevSelected != null)
                 {
-                    _prevSelected.SetIsSelected(false);                    
+                    _prevSelected.SetIsSelected(false);
                 }
 
                 SetSelectedChild(newValue);
 
                 if (newValue != null)
                 {
-                    _prevSelected = LookupAsync(newValue, true).Result;
-                    if (_prevSelected == null)
-                        Debug.WriteLine(String.Format("findChildFunc failed when looking for {0}", newValue));
-                    else
-                        _prevSelected.IsSelected = true;
+                    LookupAsync(newValue, SearchNextLevel<VM, T>.LoadSubentriesIfNotLoaded,
+                        new TreeSelectionProcessor<VM, T>(HierarchicalResult.Related, (hr, p, c) =>
+                            {
+                                c.IsSelected = true;
+                                _prevSelected = c;
+                                return true;
+                            }));
                 }
             }
         }
@@ -171,14 +167,14 @@ namespace FileExplorer.ViewModels.Helpers
         bool _isSelected = false;
         T _selectedValue = default(T);
         ITreeSelector<VM, T> _prevSelected = null;
-        
-        
+
+
 
         #endregion
 
         #region Public Properties
         private VM _currentViewModel;
-
+        
         public T Value { get { return _currentValue; } }
         public VM ViewModel { get { return _currentViewModel; } }
 
@@ -193,8 +189,8 @@ namespace FileExplorer.ViewModels.Helpers
             {
                 //if (_isSelected != value || value)
                 //{
-                    SetIsSelected(value);
-                    OnSelected(value);
+                SetIsSelected(value);
+                OnSelected(value);
 
                 //}
             }

@@ -50,6 +50,12 @@
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
                 </bc:HotTrack>
+
+                <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                    <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
+                            BorderBrush="Transparent"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
+                </bc:HotTrack>
             </WrapPanel>
         </TabItem>
         <TabItem Header="DropDown">
@@ -58,10 +64,18 @@
                     <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
                         <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
                             BorderBrush="Transparent"
-                            HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
+                            HorizontalAlignment="Center" VerticalAlignment="Center" >Popup</Button>
                     </bc:HotTrack>
                 </bc:DropDown>
                 <TextBlock Text="{Binding ElementName=dd, Path=IsDropDownOpen}" />
+                <bc:DropDown x:Name="dd2" >
+                    <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                        <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
+                            BorderBrush="Transparent"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" >Popup</Button>
+                    </bc:HotTrack>
+                </bc:DropDown>
+                <TextBlock Text="{Binding ElementName=dd2, Path=IsDropDownOpen}" />
             </WrapPanel>
         </TabItem>
         <TabItem Header="Statusbar">

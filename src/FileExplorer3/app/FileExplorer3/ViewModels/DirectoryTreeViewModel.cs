@@ -19,7 +19,7 @@ namespace FileExplorer.ViewModels
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
             _events = events;
 
-            Entries = new SubEntriesHelper<IDirectoryNodeViewModel>();
+            Entries = new EntriesHelper<IDirectoryNodeViewModel>();
             var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries,
                 _profiles.First().HierarchyComparer.CompareHierarchy);
             selection.SelectionChanged += (o, e) =>
@@ -43,10 +43,10 @@ namespace FileExplorer.ViewModels
 
         public async Task SelectAsync(IEntryModel value)
         {
-            await Selection.AsRoot().SelectAsync(value,
-                RecrusiveSearchUntilFound<IDirectoryNodeViewModel, IEntryModel>.Instance,
-                SetSelected<IDirectoryNodeViewModel, IEntryModel>.Instance,
-                SetExpanded<IDirectoryNodeViewModel, IEntryModel>.Instance);
+            await Selection.LookupAsync(value,
+                RecrusiveSearch<IDirectoryNodeViewModel, IEntryModel>.LoadSubentriesIfNotLoaded,
+                SetSelected<IDirectoryNodeViewModel, IEntryModel>.WhenSelected,
+                SetExpanded<IDirectoryNodeViewModel, IEntryModel>.WhenChildSelected);
 
         }
 

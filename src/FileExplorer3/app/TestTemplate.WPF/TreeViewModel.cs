@@ -11,12 +11,12 @@ using FileExplorer;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged, ISupportTreeSelector<TreeNodeViewModel, string>
+    public class TreeViewModel : INotifyPropertyChanged
     {
         public TreeViewModel()
         {
             //Submodel is TreeNodeViewModel,
-            Entries = new SubEntriesHelper<TreeNodeViewModel>();
+            Entries = new EntriesHelper<TreeNodeViewModel>();
             //Value is based on string
             Selection = new TreeRootSelector<TreeNodeViewModel, string>(Entries, compareFunc);
 
@@ -66,7 +66,7 @@ namespace TestTemplate.WPF
             _header = header;
 
 
-            Entries = new SubEntriesHelper<TreeNodeViewModel>(() => Task.Run(() =>
+            Entries = new EntriesHelper<TreeNodeViewModel>(() => Task.Run(() =>
             {
                 return (IEnumerable<TreeNodeViewModel>)new List<TreeNodeViewModel>(
                     from i in Enumerable.Range(1, 9)
@@ -77,8 +77,7 @@ namespace TestTemplate.WPF
                     );
             }));
 
-            Selection = new TreeSelector<TreeNodeViewModel, string>(
-                value, this, 
+            Selection = new TreeSelector<TreeNodeViewModel, string>(value, this, 
                 parentNode == null ? root.Selection : parentNode.Selection, Entries);
         }
 
