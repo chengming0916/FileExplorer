@@ -62,7 +62,7 @@ namespace FileExplorer.ViewModels
             {
                 var selectedDirectory = message.SelectedModels.First();
                 FileListModel.LoadAsync(selectedDirectory, null);
-                BreadcrumbModel.Selection.AsRoot().SelectAsync(selectedDirectory);
+                BreadcrumbModel.SelectAsync(selectedDirectory);
             }
             else if (message.Sender.Equals(BreadcrumbModel))
             {

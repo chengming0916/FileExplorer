@@ -116,7 +116,9 @@ namespace QuickZip.UserControls
                     //RootModel.IsBreadcrumbVisible = !RootModel.IsBreadcrumbVisible;
                     if (!btnToggle.IsChecked == true)
                     {
+
                         tbox.Focus();
+                        Keyboard.Focus(tbox);
                         tbox.SelectAll();
                     }
                 }

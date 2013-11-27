@@ -21,30 +21,44 @@
 
     <ControlTemplate x:Key="BreadcrumbSwitchTemplate" TargetType="{x:Type bc:Switch}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Stretch"
+            <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Stretch"
                                   IsChecked="{Binding IsSwitchOn, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" 
-                                  Width="{Binding ActualHeight, ElementName=PART_Toggle}"
-                                  Template="{StaticResource BaseButton}" Background="Transparent" >
-                    <ContentControl ContentTemplate="{TemplateBinding HeaderTemplate}"  
-                                        Content="{TemplateBinding Header}" Margin="2" />
-                </ToggleButton>
+                                 
+                                  Template="{StaticResource BlankButton}" Background="Transparent" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="1" Margin="2,0">
-                    <ContentPresenter Content="{TemplateBinding ContentOn}" 
-                              Visibility="{Binding IsSwitchOn,
-                                RelativeSource={RelativeSource TemplatedParent},
-                                Converter={StaticResource btvc},Mode=OneWay}" />
-                    <ContentPresenter Content="{TemplateBinding ContentOff}" Visibility="{Binding IsSwitchOn,
-                RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource fbtvc},Mode=OneWay}" />
+
+                    <bc:HotTrack Grid.Column="0" 
+                                 x:Name="PART_ToggleHotTrack"
+                                 Width="{Binding ActualHeight, ElementName=PART_ToggleHotTrack}">
+                        <ContentControl ContentTemplate="{TemplateBinding HeaderTemplate}"  
+                                    
+                                        Content="{TemplateBinding Header}" Margin="2" />
+                    </bc:HotTrack>
+
+
+                    <Grid Grid.Column="1" Margin="2,0">
+                        <ContentPresenter 
+                            x:Name="PART_ContentOn"
+                            Content="{TemplateBinding ContentOn}" 
+                            MinHeight="{Binding ActualHeight, ElementName=PART_ContentOff}"
+                            Visibility="{Binding IsSwitchOn,
+                                RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btv},Mode=OneWay}" />
+                        <ContentPresenter 
+                            x:Name="PART_ContentOff"
+                            Content="{TemplateBinding ContentOff}" 
+                            MinHeight="{Binding ActualHeight, ElementName=PART_ContentOn}"
+                                          Visibility="{Binding IsSwitchOn,
+                                RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource fbtv},Mode=OneWay}" />
+                    </Grid>
+
                 </Grid>
-            </Grid>
+            </ToggleButton>
         </Border>
     </ControlTemplate>
 
