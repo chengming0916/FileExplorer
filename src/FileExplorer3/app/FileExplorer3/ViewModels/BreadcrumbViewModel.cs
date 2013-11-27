@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.BaseControls;
@@ -20,22 +21,27 @@ namespace FileExplorer.ViewModels
         #region Constructor
 
         public BreadcrumbViewModel(IExplorerViewModel explorerModel, IEventAggregator events,
-            IEntryModel[] rootModels)            
+            IEntryModel[] rootModels)
         {
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
             _events = events;
 
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
-            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
+            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries,
                 _profiles.First().HierarchyComparer.CompareHierarchy);
             selection.SelectionChanged += (o, e) =>
                 {
-                    BroadcastDirectoryChanged(EntryViewModel.FromEntryModel( selection.SelectedValue));
+                    BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
                 };
             Selection = selection;
 
             Entries.SetEntries(rootModels
-                .Select(r => new BreadcrumbItemViewModel(events, this, r, null)).ToArray());   
+                .Select(r => new BreadcrumbItemViewModel(events, this, r, null)).ToArray());
+
+
+            SuggestSources = _profiles.Select(p => p.GetSuggestSource());
+
+         
         }
 
         #endregion
@@ -58,16 +64,34 @@ namespace FileExplorer.ViewModels
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
-            //_sbox = (view as UserControl).FindName("sbox") as SuggestBoxBase;
-            //_sbox.TextChanged += (o, e) =>
-            //    {
-            //        _sbox.Suggestions
-            //    };
+
+            _sbox = (view as UserControl).FindName("sbox") as SuggestBoxBase;
+            _switch = (view as UserControl).FindName("switch") as FileExplorer.BaseControls.Switch;
+
+
+            _switch.AddValueChanged(FileExplorer.BaseControls.Switch.IsSwitchOnProperty, (o, e) =>
+                {
+                    if (!_switch.IsSwitchOn)
+                    {
+                        _sbox.Dispatcher.BeginInvoke(new System.Action(() =>
+                            {
+                                Keyboard.Focus(_sbox);
+                                _sbox.Focus();
+                                _sbox.SelectAll();
+                            }), System.Windows.Threading.DispatcherPriority.Background);
+
+                    }
+                });
+
+            if (Entries.AllNonBindable.Count() > 0)
+                SelectAsync(Entries.AllNonBindable.First().Selection.Value);
         }
 
 
         public async Task SelectAsync(IEntryModel value)
         {
+            _sbox.SetValue(SuggestBoxBase.TextProperty, value.FullPath);
+
             await Selection.LookupAsync(value,
                 RecrusiveSearch<IBreadcrumbItemViewModel, IEntryModel>.LoadSubentriesIfNotLoaded,
                 SetSelected<IBreadcrumbItemViewModel, IEntryModel>.WhenSelected,
@@ -78,16 +102,14 @@ namespace FileExplorer.ViewModels
         {
             if (!ShowBreadcrumb)
             {
-                
-
                 foreach (var p in _profiles)
                 {
                     var found = p.ParseAsync(SuggestedPath).Result;
                     if (found != null)
                     {
                         ShowBreadcrumb = true;
-                        //base.SelectAsync(found);
-                        //BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
+                        SelectAsync(found);
+                        BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
                     }
                     //else not found
                 }
@@ -103,6 +125,9 @@ namespace FileExplorer.ViewModels
         private bool _showBreadcrumb = true;
         private IEnumerable<ISuggestSource> _suggestSources;
         private IEventAggregator _events;
+        private FileExplorer.BaseControls.Switch _switch;
+        private SuggestBoxBase _sbox;
+        //private bool _updatingSuggestBox = false;
 
         #endregion
 
@@ -110,7 +135,7 @@ namespace FileExplorer.ViewModels
 
         public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
-        
+
 
         public bool ShowBreadcrumb
         {

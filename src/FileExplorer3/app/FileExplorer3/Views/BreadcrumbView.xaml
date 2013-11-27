@@ -22,7 +22,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <bc:Switch Template="{StaticResource BreadcrumbSwitchTemplate}"
+        <bc:Switch x:Name="switch"
+                   Template="{StaticResource BreadcrumbSwitchTemplate}"
                    BorderBrush="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"
                    BorderThickness="1" IsSwitchOn="{Binding ShowBreadcrumb, Mode=TwoWay}"
                    >

@@ -6,7 +6,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />        
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="BaseToggleButton" TargetType="{x:Type ToggleButton}">
@@ -17,10 +17,10 @@
             >
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
                               VerticalAlignment="Center" Grid.RowSpan="2" />
-            
+
         </bc:HotTrack>
     </ControlTemplate>
-    
+
     <ControlTemplate x:Key="BasicArrowButton" TargetType="{x:Type ToggleButton}" >
         <Border x:Name="border"
                 Padding="2,0" Background="Transparent" 
@@ -107,7 +107,14 @@
         <Setter Property="Height" Value="16"/>
         <Setter Property="Template" Value="{StaticResource ExpandCollapseToggleButton}" />
     </Style>
-    
+
+    <ControlTemplate x:Key="BlankButton" TargetType="{x:Type ButtonBase}">
+        <Border BorderThickness="0" Background="Transparent">
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                              VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+        </Border>
+    </ControlTemplate>
+
     <ControlTemplate x:Key="BaseButton" TargetType="{x:Type ButtonBase}">
         <bc:HotTrack SelectedBorderBrush="{TemplateBinding BorderBrush}"
                 Padding="1,0" Background="Transparent" 

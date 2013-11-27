@@ -174,7 +174,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Public Properties
         private VM _currentViewModel;
-        
+
         public T Value { get { return _currentValue; } }
         public VM ViewModel { get { return _currentViewModel; } }
 
@@ -187,12 +187,11 @@ namespace FileExplorer.ViewModels.Helpers
             get { return _isSelected; }
             set
             {
-                //if (_isSelected != value || value)
-                //{
-                SetIsSelected(value);
-                OnSelected(value);
-
-                //}
+                if (_isSelected != value)
+                {
+                    SetIsSelected(value);
+                    OnSelected(value);
+                }
             }
         }
 

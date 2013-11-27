@@ -25,6 +25,21 @@ namespace FileExplorer.BaseControls
 
         #region Methods
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            //this.AddHandler(HeaderedContentControl.MouseDownEvent, (RoutedEventHandler)((o, e) =>
+            //    {
+            //        this.SetValue(IsSwitchOnProperty, !IsSwitchOn);
+            //    }));
+        }
+
+        public static void OnIsSwitchOnChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            
+        }
+
         #endregion
 
         #region Data
@@ -41,7 +56,7 @@ namespace FileExplorer.BaseControls
 
         public static readonly DependencyProperty IsSwitchOnProperty =
             DependencyProperty.Register("IsSwitchOn", typeof(bool),
-            typeof(Switch), new UIPropertyMetadata(true));
+            typeof(Switch), new UIPropertyMetadata(true, new PropertyChangedCallback(OnIsSwitchOnChanged)));
 
         public object ContentOn
         {
