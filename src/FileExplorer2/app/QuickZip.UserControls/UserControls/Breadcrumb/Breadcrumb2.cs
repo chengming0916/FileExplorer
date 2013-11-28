@@ -118,7 +118,6 @@ namespace QuickZip.UserControls
                     {
 
                         tbox.Focus();
-                        Keyboard.Focus(tbox);
                         tbox.SelectAll();
                     }
                 }

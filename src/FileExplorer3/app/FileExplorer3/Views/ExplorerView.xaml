@@ -17,12 +17,14 @@
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
 
-            <ContentControl Grid.ColumnSpan="2" Grid.Row="0" Name="BreadcrumbModel" />
+            <DockPanel Grid.ColumnSpan="2" Grid.Row="0" >
+                <ContentControl Name="Navigation" DockPanel.Dock="Left" />
+                <ContentControl Name="Breadcrumb" />
+            </DockPanel>
+            <ContentControl Grid.Column="0" Grid.Row="1"  Name="DirectoryTree" Margin="2" />
+            <ContentControl Grid.Column="1" Grid.Row="1" Name="FileList" Margin="2" />
 
-            <ContentControl Grid.Column="0" Grid.Row="1"  Name="DirectoryTreeModel" Margin="2" />
-            <ContentControl Grid.Column="1" Grid.Row="1" Name="FileListModel" Margin="2" />
-
-            <ContentControl Grid.ColumnSpan="2" Grid.Row="2"  Name="StatusbarModel" />
+            <ContentControl Grid.ColumnSpan="2" Grid.Row="2"  Name="Statusbar" />
             <GridSplitter Grid.Row="2" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
         </Grid>
     </Grid>

@@ -16,15 +16,19 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class BreadcrumbViewModel : Screen, IBreadcrumbViewModel
+    public class BreadcrumbViewModel : ViewAware, IBreadcrumbViewModel,
+        IHandle<DirectoryChangedEvent>
     {
         #region Constructor
 
-        public BreadcrumbViewModel(IExplorerViewModel explorerModel, IEventAggregator events,
+        public BreadcrumbViewModel(IEventAggregator events, 
             IEntryModel[] rootModels)
         {
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
             _events = events;
+
+            if (events != null)
+                events.Subscribe(this);
 
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
             var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries,
@@ -52,14 +56,6 @@ namespace FileExplorer.ViewModels
         {
             _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { viewModel }));
         }
-
-        //protected override IDirectoryNodeBroadcastHandler[] getBroadcastHandlers(IEntryModel model)
-        //{
-        //    return new IDirectoryNodeBroadcastHandler[] {
-        //        BroadcastSubEntry.All(model, (nvm,hr) => hr == HierarchicalResult.Child),
-        //                 UpdateIsSelected.Instance
-        //    };
-        //}
 
         protected override void OnViewAttached(object view, object context)
         {
@@ -102,17 +98,28 @@ namespace FileExplorer.ViewModels
         {
             if (!ShowBreadcrumb)
             {
-                foreach (var p in _profiles)
-                {
-                    var found = p.ParseAsync(SuggestedPath).Result;
-                    if (found != null)
+                Task.Run(async () =>
                     {
-                        ShowBreadcrumb = true;
-                        SelectAsync(found);
-                        BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
-                    }
-                    //else not found
-                }
+                        foreach (var p in _profiles)
+                        {
+                            var found = await p.ParseAsync(SuggestedPath);
+                            if (found != null)
+                            {
+                                _sbox.Dispatcher.BeginInvoke(new System.Action(() => { SelectAsync(found); }));
+                                ShowBreadcrumb = true;
+                                BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
+                            }
+                            //else not found
+                        }
+                    }).Start();
+            }
+        }
+
+        public void Handle(DirectoryChangedEvent message)
+        {
+            if (message.NewModel != null)
+            {
+                SelectAsync(message.NewModel);
             }
         }
 

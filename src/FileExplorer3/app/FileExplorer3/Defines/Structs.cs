@@ -34,6 +34,21 @@ namespace FileExplorer.Defines
         }
     }
 
+    public class DirectoryChangedEvent : ViewModelEvent
+    {
+        public IEntryViewModel OriginalViewModel { get; private set; }
+        public IEntryModel OriginalModel { get { return OriginalViewModel== null ? null : OriginalViewModel.EntryModel; } }
+        public IEntryViewModel NewViewModel { get; private set; }
+        public IEntryModel NewModel { get { return NewViewModel == null ? null : NewViewModel.EntryModel; } }
+
+
+        public DirectoryChangedEvent(PropertyChangedBase sender, IEntryViewModel newVM, IEntryViewModel originalVM)
+            : base(sender)
+        {
+            NewViewModel = newVM;
+            OriginalViewModel = originalVM;
+        }
+    }
 
     public class SelectionChangedEvent : ViewModelEvent
     {

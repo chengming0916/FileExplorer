@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
+    <Compile Include="BaseControls\Invert.cs" />
     <Compile Include="BaseControls\OneItemPanel.cs" />
     <Compile Include="BaseControls\OverflowablePanel.cs" />
     <Compile Include="BaseControls\OverflowableStackPanel.cs" />
@@ -189,14 +190,18 @@
     <Compile Include="ViewModels\Helpers\EntriesHelper.cs" />
     <Compile Include="ViewModels\Helpers\TreeSelector.cs" />
     <Compile Include="ViewModels\Helpers\TreeRootSelector.cs" />
-    <Compile Include="ViewModels\IBreadcrumbItemViewModel.cs" />
-    <Compile Include="ViewModels\IMetadataViewModel.cs" />
-    <Compile Include="ViewModels\IBreadcrumbViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IBreadcrumbItemViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IMetadataViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IBreadcrumbViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\INavigationViewModel.cs" />
     <Compile Include="ViewModels\MetadataViewModel.cs" />
+    <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="ViewModels\ViewModeViewModel.cs" />
-    <Compile Include="ViewModels\BreadcrumbHierarchyHelper.cs" />
     <Compile Include="Views\BreadcrumbView.xaml.cs">
       <DependentUpon>BreadcrumbView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NavigationView.xaml.cs">
+      <DependentUpon>NavigationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StatusbarView.xaml.cs">
       <DependentUpon>StatusbarView.xaml</DependentUpon>
@@ -214,15 +219,15 @@
     <Compile Include="ViewModels\EntryViewModelComparer.cs" />
     <Compile Include="ViewModels\ExplorerViewModel.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
-    <Compile Include="ViewModels\IDirectoryTreeViewModel.cs" />
-    <Compile Include="ViewModels\IExplorerViewModel.cs" />
-    <Compile Include="ViewModels\IFileListViewModel.cs" />
-    <Compile Include="ViewModels\IEntryViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IDirectoryTreeViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IExplorerViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IFileListViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IEntryViewModel.cs" />
     <Compile Include="ViewModels\Actions\LoadEntryList.cs" />
     <Compile Include="ViewModels\Actions\Loader.cs" />
-    <Compile Include="ViewModels\IStatusbarViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IStatusbarViewModel.cs" />
     <Compile Include="ViewModels\StatusbarViewModel.cs" />
-    <Compile Include="ViewModels\TaskUtils.cs" />
+    <Compile Include="Utils\TaskUtils.cs" />
     <Compile Include="Views\DirectoryTreeView.xaml.cs">
       <DependentUpon>DirectoryTreeView.xaml</DependentUpon>
     </Compile>
@@ -270,6 +275,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Common\ComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Invert.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -428,6 +437,10 @@
     <Page Include="Views\FileListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StatusbarView.xaml">
       <SubType>Designer</SubType>

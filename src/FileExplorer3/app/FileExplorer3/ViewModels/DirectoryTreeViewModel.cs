@@ -10,7 +10,8 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class DirectoryTreeViewModel : Screen, IDirectoryTreeViewModel
+    public class DirectoryTreeViewModel : PropertyChangedBase, IDirectoryTreeViewModel, 
+        IHandle<DirectoryChangedEvent>
     {
         #region Cosntructor
 
@@ -18,6 +19,9 @@ namespace FileExplorer.ViewModels
         {
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
             _events = events;
+
+            if (events != null)
+                events.Subscribe(this);
 
             Entries = new EntriesHelper<IDirectoryNodeViewModel>();
             var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries,
@@ -50,6 +54,13 @@ namespace FileExplorer.ViewModels
 
         }
 
+        public void Handle(DirectoryChangedEvent message)
+        {
+            if (message.NewModel != null)
+            {
+                SelectAsync(message.NewModel);
+            }
+        }
         
         #endregion
 

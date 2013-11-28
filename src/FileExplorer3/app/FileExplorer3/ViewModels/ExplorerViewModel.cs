@@ -11,7 +11,7 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : Screen, IExplorerViewModel, IHandle<SelectionChangedEvent>
+    public class ExplorerViewModel : ViewAware, IExplorerViewModel, IHandle<SelectionChangedEvent>
     {
         #region Cosntructor
 
@@ -20,12 +20,13 @@ namespace FileExplorer.ViewModels
             _events = events;
             _rootModels = rootModels;
 
-            BreadcrumbModel = new BreadcrumbViewModel(this, events, rootModels);
-            FileListModel = new FileListViewModel(events, true);
-            DirectoryTreeModel = new DirectoryTreeViewModel(events, rootModels);
-            StatusbarModel = new StatusbarViewModel(this, events);
+            Breadcrumb = new BreadcrumbViewModel(_internalEvents, rootModels);
+            FileList = new FileListViewModel(_internalEvents);
+            DirectoryTree = new DirectoryTreeViewModel(_internalEvents, rootModels);
+            Statusbar = new StatusbarViewModel(_internalEvents);
+            Navigation = new NavigationViewModel(_internalEvents);
 
-            events.Subscribe(this);
+            _internalEvents.Subscribe(this);
         }
             
 
@@ -41,9 +42,9 @@ namespace FileExplorer.ViewModels
                 var model = evm.Profile.ParseAsync(gotoPath).Result;
                 if (model != null)
                 {
-                    DirectoryTreeModel.SelectAsync(model);
-                    FileListModel.LoadAsync(model, null);
-                    BreadcrumbModel.Selection.AsRoot().SelectAsync(model);
+                    DirectoryTree.SelectAsync(model);
+                    FileList.LoadAsync(model, null);
+                    Breadcrumb.Selection.AsRoot().SelectAsync(model);
                     return;
                 }
             }
@@ -51,27 +52,12 @@ namespace FileExplorer.ViewModels
 
         public void ChangeView(string viewMode)
         {
-            FileListModel.ViewMode = viewMode;
+            FileList.ViewMode = viewMode;
         }
 
         public void Handle(SelectionChangedEvent message)
         {
-            //if (message.Sender.Equals(FileListModel)) //From file list.
-            //    SelectionCount = message.SelectedViewModels.Count();
-            if (message.Sender.Equals(DirectoryTreeModel))
-            {
-                var selectedDirectory = message.SelectedModels.First();
-                FileListModel.LoadAsync(selectedDirectory, null);
-                BreadcrumbModel.SelectAsync(selectedDirectory);
-            }
-            else if (message.Sender.Equals(BreadcrumbModel))
-            {
-                var selectedDirectory = message.SelectedModels.FirstOrDefault();
-                //FileListModel.LoadAsync(selectedDirectory, null);
-                if (selectedDirectory != null)
-                    DirectoryTreeModel.SelectAsync(selectedDirectory);
-            }
-
+           
         }
 
 
@@ -81,16 +67,17 @@ namespace FileExplorer.ViewModels
 
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
+        private IEventAggregator _internalEvents = new EventAggregator();
 
         #endregion
 
         #region Public Properties
 
-        public IBreadcrumbViewModel BreadcrumbModel { get; private set; }
-        public IDirectoryTreeViewModel DirectoryTreeModel { get; private set; }
-        public IFileListViewModel FileListModel { get; private set; }
-        public IStatusbarViewModel StatusbarModel { get; private set; }
-
+        public IBreadcrumbViewModel Breadcrumb { get; private set; }
+        public IDirectoryTreeViewModel DirectoryTree { get; private set; }
+        public IFileListViewModel FileList { get; private set; }
+        public IStatusbarViewModel Statusbar { get; private set; }
+        public INavigationViewModel Navigation { get; private set; }
 
         #endregion
     }

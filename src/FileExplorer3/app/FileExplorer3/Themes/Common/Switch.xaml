@@ -23,7 +23,7 @@
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
             <ToggleButton x:Name="PART_Toggle"  Grid.Column="0"  Padding="2,0" VerticalAlignment="Stretch"
                                   IsChecked="{Binding IsSwitchOn, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" 
-                                 
+                                  Focusable="False"
                                   Template="{StaticResource BlankButton}" Background="Transparent" >
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -64,6 +64,7 @@
 
     <Style TargetType="{x:Type bc:Switch}">
         <Setter Property="Template" Value="{StaticResource SwitchTemplate}" />
+        <Setter Property="Focusable" Value="False" />
     </Style>
 
 
