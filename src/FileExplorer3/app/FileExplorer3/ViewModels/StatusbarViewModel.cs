@@ -15,15 +15,14 @@ namespace FileExplorer.ViewModels
 #if !WINRT
     [Export(typeof(StatusbarViewModel))]
 #endif
-    public class StatusbarViewModel : Screen, IStatusbarViewModel,
+    public class StatusbarViewModel : PropertyChangedBase, IStatusbarViewModel,
         IHandle<SelectionChangedEvent>, IHandle<ListCompletedEvent>, IHandle<ViewChangedEvent>
     {
         #region Cosntructor
 
-        public StatusbarViewModel(IExplorerViewModel explorerModel, IEventAggregator events)
+        public StatusbarViewModel(IEventAggregator events)
         {
-            _events = events;
-            _explorerModel = explorerModel;
+            _events = events;            
             _displayItems = new BindableCollection<IEntryViewModel>();
             _allMetadataItems = new BindableCollection<IMetadataViewModel>();
 
@@ -91,9 +90,8 @@ namespace FileExplorer.ViewModels
 
         public void Handle(SelectionChangedEvent message)
         {
-            if (message.Sender.Equals(_explorerModel.FileListModel))
+            if (message.Sender is IFileListViewModel)
             {
-
                 updateDisplayItemsAndCaption(message.Sender as IFileListViewModel);
 
 
@@ -104,7 +102,7 @@ namespace FileExplorer.ViewModels
 
         public void Handle(ListCompletedEvent message)
         {
-            if (message.Sender.Equals(_explorerModel.FileListModel))
+            if (message.Sender is IFileListViewModel)
             {
                 updateDisplayItemsAndCaption(message.Sender as IFileListViewModel);
             }
@@ -118,8 +116,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Data
-
-        IExplorerViewModel _explorerModel;
+        
         bool _isExpanded = false;
         int _selectionCount;
         string _caption;

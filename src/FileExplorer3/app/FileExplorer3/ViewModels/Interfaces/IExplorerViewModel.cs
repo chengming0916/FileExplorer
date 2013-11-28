@@ -8,8 +8,8 @@ namespace FileExplorer.ViewModels
 {
     public interface IExplorerViewModel
     {
-        IDirectoryTreeViewModel DirectoryTreeModel { get; }
-        IFileListViewModel FileListModel { get; }
-        IStatusbarViewModel StatusbarModel { get; }
+        IDirectoryTreeViewModel DirectoryTree { get; }
+        IFileListViewModel FileList { get; }
+        IStatusbarViewModel Statusbar { get; }
     }
 }

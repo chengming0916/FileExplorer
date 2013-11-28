@@ -117,7 +117,7 @@
 
     <ControlTemplate x:Key="BaseButton" TargetType="{x:Type ButtonBase}">
         <bc:HotTrack SelectedBorderBrush="{TemplateBinding BorderBrush}"
-                Padding="1,0" Background="Transparent" 
+                Padding="{TemplateBinding Padding}" Background="Transparent" 
                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                 BorderThickness="0">
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
@@ -133,6 +133,30 @@
             </Trigger>
         </ControlTemplate.Triggers>-->
     </ControlTemplate>
+
+    <ControlTemplate x:Key="NavButton" TargetType="{x:Type ButtonBase}">
+        <Grid Margin="3">
+            <bc:Invert x:Name="cc" 
+                       DisabledBackgroundBrush="{TemplateBinding Background}" 
+                       DisabledForegroundBrush="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
+                       NormalBackgroundBrush="{TemplateBinding Background}" NormalForegroundBrush="{TemplateBinding Foreground}"
+                       MouseOverBackgroundBrush="{TemplateBinding Foreground}" MouseOverForegroundBrush="{TemplateBinding Background}" >
+                <Grid>
+                    <Ellipse x:Name ="BackGrad" Height="25" Width="25" HorizontalAlignment="Center" 
+                        VerticalAlignment ="Center" StrokeThickness="1"             
+                        Stroke ="{Binding Foreground, ElementName=cc}" Fill="{Binding Background, ElementName=cc}">
+                    </Ellipse>                    
+                    <ContentPresenter />
+                </Grid>
+            </bc:Invert>
+        </Grid>    
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.3" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+   
 
     <!--<ControlTemplate x:Key="BaseBreadcrumbButton" TargetType="{x:Type ButtonBase}">
         <Border x:Name="border"

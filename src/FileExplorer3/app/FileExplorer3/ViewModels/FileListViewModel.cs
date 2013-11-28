@@ -28,15 +28,16 @@ namespace FileExplorer.ViewModels
 #if !WINRT
     [Export(typeof(FileListViewModel))]
 #endif
-    public class FileListViewModel : Screen, IFileListViewModel, IHandle<ViewChangedEvent>
+    public class FileListViewModel : PropertyChangedBase, IFileListViewModel,
+        IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events, bool registerEvents)
+        public FileListViewModel(IEventAggregator events)
         {
             Events = events;
             _processedVms = CollectionViewSource.GetDefaultView(Items) as ListCollectionView;
-            if (registerEvents && events != null)
+            if (events != null)
                 events.Subscribe(this);
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -188,6 +189,11 @@ namespace FileExplorer.ViewModels
                 this.ViewMode = message.ViewMode;
         }
 
+        public void Handle(DirectoryChangedEvent message)
+        {
+            if (message.NewModel != null)
+                LoadAsync(message.NewModel, null);
+        }
 
         #endregion
 
@@ -325,6 +331,8 @@ namespace FileExplorer.ViewModels
 
 
         #endregion
+
+
 
 
     }

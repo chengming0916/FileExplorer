@@ -56,6 +56,12 @@
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >ABC</Button>
                 </bc:HotTrack>
+
+                <bc:Invert NormalBackgroundBrush="Blue" NormalForegroundBrush="Gainsboro"
+                           MouseOverBackgroundBrush="Gainsboro" MouseOverForegroundBrush="Blue"
+                           >
+                    <TextBlock Text="Invert" />
+                </bc:Invert>
             </WrapPanel>
         </TabItem>
         <TabItem Header="DropDown">

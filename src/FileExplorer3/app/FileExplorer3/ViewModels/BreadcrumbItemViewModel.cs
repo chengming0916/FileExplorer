@@ -12,7 +12,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class BreadcrumbItemViewModel : Screen, IBreadcrumbItemViewModel
+    public class BreadcrumbItemViewModel : PropertyChangedBase, IBreadcrumbItemViewModel
     {
         #region Constructor
 

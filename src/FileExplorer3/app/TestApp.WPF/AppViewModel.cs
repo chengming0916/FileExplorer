@@ -34,7 +34,7 @@ namespace TestApp.WPF
                 );
 
 
-            ExplorerModel.FileListModel.ColumnList = new ColumnInfo[] 
+            ExplorerModel.FileList.ColumnList = new ColumnInfo[] 
             {
                 ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
                 ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
@@ -42,7 +42,7 @@ namespace TestApp.WPF
                 ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
             };
 
-            ExplorerModel.FileListModel.ColumnFilters = new ColumnFilter[]
+            ExplorerModel.FileList.ColumnFilters = new ColumnFilter[]
             {
                 ColumnFilter.CreateNew("0 - 9", "EntryModel.Label", e => Regex.Match(e.Label, "^[0-9]").Success),
                 ColumnFilter.CreateNew("A - H", "EntryModel.Label", e => Regex.Match(e.Label, "^[A-Ha-h]").Success),
@@ -72,7 +72,7 @@ namespace TestApp.WPF
      
         public void ChangeView(string viewMode)
         {
-            ExplorerModel.FileListModel.ViewMode = viewMode;
+            ExplorerModel.FileList.ViewMode = viewMode;
         }
      
         
