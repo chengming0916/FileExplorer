@@ -39,9 +39,19 @@ namespace FileExplorer.ViewModels.Helpers
         bool IsSelected { get; set; }
 
         /// <summary>
+        /// This is marked by TreeRootSelector, for overflow menu support.
+        /// </summary>
+        bool IsRoot { get; set; }
+
+        /// <summary>
         /// Whether a child of current view model is selected.
         /// </summary>
         bool IsChildSelected { get; }
+
+        /// <summary>
+        /// Based on IsRoot and IsChildSelected
+        /// </summary>
+        bool IsRootAndIsChildSelected { get; }
 
         /// <summary>
         /// The selected child of current view model.

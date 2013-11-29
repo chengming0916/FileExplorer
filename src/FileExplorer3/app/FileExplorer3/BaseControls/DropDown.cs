@@ -101,8 +101,45 @@ namespace FileExplorer.BaseControls
             DependencyProperty.Register("IsDropDownAlignLeft", typeof(bool),
             typeof(DropDown), new UIPropertyMetadata(false));
 
-        
 
+        public UIElement PlacementTarget
+        {
+            get { return (UIElement)GetValue(PlacementTargetProperty); }
+            set { SetValue(PlacementTargetProperty, value); }
+        }
+
+        public static readonly DependencyProperty PlacementTargetProperty =
+            Popup.PlacementTargetProperty.AddOwner(typeof(DropDown));
+
+        public PlacementMode Placement
+        {
+            get { return (PlacementMode)GetValue(PlacementProperty); }
+            set { SetValue(PlacementProperty, value); }
+        }
+
+        public static readonly DependencyProperty PlacementProperty =
+            Popup.PlacementProperty.AddOwner(typeof(DropDown));
+
+
+
+        public double HorizontalOffset
+        {
+            get { return (double)GetValue(HorizontalOffsetProperty); }
+            set { SetValue(HorizontalOffsetProperty, value); }
+        }
+
+        public static readonly DependencyProperty HorizontalOffsetProperty =
+            Popup.HorizontalOffsetProperty.AddOwner(typeof(DropDown));
+
+
+        public double VerticalOffset
+        {
+            get { return (double)GetValue(VerticalOffsetProperty); }
+            set { SetValue(VerticalOffsetProperty, value); }
+        }
+
+        public static readonly DependencyProperty VerticalOffsetProperty =
+           Popup.VerticalOffsetProperty.AddOwner(typeof(DropDown));
 
         //IsHeaderEnabled
         //IsDropDownOpen

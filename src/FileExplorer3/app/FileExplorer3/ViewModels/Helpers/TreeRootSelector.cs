@@ -15,11 +15,18 @@ namespace FileExplorer.ViewModels.Helpers
     {
         #region Constructor
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="entryHelper"></param>
+        /// <param name="compareFunc"></param>
+        /// <param name="rootLevel">Level of TreeItem to consider as root, root items should shown in expander 
+        /// (e.g. in OverflowedAndRootItems) and have caption and expander hidden when the path is longer than it.</param>
         public TreeRootSelector(IEntriesHelper<VM> entryHelper,
-            Func<T, T, HierarchicalResult> compareFunc)
+            Func<T, T, HierarchicalResult> compareFunc, int rootLevel = 0)
             : base(entryHelper)
         {
-            
+            _rootLevel = rootLevel;
             _compareFunc = compareFunc;
         }
 
@@ -51,6 +58,21 @@ namespace FileExplorer.ViewModels.Helpers
         {
         }
 
+
+        private async Task updateRootItemsAsync(ITreeSelector<VM, T> selector, ObservableCollection<VM> rootItems, int level)
+        {
+            if (level == 0)
+                return;
+            await selector.LookupAsync(default(T), BroadcastNextLevel<VM, T>.LoadSubentriesIfNotLoaded,
+                new TreeLookupProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
+                    {
+                        c.IsRoot = true;
+                        rootItems.Add(c.ViewModel);                        
+                        AsyncUtils.RunSync(() => updateRootItemsAsync(c, rootItems, level - 1));
+                        return true;
+                    }));
+        }
+
         private void updateRootItems(Stack<ITreeSelector<VM, T>> path = null)
         {
             if (_rootItems == null)
@@ -63,8 +85,8 @@ namespace FileExplorer.ViewModels.Helpers
                         _rootItems.Add(p.ViewModel);
                 _rootItems.Add(default(VM)); //Separator
             }
-            foreach (var e in this.EntryHelper.AllNonBindable)
-                _rootItems.Add(e);
+
+            updateRootItemsAsync(this, _rootItems, 2);
         }
      
         public async Task SelectAsync(T value)
@@ -91,6 +113,7 @@ namespace FileExplorer.ViewModels.Helpers
         #region Public Properties
 
         public event EventHandler SelectionChanged;
+        private int _rootLevel;
 
         public ObservableCollection<VM> OverflowedAndRootItems
         {

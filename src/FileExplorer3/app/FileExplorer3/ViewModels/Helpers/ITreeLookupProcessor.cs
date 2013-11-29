@@ -24,10 +24,10 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
-    public class TreeSelectionProcessor<VM, T> : ITreeLookupProcessor<VM, T>
+    public class TreeLookupProcessor<VM, T> : ITreeLookupProcessor<VM, T>
     {
 
-        public TreeSelectionProcessor(HierarchicalResult appliedResult, 
+        public TreeLookupProcessor(HierarchicalResult appliedResult, 
             Func<HierarchicalResult, ITreeSelector<VM, T>, ITreeSelector<VM, T>, bool> processFunc)
         {
             _processFunc = processFunc;
@@ -103,6 +103,18 @@ namespace FileExplorer.ViewModels.Helpers
             return true;
         }
     }
+
+    //public class HideRootItem<VM, T> : ITreeLookupProcessor<VM, T>
+    //{
+    //    public static HideRootItem<VM, T> IfIsChild = new HideRootItem<VM, T>();
+
+    //    public bool Process(HierarchicalResult hr, ITreeSelector<VM, T> parentSelector, ITreeSelector<VM, T> selector)
+    //    {
+    //        if (selector.IsRoot)
+    //            selector.IsVisible = hr == HierarchicalResult.Child;            
+    //        return true;
+    //    }
+    //}
 
     public class SetChildNotSelected<VM, T> : ITreeLookupProcessor<VM, T>
     {

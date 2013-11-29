@@ -30,7 +30,7 @@
                 <ControlTemplate TargetType="{x:Type local:DropDown}">
                     <Grid>
                         <ToggleButton x:Name="PART_ToggleButton" Template="{StaticResource BaseToggleButton}"  Width="16"
-                                      BorderBrush="Silver"  
+                                      BorderBrush="Silver"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             <Grid>
                                 <ContentPresenter Content="{TemplateBinding Header}" />
@@ -40,9 +40,11 @@
                                IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
                                             RelativeSource={RelativeSource TemplatedParent}}"
                                StaysOpen="False" 
-                               HorizontalOffset="0"
-                               VerticalOffset="0"
-                               Placement="Bottom"  
+                               HorizontalOffset="{TemplateBinding HorizontalOffset}"
+                               VerticalOffset="{TemplateBinding VerticalOffset}"
+                               Placement="{TemplateBinding Placement}" 
+                               PlacementTarget="{TemplateBinding PlacementTarget}"
+                               
                                PopupAnimation="Slide" AllowsTransparency="True">
                             <Border BorderThickness="{TemplateBinding BorderThickness}" MinWidth="100" MinHeight="10"
                                         BorderBrush="{TemplateBinding BorderBrush}" 
@@ -77,7 +79,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
 
     <Style x:Key="{x:Type local:DropDownList}" 
            TargetType="{x:Type local:DropDownList}">
@@ -91,11 +93,17 @@
                         RelativeSource={RelativeSource TemplatedParent}}"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                    
+                        HorizontalOffset="{TemplateBinding HorizontalOffset}"
+                        VerticalOffset="{TemplateBinding VerticalOffset}"
+                        Placement="{TemplateBinding Placement}" 
+                        PlacementTarget="{TemplateBinding PlacementTarget}"
+                                    
                         Header="{Binding Header,RelativeSource={RelativeSource TemplatedParent}}">
-                        <ScrollViewer x:Name="DropDownScrollViewer">
+                        <ScrollViewer x:Name="DropDownScrollViewer" VerticalScrollBarVisibility="Auto">
                             <StackPanel Orientation="Vertical">
-                            <ItemsPresenter x:Name="ItemsPresenter" 
+                                <ItemsPresenter x:Name="ItemsPresenter" 
                                         KeyboardNavigation.DirectionalNavigation="Contained" 
                                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                             </StackPanel>
@@ -105,7 +113,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemContainerStyle" Value="{StaticResource ComboboxNullAsSeparatorStyle}" />            
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ComboboxNullAsSeparatorStyle}" />
     </Style>
 
 

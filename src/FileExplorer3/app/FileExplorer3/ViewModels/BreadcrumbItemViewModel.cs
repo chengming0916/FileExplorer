@@ -52,6 +52,7 @@ namespace FileExplorer.ViewModels
         IEventAggregator _events;
         bool _showCaption = true; bool _isShown = false;
         private IBreadcrumbViewModel _rootModel;
+        private bool _isOverflowed;
         
 
         #endregion
@@ -72,6 +73,18 @@ namespace FileExplorer.ViewModels
         {
             get { return _showCaption; }
             set { _showCaption = value; NotifyOfPropertyChange(() => ShowCaption); }
+        }
+
+        public bool IsOverflowedOrRoot { get { return _isOverflowed || Selection.IsRoot; } set { } }
+        public bool IsOverflowed
+        {
+            get { return _isOverflowed; }
+            set
+            {
+                _isOverflowed = value;
+                NotifyOfPropertyChange(() => IsOverflowed);
+                NotifyOfPropertyChange(() => IsOverflowedOrRoot); 
+            }
         }
 
         #endregion

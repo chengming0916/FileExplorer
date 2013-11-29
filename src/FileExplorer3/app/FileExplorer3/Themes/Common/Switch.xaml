@@ -11,9 +11,7 @@
     <ControlTemplate x:Key="SwitchTemplate" TargetType="{x:Type bc:Switch}">
         <Grid>
             <ContentPresenter Content="{TemplateBinding ContentOn}" 
-                              Visibility="{Binding IsSwitchOn,
-                                RelativeSource={RelativeSource TemplatedParent},
-                                Converter={StaticResource btvc}}" />
+                              Visibility="{Binding IsSwitchOn, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btvc}}" />
             <ContentPresenter Content="{TemplateBinding ContentOff}" Visibility="{Binding IsSwitchOn,
                 RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource fbtvc}}" />
         </Grid>
@@ -36,9 +34,7 @@
                     <bc:HotTrack Grid.Column="0" 
                                  x:Name="PART_ToggleHotTrack"
                                  Width="{Binding ActualHeight, ElementName=PART_ToggleHotTrack}">
-                        <ContentControl ContentTemplate="{TemplateBinding HeaderTemplate}"  
-                                    
-                                        Content="{TemplateBinding Header}" Margin="2" />
+                        <ContentControl ContentTemplate="{TemplateBinding HeaderTemplate}"    Content="{TemplateBinding Header}" Margin="2" />
                     </bc:HotTrack>
 
 
@@ -46,13 +42,11 @@
                         <ContentPresenter 
                             x:Name="PART_ContentOn"
                             Content="{TemplateBinding ContentOn}" 
-                            MinHeight="{Binding ActualHeight, ElementName=PART_ContentOff}"
                             Visibility="{Binding IsSwitchOn,
                                 RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btv},Mode=OneWay}" />
                         <ContentPresenter 
                             x:Name="PART_ContentOff"
                             Content="{TemplateBinding ContentOff}" 
-                            MinHeight="{Binding ActualHeight, ElementName=PART_ContentOn}"
                                           Visibility="{Binding IsSwitchOn,
                                 RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource fbtv},Mode=OneWay}" />
                     </Grid>
