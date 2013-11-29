@@ -24,13 +24,14 @@
     <ControlTemplate x:Key="BasicArrowButton" TargetType="{x:Type ToggleButton}" >
         <Border x:Name="border"
                 Padding="2,0" Background="Transparent" 
-                BorderBrush="Transparent" BorderThickness="1"
+                BorderBrush="Transparent" BorderThickness="1" 
 				MinHeight="20" MinWidth ="12" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
             <Path x:Name="path" Fill="{TemplateBinding Foreground}"
                     Data="{StaticResource NormalArrow}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center" 
-                    Margin="{TemplateBinding Padding}" IsHitTestVisible="True" />
+                    Margin="{TemplateBinding Padding}" IsHitTestVisible="True" >
+            </Path>
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsPressed" Value="True">
@@ -119,7 +120,7 @@
         <bc:HotTrack SelectedBorderBrush="{TemplateBinding BorderBrush}"
                 Padding="{TemplateBinding Padding}" Background="Transparent" 
                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                BorderThickness="0">
+                BorderThickness="{TemplateBinding BorderThickness}">
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
                               VerticalAlignment="{TemplateBinding VerticalAlignment}" />
         </bc:HotTrack>
@@ -156,7 +157,26 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-   
+
+    <ControlTemplate x:Key="NavBaseButton" TargetType="{x:Type ButtonBase}">
+        <Grid Margin="3">
+            <bc:Invert x:Name="cc" 
+                       DisabledBackgroundBrush="{TemplateBinding Background}" 
+                       DisabledForegroundBrush="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
+                       NormalBackgroundBrush="{TemplateBinding Background}" NormalForegroundBrush="{TemplateBinding Foreground}"
+                       MouseOverBackgroundBrush="{TemplateBinding Foreground}" MouseOverForegroundBrush="{TemplateBinding Background}" >
+                <Grid>                 
+                    <ContentPresenter />
+                </Grid>
+            </bc:Invert>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.3" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
 
     <!--<ControlTemplate x:Key="BaseBreadcrumbButton" TargetType="{x:Type ButtonBase}">
         <Border x:Name="border"

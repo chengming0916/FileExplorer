@@ -27,8 +27,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <ComboBox SelectedValue="{Binding ExplorerModel.FileListModel.ViewMode}" x:Name="ViewModes" Width="100" />
-            <Slider Value="{Binding ExplorerModel.FileListModel.ItemSize, Mode=TwoWay}" Minimum="30" Maximum="120" Width="200" />
+            <ComboBox SelectedValue="{Binding ExplorerModel.FileList.ViewMode}" x:Name="ViewModes" Width="100" />
+            <Slider Value="{Binding ExplorerModel.FileList.ItemSize, Mode=TwoWay}" Minimum="30" Maximum="120" Width="200" />
             <TextBox x:Name="GotoPath" Width="200" />
             <Button x:Name="Go" Content="Go" Width="150" />
             <TextBlock Text="{Binding ExplorerModel.SelectionCount}" />

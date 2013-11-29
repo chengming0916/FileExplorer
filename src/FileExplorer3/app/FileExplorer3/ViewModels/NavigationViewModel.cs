@@ -25,6 +25,8 @@ namespace FileExplorer.ViewModels
 
         #region Methods       
 
+        
+
         public void Handle(SelectionChangedEvent message)
         {
             if (message.Sender is IDirectoryTreeViewModel || message.Sender is IBreadcrumbViewModel)
@@ -33,11 +35,16 @@ namespace FileExplorer.ViewModels
                 var destFolder = message.SelectedViewModels.First();
                 if (!_updatingNavPosition && (_currentFolder == null || !(_currentFolder.Equals(destFolder))))
                 {
-                    Add(destFolder);
-                    Events.Publish(new DirectoryChangedEvent(this, destFolder, _currentFolder));
-                    _currentFolder = destFolder;
+                    AddAndBroadcast(destFolder);
                 }
             }
+        }
+
+        public void AddAndBroadcast(IEntryViewModel destFolder)
+        {
+            Add(destFolder);
+            Events.Publish(new DirectoryChangedEvent(this, destFolder, _currentFolder));
+            _currentFolder = destFolder;
         }
 
         public void Add(IEntryViewModel item)
@@ -53,8 +60,14 @@ namespace FileExplorer.ViewModels
             NavigationHistory.Insert(0, item);
             NavigationPosition = 0;
 
+            UpdateState();
+        }
+
+        private void UpdateState()
+        {
             CanGoNext = NavigationPosition > 0;
             CanGoBack = NavigationPosition < NavigationHistory.Count - 1;
+            CanGoUp = _currentFolder != null && _currentFolder.EntryModel.Parent != null;
         }
 
         public void Clear()
@@ -72,20 +85,28 @@ namespace FileExplorer.ViewModels
             try
             {
                 int orgPosition = NavigationPosition;
-                NavigationPosition = newPosition;
+                _position = newPosition;
+                NotifyOfPropertyChange(() => NavigationPosition);
+
                 if (newPosition != -1 && newPosition < NavigationHistory.Count)
                 {
                     Events.Publish(new DirectoryChangedEvent(this,
                         NavigationHistory[newPosition], NavigationHistory[orgPosition]));
+                    _currentFolder = NavigationHistory[newPosition];
                 }
             }
             finally
             {
                 _updatingNavPosition = false;
-                CanGoNext = newPosition > 0;
-                CanGoBack = newPosition < NavigationHistory.Count - 1;
-
+                UpdateState();
             }
+        }
+
+        public void GoUp()
+        {
+            if (!_updatingNavPosition && _currentFolder != null && _currentFolder.EntryModel.Parent != null)
+                AddAndBroadcast(EntryViewModel.FromEntryModel(_currentFolder.EntryModel.Parent));
+            else UpdateState();
         }
 
         public void GoBack()
@@ -109,16 +130,18 @@ namespace FileExplorer.ViewModels
         IObservableCollection<IEntryViewModel> _navigationHistory = new BindableCollection<IEntryViewModel>();
         private bool _canGoBack;
         private bool _canGoNext;
+        private bool _canGoUp;
 
         #endregion
 
         #region Public Properties
 
         public IEventAggregator Events { get; set; }
-        public int NavigationPosition { get { return _position; } private set { _position = value; NotifyOfPropertyChange(() => NavigationPosition); } }
+        public int NavigationPosition { get { return _position; } set { ChangeNavigationPosition(value); } }
         public IObservableCollection<IEntryViewModel> NavigationHistory { get { return _navigationHistory; } }
         public bool CanGoBack { get { return _canGoBack; } private set { _canGoBack = value; NotifyOfPropertyChange(() => CanGoBack); } }
         public bool CanGoNext { get { return _canGoNext; } private set { _canGoNext = value; NotifyOfPropertyChange(() => CanGoNext); } }
+        public bool CanGoUp { get { return _canGoUp; } private set { _canGoUp = value; NotifyOfPropertyChange(() => CanGoUp); } }
 
         #endregion
 

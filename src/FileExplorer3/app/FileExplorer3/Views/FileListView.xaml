@@ -21,7 +21,7 @@
     <Grid>
 
         <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"                      
-                     ItemsSource="{Binding Items}"   
+                     ItemsSource="{Binding Items}"   BorderBrush="Transparent"
                      ViewMode="{Binding ViewMode}"  
                      Columns="{Binding ColumnList}"
                      ColumnFilters ="{Binding ColumnFilters}"

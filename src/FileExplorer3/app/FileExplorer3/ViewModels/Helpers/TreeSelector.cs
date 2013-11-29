@@ -40,7 +40,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public override string ToString()
         {
-            return _currentValue.ToString();
+            return _currentValue == null ? "" : _currentValue.ToString();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace FileExplorer.ViewModels.Helpers
                 if (RootSelector.SelectedValue != null)
                     this.LookupAsync(RootSelector.SelectedValue,
                         new SearchNextUsingReverseLookup<VM, T>(RootSelector.SelectedSelector),
-                        new TreeSelectionProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
+                        new TreeLookupProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
                             {
                                 SetSelectedChild(c == null ? default(T) : c.Value);
                                 return true;
@@ -131,6 +131,7 @@ namespace FileExplorer.ViewModels.Helpers
 
             NotifyOfPropertyChanged(() => SelectedChild);
             NotifyOfPropertyChanged(() => IsChildSelected);
+            NotifyOfPropertyChanged(() => IsRootAndIsChildSelected);
         }
 
         public void OnChildSelected(T newValue)
@@ -147,7 +148,7 @@ namespace FileExplorer.ViewModels.Helpers
                 if (newValue != null)
                 {
                     LookupAsync(newValue, SearchNextLevel<VM, T>.LoadSubentriesIfNotLoaded,
-                        new TreeSelectionProcessor<VM, T>(HierarchicalResult.Related, (hr, p, c) =>
+                        new TreeLookupProcessor<VM, T>(HierarchicalResult.Related, (hr, p, c) =>
                             {
                                 c.IsSelected = true;
                                 _prevSelected = c;
@@ -174,6 +175,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Public Properties
         private VM _currentViewModel;
+        private bool _isRoot = false;
 
         public T Value { get { return _currentValue; } }
         public VM ViewModel { get { return _currentViewModel; } }
@@ -195,9 +197,25 @@ namespace FileExplorer.ViewModels.Helpers
             }
         }
 
+        public bool IsRoot
+        {
+            get { return _isRoot; }
+            set
+            {
+                _isRoot = value;
+                NotifyOfPropertyChanged(() => IsRoot);
+                NotifyOfPropertyChanged(() => IsRootAndIsChildSelected);
+            }
+        }
+
         public virtual bool IsChildSelected
         {
             get { return _selectedValue != null; }
+        }
+
+        public virtual bool IsRootAndIsChildSelected
+        {
+            get { return IsRoot && IsChildSelected; }
         }
 
         public T SelectedChild

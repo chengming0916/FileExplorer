@@ -11,7 +11,7 @@ using FileExplorer;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged
+    public class TreeViewModel : INotifyPropertyChanged, ISupportTreeSelector<TreeNodeViewModel, string>
     {
         public TreeViewModel()
         {

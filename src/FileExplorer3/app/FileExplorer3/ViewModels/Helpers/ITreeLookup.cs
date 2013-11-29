@@ -36,6 +36,23 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
+    public class BroadcastNextLevel<VM, T> : ITreeLookup<VM, T>
+    {
+        public static BroadcastNextLevel<VM, T> LoadSubentriesIfNotLoaded = new BroadcastNextLevel<VM, T>();
+
+        public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
+            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+        {
+            foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
+                if (current is ISupportTreeSelector<VM, T>)
+                {
+                    var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
+                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    processors.Process(compareResult, parentSelector, currentSelectionHelper);                    
+                }
+        }
+    }
+
     public class SearchNextUsingReverseLookup<VM, T> : ITreeLookup<VM, T>
     {
         public SearchNextUsingReverseLookup(ITreeSelector<VM,T> targetSelector)
