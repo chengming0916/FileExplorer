@@ -60,6 +60,15 @@ namespace TestTemplate.WPF
             base.OnApplyTemplate();
             setupBreadcrumb();
             setupBreadcrumbTree();
+            setupDragAndDrop();
+        }
+
+        private void setupDragAndDrop()
+        {
+            lvDnd1.AllowDrop = true;
+            lvDnd2.AllowDrop = true;
+            var adapter1 = new UIEventAdapter(lvDnd1, true, DebugUIEventProcessor.Instance);
+            var adapter2 = new UIEventAdapter(lvDnd2, true, DebugUIEventProcessor.Instance);
         }
 
         private void setupBreadcrumbTree()

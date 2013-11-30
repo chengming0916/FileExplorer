@@ -29,9 +29,9 @@
 
             <ContentControl Grid.ColumnSpan="2" Grid.Row="2"  Name="Statusbar" Margin="0,5,0,0" />
 
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1" 
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1"  Margin="5,0"
                           HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1" 
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1" Margin="5,0"
                           HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
         </Grid>
     </Grid>
