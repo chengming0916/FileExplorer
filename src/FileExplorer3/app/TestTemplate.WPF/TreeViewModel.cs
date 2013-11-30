@@ -26,6 +26,9 @@ namespace TestTemplate.WPF
 
         HierarchicalResult compareFunc(string path1, string path2)
         {
+            if (path1 == null || path2 == null)
+                return HierarchicalResult.Unrelated;
+
             if (path1.Equals(path2, StringComparison.CurrentCultureIgnoreCase))
                 return HierarchicalResult.Current;
             if (path1.StartsWith(path2, StringComparison.CurrentCultureIgnoreCase))

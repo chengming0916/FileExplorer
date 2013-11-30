@@ -80,10 +80,10 @@
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >Popup</Button>
                     </bc:HotTrack>
-                </bc:DropDown>              
+                </bc:DropDown>
                 <TextBlock Text="{Binding ElementName=dd2, Path=IsDropDownOpen}" />
 
-                
+
                 <bc:DropDown x:Name="dd3" PlacementTarget="{Binding ElementName=dd}" >
                     <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
                         <TextBlock Text="PlacementTarget" />
@@ -200,7 +200,7 @@
                 </StackPanel>
             </Grid>
         </TabItem>
-        <TabItem Header="BreadcrumbTree" x:Name="btreeTab" IsSelected="True">
+        <TabItem Header="BreadcrumbTree" x:Name="btreeTab" >
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top">
 
@@ -238,7 +238,7 @@
                         </uc:BreadcrumbTree.ItemContainerStyle>
                         <uc:BreadcrumbTree.MenuItemTemplate>
                             <DataTemplate>
-                                    <TextBlock Text="{Binding Header}" />
+                                <TextBlock Text="{Binding Header}" />
 
                             </DataTemplate>
                         </uc:BreadcrumbTree.MenuItemTemplate>
@@ -335,6 +335,25 @@
             <uc:ListViewEx x:Name="listView">
 
             </uc:ListViewEx>
+        </TabItem>
+
+        <TabItem Header="Drag n Drop" IsSelected="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>                
+                <ListView x:Name="lvDnd1" Grid.Column="0">
+                    <sys:String>1</sys:String>
+                    <sys:String>2</sys:String>
+                    <sys:String>3</sys:String>
+                </ListView>
+                <ListView x:Name="lvDnd2" Grid.Column="1">
+                    <sys:String>4</sys:String>
+                    <sys:String>5</sys:String>
+                    <sys:String>6</sys:String>
+                </ListView>
+            </Grid>
         </TabItem>
     </TabControl>
 
