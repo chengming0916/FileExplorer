@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace FileExplorer.BaseControls
 {
@@ -19,6 +20,15 @@ namespace FileExplorer.BaseControls
         {
             DependencyPropertyDescriptor desc = DependencyPropertyDescriptor.FromProperty(property, typeof(T));
             desc.AddValueChanged(obj, handler);
+        }
+
+        public static void AddValueChangedDispatcher<T>(this T obj, DependencyProperty property,              
+            EventHandler handler, DispatcherPriority priority) where T : DependencyObject
+        {
+            AddValueChanged(obj, property, (o,e) =>
+                {
+                    obj.Dispatcher.BeginInvoke(priority, handler);
+                });
         }
 
         public static T FindAncestor<T>(DependencyObject obj) where T : DependencyObject

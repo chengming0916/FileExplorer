@@ -18,6 +18,7 @@ using FileExplorer.BaseControls;
 using FileExplorer.UserControls;
 using FileExplorer.Utils;
 using FileExplorer;
+using Cofe.Core.Script;
 
 namespace TestTemplate.WPF
 {
@@ -61,14 +62,36 @@ namespace TestTemplate.WPF
             setupBreadcrumb();
             setupBreadcrumbTree();
             setupDragAndDrop();
-        }
+        }        
 
         private void setupDragAndDrop()
         {
             lvDnd1.AllowDrop = true;
             lvDnd2.AllowDrop = true;
-            var adapter1 = new UIEventAdapter(lvDnd1, true, DebugUIEventProcessor.Instance);
-            var adapter2 = new UIEventAdapter(lvDnd2, true, DebugUIEventProcessor.Instance);
+            ScriptRunner runner = new ScriptRunner();
+
+            var adapter1 = new UIEventAdapter(runner, lvDnd1, true, MultiSelectEventProcessor.Instance);
+            //var adapter2 = new UIEventAdapter(runner, lvDnd2, true, DebugUIEventProcessor.Instance);
+
+            //lvDnd1.Loaded += (o, e) =>
+            //    {
+            //        var pd = new UIParameterDic() { Sender = lvDnd1 };
+            //        pd["IsSelecting"] = true;
+            //        pd["StartPosition"] = new Point(30, 30);
+            //        pd["EndPosition"] = new Point(100, 100);
+
+            //        MultiSelectScriptCommands.AttachAdorner.Execute(pd);
+
+            //        if (pd["SelectionAdorner"] == null)
+            //            throw new Exception();
+
+            //        lvDnd1.Dispatcher.BeginInvoke(new System.Action(() =>
+            //            {
+            //                MultiSelectScriptCommands.UpdateAdorner.Execute(pd);
+            //            }));
+                    
+            //        //MultiSelectScriptCommands.DetachAdorner.Execute(pd);
+            //    };
         }
 
         private void setupBreadcrumbTree()

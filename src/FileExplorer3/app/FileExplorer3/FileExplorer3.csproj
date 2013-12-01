@@ -82,6 +82,13 @@
     <Compile Include="BaseControls\OneItemPanel.cs" />
     <Compile Include="BaseControls\OverflowablePanel.cs" />
     <Compile Include="BaseControls\OverflowableStackPanel.cs" />
+    <Compile Include="BaseControls\SelectionAdorner.cs" />
+    <Compile Include="Defines\Cofe3\Implements\ScriptCommandBase.cs" />
+    <Compile Include="Defines\Cofe3\Implements\ScriptCommandImpl.cs" />
+    <Compile Include="Defines\Cofe3\Interfaces\IScriptCommand.cs" />
+    <Compile Include="Defines\Cofe3\Interfaces\IScriptRunner.cs" />
+    <Compile Include="Defines\Cofe3\Defines\Structs\ParameterDic.cs" />
+    <Compile Include="Defines\Cofe3\Implements\ScriptRunner.cs" />
     <Compile Include="Models\ProfileSuggestionSource.cs" />
     <Compile Include="BaseControls\Switch.cs" />
     <Compile Include="Defines\Converters\VisibilityToBoolConverter.cs" />
@@ -148,8 +155,10 @@
     <Compile Include="UserControls\Breadcrumb.cs" />
     <Compile Include="UserControls\BreadcrumbBase.cs" />
     <None Include="UserControls\Notused\DirectoryModelDragDropHelper.cs" />
-    <Compile Include="UserControls\DragDrop\IUIEventProcessor.cs" />
-    <Compile Include="UserControls\DragDrop\UIEventAdapter.cs" />
+    <None Include="UserControls\Notused\DragDrop\DragEvenrProcessor.cs" />
+    <None Include="UserControls\Notused\DragDrop\MultiSelectEventProcessor.cs" />
+    <None Include="UserControls\Notused\DragDrop\UIEventProcessor.cs" />
+    <None Include="UserControls\Notused\DragDrop\UIEventAdapter.cs" />
     <Compile Include="BaseControls\DragAdorner.cs" />
     <None Include="UserControls\Notused\DragDropInfo.cs" />
     <None Include="UserControls\Notused\DragDropItemInfo.cs" />
@@ -159,8 +168,15 @@
     <None Include="UserControls\Notused\ShellClipboardFormats.cs" />
     <None Include="UserControls\Notused\VirtualDataObject.cs" />
     <Compile Include="Defines\AttachedProperties.cs" />
-    <Compile Include="UserControls\DragDrop\IControlEventHandler.cs" />
-    <Compile Include="UserControls\DragDrop\IDataObject.cs" />
+    <None Include="UserControls\Notused\DragDrop\IRoutedEventHandler.cs" />
+    <None Include="UserControls\Notused\DragDrop\IDataObject.cs" />
+    <Compile Include="UserControls\DragDrop\MultiSelectAttachedProperties.cs" />
+    <Compile Include="UserControls\DragDrop\MultiSelectEventProcessor.cs" />
+    <Compile Include="UserControls\DragDrop\MultiSelectScriptCommands.cs" />
+    <Compile Include="UserControls\DragDrop\UIEventAdapter.cs" />
+    <Compile Include="UserControls\DragDrop\ScriptCommands.cs" />
+    <Compile Include="UserControls\DragDrop\UIEventProcessor.cs" />
+    <Compile Include="UserControls\DragDrop\UIParameterDic.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
     <Compile Include="BaseControls\GridViewColumnEx.cs" />
@@ -181,6 +197,7 @@
     <Compile Include="BaseControls\VirutalStackPanelView.cs" />
     <Compile Include="BaseControls\VirutalWrapPanelView.cs" />
     <Compile Include="BaseControls\WrapPanelView.cs" />
+    <Compile Include="Utils\ControlUtils.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Utils\BitmapSourceUtils.cs" />
     <Compile Include="UserControls\InputBindingTrigger.cs" />
@@ -484,6 +501,9 @@
     <Content Include="ViewModels\Helpers\Selector.html" />
     <Resource Include="Themes\Resources\folder.ico" />
     <Resource Include="Themes\Resources\file.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Defines\Script\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
