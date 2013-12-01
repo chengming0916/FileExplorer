@@ -66,7 +66,7 @@ namespace FileExplorer.UserControls
 
             firstVisibleItemIndex -= CacheItemCount;
             if (firstVisibleItemIndex < 0) firstVisibleItemIndex = 0;
-            lastVisibleItemIndex += CacheItemCount;            
+            lastVisibleItemIndex += CacheItemCount;
 
             ItemsControl itemsControl = ItemsControl.GetItemsOwner(this);
             int itemCount = itemsControl.HasItems ? itemsControl.Items.Count : 0;
@@ -83,16 +83,16 @@ namespace FileExplorer.UserControls
                 {
                     case VerticalAlignment.Top:
                         return new Rect(itemIndex * this.ChildSize.Width, 0, this.ChildSize.Width, this.ChildSize.Height);
-                        
+
                     case VerticalAlignment.Bottom:
                         return new Rect(itemIndex * this.ChildSize.Width,
                             _viewport.Height - this.ItemHeight, this.ChildSize.Width, this.ChildSize.Height);
-                        
+
                     case VerticalAlignment.Center:
                         return new Rect(itemIndex * this.ChildSize.Width, (_viewport.Height - this.ItemHeight) / 2,
-                            this.ChildSize.Width, this.ChildSize.Height);                        
+                            this.ChildSize.Width, this.ChildSize.Height);
                     default:
-                        return new Rect(itemIndex * this.ChildSize.Width, 0, this.ChildSize.Width, _viewport.Height);                        
+                        return new Rect(itemIndex * this.ChildSize.Width, 0, this.ChildSize.Width, _viewport.Height);
                 }
             }
             else
@@ -100,17 +100,17 @@ namespace FileExplorer.UserControls
                 switch (HorizontalContentAlignment)
                 {
                     case HorizontalAlignment.Left:
-                        return new Rect(0, itemIndex * this.ChildSize.Height, this.ChildSize.Width, this.ChildSize.Height);                        
+                        return new Rect(0, itemIndex * this.ChildSize.Height, this.ChildSize.Width, this.ChildSize.Height);
                     case HorizontalAlignment.Right:
                         return new Rect(_viewport.Width - this.ItemWidth, itemIndex * this.ChildSize.Height,
-                            this.ChildSize.Width, this.ChildSize.Height);                        
+                            this.ChildSize.Width, this.ChildSize.Height);
                     case HorizontalAlignment.Center:
                         return new Rect((_viewport.Width - this.ItemWidth) / 2, itemIndex * this.ChildSize.Height,
-                            this.ChildSize.Width, this.ChildSize.Height);                        
+                            this.ChildSize.Width, this.ChildSize.Height);
                     default:
                         return new Rect(0, itemIndex * this.ChildSize.Height,
                             _viewport.Width, this.ChildSize.Height);
-                        
+
                 }
             }
         }
@@ -335,8 +335,8 @@ namespace FileExplorer.UserControls
             double xChanges = (largeChange ? _viewport.Width : SmallChanges);
 
             if (Orientation == Orientation.Horizontal)
-                SetVerticalOffset(this.VerticalOffset + yChanges);
-            else SetHorizontalOffset(this.HorizontalOffset + xChanges);
+                SetHorizontalOffset(this.HorizontalOffset + yChanges);
+            else SetVerticalOffset(this.VerticalOffset + xChanges);
         }
 
         public void SubtractOffset(bool largeChange)
@@ -345,8 +345,8 @@ namespace FileExplorer.UserControls
             double xChanges = (largeChange ? _viewport.Width : SmallChanges);
 
             if (Orientation == Orientation.Horizontal)
-                SetVerticalOffset(this.VerticalOffset - yChanges);
-            else SetHorizontalOffset(this.HorizontalOffset - xChanges);
+                SetHorizontalOffset(this.HorizontalOffset - yChanges);
+            else SetVerticalOffset(this.VerticalOffset- xChanges);
         }
 
         public void PageUp()
@@ -568,10 +568,10 @@ namespace FileExplorer.UserControls
         }
 
         public static readonly DependencyProperty CacheItemCountProperty =
-            DependencyProperty.Register("CacheItemCount", typeof(int), 
+            DependencyProperty.Register("CacheItemCount", typeof(int),
             typeof(VirtualStackPanel), new UIPropertyMetadata(0));
 
-        
+
 
         #endregion
     }
