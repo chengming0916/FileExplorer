@@ -35,7 +35,7 @@ namespace FileExplorer.BaseControls
         {
             OnMouseDrag = ScriptCommands.NoCommand;
             OnMouseDown = ScriptCommands.NoCommand;
-            OnMouseDown = ScriptCommands.NoCommand;
+            OnMouseUp = ScriptCommands.NoCommand;
             OnMouseMove = ScriptCommands.NoCommand;
 
             OnMouseDragEnter = ScriptCommands.NoCommand;

@@ -339,19 +339,34 @@
 
         <TabItem Header="Drag n Drop" IsSelected="True">
             <Grid>
+                <Grid.Resources>
+                    <DataTemplate x:Key="dragnDropItemTemplate">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}" />
+                            <TextBlock Text="s" 
+                                           Visibility="{Binding (bc:AttachedProperties.IsSelecting), 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}},
+                                    Converter={StaticResource btvc}}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>                
-                <ListView x:Name="lvDnd1" Grid.Column="0">
-                    <sys:String>1</sys:String>
-                    <sys:String>2</sys:String>
-                    <sys:String>3</sys:String>
+                </Grid.ColumnDefinitions>
+                <ListView x:Name="lvDnd1" Grid.Column="0" ItemTemplate="{StaticResource dragnDropItemTemplate}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <uc:VirtualStackPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="30" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
                 </ListView>
-                <ListView x:Name="lvDnd2" Grid.Column="1">
-                    <sys:String>4</sys:String>
-                    <sys:String>5</sys:String>
-                    <sys:String>6</sys:String>
+                <ListView x:Name="lvDnd2" Grid.Column="1" ItemTemplate="{StaticResource dragnDropItemTemplate}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <uc:VirtualWrapPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="30" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
                 </ListView>
             </Grid>
         </TabItem>

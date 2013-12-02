@@ -70,8 +70,14 @@ namespace TestTemplate.WPF
             lvDnd2.AllowDrop = true;
             ScriptRunner runner = new ScriptRunner();
 
+            for (int i = 1; i <= 20; i++)
+            {
+                lvDnd1.Items.Add(i);
+                lvDnd2.Items.Add(i+20);
+            }
+
             var adapter1 = new UIEventAdapter(runner, lvDnd1, true, MultiSelectEventProcessor.Instance);
-            //var adapter2 = new UIEventAdapter(runner, lvDnd2, true, DebugUIEventProcessor.Instance);
+            var adapter2 = new UIEventAdapter(runner, lvDnd2, true, MultiSelectEventProcessor.Instance);
 
             //lvDnd1.Loaded += (o, e) =>
             //    {

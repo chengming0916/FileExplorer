@@ -89,7 +89,7 @@ namespace FileExplorer.BaseControls
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
                 processors.Select(p => commandFunc(p)).Where(c => c.CanExecute(pd)));
             _scriptRunner.Run(commands, pd);
-            return pd.EventArgs.Handled;
+            return e.Handled;
         }
 
         void Control_DragLeave(object sender, DragEventArgs e)
@@ -144,16 +144,16 @@ namespace FileExplorer.BaseControls
             execute(_eventProcessors, p => p.OnMouseDown, "OnMouseDown", sender, e);
 
             AttachedProperties.SetIsDragging(control, false);
-            if (UITools.IsMouseOverSelectedItem(control))
-            {                
+            //if (UITools.IsMouseOverSelectedItem(control))
+            //{                
                 AttachedProperties.SetStartPosition(control, e.GetPosition(control));
                 AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
-            }
-            else
-            {
-                AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
-                AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
-            }
+            //}
+            //else
+            //{
+            //    AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
+            //    AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
+            //}
         }
 
         void Control_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -181,7 +181,9 @@ namespace FileExplorer.BaseControls
         {
             FrameworkElement control = sender as FrameworkElement;
             if (execute(_eventProcessors, p => p.OnMouseDrag, "OnMouseDrag ", sender, e))
+            //DragDropEventProcessor set e.IsHandled to true
             {
+                //DragDrop does not raise MouseUp, so have to raise manually.
                 Control_MouseUp(sender,
                     _mouseDownEvent ?? new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left));
             }
@@ -190,11 +192,12 @@ namespace FileExplorer.BaseControls
         void Control_MouseUp(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
+            
+            execute(_eventProcessors, p => p.OnMouseUp, "OnMouseUp ", sender, e);
+
             AttachedProperties.SetIsDragging(control, false);
             AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
-            AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
-
-            execute(_eventProcessors, p => p.OnMouseUp, "OnMouseUp ", sender, e);
+            AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);            
         }
 
         #endregion
