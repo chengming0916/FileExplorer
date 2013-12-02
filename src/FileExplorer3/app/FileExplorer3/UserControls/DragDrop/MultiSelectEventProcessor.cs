@@ -14,7 +14,7 @@ namespace FileExplorer.UserControls
         public MultiSelectEventProcessor()
         {
             OnMouseDrag = MultiSelectScriptCommands.StartDrag;
-            OnMouseMove = MultiSelectScriptCommands.UpdateAdornerPosition;
+            OnMouseMove = MultiSelectScriptCommands.HighlightDraggingItems;
             OnMouseUp = MultiSelectScriptCommands.EndDrag;
         }
     }

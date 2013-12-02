@@ -18,7 +18,7 @@ namespace FileExplorer.Defines
 
     public static partial class AttachedProperties
     {
-        private static DependencyProperty SelectionAdornerProperty =
+        public static DependencyProperty SelectionAdornerProperty =
             DependencyProperty.RegisterAttached("SelectionAdorner", typeof(SelectionAdorner), typeof(AttachedProperties));
 
         public static SelectionAdorner GetSelectionAdorner(DependencyObject target)
@@ -31,7 +31,7 @@ namespace FileExplorer.Defines
             target.SetValue(SelectionAdornerProperty, value);
         }
 
-        private static DependencyProperty LastScrollContentPresenterProperty =
+        public static DependencyProperty LastScrollContentPresenterProperty =
            DependencyProperty.RegisterAttached("LastScrollContentPresenter", typeof(ScrollContentPresenter), typeof(AttachedProperties));
 
         public static ScrollContentPresenter GetLastScrollContentPresenter(DependencyObject target)
@@ -42,6 +42,33 @@ namespace FileExplorer.Defines
         public static void SetLastScrollContentPresenter(DependencyObject target, ScrollContentPresenter value)
         {
             target.SetValue(LastScrollContentPresenterProperty, value);
+        }
+
+        public static DependencyProperty StartSelectedItemProperty =
+          DependencyProperty.RegisterAttached("StartSelectedItem", typeof(Control), typeof(AttachedProperties));
+
+        public static Control GetStartSelectedItem(DependencyObject target)
+        {
+            return (Control)target.GetValue(StartSelectedItemProperty);
+        }
+
+        public static void SetStartSelectedItem(DependencyObject target, Control value)
+        {
+            target.SetValue(StartSelectedItemProperty, value);
+        }
+
+        public static DependencyProperty IsSelectingProperty =
+       DependencyProperty.RegisterAttached("IsSelecting", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
+
+
+        public static bool GetIsSelecting(DependencyObject target)
+        {
+            return (bool)target.GetValue(IsSelectingProperty);
+        }
+
+        public static void SetIsSelecting(DependencyObject target, bool value)
+        {
+            target.SetValue(IsSelectingProperty, value);
         }
 
     }

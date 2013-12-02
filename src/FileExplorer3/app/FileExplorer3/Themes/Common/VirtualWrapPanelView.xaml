@@ -23,15 +23,14 @@
             <Setter.Value>
                 <ItemsPanelTemplate>
                     <uc:VirtualWrapPanel Width="{Binding (FrameworkElement.ActualWidth), 
-                        
-                   RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"  
-                   Duration="{Binding ItemAnimationDuration, RelativeSource={RelativeSource AncestorType=ListView}}"                      
-                   Orientation="{Binding (ListView.View).Orientation, RelativeSource={RelativeSource AncestorType=ListView}}"                      
-                   SmallChanges="{Binding (ListView.View).SmallChanges, RelativeSource={RelativeSource AncestorType=ListView}}"                      
-                  ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
-                   MinWidth="{Binding ItemWidth, RelativeSource={RelativeSource Self}}"
-                   ItemHeight="{Binding (ListView.View).ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
-                   CacheItemCount="{Binding (ListView.View).CacheItemCount, RelativeSource={RelativeSource AncestorType=ListView}}"
+                        RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"  
+                        Duration="{Binding ItemAnimationDuration, RelativeSource={RelativeSource AncestorType=ListView}}"                      
+                        Orientation="{Binding (ListView.View).Orientation, RelativeSource={RelativeSource AncestorType=ListView}}"                      
+                        SmallChanges="{Binding (ListView.View).SmallChanges, RelativeSource={RelativeSource AncestorType=ListView}}"                      
+                        ItemWidth="{Binding (ListView.View).ItemWidth, RelativeSource={RelativeSource AncestorType=ListView}}"
+                        MinWidth="{Binding ItemWidth, RelativeSource={RelativeSource Self}}"
+                        ItemHeight="{Binding (ListView.View).ItemHeight, RelativeSource={RelativeSource AncestorType=ListView}}"
+                        CacheItemCount="{Binding (ListView.View).CacheItemCount, RelativeSource={RelativeSource AncestorType=ListView}}"
                                          />
                     
                 </ItemsPanelTemplate>

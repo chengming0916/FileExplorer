@@ -368,6 +368,38 @@ namespace FileExplorer.BaseControls
             return GetParentTreeViewItem((FrameworkElement)htr.VisualHit);
         }
 
+        public static ListBoxItem GetSelectedListBoxItem(Visual sender, Point position)
+        {
+            DependencyObject obj = null;
+            //Bug#66
+            VisualTreeHelper.HitTest(
+            sender,
+            (o) =>
+            {
+                if (UITools.FindAncestor<ListBoxItem>(o) != null)
+                    return HitTestFilterBehavior.Continue;
+                else return HitTestFilterBehavior.ContinueSkipSelf;
+            },
+            (r) =>
+            {
+                obj = r.VisualHit;
+                return HitTestResultBehavior.Stop;
+            },
+            new PointHitTestParameters(position));
+            //if (r == null) return null;
+
+            //DependencyObject obj = r.VisualHit;
+            while (!(obj is ListBox) && (obj != null))
+            {
+                obj = VisualTreeHelper.GetParent(obj);
+
+                if (obj is ListBoxItem)
+                    return obj as ListBoxItem;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Reset scrollbar position of virtualizing panel if scrollBar becomes invisible
         /// </summary>
