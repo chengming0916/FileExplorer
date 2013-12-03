@@ -72,10 +72,10 @@ namespace TestTemplate.WPF
 
             DragDropViewModel vm1, vm2, vm3, vm4;
 
-            lvDnd1.DataContext = vm1 = new DragDropViewModel(1, 20);
-            lvDnd2.DataContext = vm2 = new DragDropViewModel(1, 20);
-            lvDnd3.DataContext = vm3 = new DragDropViewModel(1, 20);
-            lvDnd4.DataContext = vm4 = new DragDropViewModel(1, 20);            
+            lvDnd1.DataContext = vm1 = new DragDropViewModel(1, 200);
+            lvDnd2.DataContext = vm2 = new DragDropViewModel(201, 200);
+            lvDnd3.DataContext = vm3 = new DragDropViewModel(401, 200);
+            lvDnd4.DataContext = vm4 = new DragDropViewModel(601, 200);            
 
             var adapter1 = new UIEventAdapter(runner, lvDnd1, true, new MultiSelectEventProcessor(vm1.UnselectAllCommand));
             var adapter2 = new UIEventAdapter(runner, lvDnd2, true, new MultiSelectEventProcessor(vm2.UnselectAllCommand));
