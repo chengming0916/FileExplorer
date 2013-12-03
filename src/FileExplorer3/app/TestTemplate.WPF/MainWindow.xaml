@@ -343,7 +343,7 @@
                     <DataTemplate x:Key="dragnDropItemTemplate">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding}" />
-                            <TextBlock Text="s" 
+                            <TextBlock Text="[s]" Foreground="Blue"
                                            Visibility="{Binding (bc:AttachedProperties.IsSelecting), 
                                     RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}},
                                     Converter={StaticResource btvc}}" />
@@ -360,10 +360,10 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0">VirtualStackPanel</TextBlock>
-                <TextBlock Grid.Column="1" Grid.Row="0">VirtualWrapPanel</TextBlock>
-                <TextBlock Grid.Column="0" Grid.Row="2">GridView</TextBlock>
-                <TextBlock Grid.Column="1" Grid.Row="2">StackPanel</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="0">uc:VirtualStackPanel (select using ISelectInfo)</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="0">uc:VirtualWrapPanel (select using ISelectInfo)</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="2">GridView (select using GridView)</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="2">StackPanel (select using HitTest)</TextBlock>
                 <ListView x:Name="lvDnd1" Grid.Column="0" Grid.Row="1"  ItemTemplate="{StaticResource dragnDropItemTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
