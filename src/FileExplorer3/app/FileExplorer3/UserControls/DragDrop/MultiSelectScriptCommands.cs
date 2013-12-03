@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
@@ -19,164 +21,132 @@ namespace FileExplorer.UserControls
 {
     public static class MultiSelectScriptCommands
     {
-        public static IScriptCommand AttachAdorner = new AttachAdorner();
-        public static IScriptCommand DetachAdorner = new DetachAdorner();
-        public static IScriptCommand UpdateAdorner = new UpdateAdorner(false);
-        public static IScriptCommand UpdateAdornerPosition = new UpdateAdorner(true);
-        public static IScriptCommand ObtainPointerPosition = new ObtainPointerPosition();
-
-        public static IScriptCommand StartDrag = new StartDrag();
-        public static IScriptCommand EndDrag = new EndDrag();
-
-        public static IScriptCommand HighlightDraggingItems = new UpdateSelection(true);
-        public static IScriptCommand SelectDraggingItems = new UpdateSelection(false);
-
-        public static IScriptCommand FindSelectedItems = new FindSelectedItems();
-        public static IScriptCommand HighlightItems = new SelectItems(SelectMode.highlight);
-        public static IScriptCommand SelectItems = new SelectItems(SelectMode.select);
-
+        public static IScriptCommand StartSelect = new StartSelect();
+        public static IScriptCommand ContinueSelect = new ContinueSelect();
+        public static IScriptCommand EndSelect = new EndSelect();
     }
 
-    #region Attach, Detach and Update Adorner.
+    /*
+     *         (PreviewMouseDown)            (MouseMove)                        (MouseUp)
+     *            StartSelect               ContinueSelect                      EndSelect
+     *               |                               |                            |
+     *               |-False--->UpdateIsSelecting<---|---------True--------------|
+     *                            |-(ToValue)        |         
+     *                      OK-----    |       CheckIsSelecting------OK
+     *             [If already value]  |             |          [If not selecting]
+     *                                 V             V
+     *                              ObtainPointerPosition
+     *                                  |   
+     *                                  V           
+     *                       FindSelectedItems
+     *                              |--> FindSelectedItemsUsingGridView or
+     *                              |--> FindSelectedItemsUsingIChildInfo 
+     *                              |--> FindSelectedItemsUsingHitTest
+     *                   IsSelecting?      Y|                   N|
+     *                                      V                    V
+     *                            HighlightItems/ByUpdate     SelectItems/ByUpdate     
+     *                                      V                        |
+     *                                AttachAdorner                  |
+     *                                      V                        V
+     *                                UpdateAdorner            DetachAdorner
+     *                                      |--------- |-------------|
+     *                                                 V
+     *                                             AutoScroll
+     *                                                 V
+     *                                                 OK
+     * 
+     */
 
-    public class AttachAdorner : ScriptCommandBase
+
+    #region Entry Point - Start/Continue/EndSelect
+    /// <summary>
+    /// When select started, AttachAdorner, SetStartPosition, Set StartSelectedItem 
+    /// Then Mouse.Capture.
+    /// </summary>
+    public class StartSelect : ScriptCommandBase
     {
-        public AttachAdorner() : base("AttachAdorner") { }
-
-        public override bool CanExecute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
-            var scp = ControlUtils.GetScrollContentPresenter(c);
-            AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(c);
-            if (adornerLayer == null)
-                return false;
-
-            if (scp == null || AttachedProperties.GetSelectionAdorner(scp) != null)
-                return false;
-
-            return true;
-        }
+        public StartSelect() : base("StartSelect", "EventArgs") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
-            if (scp != null)
-            {
-                AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(c);
-                if (adornerLayer == null)
-                    return ResultCommand.Error(new Exception("Adorner layer not found."));
-                if (AttachedProperties.GetSelectionAdorner(scp) != null)
-                    return ResultCommand.Error(new Exception("SelectionAdorner already registered."));
+            var eventArgs = pd.EventArgs as MouseEventArgs;
 
-                //Create and register adorner.
-                SelectionAdorner adorner = new SelectionAdorner(scp);
-                pm["SelectionAdorner"] = adorner;
-                AttachedProperties.SetSelectionAdorner(scp, adorner);
-                AttachedProperties.SetLastScrollContentPresenter(c, scp); //For used when detach.
 
-                adornerLayer.Add(adorner);
 
-                if (pm.ContainsKey("IsSelecting") && (bool)pm["IsSelecting"])
-                    return MultiSelectScriptCommands.UpdateAdornerPosition;
-            }
-            return ResultCommand.OK;
+            Mouse.Capture(scp);
+            return new UpdateIsSelecting(true);
         }
     }
-    public class DetachAdorner : ScriptCommandBase
+
+    public class ContinueSelect : ScriptCommandBase
     {
-        public DetachAdorner() : base("DetachAdorner") { }
+        public ContinueSelect() : base("ContinueSelect", "EventArgs") { }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
-            var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
-            var scp = ControlUtils.GetScrollContentPresenter(c);
-
-            if (scp == null || AttachedProperties.GetSelectionAdorner(scp) == null)
-                return false;
-
-            return true;
+            return new CheckIsSelecting();
         }
+    }
+
+    public class EndSelect : ScriptCommandBase
+    {
+        public EndSelect() : base("EndSelect", "EventArgs") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
+            var eventArgs = pd.EventArgs as MouseEventArgs;
 
-            if (scp != null)
-            {
-                AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(c);
-                if (adornerLayer == null)
-                    return ResultCommand.Error(new Exception("Adorner layer not found."));
-
-                var lastScp = AttachedProperties.GetLastScrollContentPresenter(c); //For used when detach.
-                var lastAdorner = AttachedProperties.GetSelectionAdorner(scp);
-
-                if (lastAdorner != null)
-                    adornerLayer.Remove(lastAdorner);
-
-                AttachedProperties.SetLastScrollContentPresenter(c, null);
-                AttachedProperties.SetSelectionAdorner(scp, null);
-            }
-
-            return ResultCommand.OK;
-
+            Mouse.Capture(null);
+            return new UpdateIsSelecting(false);
         }
     }
-    public class UpdateAdorner : ScriptCommandBase
+
+    #endregion
+
+    public class UpdateIsSelecting : ScriptCommandBase
     {
-        public UpdateAdorner(bool setCurPositionAsEndPosition)
-            : base("UpdateAdorner",
-            "IsSelecting", "StartPostion", "EndPosition")
-        { _setCurPositionAsEndPosition = setCurPositionAsEndPosition; }
-
-        private bool _setCurPositionAsEndPosition;
-
-        private Point adjustScrollBarPosition(Control c, ScrollContentPresenter scp, Point pt)
-        {
-            var currentScrollbarPosition = ControlUtils.GetScrollbarPosition(scp);
-            var startScrollbarPosition = AttachedProperties.GetStartScrollbarPosition(c);
-            return new Point(pt.X + startScrollbarPosition.X - currentScrollbarPosition.X,
-                pt.Y + startScrollbarPosition.Y - currentScrollbarPosition.Y);
-        }
+        private bool _toValue;
+        public UpdateIsSelecting(bool toValue) : base("UpdateIsSelecting") { _toValue = toValue; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
-            var scp = ControlUtils.GetScrollContentPresenter(c);
-
-            if (AttachedProperties.GetIsDragging(c))
+            if (AttachedProperties.GetIsSelecting(c) != _toValue)
             {
-                var lastAdorner = pm.ContainsKey("SelectionAdorner") ? (SelectionAdorner)pm["SelectionAdorner"] :
-                        AttachedProperties.GetSelectionAdorner(scp);
-
-                var result = MultiSelectScriptCommands.ObtainPointerPosition.Execute(pm);
-                if (result != ResultCommand.OK)
-                    return result;
-
-                if (pd.ContainsKey("IsSelecting") && pd["IsSelecting"] is bool)
-                    lastAdorner.IsSelecting = (bool)pd["IsSelecting"];
-
-                lastAdorner.StartPosition = (Point)pd["StartAdjustedPosition"];
-                lastAdorner.EndPosition = (Point)pd["CurrentPosition"];
+                AttachedProperties.SetIsSelecting(c, _toValue);
+                return new ObtainPointerPosition();
             }
             return ResultCommand.OK;
         }
+    }
 
-        public override bool CanExecute(ParameterDic pm)
+    public class CheckIsSelecting : ScriptCommandBase
+    {
+        public CheckIsSelecting() : base("CheckIsSelecting") { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
-            var scp = ControlUtils.GetScrollContentPresenter(c);
-            return scp != null && AttachedProperties.GetSelectionAdorner(scp) != null;
+            if (AttachedProperties.GetIsSelecting(c))
+                return new ObtainPointerPosition();
+            else return ResultCommand.OK;
         }
     }
 
+
+
+
+
+
+    #region ObtainPointerPosition and FindSelectedItems
     /// <summary>
     /// Obtain position of scrollbar and  mouse, and write it to ParameterDic.
     /// </summary>
@@ -185,6 +155,11 @@ namespace FileExplorer.UserControls
         public ObtainPointerPosition()
             : base("ObtainPointerPosition")
         { }
+
+        private Point add(Point pt1, Point pt2)
+        {
+            return new Point(pt1.X + pt2.X, pt1.Y + pt2.Y);
+        }
 
         private Point adjustScrollBarPosition(Point pt, Point startScrollbarPosition, Point currentScrollbarPosition)
         {
@@ -215,121 +190,213 @@ namespace FileExplorer.UserControls
                 pd["StartAdjustedPosition"] = adjustScrollBarPosition((Point)pd["StartPosition"],
                     (Point)pd["StartScrollbarPosition"], (Point)pd["CurrentScrollbarPosition"]);
 
-            return ResultCommand.OK;
+            //SelectionBounds that used to calcuate selected items must take scroll bar position into account.                       
+            if (!pm.ContainsKey("SelectionBoundsAdjusted") || !(pm["SelectionBoundsAdjusted"] is Rect))
+                pd["SelectionBoundsAdjusted"] = new Rect(add((Point)pd["StartPosition"], (Point)pd["StartScrollbarPosition"]),
+                    add((Point)pd["CurrentPosition"], (Point)pd["CurrentScrollbarPosition"]));
+
+            if (!pm.ContainsKey("SelectionBounds") || !(pm["SelectionBounds"] is Rect))
+                pd["SelectionBounds"] = new Rect((Point)pd["StartPosition"], (Point)pd["CurrentPosition"]);
+
+            return new FindSelectedItems();
         }
     }
+
+
+    public class FindSelectedItemsUsingIChildInfo : ScriptCommandBase
+    {
+        public FindSelectedItemsUsingIChildInfo(ItemsControl ic, IChildInfo icInfo) :
+            base("FindSelectedItemsUsingIChildInfo", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
+        { _icInfo = icInfo; _ic = ic; }
+
+        private IChildInfo _icInfo;
+        private ItemsControl _ic;
+
+        public override IScriptCommand Execute(ParameterDic pm)
+
+        {
+            List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
+            List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
+
+            Rect selectionBound = (Rect)pm["SelectionBoundsAdjusted"];
+            for (int i = 0; i < _ic.Items.Count; i++)
+                if (_icInfo.GetChildRect(i).IntersectsWith(selectionBound))
+                {
+                    selectedList.Add(_ic.Items[i]);
+                    selectedIdList.Add(i);
+                }
+
+            if (AttachedProperties.GetIsSelecting(_ic))
+                return new HighlightItems();
+            else return new SelectItems();
+        }
+
+    }
+
+    public class FindSelectedItemsUsingGridView : ScriptCommandBase
+    {
+        public FindSelectedItemsUsingGridView(ItemsControl ic, GridView gview,
+            ScrollContentPresenter scp, MouseEventArgs eventArgs) :
+            base("FindSelectedItemsUsingGridView", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
+        { _ic = ic; _gview = gview; _scp = scp; _eventArgs = eventArgs; }
+
+        private GridView _gview;
+        private ItemsControl _ic;
+        private MouseEventArgs _eventArgs;
+        private ScrollContentPresenter _scp;
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
+            List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
+
+            var startSelected = AttachedProperties.GetStartSelectedItem(_ic);
+            var currentSelected = UITools.GetSelectedListBoxItem(_scp, _eventArgs.GetPosition(_scp));
+            if (startSelected != null && currentSelected != null)
+            {
+                int startIdx = _ic.ItemContainerGenerator.IndexFromContainer(startSelected);
+                int endIdx = _ic.ItemContainerGenerator.IndexFromContainer(currentSelected);
+
+                for (int i = Math.Min(startIdx, endIdx); i <= Math.Max(startIdx, endIdx); i++)
+                {
+                    selectedList.Add(_ic.Items[i]);
+                    selectedIdList.Add(i);
+                }
+            }
+
+            //UpdateStartSelectedItems, or clear it if no longer selecting.
+            if (AttachedProperties.GetIsSelecting(_ic))
+            {
+                if (AttachedProperties.GetStartSelectedItem(_ic) == null)
+                {
+                    var itemUnderMouse = UITools.GetSelectedListBoxItem(_scp, _eventArgs.GetPosition(_scp));
+                    AttachedProperties.SetStartSelectedItem(_ic, itemUnderMouse);
+                }
+            }
+            else
+                AttachedProperties.SetStartSelectedItem(_ic, null);
+
+            if (AttachedProperties.GetIsSelecting(_ic))
+                return new HighlightItems();
+            else return new SelectItems();
+        }
+
+    }
+
+    public class FindSelectedItemsUsingHitTest : ScriptCommandBase
+    {
+        public FindSelectedItemsUsingHitTest(ItemsControl ic) :
+            base("FindSelectedItemsUsingHitTest", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
+        { _ic = ic;  }
+
+        private ItemsControl _ic;
+        private static Rect _prevBound = new Rect(0, 0, 0, 0);
+
+
+        private static HitTestResultBehavior selectResultCallback(HitTestResult result)
+        {
+            return HitTestResultBehavior.Continue;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
+            List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
+            List<object> unselectedList; pm["UnselectedList"] = unselectedList = new List<object>();
+            List<int> unselectedIdList; pm["UnselectedIdList"] = unselectedIdList = new List<int>();
+
+            Func<HitTestResult, HitTestResultBehavior> cont = (result) => HitTestResultBehavior.Continue;
+            HitTestFilterCallback selectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
+            {
+                if (potentialHitTestTarget is ListViewItem)
+                {
+                    ListViewItem item = potentialHitTestTarget as ListViewItem;
+                    selectedList.Add(item);
+                    int id = _ic.ItemContainerGenerator.IndexFromContainer(item);
+                    selectedIdList.Add(id);
+
+                    if (unselectedList.Contains(item)) unselectedList.Remove(item);
+                    if (unselectedIdList.Contains(id)) unselectedIdList.Remove(id);
+                    return HitTestFilterBehavior.ContinueSkipChildren;
+                }
+                return HitTestFilterBehavior.Continue;
+            });
+            HitTestFilterCallback unselectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
+            {
+                if (potentialHitTestTarget is ListViewItem)
+                {
+                    ListViewItem item = potentialHitTestTarget as ListViewItem;
+                    unselectedList.Add(item);
+                    unselectedIdList.Add(_ic.ItemContainerGenerator.IndexFromContainer(item));
+                    return HitTestFilterBehavior.ContinueSkipChildren;
+                }
+                return HitTestFilterBehavior.Continue;
+            });
+
+            Rect selectionBound = (Rect)pm["SelectionBounds"];
+
+            //Unselect all visible selected items (by using _lastPos) no matter it's current selected or not.
+            VisualTreeHelper.HitTest(_ic, unselectFilter,
+                new HitTestResultCallback(cont),
+                new GeometryHitTestParameters(new RectangleGeometry(_prevBound)));
+
+            //Select all visible items in select region.
+            VisualTreeHelper.HitTest(_ic, selectFilter,
+                new HitTestResultCallback(cont),
+                new GeometryHitTestParameters(new RectangleGeometry(selectionBound)));
+
+            _prevBound = selectionBound;
+
+            if (AttachedProperties.GetIsSelecting(_ic))
+                return new HighlightItemsByUpdate();
+            else return new SelectItemsByUpdate();
+        }
+
+    }
+
+    /// <summary>
+    /// Call the appropriated FindSelectedItemsXYZ to poll a list of selected list (or selected + unselectedList)
+    /// </summary>
+    public class FindSelectedItems : ScriptCommandBase
+    {
+        public FindSelectedItems() : base("FindSelectedItems", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted") { }      
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;
+            var scp = ControlUtils.GetScrollContentPresenter(ic);
+            var eventArgs = pd.EventArgs as MouseEventArgs;
+
+            IChildInfo icInfo = UITools.FindVisualChild<Panel>(scp) as IChildInfo;
+            if (icInfo != null)
+                return new FindSelectedItemsUsingIChildInfo(ic, icInfo);
+            else
+                if (ic is ListView && (ic as ListView).View is GridView)
+                {
+                    var gview = (ic as ListView).View as GridView;
+                    return new FindSelectedItemsUsingGridView(ic, gview, scp, eventArgs);
+                }
+                else return new FindSelectedItemsUsingHitTest(ic);
+        }
+    }
+
 
 
 
     #endregion
 
 
+
+    #region Item selection update func - Highlight/SelectItems
+
     /// <summary>
-    /// When drag started, AttachAdorner, SetStartPosition, Set StartSelectedItem 
-    /// Then Mouse.Capture.
+    /// Update highlight of items (AttachedProperties.IsSelecting) using SelectedIdList.
     /// </summary>
-    public class StartDrag : ScriptCommandBase
+    public class HighlightItems : ScriptCommandBase
     {
-        public StartDrag() : base("StartDrag", "EventArgs") { }
+        public HighlightItems() : base("FindSelectedItems", "EventArgs", "SelectedIdList") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
-            var scp = ControlUtils.GetScrollContentPresenter(c);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
-
-            var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, eventArgs.GetPosition(scp));
-            AttachedProperties.SetStartSelectedItem(c, itemUnderMouse);
-
-            pm["IsSelecting"] = true;
-            var result = MultiSelectScriptCommands.AttachAdorner.Execute(pm);
-            if (result != ResultCommand.OK) return result;
-
-            Mouse.Capture(scp);
-            return ResultCommand.OK;
-        }
-    }
-
-    public class EndDrag : ScriptCommandBase
-    {
-        public EndDrag() : base("EndDrag", "EventArgs") { }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {            
-            var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
-            var scp = ControlUtils.GetScrollContentPresenter(c);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
-
-            AttachedProperties.SetStartSelectedItem(c, null);
-
-            if (AttachedProperties.GetIsDragging(c))
-            {
-                new ScriptRunner().Run(new Queue<IScriptCommand>(
-                    new[] {                    
-                    MultiSelectScriptCommands.ObtainPointerPosition,
-                    //Find selecting items and assigned to SelectedList and SelectedIdList
-                    MultiSelectScriptCommands.FindSelectedItems, 
-                      //Select items and remove all highlight.
-                    MultiSelectScriptCommands.SelectItems,
-                     //Remove adorner.
-                    MultiSelectScriptCommands.DetachAdorner,
-                }), pm);
-
-                Mouse.Capture(null);
-            }
-            return ResultCommand.OK;
-        }
-    }
-
-    public class UpdateSelection : ScriptCommandBase
-    {
-        public UpdateSelection(bool highlightOnly)
-            : base("UpdateSelection", "EventArgs")
-        {
-            _hightlightOnly = highlightOnly;
-        }
-
-        private bool _hightlightOnly;
-
-        public override bool CanExecute(ParameterDic pm)
-        {
-            return AttachedProperties.GetIsDragging(pm.AsUIParameterDic().Sender as Control);
-        }
-
-
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-
-            new ScriptRunner().Run(new Queue<IScriptCommand>(
-                new[] {                    
-                    MultiSelectScriptCommands.ObtainPointerPosition,
-                    //Find selecting items and assigned to SelectedList and SelectedIdList
-                    MultiSelectScriptCommands.FindSelectedItems, 
-                    MultiSelectScriptCommands.HighlightItems
-                }), pm);
-
-            pd.EventArgs.Handled = true;
-
-            return MultiSelectScriptCommands.UpdateAdornerPosition;
-        }
-    }
-
-    public enum SelectMode { highlight, select }
-    public class SelectItems : ScriptCommandBase
-    {
-        public SelectItems(SelectMode selectMode) : base("FindSelectedItems", "EventArgs", "SelectedIdList") { _selectMode = selectMode; }
-
-        SelectMode _selectMode;
-
-
-        public override bool CanExecute(ParameterDic pm)
-        {
-            return true;
-        }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -340,81 +407,273 @@ namespace FileExplorer.UserControls
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
                 : new List<int>();
 
-            switch (_selectMode)
+
+            for (int i = 0; i < ic.Items.Count; i++)
             {
-                case SelectMode.highlight:
-                    for (int i = 0; i < ic.Items.Count; i++)
-                    {
-                        DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
-                        if (item != null)
-                            AttachedProperties.SetIsSelecting(item, selectedIdList.Contains(i));
-                    }
-                    break;
-                case SelectMode.select:
-                    for (int i = 0; i < ic.Items.Count; i++)
-                    {
-                        DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
-                        if (item != null)
-                        {
-                            AttachedProperties.SetIsSelecting(item, false);
-                            item.SetValue(ListBoxItem.IsSelectedProperty, selectedIdList.Contains(i));
-                        }
-                    }
-                    break;
+                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                if (item != null)
+                    AttachedProperties.SetIsSelecting(item, selectedIdList.Contains(i));
             }
 
-
-
-            return ResultCommand.OK;
+            return new AttachAdorner();
         }
     }
 
-    public class FindSelectedItems : ScriptCommandBase
+    public class HighlightItemsByUpdate : ScriptCommandBase
     {
-        public FindSelectedItems() : base("FindSelectedItems", "EventArgs", "SelectionBoundsAdjusted") { }
-
-        public override bool CanExecute(ParameterDic pm)
-        {
-            return true;
-        }
-
-        private Point add(Point pt1, Point pt2)
-        {
-            return new Point(pt1.X + pt2.X, pt1.Y + pt2.Y);
-        }
+        public HighlightItemsByUpdate() : base("HighlightItemsByUpdate", "EventArgs", "UnselectedIdList", "UnselectedList") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+            List<object> unselectedList = pm["UnselectedList"] as List<object>;
+            List<int> unselectedIdList = pm["UnselectedIdList"] as List<int>;
+
+            List<object> selectedList = pm["SelectedList"] as List<object>;
+            List<int> selectedIdList = pm["SelectedIdList"] as List<int>;
+
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;
+
+            for (int i = 0; i < ic.Items.Count; i++)
+            {
+                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                if (item != null)
+                {
+                    bool isSelecting = AttachedProperties.GetIsSelecting(item);
+                    if (isSelecting && unselectedList.Contains(item))
+                        AttachedProperties.SetIsSelecting(item, false);
+                    else if (!isSelecting && selectedList.Contains(item))
+                        AttachedProperties.SetIsSelecting(item, true);
+                }
+            }
+
+            return new AttachAdorner();
+        }
+    }
+
+    public class SelectItemsByUpdate : ScriptCommandBase
+    {
+        public SelectItemsByUpdate() : base("SelectItemByUpdate", "EventArgs", "UnselectedIdList", "UnselectedList") { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            List<object> unselectedList = pm["UnselectedList"] as List<object>;
+            List<int> unselectedIdList = pm["UnselectedIdList"] as List<int>;
+
+            List<object> selectedList = pm["SelectedList"] as List<object>;
+            List<int> selectedIdList = pm["SelectedIdList"] as List<int>;
+
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;
+
+            for (int i = 0; i < ic.Items.Count; i++)
+            {
+                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                if (item != null)
+                {
+                    bool isSelecting = AttachedProperties.GetIsSelecting(item);
+                    AttachedProperties.SetIsSelecting(item, false);
+
+                    if (isSelecting && !unselectedList.Contains(item))
+                        item.SetValue(ListBoxItem.IsSelectedProperty, true);
+                    else if (selectedList.Contains(item))
+                        item.SetValue(ListBoxItem.IsSelectedProperty, true);
+                    else item.SetValue(ListBoxItem.IsSelectedProperty, false);
+                }
+            }
+
+            return new DetachAdorner();
+        }
+    }
 
 
+    /// <summary>
+    /// Update actual selection of items (ListBoxItem.IsSelected) using SelectedIdList.
+    /// </summary>
+    public class SelectItems : ScriptCommandBase
+    {
+        public SelectItems() : base("SelectItems", "EventArgs", "SelectedIdList") { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {     
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             var eventArgs = pd.EventArgs as MouseEventArgs;
-            if (AttachedProperties.GetIsDragging(ic))
+            var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
+                : new List<int>();
+
+
+            for (int i = 0; i < ic.Items.Count; i++)
             {
-                //SelectionBounds that used to calcuate selected items must take scroll bar position into account.                       
-                if (!pm.ContainsKey("SelectionBounds") || !(pm["SelectionBounds"] is Rect))
-                    pd["SelectionBounds"] = new Rect(add((Point)pd["StartPosition"], (Point)pd["StartScrollbarPosition"]),
-                        add((Point)pd["CurrentPosition"], (Point)pd["CurrentScrollbarPosition"]));
-
-                List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
-                List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
-
-                IChildInfo icInfo = UITools.FindVisualChild<Panel>(scp) as IChildInfo;
-                if (icInfo != null)
+                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                if (item != null)
                 {
-                    Rect selectionBound = (Rect)pm["SelectionBounds"];
-                    for (int i = 0; i < ic.Items.Count; i++)
-                        if (icInfo.GetChildRect(i).IntersectsWith(selectionBound))
-                        {
-                            selectedList.Add(ic.Items[i]);
-                            selectedIdList.Add(i);
-                        }
+                    AttachedProperties.SetIsSelecting(item, false);
+                    item.SetValue(ListBoxItem.IsSelectedProperty, selectedIdList.Contains(i));
                 }
-                else return ResultCommand.Error(new NotSupportedException());
+            }
+
+            return new DetachAdorner();
+        }
+    }
+
+    #endregion
+
+
+    #region Adorner related funcs - Attach/Update/DetachAdorner
+
+    /// <summary>
+    /// Attach adorner to adorner layer, then call UpdateAdorner.
+    /// </summary>
+    public class AttachAdorner : ScriptCommandBase
+    {
+        public AttachAdorner() : base("AttachAdorner") { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var c = pd.Sender as Control;
+            var scp = ControlUtils.GetScrollContentPresenter(c);
+            if (scp != null)
+            {
+                AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(c);
+                if (adornerLayer == null)
+                    return ResultCommand.Error(new Exception("Adorner layer not found."));
+                if (AttachedProperties.GetSelectionAdorner(scp) == null)
+                {
+
+                    //Create and register adorner.
+                    SelectionAdorner adorner = new SelectionAdorner(scp);
+                    pm["SelectionAdorner"] = adorner;
+                    AttachedProperties.SetSelectionAdorner(scp, adorner);
+                    AttachedProperties.SetLastScrollContentPresenter(c, scp); //For used when detach.
+
+                    adornerLayer.Add(adorner);
+                }
+                return new UpdateAdorner();
+            }
+            return ResultCommand.Error(new KeyNotFoundException("Scroll Content Presenter not found"));
+        }
+    }
+
+    /// <summary>
+    /// Update IsSelecting and position adorner if it's exists.
+    /// </summary>
+    public class UpdateAdorner : ScriptCommandBase
+    {
+        public UpdateAdorner()
+            : base("UpdateAdorner",
+            "IsSelecting", "StartPostion", "EndPosition")
+        { }
+
+        private Point adjustScrollBarPosition(Control c, ScrollContentPresenter scp, Point pt)
+        {
+            var currentScrollbarPosition = ControlUtils.GetScrollbarPosition(scp);
+            var startScrollbarPosition = AttachedProperties.GetStartScrollbarPosition(c);
+            return new Point(pt.X + startScrollbarPosition.X - currentScrollbarPosition.X,
+                pt.Y + startScrollbarPosition.Y - currentScrollbarPosition.Y);
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var c = pd.Sender as Control;
+            var scp = ControlUtils.GetScrollContentPresenter(c);
+
+            var lastAdorner = pm.ContainsKey("SelectionAdorner") ? (SelectionAdorner)pm["SelectionAdorner"] :
+                    AttachedProperties.GetSelectionAdorner(scp);
+
+            if (lastAdorner == null)
+                return ResultCommand.Error(new Exception("Adorner not found."));
+
+            lastAdorner.IsSelecting = AttachedProperties.GetIsSelecting(c);
+
+            lastAdorner.StartPosition = (Point)pd["StartAdjustedPosition"];
+            lastAdorner.EndPosition = (Point)pd["CurrentPosition"];
+            return new AutoScroll();
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var c = pd.Sender as Control;
+            var scp = ControlUtils.GetScrollContentPresenter(c);
+            return scp != null && AttachedProperties.GetSelectionAdorner(scp) != null;
+        }
+    }
+
+    /// <summary>
+    /// Remove adorner from adorner layer.
+    /// </summary>
+    public class DetachAdorner : ScriptCommandBase
+    {
+        public DetachAdorner() : base("DetachAdorner") { }
+
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var c = pd.Sender as Control;
+            var scp = ControlUtils.GetScrollContentPresenter(c);
+
+            if (scp != null)
+            {
+                AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(c);
+                if (adornerLayer == null)
+                    return ResultCommand.Error(new Exception("Adorner layer not found."));
+
+                var lastScp = AttachedProperties.GetLastScrollContentPresenter(c); //For used when detach.
+                var lastAdorner = AttachedProperties.GetSelectionAdorner(scp);
+
+                if (lastAdorner != null)
+                    adornerLayer.Remove(lastAdorner);
+
+                AttachedProperties.SetLastScrollContentPresenter(c, null);
+                AttachedProperties.SetSelectionAdorner(scp, null);
+            }
+
+            return ResultCommand.OK;
+
+        }
+    }
+
+    #endregion
+
+    public class AutoScroll : ScriptCommandBase
+    {
+        public AutoScroll()
+            : base("AutoScroll")
+        { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var c = pd.Sender as Control;
+            var e = pd.EventArgs as MouseEventArgs;
+            var scp = ControlUtils.GetScrollContentPresenter(c);
+
+            if (e != null && e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point mousePos = e.GetPosition(scp);
+
+                IScrollInfo isInfo = UITools.FindVisualChild<Panel>(scp) as IScrollInfo;
+                if (isInfo != null)
+                {
+                    if (isInfo.CanHorizontallyScroll)
+                        if (mousePos.X < 0)
+                            isInfo.LineLeft();
+                        else if (mousePos.X > (isInfo as Panel).ActualWidth)
+                            isInfo.LineRight();
+                    if (isInfo.CanVerticallyScroll)
+                        if (mousePos.Y < 0)
+                            isInfo.LineUp();
+                        else if (mousePos.Y > (isInfo as Panel).ActualHeight) //isInfo.ViewportHeight is bugged.
+                            isInfo.LineDown();
+                }
             }
             return ResultCommand.OK;
         }
     }
 }
+
