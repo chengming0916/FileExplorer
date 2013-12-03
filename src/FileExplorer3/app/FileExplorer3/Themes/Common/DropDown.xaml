@@ -29,7 +29,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DropDown}">
                     <Grid>
-                        <ToggleButton x:Name="PART_ToggleButton" Template="{StaticResource BaseToggleButton}"  Width="16"
+                        <ToggleButton x:Name="PART_ToggleButton" Template="{StaticResource BaseToggleButton}"  MinWidth="16"
                                       BorderBrush="Silver"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             <Grid>

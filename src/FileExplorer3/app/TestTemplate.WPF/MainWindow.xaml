@@ -1,7 +1,7 @@
 ﻿<Window x:Class="TestTemplate.WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        
+        xmlns:conv="clr-namespace:QuickZip.Converters;assembly=FileExplorer3"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:uc="http://www.quickzip.org/UserControls"
         xmlns:bc="http://www.quickzip.org/BaseControls"
@@ -88,6 +88,37 @@
                     <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
                         <TextBlock Text="PlacementTarget" />
                     </bc:HotTrack>
+                </bc:DropDown>
+
+                <bc:DropDown DataContext="1,3,5">
+                    <bc:DropDown.Resources>
+                        <conv:CsvContainsConverter x:Key="csvc" />
+                    </bc:DropDown.Resources>
+                    <bc:DropDown.Header>
+                        <TextBlock Text="{Binding}" />
+                    </bc:DropDown.Header>
+                    <bc:DropDown.Content>
+                        <ListBox SelectionMode="Multiple">
+                            <ListBox.Items>
+                                <ListBoxItem IsSelected="{Binding 
+                                Mode=OneWay,
+                                Converter={StaticResource csvc}, ConverterParameter=1}">January</ListBoxItem>
+                                <ListBoxItem IsSelected="{Binding 
+                                Mode=OneWay,
+                                Converter={StaticResource csvc}, ConverterParameter=2}">Febrary</ListBoxItem>
+                                <ListBoxItem IsSelected="{Binding 
+                                Mode=OneWay,
+                                Converter={StaticResource csvc}, ConverterParameter=3}">March</ListBoxItem>
+                                <ListBoxItem IsSelected="{Binding 
+                                Mode=OneWay,
+                                Converter={StaticResource csvc}, ConverterParameter=4}">April</ListBoxItem>
+                                <ListBoxItem IsSelected="{Binding 
+                                Mode=OneWay,
+                                Converter={StaticResource csvc}, ConverterParameter=5}">May</ListBoxItem>
+                            </ListBox.Items>
+                        </ListBox>
+                    </bc:DropDown.Content>
+
                 </bc:DropDown>
             </WrapPanel>
         </TabItem>
@@ -344,15 +375,16 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Value}" />
                             <TextBlock Text="[ing]" Foreground="Blue"
-                                    Visibility="{Binding IsSelecting, Converter={StaticResource btvc}}" />
+                                    Visibility="{Binding (bc:AttachedProperties.IsSelecting),
+                                        RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}},
+                                        Converter={StaticResource btvc}}" />
                             <TextBlock Text="[ed]" Foreground="Green"
                                     Visibility="{Binding IsSelected, Converter={StaticResource btvc}}" />
                         </StackPanel>
                     </DataTemplate>
 
-                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}" >                        
+                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}" >
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
-                        <Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=TwoWay}"  />                        
                     </Style>
                     <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListBox}}" >
                         <Setter Property="ItemTemplate" Value="{StaticResource dragnDropItemTemplate}" />
@@ -376,14 +408,17 @@
                 <ListView x:Name="lvDnd1" Grid.Column="0" Grid.Row="1">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <uc:VirtualStackPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="25" />
+                            <uc:VirtualStackPanel IsItemsHost="true" Orientation="Vertical" 
+                                                  CacheItemCount="15"
+                                                  ItemHeight="25" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
                 <ListView x:Name="lvDnd2" Grid.Column="1" Grid.Row="1">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <uc:VirtualWrapPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="30" ItemWidth="50" />
+                            <uc:VirtualWrapPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="60" ItemWidth="60"                                                 
+                                                 CacheItemCount="50" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>

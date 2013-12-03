@@ -89,6 +89,7 @@
     <Compile Include="Defines\Cofe3\Interfaces\IScriptRunner.cs" />
     <Compile Include="Defines\Cofe3\Defines\Structs\ParameterDic.cs" />
     <Compile Include="Defines\Cofe3\Implements\ScriptRunner.cs" />
+    <Compile Include="Defines\Converters\CsvContainsConverter.cs" />
     <Compile Include="Models\ProfileSuggestionSource.cs" />
     <Compile Include="BaseControls\Switch.cs" />
     <Compile Include="Defines\Converters\VisibilityToBoolConverter.cs" />
