@@ -21,14 +21,14 @@ namespace FileExplorer.UserControls
 {
     public static class MultiSelectScriptCommands
     {
-        public static IScriptCommand StartSelect = new StartSelect();
+        public static IScriptCommand BeginSelect = new BeginSelect();
         public static IScriptCommand ContinueSelect = new ContinueSelect();
         public static IScriptCommand EndSelect = new EndSelect();
     }
 
     /*
      *         (PreviewMouseDown)            (MouseMove)                        (MouseUp)
-     *            StartSelect               ContinueSelect                      EndSelect
+     *            BeginSelect               ContinueSelect                      EndSelect
      *               |                               |                            |
      *               |-False--->UpdateIsSelecting<---|---------True--------------|
      *                            |-(ToValue)        |         
@@ -58,14 +58,19 @@ namespace FileExplorer.UserControls
      */
 
 
-    #region Entry Point - Start/Continue/EndSelect
+    #region Entry Point - Begin/Continue/EndSelect
     /// <summary>
     /// When select started, AttachAdorner, SetStartPosition, Set StartSelectedItem 
     /// Then Mouse.Capture.
     /// </summary>
-    public class StartSelect : ScriptCommandBase
+    public class BeginSelect : ScriptCommandBase
     {
-        public StartSelect() : base("StartSelect", "EventArgs") { }
+        public BeginSelect(ICommand unselectCommand = null)
+            : base("BeginSelect", "EventArgs")
+        {
+            _unselectCommand = unselectCommand;
+        }
+        ICommand _unselectCommand;
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -74,7 +79,8 @@ namespace FileExplorer.UserControls
             var scp = ControlUtils.GetScrollContentPresenter(c);
             var eventArgs = pd.EventArgs as MouseEventArgs;
 
-
+            if (_unselectCommand != null && _unselectCommand.CanExecute(c))
+                _unselectCommand.Execute(c);
 
             Mouse.Capture(scp);
             return new UpdateIsSelecting(true);
@@ -109,6 +115,8 @@ namespace FileExplorer.UserControls
 
     #endregion
 
+    #region Update/CheckIsSelecting
+
     public class UpdateIsSelecting : ScriptCommandBase
     {
         private bool _toValue;
@@ -141,7 +149,7 @@ namespace FileExplorer.UserControls
         }
     }
 
-
+    #endregion
 
 
 
@@ -213,7 +221,6 @@ namespace FileExplorer.UserControls
         private ItemsControl _ic;
 
         public override IScriptCommand Execute(ParameterDic pm)
-
         {
             List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
             List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
@@ -232,6 +239,39 @@ namespace FileExplorer.UserControls
         }
 
     }
+
+    public enum SelectedItemTargetValue { ItemUnderMouse, Null }
+    public class SetStartSelectedItem : ScriptCommandBase
+    {
+        public SetStartSelectedItem(ItemsControl ic, SelectedItemTargetValue targetValue, IScriptCommand nextCommand) :
+            base("SelectedItemTargetValue", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
+        { _ic = ic; _targetValue = targetValue; _nextCommand = nextCommand; }
+
+        private IScriptCommand _nextCommand;
+        private SelectedItemTargetValue _targetValue;
+        private ItemsControl _ic;
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var scp = ControlUtils.GetScrollContentPresenter(_ic);
+            var eventArgs = pd.EventArgs as MouseEventArgs;
+
+            if (_targetValue == SelectedItemTargetValue.ItemUnderMouse)
+            {
+                if (AttachedProperties.GetStartSelectedItem(_ic) == null)
+                {
+                    var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, eventArgs.GetPosition(scp));
+                    AttachedProperties.SetStartSelectedItem(_ic, itemUnderMouse);
+                }
+            }
+            else
+                AttachedProperties.SetStartSelectedItem(_ic, null);
+
+            return _nextCommand;
+        }
+    }
+
 
     public class FindSelectedItemsUsingGridView : ScriptCommandBase
     {
@@ -276,9 +316,13 @@ namespace FileExplorer.UserControls
             else
                 AttachedProperties.SetStartSelectedItem(_ic, null);
 
-            if (AttachedProperties.GetIsSelecting(_ic))
-                return new HighlightItems();
-            else return new SelectItems();
+            IScriptCommand nextCommand =
+                (AttachedProperties.GetIsSelecting(_ic)) ? (IScriptCommand)new HighlightItems() : new SelectItems();
+
+            SelectedItemTargetValue selectValue =
+             AttachedProperties.GetIsSelecting(_ic) ? SelectedItemTargetValue.ItemUnderMouse : SelectedItemTargetValue.Null;
+
+            return new SetStartSelectedItem(_ic, selectValue, nextCommand);
         }
 
     }
@@ -287,7 +331,7 @@ namespace FileExplorer.UserControls
     {
         public FindSelectedItemsUsingHitTest(ItemsControl ic) :
             base("FindSelectedItemsUsingHitTest", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
-        { _ic = ic;  }
+        { _ic = ic; }
 
         private ItemsControl _ic;
         private static Rect _prevBound = new Rect(0, 0, 0, 0);
@@ -359,7 +403,7 @@ namespace FileExplorer.UserControls
     /// </summary>
     public class FindSelectedItems : ScriptCommandBase
     {
-        public FindSelectedItems() : base("FindSelectedItems", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted") { }      
+        public FindSelectedItems() : base("FindSelectedItems", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -367,6 +411,7 @@ namespace FileExplorer.UserControls
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             var eventArgs = pd.EventArgs as MouseEventArgs;
+
 
             IChildInfo icInfo = UITools.FindVisualChild<Panel>(scp) as IChildInfo;
             if (icInfo != null)
@@ -495,14 +540,13 @@ namespace FileExplorer.UserControls
         public SelectItems() : base("SelectItems", "EventArgs", "SelectedIdList") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {     
+        {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             var eventArgs = pd.EventArgs as MouseEventArgs;
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
                 : new List<int>();
-
 
             for (int i = 0; i < ic.Items.Count; i++)
             {

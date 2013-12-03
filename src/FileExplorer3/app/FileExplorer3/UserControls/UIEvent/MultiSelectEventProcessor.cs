@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
 {
     public class MultiSelectEventProcessor : UIEventProcessorBase
     {
-        public static MultiSelectEventProcessor Instance = new MultiSelectEventProcessor();
-
-        public MultiSelectEventProcessor()
+        public MultiSelectEventProcessor(ICommand unselectAllCommand = null)
         {
-            OnMouseDrag = MultiSelectScriptCommands.StartSelect;
-            OnMouseMove = MultiSelectScriptCommands.ContinueSelect;
-            OnMouseUp = MultiSelectScriptCommands.EndSelect;
+            OnMouseDrag = new BeginSelect(unselectAllCommand);
+            OnMouseMove = new ContinueSelect();
+            OnMouseUp = new EndSelect();
         }
     }
 }
