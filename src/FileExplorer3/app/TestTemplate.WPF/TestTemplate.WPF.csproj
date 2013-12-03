@@ -65,6 +65,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DragDropViewModel.cs" />
     <Compile Include="TreeViewModel.cs" />
     <Compile Include="FakeViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">

@@ -14,10 +14,11 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.Defines
 {
- 
+
 
     public static partial class AttachedProperties
     {
+        #region SelectionAdorner
         public static DependencyProperty SelectionAdornerProperty =
             DependencyProperty.RegisterAttached("SelectionAdorner", typeof(SelectionAdorner), typeof(AttachedProperties));
 
@@ -31,6 +32,10 @@ namespace FileExplorer.Defines
             target.SetValue(SelectionAdornerProperty, value);
         }
 
+        #endregion
+
+        #region LastScrollContentPresenter
+
         public static DependencyProperty LastScrollContentPresenterProperty =
            DependencyProperty.RegisterAttached("LastScrollContentPresenter", typeof(ScrollContentPresenter), typeof(AttachedProperties));
 
@@ -43,6 +48,9 @@ namespace FileExplorer.Defines
         {
             target.SetValue(LastScrollContentPresenterProperty, value);
         }
+        #endregion
+
+        #region StartSelectedItem
 
         public static DependencyProperty StartSelectedItemProperty =
           DependencyProperty.RegisterAttached("StartSelectedItem", typeof(Control), typeof(AttachedProperties));
@@ -56,6 +64,9 @@ namespace FileExplorer.Defines
         {
             target.SetValue(StartSelectedItemProperty, value);
         }
+        #endregion
+
+        #region IsSelecting
 
         public static DependencyProperty IsSelectingProperty =
        DependencyProperty.RegisterAttached("IsSelecting", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
@@ -70,6 +81,6 @@ namespace FileExplorer.Defines
         {
             target.SetValue(IsSelectingProperty, value);
         }
-
+        #endregion
     }
 }

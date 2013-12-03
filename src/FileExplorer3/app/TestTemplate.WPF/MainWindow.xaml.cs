@@ -70,18 +70,17 @@ namespace TestTemplate.WPF
             lvDnd2.AllowDrop = true;
             ScriptRunner runner = new ScriptRunner();
 
-            for (int i = 1; i <= 20; i++)
-            {
-                lvDnd1.Items.Add(i);
-                lvDnd2.Items.Add(i + 20);
-                lvDnd3.Items.Add(i + 40);
-                lvDnd4.Items.Add(i + 60);
-            }
+            DragDropViewModel vm1, vm2, vm3, vm4;
 
-            var adapter1 = new UIEventAdapter(runner, lvDnd1, true, MultiSelectEventProcessor.Instance);
-            var adapter2 = new UIEventAdapter(runner, lvDnd2, true, MultiSelectEventProcessor.Instance);
-            var adapter3 = new UIEventAdapter(runner, lvDnd3, true, MultiSelectEventProcessor.Instance);
-            var adapter4 = new UIEventAdapter(runner, lvDnd4, true, MultiSelectEventProcessor.Instance);
+            lvDnd1.DataContext = vm1 = new DragDropViewModel(1, 20);
+            lvDnd2.DataContext = vm2 = new DragDropViewModel(1, 20);
+            lvDnd3.DataContext = vm3 = new DragDropViewModel(1, 20);
+            lvDnd4.DataContext = vm4 = new DragDropViewModel(1, 20);            
+
+            var adapter1 = new UIEventAdapter(runner, lvDnd1, true, new MultiSelectEventProcessor(vm1.UnselectAllCommand));
+            var adapter2 = new UIEventAdapter(runner, lvDnd2, true, new MultiSelectEventProcessor(vm2.UnselectAllCommand));
+            var adapter3 = new UIEventAdapter(runner, lvDnd3, true, new MultiSelectEventProcessor(vm3.UnselectAllCommand));
+            var adapter4 = new UIEventAdapter(runner, lvDnd4, true, new MultiSelectEventProcessor(vm4.UnselectAllCommand));
 
             //lvDnd1.Loaded += (o, e) =>
             //    {
