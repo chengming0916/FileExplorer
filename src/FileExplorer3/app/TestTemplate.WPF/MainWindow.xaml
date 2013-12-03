@@ -352,19 +352,44 @@
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />                    
                 </Grid.ColumnDefinitions>
-                <ListView x:Name="lvDnd1" Grid.Column="0" ItemTemplate="{StaticResource dragnDropItemTemplate}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0">VirtualStackPanel</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="0">VirtualWrapPanel</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="2">GridView</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="2">StackPanel</TextBlock>
+                <ListView x:Name="lvDnd1" Grid.Column="0" Grid.Row="1"  ItemTemplate="{StaticResource dragnDropItemTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <uc:VirtualStackPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="30" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
-                <ListView x:Name="lvDnd2" Grid.Column="1" ItemTemplate="{StaticResource dragnDropItemTemplate}">
+                <ListView x:Name="lvDnd2" Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource dragnDropItemTemplate}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <uc:VirtualWrapPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="30" />
+                            <uc:VirtualWrapPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="30" />                            
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+                <ListView x:Name="lvDnd3" Grid.Column="0" Grid.Row="3" ItemTemplate="{StaticResource dragnDropItemTemplate}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="150" 
+                                            CellTemplate="{StaticResource dragnDropItemTemplate}"></GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <ListView x:Name="lvDnd4" Grid.Column="1" Grid.Row="3" ItemTemplate="{StaticResource dragnDropItemTemplate}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>                            
+                            <StackPanel Orientation="Vertical" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>

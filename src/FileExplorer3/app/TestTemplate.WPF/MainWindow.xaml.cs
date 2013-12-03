@@ -73,11 +73,15 @@ namespace TestTemplate.WPF
             for (int i = 1; i <= 20; i++)
             {
                 lvDnd1.Items.Add(i);
-                lvDnd2.Items.Add(i+20);
+                lvDnd2.Items.Add(i + 20);
+                lvDnd3.Items.Add(i + 40);
+                lvDnd4.Items.Add(i + 60);
             }
 
             var adapter1 = new UIEventAdapter(runner, lvDnd1, true, MultiSelectEventProcessor.Instance);
             var adapter2 = new UIEventAdapter(runner, lvDnd2, true, MultiSelectEventProcessor.Instance);
+            var adapter3 = new UIEventAdapter(runner, lvDnd3, true, MultiSelectEventProcessor.Instance);
+            var adapter4 = new UIEventAdapter(runner, lvDnd4, true, MultiSelectEventProcessor.Instance);
 
             //lvDnd1.Loaded += (o, e) =>
             //    {
