@@ -47,20 +47,7 @@ namespace FileExplorer.Defines
 
         #endregion
 
-        public static readonly DependencyProperty DragItemTemplateProperty =
-            DependencyProperty.RegisterAttached("DragItemTemplate", typeof(DataTemplate), typeof(AttachedProperties),
-            new UIPropertyMetadata(null));
-
-
-        public static DataTemplate GetDragItemTemplate(DependencyObject obj)
-        {
-            return (DataTemplate)obj.GetValue(DragItemTemplateProperty);
-        }
-
-        public static void SetDragItemTemplate(DependencyObject obj, DataTemplate value)
-        {
-            obj.SetValue(DragItemTemplateProperty, value);
-        }
+     
 
 
 

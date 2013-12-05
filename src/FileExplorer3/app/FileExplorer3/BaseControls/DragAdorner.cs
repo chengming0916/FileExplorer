@@ -29,8 +29,10 @@ namespace FileExplorer.BaseControls
                     MaxHeight = 250,
                     MaxWidth = 1000,
                     Visibility = System.Windows.Visibility.Collapsed,
-                    Opacity = 0.8
-
+                    Opacity = 0.8,
+                    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    VerticalContentAlignment = VerticalAlignment.Center, 
+            
                     //ItemsPanel = new ItemsPanelTemplate(overlapPanelfactory)
                 };
 
@@ -150,7 +152,7 @@ namespace FileExplorer.BaseControls
         // Using a DependencyProperty as the backing store for DraggingItems.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DraggingItemsProperty =
             DependencyProperty.Register("DraggingItems", typeof(IEnumerable), typeof(DragAdorner),
-            new UIPropertyMetadata(new List(), new PropertyChangedCallback(OnDraggingItemsChanged)));
+            new UIPropertyMetadata(new System.Collections.ArrayList(), new PropertyChangedCallback(OnDraggingItemsChanged)));
 
 
 

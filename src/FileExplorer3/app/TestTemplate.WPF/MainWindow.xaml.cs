@@ -19,6 +19,8 @@ using FileExplorer.UserControls;
 using FileExplorer.Utils;
 using FileExplorer;
 using Cofe.Core.Script;
+using FileExplorer.UserControls.MultiSelect;
+using FileExplorer.UserControls.DragnDrop;
 
 namespace TestTemplate.WPF
 {
@@ -75,12 +77,20 @@ namespace TestTemplate.WPF
             lvDnd1.DataContext = vm1 = new DragDropViewModel(1, 200);
             lvDnd2.DataContext = vm2 = new DragDropViewModel(201, 200);
             lvDnd3.DataContext = vm3 = new DragDropViewModel(401, 200);
-            lvDnd4.DataContext = vm4 = new DragDropViewModel(601, 200);            
+            lvDnd4.DataContext = vm4 = new DragDropViewModel(601, 200);
 
-            var adapter1 = new UIEventAdapter(runner, lvDnd1, true, new MultiSelectEventProcessor(vm1.UnselectAllCommand));
-            var adapter2 = new UIEventAdapter(runner, lvDnd2, true, new MultiSelectEventProcessor(vm2.UnselectAllCommand));
-            var adapter3 = new UIEventAdapter(runner, lvDnd3, true, new MultiSelectEventProcessor(vm3.UnselectAllCommand));
-            var adapter4 = new UIEventAdapter(runner, lvDnd4, true, new MultiSelectEventProcessor(vm4.UnselectAllCommand));
+            var adapter1 = new UIEventAdapter(runner, lvDnd1, true,
+            new DragDropEventProcessor(),
+            new MultiSelectEventProcessor(vm1.UnselectAllCommand));
+            var adapter2 = new UIEventAdapter(runner, lvDnd2, true,
+                new DragDropEventProcessor(),
+                new MultiSelectEventProcessor(vm2.UnselectAllCommand));
+            var adapter3 = new UIEventAdapter(runner, lvDnd3, true,
+                new DragDropEventProcessor(),
+                new MultiSelectEventProcessor(vm3.UnselectAllCommand));
+            var adapter4 = new UIEventAdapter(runner, lvDnd4, true,
+                new DragDropEventProcessor(),
+                new MultiSelectEventProcessor(vm4.UnselectAllCommand));
 
             //lvDnd1.Loaded += (o, e) =>
             //    {

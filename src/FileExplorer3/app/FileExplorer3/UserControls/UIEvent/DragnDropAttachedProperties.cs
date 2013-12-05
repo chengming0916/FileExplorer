@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using FileExplorer.BaseControls;
+using FileExplorer.UserControls;
 
 namespace FileExplorer.Defines
 {
@@ -28,6 +29,59 @@ namespace FileExplorer.Defines
 
         #endregion
 
+
+
+        #region DragItemTemplate
+        public static readonly DependencyProperty DragItemTemplateProperty =
+                 DependencyProperty.RegisterAttached("DragItemTemplate", typeof(DataTemplate), typeof(AttachedProperties),
+                 new UIPropertyMetadata(null));
+
+
+        public static DataTemplate GetDragItemTemplate(DependencyObject obj)
+        {
+            return (DataTemplate)obj.GetValue(DragItemTemplateProperty);
+        }
+
+        public static void SetDragItemTemplate(DependencyObject obj, DataTemplate value)
+        {
+            obj.SetValue(DragItemTemplateProperty, value);
+        }
+        #endregion
+
+        #region IsDragging
+
+        public static DependencyProperty IsDraggingProperty =
+       DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
+
+
+        public static bool GetIsDragging(DependencyObject target)
+        {
+            return (bool)target.GetValue(IsDraggingProperty);
+        }
+
+        public static void SetIsDragging(DependencyObject target, bool value)
+        {
+            target.SetValue(IsDraggingProperty, value);
+        }
+        #endregion
+
+        #region PreviousDraggables
+
+        public static DependencyProperty SelectedDraggablesProperty =
+       DependencyProperty.RegisterAttached("SelectedDraggables", typeof(IEnumerable<IDraggable>), 
+       typeof(AttachedProperties), new PropertyMetadata(null));
+
+
+        public static IEnumerable<IDraggable> GetSelectedDraggables(DependencyObject target)
+        {
+            return (IEnumerable<IDraggable>)target.GetValue(SelectedDraggablesProperty);
+        }
+
+        public static void SetSelectedDraggables(DependencyObject target, IEnumerable<IDraggable> value)
+        {
+            target.SetValue(SelectedDraggablesProperty, value);
+        }
+        #endregion
 
     }
 }

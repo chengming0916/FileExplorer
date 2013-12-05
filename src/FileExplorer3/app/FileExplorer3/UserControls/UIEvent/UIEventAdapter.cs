@@ -89,43 +89,55 @@ namespace FileExplorer.BaseControls
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
                 processors.Select(p => commandFunc(p)).Where(c => c.CanExecute(pd)));
             _scriptRunner.Run(commands, pd);
-            return e.Handled;
+            return pd.IsHandled;
         }
 
         void Control_DragLeave(object sender, DragEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            if (!AttachedProperties.GetIsMouseDragging(control))
-            {
+            //if (!AttachedProperties.GetIsMouseDragging(control))
+            //{
                 execute(_eventProcessors, p => p.OnMouseDragLeave, "OnMouseDragLeave", sender, e);
-            }
+            //}
         }
 
         void Control_Drop(object sender, DragEventArgs e)
         {
-            FrameworkElement control = sender as FrameworkElement;
+            FrameworkElement control = sender as FrameworkElement;            
             if (!AttachedProperties.GetIsMouseDragging(control))
             {
                 execute(_eventProcessors, p => p.OnMouseDrop, "OnMouseDrop", sender, e);
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
             }
         }
 
         void Control_DragEnter(object sender, DragEventArgs e)
         {
-            FrameworkElement control = sender as FrameworkElement;
-            if (!AttachedProperties.GetIsMouseDragging(control))
-            {
-                execute(_eventProcessors, p => p.OnMouseDragEnter, "OnMouseDragEnter", sender, e);
-            }
+            FrameworkElement control = sender as FrameworkElement;            
+            //if (!AttachedProperties.GetIsMouseDragging(control))
+            //{
+                if (execute(_eventProcessors, p => p.OnMouseDragEnter, "OnMouseDragEnter", sender, e))
+                    e.Handled = true;
+                
+            //}
         }
 
         void Control_DragOver(object sender, DragEventArgs e)
-        {
-            FrameworkElement control = sender as FrameworkElement;
-            if (!AttachedProperties.GetIsMouseDragging(control))
-            {
+        {            
+            FrameworkElement control = sender as FrameworkElement;            
+            //if (!AttachedProperties.GetIsMouseDragging(control))
+            //{
                 execute(_eventProcessors, p => p.OnMouseDragOver, "OnMouseDragOver", sender, e);
-            }
+            //}
+            //else
+            //{
+            //    e.Effects = DragDropEffects.None;
+            //    e.Handled = true;
+            //}
         }
 
         MouseButtonEventArgs _mouseDownEvent = null;
@@ -162,8 +174,7 @@ namespace FileExplorer.BaseControls
                     if ((e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed))
                         if (Math.Abs(position.X - startPosition.X) > SystemParameters.MinimumHorizontalDragDistance ||
                             Math.Abs(position.Y - startPosition.Y) > SystemParameters.MinimumVerticalDragDistance)
-                        {
-                            AttachedProperties.SetIsMouseDragging(control, true);
+                        {                           
                             Control_MouseDrag(sender, e);
                         }
             }
@@ -172,6 +183,7 @@ namespace FileExplorer.BaseControls
         public void Control_MouseDrag(object sender, MouseEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
+            AttachedProperties.SetIsMouseDragging(control, true);
             if (execute(_eventProcessors, p => p.OnMouseDrag, "OnMouseDrag ", sender, e))
             //DragDropEventProcessor set e.IsHandled to true
             {

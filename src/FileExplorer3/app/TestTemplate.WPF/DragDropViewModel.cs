@@ -15,6 +15,7 @@ namespace TestTemplate.WPF
 {
     public class DragDropViewModel : NotifyPropertyChanged, ISupportDrag, ISupportDrop
     {
+        public static string Format_DragDropItem = "DragDropItemVM";
         #region Constructor
 
         public DragDropViewModel(int startId, int count)
@@ -22,28 +23,84 @@ namespace TestTemplate.WPF
             for (int i = startId; i < startId + count; i++)
                 _items.Add(new DragDropItemViewModel(i));
 
-            UnselectAllCommand = new SimpleCommand() { ExecuteDelegate = (param) =>
-                {
-                    foreach (var item in Items)
-                        item.IsSelected = false;
-                }};
+            UnselectAllCommand = new SimpleCommand()
+            {
+                ExecuteDelegate = (param) =>
+                    {
+                        foreach (var item in Items)
+                            item.IsSelected = false;
+                    }
+            };
         }
 
         #endregion
 
         #region Methods
 
-        
+
 
         public bool HasDraggables
         {
-            get { throw new NotImplementedException(); }
+            get { return GetDraggables().Any(); }
         }
 
-        public Task<IDraggable> GetDraggables()
+        public IEnumerable<IDraggable> GetDraggables()
         {
-            throw new NotImplementedException();
+            return Items.Where(i => i.IsSelected).Cast<IDraggable>();
         }
+
+        public Tuple<IDataObject, DragDropEffects> GetDataObject()
+        {
+            DataObject da = new DataObject(Format_DragDropItem,
+                (from i in Items where i.IsSelected select i.Value).ToArray());
+
+            return new Tuple<IDataObject, DragDropEffects>(da, DragDropEffects.Move);
+        }
+
+
+        public void OnDataObjectDropped(IDataObject da, DragDropEffects effect)
+        {
+            if (effect == DragDropEffects.Move)
+            {
+                for (int i = Items.Count() - 1; i >= 0; i--)
+                    if (Items[i].IsSelected)
+                        Items.RemoveAt(i);
+            }
+        }
+
+
+        public DragDropEffects QueryDrop(IDataObject da)
+        {
+            if (da.GetDataPresent(Format_DragDropItem))
+                return DragDropEffects.Move;
+            return DragDropEffects.None;
+        }
+
+        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
+        {
+            if (da.GetDataPresent(Format_DragDropItem))
+            {
+                var data = da.GetData(Format_DragDropItem) as int[];
+                for (int i = 0; i < data.Length; i++)
+                    yield return new DragDropItemViewModel(data[i]);
+            }
+        }
+
+        public DragDropEffects Drop(IDataObject da, DragDropEffects allowedEffects)
+        {
+            if (!(allowedEffects.HasFlag(DragDropEffects.Move)))
+                return DragDropEffects.None;
+
+            if (!(da.GetDataPresent(Format_DragDropItem)))
+                return DragDropEffects.None;
+
+            var data = da.GetData(Format_DragDropItem) as int[];
+            for (int i = 0; i < data.Length; i++)
+                Items.Insert(i, new DragDropItemViewModel(data[i]));
+
+            return DragDropEffects.Move;
+        }
+
 
         #endregion
 
@@ -64,15 +121,15 @@ namespace TestTemplate.WPF
 
 
 
-        public DragDropEffects QueryDrop(IDraggable draggable)
+
+        public DragDropEffects GetSupportedEffects
         {
-            return DragDropEffects.Move;
+            get { throw new NotImplementedException(); }
         }
 
-        public bool Drop(IDraggable draggable)
-        {
-            throw new NotImplementedException();
-        }
+
+
+
 
     }
 
@@ -89,11 +146,16 @@ namespace TestTemplate.WPF
 
         #region Methods
 
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
         #endregion
 
         #region Data
 
-        private bool _isSelected = false, _isSelecting = false;
+        private bool _isSelected = false;
 
         #endregion
 
@@ -105,22 +167,7 @@ namespace TestTemplate.WPF
             get { return _isSelected; }
             set { _isSelected = value; NotifyOfPropertyChanged(() => IsSelected); }
         }
-        public bool IsSelecting
-        {
-            get { return _isSelecting; }
-            set { _isSelecting = value; NotifyOfPropertyChanged(() => IsSelecting); }
-        }
+
         #endregion
-
-
-        public DragDropEffects SupportedEffects
-        {
-            get { return DragDropEffects.Move; }
-        }
-
-        public DataObject GetDataObject()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

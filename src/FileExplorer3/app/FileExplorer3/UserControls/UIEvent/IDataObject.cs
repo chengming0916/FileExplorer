@@ -9,30 +9,34 @@ namespace FileExplorer.UserControls
 {
     public interface IDraggable
     {
-        DragDropEffects SupportedEffects { get; }
-        DataObject GetDataObject();
-    }
-
-    public interface IShellDraggable : IDraggable
-    {
+        bool IsSelected { get; }
         
     }
 
-    public interface ITypedDraggable<T> : IDraggable
-    {
-        Type[] SupportedTypes { get; }
-        IEnumerable<T> GetDataObject<T>();
-    }
+    //public interface IShellDraggable : IDraggable
+    //{
+        
+    //}
+
+    //public interface ITypedDraggable<T> : IDraggable
+    //{
+    //    Type[] SupportedTypes { get; }
+    //    IEnumerable<T> GetDataObject<T>();
+    //}
 
     public interface ISupportDrag
-    {
+    {        
         bool HasDraggables { get; }
-        Task<IDraggable> GetDraggables();
+        IEnumerable<IDraggable> GetDraggables();
+        Tuple<IDataObject, DragDropEffects> GetDataObject();
+
+        void OnDataObjectDropped(IDataObject da, DragDropEffects effect);
     }
 
     public interface ISupportDrop
     {
-        DragDropEffects QueryDrop(IDraggable draggable);
-        bool Drop(IDraggable draggable);
+        DragDropEffects QueryDrop(IDataObject da);
+        IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
+        DragDropEffects Drop(IDataObject da, DragDropEffects allowedEffects);
     }
 }
