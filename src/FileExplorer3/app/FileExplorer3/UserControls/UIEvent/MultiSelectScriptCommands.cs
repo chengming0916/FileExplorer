@@ -17,15 +17,8 @@ using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.UserControls.MultiSelect
 {
-    public static class MultiSelectScriptCommands
-    {
-        public static IScriptCommand BeginSelect = new BeginSelect();
-        public static IScriptCommand ContinueSelect = new ContinueSelect();
-        public static IScriptCommand EndSelect = new EndSelect();
-    }
-
     /*
      *         (PreviewMouseDown)            (MouseMove)                        (MouseUp)
      *            BeginSelect               ContinueSelect                      EndSelect
@@ -79,8 +72,10 @@ namespace FileExplorer.UserControls
             var scp = ControlUtils.GetScrollContentPresenter(c);
             var eventArgs = pd.EventArgs as MouseEventArgs;
 
-            if (_unselectCommand != null && _unselectCommand.CanExecute(c))
-                _unselectCommand.Execute(c);
+            if (pd.EventArgs.Handled)
+                return ResultCommand.NoError;
+            
+            pm["UnselectCommand"] = _unselectCommand;            
 
             Mouse.Capture(scp);
             return new UpdateIsSelecting(true);
@@ -131,7 +126,7 @@ namespace FileExplorer.UserControls
                 AttachedProperties.SetIsSelecting(c, _toValue);
                 return new ObtainPointerPosition();
             }
-            return ResultCommand.OK;
+            return ResultCommand.NoError;
         }
     }
 
@@ -145,7 +140,7 @@ namespace FileExplorer.UserControls
             var c = pd.Sender as Control;
             if (AttachedProperties.GetIsSelecting(c))
                 return new ObtainPointerPosition();
-            else return ResultCommand.OK;
+            else return ResultCommand.NoError;
         }
     }
 
@@ -240,39 +235,7 @@ namespace FileExplorer.UserControls
 
     }
 
-    public enum SelectedItemTargetValue { ItemUnderMouse, Null }
-    public class SetStartSelectedItem : ScriptCommandBase
-    {
-        public SetStartSelectedItem(ItemsControl ic, SelectedItemTargetValue targetValue, IScriptCommand nextCommand) :
-            base("SelectedItemTargetValue", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
-        { _ic = ic; _targetValue = targetValue; _nextCommand = nextCommand; }
-
-        private IScriptCommand _nextCommand;
-        private SelectedItemTargetValue _targetValue;
-        private ItemsControl _ic;
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var scp = ControlUtils.GetScrollContentPresenter(_ic);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
-
-            if (_targetValue == SelectedItemTargetValue.ItemUnderMouse)
-            {
-                if (AttachedProperties.GetStartSelectedItem(_ic) == null)
-                {
-                    var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, eventArgs.GetPosition(scp));
-                    AttachedProperties.SetStartSelectedItem(_ic, itemUnderMouse);
-                }
-            }
-            else
-                AttachedProperties.SetStartSelectedItem(_ic, null);
-
-            return _nextCommand;
-        }
-    }
-
-
+  
     public class FindSelectedItemsUsingGridView : ScriptCommandBase
     {
         public FindSelectedItemsUsingGridView(ItemsControl ic, GridView gview,
@@ -540,13 +503,20 @@ namespace FileExplorer.UserControls
         public SelectItems() : base("SelectItems", "EventArgs", "SelectedIdList") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {
+        {            
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             var eventArgs = pd.EventArgs as MouseEventArgs;
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
                 : new List<int>();
+
+            if (pm.ContainsKey("UnselectCommand"))
+            {
+                ICommand unselectCommand = pm["UnselectCommand"] as ICommand;
+                if (unselectCommand != null && unselectCommand.CanExecute(ic))
+                    unselectCommand.Execute(ic);
+            }
 
             for (int i = 0; i < ic.Items.Count; i++)
             {
@@ -677,7 +647,7 @@ namespace FileExplorer.UserControls
                 AttachedProperties.SetSelectionAdorner(scp, null);
             }
 
-            return ResultCommand.OK;
+            return ResultCommand.NoError;
 
         }
     }
@@ -716,7 +686,7 @@ namespace FileExplorer.UserControls
                             isInfo.LineDown();
                 }
             }
-            return ResultCommand.OK;
+            return ResultCommand.NoError;
         }
     }
 }

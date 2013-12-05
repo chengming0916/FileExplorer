@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofe.Core.Script
-{
+{    
     public abstract class ScriptCommandBase : IScriptCommand
     {
+       
 
         #region Constructor
 
@@ -16,12 +17,25 @@ namespace Cofe.Core.Script
             CommandKey = commandKey;
             CommandParameters = parameters;
         }
+
+        protected ScriptCommandBase(string commandKey, IScriptCommand nextCommand, params string[] parameters)
+        {
+            CommandKey = commandKey;
+            CommandParameters = parameters;
+
+            _nextCommand = nextCommand;
+        }
         
         #endregion
 
         #region Methods
 
-        public abstract IScriptCommand Execute(ParameterDic pm);
+        public virtual IScriptCommand Execute(ParameterDic pm)
+        {
+            if (_nextCommand != null)
+                return _nextCommand;
+            return ResultCommand.NoError;
+        }
 
         public virtual bool CanExecute(ParameterDic pm)
         {
@@ -31,6 +45,8 @@ namespace Cofe.Core.Script
         #endregion
 
         #region Data
+
+        protected IScriptCommand _nextCommand;
         
         #endregion
 

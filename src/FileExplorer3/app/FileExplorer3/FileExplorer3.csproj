@@ -85,6 +85,7 @@
     <Compile Include="BaseControls\SelectionAdorner.cs" />
     <Compile Include="Defines\Cofe3\Implements\ScriptCommandBase.cs" />
     <Compile Include="Defines\Cofe3\Implements\ScriptCommandImpl.cs" />
+    <Compile Include="Defines\Cofe3\Implements\SimpleScriptCommand.cs" />
     <Compile Include="Defines\Cofe3\Interfaces\IScriptCommand.cs" />
     <Compile Include="Defines\Cofe3\Interfaces\IScriptRunner.cs" />
     <Compile Include="Defines\Cofe3\Defines\Structs\ParameterDic.cs" />
@@ -170,6 +171,8 @@
     <None Include="UserControls\Notused\VirtualDataObject.cs" />
     <Compile Include="Defines\AttachedProperties.cs" />
     <None Include="UserControls\Notused\DragDrop\IRoutedEventHandler.cs" />
+    <Compile Include="UserControls\UIEvent\CommonCommands.cs" />
+    <Compile Include="UserControls\UIEvent\DragDropEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\IDataObject.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
@@ -195,6 +198,7 @@
     <Compile Include="UserControls\UIEvent\UIEventAdapter.cs" />
     <Compile Include="UserControls\UIEvent\UIEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\UIParameterDic.cs" />
+    <None Include="UserControls\UIEvent\VirtualDataObject.cs" />
     <Compile Include="UserControls\UITools.cs" />
     <Compile Include="BaseControls\VirtualWrapPanel.cs" />
     <Compile Include="BaseControls\VirutalStackPanel.cs" />

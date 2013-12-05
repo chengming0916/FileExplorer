@@ -19,6 +19,62 @@ namespace FileExplorer.BaseControls
         public static NoScriptCommand NoCommand = new NoScriptCommand();
     }
 
+
+    public class IfScriptCommand : IScriptCommand
+    {
+        private Func<ParameterDic, bool> _condition;
+        private IScriptCommand _otherwiseCommand;
+        private IScriptCommand _ifTrueCommand;
+        public IfScriptCommand(Func<ParameterDic, bool> condition,
+            IScriptCommand ifTrueCommand, IScriptCommand otherwiseCommand)
+        { _condition = condition; _ifTrueCommand = ifTrueCommand; _otherwiseCommand = otherwiseCommand; }
+
+        public string CommandKey
+        {
+            get { return "IfScriptCommand"; }
+        }
+
+        public IScriptCommand Execute(ParameterDic pm)
+        {
+            if (_condition(pm))
+                return _ifTrueCommand;
+            return _otherwiseCommand;
+        }
+
+        public bool CanExecute(ParameterDic pm)
+        {
+            return true;
+        }
+    }
+
+    public class RunInSequenceScriptCommand : IScriptCommand
+    {
+        private IScriptCommand[] _scriptCommands;
+        public RunInSequenceScriptCommand(params IScriptCommand[] scriptCommands)
+        { if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands; }
+
+        public string CommandKey
+        {
+            get { return String.Join(",", _scriptCommands.Select(c => c.CommandKey)); }
+        }
+
+        public IScriptCommand Execute(ParameterDic pm)
+        {
+            foreach (var c in _scriptCommands)
+            {
+                var result = c.Execute(pm);
+                if (result != ResultCommand.NoError && result != ResultCommand.OK)
+                    return result;
+            }
+            return ResultCommand.NoError;
+        }
+
+        public bool CanExecute(ParameterDic pm)
+        {
+            return _scriptCommands.First().CanExecute(pm);
+        }
+    }
+
     public class DebugScriptCommand : IScriptCommand
     {
         public enum HandleType { printOrgSource, printSelector, prepareDataObject }
