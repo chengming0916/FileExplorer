@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using FileExplorer.BaseControls;
 using FileExplorer.UserControls;
 
@@ -29,7 +30,21 @@ namespace FileExplorer.Defines
 
         #endregion
 
+        #region StartDraggingItem
 
+        public static DependencyProperty StartDraggingItemProperty =
+          DependencyProperty.RegisterAttached("StartDraggingItem", typeof(Control), typeof(AttachedProperties));
+
+        public static Control GetStartDraggingItem(DependencyObject target)
+        {
+            return (Control)target.GetValue(StartDraggingItemProperty);
+        }
+
+        public static void SetStartDraggingItem(DependencyObject target, Control value)
+        {
+            target.SetValue(StartDraggingItemProperty, value);
+        }
+        #endregion
 
         #region DragItemTemplate
         public static readonly DependencyProperty DragItemTemplateProperty =

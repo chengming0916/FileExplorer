@@ -19,15 +19,14 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.UserControls
 {
-    public enum SelectedItemTargetValue { ItemUnderMouse, Null }
-    public class SetStartSelectedItem : ScriptCommandBase
+    public class SetItemUnderMouse : ScriptCommandBase
     {
-        public SetStartSelectedItem(ItemsControl ic, SelectedItemTargetValue targetValue, IScriptCommand nextCommand = null) :
+        public SetItemUnderMouse(ItemsControl ic, DependencyProperty property, IScriptCommand nextCommand = null) :
             base("SelectedItemTargetValue", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
-        { _ic = ic; _targetValue = targetValue; _nextCommand = nextCommand; }
+        { _ic = ic; _property = property; _nextCommand = nextCommand; }
 
         private IScriptCommand _nextCommand;
-        private SelectedItemTargetValue _targetValue;
+        private DependencyProperty _property;
         private ItemsControl _ic;
 
         public override IScriptCommand Execute(ParameterDic pm)
@@ -37,23 +36,19 @@ namespace FileExplorer.UserControls
             var eventArgs = pd.EventArgs as MouseEventArgs;
 
             pm["StartSelectedItem"] = null;
-            if (_targetValue == SelectedItemTargetValue.ItemUnderMouse)
+
+            var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, eventArgs.GetPosition(scp));
+            if (_ic.GetValue(_property) == null)
             {
-                var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, eventArgs.GetPosition(scp));
-                if (AttachedProperties.GetStartSelectedItem(_ic) == null)
-                    AttachedProperties.SetStartSelectedItem(_ic, itemUnderMouse);
+                _ic.SetValue(_property, itemUnderMouse);
                 pm["StartSelectedItem"] = itemUnderMouse;
-            }
-            else
-            {
-                AttachedProperties.SetStartSelectedItem(_ic, null);
             }
 
             return _nextCommand == null ? ResultCommand.NoError : _nextCommand;
         }
     }
 
-    
+
     public class SetEventIsHandled : ScriptCommandBase
     {
         public SetEventIsHandled(bool toVal = true, IScriptCommand nextCommand = null) :

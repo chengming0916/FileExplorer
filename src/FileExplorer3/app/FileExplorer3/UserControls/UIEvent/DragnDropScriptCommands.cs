@@ -36,7 +36,7 @@ namespace FileExplorer.UserControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
             if (ic.DataContext is ISupportDrag)
             {
-                return new SetStartSelectedItem(ic, SelectedItemTargetValue.ItemUnderMouse,
+                return new SetItemUnderMouse(ic, AttachedProperties.StartDraggingItemProperty,
                     new IfItemUnderMouseSelected(new SetSelectedDraggables(), ResultCommand.NoError));
             }
             return ResultCommand.NoError;
@@ -52,7 +52,7 @@ namespace FileExplorer.UserControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var ic = pd.Sender as ItemsControl;            
 
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
@@ -70,7 +70,7 @@ namespace FileExplorer.UserControls.DragnDrop
                     //Set it handled so it wont call multi-select.
                     pd.EventArgs.Handled = true;
                     pd.IsHandled = true;
-                    return new UpdateIsDragging(true, new DoDragDrop());
+                    return new UpdateIsDragging(true, new DoDragDrop(ic, isd));
                 }
             }
 
@@ -86,8 +86,10 @@ namespace FileExplorer.UserControls.DragnDrop
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
-            return new SetStartSelectedItem(ic, SelectedItemTargetValue.Null,
-                new UpdateIsDragging(false, new DetachAdorner()));
+
+            AttachedProperties.SetStartDraggingItem(ic, null);
+
+            return new UpdateIsDragging(false, new DetachAdorner());
         }
     }
 
@@ -98,8 +100,9 @@ namespace FileExplorer.UserControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var ic = pd.Sender as ItemsControl;            
             var eventArgs = pd.EventArgs as DragEventArgs;
+
             if (ic.DataContext is ISupportDrop)
             {
                 var isd = ic.DataContext as ISupportDrop;
@@ -118,7 +121,7 @@ namespace FileExplorer.UserControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var ic = pd.Sender as ItemsControl;            
             var eventArgs = pd.EventArgs as DragEventArgs;
             Window parentWindow = Window.GetWindow(ic);
 
@@ -241,7 +244,8 @@ namespace FileExplorer.UserControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var ic = pd.Sender as ItemsControl;            
+            
             var eventArgs = pd.EventArgs as DragEventArgs;
             if (ic.DataContext is ISupportDrop)
             {
@@ -296,7 +300,7 @@ namespace FileExplorer.UserControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
             if (ic.DataContext is ISupportDrag)
             {
-                var startSelectedItem = AttachedProperties.GetStartSelectedItem(ic);
+                var startSelectedItem = AttachedProperties.GetStartDraggingItem(ic);
                 if (startSelectedItem != null)
                 {
                     if ((ic.DataContext as ISupportDrag).GetDraggables().Contains(
@@ -356,9 +360,11 @@ namespace FileExplorer.UserControls.DragnDrop
     public class DoDragDrop : ScriptCommandBase
     {
         private IDataObject _dataObj;
+        private ItemsControl _ic;
+        private ISupportDrag _isd;
 
 
-        public DoDragDrop() : base("DoDragDrop") { }
+        public DoDragDrop(ItemsControl ic, ISupportDrag isd) : base("DoDragDrop") { _ic = ic; _isd = isd; }
 
         private void OnQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
         {
@@ -396,22 +402,21 @@ namespace FileExplorer.UserControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-            var isd = ic.DataContext as ISupportDrag;
-            var dataObjectTup = isd.GetDataObject();
+            
+            var dataObjectTup = _isd.GetDataObject();
             _dataObj = dataObjectTup.Item1;
 
-            System.Windows.DragDrop.AddQueryContinueDragHandler(ic,
+            System.Windows.DragDrop.AddQueryContinueDragHandler(_ic,
                   new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
-            DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(ic,
+            DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic,
                  _dataObj, dataObjectTup.Item2);
 
-            System.Windows.DragDrop.RemoveQueryContinueDragHandler(ic,
+            System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic,
                   new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
             if (resultEffect != DragDropEffects.None)
-                isd.OnDataObjectDropped(_dataObj, resultEffect);
+                _isd.OnDataObjectDropped(_dataObj, resultEffect);
 
             _dataObj = null;
 

@@ -144,12 +144,17 @@ namespace FileExplorer.UserControls.MultiSelect
         }
     }
 
+
+
     #endregion
 
 
 
 
     #region ObtainPointerPosition and FindSelectedItems
+
+
+
     /// <summary>
     /// Obtain position of scrollbar and  mouse, and write it to ParameterDic.
     /// </summary>
@@ -282,10 +287,10 @@ namespace FileExplorer.UserControls.MultiSelect
             IScriptCommand nextCommand =
                 (AttachedProperties.GetIsSelecting(_ic)) ? (IScriptCommand)new HighlightItems() : new SelectItems();
 
-            SelectedItemTargetValue selectValue =
-             AttachedProperties.GetIsSelecting(_ic) ? SelectedItemTargetValue.ItemUnderMouse : SelectedItemTargetValue.Null;
 
-            return new SetStartSelectedItem(_ic, selectValue, nextCommand);
+            if (AttachedProperties.GetIsSelecting(_ic))
+                return new SetItemUnderMouse(_ic, AttachedProperties.StartSelectedItemProperty, nextCommand);
+            else return nextCommand;
         }
 
     }
