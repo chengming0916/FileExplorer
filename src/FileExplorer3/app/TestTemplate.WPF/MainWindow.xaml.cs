@@ -68,17 +68,18 @@ namespace TestTemplate.WPF
 
         private void setupDragAndDrop()
         {
-            lvDnd1.AllowDrop = true;
-            lvDnd2.AllowDrop = true;
             ScriptRunner runner = new ScriptRunner();
 
-            DragDropViewModel vm1, vm2, vm3, vm4;
+            DragDropItemViewModel vm0, vm1, vm2, vm3, vm4;
 
-            lvDnd1.DataContext = vm1 = new DragDropViewModel(1, 200);
-            lvDnd2.DataContext = vm2 = new DragDropViewModel(201, 200);
-            lvDnd3.DataContext = vm3 = new DragDropViewModel(401, 200);
-            lvDnd4.DataContext = vm4 = new DragDropViewModel(601, 200);
+            tvDnd1.DataContext = vm0 = new DragDropItemViewModel(1, 10);
+            lvDnd1.DataContext = vm1 = new DragDropItemViewModel(20, 20);
+            lvDnd2.DataContext = vm2 = new DragDropItemViewModel(21, 20);
+            lvDnd3.DataContext = vm3 = new DragDropItemViewModel(41, 20);
+            lvDnd4.DataContext = vm4 = new DragDropItemViewModel(61, 20);
 
+            var adapter0 = new UIEventAdapter(runner, tvDnd1, true,
+            new DragDropEventProcessor());
             var adapter1 = new UIEventAdapter(runner, lvDnd1, true,
             new DragDropEventProcessor(),
             new MultiSelectEventProcessor(vm1.UnselectAllCommand));
@@ -108,7 +109,7 @@ namespace TestTemplate.WPF
             //            {
             //                MultiSelectScriptCommands.UpdateAdorner.Execute(pd);
             //            }));
-                    
+                   
             //        //MultiSelectScriptCommands.DetachAdorner.Execute(pd);
             //    };
         }

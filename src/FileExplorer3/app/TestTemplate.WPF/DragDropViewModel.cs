@@ -13,24 +13,32 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace TestTemplate.WPF
 {
-    public class DragDropViewModel : NotifyPropertyChanged, ISupportDrag, ISupportDrop
+    public class DragDropItemViewModel : NotifyPropertyChanged, ISupportDrag, ISupportDrop, IDraggable
     {
         public static string Format_DragDropItem = "DragDropItemVM";
         #region Constructor
 
-        public DragDropViewModel(int startId, int count)
+        public DragDropItemViewModel(int value)
         {
-            for (int i = startId; i < startId + count; i++)
-                _items.Add(new DragDropItemViewModel(i));
-
+            Value = value;
             UnselectAllCommand = new SimpleCommand()
             {
                 ExecuteDelegate = (param) =>
-                    {
-                        foreach (var item in Items)
-                            item.IsSelected = false;
-                    }
+                {
+                    foreach (var item in Items)
+                        item.IsSelected = false;
+                }
             };
+        }
+
+
+        public DragDropItemViewModel(int startId, int count)
+            : this(-1)
+        {            
+            for (int i = startId; i < startId + count; i++)
+                _items.Add(new DragDropItemViewModel(i));
+
+         
         }
 
         #endregion
@@ -101,11 +109,16 @@ namespace TestTemplate.WPF
             return DragDropEffects.Move;
         }
 
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
 
         #endregion
 
         #region Data
 
+        private bool _isSelected = false;
         private ObservableCollection<DragDropItemViewModel> _items = new ObservableCollection<DragDropItemViewModel>();
 
         #endregion
@@ -114,6 +127,13 @@ namespace TestTemplate.WPF
 
         public ICommand UnselectAllCommand { get; set; }
         public ObservableCollection<DragDropItemViewModel> Items { get { return _items; } }
+
+        public int Value { get; set; }
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { _isSelected = value; NotifyOfPropertyChanged(() => IsSelected); }
+        }
 
         #endregion
 
@@ -133,41 +153,6 @@ namespace TestTemplate.WPF
 
     }
 
-    public class DragDropItemViewModel : NotifyPropertyChanged, IDraggable
-    {
-        #region Constructor
 
-        public DragDropItemViewModel(int value)
-        {
-            Value = value;
-        }
 
-        #endregion
-
-        #region Methods
-
-        public override string ToString()
-        {
-            return Value.ToString();
-        }
-
-        #endregion
-
-        #region Data
-
-        private bool _isSelected = false;
-
-        #endregion
-
-        #region Public Properties
-
-        public int Value { get; set; }
-        public bool IsSelected
-        {
-            get { return _isSelected; }
-            set { _isSelected = value; NotifyOfPropertyChanged(() => IsSelected); }
-        }
-
-        #endregion
-    }
 }
