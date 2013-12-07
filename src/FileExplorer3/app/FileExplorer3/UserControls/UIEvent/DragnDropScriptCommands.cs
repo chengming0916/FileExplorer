@@ -16,6 +16,7 @@ using Cofe.Core.Script;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.UserControls.DragnDrop
 {
@@ -90,6 +91,34 @@ namespace FileExplorer.UserControls.DragnDrop
             AttachedProperties.SetStartDraggingItem(ic, null);
 
             return new UpdateIsDragging(false, new DetachAdorner());
+        }
+    }
+    
+    public class GetDataContext : ScriptCommandBase
+    {
+        Func<object, bool> _filter;
+        public GetDataContext(Func<object, bool> filter = null, 
+            IScriptCommand nextCommand = null) : base("GetDataContext", nextCommand, "EventArgs")             
+        { _filter = filter; }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;            
+            var eventArgs = pd.EventArgs as DragEventArgs;
+
+            object dataContext = (eventArgs.OriginalSource as FrameworkElement).DataContext;
+            if (_filter(dataContext))
+                pd["DataContext"] = dataContext;
+            else
+                if (_filter(ic.DataContext))
+                    pd["DataContext"] = ic.DataContext;
+                else return ResultCommand.Error(new Exception("No matched datacontext."));
+
+            if (_nextCommand != null)
+                return _nextCommand;
+            else return ResultCommand.NoError;
+
         }
     }
 

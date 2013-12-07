@@ -32,8 +32,8 @@ namespace TestTemplate.WPF
         }
 
 
-        public DragDropItemViewModel(int startId, int count)
-            : this(-1)
+        public DragDropItemViewModel( int startId, int count)
+            : this(- 1)
         {            
             for (int i = startId; i < startId + count; i++)
                 _items.Add(new DragDropItemViewModel(i));
@@ -45,7 +45,7 @@ namespace TestTemplate.WPF
 
         #region Methods
 
-
+        
 
         public bool HasDraggables
         {
@@ -127,7 +127,6 @@ namespace TestTemplate.WPF
 
         public ICommand UnselectAllCommand { get; set; }
         public ObservableCollection<DragDropItemViewModel> Items { get { return _items; } }
-
         public int Value { get; set; }
         public bool IsSelected
         {
@@ -151,7 +150,10 @@ namespace TestTemplate.WPF
 
 
 
+
+      
     }
+
 
 
 

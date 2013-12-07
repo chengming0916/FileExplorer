@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FileExplorer.BaseControls;
 using FileExplorer.UserControls;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Defines
 {

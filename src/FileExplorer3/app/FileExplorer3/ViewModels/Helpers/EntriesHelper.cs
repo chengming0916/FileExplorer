@@ -36,6 +36,12 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
 
+        public async Task<IEnumerable<VM>> LoadAsync(Func<Task<IEnumerable<VM>>> loadFunc)
+        {
+            _loadSubEntryFunc = loadFunc;
+            return await LoadAsync(true);
+        }
+
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
             if (!_isLoaded || force) //NotLoaded
