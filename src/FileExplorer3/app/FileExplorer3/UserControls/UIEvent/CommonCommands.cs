@@ -17,37 +17,70 @@ using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.BaseControls
 {
-    public class SetItemUnderMouse : ScriptCommandBase
+    public static partial class UITools
     {
-        public SetItemUnderMouse(ItemsControl ic, DependencyProperty property, IScriptCommand nextCommand = null) :
-            base("SelectedItemTargetValue", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
-        { _ic = ic; _property = property; _nextCommand = nextCommand; }
+        public static Control GetItemUnderMouse(ItemsControl ic, Point position)
+        {
+            if (ic is ListView)
+            {
+                var scp = ControlUtils.GetScrollContentPresenter(ic);
+                return UITools.GetSelectedListBoxItem(scp, position);
+            }
+            else if (ic is TreeView)
+            {
+                return UITools.GetTreeViewItem(ic as TreeView, position);
+            }
+            else throw new NotSupportedException();
+        }
 
-        private IScriptCommand _nextCommand;
-        private DependencyProperty _property;
-        private ItemsControl _ic;
+        public static void SetItemUnderMouseToAttachedProperty(ItemsControl ic, Point position, DependencyProperty property)
+        {
+            ic.SetValue(property, GetItemUnderMouse(ic, position));
+        }
+    }
+
+    public class MarkEventHandled : ScriptCommandBase
+    {
+        public MarkEventHandled() : base("MarkEventHandled") { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();            
+            pd.EventArgs.Handled = true;
+
+            return ResultCommand.NoError;
+        }
+    }
+
+    public class GetDataContext : ScriptCommandBase
+    {
+        Func<object, bool> _filter;
+        IScriptCommand _notFoundCommand;
+        public GetDataContext(Func<object, bool> filter = null,
+            IScriptCommand nextCommand = null, IScriptCommand notFoundCommand = null)
+            : base("GetDataContext", nextCommand, "EventArgs")
+        { _filter = filter; _notFoundCommand = notFoundCommand; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var scp = ControlUtils.GetScrollContentPresenter(_ic);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
+            var ic = pd.Sender as ItemsControl;
+            var eventArgs = pd.EventArgs as DragEventArgs;
 
-            pm["StartSelectedItem"] = null;
+            object dataContext = (eventArgs.OriginalSource as FrameworkElement).DataContext;
+            if (_filter(dataContext))
+                pd["DataContext"] = dataContext;
+            else
+                if (_filter(ic.DataContext))
+                    pd["DataContext"] = ic.DataContext;
+                else return _notFoundCommand ?? ResultCommand.Error(new Exception("No matched datacontext."));
 
-            var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, eventArgs.GetPosition(scp));
-            if (_ic.GetValue(_property) == null)
-            {
-                _ic.SetValue(_property, itemUnderMouse);
-                pm["StartSelectedItem"] = itemUnderMouse;
-            }
+            return _nextCommand ?? ResultCommand.NoError;
 
-            return _nextCommand == null ? ResultCommand.NoError : _nextCommand;
         }
     }
-
 
     public class SetEventIsHandled : ScriptCommandBase
     {

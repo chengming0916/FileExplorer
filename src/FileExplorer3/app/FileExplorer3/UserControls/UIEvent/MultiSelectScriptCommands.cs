@@ -15,9 +15,10 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
+using FileExplorer.UserControls;
 using FileExplorer.Utils;
 
-namespace FileExplorer.UserControls.MultiSelect
+namespace FileExplorer.BaseControls.MultiSelect
 {
     /*
      *         (PreviewMouseDown)            (MouseMove)                        (MouseUp)
@@ -52,18 +53,20 @@ namespace FileExplorer.UserControls.MultiSelect
 
 
     #region Entry Point - Begin/Continue/EndSelect
+
+
     /// <summary>
     /// When select started, AttachAdorner, SetStartPosition, Set StartSelectedItem 
     /// Then Mouse.Capture.
     /// </summary>
     public class BeginSelect : ScriptCommandBase
     {
-        public BeginSelect(ICommand unselectCommand = null)
+        public BeginSelect()
             : base("BeginSelect", "EventArgs")
         {
-            _unselectCommand = unselectCommand;
+            UnselectCommand = null;
         }
-        ICommand _unselectCommand;
+        public ICommand UnselectCommand { get; set; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -72,10 +75,10 @@ namespace FileExplorer.UserControls.MultiSelect
             var scp = ControlUtils.GetScrollContentPresenter(c);
             var eventArgs = pd.EventArgs as MouseEventArgs;
 
-            if (pd.EventArgs.Handled)
+            if (eventArgs.Handled)
                 return ResultCommand.NoError;
-            
-            pm["UnselectCommand"] = _unselectCommand;            
+
+            pm["UnselectCommand"] = UnselectCommand;
 
             Mouse.Capture(scp);
             return new UpdateIsSelecting(true);
@@ -88,13 +91,22 @@ namespace FileExplorer.UserControls.MultiSelect
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+            var pd = pm.AsUIParameterDic();
+            var c = pd.Sender as Control;
+            var eventArgs = pd.EventArgs as MouseEventArgs;
+
+            if (eventArgs.Handled)
+                return ResultCommand.NoError;
+
             return new CheckIsSelecting();
         }
     }
 
     public class EndSelect : ScriptCommandBase
     {
-        public EndSelect() : base("EndSelect", "EventArgs") { }
+        public EndSelect() : base("EndSelect", "EventArgs") { UnselectCommand = null; }
+
+        public ICommand UnselectCommand { get; set; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -102,9 +114,23 @@ namespace FileExplorer.UserControls.MultiSelect
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
             var eventArgs = pd.EventArgs as MouseEventArgs;
+            pm["UnselectCommand"] = UnselectCommand;
+
+            if (eventArgs.Handled)
+                return ResultCommand.NoError;
 
             Mouse.Capture(null);
-            return new UpdateIsSelecting(false);
+
+            if (AttachedProperties.GetIsSelecting(c))
+                return new UpdateIsSelecting(false);
+            else
+            {
+                //If not mouse over item and is selecting (dragging), unselect all.
+                if (!UITools.IsMouseOverSelectedItem(c))
+                    return new SelectItems(); 
+                //Otherwise do nothing.
+                return ResultCommand.NoError;
+            }
         }
     }
 
@@ -240,7 +266,7 @@ namespace FileExplorer.UserControls.MultiSelect
 
     }
 
-  
+
     public class FindSelectedItemsUsingGridView : ScriptCommandBase
     {
         public FindSelectedItemsUsingGridView(ItemsControl ic, GridView gview,
@@ -289,8 +315,13 @@ namespace FileExplorer.UserControls.MultiSelect
 
 
             if (AttachedProperties.GetIsSelecting(_ic))
-                return new SetItemUnderMouse(_ic, AttachedProperties.StartSelectedItemProperty, nextCommand);
-            else return nextCommand;
+            {
+                if (AttachedProperties.GetStartSelectedItem(_ic) == null)
+                    UITools.SetItemUnderMouseToAttachedProperty(_ic, _eventArgs.GetPosition(_scp),
+                        AttachedProperties.StartSelectedItemProperty);
+            }
+
+            return nextCommand;
         }
 
     }
@@ -320,14 +351,13 @@ namespace FileExplorer.UserControls.MultiSelect
             Func<HitTestResult, HitTestResultBehavior> cont = (result) => HitTestResultBehavior.Continue;
             HitTestFilterCallback selectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
             {
-                if (potentialHitTestTarget is ListViewItem)
+                if (potentialHitTestTarget is ListViewItem || potentialHitTestTarget is TreeViewItem)
                 {
-                    ListViewItem item = potentialHitTestTarget as ListViewItem;
-                    selectedList.Add(item);
-                    int id = _ic.ItemContainerGenerator.IndexFromContainer(item);
+                    selectedList.Add(potentialHitTestTarget);
+                    int id = _ic.ItemContainerGenerator.IndexFromContainer(potentialHitTestTarget);
                     selectedIdList.Add(id);
 
-                    if (unselectedList.Contains(item)) unselectedList.Remove(item);
+                    if (unselectedList.Contains(potentialHitTestTarget)) unselectedList.Remove(potentialHitTestTarget);
                     if (unselectedIdList.Contains(id)) unselectedIdList.Remove(id);
                     return HitTestFilterBehavior.ContinueSkipChildren;
                 }
@@ -335,11 +365,10 @@ namespace FileExplorer.UserControls.MultiSelect
             });
             HitTestFilterCallback unselectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
             {
-                if (potentialHitTestTarget is ListViewItem)
+                if (potentialHitTestTarget is ListViewItem || potentialHitTestTarget is TreeViewItem)
                 {
-                    ListViewItem item = potentialHitTestTarget as ListViewItem;
-                    unselectedList.Add(item);
-                    unselectedIdList.Add(_ic.ItemContainerGenerator.IndexFromContainer(item));
+                    unselectedList.Add(potentialHitTestTarget);
+                    unselectedIdList.Add(_ic.ItemContainerGenerator.IndexFromContainer(potentialHitTestTarget));
                     return HitTestFilterBehavior.ContinueSkipChildren;
                 }
                 return HitTestFilterBehavior.Continue;
@@ -508,7 +537,7 @@ namespace FileExplorer.UserControls.MultiSelect
         public SelectItems() : base("SelectItems", "EventArgs", "SelectedIdList") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {            
+        {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Models;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IEntryViewModel : INotifyPropertyChangedEx
+    public interface IEntryViewModel : INotifyPropertyChangedEx, IDraggable
     {
         IEntryModel EntryModel { get; }
 

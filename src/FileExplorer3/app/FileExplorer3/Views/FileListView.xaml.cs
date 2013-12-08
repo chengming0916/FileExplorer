@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FileExplorer.BaseControls;
+using FileExplorer.BaseControls.DragnDrop;
+using FileExplorer.BaseControls.MultiSelect;
 
 namespace FileExplorer.Views
 {
@@ -26,6 +29,14 @@ namespace FileExplorer.Views
         {
             InitializeComponent();
             //CommandBindings.Add(new CommandBinding(this.ProcessedItems.RenameCommand));
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            //this.RegisterEventProcessors(new DragDropEventProcessor(),
+            //    new MultiSelectEventProcessor(vm1.UnselectAllCommand));
         }
     }
 }

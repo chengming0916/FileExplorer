@@ -79,12 +79,58 @@ namespace FileExplorer.Defines
         {
             target.SetValue(IsDraggingProperty, value);
         }
+
+        #endregion
+
+        #region IsDraggingOver
+
+        public static DependencyProperty IsDraggingOverProperty =
+       DependencyProperty.RegisterAttached("IsDraggingOver", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
+
+
+        public static bool GetIsDraggingOver(DependencyObject target)
+        {
+            return (bool)target.GetValue(IsDraggingOverProperty);
+        }
+
+        public static void SetIsDraggingOver(DependencyObject target, bool value)
+        {
+            target.SetValue(IsDraggingOverProperty, value);
+        }
+
+        #endregion
+
+        #region DraggingOverItem
+
+        public static DependencyProperty DraggingOverItemProperty =
+       DependencyProperty.RegisterAttached("DraggingOverItem", typeof(FrameworkElement), typeof(AttachedProperties),
+       new PropertyMetadata(null, OnLastDraggingOverPropertyChange));
+
+        public static void OnLastDraggingOverPropertyChange
+            (DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue != null)
+                SetIsDraggingOver(e.OldValue as DependencyObject, false);
+            if (e.NewValue != null)
+                SetIsDraggingOver(e.NewValue as DependencyObject, true);
+        }
+
+        public static object GetDraggingOverItem(DependencyObject target)
+        {
+            return (FrameworkElement)target.GetValue(DraggingOverItemProperty);
+        }
+
+        public static void SetDraggingOverItem(DependencyObject target, FrameworkElement value)
+        {
+            target.SetValue(DraggingOverItemProperty, value);
+        }
+
         #endregion
 
         #region PreviousDraggables
 
         public static DependencyProperty SelectedDraggablesProperty =
-       DependencyProperty.RegisterAttached("SelectedDraggables", typeof(IEnumerable<IDraggable>), 
+       DependencyProperty.RegisterAttached("SelectedDraggables", typeof(IEnumerable<IDraggable>),
        typeof(AttachedProperties), new PropertyMetadata(null));
 
 

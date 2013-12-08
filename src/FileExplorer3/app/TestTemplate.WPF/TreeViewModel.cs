@@ -13,8 +13,7 @@ using System.Windows;
 namespace TestTemplate.WPF
 {
     public class TreeViewModel : INotifyPropertyChanged, 
-        ISupportTreeSelector<TreeNodeViewModel, string>,
-        ISupportDrag, ISupportDrop
+        ISupportTreeSelector<TreeNodeViewModel, string>
     {
         public TreeViewModel()
         {
@@ -48,48 +47,7 @@ namespace TestTemplate.WPF
 
 
         public static string Format_DragDropItem = "DragDropItemVM";
-        #region ISupportDrop
-
-        DragDropEffects ISupportDrop.QueryDrop(IDataObject da)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<IDraggable> ISupportDrop.QueryDropDraggables(IDataObject da)
-        {
-            throw new NotImplementedException();
-        }
-
-        DragDropEffects ISupportDrop.Drop(IDataObject da, DragDropEffects allowedEffects)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region ISupportDrag
-
-        bool ISupportDrag.HasDraggables
-        {
-            get { return (this as ISupportDrag).GetDraggables().Any(); }
-        }
-
-        IEnumerable<IDraggable> ISupportDrag.GetDraggables()
-        {
-            return null;
-        }
-
-        Tuple<IDataObject, DragDropEffects> ISupportDrag.GetDataObject()
-        {
-            throw new NotImplementedException();
-        }
-
-        void ISupportDrag.OnDataObjectDropped(IDataObject da, DragDropEffects effect)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
+      
     }
 
 

@@ -14,7 +14,7 @@ using System.Windows.Threading;
 
 namespace FileExplorer.BaseControls
 {
-    public static class UITools
+    public static partial class UITools
     {
         public static void AddValueChanged<T>(this T obj, DependencyProperty property, EventHandler handler) where T : DependencyObject
         {
@@ -65,9 +65,7 @@ namespace FileExplorer.BaseControls
             }
             return default(T);
 
-        }
-
-
+        }       
 
         public static T FindAncestor<T>(this UIElement obj) where T : UIElement
         {
@@ -400,6 +398,8 @@ namespace FileExplorer.BaseControls
             return null;
         }
 
+        
+
         /// <summary>
         /// Reset scrollbar position of virtualizing panel if scrollBar becomes invisible
         /// </summary>
@@ -443,6 +443,9 @@ namespace FileExplorer.BaseControls
                       });
 
         }
+
+
+
 
     }
 }

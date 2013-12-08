@@ -18,8 +18,10 @@ namespace TestTemplate.WPF
         public static string Format_DragDropItem = "DragDropItemVM";
         #region Constructor
 
-        public DragDropItemViewModel(int value)
+        public DragDropItemViewModel(int value, bool isDroppable, bool isChildDroppable)
         {
+            IsDroppable = isDroppable;
+            IsChildDroppable = isChildDroppable;
             Value = value;
             UnselectAllCommand = new SimpleCommand()
             {
@@ -32,25 +34,37 @@ namespace TestTemplate.WPF
         }
 
 
-        public DragDropItemViewModel( int startId, int count)
-            : this(- 1)
-        {            
+        public DragDropItemViewModel(int startId, int count, bool isDroppable, bool isChildDroppable)
+            : this(-1, isDroppable, isChildDroppable)
+        {
             for (int i = startId; i < startId + count; i++)
-                _items.Add(new DragDropItemViewModel(i));
+                _items.Add(new DragDropItemViewModel(i, isChildDroppable, isChildDroppable));
 
-         
+
         }
 
         #endregion
 
         #region Methods
 
-        
+
 
         public bool HasDraggables
         {
             get { return GetDraggables().Any(); }
         }
+
+        public bool IsDroppable
+        {
+            get;
+            set;
+        }
+
+
+
+
+
+        public bool IsChildDroppable { get; set; }
 
         public IEnumerable<IDraggable> GetDraggables()
         {
@@ -70,9 +84,8 @@ namespace TestTemplate.WPF
         {
             if (effect == DragDropEffects.Move)
             {
-                for (int i = Items.Count() - 1; i >= 0; i--)
-                    if (Items[i].IsSelected)
-                        Items.RemoveAt(i);
+                foreach (var item in Items.Where(i => i.IsSelected).ToList())
+                    Items.Remove(item);
             }
         }
 
@@ -80,7 +93,13 @@ namespace TestTemplate.WPF
         public DragDropEffects QueryDrop(IDataObject da)
         {
             if (da.GetDataPresent(Format_DragDropItem))
+            {
+                var data = da.GetData(Format_DragDropItem) as int[];
+                for (int i = 0; i < data.Length; i++)
+                    if (data[i] == this.Value)
+                        return DragDropEffects.None;
                 return DragDropEffects.Move;
+            }
             return DragDropEffects.None;
         }
 
@@ -90,7 +109,7 @@ namespace TestTemplate.WPF
             {
                 var data = da.GetData(Format_DragDropItem) as int[];
                 for (int i = 0; i < data.Length; i++)
-                    yield return new DragDropItemViewModel(data[i]);
+                    yield return new DragDropItemViewModel(data[i], IsChildDroppable, IsChildDroppable);
             }
         }
 
@@ -104,7 +123,7 @@ namespace TestTemplate.WPF
 
             var data = da.GetData(Format_DragDropItem) as int[];
             for (int i = 0; i < data.Length; i++)
-                Items.Insert(i, new DragDropItemViewModel(data[i]));
+                Items.Insert(i, new DragDropItemViewModel(data[i], IsChildDroppable, IsChildDroppable));
 
             return DragDropEffects.Move;
         }
@@ -127,6 +146,7 @@ namespace TestTemplate.WPF
 
         public ICommand UnselectAllCommand { get; set; }
         public ObservableCollection<DragDropItemViewModel> Items { get { return _items; } }
+
         public int Value { get; set; }
         public bool IsSelected
         {
@@ -140,20 +160,7 @@ namespace TestTemplate.WPF
 
 
 
-
-        public DragDropEffects GetSupportedEffects
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-
-
-
-
-
-      
     }
-
 
 
 
