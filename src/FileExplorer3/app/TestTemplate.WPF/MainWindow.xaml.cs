@@ -19,8 +19,9 @@ using FileExplorer.UserControls;
 using FileExplorer.Utils;
 using FileExplorer;
 using Cofe.Core.Script;
-using FileExplorer.UserControls.MultiSelect;
-using FileExplorer.UserControls.DragnDrop;
+
+using FileExplorer.BaseControls.DragnDrop;
+using FileExplorer.BaseControls.MultiSelect;
 
 namespace TestTemplate.WPF
 {
@@ -72,27 +73,20 @@ namespace TestTemplate.WPF
 
             DragDropItemViewModel vm0, vm1, vm2, vm3, vm4;
 
-            tvDnd1.DataContext = vm0 = new DragDropItemViewModel(1, 10);
-            lvDnd1.DataContext = vm1 = new DragDropItemViewModel(20, 20);
-            lvDnd2.DataContext = vm2 = new DragDropItemViewModel(21, 20);
-            lvDnd3.DataContext = vm3 = new DragDropItemViewModel(41, 20);
-            lvDnd4.DataContext = vm4 = new DragDropItemViewModel(61, 20);
+            //StartIdx, child count, droppable, child droppable
+            tvDnd1.DataContext = vm0 = new DragDropItemViewModel(1, 10, true, true);
+            lvDnd1.DataContext = vm1 = new DragDropItemViewModel(20, 20, true, false);
+            lvDnd2.DataContext = vm2 = new DragDropItemViewModel(41, 20, true, false);
+            lvDnd3.DataContext = vm3 = new DragDropItemViewModel(61, 20, true, false);
+            lvDnd4.DataContext = vm4 = new DragDropItemViewModel(81, 20, true, false);
 
-            var adapter0 = new UIEventAdapter(runner, tvDnd1, true,
-            new DragDropEventProcessor());
-            var adapter1 = new UIEventAdapter(runner, lvDnd1, true,
-            new DragDropEventProcessor(),
-            new MultiSelectEventProcessor(vm1.UnselectAllCommand));
-            var adapter2 = new UIEventAdapter(runner, lvDnd2, true,
-                new DragDropEventProcessor(),
-                new MultiSelectEventProcessor(vm2.UnselectAllCommand));
-            var adapter3 = new UIEventAdapter(runner, lvDnd3, true,
-                new DragDropEventProcessor(),
-                new MultiSelectEventProcessor(vm3.UnselectAllCommand));
-            var adapter4 = new UIEventAdapter(runner, lvDnd4, true,
-                new DragDropEventProcessor(),
-                new MultiSelectEventProcessor(vm4.UnselectAllCommand));
-
+            #region To register manually
+            //tvDnd1.RegisterEventProcessors(new DragDropEventProcessor());            
+            //lvDnd1.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm1.UnselectAllCommand));
+            //lvDnd2.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm2.UnselectAllCommand));
+            //lvDnd3.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm3.UnselectAllCommand));
+            //lvDnd4.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm4.UnselectAllCommand));        
+            
             //lvDnd1.Loaded += (o, e) =>
             //    {
             //        var pd = new UIParameterDic() { Sender = lvDnd1 };
@@ -112,6 +106,7 @@ namespace TestTemplate.WPF
                    
             //        //MultiSelectScriptCommands.DetachAdorner.Execute(pd);
             //    };
+            #endregion
         }
 
         private void setupBreadcrumbTree()

@@ -368,15 +368,31 @@
             </uc:ListViewEx>
         </TabItem>
 
-        <TabItem Header="Drag n Drop" IsSelected="True">
+        <TabItem Header="UIEventHub" IsSelected="True">
             <Grid>
                 <Grid.Resources>
-                    <HierarchicalDataTemplate x:Key="dragnDropItemTemplate" ItemsSource="{Binding Items}">
+                    <DataTemplate x:Key="dragnDropItemTemplate">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Value}" />
                             <TextBlock Text="[ing]" Foreground="Blue"
                                     Visibility="{Binding (bc:AttachedProperties.IsSelecting),
-                                        RelativeSource={RelativeSource AncestorType={x:Type ContentControl}},
+                                        RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}},
+                                        Converter={StaticResource btvc}}" />
+                            <TextBlock Text="[ed]" Foreground="Green"
+                                    Visibility="{Binding IsSelected, Converter={StaticResource btvc}}" />
+                        </StackPanel>
+                    </DataTemplate>
+
+                    <HierarchicalDataTemplate x:Key="dragnDropTreeItemTemplate" ItemsSource="{Binding Items}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Value}" />
+                            <TextBlock Text="[ing]" Foreground="Blue"
+                                    Visibility="{Binding (bc:AttachedProperties.IsSelecting),
+                                        RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}},
+                                        Converter={StaticResource btvc}}" />
+                            <TextBlock Text="[over]" Foreground="Tomato"
+                                    Visibility="{Binding (bc:AttachedProperties.IsDraggingOver),
+                                        RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}},
                                         Converter={StaticResource btvc}}" />
                             <TextBlock Text="[ed]" Foreground="Green"
                                     Visibility="{Binding IsSelected, Converter={StaticResource btvc}}" />
@@ -400,9 +416,11 @@
                         <Setter Property="bc:AttachedProperties.DragItemTemplate" 
                                 Value="{StaticResource dragnDropHintTemplate}" />
                     </Style>
-
+                    <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}" >
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />                        
+                    </Style>
                     <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource {x:Type TreeView}}" >
-                        <Setter Property="ItemTemplate" Value="{StaticResource dragnDropItemTemplate}" />
+                        <Setter Property="ItemTemplate" Value="{StaticResource dragnDropTreeItemTemplate}" />
                         <Setter Property="ItemsSource" Value="{Binding Items}" />
                         <Setter Property="AllowDrop" Value="True" />
                         <Setter Property="bc:AttachedProperties.DragItemTemplate" 
@@ -416,18 +434,29 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="2" Grid.RowSpan="3" />
-                <TextBlock Grid.Column="0" Grid.Row="0">TreeView</TextBlock>
-                <TextBlock Grid.Column="1" Grid.Row="0">uc:VirtualStackPanel (select using ISelectInfo)</TextBlock>
-                <TextBlock Grid.Column="2" Grid.Row="0">uc:VirtualWrapPanel (select using ISelectInfo)</TextBlock>
-                <TextBlock Grid.Column="1" Grid.Row="2">GridView (select using GridView)</TextBlock>
-                <TextBlock Grid.Column="2" Grid.Row="2">StackPanel (select using HitTest)</TextBlock>
-                <TreeView x:Name="tvDnd1" Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" />
-                <ListView x:Name="lvDnd1" Grid.Column="1" Grid.Row="1" >
+                <TextBlock Grid.ColumnSpan="3" Grid.Row="0">Drag and Drop and MultiSelect demonstration</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="1">TreeView</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="1">uc:VirtualStackPanel (select using ISelectInfo)</TextBlock>
+                <TextBlock Grid.Column="2" Grid.Row="1">uc:VirtualWrapPanel (select using ISelectInfo)</TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="3">GridView (select using GridView)</TextBlock>
+                <TextBlock Grid.Column="2" Grid.Row="3">StackPanel (select using HitTest)</TextBlock>
+                <TreeView x:Name="tvDnd1" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" >
+                    <bc:UIEventAdapter.Processors>
+                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                    </bc:UIEventAdapter.Processors>
+                </TreeView>
+                
+                <ListView x:Name="lvDnd1" Grid.Column="1" Grid.Row="2" >
+                    <bc:UIEventAdapter.Processors>
+                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                        <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />                        
+                    </bc:UIEventAdapter.Processors>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <uc:VirtualStackPanel IsItemsHost="true" Orientation="Vertical" 
@@ -436,7 +465,11 @@
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
-                <ListView x:Name="lvDnd2" Grid.Column="2" Grid.Row="1">
+                <ListView x:Name="lvDnd2" Grid.Column="2" Grid.Row="2">
+                    <bc:UIEventAdapter.Processors>
+                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                        <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />                        
+                    </bc:UIEventAdapter.Processors>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <uc:VirtualWrapPanel IsItemsHost="true" Orientation="Vertical" ItemHeight="60" ItemWidth="60"                                                 
@@ -444,7 +477,11 @@
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
-                <ListView x:Name="lvDnd3" Grid.Column="1" Grid.Row="3">
+                <ListView x:Name="lvDnd3" Grid.Column="1" Grid.Row="4">
+                    <bc:UIEventAdapter.Processors>
+                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                        <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />                        
+                    </bc:UIEventAdapter.Processors>
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="150" 
@@ -452,7 +489,11 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <ListView x:Name="lvDnd4" Grid.Column="2" Grid.Row="3">
+                <ListView x:Name="lvDnd4" Grid.Column="2" Grid.Row="4">
+                    <bc:UIEventAdapter.Processors>
+                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                        <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />                        
+                    </bc:UIEventAdapter.Processors>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Vertical" />

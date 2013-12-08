@@ -35,6 +35,7 @@ namespace FileExplorer.ViewModels.Helpers
 
     public interface ISupportDrop
     {
+        bool IsDroppable { get; }
         DragDropEffects QueryDrop(IDataObject da);
         IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
         DragDropEffects Drop(IDataObject da, DragDropEffects allowedEffects);

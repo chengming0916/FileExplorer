@@ -27,7 +27,7 @@ namespace FileExplorer.BaseControls
         IScriptCommand OnMouseMove { get; }
     }
 
-    public abstract class UIEventProcessorBase : IUIEventProcessor
+    public abstract class UIEventProcessorBase : Freezable, IUIEventProcessor
     {
         public int Priority { get; protected set; }
 
@@ -53,6 +53,11 @@ namespace FileExplorer.BaseControls
         public IScriptCommand OnMouseDragOver { get; protected set; }
         public IScriptCommand OnMouseDragLeave { get; protected set; }
         public IScriptCommand OnMouseDrop { get; protected set; }
+
+        protected override Freezable CreateInstanceCore()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class DebugUIEventProcessor : UIEventProcessorBase

@@ -18,10 +18,74 @@ using FileExplorer.Defines;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
 
-namespace FileExplorer.UserControls.DragnDrop
+namespace FileExplorer.BaseControls.DragnDrop
 {
-    public static class DragnDropScriptCommands
+    public static class DataContextFinder
     {
+        public static Func<ISupportDrag, bool> SupportDrag = dc => dc is ISupportDrag && dc.HasDraggables;
+        public static Func<ISupportDrop, bool> SupportDrop = dc => dc is ISupportDrop && dc.IsDroppable;
+
+        public static T GetDataContext<T>(ParameterDic pm, Func<T, bool> filter = null)
+        {
+            FrameworkElement ele;
+            return GetDataContext(pm, out ele, filter);
+        }
+
+
+        public static FrameworkElement GetDataContextOwner(FrameworkElement ele)
+        {
+            var tvItem = UITools.FindAncestor<TreeViewItem>(ele);
+            if (tvItem != null)
+                return tvItem;
+
+            var lvItem = UITools.FindAncestor<ListViewItem>(ele);
+            if (lvItem != null)
+                return lvItem;
+
+            var ic = UITools.FindAncestor<ItemsControl>(ele);
+            if (ic != null)
+                return ic;
+
+            return ele;
+        }
+
+        public static T GetDataContext<T>(ParameterDic pm, out FrameworkElement ele, Func<T, bool> filter = null)
+        {
+            var pd = pm.AsUIParameterDic();
+            var eventArgs = pd.EventArgs as RoutedEventArgs;            
+            var origSource = eventArgs.OriginalSource as FrameworkElement;
+            ele = null;
+
+            object dataContext = origSource.DataContext;
+            if (dataContext is T && filter((T)dataContext))
+            {
+                ele = GetDataContextOwner(origSource);
+                return (T)dataContext;
+            }
+            else
+            {
+                var ic = UITools.FindAncestor<ItemsControl>(origSource);
+                while (ic != null)
+                {
+                    if (ic.DataContext is T && filter((T)ic.DataContext))
+                    {
+                        ele = GetDataContextOwner(ic);
+                        return (T)ic.DataContext;
+                    }
+                    ic = UITools.FindAncestor<ItemsControl>(VisualTreeHelper.GetParent(ic));
+                }
+
+            }
+
+                
+            
+
+            return default(T);
+
+        }
+
+        
+
     }
 
     /// <summary>
@@ -35,10 +99,16 @@ namespace FileExplorer.UserControls.DragnDrop
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
-            if (ic.DataContext is ISupportDrag)
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
+            var eventArgs = pd.EventArgs as MouseEventArgs;
+            var scp = ControlUtils.GetScrollContentPresenter(ic);
+
+            if (isd != null)
             {
-                return new SetItemUnderMouse(ic, AttachedProperties.StartDraggingItemProperty,
-                    new IfItemUnderMouseSelected(new SetSelectedDraggables(), ResultCommand.NoError));
+                UITools.SetItemUnderMouseToAttachedProperty(ic, eventArgs.GetPosition(scp),
+                    AttachedProperties.StartDraggingItemProperty);
+
+                return new IfItemUnderMouseSelected(new SetSelectedDraggables(), ResultCommand.NoError);
             }
             return ResultCommand.NoError;
         }
@@ -53,14 +123,14 @@ namespace FileExplorer.UserControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;            
+            var ic = pd.Sender as ItemsControl;
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
 
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
 
-            if (ic.DataContext is ISupportDrag)
-            {
-                var isd = ic.DataContext as ISupportDrag;
+            if (isd != null)
+            {                
                 var previousDraggables = AttachedProperties.GetSelectedDraggables(ic);
                 var currentDraggables = isd.GetDraggables().ToList();
 
@@ -71,11 +141,28 @@ namespace FileExplorer.UserControls.DragnDrop
                     //Set it handled so it wont call multi-select.
                     pd.EventArgs.Handled = true;
                     pd.IsHandled = true;
-                    return new UpdateIsDragging(true, new DoDragDrop(ic, isd));
+                    AttachedProperties.SetIsDragging(ic, true);
+                    return new DoDragDrop(ic, isd);
                 }
             }
 
             return ResultCommand.NoError; //Not supported
+        }
+    }
+
+    public class ContinueDrag : ScriptCommandBase
+    {
+        public ContinueDrag() : base("ContinueDrag", "EventArgs") { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;
+
+            if (AttachedProperties.GetIsDragging(ic))
+                pd.EventArgs.Handled = true;
+
+            return ResultCommand.OK;
         }
     }
 
@@ -89,55 +176,43 @@ namespace FileExplorer.UserControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
 
             AttachedProperties.SetStartDraggingItem(ic, null);
+            AttachedProperties.SetIsDragging(ic, false);
 
-            return new UpdateIsDragging(false, new DetachAdorner());
-        }
-    }
-    
-    public class GetDataContext : ScriptCommandBase
-    {
-        Func<object, bool> _filter;
-        public GetDataContext(Func<object, bool> filter = null, 
-            IScriptCommand nextCommand = null) : base("GetDataContext", nextCommand, "EventArgs")             
-        { _filter = filter; }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;            
-            var eventArgs = pd.EventArgs as DragEventArgs;
-
-            object dataContext = (eventArgs.OriginalSource as FrameworkElement).DataContext;
-            if (_filter(dataContext))
-                pd["DataContext"] = dataContext;
-            else
-                if (_filter(ic.DataContext))
-                    pd["DataContext"] = ic.DataContext;
-                else return ResultCommand.Error(new Exception("No matched datacontext."));
-
-            if (_nextCommand != null)
-                return _nextCommand;
-            else return ResultCommand.NoError;
-
+            return new DetachAdorner();
         }
     }
 
+
+    public enum QueryDragDropEffectMode { Enter, Leave }
     public class QueryDragDropEffects : ScriptCommandBase
     {
-        public QueryDragDropEffects() : base("QueryDragDropEffects", "EventArgs") { }
+        private QueryDragDropEffectMode _mode;
+        public QueryDragDropEffects(QueryDragDropEffectMode mode) :
+            base("QueryDragDropEffects", "EventArgs") { _mode = mode; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+            
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;            
             var eventArgs = pd.EventArgs as DragEventArgs;
 
-            if (ic.DataContext is ISupportDrop)
+            FrameworkElement ele;
+            var isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
+            if (isd != null)
             {
-                var isd = ic.DataContext as ISupportDrop;
-                eventArgs.Effects = (eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data));
-                eventArgs.Handled = true;
-                return new AttachAdorner();
+                if (_mode == QueryDragDropEffectMode.Enter)
+                {
+                    AttachedProperties.SetDraggingOverItem(ic, ele);
+                    eventArgs.Effects = (eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data));                    
+                    eventArgs.Handled = true;                    
+                    return new AttachAdorner();
+                }
+                else
+                {
+                    AttachedProperties.SetDraggingOverItem(ic, null);
+                    return new HideAdorner();
+                }
             }
             return ResultCommand.NoError;
         }
@@ -153,10 +228,10 @@ namespace FileExplorer.UserControls.DragnDrop
             var ic = pd.Sender as ItemsControl;            
             var eventArgs = pd.EventArgs as DragEventArgs;
             Window parentWindow = Window.GetWindow(ic);
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
 
-            if (ic.DataContext is ISupportDrop)
-            {
-                var isd = ic.DataContext as ISupportDrop;
+            if (isd != null)
+            {                
                 var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
                 if (dragAdorner != null)
                 {
@@ -273,14 +348,19 @@ namespace FileExplorer.UserControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;            
-            
+            var ic = pd.Sender as ItemsControl;
+
+            AttachedProperties.SetDraggingOverItem(ic, null);
             var eventArgs = pd.EventArgs as DragEventArgs;
-            if (ic.DataContext is ISupportDrop)
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
+            if (isd != null)
             {
-                var isd = ic.DataContext as ISupportDrop;
-                isd.Drop(eventArgs.Data, eventArgs.AllowedEffects);
-                eventArgs.Handled = true;
+                eventArgs.Effects = eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data);
+                if (eventArgs.Effects != DragDropEffects.None)
+                {
+                    isd.Drop(eventArgs.Data, eventArgs.AllowedEffects);
+                    eventArgs.Handled = true;
+                }                
             }
 
             return ResultCommand.NoError;
@@ -289,24 +369,24 @@ namespace FileExplorer.UserControls.DragnDrop
 
     #region Update/CheckIsDragging
 
-    public class UpdateIsDragging : ScriptCommandBase
-    {
-        private bool _toValue;
-        public UpdateIsDragging(bool toValue, IScriptCommand nextCommand = null) : base("UpdateIsDragging", nextCommand) { _toValue = toValue; }
+    //public class UpdateIsDragging : ScriptCommandBase
+    //{
+    //    private bool _toValue;
+    //    public UpdateIsDragging(bool toValue, IScriptCommand nextCommand = null) : base("UpdateIsDragging", nextCommand) { _toValue = toValue; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
-            if (AttachedProperties.GetIsDragging(c) != _toValue)
-            {
-                AttachedProperties.SetIsDragging(c, _toValue);
-                if (_nextCommand != null)
-                    return _nextCommand;
-            }
-            return ResultCommand.NoError;
-        }
-    }
+    //    public override IScriptCommand Execute(ParameterDic pm)
+    //    {
+    //        var pd = pm.AsUIParameterDic();
+    //        var c = pd.Sender as Control;
+    //        if (AttachedProperties.GetIsDragging(c) != _toValue)
+    //        {
+    //            AttachedProperties.SetIsDragging(c, _toValue);
+    //            if (_nextCommand != null)
+    //                return _nextCommand;
+    //        }
+    //        return ResultCommand.NoError;
+    //    }
+    //}
 
     public class IfIsDragging : IfScriptCommand
     {
@@ -327,12 +407,14 @@ namespace FileExplorer.UserControls.DragnDrop
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
-            if (ic.DataContext is ISupportDrag)
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
+
+            if (isd != null)
             {
                 var startSelectedItem = AttachedProperties.GetStartDraggingItem(ic);
                 if (startSelectedItem != null)
                 {
-                    if ((ic.DataContext as ISupportDrag).GetDraggables().Contains(
+                    if (isd.GetDraggables().Contains(
                         startSelectedItem.DataContext))
                         return true;
                 }
@@ -361,11 +443,12 @@ namespace FileExplorer.UserControls.DragnDrop
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
-            if (ic.DataContext is ISupportDrag)
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
+            if (isd != null)
             {
 
                 AttachedProperties.SetSelectedDraggables(ic,
-                    (ic.DataContext as ISupportDrag).GetDraggables().ToList());
+                    isd.GetDraggables().ToList());
                 pd.EventArgs.Handled = true;
             }
 

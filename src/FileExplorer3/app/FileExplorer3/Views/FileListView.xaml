@@ -6,6 +6,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:uc="clr-namespace:FileExplorer.UserControls"
+             xmlns:bc="clr-namespace:FileExplorer.BaseControls"
              xmlns:m="clr-namespace:FileExplorer.Models"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -30,14 +31,17 @@
                      ItemAnimationDuration="00:00:00"
                      SortDirection="{Binding SortDirection}"
                      SortBy="{Binding SortBy}"
-                     SelectionModeEx="SelectionHelper"
+                    
                      cal:View.ApplyConventions="False"
                      cal:Message.Attach = 
                        "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)];
                        [Event FilterChangedEvent] = [Action OnFilterChanged()];
                        [Event UnselectAllRequired] = [Action UnselectAll()]"
                        >
-                
+            <bc:UIEventAdapter.Processors>
+                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
+            </bc:UIEventAdapter.Processors>
             <i:Interaction.Triggers>
                 <uc:InputBindingTrigger>
                     <uc:InputBindingTrigger.InputBinding>
