@@ -6,9 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Defines;
+using FileExplorer.UserControls.DragDrop;
+//using FileExplorer.UserControls.DragDrop;
 using QuickZip.Converters;
 using QuickZip.UserControls.Logic.Tools.IconExtractor;
 
@@ -158,6 +161,29 @@ namespace FileExplorer.Models
                     yield return GetImageFromImageExtractor.Instance;
         }
 
+        public IDataObject GetDataObject(IEnumerable<IEntryModel> entries)
+        {
+            //var retVal = new FileDropDataObject(null);
+            //retVal.SetFileDropData(entries.Cast<FileSystemInfoExModel>()
+            //    .Select(m => new FileDrop(m.FullPath, m.IsDirectory)).ToArray());
+            var retVal = new DataObject();
+            retVal.SetData(
+                DataFormats.FileDrop,
+                entries.Cast<FileSystemInfoExModel>()
+                .Select(m => m.FullPath).ToArray());
+            return retVal;            
+        }
+
+        public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
+        {
+            return DragDropEffects.Copy;
+        }
+
+        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)
+        {
+
+        }
+
         public Task<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
         {
             throw new NotImplementedException();
@@ -204,6 +230,9 @@ namespace FileExplorer.Models
 
 
 
-        
+
+
+
+       
     }
 }

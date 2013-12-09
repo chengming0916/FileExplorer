@@ -11,6 +11,7 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.BaseControls;
+using System.Windows;
 
 namespace FileExplorer.Models
 {
@@ -35,6 +36,12 @@ namespace FileExplorer.Models
         Task<IEntryModel> ParseAsync(string path);
 
         Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
+
+        IDataObject GetDataObject(IEnumerable<IEntryModel> entries);
+
+        DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries);
+
+        void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect);
 
         //Task<ImageSource> GetIconAsync(IEntryModel entry, int size);
 

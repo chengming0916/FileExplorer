@@ -71,16 +71,19 @@ namespace TestTemplate.WPF
             return Items.Where(i => i.IsSelected).Cast<IDraggable>();
         }
 
-        public Tuple<IDataObject, DragDropEffects> GetDataObject()
+        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
         {
-            DataObject da = new DataObject(Format_DragDropItem,
-                (from i in Items where i.IsSelected select i.Value).ToArray());
+            return new DataObject(Format_DragDropItem,
+                (from i in draggables.Cast<DragDropItemViewModel>() where i.IsSelected select i.Value).ToArray());
+        }
 
-            return new Tuple<IDataObject, DragDropEffects>(da, DragDropEffects.Move);
+        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        {
+            return DragDropEffects.Move;
         }
 
 
-        public void OnDataObjectDropped(IDataObject da, DragDropEffects effect)
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
         {
             if (effect == DragDropEffects.Move)
             {

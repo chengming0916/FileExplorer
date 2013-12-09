@@ -21,6 +21,7 @@ using System.Collections;
 using FileExplorer.ViewModels.Actions;
 using FileExplorer.Utils;
 using System.Collections.ObjectModel;
+using FileExplorer.ViewModels.Helpers;
 
 
 namespace FileExplorer.ViewModels
@@ -29,7 +30,7 @@ namespace FileExplorer.ViewModels
     [Export(typeof(FileListViewModel))]
 #endif
     public class FileListViewModel : PropertyChangedBase, IFileListViewModel,
-        IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>
+        IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDrag, ISupportDrop
     {
         #region Cosntructor
 
@@ -195,6 +196,55 @@ namespace FileExplorer.ViewModels
                 LoadAsync(message.NewModel, null);
         }
 
+        #region ISupportDrag
+
+        public bool HasDraggables
+        {
+            get { return  _selectedVms.Any(); }
+        }
+
+        public IEnumerable<IDraggable> GetDraggables()
+        {
+            return _selectedVms;
+        }
+
+        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
+        {
+            return Profile.GetDataObject(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel));                        
+        }
+
+        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        {
+            return Profile.QueryDrag(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel));
+        }
+
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
+        {
+            Profile.OnDragCompleted(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel), da, effect);
+        }
+
+        public bool IsDroppable
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public DragDropEffects QueryDrop(IDataObject da)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DragDropEffects Drop(IDataObject da, DragDropEffects allowedEffects)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #endregion
 
         #region Data
@@ -204,6 +254,7 @@ namespace FileExplorer.ViewModels
         private ObservableCollection<IEntryViewModel> _items = new FastObservableCollection<IEntryViewModel>();
         private IList<IEntryViewModel> _selectedVms = new List<IEntryViewModel>();
         private ListCollectionView _processedVms = null;
+        private DragDropEffects _dragDropEffects = DragDropEffects.Copy | DragDropEffects.Link;
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private string _sortBy = "EntryModel.Label";
@@ -329,12 +380,18 @@ namespace FileExplorer.ViewModels
         #endregion
 
 
+        public DragDropEffects DragDropEffects { get { return _dragDropEffects; } set { _dragDropEffects = value; } }
+
 
         #endregion
 
 
 
 
+
+
+
+        
     }
 }
 
