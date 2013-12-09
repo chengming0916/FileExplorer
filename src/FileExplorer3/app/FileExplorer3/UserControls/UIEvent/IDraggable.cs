@@ -38,6 +38,6 @@ namespace FileExplorer.ViewModels.Helpers
         bool IsDroppable { get; }
         DragDropEffects QueryDrop(IDataObject da);
         IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
-        DragDropEffects Drop(IDataObject da, DragDropEffects allowedEffects);
+        DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects);
     }
 }

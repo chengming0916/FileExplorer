@@ -225,7 +225,7 @@ namespace FileExplorer.ViewModels
 
         public bool IsDroppable
         {
-            get { throw new NotImplementedException(); }
+            get { return true; }
         }
 
         public DragDropEffects QueryDrop(IDataObject da)
@@ -238,7 +238,7 @@ namespace FileExplorer.ViewModels
             throw new NotImplementedException();
         }
 
-        public DragDropEffects Drop(IDataObject da, DragDropEffects allowedEffects)
+        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
         {
             throw new NotImplementedException();
         }
