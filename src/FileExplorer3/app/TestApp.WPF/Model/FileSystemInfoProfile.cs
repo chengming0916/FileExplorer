@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Defines;
+//using FileExplorer.UserControls.DragDrop;
 
 namespace FileExplorer.Models
 {
@@ -74,6 +76,27 @@ namespace FileExplorer.Models
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }
 
+        public IDataObject GetDataObject(IEnumerable<IEntryModel> entries)
+        {            
+            var retVal = new DataObject();
+            retVal.SetData(
+               DataFormats.FileDrop,
+               entries.Cast<FileSystemInfoExModel>()
+               .Select(m => m.FullPath).ToArray());
+            return retVal;            
+        }
+
+        public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
+        {
+            return DragDropEffects.Copy;
+        }
+
+        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)
+        {
+
+        }
+
+
         private Icon getFolderIcon()
         {
             return new Icon(System.Reflection.Assembly.GetExecutingAssembly()
@@ -130,6 +153,10 @@ namespace FileExplorer.Models
         {
             throw new NotImplementedException();
         }
+
+
+
+
 
 
 

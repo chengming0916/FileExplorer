@@ -159,6 +159,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
 
+
             if (AttachedProperties.GetIsDragging(ic))
                 pd.EventArgs.Handled = true;
 
@@ -514,21 +515,22 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            
-            var dataObjectTup = _isd.GetDataObject();
-            _dataObj = dataObjectTup.Item1;
+
+            var draggables = _isd.GetDraggables().ToList();
+            _dataObj = _isd.GetDataObject(draggables);
+            var effect = _isd.QueryDrag(draggables);
 
             System.Windows.DragDrop.AddQueryContinueDragHandler(_ic,
                   new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
             DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic,
-                 _dataObj, dataObjectTup.Item2);
+                 _dataObj, effect);
 
             System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic,
                   new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
             if (resultEffect != DragDropEffects.None)
-                _isd.OnDataObjectDropped(_dataObj, resultEffect);
+                _isd.OnDragCompleted(draggables, _dataObj, resultEffect);
 
             _dataObj = null;
 
@@ -555,21 +557,21 @@ namespace FileExplorer.BaseControls.DragnDrop
     //}
 
 
-    public class PrepareDataObject : ScriptCommandBase
-    {
-        public PrepareDataObject() : base("PrepareDataObject") { }
+    //public class PrepareDataObject : ScriptCommandBase
+    //{
+    //    public PrepareDataObject() : base("PrepareDataObject") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-            var isd = ic.DataContext as ISupportDrag;
+    //    public override IScriptCommand Execute(ParameterDic pm)
+    //    {
+    //        var pd = pm.AsUIParameterDic();
+    //        var ic = pd.Sender as ItemsControl;
+    //        var isd = ic.DataContext as ISupportDrag;
 
-            pm["DataObject"] = isd.GetDataObject();
+    //        pm["DataObject"] = isd.GetDataObject();
 
-            return ResultCommand.NoError;
-        }
+    //        return ResultCommand.NoError;
+    //    }
 
-    }
+    //}
 
 }
