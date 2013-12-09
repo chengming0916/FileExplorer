@@ -95,15 +95,13 @@ namespace TestTemplate.WPF
 
         public DragDropEffects QueryDrop(IDataObject da)
         {
-            if (da.GetDataPresent(Format_DragDropItem))
-            {
-                var data = da.GetData(Format_DragDropItem) as int[];
-                for (int i = 0; i < data.Length; i++)
-                    if (data[i] == this.Value)
-                        return DragDropEffects.None;
-                return DragDropEffects.Move;
-            }
-            return DragDropEffects.None;
+            var draggableModels = QueryDropDraggables(da).Cast<DragDropItemViewModel>();
+            if (draggableModels.Count() == 0)
+                return DragDropEffects.None;
+            foreach (var dm in draggableModels)
+                if (dm.Value == this.Value)
+                    return DragDropEffects.None;
+            return DragDropEffects.Move;            
         }
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
@@ -116,17 +114,18 @@ namespace TestTemplate.WPF
             }
         }
 
-        public DragDropEffects Drop(IDataObject da, DragDropEffects allowedEffects)
+        public DragDropEffects Drop(IEnumerable<IDraggable> draggable, IDataObject da, DragDropEffects allowedEffects)
         {
             if (!(allowedEffects.HasFlag(DragDropEffects.Move)))
                 return DragDropEffects.None;
 
-            if (!(da.GetDataPresent(Format_DragDropItem)))
-                return DragDropEffects.None;
-
-            var data = da.GetData(Format_DragDropItem) as int[];
-            for (int i = 0; i < data.Length; i++)
-                Items.Insert(i, new DragDropItemViewModel(data[i], IsChildDroppable, IsChildDroppable));
+            var draggableViewModels = draggable.Cast<DragDropItemViewModel>();
+            if (draggableViewModels.Any())
+            {
+                int idx = 0;
+                foreach (var d in draggableViewModels)
+                    Items.Insert(idx++, d);
+            }
 
             return DragDropEffects.Move;
         }

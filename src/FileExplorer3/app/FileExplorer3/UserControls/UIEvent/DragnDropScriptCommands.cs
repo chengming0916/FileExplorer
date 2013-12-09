@@ -355,11 +355,12 @@ namespace FileExplorer.BaseControls.DragnDrop
             var eventArgs = pd.EventArgs as DragEventArgs;
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
             if (isd != null)
-            {
+            {                
                 eventArgs.Effects = eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data);
                 if (eventArgs.Effects != DragDropEffects.None)
                 {
-                    isd.Drop(eventArgs.Data, eventArgs.AllowedEffects);
+                    IEnumerable<IDraggable> draggables = isd.QueryDropDraggables(eventArgs.Data);
+                    isd.Drop(draggables, eventArgs.Data, eventArgs.AllowedEffects);
                     eventArgs.Handled = true;
                 }                
             }
