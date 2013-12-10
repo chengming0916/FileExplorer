@@ -79,7 +79,7 @@ namespace TestTemplate.WPF
 
         public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
         {
-            return DragDropEffects.Move;
+            return DragDropEffects.Move | DragDropEffects.Copy;
         }
 
 
@@ -101,7 +101,7 @@ namespace TestTemplate.WPF
             foreach (var dm in draggableModels)
                 if (dm.Value == this.Value)
                     return DragDropEffects.None;
-            return DragDropEffects.Move;            
+            return DragDropEffects.Move | DragDropEffects.Copy;            
         }
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
@@ -116,18 +116,19 @@ namespace TestTemplate.WPF
 
         public DragDropEffects Drop(IEnumerable<IDraggable> draggable, IDataObject da, DragDropEffects allowedEffects)
         {
-            if (!(allowedEffects.HasFlag(DragDropEffects.Move)))
-                return DragDropEffects.None;
-
-            var draggableViewModels = draggable.Cast<DragDropItemViewModel>();
-            if (draggableViewModels.Any())
+            if (allowedEffects.HasFlag(DragDropEffects.Move) ||
+                allowedEffects.HasFlag(DragDropEffects.Copy))
             {
-                int idx = 0;
-                foreach (var d in draggableViewModels)
-                    Items.Insert(idx++, d);
+                var draggableViewModels = draggable.Cast<DragDropItemViewModel>();
+                if (draggableViewModels.Any())
+                {
+                    int idx = 0;
+                    foreach (var d in draggableViewModels)
+                        Items.Insert(idx++, d);
+                }
+                return DragDropEffects.Move;
             }
-
-            return DragDropEffects.Move;
+            else return DragDropEffects.None;
         }
 
         public override string ToString()
