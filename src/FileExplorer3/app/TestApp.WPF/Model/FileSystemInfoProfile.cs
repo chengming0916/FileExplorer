@@ -97,6 +97,22 @@ namespace FileExplorer.Models
         }
 
 
+        public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DragDropEffects QueryDrop(IEnumerable<IEntryModel> entries)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects)
+        {
+            throw new NotImplementedException();
+        }
+
+
         private Icon getFolderIcon()
         {
             return new Icon(System.Reflection.Assembly.GetExecutingAssembly()
@@ -153,6 +169,8 @@ namespace FileExplorer.Models
         {
             throw new NotImplementedException();
         }
+
+
 
 
 

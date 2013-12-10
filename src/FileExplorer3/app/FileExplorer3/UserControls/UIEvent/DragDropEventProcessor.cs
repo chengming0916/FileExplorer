@@ -44,7 +44,7 @@ namespace FileExplorer.BaseControls
             {
                 //Register Drag                
                 OnMouseDragEnter = new QueryDragDropEffects(QueryDragDropEffectMode.Enter);
-                OnMouseDragOver = new UpdateAdorner();
+                OnMouseDragOver = new ContinueDrop();
                 OnMouseDragLeave = new QueryDragDropEffects(QueryDragDropEffectMode.Leave);
                 OnMouseDrop = new BeginDrop();
 

@@ -149,7 +149,7 @@ namespace FileExplorer.BaseControls
         MouseButtonEventArgs _mouseDownEvent = null;
         void Control_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton != MouseButton.Left || e.ClickCount > 1)
+            if (e.ClickCount > 1)
                 return;
             bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;
             bool isOverScrollBar = UITools.FindAncestor<ScrollBar>(e.OriginalSource as DependencyObject) != null;

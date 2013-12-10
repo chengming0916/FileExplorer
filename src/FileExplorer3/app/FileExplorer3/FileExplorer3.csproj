@@ -172,6 +172,7 @@
     <Compile Include="Defines\AttachedProperties.cs" />
     <None Include="UserControls\Notused\DragDrop\IRoutedEventHandler.cs" />
     <Compile Include="UserControls\UIEvent\CommonCommands.cs" />
+    <Compile Include="UserControls\UIEvent\DragScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\IFileDropItem.cs" />
     <Compile Include="UserControls\UIEvent\NonsealedDataObject.cs" />
     <Compile Include="UserControls\UIEvent\UIEventAdapter.cs" />
@@ -193,7 +194,7 @@
     <Compile Include="UserControls\SelectionHelper.cs" />
     <Compile Include="UserControls\UIEvent\UIAttachedProperties.cs" />
     <Compile Include="UserControls\UIEvent\DragnDropAttachedProperties.cs" />
-    <Compile Include="UserControls\UIEvent\DragnDropScriptCommands.cs" />
+    <Compile Include="UserControls\UIEvent\DropScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\MultiSelectAttachedProperties.cs" />
     <Compile Include="UserControls\UIEvent\MultiSelectEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\MultiSelectScriptCommands.cs" />

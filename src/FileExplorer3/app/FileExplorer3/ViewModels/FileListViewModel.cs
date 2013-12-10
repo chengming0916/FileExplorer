@@ -230,17 +230,17 @@ namespace FileExplorer.ViewModels
 
         public DragDropEffects QueryDrop(IDataObject da)
         {
-            throw new NotImplementedException();
+            return Profile.QueryDrop(Profile.GetEntryModels(da));
         }
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
         {
-            throw new NotImplementedException();
+            return Profile.GetEntryModels(da).Select(em => EntryViewModel.FromEntryModel(em));
         }
 
         public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
         {
-            throw new NotImplementedException();
+            return Profile.Drop(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel), da, allowedEffects);
         }
 
         #endregion

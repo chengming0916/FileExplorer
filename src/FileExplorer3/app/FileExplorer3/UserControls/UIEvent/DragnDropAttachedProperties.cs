@@ -82,6 +82,117 @@ namespace FileExplorer.Defines
 
         #endregion
 
+
+        public enum DragMethod { None, Normal, Menu }
+        #region DragMethod
+
+        /// <summary>
+        /// This is assigned in DoDragDrop, this attached property is set to sender control.
+        /// EndDrag access this, if it's not None (drag to elsewhere), 
+        /// </summary>
+        public static DependencyProperty DragMethodProperty =
+       DependencyProperty.RegisterAttached("DragMethod", typeof(DragMethod), typeof(AttachedProperties), new PropertyMetadata(DragMethod.Normal));
+
+
+        public static DragMethod GetDragMethod(DependencyObject target)
+        {
+            return (DragMethod)target.GetValue(DragMethodProperty);
+        }
+
+        public static void SetDragMethod(DependencyObject target, DragMethod value)
+        {
+            target.SetValue(DragMethodProperty, value);
+        }
+
+        #endregion
+
+       // [Flags]
+       // public enum DropMethod : int { Normal, Menu }
+       // #region DropMethod
+
+       // /// <summary>
+       // /// This is assigned in DoDragDrop, this attached property is set to sender control.
+       // /// EndDrag access this, if it's not None (drag to elsewhere), 
+       // /// </summary>
+       // public static DependencyProperty DropMethodProperty =
+       //DependencyProperty.RegisterAttached("DropMethod", typeof(DropMethod), typeof(AttachedProperties), new PropertyMetadata(DropMethod.Normal));
+
+
+       // public static DropMethod GetDropMethod(DependencyObject target)
+       // {
+       //     return (DropMethod)target.GetValue(DropMethodProperty);
+       // }
+
+       // public static void SetDropMethod(DependencyObject target, DropMethod value)
+       // {
+       //     target.SetValue(DropMethodProperty, value);
+       // }
+
+       // #endregion
+
+
+        public enum DragState { None, Drag, Menu, Drop }
+        #region DragState
+
+        /// <summary>
+        /// This is assigned in DoDragDrop, this attached property is set to sender control.
+        /// EndDrag access this, if it's not None (drag to elsewhere), 
+        /// </summary>
+        public static DependencyProperty DragStateProperty =
+       DependencyProperty.RegisterAttached("DragState", typeof(DragState), typeof(AttachedProperties), new PropertyMetadata(DragState.None));
+
+
+        public static DragState GetDragState(DependencyObject target)
+        {
+            return (DragState)target.GetValue(DragStateProperty);
+        }
+
+        public static void SetDragState(DependencyObject target, DragState value)
+        {
+            target.SetValue(DragStateProperty, value);
+        }
+
+        #endregion
+
+        public enum DropState
+        {
+            /// <summary>
+            /// Not in drop state.
+            /// </summary>
+            None,
+            /// <summary>
+            /// Item is dropping (IsupportDrop.Drop is calling)
+            /// </summary>
+            Drop,
+            /// <summary>
+            /// Menu is displaying, continue drag drop loop (in DoDragDrop.OnQueryContinueDrag).
+            /// </summary>
+            Menu
+        }
+        #region DropState
+
+        /// <summary>
+        /// This is assigned in ContinueDrop, which shows a menu
+        /// EndDrag access this, if it's not None (drag to elsewhere), 
+        /// </summary>
+        public static DependencyProperty DropStateProperty =
+            DependencyProperty.RegisterAttached("DropState", typeof(DropState), typeof(AttachedProperties),
+                new PropertyMetadata(DropState.None));
+
+
+        public static DropState GetDropState(DependencyObject target)
+        {
+            return (DropState)target.GetValue(DropStateProperty);
+        }
+
+        public static void SetDropState(DependencyObject target, DropState value)
+        {
+            target.SetValue(DropStateProperty, value);
+        }
+
+        #endregion
+
+
         #region IsDraggingOver
 
         public static DependencyProperty IsDraggingOverProperty =

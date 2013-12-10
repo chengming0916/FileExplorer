@@ -52,7 +52,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public static T GetDataContext<T>(ParameterDic pm, out FrameworkElement ele, Func<T, bool> filter = null)
         {
             var pd = pm.AsUIParameterDic();
-            var eventArgs = pd.EventArgs as RoutedEventArgs;            
+            var eventArgs = pd.EventArgs as RoutedEventArgs;
             var origSource = eventArgs.OriginalSource as FrameworkElement;
             ele = null;
 
@@ -77,14 +77,14 @@ namespace FileExplorer.BaseControls.DragnDrop
 
             }
 
-                
-            
+
+
 
             return default(T);
 
         }
 
-        
+
 
     }
 
@@ -130,7 +130,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                 return ResultCommand.NoError;
 
             if (isd != null)
-            {                
+            {
                 var previousDraggables = AttachedProperties.GetSelectedDraggables(ic);
                 var currentDraggables = isd.GetDraggables().ToList();
 
@@ -179,68 +179,52 @@ namespace FileExplorer.BaseControls.DragnDrop
             AttachedProperties.SetStartDraggingItem(ic, null);
             AttachedProperties.SetIsDragging(ic, false);
 
-            return new DetachAdorner();
-        }
-    }
-
-
-    public enum QueryDragDropEffectMode { Enter, Leave }
-    public class QueryDragDropEffects : ScriptCommandBase
-    {
-        private QueryDragDropEffectMode _mode;
-        public QueryDragDropEffects(QueryDragDropEffectMode mode) :
-            base("QueryDragDropEffects", "EventArgs") { _mode = mode; }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;            
-            var eventArgs = pd.EventArgs as DragEventArgs;
-
-            FrameworkElement ele;
-            var isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
-            if (isd != null)
+            switch (AttachedProperties.GetDragMethod(ic))
             {
-                if (_mode == QueryDragDropEffectMode.Enter)
-                {
-                    AttachedProperties.SetDraggingOverItem(ic, ele);
-                    eventArgs.Effects = (eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data));                    
-                    eventArgs.Handled = true;                    
-                    return new AttachAdorner();
-                }
-                else
-                {
-                    AttachedProperties.SetDraggingOverItem(ic, null);
-                    return new HideAdorner();
-                }
+                case AttachedProperties.DragMethod.Menu:
+                    return ResultCommand.NoError; //Don't detach adorner.
+                default:
+                    return new DetachAdorner();
             }
-            return ResultCommand.NoError;
         }
     }
+
+
 
     public class UpdateAdorner : ScriptCommandBase
     {
-        public UpdateAdorner() : base("UpdateAdorner", "EventArgs") { }
+        public UpdateAdorner(bool updateDraggables)
+            : base("UpdateAdorner", "EventArgs")
+        { _updateDraggables = updateDraggables; }
+
+        private bool _updateDraggables;
+        private static IDataObject _previousDataObject = null;
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;            
+            var ic = pd.Sender as ItemsControl;
             var eventArgs = pd.EventArgs as DragEventArgs;
             Window parentWindow = Window.GetWindow(ic);
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
 
             if (isd != null)
-            {                
+            {
                 var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
                 if (dragAdorner != null)
                 {
-                    dragAdorner.DraggingItems = isd.QueryDropDraggables(eventArgs.Data);
+                    if (_updateDraggables && !eventArgs.Data.Equals(_previousDataObject))
+                    {
+                        var newDraggables = isd.QueryDropDraggables(eventArgs.Data);
+                        dragAdorner.DraggingItems = newDraggables;
+                        var hintTemplate = AttachedProperties.GetDragItemTemplate(ic);
+                        dragAdorner.DraggingItemTemplate = hintTemplate ?? ic.ItemTemplate;
+
+                        _previousDataObject = eventArgs.Data;
+                    }
                     dragAdorner.PointerPosition = eventArgs.GetPosition(parentWindow);
                     dragAdorner.IsDragging = true;
-                    var hintTemplate = AttachedProperties.GetDragItemTemplate(ic);                    
-                    dragAdorner.DraggingItemTemplate = hintTemplate ?? ic.ItemTemplate;
+
                 }
             }
 
@@ -261,8 +245,8 @@ namespace FileExplorer.BaseControls.DragnDrop
             Window parentWindow = Window.GetWindow(ic);
 
             var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
-            if (dragAdorner != null)            
-                dragAdorner.IsDragging = false;            
+            if (dragAdorner != null)
+                dragAdorner.IsDragging = false;
 
             return ResultCommand.NoError;
         }
@@ -284,7 +268,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             {
                 pm["DragDropAdorner"] = AttachedProperties.GetDragAdorner(parentWindow);
                 if (pm["DragDropAdorner"] != null)
-                    return new UpdateAdorner();
+                    return new UpdateAdorner(true);
 
                 AdornerDecorator decorator = UITools.FindVisualChildByName<AdornerDecorator>
                     (parentWindow, "PART_DragDropAdorner");
@@ -298,7 +282,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                     pm["DragDropAdorner"] = adorner;
                     adornerLayer.Add(adorner);
                     AttachedProperties.SetDragAdorner(parentWindow, adorner);
-                    return new UpdateAdorner();
+                    return new UpdateAdorner(true);
                 }
             }
 
@@ -342,32 +326,6 @@ namespace FileExplorer.BaseControls.DragnDrop
         }
     }
 
-    public class BeginDrop : ScriptCommandBase
-    {
-        public BeginDrop() : base("BeginDrop", "EventArgs") { }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-
-            AttachedProperties.SetDraggingOverItem(ic, null);
-            var eventArgs = pd.EventArgs as DragEventArgs;
-            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
-            if (isd != null)
-            {                
-                eventArgs.Effects = eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data);
-                if (eventArgs.Effects != DragDropEffects.None)
-                {
-                    IEnumerable<IDraggable> draggables = isd.QueryDropDraggables(eventArgs.Data);
-                    isd.Drop(draggables, eventArgs.Data, eventArgs.AllowedEffects);
-                    eventArgs.Handled = true;
-                }                
-            }
-
-            return ResultCommand.NoError;
-        }
-    }
 
     #region Update/CheckIsDragging
 
@@ -470,13 +428,13 @@ namespace FileExplorer.BaseControls.DragnDrop
 
     }
 
-
     public class DoDragDrop : ScriptCommandBase
     {
         private IDataObject _dataObj;
         private ItemsControl _ic;
         private ISupportDrag _isd;
-
+        private AttachedProperties.DragMethod _dragMethod;
+        private AttachedProperties.DragState _dragState;
 
         public DoDragDrop(ItemsControl ic, ISupportDrag isd) : base("DoDragDrop") { _ic = ic; _isd = isd; }
 
@@ -490,27 +448,66 @@ namespace FileExplorer.BaseControls.DragnDrop
             {
                 e.Action = DragAction.Cancel;
                 control.AllowDrop = true;
-
-                //control.QueryContinueDrag -= new QueryContinueDragEventHandler(OnQueryContinueDrag);
-                //HideAdorner(control);
             }
             else
-                //Drop!
                 if (e.KeyStates == DragDropKeyStates.None)
                 {
-                    _dataObj.SetData(ShellClipboardFormats.CFSTR_INDRAGLOOP, 0);
-                    e.Action = DragAction.Drop;
-                    control.AllowDrop = true;
-
-                    //control.QueryContinueDrag -= new QueryContinueDragEventHandler(OnQueryContinueDrag);
-                    //HideAdorner(control);
+                    if (_dragMethod == AttachedProperties.DragMethod.Menu &&
+                        _dataObj.GetDataPresent(typeof(AttachedProperties.DropState)))
+                    {
+                        var dropState = (AttachedProperties.DropState)_dataObj.GetData(typeof(AttachedProperties.DropState));
+                        switch (dropState)
+                        {
+                            case AttachedProperties.DropState.None:
+                                //Tell dest to show menu.
+                                setDragState(AttachedProperties.DragState.Menu);
+                                e.Action = DragAction.Continue;
+                                break;
+                            case AttachedProperties.DropState.Menu:
+                                //Dont drop yet, the menu is showing.
+                                e.Action = DragAction.Continue;
+                                Mouse.Capture(null);
+                                break;
+                            case AttachedProperties.DropState.Drop:
+                                //Drop!
+                                setDragState(AttachedProperties.DragState.Drop);
+                                e.Action = DragAction.Drop;
+                                break;
+                        }
+                    }
+                    else //Drop!
+                    {
+                        setDragState(AttachedProperties.DragState.Drop);
+                        _dataObj.SetData(ShellClipboardFormats.CFSTR_INDRAGLOOP, 0);
+                        e.Action = DragAction.Drop;
+                    }
                 }
                 else
                     e.Action = DragAction.Continue;
 
+            _dataObj.SetData(typeof(DragDropKeyStates), e.KeyStates);
+
+
             e.Handled = true;
-            //Debug.WriteLine(e.Action);
-            //base.OnQueryContinueDrag(e);
+        }
+
+        private void setDragState(AttachedProperties.DragState dragState)
+        {
+            _dragState = dragState;
+            //UI may want this information.
+            AttachedProperties.SetDragState(_ic, _dragState);
+            //Inform the destination of the drag state.
+            _dataObj.SetData(typeof(AttachedProperties.DragState), _dragState);
+        }
+
+        private void setDragMethod()
+        {
+            _dragMethod = AttachedProperties.DragMethod.Normal;
+            if (Mouse.RightButton == MouseButtonState.Pressed)
+                _dragMethod = AttachedProperties.DragMethod.Menu;
+
+            //This is for EndDrag to now show adorner.
+            AttachedProperties.SetDragMethod(_ic, _dragMethod);
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
@@ -524,8 +521,13 @@ namespace FileExplorer.BaseControls.DragnDrop
             System.Windows.DragDrop.AddQueryContinueDragHandler(_ic,
                   new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
-            DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic,
-                 _dataObj, effect);
+            //Determine and set the desired drag method. (Normal, Menu)
+            setDragMethod();
+            //Inform Drag is starting.
+            setDragState(AttachedProperties.DragState.Drag);
+
+            //Start the DragDrop.
+            DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic, _dataObj, effect);
 
             System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic,
                   new QueryContinueDragEventHandler(OnQueryContinueDrag));
@@ -540,39 +542,5 @@ namespace FileExplorer.BaseControls.DragnDrop
             return ResultCommand.NoError;
         }
     }
-
-
-    //public class SetHandledIfDragging : ScriptCommandBase
-    //{
-    //    public SetHandledIfDragging() : base("SetHandledIfDragging", "EventArgs") { }
-
-    //    public override IScriptCommand Execute(ParameterDic pm)
-    //    {
-    //        var pd = pm.AsUIParameterDic();
-    //        var ic = pd.Sender as ItemsControl;
-    //        Control c = pd["StartSelectedItem"] as Control;
-    //        if (c != null && c.DataContext is IDraggable && (c.DataContext as IDraggable).IsSelected)
-    //            return new SetEventIsHandled(ResultCommand.NoError);
-    //        else return ResultCommand.NoError;
-    //    }
-    //}
-
-
-    //public class PrepareDataObject : ScriptCommandBase
-    //{
-    //    public PrepareDataObject() : base("PrepareDataObject") { }
-
-    //    public override IScriptCommand Execute(ParameterDic pm)
-    //    {
-    //        var pd = pm.AsUIParameterDic();
-    //        var ic = pd.Sender as ItemsControl;
-    //        var isd = ic.DataContext as ISupportDrag;
-
-    //        pm["DataObject"] = isd.GetDataObject();
-
-    //        return ResultCommand.NoError;
-    //    }
-
-    //}
 
 }

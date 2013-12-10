@@ -37,11 +37,22 @@ namespace FileExplorer.Models
 
         Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
 
+
+        #region Drag and Drop
+
         IDataObject GetDataObject(IEnumerable<IEntryModel> entries);
 
         DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries);
 
-        void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect);
+        void OnDragCompleted(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects effect);
+
+        IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject);
+
+        DragDropEffects QueryDrop(IEnumerable<IEntryModel> entries);
+
+        DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects);
+
+        #endregion
 
         //Task<ImageSource> GetIconAsync(IEntryModel entry, int size);
 
