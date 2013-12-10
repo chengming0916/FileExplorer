@@ -434,7 +434,6 @@ namespace FileExplorer.BaseControls.DragnDrop
         private ItemsControl _ic;
         private ISupportDrag _isd;
         private AttachedProperties.DragMethod _dragMethod;
-        private AttachedProperties.DragState _dragState;
 
         public DoDragDrop(ItemsControl ic, ISupportDrag isd) : base("DoDragDrop") { _ic = ic; _isd = isd; }
 
@@ -452,52 +451,20 @@ namespace FileExplorer.BaseControls.DragnDrop
             else
                 if (e.KeyStates == DragDropKeyStates.None)
                 {
-                    if (_dragMethod == AttachedProperties.DragMethod.Menu &&
-                        _dataObj.GetDataPresent(typeof(AttachedProperties.DropState)))
-                    {
-                        var dropState = (AttachedProperties.DropState)_dataObj.GetData(typeof(AttachedProperties.DropState));
-                        switch (dropState)
-                        {
-                            case AttachedProperties.DropState.None:
-                                //Tell dest to show menu.
-                                setDragState(AttachedProperties.DragState.Menu);
-                                e.Action = DragAction.Continue;
-                                break;
-                            case AttachedProperties.DropState.Menu:
-                                //Dont drop yet, the menu is showing.
-                                e.Action = DragAction.Continue;
-                                Mouse.Capture(null);
-                                break;
-                            case AttachedProperties.DropState.Drop:
-                                //Drop!
-                                setDragState(AttachedProperties.DragState.Drop);
-                                e.Action = DragAction.Drop;
-                                break;
-                        }
-                    }
-                    else //Drop!
-                    {
-                        setDragState(AttachedProperties.DragState.Drop);
-                        _dataObj.SetData(ShellClipboardFormats.CFSTR_INDRAGLOOP, 0);
-                        e.Action = DragAction.Drop;
-                    }
+                    _dataObj.SetData(ShellClipboardFormats.CFSTR_INDRAGLOOP, 0);
+                    e.Action = DragAction.Drop;
                 }
                 else
                     e.Action = DragAction.Continue;
 
             _dataObj.SetData(typeof(DragDropKeyStates), e.KeyStates);
 
-
             e.Handled = true;
         }
 
-        private void setDragState(AttachedProperties.DragState dragState)
+        private void OnPreviewDrop(object sender, QueryContinueDragEventArgs e)
         {
-            _dragState = dragState;
-            //UI may want this information.
-            AttachedProperties.SetDragState(_ic, _dragState);
-            //Inform the destination of the drag state.
-            _dataObj.SetData(typeof(AttachedProperties.DragState), _dragState);
+
         }
 
         private void setDragMethod()
@@ -508,6 +475,8 @@ namespace FileExplorer.BaseControls.DragnDrop
 
             //This is for EndDrag to now show adorner.
             AttachedProperties.SetDragMethod(_ic, _dragMethod);
+
+            _dataObj.SetData(typeof(AttachedProperties.DragMethod), _dragMethod);
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
@@ -518,29 +487,41 @@ namespace FileExplorer.BaseControls.DragnDrop
             _dataObj = _isd.GetDataObject(draggables);
             var effect = _isd.QueryDrag(draggables);
 
-            System.Windows.DragDrop.AddQueryContinueDragHandler(_ic,
-                  new QueryContinueDragEventHandler(OnQueryContinueDrag));
+            System.Windows.DragDrop.AddQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
+            _dataObj.SetData(typeof(ISupportDrag), _isd);
             //Determine and set the desired drag method. (Normal, Menu)
             setDragMethod();
-            //Inform Drag is starting.
-            setDragState(AttachedProperties.DragState.Drag);
 
             //Start the DragDrop.
             DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic, _dataObj, effect);
 
-            System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic,
-                  new QueryContinueDragEventHandler(OnQueryContinueDrag));
+            System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
-            if (resultEffect != DragDropEffects.None)
-                _isd.OnDragCompleted(draggables, _dataObj, resultEffect);
-
+            var dataObj = _dataObj;
             _dataObj = null;
+            return new NotifyDropCompleted(_isd, draggables, dataObj, resultEffect);
+        }
+    }
 
-            //pd.EventArgs.Handled = true;
+    public class NotifyDropCompleted : ScriptCommandBase
+    {
+        private IEnumerable<IDraggable> _draggables;
+        private IDataObject _dataObj;
+        private DragDropEffects _resultEffect;
+        private ISupportDrag _isd;
+
+        public NotifyDropCompleted(ISupportDrag isd, IEnumerable<IDraggable> draggables, IDataObject dataObj,
+            DragDropEffects resultEffect)
+            : base("NotifyDropCompleted")
+        { _isd = isd; _draggables = draggables; _dataObj = dataObj; _resultEffect = resultEffect; }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            if (_resultEffect != DragDropEffects.None)
+                _isd.OnDragCompleted(_draggables, _dataObj, _resultEffect);
 
             return ResultCommand.NoError;
         }
     }
-
 }

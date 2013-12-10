@@ -43,13 +43,13 @@ namespace FileExplorer.BaseControls
             SetSupportedDragDropEffects(DragDropEffects.All);
 
 
-            this.AddHandler(MenuItem.ClickEvent, (RoutedEventHandler)((o,e) =>
+            this.ContextMenu.AddHandler(MenuItem.ClickEvent, (RoutedEventHandler)((o, e) =>
             {
-                MenuItem mi = o as MenuItem;
+                MenuItem mi =  e.Source as MenuItem;
                 if (mi.Tag is DragDropEffects)
                 {
                     this.SetValue(DragDropEffectProperty, mi.Tag);
-                    _canvas.ContextMenu.StaysOpen = false;
+                    this.ContextMenu.StaysOpen = false;
                 }
             }));
 
@@ -66,7 +66,7 @@ namespace FileExplorer.BaseControls
         {
             ContextMenu.Items.Clear();
             foreach (var e in Enum.GetValues(typeof(DragDropEffects)))
-                if (effects.HasFlag((DragDropEffects)e))
+                if ((DragDropEffects)e != DragDropEffects.None && effects.HasFlag((DragDropEffects)e))
                     ContextMenu.Items.Add(new MenuItem() { Tag = e, Header = e.ToString() });
         }
 
