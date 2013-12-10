@@ -184,6 +184,40 @@ namespace FileExplorer.Models
 
         }
 
+
+        public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
+        {
+            if (dataObject.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] fileNameList = dataObject.GetData(DataFormats.FileDrop) as string[];                
+                foreach (var fn in fileNameList)
+                {
+                    FileSystemInfoExModel vm;
+                    try
+                    {
+                        vm = new FileSystemInfoExModel(this, FileSystemInfoEx.FromString(fn));
+                    }
+                    catch
+                    {
+                        vm = null;
+                    }
+
+                    if (vm != null)
+                        yield return vm;
+                }
+            }
+        }
+
+        public DragDropEffects QueryDrop(IEnumerable<IEntryModel> entries)
+        {
+            return DragDropEffects.Copy;
+        }
+
+        public DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
         {
             throw new NotImplementedException();

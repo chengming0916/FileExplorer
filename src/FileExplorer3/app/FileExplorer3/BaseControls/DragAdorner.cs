@@ -39,8 +39,19 @@ namespace FileExplorer.BaseControls
             Canvas.SetTop(_items, -50);
             Canvas.SetLeft(_items, -50);
 
-            _canvas.ContextMenu = new ContextMenu() { PlacementTarget = _items };
-            _canvas.ContextMenu.Items.Add("AAA");
+            this.ContextMenu = new ContextMenu() { PlacementTarget = _items };
+            SetSupportedDragDropEffects(DragDropEffects.All);
+
+
+            this.AddHandler(MenuItem.ClickEvent, (RoutedEventHandler)((o,e) =>
+            {
+                MenuItem mi = o as MenuItem;
+                if (mi.Tag is DragDropEffects)
+                {
+                    this.SetValue(DragDropEffectProperty, mi.Tag);
+                    _canvas.ContextMenu.StaysOpen = false;
+                }
+            }));
 
             _canvas.Children.Add(_items);
 
@@ -50,6 +61,14 @@ namespace FileExplorer.BaseControls
 
 
         #region Methods
+
+        public void SetSupportedDragDropEffects(DragDropEffects effects)
+        {
+            ContextMenu.Items.Clear();
+            foreach (var e in Enum.GetValues(typeof(DragDropEffects)))
+                if (effects.HasFlag((DragDropEffects)e))
+                    ContextMenu.Items.Add(new MenuItem() { Tag = e, Header = e.ToString() });
+        }
 
         protected override int VisualChildrenCount { get { return 1; } }
 
@@ -142,6 +161,19 @@ namespace FileExplorer.BaseControls
         #endregion
 
         #region Public Properties
+
+        public DragDropEffects DragDropEffect
+        {
+            get { return (DragDropEffects)GetValue(DragDropEffectProperty); }
+            set { SetValue(DragDropEffectProperty, value); }
+        }
+        
+        public static readonly DependencyProperty DragDropEffectProperty =
+            DependencyProperty.Register("DragDropEffect", typeof(DragDropEffects), typeof(DragAdorner),
+            new UIPropertyMetadata(DragDropEffects.None));
+
+
+
 
         public IEnumerable DraggingItems
         {

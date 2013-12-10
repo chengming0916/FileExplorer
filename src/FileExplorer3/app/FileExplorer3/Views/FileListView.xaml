@@ -7,6 +7,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:uc="clr-namespace:FileExplorer.UserControls"
              xmlns:bc="clr-namespace:FileExplorer.BaseControls"
+             xmlns:def="clr-namespace:FileExplorer.Defines"
              xmlns:m="clr-namespace:FileExplorer.Models"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -16,6 +17,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Views.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -31,12 +33,14 @@
                      ItemAnimationDuration="00:00:00"
                      SortDirection="{Binding SortDirection}"
                      SortBy="{Binding SortBy}"
-                    
+                     AllowDrop="True"
                      cal:View.ApplyConventions="False"
                      cal:Message.Attach = 
                        "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)];
                        [Event FilterChangedEvent] = [Action OnFilterChanged()];
                        [Event UnselectAllRequired] = [Action UnselectAll()]"
+                       
+                     def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
                        >
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />

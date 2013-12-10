@@ -24,6 +24,7 @@
                 <ContentControl Name="Breadcrumb" />
             </DockPanel>
 
+            <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="2" Grid.RowSpan="3" />
             <ContentControl Grid.Column="0" Grid.Row="1"  Name="DirectoryTree" Margin="2" />
             <ContentControl Grid.Column="1" Grid.Row="1" Name="FileList" Margin="2" />
 
