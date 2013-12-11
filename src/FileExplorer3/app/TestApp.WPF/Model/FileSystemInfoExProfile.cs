@@ -177,7 +177,7 @@ namespace FileExplorer.Models
 
         public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
         {
-            return DragDropEffects.Copy;
+            return DragDropEffects.Copy | DragDropEffects.Move;
         }
 
         public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)

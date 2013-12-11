@@ -14,8 +14,7 @@ namespace TestApp.WPF
     public partial class App : Application
     {
         protected override void OnStartup(StartupEventArgs e)
-        {
-            FileExplorer.UnitTests.ActionTest.WaitUntilPropertyChanged_Test();
+        {            
             base.OnStartup(e); 
         }
     }
