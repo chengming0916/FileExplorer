@@ -106,6 +106,9 @@ namespace FileExplorer.BaseControls.DragnDrop
             var eventArgs = pd.EventArgs as MouseEventArgs;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
 
+            if (UITools.FindAncestor<ToggleButton>(eventArgs.OriginalSource as DependencyObject) != null)
+                return ResultCommand.NoError;
+
             if (isd != null)
             {
                 UITools.SetItemUnderMouseToAttachedProperty(ic, eventArgs.GetPosition(scp),
@@ -413,7 +416,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
                 AttachedProperties.SetSelectedDraggables(ic,
                     isd.GetDraggables().ToList());
-                //pd.EventArgs.Handled = true;
+                pd.EventArgs.Handled = true;
             }
 
             return ResultCommand.NoError;

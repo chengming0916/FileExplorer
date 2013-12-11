@@ -226,9 +226,12 @@ namespace FileExplorer.BaseControls.MultiSelect
             : base("ObtainPointerPosition")
         { }
 
-        private Point add(Point pt1, Point pt2)
+        private Point add(params Point[] pts)
         {
-            return new Point(pt1.X + pt2.X, pt1.Y + pt2.Y);
+            Point retVal = new Point(0, 0);
+            foreach (var pt in pts)
+                retVal = new Point(retVal.X + pt.X, retVal.Y + pt.Y);
+            return retVal;            
         }
 
         private Point adjustScrollBarPosition(Point pt, Point startScrollbarPosition, Point currentScrollbarPosition)
@@ -262,7 +265,8 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             //SelectionBounds that used to calcuate selected items must take scroll bar position into account.                       
             if (!pm.ContainsKey("SelectionBoundsAdjusted") || !(pm["SelectionBoundsAdjusted"] is Rect))
-                pd["SelectionBoundsAdjusted"] = new Rect(add((Point)pd["StartPosition"], (Point)pd["StartScrollbarPosition"]),
+                pd["SelectionBoundsAdjusted"] = new Rect(
+                    add((Point)pd["StartPosition"], (Point)pd["StartScrollbarPosition"]),
                     add((Point)pd["CurrentPosition"], (Point)pd["CurrentScrollbarPosition"]));
 
             if (!pm.ContainsKey("SelectionBounds") || !(pm["SelectionBounds"] is Rect))
@@ -672,9 +676,19 @@ namespace FileExplorer.BaseControls.MultiSelect
                 return ResultCommand.Error(new Exception("Adorner not found."));
 
             lastAdorner.IsSelecting = AttachedProperties.GetIsSelecting(c);
+            
+            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);            
+            Point startPosition = (Point)pd["StartAdjustedPosition"];
+            Point endPosition = (Point)pd["CurrentPosition"];
+            if (gvhrp != null)
+            {
+                //If Grid Header exists, offset it's height, because the adorner include the header too.
+                startPosition.Offset(0, -gvhrp.ActualHeight);
+                endPosition.Offset(0, -gvhrp.ActualHeight);
+            }
+            lastAdorner.StartPosition = startPosition;
+            lastAdorner.EndPosition = endPosition;
 
-            lastAdorner.StartPosition = (Point)pd["StartAdjustedPosition"];
-            lastAdorner.EndPosition = (Point)pd["CurrentPosition"];
             return new AutoScroll();
         }
 
