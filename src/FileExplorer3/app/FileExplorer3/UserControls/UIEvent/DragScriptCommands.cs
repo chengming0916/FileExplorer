@@ -129,22 +129,23 @@ namespace FileExplorer.BaseControls.DragnDrop
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
 
-            if (isd != null)
-            {
-                var previousDraggables = AttachedProperties.GetSelectedDraggables(ic);
-                var currentDraggables = isd.GetDraggables().ToList();
-
-
-                if (currentDraggables.Any() && previousDraggables != null &&
-                    currentDraggables.SequenceEqual(previousDraggables))
+            if (ic.GetValue(AttachedProperties.StartDraggingItemProperty) != null)
+                if (isd != null)
                 {
-                    //Set it handled so it wont call multi-select.
-                    pd.EventArgs.Handled = true;
-                    pd.IsHandled = true;
-                    AttachedProperties.SetIsDragging(ic, true);
-                    return new DoDragDrop(ic, isd);
+                    var previousDraggables = AttachedProperties.GetSelectedDraggables(ic);
+                    var currentDraggables = isd.GetDraggables().ToList();
+
+
+                    if (currentDraggables.Any() && previousDraggables != null &&
+                        currentDraggables.SequenceEqual(previousDraggables))
+                    {
+                        //Set it handled so it wont call multi-select.
+                        pd.EventArgs.Handled = true;
+                        pd.IsHandled = true;
+                        AttachedProperties.SetIsDragging(ic, true);
+                        return new DoDragDrop(ic, isd);
+                    }
                 }
-            }
 
             return ResultCommand.NoError; //Not supported
         }
@@ -481,6 +482,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+            Debug.WriteLine(String.Format("DoDragDrop"));
             var pd = pm.AsUIParameterDic();
 
             var draggables = _isd.GetDraggables().ToList();
@@ -497,7 +499,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic, _dataObj, effect);
 
             System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));
-
+            Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
             var dataObj = _dataObj;
             _dataObj = null;
             return new NotifyDropCompleted(_isd, draggables, dataObj, resultEffect);

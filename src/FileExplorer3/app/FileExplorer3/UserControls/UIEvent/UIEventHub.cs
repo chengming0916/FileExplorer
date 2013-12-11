@@ -116,6 +116,7 @@ namespace FileExplorer.BaseControls
             FrameworkElement control = sender as FrameworkElement;
             //if (!AttachedProperties.GetIsMouseDragging(control))
             //{
+            Debug.WriteLine("Drop");
             execute(_eventProcessors, p => p.OnMouseDrop, "OnMouseDrop", sender, e);
             //}
 
