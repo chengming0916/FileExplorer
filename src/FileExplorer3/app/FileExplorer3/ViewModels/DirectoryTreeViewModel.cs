@@ -32,8 +32,11 @@ namespace FileExplorer.ViewModels
             };
             Selection = selection;
 
-            Entries.SetEntries(rootModels
-                .Select(r => new DirectoryNodeViewModel(events, this, r, null)).ToArray());   
+            DirectoryNodeViewModel[] rootViewModels = rootModels
+                .Select(r => new DirectoryNodeViewModel(events, this, r, null)).ToArray();
+            foreach (var rvm in rootViewModels)
+                rvm.Entries.IsExpanded = true;
+            Entries.SetEntries(rootViewModels);   
         }
 
         #endregion

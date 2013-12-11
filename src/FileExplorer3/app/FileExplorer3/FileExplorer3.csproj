@@ -172,6 +172,8 @@
     <Compile Include="Defines\AttachedProperties.cs" />
     <None Include="UserControls\Notused\DragDrop\IRoutedEventHandler.cs" />
     <Compile Include="UserControls\UIEvent\CommonCommands.cs" />
+    <Compile Include="UserControls\UIEvent\ISupportDrop.cs" />
+    <Compile Include="UserControls\UIEvent\ISupportDrag.cs" />
     <Compile Include="UserControls\UIEvent\DragScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\IFileDropItem.cs" />
     <Compile Include="UserControls\UIEvent\NonsealedDataObject.cs" />

@@ -22,10 +22,17 @@ namespace FileExplorer.BaseControls.DragnDrop
 {
     public static class DataContextFinder
     {
-        public static Func<ISupportDrag, bool> SupportDrag = dc => dc is ISupportDrag && dc.HasDraggables;
-        public static Func<ISupportDrop, bool> SupportDrop = dc => dc is ISupportDrop && dc.IsDroppable;
+        public static Func<object, ISupportDrag> SupportDrag = 
+            dc => (dc is ISupportDrag && (dc as ISupportDrag).HasDraggables) ? dc as ISupportDrag : 
+                (dc is ISupportDragHelper && (dc as ISupportDragHelper).DragHelper.HasDraggables) ? (dc as ISupportDragHelper).DragHelper : 
+                null;
 
-        public static T GetDataContext<T>(ParameterDic pm, Func<T, bool> filter = null)
+        public static Func<object, ISupportDrop> SupportDrop =
+            dc => (dc is ISupportDrop && (dc as ISupportDrop).IsDroppable) ? dc as ISupportDrop :
+                (dc is ISupportDropHelper && (dc as ISupportDropHelper).DropHelper.IsDroppable) ? (dc as ISupportDropHelper).DropHelper :
+                null;
+
+        public static T GetDataContext<T>(ParameterDic pm, Func<object, T> filter = null)
         {
             FrameworkElement ele;
             return GetDataContext(pm, out ele, filter);
@@ -49,7 +56,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             return ele;
         }
 
-        public static T GetDataContext<T>(ParameterDic pm, out FrameworkElement ele, Func<T, bool> filter = null)
+        public static T GetDataContext<T>(ParameterDic pm, out FrameworkElement ele, Func<object, T> filter = null)
         {
             var pd = pm.AsUIParameterDic();
             var eventArgs = pd.EventArgs as RoutedEventArgs;
@@ -57,17 +64,19 @@ namespace FileExplorer.BaseControls.DragnDrop
             ele = null;
 
             object dataContext = origSource.DataContext;
-            if (dataContext is T && filter((T)dataContext))
+            var filterResult = filter(dataContext);
+            if (filterResult != null)
             {
                 ele = GetDataContextOwner(origSource);
-                return (T)dataContext;
+                return filterResult;
             }
             else
             {
                 var ic = UITools.FindAncestor<ItemsControl>(origSource);
                 while (ic != null)
                 {
-                    if (ic.DataContext is T && filter((T)ic.DataContext))
+                    filterResult = filter(ic.DataContext);
+                    if (filterResult != null)
                     {
                         ele = GetDataContextOwner(ic);
                         return (T)ic.DataContext;
@@ -76,14 +85,8 @@ namespace FileExplorer.BaseControls.DragnDrop
                 }
 
             }
-
-
-
-
             return default(T);
-
         }
-
 
 
     }

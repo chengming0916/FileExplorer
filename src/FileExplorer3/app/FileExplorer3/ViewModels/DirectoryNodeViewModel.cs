@@ -5,12 +5,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.ViewModels.Actions;
 using FileExplorer.ViewModels.Helpers;
+using System.Windows;
 
 namespace FileExplorer.ViewModels
 {
@@ -59,7 +59,7 @@ namespace FileExplorer.ViewModels
             return new DirectoryNodeViewModel(_events, _rootModel, entryModel, this);
         }
 
-    
+      
   
 
         #endregion
@@ -90,5 +90,7 @@ namespace FileExplorer.ViewModels
 
 
 
+
+     
     }
 }
