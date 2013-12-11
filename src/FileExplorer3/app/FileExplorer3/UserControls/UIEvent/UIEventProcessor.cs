@@ -24,6 +24,7 @@ namespace FileExplorer.BaseControls
         IScriptCommand OnMouseDrop { get; }
         IScriptCommand OnMouseUp { get; }
         IScriptCommand OnPreviewMouseDown { get; }
+        IScriptCommand OnMouseDown { get; }
         IScriptCommand OnMouseMove { get; }
     }
 
@@ -34,6 +35,7 @@ namespace FileExplorer.BaseControls
         public UIEventProcessorBase()
         {
             OnMouseDrag = ScriptCommands.NoCommand;
+            OnMouseDown = ScriptCommands.NoCommand;
             OnPreviewMouseDown = ScriptCommands.NoCommand;
             OnMouseUp = ScriptCommands.NoCommand;
             OnMouseMove = ScriptCommands.NoCommand;
@@ -47,6 +49,7 @@ namespace FileExplorer.BaseControls
         public IScriptCommand OnMouseDrag { get; protected set; }
         public IScriptCommand OnMouseUp { get; protected set; }
         public IScriptCommand OnPreviewMouseDown { get; protected set; }
+        public IScriptCommand OnMouseDown { get; protected set; }
         public IScriptCommand OnMouseMove { get; protected set; }
 
         public IScriptCommand OnMouseDragEnter { get; protected set; }

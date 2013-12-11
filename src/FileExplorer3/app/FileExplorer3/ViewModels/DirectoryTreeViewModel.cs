@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
@@ -10,10 +11,28 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class DirectoryTreeViewModel : PropertyChangedBase, IDirectoryTreeViewModel, 
-        IHandle<DirectoryChangedEvent>
+
+
+ 
+
+
+    public class DirectoryTreeViewModel : PropertyChangedBase, IDirectoryTreeViewModel,
+        IHandle<DirectoryChangedEvent>, ISupportDragHelper
     {
         #region Cosntructor
+
+        #region DirectoryTreeDragHelper
+        private class DirectoryTreeDragHelper : TreeDragHelper<IDirectoryNodeViewModel, IEntryModel>
+        {
+            public DirectoryTreeDragHelper(IEntriesHelper<IDirectoryNodeViewModel> entries,
+                ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
+                : base(entries, selection,
+                ems => ems.First().Profile.QueryDrag(ems),
+                ems => ems.First().Profile.GetDataObject(ems),
+                null, d => (d as IDirectoryNodeViewModel).CurrentDirectory.EntryModel)
+            { }
+        }
+        #endregion
 
         public DirectoryTreeViewModel(IEventAggregator events, params IEntryModel[] rootModels)
         {
@@ -36,7 +55,8 @@ namespace FileExplorer.ViewModels
                 .Select(r => new DirectoryNodeViewModel(events, this, r, null)).ToArray();
             foreach (var rvm in rootViewModels)
                 rvm.Entries.IsExpanded = true;
-            Entries.SetEntries(rootViewModels);   
+            Entries.SetEntries(rootViewModels);
+            DragHelper = new DirectoryTreeDragHelper(Entries, Selection);
         }
 
         #endregion
@@ -64,12 +84,12 @@ namespace FileExplorer.ViewModels
                 SelectAsync(message.NewModel);
             }
         }
-        
+
         #endregion
 
         #region Data
 
-           
+
         private IEnumerable<IProfile> _profiles;
         private IEventAggregator _events;
 
@@ -79,9 +99,11 @@ namespace FileExplorer.ViewModels
 
         public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
-
+        public ISupportDrag DragHelper { get; set; }
 
         #endregion
+
+
 
 
 
