@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:bc="clr-namespace:FileExplorer.BaseControls"
-              xmlns:uc="clr-namespace:FileExplorer.UserControls"
+             xmlns:uc="clr-namespace:FileExplorer.UserControls"
+             xmlns:def="clr-namespace:FileExplorer.Defines"
              xmlns:m="clr-namespace:FileExplorer.Models"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -15,8 +16,8 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TreeView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
-            
+
+
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel>
@@ -31,7 +32,9 @@
         </StackPanel>-->
 
 
-        <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" BorderBrush="Transparent" >
+        <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" BorderBrush="Transparent"
+                       def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"                       
+                       >
             <uc:TreeViewEx.ItemContainerStyle>
                 <Style TargetType="{x:Type uc:TreeViewItemEx}" 
                        BasedOn="{StaticResource TreeViewItemExStyle}" >
@@ -39,6 +42,9 @@
                     <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
                 </Style>
             </uc:TreeViewEx.ItemContainerStyle>
+            <bc:UIEventAdapter.Processors>
+                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+            </bc:UIEventAdapter.Processors>
         </uc:TreeViewEx>
     </DockPanel>
 </UserControl>

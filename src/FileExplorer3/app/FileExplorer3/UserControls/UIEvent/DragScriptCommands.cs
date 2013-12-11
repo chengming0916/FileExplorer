@@ -79,7 +79,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                     if (filterResult != null)
                     {
                         ele = GetDataContextOwner(ic);
-                        return (T)ic.DataContext;
+                        return filterResult;
                     }
                     ic = UITools.FindAncestor<ItemsControl>(VisualTreeHelper.GetParent(ic));
                 }
@@ -413,7 +413,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
                 AttachedProperties.SetSelectedDraggables(ic,
                     isd.GetDraggables().ToList());
-                pd.EventArgs.Handled = true;
+                //pd.EventArgs.Handled = true;
             }
 
             return ResultCommand.NoError;

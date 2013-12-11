@@ -70,6 +70,7 @@ namespace FileExplorer.BaseControls
                 if (_isEnabled)
                 {
                     Control.PreviewMouseDown += Control_PreviewMouseDown;
+                    Control.MouseDown += Control_MouseDown;
                     Control.MouseMove += Control_MouseMove;
                     Control.MouseUp += Control_MouseUp;
 
@@ -92,6 +93,7 @@ namespace FileExplorer.BaseControls
             }
         }
 
+     
         private bool execute(IList<UIEventProcessorBase> processors, Func<IUIEventProcessor, IScriptCommand> commandFunc,
             string eventName, object sender, RoutedEventArgs e)
         {
@@ -146,6 +148,12 @@ namespace FileExplorer.BaseControls
             //    e.Handled = true;
             //}
         }
+
+        void Control_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            execute(_eventProcessors, p => p.OnMouseDown, "OnMouseDown", sender, e);
+        }
+
 
         MouseButtonEventArgs _mouseDownEvent = null;
         void Control_PreviewMouseDown(object sender, MouseButtonEventArgs e)
