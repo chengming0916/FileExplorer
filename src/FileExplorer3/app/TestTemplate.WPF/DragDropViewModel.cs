@@ -93,16 +93,18 @@ namespace TestTemplate.WPF
         }
 
 
-        public DragDropEffects QueryDrop(IDataObject da)
+
+
+        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
             var draggableModels = QueryDropDraggables(da).Cast<DragDropItemViewModel>();
             if (draggableModels.Count() == 0)
-                return DragDropEffects.None;
+                return QueryDropResult.None;
             foreach (var dm in draggableModels)
                 if (dm.Value == this.Value)
-                    return DragDropEffects.None;
-            return DragDropEffects.Move | DragDropEffects.Copy;            
-        }
+                    return QueryDropResult.None;
+            return QueryDropResult.CreateNew(DragDropEffects.Move | DragDropEffects.Copy, DragDropEffects.Move);            
+        }      
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
         {

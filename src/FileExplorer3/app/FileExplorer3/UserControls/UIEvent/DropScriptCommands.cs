@@ -42,7 +42,8 @@ namespace FileExplorer.BaseControls.DragnDrop
                 if (_mode == QueryDragDropEffectMode.Enter)
                 {
                     AttachedProperties.SetDraggingOverItem(ic, ele);
-                    eventArgs.Effects = (eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data));
+                    eventArgs.Effects = eventArgs.AllowedEffects & 
+                        isd.QueryDrop(eventArgs.Data, eventArgs.AllowedEffects).SupportedEffects;
                     eventArgs.Handled = true;
 
                     return new AttachAdorner();
@@ -108,13 +109,14 @@ namespace FileExplorer.BaseControls.DragnDrop
         private IDataObject _dataObject;
         private ISupportDrop _isDrop;
         private ISupportDrag _isDrag;
-        private DragDropEffects _supportedEffects;
+        private DragDropEffects _supportedEffects, _defaultEffect;
         private DragAdorner _dragAdorner;
 
-        public ShowAdornerContextMenu(DragDropEffects supportedEffects,
+        public ShowAdornerContextMenu(DragDropEffects supportedEffects, DragDropEffects defaultEffect,
             ISupportDrag isDrag, ISupportDrop isDrop, IDataObject dataObject)
             : base("ShowAdornerContextMenu", "EventArgs")
-        { _supportedEffects = supportedEffects; _isDrag = isDrag; _isDrop = isDrop; _dataObject = dataObject; }
+        { _supportedEffects = supportedEffects; _defaultEffect = defaultEffect;  
+            _isDrag = isDrag; _isDrop = isDrop; _dataObject = dataObject; }
 
         
         public override IScriptCommand Execute(ParameterDic pm)
@@ -135,43 +137,17 @@ namespace FileExplorer.BaseControls.DragnDrop
                         new ScriptRunner().Run(new Queue<IScriptCommand>(
                         new IScriptCommand[] {
                             new BeginDrop(_dragAdorner.DragDropEffect),
-                            new NotifyDropCompleted(_isDrag, _isDrag.GetDraggables(), _dataObject, eventArgs.Effects)
+                            new NotifyDropCompleted(_isDrag, _isDrag.GetDraggables(), _dataObject, _dragAdorner.DragDropEffect)
                         }), pm);
                     };
 
-                _dragAdorner.SetSupportedDragDropEffects(_supportedEffects);
+                _dragAdorner.SetSupportedDragDropEffects(_supportedEffects, _defaultEffect);
                 _dragAdorner.ContextMenu.AddHandler(ContextMenu.ClosedEvent, (RoutedEventHandler)ContextMenu_Closed);
                 _dragAdorner.ContextMenu.IsOpen = true;
             }
             return ResultCommand.OK;
         }
     }
-
-    //public class UpdateDragStatus : ScriptCommandBase
-    //{
-    //    AttachedProperties.DropStatus _status;
-    //    public UpdateDragStatus(AttachedProperties.DropStatus status)
-    //        : base("UpdateDragStatus", "EventArgs")
-    //    { _status = status; }
-
-    //    public override IScriptCommand Execute(ParameterDic pm)
-    //    {
-    //        var pd = pm.AsUIParameterDic();
-    //        var ic = pd.Sender as ItemsControl;
-    //        var eventArgs = pd.EventArgs as DragEventArgs;
-
-    //        //If initiate by this helper.
-    //        if (eventArgs.Data.GetDataPresent(typeof(AttachedProperties.DragMethod)))
-    //            if (((AttachedProperties.DragMethod)eventArgs.Data.GetData(typeof(AttachedProperties.DragMethod)))
-    //                == AttachedProperties.DragMethod.Menu) //Need display Menu
-    //                eventArgs.Data.SetData(typeof(AttachedProperties.DropStatus), _status);
-
-    //        switch (_status)
-    //        {
-    //            case AttachedProperties.DropStatus.Drop: return new HideAdorner();
-    //        }
-    //    }
-    //}
 
     public class BeginDrop : ScriptCommandBase
     {
@@ -197,22 +173,24 @@ namespace FileExplorer.BaseControls.DragnDrop
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
             if (isd != null)
             {
-                DragDropEffects supportedEffects = eventArgs.AllowedEffects & isd.QueryDrop(eventArgs.Data);
+                QueryDropResult queryDropResult = isd.QueryDrop(eventArgs.Data, eventArgs.AllowedEffects);
+                DragDropEffects supportedEffects = eventArgs.AllowedEffects & queryDropResult.SupportedEffects;
                 if (supportedEffects != DragDropEffects.None && !_overrideDragDropEffect.HasValue &&
                     dragMethod == AttachedProperties.DragMethod.Menu && eventArgs.Data.GetDataPresent(typeof(ISupportDrag)))
                 {
                     eventArgs.Effects = DragDropEffects.None;
                     eventArgs.Handled = true;
                     ISupportDrag isDrag = eventArgs.Data.GetData(typeof(ISupportDrag)) as ISupportDrag;
-                    return new ShowAdornerContextMenu(supportedEffects, isDrag, isd, eventArgs.Data);
+                    return new ShowAdornerContextMenu(supportedEffects, queryDropResult.PreferredEffect, isDrag, isd, eventArgs.Data);
                 }
 
-                eventArgs.Effects = _overrideDragDropEffect.HasValue ? _overrideDragDropEffect.Value : supportedEffects;
+                //If OverrideDragDropEffect is set, use it instead.
+                supportedEffects = _overrideDragDropEffect.HasValue ? _overrideDragDropEffect.Value : supportedEffects;
 
-                if (eventArgs.Effects != DragDropEffects.None)
+                if (supportedEffects != DragDropEffects.None)
                 {
                     IEnumerable<IDraggable> draggables = isd.QueryDropDraggables(eventArgs.Data);
-                    isd.Drop(draggables, eventArgs.Data, eventArgs.AllowedEffects);
+                    eventArgs.Effects = isd.Drop(draggables, eventArgs.Data, supportedEffects);
                     eventArgs.Handled = true;
                 }
 

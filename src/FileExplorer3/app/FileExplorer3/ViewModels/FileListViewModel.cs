@@ -228,9 +228,9 @@ namespace FileExplorer.ViewModels
             get { return true; }
         }
 
-        public DragDropEffects QueryDrop(IDataObject da)
+        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
-            return Profile.QueryDrop(Profile.GetEntryModels(da));
+            return Profile.QueryDrop(Profile.GetEntryModels(da), allowedEffects);
         }
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)

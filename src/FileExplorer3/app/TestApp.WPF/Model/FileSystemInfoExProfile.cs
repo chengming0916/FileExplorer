@@ -11,6 +11,7 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.UserControls.DragDrop;
+using FileExplorer.ViewModels.Helpers;
 //using FileExplorer.UserControls.DragDrop;
 using QuickZip.Converters;
 using QuickZip.UserControls.Logic.Tools.IconExtractor;
@@ -208,9 +209,10 @@ namespace FileExplorer.Models
             }
         }
 
-        public DragDropEffects QueryDrop(IEnumerable<IEntryModel> entries)
+
+        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, DragDropEffects allowedEffects)
         {
-            return DragDropEffects.Copy;
+            return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
         }
 
         public DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects)

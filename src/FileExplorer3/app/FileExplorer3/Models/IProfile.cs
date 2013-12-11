@@ -12,6 +12,7 @@ using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.BaseControls;
 using System.Windows;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Models
 {
@@ -48,8 +49,7 @@ namespace FileExplorer.Models
 
         IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject);
 
-        DragDropEffects QueryDrop(IEnumerable<IEntryModel> entries);
-
+        QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, DragDropEffects allowedEffects);        
         DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects);
 
         #endregion
