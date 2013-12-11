@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.Defines;
+using FileExplorer.ViewModels.Helpers;
 //using FileExplorer.UserControls.DragDrop;
 
 namespace FileExplorer.Models
@@ -102,7 +103,7 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
-        public DragDropEffects QueryDrop(IEnumerable<IEntryModel> entries)
+        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, DragDropEffects allowedEffects)
         {
             throw new NotImplementedException();
         }
@@ -169,6 +170,7 @@ namespace FileExplorer.Models
         {
             throw new NotImplementedException();
         }
+
 
 
 

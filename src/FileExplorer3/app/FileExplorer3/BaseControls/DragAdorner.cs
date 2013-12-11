@@ -62,12 +62,23 @@ namespace FileExplorer.BaseControls
 
         #region Methods
 
-        public void SetSupportedDragDropEffects(DragDropEffects effects)
+        public void SetSupportedDragDropEffects(DragDropEffects effects, DragDropEffects defaultEffect = DragDropEffects.Copy)
         {
             ContextMenu.Items.Clear();
             foreach (var e in Enum.GetValues(typeof(DragDropEffects)))
-                if ((DragDropEffects)e != DragDropEffects.None && effects.HasFlag((DragDropEffects)e))
-                    ContextMenu.Items.Add(new MenuItem() { Tag = e, Header = e.ToString() });
+            {
+                DragDropEffects curEffect = (DragDropEffects)e;
+                if (curEffect != DragDropEffects.None && effects.HasFlag(curEffect))
+                {
+                    var header = new TextBlock() { Text = curEffect.ToString() };
+                    if (curEffect.Equals(defaultEffect))
+                    {
+                        header.FontWeight = FontWeights.Bold;
+                        ContextMenu.Items.Insert(0, new MenuItem() { Tag = e, Header = header });
+                    }
+                    else ContextMenu.Items.Add(new MenuItem() { Tag = e, Header = header });
+                }
+            }
         }
 
         protected override int VisualChildrenCount { get { return 1; } }

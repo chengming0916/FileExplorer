@@ -409,7 +409,7 @@
                     <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}" >
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"  />
                     </Style>
-                    <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListBox}}" >
+                    <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListBox}}" >                        
                         <Setter Property="ItemTemplate" Value="{StaticResource dragnDropItemTemplate}" />
                         <Setter Property="ItemsSource" Value="{Binding Items}" />
                         <Setter Property="AllowDrop" Value="True" />

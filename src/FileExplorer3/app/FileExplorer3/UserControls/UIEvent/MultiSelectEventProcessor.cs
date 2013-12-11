@@ -13,6 +13,7 @@ namespace FileExplorer.BaseControls
     {
         public MultiSelectEventProcessor()
         {
+            OnPreviewMouseDown = new SetHandledIfNotFocused();
             OnMouseDrag = new BeginSelect();
             OnMouseMove = new ContinueSelect();
             OnMouseUp = new EndSelect();

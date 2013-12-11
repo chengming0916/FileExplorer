@@ -55,6 +55,39 @@ namespace FileExplorer.BaseControls.MultiSelect
     #region Entry Point - Begin/Continue/EndSelect
 
 
+    public class SetHandledIfNotFocused : ScriptCommandBase
+    {
+        public SetHandledIfNotFocused()
+            : base("SetHandledIfNotFocused", "EventArgs")
+        {
+            
+        }
+        public ICommand UnselectCommand { get; set; }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;
+            var scp = ControlUtils.GetScrollContentPresenter(ic);
+            var eventArgs = pd.EventArgs as MouseEventArgs;
+
+            if (!ic.IsKeyboardFocusWithin)
+            {
+                var itemUnderMouse = UITools.GetItemUnderMouse(ic, eventArgs.GetPosition(scp));
+
+                if ((itemUnderMouse is ListBoxItem && (itemUnderMouse as ListBoxItem).IsSelected) ||
+                    (itemUnderMouse is TreeViewItem && (itemUnderMouse as TreeViewItem).IsSelected))
+                {
+                    ic.Focus();
+                    eventArgs.Handled = true;
+                }
+            }
+
+            return ResultCommand.NoError;
+        }
+    }
+
+
     /// <summary>
     /// When select started, AttachAdorner, SetStartPosition, Set StartSelectedItem 
     /// Then Mouse.Capture.
@@ -71,7 +104,7 @@ namespace FileExplorer.BaseControls.MultiSelect
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
+            var c = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(c);
             var eventArgs = pd.EventArgs as MouseEventArgs;
 
