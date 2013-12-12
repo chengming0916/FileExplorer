@@ -230,7 +230,7 @@ namespace FileExplorer.ViewModels
 
         public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
-            return Profile.QueryDrop(Profile.GetEntryModels(da), allowedEffects);
+            return Profile.QueryDrop(Profile.GetEntryModels(da), CurrentDirectory.EntryModel, allowedEffects);
         }
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
@@ -240,7 +240,8 @@ namespace FileExplorer.ViewModels
 
         public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
         {
-            return Profile.Drop(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel), da, allowedEffects);
+            return Profile.OnDropCompleted(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel), da, 
+                CurrentDirectory.EntryModel, allowedEffects);
         }
 
         #endregion
@@ -266,6 +267,7 @@ namespace FileExplorer.ViewModels
         };
 
         private ColumnFilter[] _colFilters = new ColumnFilter[] { };
+        private bool _isDraggingOver;
         //new List<ListViewColumnFilter>() 
         //{
         //    new ListViewColumnFilter("Life", "EntryModel.Label"),
@@ -379,6 +381,12 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
+
+        public bool IsDraggingOver
+        {
+            get { return _isDraggingOver; }
+            set { _isDraggingOver = value; NotifyOfPropertyChange(() => IsDraggingOver); }
+        }
 
         public DragDropEffects DragDropEffects { get { return _dragDropEffects; } set { _dragDropEffects = value; } }
 

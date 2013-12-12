@@ -32,7 +32,7 @@
         </StackPanel>-->
 
 
-        <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" BorderBrush="Transparent"
+        <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" BorderBrush="Transparent"                       
                        def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"                       
                        >
             <uc:TreeViewEx.ItemContainerStyle>
@@ -40,6 +40,8 @@
                        BasedOn="{StaticResource TreeViewItemExStyle}" >
                     <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
                     <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
+                    <Setter Property="AllowDrop" Value="True" />
+                    <Setter Property="def:AttachedProperties.DragItemTemplate" Value="{StaticResource GridLabelTemplate}" />
                 </Style>
             </uc:TreeViewEx.ItemContainerStyle>
             <bc:UIEventAdapter.Processors>

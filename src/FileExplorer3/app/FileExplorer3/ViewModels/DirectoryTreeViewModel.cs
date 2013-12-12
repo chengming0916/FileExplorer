@@ -22,16 +22,21 @@ namespace FileExplorer.ViewModels
         #region Cosntructor
 
         #region DirectoryTreeDragHelper
-        private class DirectoryTreeDragHelper : TreeDragHelper<IDirectoryNodeViewModel, IEntryModel>
+        private class DirectoryTreeDragHelper : TreeDragHelper<IEntryModel>
         {
             public DirectoryTreeDragHelper(IEntriesHelper<IDirectoryNodeViewModel> entries,
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
-                : base(entries, selection,
+                : base(
+                () => new [] { selection.RootSelector.SelectedViewModel.CurrentDirectory },
                 ems => ems.First().Profile.QueryDrag(ems),
                 ems => ems.First().Profile.GetDataObject(ems),
-                null, d => (d as IDirectoryNodeViewModel).CurrentDirectory.EntryModel)
+                (ems, da, eff) => ems.First().Profile.OnDragCompleted(ems,da, eff) 
+                , d => (d as IEntryViewModel).EntryModel)
             { }
         }
+
+        
+
         #endregion
 
         public DirectoryTreeViewModel(IEventAggregator events, params IEntryModel[] rootModels)

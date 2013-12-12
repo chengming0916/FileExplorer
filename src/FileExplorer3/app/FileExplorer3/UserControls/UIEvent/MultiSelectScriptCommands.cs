@@ -246,8 +246,17 @@ namespace FileExplorer.BaseControls.MultiSelect
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
 
+            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
+            Func<Point, Point> adjustGridHeaderPosition = (pt) =>
+                {
+                    //Deduct Grid View Header from the position.
+                    if (gvhrp != null)
+                        pt.Offset(0, -gvhrp.ActualHeight);
+                    return pt;
+                };
+
             if (!(pd.ContainsKey("StartPosition")))
-                pd["StartPosition"] = AttachedProperties.GetStartPosition(c);
+                pd["StartPosition"] = adjustGridHeaderPosition(AttachedProperties.GetStartPosition(c));
 
             if (!(pd.ContainsKey("StartScrollbarPosition")))
                 pd["StartScrollbarPosition"] = AttachedProperties.GetStartScrollbarPosition(c);
@@ -256,7 +265,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                 pd["CurrentScrollbarPosition"] = ControlUtils.GetScrollbarPosition(scp);
 
             if (!(pd.ContainsKey("CurrentPosition")))
-                pd["CurrentPosition"] = Mouse.GetPosition(c);
+                pd["CurrentPosition"] = adjustGridHeaderPosition(Mouse.GetPosition(c));
 
             //These adjusted position for used in visual only.
             if (!(pd.ContainsKey("StartAdjustedPosition")))
@@ -271,7 +280,7 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             if (!pm.ContainsKey("SelectionBounds") || !(pm["SelectionBounds"] is Rect))
                 pd["SelectionBounds"] = new Rect((Point)pd["StartPosition"], (Point)pd["CurrentPosition"]);
-
+         
             return new FindSelectedItems();
         }
     }
@@ -676,18 +685,9 @@ namespace FileExplorer.BaseControls.MultiSelect
                 return ResultCommand.Error(new Exception("Adorner not found."));
 
             lastAdorner.IsSelecting = AttachedProperties.GetIsSelecting(c);
-            
-            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);            
-            Point startPosition = (Point)pd["StartAdjustedPosition"];
-            Point endPosition = (Point)pd["CurrentPosition"];
-            if (gvhrp != null)
-            {
-                //If Grid Header exists, offset it's height, because the adorner include the header too.
-                startPosition.Offset(0, -gvhrp.ActualHeight);
-                endPosition.Offset(0, -gvhrp.ActualHeight);
-            }
-            lastAdorner.StartPosition = startPosition;
-            lastAdorner.EndPosition = endPosition;
+        
+            lastAdorner.StartPosition = (Point)pd["StartAdjustedPosition"];
+            lastAdorner.EndPosition = (Point)pd["CurrentPosition"];
 
             return new AutoScroll();
         }

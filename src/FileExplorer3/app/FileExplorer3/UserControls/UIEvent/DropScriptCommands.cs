@@ -42,7 +42,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                 if (_mode == QueryDragDropEffectMode.Enter)
                 {
                     AttachedProperties.SetDraggingOverItem(ic, ele);
-                    eventArgs.Effects = eventArgs.AllowedEffects & 
+                    eventArgs.Effects = eventArgs.AllowedEffects &
                         isd.QueryDrop(eventArgs.Data, eventArgs.AllowedEffects).SupportedEffects;
                     eventArgs.Handled = true;
 
@@ -53,6 +53,10 @@ namespace FileExplorer.BaseControls.DragnDrop
                     AttachedProperties.SetDraggingOverItem(Window.GetWindow(ic), null);
                     return new HideAdorner();
                 }
+            }
+            else
+            {
+                eventArgs.Effects = DragDropEffects.None;
             }
             return ResultCommand.NoError;
         }

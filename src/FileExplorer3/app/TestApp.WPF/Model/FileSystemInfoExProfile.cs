@@ -210,14 +210,18 @@ namespace FileExplorer.Models
         }
 
 
-        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, DragDropEffects allowedEffects)
+        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
         {
             return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
         }
 
-        public DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects)
+
+        public DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffects allowedEffects)
         {
-            throw new NotImplementedException();
+            MessageBox.Show(
+                String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
+                entries.Count(), PathEx.GetFileName(destDir.FullPath), allowedEffects));
+            return DragDropEffects.None;
         }
 
         public Task<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)

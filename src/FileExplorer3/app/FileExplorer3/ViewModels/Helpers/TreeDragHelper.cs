@@ -7,21 +7,19 @@ using System.Windows;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeDragHelper<VM, T> : ISupportDrag
-       where VM : IDraggable
+    public class TreeDragHelper<T> : ISupportDrag       
     {
 
         #region Constructor
 
-        public TreeDragHelper(IEntriesHelper<VM> entries, ITreeSelector<VM, T> selection,
-
+        public TreeDragHelper(
+            Func<IEnumerable<IDraggable>> getDraggableFunc,
             Func<IEnumerable<T>, DragDropEffects> queryDragFunc,
             Func<IEnumerable<T>, IDataObject> dataObjectFunc,
-            Action<IEnumerable<T>, DragDropEffects> dragCompletedAction,
-            Func<VM, T> convertBackFunc)
+            Action<IEnumerable<T>, IDataObject, DragDropEffects> dragCompletedAction,
+            Func<IDraggable, T> convertBackFunc)
         {
-            _entries = entries;
-            _selection = selection;
+            _getDraggableFunc = getDraggableFunc;
             _queryDragFunc = queryDragFunc;
             _dataObjectFunc = dataObjectFunc;
             _dragCompletedAction = dragCompletedAction;
@@ -39,20 +37,19 @@ namespace FileExplorer.ViewModels.Helpers
 
         public IEnumerable<IDraggable> GetDraggables()
         {
-            if (_selection.RootSelector.SelectedViewModel != null)
-                yield return _selection.RootSelector.SelectedViewModel;
+            return _getDraggableFunc();
         }
 
         public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
         {
-            var entryModels = draggables.Cast<VM>().Select(d => _convertBackFunc(d));
+            var entryModels = draggables.Select(d => _convertBackFunc(d));
             return _queryDragFunc(entryModels);
 
         }
 
         public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
         {
-            var entryModels = draggables.Cast<VM>().Select(d => _convertBackFunc(d));
+            var entryModels = draggables.Select(d => _convertBackFunc(d));
             return _dataObjectFunc(entryModels);
         }
 
@@ -60,20 +57,19 @@ namespace FileExplorer.ViewModels.Helpers
         {
             if (_dragCompletedAction == null)
                 throw new ArgumentException();
-            var entryModels = draggables.Cast<VM>().Select(d => _convertBackFunc(d));
-            _dragCompletedAction(entryModels, effect);
+            var entryModels = draggables.Select(d => _convertBackFunc(d));
+            _dragCompletedAction(entryModels, da, effect);
         }
 
         #endregion
 
         #region Data
-
-        private ITreeSelector<VM, T> _selection;
-        private IEntriesHelper<VM> _entries;
-        private Func<VM, T> _convertBackFunc;
+        
+        private Func<IDraggable, T> _convertBackFunc;
         private Func<IEnumerable<T>, DragDropEffects> _queryDragFunc;
         private Func<IEnumerable<T>, IDataObject> _dataObjectFunc;
-        private Action<IEnumerable<T>, DragDropEffects> _dragCompletedAction;
+        private Action<IEnumerable<T>, IDataObject, DragDropEffects> _dragCompletedAction;
+        private Func<IEnumerable<IDraggable>> _getDraggableFunc;
 
         #endregion
 
