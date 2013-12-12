@@ -115,7 +115,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void SetSelectedChild(T newValue)
         {
-            Debug.WriteLine(String.Format("SetSelectedChild of {0} to {1}", this.Value, newValue));
+            //Debug.WriteLine(String.Format("SetSelectedChild of {0} to {1}", this.Value, newValue));
 
             if (newValue == null && this.EntryHelper.IsLoaded && _selectedValue != null)
             {

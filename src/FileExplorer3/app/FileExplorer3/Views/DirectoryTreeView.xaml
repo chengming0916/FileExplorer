@@ -40,6 +40,7 @@
                        BasedOn="{StaticResource TreeViewItemExStyle}" >
                     <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
                     <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
+                    <Setter Property="IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver, Mode=OneWay}" />
                     <Setter Property="AllowDrop" Value="True" />
                     <Setter Property="def:AttachedProperties.DragItemTemplate" Value="{StaticResource GridLabelTemplate}" />
                 </Style>
