@@ -49,8 +49,8 @@ namespace FileExplorer.Models
 
         IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject);
 
-        QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, DragDropEffects allowedEffects);        
-        DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects);
+        QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel dest, DragDropEffects allowedEffects);        
+        DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffects allowedEffects);
 
         #endregion
 

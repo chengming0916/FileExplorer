@@ -384,6 +384,12 @@ namespace FileExplorer.BaseControls.DragnDrop
                     if (isd.GetDraggables().Contains(
                         startSelectedItem.DataContext))
                         return true;
+
+                    if (startSelectedItem.GetValue(ListBoxItem.IsSelectedProperty).Equals(true))
+                        return true;
+
+                    if (startSelectedItem.GetValue(TreeViewItem.IsSelectedProperty).Equals(true))
+                        return true;
                 }
             }
             return false;

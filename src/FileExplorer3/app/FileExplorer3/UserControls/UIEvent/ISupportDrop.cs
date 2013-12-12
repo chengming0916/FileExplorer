@@ -40,6 +40,7 @@ namespace FileExplorer.ViewModels.Helpers
 
     public interface ISupportDrop
     {
+        bool IsDraggingOver { set; }
         bool IsDroppable { get; }
         QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects);
         IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);

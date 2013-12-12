@@ -15,17 +15,55 @@ using System.Windows;
 namespace FileExplorer.ViewModels
 {
 
-    public class DirectoryNodeViewModel : PropertyChangedBase, IDirectoryNodeViewModel
+    public class DirectoryNodeViewModel : PropertyChangedBase, IDirectoryNodeViewModel, ISupportDropHelper
     {
         public enum NodeState { IsCreated, IsLoading, IsLoaded, IsError, IsInvalid }
 
         #region Cosntructor
 
+        #region DirectoryNodeDropHelper
+        internal class DirectoryNodeDropHelper : TreeDropHelper<IEntryModel>
+        {
+            private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
+                ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
+            {
+                var profiles = selection.RootSelector.EntryHelper.All.Select(rvm => rvm.CurrentDirectory.EntryModel.Profile);
+                foreach (var p in profiles)
+                {
+                    var retVal = p.GetEntryModels(da);
+                    if (retVal != null)
+                        return retVal;
+                }
+                return null;
+            }
+
+            public DirectoryNodeDropHelper(IEntryModel curDir, IEntriesHelper<IDirectoryNodeViewModel> entries,
+                ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
+                : base(
+                (ems, eff) => curDir.Profile.QueryDrop(ems, curDir, eff),
+                da => dataObjectFunc(da, selection),
+                (ems, da, eff) => curDir.Profile.OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
+            { }
+        }
+        #endregion
+
         public static IDirectoryNodeViewModel DummyNode = new DirectoryNodeViewModel();
 
-        private DirectoryNodeViewModel() //For Dummynode.            
+        /// <summary>
+        /// For dummy node.
+        /// </summary>
+        private DirectoryNodeViewModel() 
         {
 
+        }
+
+        /// <summary>
+        /// For displaying contents only (e.g. DragAdorner).
+        /// </summary>
+        /// <param name="curDirModel"></param>
+        public DirectoryNodeViewModel(IEntryModel curDirModel) 
+        {
+            CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
         }
 
         public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel,
@@ -39,6 +77,7 @@ namespace FileExplorer.ViewModels
             Entries = new EntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask);
             Selection = new TreeSelector<IDirectoryNodeViewModel, IEntryModel>(curDirModel, this, 
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
+            DropHelper = new DirectoryNodeDropHelper(curDirModel, Entries, Selection);
         }
 
 
@@ -78,6 +117,7 @@ namespace FileExplorer.ViewModels
         public IEntryViewModel CurrentDirectory { get; set; }
         public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
+        public ISupportDrop DropHelper { get; set; }
 
 
         #endregion

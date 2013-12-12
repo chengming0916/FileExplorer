@@ -144,6 +144,7 @@ namespace TestTemplate.WPF
 
         private bool _isSelected = false;
         private ObservableCollection<DragDropItemViewModel> _items = new ObservableCollection<DragDropItemViewModel>();
+        private bool _isDraggingOver;
 
         #endregion
 
@@ -151,7 +152,11 @@ namespace TestTemplate.WPF
 
         public ICommand UnselectAllCommand { get; set; }
         public ObservableCollection<DragDropItemViewModel> Items { get { return _items; } }
-
+        public bool IsDraggingOver
+        {
+            get { return _isDraggingOver; }
+            set { _isDraggingOver = value; NotifyOfPropertyChanged(() => IsDraggingOver); }
+        }
         public int Value { get; set; }
         public bool IsSelected
         {

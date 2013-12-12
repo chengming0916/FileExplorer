@@ -103,12 +103,12 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
-        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, DragDropEffects allowedEffects)
+        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
         {
             throw new NotImplementedException();
         }
 
-        public DragDropEffects Drop(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects allowedEffects)
+        public DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffects allowedEffects)
         {
             throw new NotImplementedException();
         }
