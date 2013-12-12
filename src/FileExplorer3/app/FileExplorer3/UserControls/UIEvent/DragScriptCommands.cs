@@ -494,7 +494,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            Debug.WriteLine(String.Format("DoDragDrop"));
+            //Debug.WriteLine(String.Format("DoDragDrop"));
             var pd = pm.AsUIParameterDic();
 
             var draggables = _isd.GetDraggables().ToList();

@@ -39,13 +39,15 @@ namespace FileExplorer.BaseControls.DragnDrop
             var isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
             if (isd != null)
             {
+                isd.IsDraggingOver = _mode == QueryDragDropEffectMode.Enter;
+
                 if (_mode == QueryDragDropEffectMode.Enter)
                 {
                     AttachedProperties.SetDraggingOverItem(ic, ele);
                     eventArgs.Effects = eventArgs.AllowedEffects &
                         isd.QueryDrop(eventArgs.Data, eventArgs.AllowedEffects).SupportedEffects;
                     eventArgs.Handled = true;
-
+                    
                     return new AttachAdorner();
                 }
                 else

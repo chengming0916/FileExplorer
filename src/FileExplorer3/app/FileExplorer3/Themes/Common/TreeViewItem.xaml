@@ -13,7 +13,7 @@
 
 
 
-    <ControlTemplate x:Key="treeViewItemTemplate" TargetType="{x:Type TreeViewItem}">
+    <ControlTemplate x:Key="treeViewItemTemplate" TargetType="{x:Type uc:TreeViewItemEx}">
         <Grid HorizontalAlignment="Stretch" x:Name="baseGrid" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="19" Width="Auto"/>
@@ -26,6 +26,7 @@
             </Grid.RowDefinitions>
 
             <bc:HotTrack Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2" 
+                         IsDragging="{TemplateBinding IsDraggingOver}"
                          IsSelected="{TemplateBinding IsSelected}" FillFullRow="True">
                 <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch"  
                                   Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2"
