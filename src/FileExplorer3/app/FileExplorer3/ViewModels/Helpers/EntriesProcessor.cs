@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace FileExplorer.ViewModels.Helpers
             All.CustomSort = comparer;
             All.GroupDescriptions.Add(new PropertyGroupDescription(groupDescription));
         }
+      
 
         public void ClearFilters()
         {
@@ -51,11 +53,14 @@ namespace FileExplorer.ViewModels.Helpers
             AppendFilters(filters);
         }
 
+
+
         #endregion
 
         #region Data
 
         ListCollectionView _processedItems = null;
+     
 
         #endregion
 
@@ -71,10 +76,12 @@ namespace FileExplorer.ViewModels.Helpers
             }
         }
         public IEntriesHelper<VM> EntriesHelper { get; private set; }
+        public IColumnsHelper ColumnHelper { get; private set; }
 
-
-
+      
         #endregion
 
+
+     
     }
 }
