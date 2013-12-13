@@ -35,16 +35,13 @@
                      SortBy="{Binding SortBy}"
                      AllowDrop="True"
                      cal:View.ApplyConventions="False"
-                     cal:Message.Attach = 
-                       "[Event SelectionChangedEvent] = [Action OnSelectionChanged($this.SelectedItems)];
-                       [Event FilterChangedEvent] = [Action OnFilterChanged()];
-                       [Event UnselectAllRequired] = [Action UnselectAll()]"
+                     cal:Message.Attach = "[Event FilterChangedEvent] = [Action OnFilterChanged()];"
                        
                      def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
                        >
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
-                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
+                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAllCommand}" />
             </bc:UIEventAdapter.Processors>
             <i:Interaction.Triggers>
                 <uc:InputBindingTrigger>

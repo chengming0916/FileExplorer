@@ -23,19 +23,22 @@ namespace FileExplorer.ViewModels
 
         public static IEntryViewModel DummyNode = new EntryViewModel() { EntryModel = EntryModelBase.DummyModel };
 
-
         private EntryViewModel()
-        {            
+        {
+
+        }
+
+        protected EntryViewModel(IEntryModel model)
+        {
+            EntryModel = model;
+            _iconExtractSequences = model.Profile.GetIconExtractSequence(model);
+            IsEditable = model.IsRenamable;
         }
 
         public static EntryViewModel FromEntryModel(IEntryModel model)
         {
-            return new EntryViewModel()
-            {
-                EntryModel = model,
-                _iconExtractSequences = model.Profile.GetIconExtractSequence(model),
-                IsEditable = model.IsRenamable
-            };
+            return new EntryViewModel(model);
+
         }
 
         public IEntryViewModel Clone()
