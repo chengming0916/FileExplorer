@@ -34,7 +34,7 @@
             <Button x:Name="Go" Content="Go" Width="150" />
             <TextBlock Text="{Binding ExplorerModel.SelectionCount}" />
         </StackPanel>
-        <ContentControl Name="ExplorerModel" Margin="2"  Grid.Row="1"/>
+        <ContentControl Name="ExplorerModel" Margin="2"  Grid.Row="1"/>        
     </Grid>
 
 </Window>
