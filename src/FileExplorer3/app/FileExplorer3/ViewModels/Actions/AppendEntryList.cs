@@ -1,55 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using FileExplorer.Models;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using Caliburn.Micro;
+//using FileExplorer.Models;
 
-namespace FileExplorer.ViewModels.Actions
-{
-    /// <summary>
-    /// Append entrylist context["EntryList"] to context.Target (IEntryListViewModel)
-    /// </summary>
-    public class AppendEntryList : IResult
-    {
-        #region Cosntructor
+//namespace FileExplorer.ViewModels.Actions
+//{
+//    /// <summary>
+//    /// Append entrylist context["EntryList"] to context.Target (IEntryListViewModel)
+//    /// </summary>
+//    public class AppendEntryList : IResult
+//    {
+//        #region Cosntructor
 
-        public AppendEntryList(IEntryViewModel parentModel, IFileListViewModel targetModel)
-        {
-            _parentModel = parentModel;
-            _targetModel = targetModel;
-        }
+//        public AppendEntryList(IEntryViewModel parentModel, IFileListViewModel targetModel)
+//        {
+//            _parentModel = parentModel;
+//            _targetModel = targetModel;
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Methods
+//        #region Methods
 
-        public event EventHandler<ResultCompletionEventArgs> Completed;
+//        public event EventHandler<ResultCompletionEventArgs> Completed;
 
-        public void Execute(ActionExecutionContext context)
-        {
-            var entryModels = context["EntryList"] as IEnumerable<IEntryModel>;
-            foreach (var em in entryModels)
-            {
-                var evm = EntryViewModel.FromEntryModel(em);                
-                _targetModel.Items.Add(evm);
-            }
-            Completed(this, new ResultCompletionEventArgs());
-        }
+//        public void Execute(ActionExecutionContext context)
+//        {
+//            var entryModels = context["EntryList"] as IEnumerable<IEntryModel>;
+//            foreach (var em in entryModels)
+//            {
+//                var evm = EntryViewModel.FromEntryModel(em);                
+//                _targetModel.Items.Add(evm);
+//            }
+//            Completed(this, new ResultCompletionEventArgs());
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Data
+//        #region Data
 
-        private IEntryViewModel _parentModel;
-        private IFileListViewModel _targetModel;
+//        private IEntryViewModel _parentModel;
+//        private IFileListViewModel _targetModel;
 
-        #endregion
+//        #endregion
 
-        #region Public Properties
+//        #region Public Properties
 
-        #endregion
+//        #endregion
        
-    }
-}
+//    }
+//}

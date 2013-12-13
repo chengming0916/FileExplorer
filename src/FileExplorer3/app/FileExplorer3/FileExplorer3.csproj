@@ -227,7 +227,11 @@
     <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
     <Compile Include="Models\EntryModelIconExtractor.cs" />
     <Compile Include="ViewModels\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\Helpers\ColumnsHelper.cs" />
+    <Compile Include="ViewModels\Helpers\EntriesProcessor.cs" />
     <Compile Include="ViewModels\Helpers\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\Helpers\IColumnsHelper.cs" />
+    <Compile Include="ViewModels\Helpers\IEntriesProcessor.cs" />
     <Compile Include="ViewModels\Helpers\ITreeLookup.cs" />
     <Compile Include="ViewModels\Helpers\IEntriesHelper.cs" />
     <Compile Include="ViewModels\Helpers\ITreeSelector.cs" />
