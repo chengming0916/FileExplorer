@@ -24,10 +24,10 @@
     <Grid>
 
         <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"                      
-                     ItemsSource="{Binding Items}"   BorderBrush="Transparent"
+                     ItemsSource="{Binding ProcessedEntries.All}"   BorderBrush="Transparent"
                      ViewMode="{Binding ViewMode}"  
-                     Columns="{Binding ColumnList}"
-                     ColumnFilters ="{Binding ColumnFilters}"
+                     Columns="{Binding Columns.ColumnList}"
+                     ColumnFilters ="{Binding Columns.ColumnFilters}"
                      ColumnsVisibility="Visible"
                      ItemSize="{Binding ItemSize}"
                      ItemAnimationDuration="00:00:00"

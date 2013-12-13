@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels
                 if (model != null)
                 {
                     DirectoryTree.SelectAsync(model);
-                    FileList.LoadAsync(model, null);
+                    FileList.LoadAsync(model);
                     Breadcrumb.Selection.AsRoot().SelectAsync(model);
                     return;
                 }

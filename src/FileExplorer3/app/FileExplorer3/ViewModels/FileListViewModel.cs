@@ -30,14 +30,16 @@ namespace FileExplorer.ViewModels
     [Export(typeof(FileListViewModel))]
 #endif
     public class FileListViewModel : PropertyChangedBase, IFileListViewModel,
-        IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDrag, ISupportDrop
+        IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>//, ISupportDrag, ISupportDrop
     {
         #region Cosntructor
 
         public FileListViewModel(IEventAggregator events)
         {
             Events = events;
-            _processedVms = CollectionViewSource.GetDefaultView(Items) as ListCollectionView;
+            var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask);
+            ProcessedEntries = new EntriesProcessor<IEntryViewModel>(entryHelper);
+            Columns = new ColumnsHelper(ProcessedEntries);
             if (events != null)
                 events.Subscribe(this);
             #region Unused
@@ -56,84 +58,28 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        #region Utils
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public async Task<IList<IEntryModel>> listAsync(IEntryViewModel parentModel, Func<IEntryModel, bool> filter = null)
+        async Task<IEnumerable<IEntryViewModel>> loadEntriesTask()
         {
-            if (filter == null)
-                filter = (em) => true;
-            var result = await parentModel.EntryModel.Profile.ListAsync(parentModel.EntryModel, filter);
-            var entryModels = from m in result
-                              where filter(m)
-                              select (IEntryModel)m;
-            return entryModels.ToList();
+            if (CurrentDirectory == null)
+                return new List<IEntryViewModel>();
+
+            var subEntries = await CurrentDirectory.Profile.ListAsync(CurrentDirectory);
+            return subEntries.Select(s => CreateSubmodel(s));
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected void appendEntryList<T>(ObservableCollection<T> collection, IList<IEntryModel> entryModels,
-            Func<IEntryModel, T> conversion)
+        public IEntryViewModel CreateSubmodel(IEntryModel entryModel)
         {
-            if (collection is FastObservableCollection<T>)
-            {
-                var fastCol = collection as FastObservableCollection<T>;
-                fastCol.AddItems((from em in entryModels select conversion(em)).ToList());
-            }
-            else
-                foreach (var em in entryModels)
-                {
-                    collection.Add(conversion(em));
-                }
+            return EntryViewModel.FromEntryModel(entryModel);
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected void replaceEntryList<T>(ObservableCollection<T> collection, IList<IEntryModel> entryModels,
-            Func<IEntryModel, T> conversion)
-        {
-            collection.Clear();
-            appendEntryList(collection, entryModels, conversion);
-        }
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected void calculateColumnHeaderCount(ColumnFilter[] filters, IList<IEntryModel> entryModels)
-        {
-            foreach (var f in filters)
-                f.MatchedCount = 0;
-
-            foreach (var em in entryModels)
-                foreach (var f in filters)
-                    if (f.Matches(em))
-                        f.MatchedCount++;
-        }
-
-        protected T findMatched<T>(IEntryModel model, IObservableCollection<T> lookupList, Func<T, IEntryModel, bool> matchFunc)
-        {
-            foreach (var evm in lookupList)
-                if (matchFunc(evm, model))
-                {
-                    return evm;
-                }
-            return default(T);
-        }
-
-        #endregion
 
         #region Actions
 
-        public virtual Task<IList<IEntryModel>> ListAsync(Func<IEntryModel, bool> filter = null)
+        public async Task LoadAsync(IEntryModel em)
         {
-            return listAsync(CurrentDirectory, filter);
-        }
-
-        public async Task<IList<IEntryModel>> LoadAsync(IEntryModel em, Func<IEntryModel, bool> filter = null)
-        {
-            CurrentDirectory = EntryViewModel.FromEntryModel(em);
-            SelectedItems.Clear();
-            var entryModels = await ListAsync(filter);
-            replaceEntryList(this.Items, entryModels, (subem) => EntryViewModel.FromEntryModel(subem));
-            calculateColumnHeaderCount(ColumnFilters, entryModels);
-            Events.Publish(new ListCompletedEvent(this, Items));
-            return entryModels;
+            CurrentDirectory = em;
+            await ProcessedEntries.EntriesHelper.LoadAsync(true);
+            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);            
         }
 
         /// <summary>
@@ -142,7 +88,7 @@ namespace FileExplorer.ViewModels
         /// <returns></returns>
         public IEnumerable<IResult> UnselectAll()
         {
-            yield return new UnselectAll(Items);
+            yield return new UnselectAll(ProcessedEntries.EntriesHelper.AllNonBindable);
         }
 
 
@@ -162,24 +108,20 @@ namespace FileExplorer.ViewModels
             var comparer = new EntryViewModelComparer(
                 col.Comparer != null ? col.Comparer : Profile.GetComparer(col),
                 direction);
-            _processedVms.CustomSort = comparer;
-            _processedVms.GroupDescriptions.Add(new PropertyGroupDescription(col.ValuePath));
+            ProcessedEntries.Sort(comparer, col.ValuePath);
         }
 
         public void OnSelectionChanged(IList selectedItems)
         {
+            return;
+
             SelectedItems = selectedItems.Cast<IEntryViewModel>().Distinct().ToList();
             Events.Publish(new SelectionChangedEvent(this, SelectedItems));
         }
 
         public void OnFilterChanged()
         {
-            var allCheckedFilters = ColumnFilters.Where(f => f.IsChecked).ToArray();
-
-            if (allCheckedFilters.Length == 0)
-                _processedVms.Filter = null;
-            else
-                _processedVms.Filter = (e) => (ColumnFilter.Match(allCheckedFilters, (e as IEntryViewModel).EntryModel));
+            Columns.OnFilterChanged();
         }
 
         #endregion
@@ -193,7 +135,7 @@ namespace FileExplorer.ViewModels
         public void Handle(DirectoryChangedEvent message)
         {
             if (message.NewModel != null)
-                LoadAsync(message.NewModel, null);
+                LoadAsync(message.NewModel);
         }
 
         #region ISupportDrag
@@ -230,7 +172,7 @@ namespace FileExplorer.ViewModels
 
         public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
-            return Profile.QueryDrop(Profile.GetEntryModels(da), CurrentDirectory.EntryModel, allowedEffects);
+            return Profile.QueryDrop(Profile.GetEntryModels(da), CurrentDirectory, allowedEffects);
         }
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
@@ -241,7 +183,7 @@ namespace FileExplorer.ViewModels
         public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
         {
             return Profile.OnDropCompleted(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel), da, 
-                CurrentDirectory.EntryModel, allowedEffects);
+                CurrentDirectory, allowedEffects);
         }
 
         #endregion
@@ -250,38 +192,26 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        private IEntryViewModel _parentVm = null;
-
-        private ObservableCollection<IEntryViewModel> _items = new FastObservableCollection<IEntryViewModel>();
+        private IEntryModel _parentVm = null;
         private IList<IEntryViewModel> _selectedVms = new List<IEntryViewModel>();
-        private ListCollectionView _processedVms = null;
         private DragDropEffects _dragDropEffects = DragDropEffects.Copy | DragDropEffects.Link;
+
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private string _sortBy = "EntryModel.Label";
         private ListSortDirection _sortDirection = ListSortDirection.Ascending;
-        private ColumnInfo[] _colList = new ColumnInfo[]
-        {
-            ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", null, 200),   
-            ColumnInfo.FromBindings("Description", "EntryModel.Description", "", null, 200)   
-        };
 
-        private ColumnFilter[] _colFilters = new ColumnFilter[] { };
         private bool _isDraggingOver;
-        //new List<ListViewColumnFilter>() 
-        //{
-        //    new ListViewColumnFilter("Life", "EntryModel.Label"),
-        //    new ListViewColumnFilter("Universe", "EntryModel.Label"), 
-        //    new ListViewColumnFilter("Everything", "EntryModel.Label") { IsChecked = true }
-        //}.ToArray();
 
         #endregion
 
         #region Public Properties
 
+        public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
+        public IColumnsHelper Columns { get; private set; }
         public IEventAggregator Events { get; private set; }
 
-        public IEntryViewModel CurrentDirectory
+        public IEntryModel CurrentDirectory
         {
             get { return _parentVm; }
             set { _parentVm = value; NotifyOfPropertyChange(() => CurrentDirectory); }
@@ -289,7 +219,7 @@ namespace FileExplorer.ViewModels
 
         public IProfile Profile
         {
-            get { return CurrentDirectory == null ? null : CurrentDirectory.EntryModel.Profile; }
+            get { return CurrentDirectory == null ? null : CurrentDirectory.Profile; }
         }
 
         #region SortBy, SortDirection
@@ -302,7 +232,7 @@ namespace FileExplorer.ViewModels
                 if (_sortBy != value)
                 {
                     _sortBy = value;
-                    OnSortDirectoryChanged(ColumnList.Find(_sortBy), _sortDirection);
+                    OnSortDirectoryChanged(Columns.ColumnList.Find(_sortBy), _sortDirection);
                     NotifyOfPropertyChange(() => SortBy);
                 }
             }
@@ -316,7 +246,7 @@ namespace FileExplorer.ViewModels
                 if (_sortDirection != value)
                 {
                     _sortDirection = value;
-                    OnSortDirectoryChanged(ColumnList.Find(_sortBy), _sortDirection);
+                    OnSortDirectoryChanged(Columns.ColumnList.Find(_sortBy), _sortDirection);
                     NotifyOfPropertyChange(() => SortDirection);
                 }
             }
@@ -324,7 +254,7 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        #region ViewMode, ItemSize, ColumnList, ColumnFilters
+        #region ViewMode, ItemSize
 
         public string ViewMode
         {
@@ -346,28 +276,11 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        public ColumnInfo[] ColumnList
-        {
-            get { return _colList; }
-            set { _colList = value; NotifyOfPropertyChange(() => ColumnList); }
-        }
-
-        public ColumnFilter[] ColumnFilters
-        {
-            get { return _colFilters; }
-            set { _colFilters = value; NotifyOfPropertyChange(() => ColumnFilters); }
-        }
+     
 
         #endregion
 
         #region Items, ProcessedItems, SelectedItems
-
-        public ObservableCollection<IEntryViewModel> Items { get { return _items; } }
-
-        public CollectionView ProcessedItems
-        {
-            get { return _processedVms; }
-        }
 
         public IList<IEntryViewModel> SelectedItems
         {

@@ -9,16 +9,7 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface IEntriesProcessor<VM>
-    {
-        IEntriesHelper<VM> EntriesHelper { get; }
-
-        void Sort(IComparer comparer, string groupDescription);
-        void ClearFilter();
-        void AppendFilters(params ColumnFilter[] filters);
-
-        ListCollectionView All { get; }
-    }
+  
 
     public class EntriesProcessor<VM> : IEntriesProcessor<VM>
     {
@@ -39,7 +30,7 @@ namespace FileExplorer.ViewModels.Helpers
             All.GroupDescriptions.Add(new PropertyGroupDescription(groupDescription));
         }
 
-        public void ClearFilter()
+        public void ClearFilters()
         {
             All.Filter = null;
         }
@@ -52,6 +43,12 @@ namespace FileExplorer.ViewModels.Helpers
                 All.Filter = (e) =>
                     All.Filter(e) &&
                     ColumnFilter.Match(filters, (e as IEntryViewModel).EntryModel);
+        }
+
+        public void SetFilters(params ColumnFilter[] filters)
+        {
+            ClearFilters();
+            AppendFilters(filters);
         }
 
         #endregion
@@ -74,6 +71,8 @@ namespace FileExplorer.ViewModels.Helpers
             }
         }
         public IEntriesHelper<VM> EntriesHelper { get; private set; }
+
+
 
         #endregion
 

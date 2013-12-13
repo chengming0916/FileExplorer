@@ -113,7 +113,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public event EventHandler EntriesChanged;
 
-        public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }
+        public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }        
 
         public ObservableCollection<VM> All { get { return _subItems; } private set { _subItems = value; } }        
 

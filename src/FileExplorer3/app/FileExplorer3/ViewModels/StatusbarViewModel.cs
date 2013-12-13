@@ -54,10 +54,10 @@ namespace FileExplorer.ViewModels
             Items.Clear();
             SelectionCount = flvm.SelectedItems.Count();
 
-            Items.AddRange(flvm.CurrentDirectory.EntryModel.Profile.MetadataProvider.GetMetadata(
+            Items.AddRange(flvm.CurrentDirectory.Profile.MetadataProvider.GetMetadata(
                 flvm.SelectedItems.Select(evm => evm.EntryModel), 
-                flvm.ProcessedItems.Count, 
-                flvm.CurrentDirectory.EntryModel).Select(m => MetadataViewModel.FromMetadata(m)));
+                flvm.ProcessedEntries.All.Count, 
+                flvm.CurrentDirectory).Select(m => MetadataViewModel.FromMetadata(m)));
 
             //Items.Add(MetadataViewModel.FromText("", String.Format("{0} items", flvm.Items.Count()), true));
             //if (SelectionCount > 0)
@@ -75,7 +75,7 @@ namespace FileExplorer.ViewModels
                 case 0:
                     //Caption = String.Format(NoneSelected, flvm.CurrentDirectory.EntryModel.Label);
 
-                    DisplayItems.Add(flvm.CurrentDirectory);
+                    DisplayItems.Add(EntryViewModel.FromEntryModel(flvm.CurrentDirectory));
                     break;
                 case 1:
                     //Caption = String.Format(OneSelected, flvm.SelectedItems.First().EntryModel.Label);
