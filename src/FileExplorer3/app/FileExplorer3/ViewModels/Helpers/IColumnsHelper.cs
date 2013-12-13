@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +12,14 @@ namespace FileExplorer.ViewModels.Helpers
 {
     public interface IColumnsHelper
     {
+
         ColumnInfo[] ColumnList { get; set; }
         ColumnFilter[] ColumnFilters { get; set; }
 
-        void OnFilterChanged();
+        event EventHandler FilterChanged;
+        event EventHandler SortChanged;
         void CalculateColumnHeaderCount(IEnumerable<IEntryModel> entryModels);
+        IComparer GetComparer(ColumnInfo colInfo, ListSortDirection direction);
     }
 
 }

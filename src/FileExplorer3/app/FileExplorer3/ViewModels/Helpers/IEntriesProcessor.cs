@@ -22,5 +22,6 @@ namespace FileExplorer.ViewModels.Helpers
     public interface IEntriesProcessor<VM> : IEntriesProcessor
     {
         IEntriesHelper<VM> EntriesHelper { get; }
+        
     }
 }

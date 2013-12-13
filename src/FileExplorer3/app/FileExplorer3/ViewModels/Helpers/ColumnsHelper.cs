@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,19 +15,41 @@ namespace FileExplorer.ViewModels.Helpers
     {
         #region Constructor
 
-        public ColumnsHelper(IEntriesProcessor processor)
+        public ColumnsHelper(IEntriesProcessor processor, Func<ColumnInfo, ListSortDirection, IComparer> getComparerFunc)
         {
             _processor = processor;
+            _getComparerFunc = getComparerFunc;
         }
 
         #endregion
 
         #region Methods
 
-        public void OnFilterChanged()
+        private void NotifyFilterChanged()
         {
             var checkedFilters = ColumnFilters.Where(f => f.IsChecked).ToArray();
             _processor.SetFilters(checkedFilters);
+
+            if (FilterChanged != null)
+                FilterChanged(this, EventArgs.Empty);
+        }
+
+        private void NotifySortChanged()
+        {
+            if (SortChanged != null) SortChanged(this, EventArgs.Empty);
+            NotifyOfPropertyChanged(() => SortDirection);
+            NotifyOfPropertyChanged(() => SortBy);
+
+            var columnInfo = this.ColumnList.Find(_sortBy);
+            if (columnInfo != null)
+            {
+                _processor.Sort(GetComparer(columnInfo, _sortDirection), _sortBy);
+            }
+        }
+
+        public IComparer GetComparer(ColumnInfo colInfo, ListSortDirection direction)
+        {
+            return _getComparerFunc(colInfo, direction);
         }
 
         public void CalculateColumnHeaderCount(IEnumerable<IEntryModel> entryModels)
@@ -39,10 +63,23 @@ namespace FileExplorer.ViewModels.Helpers
                         f.MatchedCount++;
         }
 
+        public void SetColumnFilters(ColumnFilter[] filters)
+        {
+            _colFilters = filters;
+            foreach (var f in filters)
+                f.PropertyChanged += (o, e) =>
+                    {
+                        NotifyFilterChanged();
+                    };
+            NotifyOfPropertyChanged(() => ColumnFilters);
+        }
+
         #endregion
 
         #region Data
 
+        public event EventHandler FilterChanged;
+        public event EventHandler SortChanged;
 
         private IEntriesProcessor _processor;
         private ColumnFilter[] _colFilters;
@@ -51,6 +88,9 @@ namespace FileExplorer.ViewModels.Helpers
             ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", null, 200),   
             ColumnInfo.FromBindings("Description", "EntryModel.Description", "", null, 200)   
         };
+        private Func<ColumnInfo, ListSortDirection, IComparer> _getComparerFunc;
+        private string _sortBy = "EntryModel.Label";
+        private ListSortDirection _sortDirection = ListSortDirection.Ascending;
 
         #endregion
 
@@ -65,8 +105,35 @@ namespace FileExplorer.ViewModels.Helpers
         public ColumnFilter[] ColumnFilters
         {
             get { return _colFilters; }
-            set { _colFilters = value; NotifyOfPropertyChanged(() => ColumnFilters); }
+            set { SetColumnFilters(value); }
         }
+
+        public string SortBy
+        {
+            get { return _sortBy; }
+            set
+            {
+                if (_sortBy != value)
+                {
+                    _sortBy = value;
+                    NotifySortChanged();
+                }
+            }
+        }
+
+        public ListSortDirection SortDirection
+        {
+            get { return _sortDirection; }
+            set
+            {
+                if (_sortDirection != value)
+                {
+                    _sortDirection = value;
+                    NotifySortChanged();
+                }
+            }
+        }
+
 
 
         #endregion

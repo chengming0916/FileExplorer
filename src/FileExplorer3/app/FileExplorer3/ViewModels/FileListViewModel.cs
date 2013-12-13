@@ -69,7 +69,12 @@ namespace FileExplorer.ViewModels
             Events = events;
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask);
             ProcessedEntries = new EntriesProcessor<IEntryViewModel>(entryHelper);
-            Columns = new ColumnsHelper(ProcessedEntries);
+            Columns = new ColumnsHelper(ProcessedEntries, 
+                (col, direction) =>
+                    new EntryViewModelComparer(
+                        col.Comparer != null ? col.Comparer : CurrentDirectory.Profile.GetComparer(col),
+                        direction)            
+            );
             Selection = new ListSelector<IEntryViewModel, IEntryModel>(entryHelper);
             DropHelper = new FileListDropHelper(this);
             DragHelper = new FileListDragHelper(this);
@@ -133,22 +138,11 @@ namespace FileExplorer.ViewModels
             if (CurrentDirectory == null)
                 return;
             var comparer = new EntryViewModelComparer(
-                col.Comparer != null ? col.Comparer : Profile.GetComparer(col),
+                col.Comparer != null ? col.Comparer : CurrentDirectory.Profile.GetComparer(col),
                 direction);
             ProcessedEntries.Sort(comparer, col.ValuePath);
         }
-
-        //public void OnSelectionChanged(IList selectedItems)
-        //{
-        //    Selection.OnSelectionChanged(selectedItems);                        
-            
-        //}
-
-        public void OnFilterChanged()
-        {
-            Columns.OnFilterChanged();
-        }
-
+        
         #endregion
 
         public void Handle(ViewChangedEvent message)
@@ -171,8 +165,7 @@ namespace FileExplorer.ViewModels
         private IEntryModel _currentDirVM = null;        
         private int _itemSize = 60;
         private string _viewMode = "Icon";
-        private string _sortBy = "EntryModel.Label";
-        private ListSortDirection _sortDirection = ListSortDirection.Ascending;
+     
 
         #endregion
 
@@ -191,43 +184,7 @@ namespace FileExplorer.ViewModels
             set { _currentDirVM = value; NotifyOfPropertyChange(() => CurrentDirectory); }
         }
 
-        public IProfile Profile
-        {
-            get { return CurrentDirectory == null ? null : CurrentDirectory.Profile; }
-        }
-
-        #region SortBy, SortDirection
-
-        public string SortBy
-        {
-            get { return _sortBy; }
-            set
-            {
-                if (_sortBy != value)
-                {
-                    _sortBy = value;
-                    OnSortDirectoryChanged(Columns.ColumnList.Find(_sortBy), _sortDirection);
-                    NotifyOfPropertyChange(() => SortBy);
-                }
-            }
-        }
-
-        public ListSortDirection SortDirection
-        {
-            get { return _sortDirection; }
-            set
-            {
-                if (_sortDirection != value)
-                {
-                    _sortDirection = value;
-                    OnSortDirectoryChanged(Columns.ColumnList.Find(_sortBy), _sortDirection);
-                    NotifyOfPropertyChange(() => SortDirection);
-                }
-            }
-        }
-
-        #endregion
-
+     
         #region ViewMode, ItemSize
 
         public string ViewMode
