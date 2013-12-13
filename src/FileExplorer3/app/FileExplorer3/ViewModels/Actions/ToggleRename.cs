@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels.Actions
 
         public void Execute(ActionExecutionContext context)
         {
-            var first = _model.SelectedItems.FirstOrDefault();
+            var first = _model.Selection.SelectedItems.FirstOrDefault();
             if (first != null && first.IsEditable)
                 if (_value.HasValue)
                     first.IsEditing = _value.Value;

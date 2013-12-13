@@ -16,11 +16,12 @@ namespace FileExplorer.ViewModels
     {
         IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; }
         IColumnsHelper Columns { get; }
+        IListSelector<IEntryViewModel, IEntryModel> Selection { get; }
 
         Task LoadAsync(IEntryModel em);        
 
         //ObservableCollection<IEntryViewModel> Items { get; }
-        IList<IEntryViewModel> SelectedItems { get; }
+        //IList<IEntryViewModel> SelectedItems { get; }
         //CollectionView ProcessedItems { get; }
 
         IEventAggregator Events { get; }

@@ -30,8 +30,38 @@ namespace FileExplorer.ViewModels
     [Export(typeof(FileListViewModel))]
 #endif
     public class FileListViewModel : PropertyChangedBase, IFileListViewModel,
-        IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>//, ISupportDrag, ISupportDrop
+        IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDragHelper, ISupportDropHelper
     {
+
+        #region FileListDrag/DropHelper
+        internal class FileListDropHelper : TreeDropHelper<IEntryModel>
+        {
+            private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
+                FileListViewModel flvm)
+            {
+                return flvm.CurrentDirectory.Profile.GetEntryModels(da);
+            }
+
+            public FileListDropHelper(FileListViewModel flvm)
+                : base(
+                (ems, eff) => flvm.CurrentDirectory.Profile.QueryDrop(ems, flvm.CurrentDirectory, eff),
+                da => dataObjectFunc(da, flvm),
+                (ems, da, eff) => flvm.CurrentDirectory.Profile.OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
+            { }
+        }
+        private class FileListDragHelper : TreeDragHelper<IEntryModel>
+        {
+            public FileListDragHelper(FileListViewModel flvm)
+                : base(
+                () => flvm.Selection.SelectedItems.ToArray(),
+                ems => ems.First().Profile.QueryDrag(ems),
+                ems => ems.First().Profile.GetDataObject(ems),
+                (ems, da, eff) => ems.First().Profile.OnDragCompleted(ems, da, eff)
+                , d => (d as IEntryViewModel).EntryModel)
+            { }
+        }
+        #endregion
+
         #region Cosntructor
 
         public FileListViewModel(IEventAggregator events)
@@ -40,6 +70,13 @@ namespace FileExplorer.ViewModels
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask);
             ProcessedEntries = new EntriesProcessor<IEntryViewModel>(entryHelper);
             Columns = new ColumnsHelper(ProcessedEntries);
+            Selection = new ListSelector<IEntryViewModel, IEntryModel>(entryHelper);
+            DropHelper = new FileListDropHelper(this);
+            DragHelper = new FileListDragHelper(this);
+
+            Selection.SelectionChanged += (o, e) => 
+            { Events.Publish(new SelectionChangedEvent(this, Selection.SelectedItems)); };
+
             if (events != null)
                 events.Subscribe(this);
             #region Unused
@@ -69,7 +106,7 @@ namespace FileExplorer.ViewModels
 
         public IEntryViewModel CreateSubmodel(IEntryModel entryModel)
         {
-            return EntryViewModel.FromEntryModel(entryModel);
+            return new FileListItemViewModel(entryModel, Selection);
         }
 
 
@@ -80,17 +117,7 @@ namespace FileExplorer.ViewModels
             CurrentDirectory = em;
             await ProcessedEntries.EntriesHelper.LoadAsync(true);
             Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);            
-        }
-
-        /// <summary>
-        /// Virtual panel require this to unselect all entries using view models.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<IResult> UnselectAll()
-        {
-            yield return new UnselectAll(ProcessedEntries.EntriesHelper.AllNonBindable);
-        }
-
+        }  
 
         public IEnumerable<IResult> ToggleRename()
         {
@@ -111,13 +138,11 @@ namespace FileExplorer.ViewModels
             ProcessedEntries.Sort(comparer, col.ValuePath);
         }
 
-        public void OnSelectionChanged(IList selectedItems)
-        {
-            return;
-
-            SelectedItems = selectedItems.Cast<IEntryViewModel>().Distinct().ToList();
-            Events.Publish(new SelectionChangedEvent(this, SelectedItems));
-        }
+        //public void OnSelectionChanged(IList selectedItems)
+        //{
+        //    Selection.OnSelectionChanged(selectedItems);                        
+            
+        //}
 
         public void OnFilterChanged()
         {
@@ -138,70 +163,16 @@ namespace FileExplorer.ViewModels
                 LoadAsync(message.NewModel);
         }
 
-        #region ISupportDrag
-
-        public bool HasDraggables
-        {
-            get { return  _selectedVms.Any(); }
-        }
-
-        public IEnumerable<IDraggable> GetDraggables()
-        {
-            return _selectedVms;
-        }
-
-        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
-        {
-            return Profile.GetDataObject(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel));                        
-        }
-
-        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
-        {
-            return Profile.QueryDrag(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel));
-        }
-
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
-        {
-            Profile.OnDragCompleted(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel), da, effect);
-        }
-
-        public bool IsDroppable
-        {
-            get { return true; }
-        }
-
-        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
-        {
-            return Profile.QueryDrop(Profile.GetEntryModels(da), CurrentDirectory, allowedEffects);
-        }
-
-        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
-        {
-            return Profile.GetEntryModels(da).Select(em => EntryViewModel.FromEntryModel(em));
-        }
-
-        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
-        {
-            return Profile.OnDropCompleted(draggables.Cast<IEntryViewModel>().Select(vm => vm.EntryModel), da, 
-                CurrentDirectory, allowedEffects);
-        }
-
-        #endregion
-
+      
         #endregion
 
         #region Data
 
-        private IEntryModel _parentVm = null;
-        private IList<IEntryViewModel> _selectedVms = new List<IEntryViewModel>();
-        private DragDropEffects _dragDropEffects = DragDropEffects.Copy | DragDropEffects.Link;
-
+        private IEntryModel _currentDirVM = null;        
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private string _sortBy = "EntryModel.Label";
         private ListSortDirection _sortDirection = ListSortDirection.Ascending;
-
-        private bool _isDraggingOver;
 
         #endregion
 
@@ -210,11 +181,14 @@ namespace FileExplorer.ViewModels
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
         public IEventAggregator Events { get; private set; }
+        public IListSelector<IEntryViewModel, IEntryModel> Selection { get; private set; }
+        public ISupportDrag DragHelper { get; private set; }
+        public ISupportDrop DropHelper { get; private set; }
 
         public IEntryModel CurrentDirectory
         {
-            get { return _parentVm; }
-            set { _parentVm = value; NotifyOfPropertyChange(() => CurrentDirectory); }
+            get { return _currentDirVM; }
+            set { _currentDirVM = value; NotifyOfPropertyChange(() => CurrentDirectory); }
         }
 
         public IProfile Profile
@@ -280,31 +254,10 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        #region Items, ProcessedItems, SelectedItems
-
-        public IList<IEntryViewModel> SelectedItems
-        {
-            get { return _selectedVms; }
-            set
-            {
-                _selectedVms = value;
-                NotifyOfPropertyChange(() => SelectedItems);
-            }
-        }
 
         #endregion
 
 
-        public bool IsDraggingOver
-        {
-            get { return _isDraggingOver; }
-            set { _isDraggingOver = value; NotifyOfPropertyChange(() => IsDraggingOver); }
-        }
-
-        public DragDropEffects DragDropEffects { get { return _dragDropEffects; } set { _dragDropEffects = value; } }
-
-
-        #endregion
 
 
 
