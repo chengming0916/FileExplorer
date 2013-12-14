@@ -20,7 +20,13 @@ namespace FileExplorer.BaseControls
             : base(adornedElement)
         {
             _canvas = new Canvas() { Background = null };
-
+            _text = new TextBlock() { Foreground = Brushes.Black, FontWeight = FontWeights.Bold,                
+                 };
+            _border = new Border() { Child = _text, BorderThickness = new Thickness(1), BorderBrush = Brushes.Black,
+                        HorizontalAlignment = HorizontalAlignment.Left, Padding= new Thickness(2,0, 2, 0),
+                        Background = Brushes.White
+            };
+            _border.RenderTransform = new TranslateTransform(10, 0);
             //FrameworkElementFactory overlapPanelfactory = new FrameworkElementFactory(typeof(OverlappingPanel));
             //overlapPanelfactory.SetValue(OverlappingPanel.OverlapXProperty, 5);
             //overlapPanelfactory.SetValue(OverlappingPanel.OverlapYProperty, 5);
@@ -36,8 +42,13 @@ namespace FileExplorer.BaseControls
                     //ItemsPanel = new ItemsPanelTemplate(overlapPanelfactory)
                 };
 
-            Canvas.SetTop(_items, -50);
-            Canvas.SetLeft(_items, -50);
+           
+            _stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
+            _stackPanel.Children.Add(_border);
+            _stackPanel.Children.Add(_items);
+            Canvas.SetTop(_stackPanel, -50);
+            Canvas.SetLeft(_stackPanel, -50);
+
 
             this.ContextMenu = new ContextMenu() { PlacementTarget = _items };
             SetSupportedDragDropEffects(DragDropEffects.All);
@@ -53,7 +64,7 @@ namespace FileExplorer.BaseControls
                 }
             }));
 
-            _canvas.Children.Add(_items);
+            _canvas.Children.Add(_stackPanel);
 
             this.AddLogicalChild(_canvas);
             this.AddVisualChild(_canvas);
@@ -110,6 +121,17 @@ namespace FileExplorer.BaseControls
             }
         }
 
+        public static void OnTextChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            DragAdorner adorner = o as DragAdorner;
+            if (adorner != null)
+            {
+                string newValue = e.NewValue as string;
+                adorner._text.Text = newValue;
+                adorner._border.Visibility = String.IsNullOrEmpty(newValue) ? Visibility.Collapsed : Visibility.Visible;                
+            }
+        }
+
         public static void OnIsDraggingChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             DragAdorner adorner = o as DragAdorner;
@@ -117,8 +139,10 @@ namespace FileExplorer.BaseControls
             {
                 //Debug.WriteLine(e.NewValue);
                 if ((bool)e.NewValue)
-                    adorner._items.Visibility = Visibility.Visible;
+                    adorner._items.Visibility =  Visibility.Visible;
                 else adorner._items.Visibility = Visibility.Collapsed;
+
+                adorner._border.Visibility = adorner._items.Visibility;
             }
         }
 
@@ -146,8 +170,8 @@ namespace FileExplorer.BaseControls
             if (adorner != null)
             {
                 Point newPos = (Point)e.NewValue;
-                Canvas.SetLeft(adorner._items, newPos.X + 10);
-                Canvas.SetTop(adorner._items, newPos.Y + 10);
+                Canvas.SetLeft(adorner._stackPanel, newPos.X + 10);
+                Canvas.SetTop(adorner._stackPanel, newPos.Y + 10);
             }
         }
 
@@ -167,11 +191,26 @@ namespace FileExplorer.BaseControls
         #region Data
 
         private Canvas _canvas;
-        private ItemsControl _items;        
+        private ItemsControl _items;
+        private StackPanel _stackPanel;
+        public TextBlock _text;
+        private Border _border;
 
         #endregion
 
         #region Public Properties
+
+
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register("Text", typeof(string), typeof(DragAdorner),
+            new UIPropertyMetadata("", new PropertyChangedCallback(OnTextChanged)));
+
 
         public DragDropEffects DragDropEffect
         {

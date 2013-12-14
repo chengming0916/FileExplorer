@@ -42,6 +42,7 @@ namespace FileExplorer.ViewModels.Helpers
     {
         bool IsDraggingOver { set; }
         bool IsDroppable { get; }
+        string DropTargetLabel { get; }
         QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects);
         IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
         DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects);

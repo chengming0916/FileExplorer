@@ -50,10 +50,16 @@ namespace FileExplorer.ViewModels.Helpers
             get { return false; }
         }
 
+        public string DropTargetLabel
+        {
+            get { return "None"; }
+        }
+
         #endregion
 
 
 
+     
     }
 
     public class DropHelper<T> : NotifyPropertyChanged, ISupportDrop
@@ -61,7 +67,8 @@ namespace FileExplorer.ViewModels.Helpers
         #region Constructor
 
         public DropHelper(
-            Func<IEnumerable<T>, DragDropEffects, QueryDropResult> queryDropFunc,
+            Func<string> dropTargetFunc,            
+            Func<IEnumerable<T>, DragDropEffects, QueryDropResult> queryDropFunc,            
             Func<IDataObject, IEnumerable<T>> dataobjectFunc,
             Func<IEnumerable<T>, IDataObject, DragDropEffects, DragDropEffects> dropFunc,
             Func<T, IDraggable> convertFunc
@@ -69,6 +76,7 @@ namespace FileExplorer.ViewModels.Helpers
         {
             IsDroppable = true;
 
+            _dropTargetFunc = dropTargetFunc;
             _queryDropFunc = queryDropFunc;
             _dataObjectFunc = dataobjectFunc;
             _dropFunc = dropFunc;
@@ -85,6 +93,7 @@ namespace FileExplorer.ViewModels.Helpers
             return _queryDropFunc(entries, allowedEffects);
         }
 
+
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
         {
             return from e in _dataObjectFunc(da) select _convertFunc(e);
@@ -100,6 +109,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Data
 
+        private Func<string> _dropTargetFunc;
         private Func<IDataObject, IEnumerable<T>> _dataObjectFunc;
         private bool _isDroppable = true, _isDraggingOver = false;
         private Func<T, IDraggable> _convertFunc;
@@ -122,6 +132,8 @@ namespace FileExplorer.ViewModels.Helpers
             set { _isDraggingOver = value; NotifyOfPropertyChanged(() => IsDraggingOver); }
         }
 
+        public string DropTargetLabel { get { return _dropTargetFunc(); } }
+        
         #endregion
 
 

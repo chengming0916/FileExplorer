@@ -164,12 +164,20 @@ namespace TestTemplate.WPF
             set { _isSelected = value; NotifyOfPropertyChanged(() => IsSelected); }
         }
 
+        public string DropTargetLabel
+        {
+            get { return Value.ToString(); }
+        }
+
         #endregion
 
 
 
 
 
+
+
+        
     }
 
 
