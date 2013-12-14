@@ -17,17 +17,12 @@ namespace FileExplorer.ViewModels
         IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; }
         IColumnsHelper Columns { get; }
         IListSelector<IEntryViewModel, IEntryModel> Selection { get; }
-
-        Task LoadAsync(IEntryModel em);        
-
-        //ObservableCollection<IEntryViewModel> Items { get; }
-        //IList<IEntryViewModel> SelectedItems { get; }
-        //CollectionView ProcessedItems { get; }
-
+        
         IEventAggregator Events { get; }
 
+        Task SetCurrentDirectoryAsync(IEntryModel em);
 
-        IEntryModel CurrentDirectory { get; }
+        IEntryModel CurrentDirectory { get; set; }
 
         string ViewMode { get; set; }
         int ItemSize { get; set; }
