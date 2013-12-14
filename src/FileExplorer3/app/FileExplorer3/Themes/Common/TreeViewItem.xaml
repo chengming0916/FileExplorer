@@ -2,6 +2,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
     xmlns:bc="clr-namespace:FileExplorer.BaseControls"
+    xmlns:def="clr-namespace:FileExplorer.Defines"
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
@@ -26,7 +27,8 @@
             </Grid.RowDefinitions>
 
             <bc:HotTrack Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2" 
-                         IsDragging="{TemplateBinding IsDraggingOver}"
+                         IsDragging="{Binding (def:AttachedProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
+                         IsDraggingOver="{Binding (def:AttachedProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"                    
                          IsSelected="{TemplateBinding IsSelected}" FillFullRow="True">
                 <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch"  
                                   Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2"

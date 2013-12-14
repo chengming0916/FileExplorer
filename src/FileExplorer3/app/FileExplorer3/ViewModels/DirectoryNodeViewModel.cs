@@ -22,7 +22,7 @@ namespace FileExplorer.ViewModels
         #region Cosntructor
 
         #region DirectoryNodeDropHelper
-        internal class DirectoryNodeDropHelper : TreeDropHelper<IEntryModel>
+        internal class DirectoryNodeDropHelper : DropHelper<IEntryModel>
         {
             private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)

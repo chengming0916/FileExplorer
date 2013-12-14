@@ -209,10 +209,16 @@ namespace FileExplorer.Models
             }
         }
 
+        public bool QueryCanDrop(IEntryModel destDir)
+        {
+            return (destDir as FileSystemInfoExModel).IsDirectory;
+        }
 
         public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
         {
-            return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
+            if ((destDir as FileSystemInfoExModel).IsDirectory)
+                return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
+            else return QueryDropResult.None;
         }
 
 

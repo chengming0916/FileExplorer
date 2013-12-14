@@ -57,6 +57,14 @@
                                              Storyboard.TargetProperty="Opacity"  To="0.35" />
                         </Storyboard>
                     </VisualState>
+                    <VisualState x:Name="DraggingOver">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="background"  Duration="0:0:0.1"
+                                             Storyboard.TargetProperty="Opacity"  To="0.05" />
+                            <DoubleAnimation Storyboard.TargetName="highlight"  Duration="0:0:0.1"
+                                             Storyboard.TargetProperty="Opacity"  To="0.35" />
+                        </Storyboard>
+                    </VisualState>
                     <VisualState x:Name="Selected">
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="selected"  Duration="0:0:0.1"
