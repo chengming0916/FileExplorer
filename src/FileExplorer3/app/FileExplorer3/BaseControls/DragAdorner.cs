@@ -28,8 +28,9 @@ namespace FileExplorer.BaseControls
             };
             _border.RenderTransform = new TranslateTransform(10, 0);
             //FrameworkElementFactory overlapPanelfactory = new FrameworkElementFactory(typeof(OverlappingPanel));
-            //overlapPanelfactory.SetValue(OverlappingPanel.OverlapXProperty, 5);
-            //overlapPanelfactory.SetValue(OverlappingPanel.OverlapYProperty, 5);
+            //overlapPanelfactory.SetValue(OverlappingPanel.OverlapXProperty, 5.0d);
+            //overlapPanelfactory.SetValue(OverlappingPanel.OverlapYProperty, 5.0d);
+
             _items = new ItemsControl()
                 {
                     MaxHeight = 250,
