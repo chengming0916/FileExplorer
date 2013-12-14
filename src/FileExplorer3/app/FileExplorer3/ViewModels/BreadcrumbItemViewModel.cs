@@ -12,17 +12,17 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class BreadcrumbItemViewModel : PropertyChangedBase, IBreadcrumbItemViewModel
+    public class BreadcrumbItemViewModel : EntryViewModel, IBreadcrumbItemViewModel
     {
         #region Constructor
 
         public BreadcrumbItemViewModel(IEventAggregator events, IBreadcrumbViewModel rootModel,
             IEntryModel curDirModel, IBreadcrumbItemViewModel parentModel)
+            : base(curDirModel)
         {
             _events = events;
             _rootModel = rootModel;
-
-            CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
+            
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>(loadEntriesTask);
             Selection = new TreeSelector<IBreadcrumbItemViewModel, IEntryModel>(curDirModel, this, 
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
@@ -58,8 +58,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
-        
-        public IEntryViewModel CurrentDirectory { get; set; }
+                
         public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
 

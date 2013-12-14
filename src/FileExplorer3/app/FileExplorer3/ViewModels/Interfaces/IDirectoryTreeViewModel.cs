@@ -14,10 +14,9 @@ namespace FileExplorer.ViewModels
         Task SelectAsync(IEntryModel value);
     }
 
-    public interface IDirectoryNodeViewModel : ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>, IDraggable
+    public interface IDirectoryNodeViewModel : IEntryViewModel, ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>, IDraggable
     {
-        bool ShowCaption { get; set; }
-        IEntryViewModel CurrentDirectory { get; set; }
+        bool ShowCaption { get; set; }        
     }
 
 }
