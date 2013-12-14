@@ -53,7 +53,7 @@ namespace FileExplorer.ViewModels
         #region Methods
 
         private async Task loadIcon()
-        {
+        {            
             Action<Task<ImageSource>> updateIcon = (tsk) =>
                 {
                     if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
