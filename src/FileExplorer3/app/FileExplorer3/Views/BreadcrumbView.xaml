@@ -29,7 +29,7 @@
                    BorderThickness="1" IsSwitchOn="{Binding ShowBreadcrumb, Mode=TwoWay}"
                    >
             <bc:Switch.Header>
-                <Image Source="{Binding Selection.SelectedViewModel.CurrentDirectory.Icon}" />
+                <Image Source="{Binding Selection.SelectedViewModel.Icon}" />
             </bc:Switch.Header>
             <bc:Switch.ContentOn>
                 <DockPanel>

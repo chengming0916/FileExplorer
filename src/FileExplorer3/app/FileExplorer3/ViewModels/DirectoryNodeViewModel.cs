@@ -15,7 +15,7 @@ using System.Windows;
 namespace FileExplorer.ViewModels
 {
 
-    public class DirectoryNodeViewModel : PropertyChangedBase, IDirectoryNodeViewModel, ISupportDropHelper
+    public class DirectoryNodeViewModel : EntryViewModel, IDirectoryNodeViewModel, ISupportDropHelper
     {
         public enum NodeState { IsCreated, IsLoading, IsLoaded, IsError, IsInvalid }
 
@@ -27,7 +27,7 @@ namespace FileExplorer.ViewModels
             private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
             {
-                var profiles = selection.RootSelector.EntryHelper.All.Select(rvm => rvm.CurrentDirectory.EntryModel.Profile);
+                var profiles = selection.RootSelector.EntryHelper.All.Select(rvm => rvm.EntryModel.Profile);
                 foreach (var p in profiles)
                 {
                     var retVal = p.GetEntryModels(da);
@@ -53,6 +53,7 @@ namespace FileExplorer.ViewModels
         /// For dummy node.
         /// </summary>
         private DirectoryNodeViewModel() 
+            : base()
         {
 
         }
@@ -62,18 +63,19 @@ namespace FileExplorer.ViewModels
         /// </summary>
         /// <param name="curDirModel"></param>
         public DirectoryNodeViewModel(IEntryModel curDirModel) 
+            : base(curDirModel)
         {
-            CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
+            
         }
 
         public DirectoryNodeViewModel(IEventAggregator events, IDirectoryTreeViewModel rootModel, IEntryModel curDirModel,
             IDirectoryNodeViewModel parentModel)
+            : base(curDirModel)
         {
 
             _events = events;
             _rootModel = rootModel;
-
-            CurrentDirectory = EntryViewModel.FromEntryModel(curDirModel);
+            
             Entries = new EntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask);
             Selection = new TreeSelector<IDirectoryNodeViewModel, IEntryModel>(curDirModel, this, 
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
@@ -113,8 +115,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public bool ShowCaption { get { return _showCaption; } set { _showCaption = value; NotifyOfPropertyChange(() => ShowCaption); } }
-        public IEntryViewModel CurrentDirectory { get; set; }
+        public bool ShowCaption { get { return _showCaption; } set { _showCaption = value; NotifyOfPropertyChange(() => ShowCaption); } }        
         public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
         public ISupportDrop DropHelper { get; set; }

@@ -71,21 +71,21 @@
     <HierarchicalDataTemplate x:Key="DirectoryNodeItemTemplate"  
                               ItemsSource="{Binding Entries.All}"
                               DataType="{x:Type vm:DirectoryNodeViewModel}">
-        <ContentPresenter Content="{Binding CurrentDirectory}"
+        <ContentPresenter Content="{Binding}"
             ContentTemplate="{StaticResource GridLabelTemplate}" />
     </HierarchicalDataTemplate>
 
     <HierarchicalDataTemplate x:Key="BreadcrumbMenuNodeItemTemplate"  
                               ItemsSource="{Binding Entries.All}"
                               DataType="{x:Type vm:DirectoryNodeViewModel}">
-        <ContentPresenter Content="{Binding CurrentDirectory}" Height="16"
+        <ContentPresenter Content="{Binding}" Height="16"
             ContentTemplate="{StaticResource SmallIconItemTemplate}" />
     </HierarchicalDataTemplate>
 
     <HierarchicalDataTemplate x:Key="ExpanderItemTemplate"  
                               ItemsSource="{Binding Entries.All}"
                               DataType="{x:Type vm:DirectoryNodeViewModel}">
-        <ContentPresenter Content="{Binding CurrentDirectory}" Height="16"
+        <ContentPresenter Content="{Binding}" Height="16"
             ContentTemplate="{StaticResource SmallIconItemTemplate}" 
                           Visibility="{Binding IsOverflowed, Converter={StaticResource fbtvc}}"
                           />
@@ -95,7 +95,7 @@
                               ItemsSource="{Binding Entries.All}"
                               DataType="{x:Type vm:DirectoryNodeViewModel}">
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Stretch" Stretch="Uniform">
-            <TextBlock Text="{Binding CurrentDirectory.EntryModel.Label}" 
+            <TextBlock Text="{Binding EntryModel.Label}" 
                    Padding="2,0" />
         </Viewbox>        
     </HierarchicalDataTemplate>

@@ -23,7 +23,7 @@ namespace FileExplorer.ViewModels
 
         public static IEntryViewModel DummyNode = new EntryViewModel() { EntryModel = EntryModelBase.DummyModel };
 
-        private EntryViewModel()
+        protected EntryViewModel()
         {
 
         }
