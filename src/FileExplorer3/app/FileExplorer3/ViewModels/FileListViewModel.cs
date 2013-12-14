@@ -117,11 +117,14 @@ namespace FileExplorer.ViewModels
 
         #region Actions
 
-        public async Task LoadAsync(IEntryModel em)
+        public async Task SetCurrentDirectoryAsync(IEntryModel em)
         {
-            CurrentDirectory = em;
+            _currentDirVM = em; 
+                        
             await ProcessedEntries.EntriesHelper.LoadAsync(true);
-            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);            
+            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);
+
+            NotifyOfPropertyChange(() => CurrentDirectory);
         }  
 
         public IEnumerable<IResult> ToggleRename()
@@ -129,20 +132,6 @@ namespace FileExplorer.ViewModels
             yield return new ToggleRename(this);
         }
 
-        #endregion
-
-        #region OnPropertyChanged
-
-        protected virtual void OnSortDirectoryChanged(ColumnInfo col, ListSortDirection direction)
-        {
-            if (CurrentDirectory == null)
-                return;
-            var comparer = new EntryViewModelComparer(
-                col.Comparer != null ? col.Comparer : CurrentDirectory.Profile.GetComparer(col),
-                direction);
-            ProcessedEntries.Sort(comparer, col.ValuePath);
-        }
-        
         #endregion
 
         public void Handle(ViewChangedEvent message)
@@ -154,7 +143,7 @@ namespace FileExplorer.ViewModels
         public void Handle(DirectoryChangedEvent message)
         {
             if (message.NewModel != null)
-                LoadAsync(message.NewModel);
+                CurrentDirectory = message.NewModel;                
         }
 
       
@@ -181,7 +170,7 @@ namespace FileExplorer.ViewModels
         public IEntryModel CurrentDirectory
         {
             get { return _currentDirVM; }
-            set { _currentDirVM = value; NotifyOfPropertyChange(() => CurrentDirectory); }
+            set { SetCurrentDirectoryAsync(value); }
         }
 
      
