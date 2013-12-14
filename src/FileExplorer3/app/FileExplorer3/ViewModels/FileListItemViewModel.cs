@@ -3,19 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FileExplorer.Models;
 using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class FileListItemViewModel : EntryViewModel, IFileListItemViewModel
+    public class FileListItemViewModel : EntryViewModel, IFileListItemViewModel, ISupportDropHelper
     {
-        #region Constructor
+        #region FileListItemDropHelper
+
+        #region MyRegion
+
+        internal class FileListItemDropHelper : DropHelper<IEntryModel>
+        {
+            private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
+                FileListItemViewModel flvm)
+            {
+                return flvm.EntryModel.Profile.GetEntryModels(da);
+            }
+
+            public FileListItemDropHelper(FileListItemViewModel flvm)
+                : base(
+                (ems, eff) => flvm.EntryModel.Profile.QueryDrop(ems, flvm.EntryModel, eff),
+                da => dataObjectFunc(da, flvm),
+                (ems, da, eff) => flvm.EntryModel.Profile.OnDropCompleted(ems, da, flvm.EntryModel, eff), em => EntryViewModel.FromEntryModel(em))
+            {                 
+            }
+        }
+
+        #endregion
 
         public FileListItemViewModel(IEntryModel model, IReportSelected<IEntryViewModel> reportSelected)
             : base(model)
         {
             _reportSelected = reportSelected;
+            DropHelper = 
+                model.Profile.QueryCanDrop(model) ? (ISupportDrop)new FileListItemDropHelper(this) : NoDropHelper.Instance;
             
         }
 
@@ -46,6 +70,8 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
+
+        public ISupportDrop DropHelper { get; private set; }
 
         #endregion
     }

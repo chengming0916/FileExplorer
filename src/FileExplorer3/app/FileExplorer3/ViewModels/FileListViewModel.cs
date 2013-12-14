@@ -34,7 +34,7 @@ namespace FileExplorer.ViewModels
     {
 
         #region FileListDrag/DropHelper
-        internal class FileListDropHelper : TreeDropHelper<IEntryModel>
+        internal class FileListDropHelper : DropHelper<IEntryModel>
         {
             private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
                 FileListViewModel flvm)

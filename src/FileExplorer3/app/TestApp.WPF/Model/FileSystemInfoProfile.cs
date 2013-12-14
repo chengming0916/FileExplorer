@@ -103,6 +103,12 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
+        public bool QueryCanDrop(IEntryModel destDir)
+        {
+            return (destDir as FileSystemInfoModel).IsDirectory;
+        }
+
+
         public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
         {
             throw new NotImplementedException();

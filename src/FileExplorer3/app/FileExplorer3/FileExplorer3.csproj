@@ -242,7 +242,7 @@
     <Compile Include="ViewModels\Helpers\NotifyPropertyChangedBase.cs" />
     <Compile Include="ViewModels\Helpers\EntriesHelper.cs" />
     <Compile Include="ViewModels\Helpers\TreeDragHelper.cs" />
-    <Compile Include="ViewModels\Helpers\TreeDropHelper.cs" />
+    <Compile Include="ViewModels\Helpers\DropHelperImpl.cs" />
     <Compile Include="ViewModels\Helpers\TreeSelector.cs" />
     <Compile Include="ViewModels\Helpers\TreeRootSelector.cs" />
     <Compile Include="ViewModels\Interfaces\IBreadcrumbItemViewModel.cs" />

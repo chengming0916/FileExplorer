@@ -14,7 +14,7 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.BaseControls
 {
-    [TemplatePart(Name = "hotTrackGrid", Type=typeof(Grid))]
+    [TemplatePart(Name = "hotTrackGrid", Type = typeof(Grid))]
     [TemplatePart(Name = "selected", Type = typeof(Rectangle))]
     [TemplatePart(Name = "background", Type = typeof(Rectangle))]
     [TemplatePart(Name = "highlight", Type = typeof(Rectangle))]
@@ -71,17 +71,18 @@ namespace FileExplorer.BaseControls
 
         private void UpdateStates(bool useTransition)
         {
-           
+
             if (IsSelected)
                 VisualStateManager.GoToState(this, "Selected", useTransition);
-            else
-                if (IsDragging)
-                    VisualStateManager.GoToState(this, "Dragging", useTransition);
-                else if (IsMouseOver)
-                    if (IsEnabled)
-                        VisualStateManager.GoToState(this, "MouseOver", useTransition);
-                    else VisualStateManager.GoToState(this, "MouseOverGrayed", useTransition);
-                else VisualStateManager.GoToState(this, "Normal", useTransition);
+            else if (IsDragging)
+                VisualStateManager.GoToState(this, "Dragging", useTransition);
+            else if (IsDraggingOver)
+                VisualStateManager.GoToState(this, "DraggingOver", useTransition);
+            else if (IsMouseOver)
+                if (IsEnabled)
+                    VisualStateManager.GoToState(this, "MouseOver", useTransition);
+                else VisualStateManager.GoToState(this, "MouseOverGrayed", useTransition);
+            else VisualStateManager.GoToState(this, "Normal", useTransition);
 
             //if (IsFocused)
             //    VisualStateManager.GoToState(this, "Focused", useTransition);
@@ -133,6 +134,16 @@ namespace FileExplorer.BaseControls
 
         public static readonly DependencyProperty IsDraggingProperty =
             DependencyProperty.Register("IsDragging", typeof(bool),
+            typeof(HotTrack), new UIPropertyMetadata(false, OnIsSelectedChanged));
+
+        public bool IsDraggingOver
+        {
+            get { return (bool)GetValue(IsDraggingOverProperty); }
+            set { SetValue(IsDraggingOverProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsDraggingOverProperty =
+            DependencyProperty.Register("IsDraggingOver", typeof(bool),
             typeof(HotTrack), new UIPropertyMetadata(false, OnIsSelectedChanged));
 
         /// <summary>

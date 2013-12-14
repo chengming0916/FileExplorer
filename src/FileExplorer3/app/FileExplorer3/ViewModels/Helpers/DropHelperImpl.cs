@@ -7,11 +7,60 @@ using System.Windows;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public class TreeDropHelper<T> : NotifyPropertyChanged, ISupportDrop         
+    public class NoDropHelper : NotifyPropertyChanged, ISupportDrop
     {
         #region Constructor
 
-        public TreeDropHelper(
+        public static NoDropHelper Instance = new NoDropHelper();
+
+        #endregion
+
+        #region Methods
+
+        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Data
+
+        #endregion
+
+        #region Public Properties
+
+        public bool IsDraggingOver
+        {
+            set { }
+        }
+
+        public bool IsDroppable
+        {
+            get { return false; }
+        }
+
+        #endregion
+
+
+
+    }
+
+    public class DropHelper<T> : NotifyPropertyChanged, ISupportDrop
+    {
+        #region Constructor
+
+        public DropHelper(
             Func<IEnumerable<T>, DragDropEffects, QueryDropResult> queryDropFunc,
             Func<IDataObject, IEnumerable<T>> dataobjectFunc,
             Func<IEnumerable<T>, IDataObject, DragDropEffects, DragDropEffects> dropFunc,

@@ -39,13 +39,16 @@ namespace FileExplorer.BaseControls.DragnDrop
             var isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
             if (isd != null)
             {
-                isd.IsDraggingOver = _mode == QueryDragDropEffectMode.Enter;
+                bool isDraggingOver = isd.IsDraggingOver = _mode == QueryDragDropEffectMode.Enter;
+                AttachedProperties.SetIsDraggingOver(ele, isDraggingOver);
 
                 if (_mode == QueryDragDropEffectMode.Enter)
                 {
                     AttachedProperties.SetDraggingOverItem(ic, ele);
                     eventArgs.Effects = eventArgs.AllowedEffects &
                         isd.QueryDrop(eventArgs.Data, eventArgs.AllowedEffects).SupportedEffects;
+                    if (eventArgs.Effects == DragDropEffects.None)
+                        AttachedProperties.SetIsDraggingOver(ele, false);
                     eventArgs.Handled = true;
                     
                     return new AttachAdorner();
@@ -55,6 +58,8 @@ namespace FileExplorer.BaseControls.DragnDrop
                     AttachedProperties.SetDraggingOverItem(Window.GetWindow(ic), null);
                     return new HideAdorner();
                 }
+
+                
             }
             else
             {
