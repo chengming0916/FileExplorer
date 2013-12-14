@@ -35,19 +35,14 @@ namespace FileExplorer.ViewModels
 
         #region FileListDrag/DropHelper
         internal class FileListDropHelper : DropHelper<IEntryModel>
-        {
-            private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
-                FileListViewModel flvm)
-            {
-                return flvm.CurrentDirectory.Profile.GetEntryModels(da);
-            }
-
+        {            
             public FileListDropHelper(FileListViewModel flvm)
-                : base(
-                (ems, eff) => flvm.CurrentDirectory.Profile.QueryDrop(ems, flvm.CurrentDirectory, eff),
-                da => dataObjectFunc(da, flvm),
+                : base(() => flvm.CurrentDirectory.Label,
+                (ems, eff) => flvm.CurrentDirectory.Profile.QueryDrop(ems, flvm.CurrentDirectory, eff),                    
+                    da => flvm.CurrentDirectory.Profile.GetEntryModels(da),
                 (ems, da, eff) => flvm.CurrentDirectory.Profile.OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
             { }
+            
         }
         private class FileListDragHelper : TreeDragHelper<IEntryModel>
         {

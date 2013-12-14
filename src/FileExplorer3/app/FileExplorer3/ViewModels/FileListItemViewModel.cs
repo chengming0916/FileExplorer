@@ -17,16 +17,11 @@ namespace FileExplorer.ViewModels
 
         internal class FileListItemDropHelper : DropHelper<IEntryModel>
         {
-            private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
-                FileListItemViewModel flvm)
-            {
-                return flvm.EntryModel.Profile.GetEntryModels(da);
-            }
-
+            
             public FileListItemDropHelper(FileListItemViewModel flvm)
-                : base(
-                (ems, eff) => flvm.EntryModel.Profile.QueryDrop(ems, flvm.EntryModel, eff),
-                da => dataObjectFunc(da, flvm),
+                : base( () => flvm.EntryModel.Label,
+                (ems, eff) => flvm.EntryModel.Profile.QueryDrop(ems, flvm.EntryModel, eff),                
+                da => flvm.EntryModel.Profile.GetEntryModels(da),
                 (ems, da, eff) => flvm.EntryModel.Profile.OnDropCompleted(ems, da, flvm.EntryModel, eff), em => EntryViewModel.FromEntryModel(em))
             {                 
             }

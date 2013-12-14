@@ -22,9 +22,9 @@ namespace FileExplorer.BaseControls.DragnDrop
 {
     public static class DataContextFinder
     {
-        public static Func<object, ISupportDrag> SupportDrag = 
-            dc => (dc is ISupportDrag && (dc as ISupportDrag).HasDraggables) ? dc as ISupportDrag : 
-                (dc is ISupportDragHelper && (dc as ISupportDragHelper).DragHelper.HasDraggables) ? (dc as ISupportDragHelper).DragHelper : 
+        public static Func<object, ISupportDrag> SupportDrag =
+            dc => (dc is ISupportDrag && (dc as ISupportDrag).HasDraggables) ? dc as ISupportDrag :
+                (dc is ISupportDragHelper && (dc as ISupportDragHelper).DragHelper.HasDraggables) ? (dc as ISupportDragHelper).DragHelper :
                 null;
 
         public static Func<object, ISupportDrop> SupportDrop =
@@ -198,140 +198,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
 
 
-    public class UpdateAdorner : ScriptCommandBase
-    {
-        public UpdateAdorner(bool updateDraggables)
-            : base("UpdateAdorner", "EventArgs")
-        { _updateDraggables = updateDraggables; }
-
-        private bool _updateDraggables;
-        private static IDataObject _previousDataObject = null;
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-            var eventArgs = pd.EventArgs as DragEventArgs;
-            Window parentWindow = Window.GetWindow(ic);
-            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
-
-            if (isd != null)
-            {
-                var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
-                if (dragAdorner != null)
-                {
-                    if (_updateDraggables && !eventArgs.Data.Equals(_previousDataObject))
-                    {
-                        var newDraggables = isd.QueryDropDraggables(eventArgs.Data);
-                        dragAdorner.DraggingItems = newDraggables;
-                        var hintTemplate = AttachedProperties.GetDragItemTemplate(ic);
-                        dragAdorner.DraggingItemTemplate = hintTemplate ?? ic.ItemTemplate;
-
-                        _previousDataObject = eventArgs.Data;
-                    }
-                    dragAdorner.PointerPosition = eventArgs.GetPosition(parentWindow);
-                    dragAdorner.IsDragging = true;
-
-                }
-            }
-
-            return ResultCommand.NoError;
-        }
-    }
-
-
-    public class HideAdorner : ScriptCommandBase
-    {
-        public HideAdorner() : base("HideAdorner", "EventArgs") { }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-            var eventArgs = pd.EventArgs as DragEventArgs;
-            Window parentWindow = Window.GetWindow(ic);
-
-            var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
-            if (dragAdorner != null)
-                dragAdorner.IsDragging = false;
-
-            return ResultCommand.NoError;
-        }
-    }
-
-
-    public class AttachAdorner : ScriptCommandBase
-    {
-        public AttachAdorner() : base("AttachAdorner", "EventArgs") { }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-
-            Window parentWindow = Window.GetWindow(ic);
-
-            if (parentWindow != null)
-            {
-                pm["DragDropAdorner"] = AttachedProperties.GetDragAdorner(parentWindow);
-                if (pm["DragDropAdorner"] != null)
-                    return new UpdateAdorner(true);
-
-                AdornerDecorator decorator = UITools.FindVisualChildByName<AdornerDecorator>
-                    (parentWindow, "PART_DragDropAdorner");
-
-                if (decorator == null)
-                    return ResultCommand.Error(new KeyNotFoundException("PART_DragDropAdorner"));
-                else
-                {
-                    AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(decorator);
-                    DragAdorner adorner = new DragAdorner(adornerLayer);
-                    pm["DragDropAdorner"] = adorner;
-                    adornerLayer.Add(adorner);
-                    AttachedProperties.SetDragAdorner(parentWindow, adorner);
-                    return new UpdateAdorner(true);
-                }
-            }
-
-            return ResultCommand.Error(new Exception("Control do not have parent window."));
-        }
-    }
-
-    public class DetachAdorner : ScriptCommandBase
-    {
-        public DetachAdorner() : base("DetachAdorner", "EventArgs") { }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-
-            Window parentWindow = Window.GetWindow(ic);
-
-            if (parentWindow != null)
-            {
-                var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
-
-                if (dragAdorner != null)
-                {
-                    AdornerDecorator decorator = UITools.FindVisualChildByName<AdornerDecorator>
-                        (parentWindow, "PART_DragDropAdorner");
-
-                    if (decorator == null)
-                        return ResultCommand.Error(new KeyNotFoundException("PART_DragDropAdorner"));
-                    else
-                    {
-                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(decorator);
-                        adornerLayer.Remove(dragAdorner);
-                        AttachedProperties.SetDragAdorner(parentWindow, null);
-                        return ResultCommand.NoError;
-                    }
-                }
-            }
-
-            return ResultCommand.Error(new Exception("Control do not have parent window."));
-        }
-    }
+    
 
 
     #region Update/CheckIsDragging

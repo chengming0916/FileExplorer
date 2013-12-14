@@ -186,6 +186,8 @@ namespace FileExplorer.Models
         }
 
 
+
+
         public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
         {
             if (dataObject.GetDataPresent(DataFormats.FileDrop))
@@ -279,6 +281,8 @@ namespace FileExplorer.Models
 
 
 
-       
+
+
+
     }
 }

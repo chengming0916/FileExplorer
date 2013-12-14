@@ -37,11 +37,14 @@ namespace FileExplorer.ViewModels
                 return null;
             }
 
+          
+
             public DirectoryNodeDropHelper(IEntryModel curDir, IEntriesHelper<IDirectoryNodeViewModel> entries,
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
-                (ems, eff) => curDir.Profile.QueryDrop(ems, curDir, eff),
-                da => dataObjectFunc(da, selection),
+                () => curDir.Label,
+                (ems, eff) => curDir.Profile.QueryDrop(ems, curDir, eff),                
+                da => dataObjectFunc(da, selection),                
                 (ems, da, eff) => curDir.Profile.OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
             { }
         }
