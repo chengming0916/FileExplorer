@@ -77,6 +77,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
+    <Compile Include="Views\ToolbarView.xaml.cs">
+      <DependentUpon>ToolbarView.xaml</DependentUpon>
+    </Compile>
     <None Include="BaseControls\LambdaHierarchyHelper.cs" />
     <Compile Include="BaseControls\Invert.cs" />
     <Compile Include="BaseControls\OneItemPanel.cs" />
@@ -252,6 +256,7 @@
     <Compile Include="ViewModels\Interfaces\INavigationViewModel.cs" />
     <Compile Include="ViewModels\MetadataViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
+    <Compile Include="ViewModels\ToolbarViewModel.cs" />
     <Compile Include="ViewModels\ViewModeViewModel.cs" />
     <Compile Include="Views\BreadcrumbView.xaml.cs">
       <DependentUpon>BreadcrumbView.xaml</DependentUpon>
@@ -499,6 +504,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StatusbarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolbarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -24,7 +24,7 @@ namespace FileExplorer.ViewModels
             FileList = new FileListViewModel(_internalEvents);
             DirectoryTree = new DirectoryTreeViewModel(_internalEvents, rootModels);
             Statusbar = new StatusbarViewModel(_internalEvents);
-            Navigation = new NavigationViewModel(_internalEvents);
+            Navigation = new NavigationViewModel(_internalEvents);            
 
             _internalEvents.Subscribe(this);
         }
@@ -78,6 +78,7 @@ namespace FileExplorer.ViewModels
         public IFileListViewModel FileList { get; private set; }
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
+        
 
         #endregion
     }

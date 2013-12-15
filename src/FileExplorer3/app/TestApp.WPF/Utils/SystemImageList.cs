@@ -868,7 +868,7 @@ namespace QuickZip.Converters
             {
                 icon = System.Drawing.Icon.FromHandle(hIcon);
             }
-            return icon.Clone() as Icon;
+            return icon != null ? icon.Clone() as Icon : null;
 
         }
 

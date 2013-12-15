@@ -260,10 +260,19 @@ namespace FileExplorer.UserControls
 
         public event RoutedEventHandler FilterChanged
         {
-            add { AddHandler(FilterChangedEvent, value); }
+            add { AddHandler(FilterChangedEvent, value);  }
             remove { RemoveHandler(FilterChangedEvent, value); }
         }
 
+        public static readonly DependencyProperty ContentBelowHeaderProperty =
+            DependencyProperty.Register("ContentBelowHeader", typeof(object), typeof(ListViewEx));
+        public object ContentBelowHeader
+        {
+            get { return (object)GetValue(ContentBelowHeaderProperty); }
+            set { SetValue(ContentBelowHeaderProperty, value); }
+        }
+
+        
         #endregion
 
         #region SortBy, SortDirection property

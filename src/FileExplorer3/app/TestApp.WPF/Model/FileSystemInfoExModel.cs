@@ -32,9 +32,7 @@ namespace FileExplorer.Models
                     new FileSystemInfoExModel(profile,
                         (profile as FileSystemInfoExProfile).createDirectoryInfo(ParentFullPath));
                 });
-            this.Description = fsi.GetType().ToString();
-
-            fsi.Dispose();
+            this.Description = fsi.GetType().ToString();            
         }
 
         #endregion
