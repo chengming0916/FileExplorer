@@ -82,7 +82,7 @@ namespace FileExplorer.Models
             var retVal = new DataObject();
             retVal.SetData(
                DataFormats.FileDrop,
-               entries.Cast<FileSystemInfoExModel>()
+               entries.Cast<FileSystemInfoModel>()
                .Select(m => m.FullPath).ToArray());
             return retVal;            
         }
@@ -100,7 +100,7 @@ namespace FileExplorer.Models
 
         public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
         {
-            throw new NotImplementedException();
+            yield break; ;
         }
 
         public bool QueryCanDrop(IEntryModel destDir)
@@ -111,7 +111,7 @@ namespace FileExplorer.Models
 
         public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
         {
-            throw new NotImplementedException();
+            return QueryDropResult.None;
         }
 
         public DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffects allowedEffects)
