@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7A89CE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTemplate.WPF", "TestTemplate.WPF\TestTemplate.WPF.csproj", "{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryInfoEx", "..\..\DirectoryInfoEx\app\DirectoryInfoEx\DirectoryInfoEx.csproj", "{09DF5A9A-989E-410C-BA72-5A94CF481E57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,16 @@ Global
 		{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}.Release|ARM.ActiveCfg = Release|Any CPU
 		{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}.Release|x64.ActiveCfg = Release|Any CPU
 		{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|ARM.ActiveCfg = Release|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|x64.ActiveCfg = Release|Any CPU
+		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

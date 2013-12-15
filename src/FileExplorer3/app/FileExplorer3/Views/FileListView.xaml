@@ -9,6 +9,7 @@
              xmlns:bc="clr-namespace:FileExplorer.BaseControls"
              xmlns:def="clr-namespace:FileExplorer.Defines"
              xmlns:m="clr-namespace:FileExplorer.Models"
+             xmlns:v="clr-namespace:FileExplorer.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -50,6 +51,11 @@
                     <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
             </i:Interaction.Triggers>
+
+            <uc:ListViewEx.ContentBelowHeader>
+                <!--<ContentControl Name="Toolbar" Content="{Binding Toolbar}" Margin="2" />-->
+                <v:ToolbarView x:Name="Toolbar" DataContext="{Binding Toolbar}" />
+            </uc:ListViewEx.ContentBelowHeader>
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>

@@ -74,6 +74,8 @@ namespace FileExplorer.ViewModels
             DropHelper = new FileListDropHelper(this);
             DragHelper = new FileListDragHelper(this);
 
+            Toolbar = new ToolbarViewModel(events);
+
             Selection.SelectionChanged += (o, e) => 
             { Events.Publish(new SelectionChangedEvent(this, Selection.SelectedItems)); };
 
@@ -161,6 +163,8 @@ namespace FileExplorer.ViewModels
         public IListSelector<IEntryViewModel, IEntryModel> Selection { get; private set; }
         public ISupportDrag DragHelper { get; private set; }
         public ISupportDrop DropHelper { get; private set; }
+
+        public IToolbarViewModel Toolbar { get; private set; }
 
         public IEntryModel CurrentDirectory
         {
