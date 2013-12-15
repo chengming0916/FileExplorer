@@ -25,6 +25,9 @@ namespace FileExplorer.Models
 
         public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
         {
+            if (a == null || b == null)
+                return HierarchicalResult.Unrelated;
+
             string apath = a.FullPath.TrimEnd('\\');
             string bpath = b.FullPath.TrimEnd('\\');
             if (apath.Equals(bpath, _stringComparsion))

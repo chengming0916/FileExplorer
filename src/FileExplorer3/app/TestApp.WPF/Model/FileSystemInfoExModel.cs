@@ -33,6 +33,8 @@ namespace FileExplorer.Models
                         (profile as FileSystemInfoExProfile).createDirectoryInfo(ParentFullPath));
                 });
             this.Description = fsi.GetType().ToString();
+
+            fsi.Dispose();
         }
 
         #endregion
