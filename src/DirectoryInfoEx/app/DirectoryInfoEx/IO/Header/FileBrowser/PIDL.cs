@@ -8,24 +8,30 @@ using System.Diagnostics;
 namespace ShellDll
 {
     public class PIDL : IEnumerable //, IDisposable //11-01-09 : Added automatic disposer (LYCJ)
-        //0.13 : Removed IDisposable in PIDL as it causing AccessViolationException, user have to free calling the Free() method.
+    //0.13 : Removed IDisposable in PIDL as it causing AccessViolationException, user have to free calling the Free() method.
     {
+
         private IntPtr pidl = IntPtr.Zero;
+        public static int Counter = 0;
 
         #region Constructors
 
         public PIDL(IntPtr pidl, bool clone)
         {
-            if (clone)
+            System.Threading.Interlocked.Increment(ref Counter);
+            if (clone)            
                 this.pidl = ILClone(pidl);
             else
-                this.pidl = pidl;            
+                this.pidl = pidl;
         }
 
         public PIDL(PIDL pidl, bool clone)
         {
             if (clone)
+            {
                 this.pidl = ILClone(pidl.Ptr);
+                System.Threading.Interlocked.Increment(ref Counter);
+            }
             else
                 this.pidl = pidl.Ptr;
         }
@@ -106,6 +112,7 @@ namespace ShellDll
         {
             if (pidl != IntPtr.Zero)
             {
+                System.Threading.Interlocked.Decrement(ref Counter);
                 Marshal.FreeCoTaskMem(pidl);
                 pidl = IntPtr.Zero;
             }

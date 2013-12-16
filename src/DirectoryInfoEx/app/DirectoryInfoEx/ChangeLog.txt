@@ -1,4 +1,5 @@
-﻿QuickZip.IO.PIDL change log.
+﻿
+QuickZip.IO.PIDL change log.
 
      * 08-22-09 - version 0.1
           o Initial version.
@@ -107,3 +108,6 @@
 	      o Added ImageExtractor, which uses IExtractImage to generate thumbnails.
 		  o Added PreviewHelper and PreviewControl, which is a IPreviewHandler.
 		  o Fix illegal PIDL for Directory under Library.ms directory
+		12-16-13 Version 0.23
+		  o Change access to FileSystemInfoEx.PIDL/PidlRel to extension methods (RequestPIDL/RelPIDL)
+		  o Fixed a memory leak when listing.

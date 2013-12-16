@@ -134,7 +134,7 @@ namespace System.IO
                      .Replace("__OPENQUOTE__", "(")
                      .Replace("__CLOSEQUOTE__", ")")
                      .Replace("__QM__", ".")
-                 + '$';  
+                 + '$';
             }
         }
 
@@ -218,10 +218,10 @@ namespace System.IO
         public static Environment.SpecialFolder CSIDLToShellFolder(ShellAPI.CSIDL csidl)
         {
             var enumerator = _shellFolderLookupDic.GetEnumerator();
-            
+
             while (enumerator.MoveNext())
-               if (enumerator.Current.Value.Equals(csidl))
-                   return enumerator.Current.Key;
+                if (enumerator.Current.Value.Equals(csidl))
+                    return enumerator.Current.Key;
 
             throw new ArgumentException("This CSIDL path not supported");
         }
@@ -252,7 +252,10 @@ namespace System.IO
             List<PIDL> retVal = new List<PIDL>();
             foreach (FileSystemInfoEx fi in items)
                 if (fi.Exists)
-                    retVal.Add(relative ? fi.PIDLRel : fi.PIDL);
+                    fi.RequestPIDL((pidl, relPidl) =>
+                        {
+                            retVal.Add(relative ? relPidl : pidl);
+                        });
             return retVal.ToArray();
         }
 
@@ -473,12 +476,17 @@ namespace System.IO
                 if (srcParentShellFolder == null)
                     throw new IOException("Source directory does not support IShellFolder");
 
-                IntPtr tmpPtr;
-                int hr = srcParentShellFolder.SetNameOf(IntPtr.Zero, srcElement.PIDLRel.Ptr,
-                    destName, ShellAPI.SHGNO.FORPARSING, out tmpPtr);
+                int hr = srcElement.RequestRelativePIDL(srcRelPidl =>
+                    {
+                        IntPtr tmpPtr;
+                        int retVal = srcParentShellFolder.SetNameOf(IntPtr.Zero, srcRelPidl.Ptr,
+                            destName, ShellAPI.SHGNO.FORPARSING, out tmpPtr);
 
-                PIDL tmpPIDL = new PIDL(tmpPtr, false); //consume the IntPtr, and free it.
-                tmpPIDL.Free();
+                        PIDL tmpPIDL = new PIDL(tmpPtr, false); //consume the IntPtr, and free it.
+                        tmpPIDL.Free();
+
+                        return retVal;
+                    });
 
                 if (hr != ShellAPI.S_OK)
                     Marshal.ThrowExceptionForHR(hr);
@@ -557,41 +565,47 @@ namespace System.IO
             if (dir.FullName.Equals(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)))
                 dir = DirectoryInfoEx.DesktopDirectory;
 
-            //0.15 : Fixed PIDL not freed correctly.
-            PIDL dirPIDLRel = dir.PIDLRel;
-            int hr;
-
+            IntPtr storePtr = IntPtr.Zero;
+            //0.15 : Fixed PIDL not freed correctly.      
             try
             {
-                if (dirPIDLRel.Size == 0)
-                {
-                    IntPtr pidlLast = IntPtr.Zero;
-                    hr = ShellAPI.SHBindToParent(dirPIDLRel.Ptr, ShellAPI.IID_IStorage,
-                        out storagePtr, ref pidlLast);
-                }
-                else
-                    //0.15: Fixed ShellFolder not freed correctly.
-                    using (ShellFolder2 dirParentShellFolder = dir.Parent.ShellFolder)
-                        if (dirParentShellFolder != null)
-                            hr = dirParentShellFolder.BindToStorage(
-                            dirPIDLRel.Ptr, IntPtr.Zero, ref ShellAPI.IID_IStorage,
-                            out storagePtr);
-                        else
+                return dir.RequestRelativePIDL(dirPIDLRel =>
+                    {
+
+                        int hr;
+                        if (dirPIDLRel.Size == 0)
                         {
-                            storagePtr = IntPtr.Zero;
+                            IntPtr pidlLast = IntPtr.Zero;
+                            hr = ShellAPI.SHBindToParent(dirPIDLRel.Ptr, ShellAPI.IID_IStorage,
+                                out storePtr, ref pidlLast);
+                        }
+                        else
+                            //0.15: Fixed ShellFolder not freed correctly.
+                            using (ShellFolder2 dirParentShellFolder = dir.Parent.ShellFolder)
+                                if (dirParentShellFolder != null)
+                                    hr = dirParentShellFolder.BindToStorage(
+                                    dirPIDLRel.Ptr, IntPtr.Zero, ref ShellAPI.IID_IStorage,
+                                    out storePtr);
+                                else
+                                {
+                                    storePtr = IntPtr.Zero;
+                                    return false;
+                                }
+
+                        if ((hr != ShellAPI.S_OK))
+                        {
+                            storePtr = IntPtr.Zero;
+                            Marshal.ThrowExceptionForHR(hr);
                             return false;
                         }
 
-                if ((hr != ShellAPI.S_OK))
-                {
-                    storagePtr = IntPtr.Zero;
-                    Marshal.ThrowExceptionForHR(hr);
-                    return false;
-                }
+                        return true;
+                    });
             }
-            finally { if (dirPIDLRel != null) dirPIDLRel.Free(); dirPIDLRel = null; }
-
-            return true;
+            finally
+            {
+                storagePtr = storePtr;
+            }
         }
         /// <summary>
         /// Take a directory and return the IStorage PTr interface.

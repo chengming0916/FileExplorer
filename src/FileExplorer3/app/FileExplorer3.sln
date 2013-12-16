@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTemplate.WPF", "TestTem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryInfoEx", "..\..\DirectoryInfoEx\app\DirectoryInfoEx\DirectoryInfoEx.csproj", "{09DF5A9A-989E-410C-BA72-5A94CF481E57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "..\..\..\..\Test\ConsoleApplication1\ConsoleApplication1.csproj", "{B6436C31-1CBC-4970-B082-291D698BDD37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,16 @@ Global
 		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|ARM.ActiveCfg = Release|Any CPU
 		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|x64.ActiveCfg = Release|Any CPU
 		{09DF5A9A-989E-410C-BA72-5A94CF481E57}.Release|x86.ActiveCfg = Release|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Release|x64.ActiveCfg = Release|Any CPU
+		{B6436C31-1CBC-4970-B082-291D698BDD37}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

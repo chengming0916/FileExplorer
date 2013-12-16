@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\FileSystemInfoEx\ExtensionMethods.cs" />
     <Compile Include="IO\Header\FileBrowser\Interfaces\IExtractImage.cs" />
     <Compile Include="IO\Header\FileBrowser\Interfaces\IAdviseSink.cs" />
     <Compile Include="IO\Header\FileBrowser\Interfaces\IContextMenu.cs" />

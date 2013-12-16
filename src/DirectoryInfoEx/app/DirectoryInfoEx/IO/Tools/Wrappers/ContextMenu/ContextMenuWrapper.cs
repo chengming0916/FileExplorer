@@ -705,23 +705,16 @@ namespace System.IO.Tools
                 {
                     IShellExtInit iShellExtInit = Marshal.GetTypedObjectForIUnknown(
                         iShellExtInitPtr, typeof(IShellExtInit)) as IShellExtInit;
+                    
+                    item.RequestPIDL(pidlLookup =>
+                        {
+                            iShellExtInit.Initialize(pidlLookup.Ptr, IntPtr.Zero, 0);
 
-                    PIDL pidlLookup = item.PIDL;
-                    try
-                    {
-                        iShellExtInit.Initialize(pidlLookup.Ptr, IntPtr.Zero, 0);
+                            Marshal.ReleaseComObject(iShellExtInit);
+                            Marshal.Release(iShellExtInitPtr);
+                        });
 
-                        Marshal.ReleaseComObject(iShellExtInit);
-                        Marshal.Release(iShellExtInitPtr);
-
-                        return true;
-                    }
-                    finally
-                    {
-                        if (pidlLookup != null)
-                            pidlLookup.Free();
-                        pidlLookup = null;
-                    }
+                    return true;                    
                 }
                 else
                 {

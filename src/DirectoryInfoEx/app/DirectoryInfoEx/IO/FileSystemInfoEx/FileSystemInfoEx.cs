@@ -27,6 +27,7 @@ namespace System.IO
         #endregion
 
         #region Variables and Properties
+        public static int counter = 0;
         private string _name;
         internal DirectoryInfoEx _parent;
         private bool _parentInited = false;
@@ -35,14 +36,15 @@ namespace System.IO
         private FileAttributes _attributes;
         private DateTime _lastWriteTime, _lastAccessTime, _creationTime;
   
-        public PIDL PIDLRel
-        {
-            get { return getRelPIDL(); ; }
-        }
-        public PIDL PIDL
-        {
-            get { return getPIDL(); }
-        }
+
+        //public PIDL PIDLRel
+        //{
+        //    get { return getRelPIDL(); ; }
+        //}
+        //public PIDL PIDL
+        //{
+        //    get { return getPIDL(); }
+        //}
 
         public RefreshModeEnum RefreshMode { get; private set; }
         public override string Name { get { return _name; } }
@@ -74,11 +76,14 @@ namespace System.IO
                 if (Exists)
                 {
                     if (FullName.Equals(IOTools.IID_Desktop)) return;
-                    PIDL relPIDL;
-                    _parent = new DirectoryInfoEx(getParentPIDL(PIDL, out relPIDL));
-                    _parentInited = true;
 
-                    relPIDL.Free();
+                    this.RequestPIDL((pidl) =>
+                        {
+                            PIDL relPIDL;
+                            _parent = new DirectoryInfoEx(getParentPIDL(pidl));                            
+                            _parentInited = true;
+                            
+                        });
                 }
                 else
                 {
@@ -87,28 +92,30 @@ namespace System.IO
                 }
         }
 
+
+
         //0.12: Fixed PIDL, PIDLRel, ShellFolder, Storage properties generated on demand to avoid x-thread issues.
-        private PIDL getRelPIDL()
+        internal PIDL getRelPIDL()
         {
             if (_pidlRel != null) //0.14 : FileSystemInfoEx now stored a copy of PIDL/Rel, will return copy of it when properties is called (to avoid AccessViolation). 
                 return new PIDL(_pidlRel, true);
 
 
-            //0.16: Fixed getRelPIDL() cannot return correct value if File/DirInfoEx construct with string. (attemp to return a freed up pointer).
-            //PIDL pidlLookup = PIDL;
-            //try
-            //{
-            return getRelativePIDL(PIDL);
-            //}
-            //finally
-            //{
-            //    if (pidlLookup != null)
-            //        pidlLookup.Free();
-            //    pidlLookup = null;
-            //}
+            //0.16: Fixed getRelPIDL() cannot return correct value if File/DirInfoEx construct with string. (attemp to return a freed up pointer).                       
+            PIDL pidlLookup = getPIDL();
+            try
+            {
+                return getRelativePIDL(pidlLookup);
+            }
+            finally
+            {
+                if (pidlLookup != null)
+                    pidlLookup.Free();
+                pidlLookup = null;
+            }
         }
 
-        private PIDL getPIDL()
+        internal PIDL getPIDL()
         {
             if (_pidl != null)
                 return new PIDL(_pidl, true);
@@ -194,15 +201,20 @@ namespace System.IO
         }
 
 
-        internal static string PIDLToPath(PIDL pidlFull)
-        {
-            PIDL desktopPIDL = DirectoryInfoEx.DesktopDirectory.PIDL;
-            if (pidlFull.Equals(desktopPIDL))
-                return "::{00021400-0000-0000-C000-000000000046}";
-            if (desktopPIDL != null) desktopPIDL.Free(); desktopPIDL = null;
+        internal static string PtrToPath(IntPtr ptr)
+        {            
+            using (ShellFolder2 _desktopShellFolder = getDesktopShellFolder())
+                return loadName(_desktopShellFolder, ptr, ShellAPI.SHGNO.FORPARSING);
 
+        }
+
+        internal static string PIDLToPath(PIDL pidlFull)
+        {            
+            if (DirectoryInfoEx.DesktopDirectory.RequestPIDL(desktopPIDL => pidlFull.Equals(desktopPIDL)))
+                return "::{00021400-0000-0000-C000-000000000046}";
             using (ShellFolder2 _desktopShellFolder = getDesktopShellFolder())
                 return loadName(_desktopShellFolder, pidlFull, ShellAPI.SHGNO.FORPARSING);
+                
         }
 
         internal static string PIDLToPath(IShellFolder2 iShellFolder, PIDL pidlRel)
@@ -225,13 +237,27 @@ namespace System.IO
             relPIDL = new PIDL(pidl, true); //0.21
             if (pidl.Size == 0)
                 return pidl;
+
             IntPtr pParent = PIDL.ILClone(pidl.Ptr);
 
             relPIDL = getRelativePIDL(pidl);
             if (pParent == IntPtr.Zero || !PIDL.ILRemoveLastID2(ref pParent))
+            {
+                new PIDL(pParent, false).Free();
                 return DirectoryInfoEx.CSIDLtoPIDL(ShellAPI.CSIDL.DESKTOP);
+            }
 
             return new PIDL(pParent, false); //pParent will be freed by the PIDL.
+        }
+
+        internal static PIDL getParentPIDL(PIDL pidl)
+        {
+            PIDL relPIDL = null;
+            try
+            {
+                return getParentPIDL(pidl, out relPIDL);
+            }
+            finally { if (relPIDL != null) relPIDL.Free(); }
         }
 
         //internal static string getParentParseName(PIDL pidl)
@@ -315,7 +341,7 @@ namespace System.IO
             return loadName(iShellFolder, new PIDL(IntPtr.Zero, false), uFlags);
         }
 
-        private static string loadName(IShellFolder2 iShellFolder, PIDL relPidl, ShellAPI.SHGNO uFlags)
+        private static string loadName(IShellFolder2 iShellFolder,IntPtr ptr, ShellAPI.SHGNO uFlags)
         {
             if (iShellFolder == null) return null;
 
@@ -325,8 +351,8 @@ namespace System.IO
 
             try
             {
-                if (iShellFolder.GetDisplayNameOf(relPidl.Ptr, uFlags, ptrStr) == ShellAPI.S_OK)
-                    ShellAPI.StrRetToBuf(ptrStr, relPidl.Ptr, buf, ShellAPI.MAX_PATH);
+                if (iShellFolder.GetDisplayNameOf(ptr, uFlags, ptrStr) == ShellAPI.S_OK)
+                    ShellAPI.StrRetToBuf(ptrStr, ptr, buf, ShellAPI.MAX_PATH);
             }
             finally
             {
@@ -335,6 +361,11 @@ namespace System.IO
                 ptrStr = IntPtr.Zero;
             }
             return buf.ToString();
+        }
+
+        private static string loadName(IShellFolder2 iShellFolder, PIDL relPidl, ShellAPI.SHGNO uFlags)
+        {
+            return loadName(iShellFolder, relPidl.Ptr, uFlags);
         }
 
 
@@ -453,17 +484,20 @@ namespace System.IO
                 refresh(null, null, null, mode);
             else
                 try
-                {
+                {                    
                     //0.16: Fixed ShellFolder not freed
-                    using (ShellFolder2 sf = getParentIShellFolder(PIDL, out relPIDL))
-                        refresh(sf, relPIDL, PIDL, mode);
+                    this.RequestPIDL(pidlLookup =>
+                        {
+                            using (ShellFolder2 sf = getParentIShellFolder(pidlLookup, out relPIDL))
+                                refresh(sf, relPIDL, pidlLookup, mode);
+                        });
                 }
                 catch (NullReferenceException)
                 {
                     refresh(null, null, null, mode);
                 }
                 finally
-                {
+                {               
                     if (relPIDL != null)
                         relPIDL.Free();
                     relPIDL = null;
@@ -486,11 +520,9 @@ namespace System.IO
         /// Return if two FileSystemInfoEx is equal (using PIDL if possible, otherwise Path)
         /// </summary>
         public virtual bool Equals(FileSystemInfoEx other)
-        {
-            if (PIDL != null)
-                return PIDL.Equals(other.PIDL);
-            else return FullName.Equals(other.FullName, StringComparison.InvariantCultureIgnoreCase);
-
+        {            
+            return this.RequestPIDL(thisPidl => 
+                other.RequestPIDL(otherPidl => thisPidl.Equals(otherPidl)));
         }
 
         public override bool Equals(object obj)
@@ -523,7 +555,7 @@ namespace System.IO
             //0.16: Fixed ShellFolder not freed
             using (ShellFolder2 parentShellFolder = getParentIShellFolder(fullPIDL, out relPIDL))
                 refresh(parentShellFolder, relPIDL, fullPIDL, RefreshModeEnum.BaseProps);
-            _pidl = new PIDL(fullPIDL, true); //0.14 : FileSystemInfoEx record the pidl when construct, as some path do not parasable (e.g. EntireNetwork)
+            _pidl = new PIDL(fullPIDL, false); //0.14 : FileSystemInfoEx record the pidl when construct, as some path do not parasable (e.g. EntireNetwork)
             _pidlRel = relPIDL;
         }
 
@@ -532,7 +564,7 @@ namespace System.IO
             PIDL relPIDL = null;
             getParentPIDL(fullPIDL, out relPIDL);
             refresh(parentShellFolder, relPIDL, fullPIDL, RefreshModeEnum.BaseProps);
-            _pidl = new PIDL(fullPIDL, true);
+            _pidl = new PIDL(fullPIDL, false);
             _pidlRel = relPIDL;
         }
 
@@ -542,7 +574,7 @@ namespace System.IO
 
             refresh(parentShellFolder, relPIDL, fullPIDL, RefreshModeEnum.BaseProps);
             _pidl = fullPIDL;
-            _pidlRel = new PIDL(relPIDL, true);
+            _pidlRel = relPIDL; // new PIDL(relPIDL, false);
         }
 
 
@@ -569,19 +601,22 @@ namespace System.IO
         }
 
         internal FileSystemInfoEx(string fullPath)
+            : this()
         {
             init(fullPath);
         }
 
         protected FileSystemInfoEx(SerializationInfo info, StreamingContext context)
-            : base()
+            : this()
         {
             init(info, context);
         }
 
-        protected FileSystemInfoEx()
-        {
 
+        protected FileSystemInfoEx()
+            : base()
+        {
+            System.Threading.Interlocked.Increment(ref counter);
         }
 
         #endregion
@@ -617,10 +652,15 @@ namespace System.IO
 
         public void Dispose()
         {
-            if (_pidlRel != null) _pidlRel.Free();
+            if (_pidlRel != null || _pidl != null)
+                System.Threading.Interlocked.Decrement(ref counter);
+
+            if (_pidlRel != null)            
+                _pidlRel.Free();                
             if (_pidl != null) _pidl.Free();
             _pidlRel = null;
             _pidl = null;
+            
         }
 
         #endregion

@@ -23,14 +23,16 @@ namespace FileExplorer.Models
                 using (FileSystemInfoEx fsi = FileSystemInfoEx.FromString(model.FullPath))
                 {
                     Bitmap bitmap = null;
-                    if (fsi != null && fsi.PIDL != null)
-                    {
-                        bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
-                            fsi.PIDL.Ptr, model.IsDirectory, false);
-                        if (bitmap != null)
-                            return Task.FromResult<ImageSource>(
-                                Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
-                    }
+                    if (fsi != null)
+                        return fsi.RequestPIDL(pidl =>
+                        {
+                            bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
+                                pidl.Ptr, model.IsDirectory, false);
+                            if (bitmap != null)
+                                return Task.FromResult<ImageSource>(
+                                    Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
+                            else return Task.FromResult<ImageSource>(null);
+                        });
                 }
 
             return Task.FromResult<ImageSource>(null);

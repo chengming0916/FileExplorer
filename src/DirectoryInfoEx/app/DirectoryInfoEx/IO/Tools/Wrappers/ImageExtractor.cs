@@ -58,7 +58,7 @@ namespace System.IO.Tools
         {
             using (ShellFolder2 sf2 = file.Parent.ShellFolder)
             {
-                PIDL filePIDL = file.PIDLRel;
+                PIDL filePIDL = file.getRelPIDL();
                 try
                 {
                     return GetIExtractImage(sf2, filePIDL.Ptr, out iExtractImagePtr, out iExtractImage);
