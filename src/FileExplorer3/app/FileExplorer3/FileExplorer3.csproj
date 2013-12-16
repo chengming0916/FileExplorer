@@ -77,6 +77,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
     <Compile Include="Views\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
@@ -160,21 +161,8 @@
     <Compile Include="BaseControls\BreadcrumbOverflowPanel.cs" />
     <Compile Include="UserControls\Breadcrumb.cs" />
     <Compile Include="UserControls\BreadcrumbBase.cs" />
-    <None Include="UserControls\Notused\DirectoryModelDragDropHelper.cs" />
-    <None Include="UserControls\Notused\DragDrop\DragEvenrProcessor.cs" />
-    <None Include="UserControls\Notused\DragDrop\MultiSelectEventProcessor.cs" />
-    <None Include="UserControls\Notused\DragDrop\UIEventProcessor.cs" />
-    <None Include="UserControls\Notused\DragDrop\UIEventAdapter.cs" />
     <Compile Include="BaseControls\DragAdorner.cs" />
-    <None Include="UserControls\Notused\DragDropInfo.cs" />
-    <None Include="UserControls\Notused\DragDropItemInfo.cs" />
-    <None Include="UserControls\Notused\FileDragDropHelper.cs" />
-    <None Include="UserControls\Notused\ISupportDrag.cs" />
-    <None Include="UserControls\Notused\ISupportDrop.cs" />
-    <None Include="UserControls\Notused\ShellClipboardFormats.cs" />
-    <None Include="UserControls\Notused\VirtualDataObject.cs" />
     <Compile Include="Defines\AttachedProperties.cs" />
-    <None Include="UserControls\Notused\DragDrop\IRoutedEventHandler.cs" />
     <Compile Include="UserControls\UIEvent\CommonCommands.cs" />
     <Compile Include="UserControls\UIEvent\ISupportDrop.cs" />
     <Compile Include="UserControls\UIEvent\ISupportDrag.cs" />
@@ -336,6 +324,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Common\ComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Toolbar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

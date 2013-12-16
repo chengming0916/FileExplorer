@@ -41,7 +41,7 @@ namespace FileExplorer.ViewModels
             {
                 var model = evm.Profile.ParseAsync(gotoPath).Result;
                 if (model != null)
-                {
+                {                    
                     DirectoryTree.SelectAsync(model);
                     FileList.SetCurrentDirectoryAsync(model);
                     Breadcrumb.Selection.AsRoot().SelectAsync(model);

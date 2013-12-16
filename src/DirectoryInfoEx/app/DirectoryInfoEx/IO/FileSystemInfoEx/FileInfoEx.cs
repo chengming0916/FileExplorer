@@ -166,16 +166,10 @@ namespace System.IO
         internal FileInfoEx(IShellFolder2 parentShellFolder, DirectoryInfoEx parentDir, PIDL relPIDL)
         {
             Parent = parentDir;
-            PIDL parentPIDL = parentDir.PIDL;
-            try
-            {
-                init(parentShellFolder, parentPIDL, relPIDL);
-            }
-            finally
-            {
-                if (parentPIDL != null) parentPIDL.Free();
-                parentPIDL = null;
-            }
+            parentDir.RequestPIDL(parentPIDL =>
+                {
+                    init(parentShellFolder, parentPIDL, relPIDL);
+                });            
         }
 
         internal FileInfoEx(DirectoryInfoEx parentDir, PIDL relPIDL)
@@ -183,7 +177,8 @@ namespace System.IO
             Parent = parentDir;
             //0.15: Fixed ShellFolder not freed.
             using (ShellFolder2 parentShellFolder = parentDir.ShellFolder)
-                init(parentShellFolder, parentDir.PIDLRel, relPIDL);
+                parentDir.RequestRelativePIDL(parentRelPidl =>
+                    init(parentShellFolder, parentRelPidl, relPIDL));
         }
 
         protected FileInfoEx()

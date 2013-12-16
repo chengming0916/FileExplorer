@@ -7,6 +7,7 @@ using System.IO;
 using System.Drawing;
 using System.Threading;
 using QuickZip.UserControls.Logic.Tools.IconExtractor;
+using ShellDll;
 
 namespace QuickZip.Converters
 {
@@ -46,8 +47,7 @@ namespace QuickZip.Converters
                     return retVal;
             }
 
-
-            return GetBitmap(size, entry.PIDL.Ptr, entry is DirectoryInfoEx, false);
+            return entry.RequestPIDL(pidl => GetBitmap(size, pidl.Ptr, entry is DirectoryInfoEx, false));
         }
 
         protected override void GetIconKey(FileSystemInfoEx entry, IconSize size, out string fastKey, out string slowKey)

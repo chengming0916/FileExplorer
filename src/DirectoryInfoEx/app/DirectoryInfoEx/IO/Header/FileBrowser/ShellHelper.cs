@@ -90,28 +90,28 @@ namespace ShellDll
         public static IntPtr GetIDataObject(FileSystemInfoEx[] items)
         {
             DirectoryInfoEx parent = items[0].Parent != null ? items[0].Parent : DirectoryInfoEx.DesktopDirectory;
+            IntPtr retVal = IntPtr.Zero;
 
-            IntPtr[] pidls = new IntPtr[items.Length];
-            for (int i = 0; i < items.Length; i++)
-                pidls[i] = items[i].PIDLRel.Ptr;
+            items.RequestPIDL((pidls, ptrs) =>
+                {
 
-            IntPtr dataObjectPtr;
-            //0.15: Fixed ShellFolder not freed.
-            using (ShellFolder2 parentShellFolder = parent.ShellFolder)
-                if (parentShellFolder.GetUIObjectOf(
-                        IntPtr.Zero,
-                        (uint)pidls.Length,
-                        pidls,
-                        ref ShellAPI.IID_IDataObject,
-                        IntPtr.Zero,
-                        out dataObjectPtr) == ShellAPI.S_OK)
-                {
-                    return dataObjectPtr;
-                }
-                else
-                {
-                    return IntPtr.Zero;
-                }
+                    IntPtr dataObjectPtr;
+                    //0.15: Fixed ShellFolder not freed.
+                    using (ShellFolder2 parentShellFolder = parent.ShellFolder)
+                        if (parentShellFolder.GetUIObjectOf(
+                                IntPtr.Zero,
+                                (uint)ptrs.Length,
+                                ptrs,
+                                ref ShellAPI.IID_IDataObject,
+                                IntPtr.Zero,
+                                out dataObjectPtr) == ShellAPI.S_OK)
+                        {
+                            retVal = dataObjectPtr;
+                        }
+
+                });
+
+            return retVal;
         }
 
         ///// <summary>

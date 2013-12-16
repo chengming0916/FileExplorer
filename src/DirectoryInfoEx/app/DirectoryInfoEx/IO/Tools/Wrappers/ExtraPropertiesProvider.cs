@@ -407,24 +407,20 @@ namespace System.IO.Tools
 
         public static object GetProperty(ShellFolder2 sf2, FileInfoEx file, ref PropertyKey propKey)
         {
-            PIDL pidlLookup = file.PIDLRel;
-            if (pidlLookup != null)
-            {
-                try
+            PropertyKey pKey = propKey;
+            var output = file.RequestRelativePIDL(relPidl =>
                 {
-                    object retVal;
-                    int hr = sf2.GetDetailsEx(pidlLookup.Ptr, ref propKey, out retVal);
-                    if (hr != ShellAPI.S_OK)
-                        Marshal.ThrowExceptionForHR(hr);
-
+                    object retVal = null;
+                    if (relPidl != null)
+                    {                        
+                        int hr = sf2.GetDetailsEx(relPidl.Ptr, ref pKey, out retVal);
+                        if (hr != ShellAPI.S_OK)
+                            Marshal.ThrowExceptionForHR(hr);
+                    }
                     return retVal;
-                }
-                finally
-                {
-                    pidlLookup.Free();
-                }
-            }
-            return null;
+                });
+            propKey = pKey;
+            return output;
 
         }
 

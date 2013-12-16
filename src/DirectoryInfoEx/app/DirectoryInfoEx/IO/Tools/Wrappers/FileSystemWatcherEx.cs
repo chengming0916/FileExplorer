@@ -62,7 +62,7 @@ namespace System.IO
         public SystemWatcherWrapper(DirectoryInfoEx dir, bool includeSubDir)
         {            
             MonitorDir = dir;
-            _dirPIDL = dir.PIDL;
+            _dirPIDL = dir.getPIDL();
             IncludeSubDirectories = includeSubDir;
 
             this.CreateHandle(new CreateParams());

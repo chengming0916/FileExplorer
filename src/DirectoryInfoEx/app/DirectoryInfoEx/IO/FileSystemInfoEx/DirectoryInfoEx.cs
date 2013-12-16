@@ -23,7 +23,7 @@ namespace System.IO
     {
         public enum DirectoryTypeEnum { dtDesktop, dtSpecial, dtDrive, dtFolder, dtRoot }
 
-        #region Static Variables        
+        #region Static Variables
         public static readonly DirectoryInfoEx DesktopDirectory;
         public static readonly DirectoryInfoEx MyComputerDirectory;
         public static readonly DirectoryInfoEx CurrentUserDirectory;
@@ -36,7 +36,7 @@ namespace System.IO
 #if DEBUG
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
                 throw new Exception("This should not be executed when design time.");
-#endif    
+#endif
             DesktopDirectory = new DirectoryInfoEx(CSIDLtoPIDL(ShellAPI.CSIDL.DESKTOP));
             MyComputerDirectory = new DirectoryInfoEx(CSIDLtoPIDL(ShellAPI.CSIDL.DRIVES));
             CurrentUserDirectory = new DirectoryInfoEx(CSIDLtoPIDL(ShellAPI.CSIDL.PROFILE));
@@ -87,10 +87,12 @@ namespace System.IO
             if (_parent != null)
                 using (ShellFolder2 parentShellFolder = _parent.ShellFolder)
                 {
-                    IntPtr ptrShellFolder;
-                    PIDL relPIDL = this.PIDLRel;
-                    int hr = parentShellFolder.BindToObject(relPIDL.Ptr, IntPtr.Zero, ref ShellAPI.IID_IShellFolder2,
-                        out ptrShellFolder);
+                    IntPtr ptrShellFolder = IntPtr.Zero;
+
+                    int hr = this.RequestRelativePIDL(relPIDL =>
+                        parentShellFolder.BindToObject(relPIDL.Ptr, IntPtr.Zero, ref ShellAPI.IID_IShellFolder2,
+                        out ptrShellFolder));
+
                     if (ptrShellFolder != IntPtr.Zero && hr == ShellAPI.S_OK)
                         return new ShellFolder2(ptrShellFolder);
                 }
@@ -107,26 +109,18 @@ namespace System.IO
                 if (retVal != null)
                     return retVal;
 
-                PIDL pidlLookup = PIDL;
-                PIDL relPIDL = this.PIDLRel;
-                try
-                {
-                    using (ShellFolder2 parentShellFolder = getParentIShellFolder(pidlLookup, out relPIDL))
+                return this.RequestPIDL((pidl, relPIDL) =>
                     {
-                        IntPtr ptrShellFolder;
-                        int hr = parentShellFolder.BindToObject(relPIDL.Ptr, IntPtr.Zero, ref ShellAPI.IID_IShellFolder2,
-                            out ptrShellFolder);
-                        if (ptrShellFolder == IntPtr.Zero || hr != ShellAPI.S_OK) Marshal.ThrowExceptionForHR(hr);
-                        return new ShellFolder2(ptrShellFolder);
-                    }
-                }
-                finally
-                {
-                    if (pidlLookup != null) pidlLookup.Free();
-                    if (relPIDL != null) relPIDL.Free();
-                    relPIDL = null;
-                    pidlLookup = null;
-                }
+                        using (ShellFolder2 parentShellFolder = getParentIShellFolder(pidl, out relPIDL))
+                        {
+                            IntPtr ptrShellFolder;
+                            int hr = parentShellFolder.BindToObject(relPIDL.Ptr, IntPtr.Zero, ref ShellAPI.IID_IShellFolder2,
+                                out ptrShellFolder);
+                            if (ptrShellFolder == IntPtr.Zero || hr != ShellAPI.S_OK) Marshal.ThrowExceptionForHR(hr);
+                            return new ShellFolder2(ptrShellFolder);
+                        }
+
+                    });
             }
         }
 
@@ -296,7 +290,7 @@ namespace System.IO
         {
             base.refresh(parentShellFolder, relPIDL, fullPIDL, mode);
 
-            if ((mode & RefreshModeEnum.FullProps) != 0 && 
+            if ((mode & RefreshModeEnum.FullProps) != 0 &&
                 parentShellFolder != null && relPIDL != null && fullPIDL != null)
             {
                 ShellAPI.SFGAO attribute = shGetFileAttribute(fullPIDL, ShellAPI.SFGAO.BROWSABLE |
@@ -344,7 +338,7 @@ namespace System.IO
         private static bool listContains(List<FileSystemInfoEx> list, PIDL pidl)
         {
             foreach (FileSystemInfoEx item in list)
-                if (item.PIDLRel.Equals(pidl))
+                if (item.RequestRelativePIDL((relPidl) => relPidl.Equals(pidl)))
                     return true;
 
             return false;
@@ -352,43 +346,46 @@ namespace System.IO
         private static void listRemove(List<FileSystemInfoEx> list, PIDL pidl)
         {
             for (int i = list.Count - 1; i >= 0; i--)
-                if (list[i].PIDLRel.Equals(pidl))
+                if (list[i].RequestRelativePIDL((relPidl) => relPidl.Equals(pidl)))
                 { list.RemoveAt(i); return; }
         }
-        
-        
+
+
         //0.17: Added DirectoryInfoEx.EnumerateFiles/EnumerateDirectories/EnumerateFileSystemInfos() methods which work similar as the one in .Net4
         public IEnumerable<FileInfoEx> EnumerateFiles(String searchPattern, SearchOption searchOption, CancelDelegate cancel)
         {
             IntPtr ptrEnum = IntPtr.Zero;
             IEnumIDList IEnum = null;
-            PIDL parentPIDL = this.PIDL;
+            PIDL parentPIDL = this.getPIDL();
 
-            using (ShellFolder2 sf = this.ShellFolder)            
+            List<IntPtr> trashPtrList = new List<IntPtr>();
+            using (ShellFolder2 sf = this.ShellFolder)
                 try
                 {
                     if (sf.EnumObjects(IntPtr.Zero, flag, out ptrEnum) == ShellAPI.S_OK)
                     {
                         IEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(ptrEnum, typeof(IEnumIDList));
-                        IntPtr pidlSubItem;
+                        IntPtr pidlSubItemPtr;
                         int celtFetched;
 
-                        while (!IOTools.IsCancelTriggered(cancel) && IEnum.Next(1, out pidlSubItem, out celtFetched) == ShellAPI.S_OK && celtFetched == 1)
+                        while (!IOTools.IsCancelTriggered(cancel) && IEnum.Next(1, out pidlSubItemPtr, out celtFetched) == ShellAPI.S_OK && celtFetched == 1)
                         {
+                            trashPtrList.Add(pidlSubItemPtr); //0.24 : Large memory Leak here.    
+
                             ShellAPI.SFGAO attribs = ShellAPI.SFGAO.FOLDER | ShellAPI.SFGAO.FILESYSTEM | ShellAPI.SFGAO.STREAM;
-                            sf.GetAttributesOf(1, new IntPtr[] { pidlSubItem }, ref attribs);
+                            sf.GetAttributesOf(1, new IntPtr[] { pidlSubItemPtr }, ref attribs);
                             //http://www.eggheadcafe.com/aspnet_answers/platformsdkshell/Mar2006/post26165601.asp
                             bool isZip = ((attribs & ShellAPI.SFGAO.FOLDER) != 0 && (attribs & ShellAPI.SFGAO.STREAM) != 0);
                             bool isDir = ((attribs & ShellAPI.SFGAO.FOLDER) != 0);
                             if (isZip || !isDir)
                             {
-                                PIDL subRelPidl = new PIDL(pidlSubItem, false);
+                                PIDL subRelPidl = new PIDL(pidlSubItemPtr, true);
                                 //FileInfoEx fi = new FileInfoEx(sf, this, subRelPidl);
                                 FileInfoEx fi = new FileInfoEx(sf, parentPIDL, subRelPidl);
                                 if (IOTools.MatchFileMask(fi.Name, searchPattern))
                                     yield return fi;
                                 //0.18: Fixed DirectoryInfoEx.EnumerateFiles, SearchPattern is ignored.
-                            }                            
+                            }
                         }
 
                         if (searchOption == SearchOption.AllDirectories)
@@ -421,6 +418,11 @@ namespace System.IO
                         Marshal.ReleaseComObject(IEnum);
                         Marshal.Release(ptrEnum);
                     }
+
+
+                    if (trashPtrList != null)
+                        foreach (var ptr in trashPtrList)
+                            Marshal.FreeCoTaskMem(ptr); //0.24 : Large memory Leak here.  
                 }
         }
         public IEnumerable<FileInfoEx> EnumerateFiles(String searchPattern, SearchOption searchOption) { return EnumerateFiles(searchPattern, searchOption, null); }
@@ -431,23 +433,26 @@ namespace System.IO
         {
             IntPtr ptrEnum = IntPtr.Zero;
             IEnumIDList IEnum = null;
-            PIDL parentPIDL = this.PIDL;
+            PIDL parentPIDL = this.getPIDL();
 
+            List<IntPtr> trashPtrList = new List<IntPtr>();
             using (ShellFolder2 sf = this.ShellFolder)
                 try
                 {
                     if (sf.EnumObjects(IntPtr.Zero, flag, out ptrEnum) == ShellAPI.S_OK)
                     {
                         IEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(ptrEnum, typeof(IEnumIDList));
-                        IntPtr pidlSubItem;
+                        IntPtr pidlSubItemPtr;
                         int celtFetched;
 
-                        while (!IOTools.IsCancelTriggered(cancel) && IEnum.Next(1, out pidlSubItem, out celtFetched) == ShellAPI.S_OK && celtFetched == 1)
+                      
+                        while (!IOTools.IsCancelTriggered(cancel) && IEnum.Next(1, out pidlSubItemPtr, out celtFetched) == ShellAPI.S_OK && celtFetched == 1)
                         {
+                            trashPtrList.Add(pidlSubItemPtr); //0.24 : Large memory Leak here.                                
 
                             ShellAPI.SFGAO attribs = ShellAPI.SFGAO.FOLDER | ShellAPI.SFGAO.FILESYSTEM | ShellAPI.SFGAO.STREAM |
                                 ShellAPI.SFGAO.FILESYSANCESTOR | ShellAPI.SFGAO.NONENUMERATED;
-                            sf.GetAttributesOf(1, new IntPtr[] { pidlSubItem }, ref attribs);
+                            sf.GetAttributesOf(1, new IntPtr[] { pidlSubItemPtr }, ref attribs);
                             bool isZip = ((attribs & ShellAPI.SFGAO.FOLDER) != 0 && (attribs & ShellAPI.SFGAO.STREAM) != 0);
                             bool isDir = ((attribs & ShellAPI.SFGAO.FOLDER) != 0);
                             //0.18 Added a check for NonEnumerated items so DirectoryInfoEx.EnumerateDirectories wont return some system directories (e.g. C:\MSOCache)
@@ -461,35 +466,36 @@ namespace System.IO
                                 {
                                     "::{645FF040-5081-101B-9F08-00AA002F954E}"
                                 };
-                                string path = PIDLToPath(new PIDL(pidlSubItem, false));
+
+                                string path = PtrToPath(pidlSubItemPtr);                              
                                 foreach (string allowedPath in allowedPaths)
                                     if (allowedPath == path)
                                         includedFolder = true;
-                                if (!includedFolder)
-                                    if (IOTools.HasParent(this, NetworkDirectory))
-                                        includedFolder = true;
+                                //if (!includedFolder)
+                                //    if (IOTools.HasParent(this, NetworkDirectory))
+                                //        includedFolder = true;
 
                             }
                             if (isDir && !isZip /*&& !isNonEnumerated*/ && (isFileAncestor || includedFolder))
-                            {                                    
-                                PIDL subPidl = new PIDL(pidlSubItem, false);
+                            {
+                                PIDL subPidl = new PIDL(pidlSubItemPtr, true);
                                 //DirectoryInfoEx di = new DirectoryInfoEx(this, subPidl);
-                                
+
                                 //0.22: Fix illegal PIDL for Directory under Library.ms directory
                                 bool isLibraryItem = IOTools.IsLibraryItem(FullName);
-                                DirectoryInfoEx di = new DirectoryInfoEx(sf, parentPIDL, subPidl, isLibraryItem);                                    
-                                    
-                                if (IOTools.MatchFileMask(di.Name, searchPattern))                                    
+                                DirectoryInfoEx di = new DirectoryInfoEx(sf, parentPIDL, subPidl, isLibraryItem);
+
+                                if (IOTools.MatchFileMask(di.Name, searchPattern))
                                     yield return di;
                                 if (searchOption == SearchOption.AllDirectories)
                                 {
-                                  IEnumerator<DirectoryInfoEx> dirEnumerator = di.EnumerateDirectories(searchPattern, searchOption, cancel).GetEnumerator();
+                                    IEnumerator<DirectoryInfoEx> dirEnumerator = di.EnumerateDirectories(searchPattern, searchOption, cancel).GetEnumerator();
 
-                                  while (dirEnumerator.MoveNext())
-                                  {
-                                      //Debug.Assert(dirEnumerator.Current.IsFolder);
-                                      yield return dirEnumerator.Current;
-                                  }                                                                       
+                                    while (dirEnumerator.MoveNext())
+                                    {
+                                        //Debug.Assert(dirEnumerator.Current.IsFolder);
+                                        yield return dirEnumerator.Current;
+                                    }
                                 }
                             }
                         }
@@ -497,6 +503,7 @@ namespace System.IO
                 }
                 finally
                 {
+
                     if (parentPIDL != null)
                     {
                         parentPIDL.Free();
@@ -508,14 +515,19 @@ namespace System.IO
                         Marshal.ReleaseComObject(IEnum);
                         Marshal.Release(ptrEnum);
                     }
+
+                    if (trashPtrList != null)
+                        foreach (var ptr in trashPtrList)
+                            Marshal.FreeCoTaskMem(ptr); //0.24 : Large memory Leak here.                                
+
                 }
         }
-        public IEnumerable<DirectoryInfoEx> EnumerateDirectories(String searchPattern, SearchOption searchOption) { return EnumerateDirectories(searchPattern, searchOption, null); }                
+        public IEnumerable<DirectoryInfoEx> EnumerateDirectories(String searchPattern, SearchOption searchOption) { return EnumerateDirectories(searchPattern, searchOption, null); }
         public IEnumerable<DirectoryInfoEx> EnumerateDirectories(String searchPattern) { return EnumerateDirectories(searchPattern, SearchOption.TopDirectoryOnly); }
         public IEnumerable<DirectoryInfoEx> EnumerateDirectories() { return EnumerateDirectories("*", SearchOption.TopDirectoryOnly); }
 
         public IEnumerable<FileSystemInfoEx> EnumerateFileSystemInfos(String searchPattern, SearchOption searchOption, CancelDelegate cancel)
-        {            
+        {
             IEnumerator<DirectoryInfoEx> dirEnumerator = EnumerateDirectories(searchPattern, SearchOption.TopDirectoryOnly).GetEnumerator();
             while (!IOTools.IsCancelTriggered(cancel) && dirEnumerator.MoveNext())
             {
@@ -523,23 +535,23 @@ namespace System.IO
 
                 if (searchOption == SearchOption.AllDirectories)
                 {
-                IEnumerator<FileSystemInfoEx> fsEnumerator = 
-                    dirEnumerator.Current.EnumerateFileSystemInfos(searchPattern, searchOption, cancel).GetEnumerator();
-                while (fsEnumerator.MoveNext())
-                    yield return fsEnumerator.Current;
+                    IEnumerator<FileSystemInfoEx> fsEnumerator =
+                        dirEnumerator.Current.EnumerateFileSystemInfos(searchPattern, searchOption, cancel).GetEnumerator();
+                    while (fsEnumerator.MoveNext())
+                        yield return fsEnumerator.Current;
                 }
             }
 
             IEnumerator<FileInfoEx> fileEnumerator = EnumerateFiles(searchPattern, SearchOption.TopDirectoryOnly, cancel).GetEnumerator();
-            while (!IOTools.IsCancelTriggered(cancel) && fileEnumerator.MoveNext())            
-                yield return fileEnumerator.Current;                                    
+            while (!IOTools.IsCancelTriggered(cancel) && fileEnumerator.MoveNext())
+                yield return fileEnumerator.Current;
         }
         public IEnumerable<FileSystemInfoEx> EnumerateFileSystemInfos(String searchPattern, SearchOption searchOption) { return EnumerateFileSystemInfos(searchPattern, searchOption, null); }
         public IEnumerable<FileSystemInfoEx> EnumerateFileSystemInfos(String searchPattern) { return EnumerateFileSystemInfos(searchPattern, SearchOption.TopDirectoryOnly); }
         public IEnumerable<FileSystemInfoEx> EnumerateFileSystemInfos() { return EnumerateFileSystemInfos("*", SearchOption.TopDirectoryOnly); }
 
 
-        #region Obsolute        
+        #region Obsolute
 
         //protected virtual bool EnumDirs(out List<FileSystemInfoEx> dirList)
         //{
@@ -716,7 +728,7 @@ namespace System.IO
         public FileSystemInfoEx[] GetFileSystemInfos()
         {
             checkExists();
-            return new List<FileSystemInfoEx>(EnumerateFileSystemInfos()).ToArray();            
+            return new List<FileSystemInfoEx>(EnumerateFileSystemInfos()).ToArray();
         }
 
         /// <summary>
@@ -743,7 +755,7 @@ namespace System.IO
         public DirectoryInfoEx[] GetDirectories()
         {
             checkExists();
-            return new List<DirectoryInfoEx>(EnumerateDirectories()).ToArray();            
+            return new List<DirectoryInfoEx>(EnumerateDirectories()).ToArray();
         }
 
         /// <summary>
@@ -843,7 +855,7 @@ namespace System.IO
 
             FileSystemInfoEx[] subFSInfo = GetFileSystemInfos();
             for (int i = 0; i < subFSInfo.Length; i++)
-                if (subFSInfo[i].PIDLRel.Equals(pidl))
+                if (subFSInfo[i].RequestRelativePIDL(relPidl => relPidl.Equals(pidl)))
                 {
                     isDirectory = subFSInfo[i] is DirectoryInfoEx;
                     return i;
@@ -866,7 +878,7 @@ namespace System.IO
         {
             DirectoryInfoEx[] subFSInfo = GetDirectories();
             for (int i = 0; i < subFSInfo.Length; i++)
-                if (subFSInfo[i].PIDLRel.Equals(pidl))
+                if (subFSInfo[i].RequestRelativePIDL(relPidl => relPidl.Equals(pidl)))
                     return (DirectoryInfoEx)subFSInfo[i];
 
             return null;
@@ -886,7 +898,7 @@ namespace System.IO
         {
             FileInfoEx[] subFSInfo = GetFiles();
             for (int i = 0; i < subFSInfo.Length; i++)
-                if (subFSInfo[i].PIDLRel.Equals(pidl))
+                if (subFSInfo[i].RequestRelativePIDL(relPidl => relPidl.Equals(pidl)))
                     return (FileInfoEx)subFSInfo[i];
 
             return null;
@@ -973,14 +985,12 @@ namespace System.IO
         internal DirectoryInfoEx(DirectoryInfoEx parentDir, PIDL relPIDL)
         {
             Parent = parentDir;
-            PIDL parentPIDL = parentDir.PIDL;
-            try
-            {
-                //0.15: Fixed ShellFolder not freed.
-                using (ShellFolder2 parentShellFolder = parentDir.ShellFolder)
-                    init(parentShellFolder, parentPIDL, relPIDL);
-            }
-            finally { if (parentPIDL != null) parentPIDL.Free(); parentPIDL = null; }
+            parentDir.RequestPIDL(parentPIDL =>
+                {
+                    //0.15: Fixed ShellFolder not freed.
+                    using (ShellFolder2 parentShellFolder = parentDir.ShellFolder)
+                        init(parentShellFolder, parentPIDL, relPIDL);
+                });
         }
 
         protected DirectoryInfoEx()
