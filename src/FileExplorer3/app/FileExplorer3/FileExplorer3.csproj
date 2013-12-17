@@ -77,6 +77,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defines\Converters\BorderClipConverter.cs" />
+    <Compile Include="Defines\Converters\VisibleIfEqualConverter.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
     <Compile Include="Views\ToolbarView.xaml.cs">

@@ -62,10 +62,18 @@ namespace TestTemplate.WPF
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
+            setupDropDownList();
             setupBreadcrumb();
             setupBreadcrumbTree();
             setupDragAndDrop();
-        }        
+            setupToolbarItem();
+        }
+
+        private void setupDropDownList()
+        {
+            ddl.ItemsSource = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        }
 
         private void setupDragAndDrop()
         {
@@ -173,9 +181,17 @@ namespace TestTemplate.WPF
 
         }
 
+        private void setupToolbarItem()
+        {
+            tbiMenu1.SetValue(ItemsControl.ItemsSourceProperty, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+            tbiMenu2.SetValue(ItemsControl.ItemsSourceProperty, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //sbar.Items.Add(new StatusbarItemEx() { Content = "Add", Type = FileExplorer.Defines.DisplayType.Text, Header = "New" });
         }
+
+        
     }
 }

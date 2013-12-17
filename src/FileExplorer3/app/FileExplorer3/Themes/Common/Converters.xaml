@@ -14,7 +14,7 @@
     <conv:BoolToVisibilityCollapsedConverter x:Key="btvc" />
     <conv:FlipBoolConverter x:Key="fb" />
     <conv:VisibilityToBoolConverter x:Key="vtb" />
-    
+    <conv:BorderClipConverter  x:Key="bc" />
     <!--
     
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />

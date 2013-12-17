@@ -10,6 +10,7 @@
 
     <ControlTemplate x:Key="HotTrackTemplate" TargetType="bc:HotTrack">
         <Border x:Name="borderCurrent" 
+                                CornerRadius="{TemplateBinding CornerRadius}"
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 BorderBrush="Transparent" Background="Transparent">
             <VisualStateManager.VisualStateGroups>

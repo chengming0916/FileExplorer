@@ -65,62 +65,86 @@
             </WrapPanel>
         </TabItem>
         <TabItem Header="DropDown">
-            <WrapPanel>
-                <bc:DropDown x:Name="dd" >
-                    <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
-                        <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
+            <StackPanel Orientation="Vertical">
+                <WrapPanel>
+                    <TextBlock Text="Button in dropdown :"  />
+                    <bc:DropDown x:Name="dd" >
+                        <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                            <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >Popup</Button>
-                    </bc:HotTrack>
-                </bc:DropDown>
-                <TextBlock Text="{Binding ElementName=dd, Path=IsDropDownOpen}" />
-                <bc:DropDown x:Name="dd2"  >
-                    <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
-                        <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
+                        </bc:HotTrack>
+                    </bc:DropDown>
+                    <TextBlock Text="{Binding ElementName=dd, Path=IsDropDownOpen}" />
+                </WrapPanel>
+
+                <WrapPanel>
+                    <TextBlock Text="Button in dropdown :"  />
+                    <bc:DropDown x:Name="dd2"  >
+                        <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                            <Button Template="{StaticResource BaseButton}" Width="200" Height="70" 
                             BorderBrush="Transparent"
                             HorizontalAlignment="Center" VerticalAlignment="Center" >Popup</Button>
-                    </bc:HotTrack>
-                </bc:DropDown>
-                <TextBlock Text="{Binding ElementName=dd2, Path=IsDropDownOpen}" />
+                        </bc:HotTrack>
+                    </bc:DropDown>
+                    <TextBlock Text="{Binding ElementName=dd2, Path=IsDropDownOpen}" />
+                </WrapPanel>
 
-
-                <bc:DropDown x:Name="dd3" PlacementTarget="{Binding ElementName=dd}" >
-                    <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
-                        <TextBlock Text="PlacementTarget" />
-                    </bc:HotTrack>
-                </bc:DropDown>
-
-                <bc:DropDown DataContext="1,3,5">
-                    <bc:DropDown.Resources>
-                        <conv:CsvContainsConverter x:Key="csvc" />
-                    </bc:DropDown.Resources>
-                    <bc:DropDown.Header>
-                        <TextBlock Text="{Binding}" />
-                    </bc:DropDown.Header>
-                    <bc:DropDown.Content>
-                        <ListBox SelectionMode="Multiple">
-                            <ListBox.Items>
-                                <ListBoxItem IsSelected="{Binding 
+                <WrapPanel>
+                    <TextBlock Text="Test PlacementTarget :" x:Name="tb3" />
+                    <bc:DropDown x:Name="dd3" PlacementTarget="{Binding ElementName=tb3}" >
+                        <bc:HotTrack BorderBrush="Gainsboro" BorderThickness="1" IsEnabled="True" SelectedBorderBrush="Black">
+                            <TextBlock Text="PlacementTarget" />
+                        </bc:HotTrack>
+                    </bc:DropDown>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Text="ListBox Sample:" />
+                    <bc:DropDown DataContext="1,3,5">
+                        <bc:DropDown.Resources>
+                            <conv:CsvContainsConverter x:Key="csvc" />
+                        </bc:DropDown.Resources>
+                        <bc:DropDown.Header>
+                            <TextBlock Text="{Binding}" />
+                        </bc:DropDown.Header>
+                        <bc:DropDown.Content>
+                            <ListBox SelectionMode="Multiple">
+                                <ListBox.Items>
+                                    <ListBoxItem IsSelected="{Binding 
                                 Mode=OneWay,
                                 Converter={StaticResource csvc}, ConverterParameter=1}">January</ListBoxItem>
-                                <ListBoxItem IsSelected="{Binding 
+                                    <ListBoxItem IsSelected="{Binding 
                                 Mode=OneWay,
                                 Converter={StaticResource csvc}, ConverterParameter=2}">Febrary</ListBoxItem>
-                                <ListBoxItem IsSelected="{Binding 
+                                    <ListBoxItem IsSelected="{Binding 
                                 Mode=OneWay,
                                 Converter={StaticResource csvc}, ConverterParameter=3}">March</ListBoxItem>
-                                <ListBoxItem IsSelected="{Binding 
+                                    <ListBoxItem IsSelected="{Binding 
                                 Mode=OneWay,
                                 Converter={StaticResource csvc}, ConverterParameter=4}">April</ListBoxItem>
-                                <ListBoxItem IsSelected="{Binding 
+                                    <ListBoxItem IsSelected="{Binding 
                                 Mode=OneWay,
                                 Converter={StaticResource csvc}, ConverterParameter=5}">May</ListBoxItem>
-                            </ListBox.Items>
-                        </ListBox>
-                    </bc:DropDown.Content>
+                                </ListBox.Items>
+                            </ListBox>
+                        </bc:DropDown.Content>
 
-                </bc:DropDown>
-            </WrapPanel>
+                    </bc:DropDown>
+                </WrapPanel>
+
+                <WrapPanel>                    
+                    <bc:DropDownList x:Name="ddl" Header="DropDownList">
+                        <bc:DropDownList.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" >
+                                    <ProgressBar Minimum="0" Maximum="10" Value="{Binding Mode=OneTime}" Width="30" Height="10" />
+                                    <TextBlock Text="{Binding Mode=OneTime}" Margin="5,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </bc:DropDownList.ItemTemplate>
+                    </bc:DropDownList>
+                </WrapPanel>
+            </StackPanel>
         </TabItem>
         <TabItem Header="Statusbar">
             <WrapPanel Orientation="Vertical">
@@ -503,9 +527,20 @@
             </Grid>
         </TabItem>
         <TabItem Header="Toolbar" IsSelected="True">
-            <uc:ToolbarEx Height="30" VerticalAlignment="Top">
-                <Button>Test</Button>
-                <Button>Test</Button>
+            <uc:ToolbarEx VerticalAlignment="Top">
+                <!--<Button>Test</Button>
+                <Button>Test</Button>-->
+                <uc:ToolbarItemEx ContentType="Button" Header="Button" />
+                <uc:ToolbarItemEx ContentType="Button" Header="Button" />
+                <uc:ToolbarItemEx x:Name="tbiMenu1" ContentType="Menu" Header="Menu" />
+                <uc:ToolbarItemEx x:Name="tbiMenu2" ContentType="Menu" Header="Menu" />
+                <uc:ToolbarItemEx x:Name="tbibMenu1" ContentType="ButtonMenu" Header="ButtonMenu" />
+                <uc:ToolbarItemEx x:Name="tbibMenu2" ContentType="ButtonMenu" Header="ButtonMenu" />
+                <uc:ToolbarItemEx ContentType="Range" Header="Range" />
+                <uc:ToolbarItemEx ContentType="Range" Header="Range" />
+                <uc:ToolbarEx.LayoutTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                </uc:ToolbarEx.LayoutTransform>
             </uc:ToolbarEx>
         </TabItem>
     </TabControl>

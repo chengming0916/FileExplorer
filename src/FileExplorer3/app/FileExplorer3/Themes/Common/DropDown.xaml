@@ -25,17 +25,19 @@
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HeaderButtonTemplate" Value="{StaticResource BaseToggleButton}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DropDown}">
                     <Grid>
-                        <ToggleButton x:Name="PART_ToggleButton" Template="{StaticResource BaseToggleButton}"  MinWidth="16"
+                        <ToggleButton x:Name="PART_ToggleButton"  MinWidth="16"
+                                      Template="{Binding HeaderButtonTemplate, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" 
                                       BorderBrush="Silver"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             <Grid>
                                 <ContentPresenter Content="{TemplateBinding Header}" />
                             </Grid>
-                        </ToggleButton>
+                        </ToggleButton>                        
                         <Popup x:Name="PART_Popup" Focusable="False"
                                IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, 
                                             RelativeSource={RelativeSource TemplatedParent}}"
@@ -100,7 +102,9 @@
                         Placement="{TemplateBinding Placement}" 
                         PlacementTarget="{TemplateBinding PlacementTarget}"
                                     
-                        Header="{Binding Header,RelativeSource={RelativeSource TemplatedParent}}">
+                        Header="{Binding Header,RelativeSource={RelativeSource TemplatedParent}}"
+                        HeaderButtonTemplate="{Binding HeaderButtonTemplate,RelativeSource={RelativeSource TemplatedParent}}"            
+                                    >
                         <ScrollViewer x:Name="DropDownScrollViewer" VerticalScrollBarVisibility="Auto">
                             <StackPanel Orientation="Vertical">
                                 <ItemsPresenter x:Name="ItemsPresenter" 
@@ -116,5 +120,39 @@
         <Setter Property="ItemContainerStyle" Value="{StaticResource ComboboxNullAsSeparatorStyle}" />
     </Style>
 
+
+    <Style x:Key="{x:Type local:DropDownMenu}" 
+           TargetType="{x:Type local:DropDownMenu}">
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DropDownList}">
+                    <local:DropDown IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay,
+                        RelativeSource={RelativeSource TemplatedParent}}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                    
+                        HorizontalOffset="{TemplateBinding HorizontalOffset}"
+                        VerticalOffset="{TemplateBinding VerticalOffset}"
+                        Placement="{TemplateBinding Placement}" 
+                        PlacementTarget="{TemplateBinding PlacementTarget}"
+                                    
+                        Header="{Binding Header,RelativeSource={RelativeSource TemplatedParent}}"
+                        HeaderButtonTemplate="{Binding HeaderButtonTemplate,RelativeSource={RelativeSource TemplatedParent}}"            
+                                    >
+                        <ScrollViewer x:Name="DropDownScrollViewer" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Orientation="Vertical">
+                                <ItemsPresenter x:Name="ItemsPresenter" 
+                                        KeyboardNavigation.DirectionalNavigation="Contained" 
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </local:DropDown>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

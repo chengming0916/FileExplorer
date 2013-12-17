@@ -126,6 +126,17 @@ namespace FileExplorer.BaseControls
             DependencyProperty.Register("SelectedBorderBrush", typeof(Brush),
             typeof(HotTrack), new UIPropertyMetadata(Brushes.Transparent));
 
+        public CornerRadius CornerRadius
+        {
+            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
+            set { SetValue(CornerRadiusProperty, value); }
+        }
+
+        public static readonly DependencyProperty CornerRadiusProperty =
+            DependencyProperty.Register("CornerRadius", typeof(CornerRadius),
+            typeof(HotTrack), new UIPropertyMetadata(new CornerRadius(0)));
+
+
         public bool IsDragging
         {
             get { return (bool)GetValue(IsDraggingProperty); }

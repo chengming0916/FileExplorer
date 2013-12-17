@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace FileExplorer.UserControls
 {
-    public class ToolbarEx : ItemsControl
+    public class ToolbarEx : Menu
     {
         #region Constructor
 
@@ -38,20 +38,21 @@ namespace FileExplorer.UserControls
 
     }
 
-    public enum ToolbarItemType { Button, Range, Menu }
+    public enum ToolbarItemType { Button, Menu, ButtonMenu, Range}
 
-    public class ToolbarItemEx : ContentControl
+
+    public class ToolbarItemEx : MenuItem
     {
-                #region Constructor
-        
+        #region Constructor
+
         #endregion
 
         #region Methods
-        
+
         #endregion
 
         #region Data
-        
+
         #endregion
 
         #region Public Properties
@@ -63,11 +64,11 @@ namespace FileExplorer.UserControls
             get { return (ToolbarItemType)GetValue(ContentTypeProperty); }
             set { SetValue(ContentTypeProperty, value); }
         }
-        
+
         public static readonly DependencyProperty ContentTypeProperty =
-            DependencyProperty.Register("ContentType", typeof(ToolbarItemType), 
-            typeof(ToolbarEx), new PropertyMetadata(ToolbarItemType.Button));        
-        
+            DependencyProperty.Register("ContentType", typeof(ToolbarItemType),
+            typeof(ToolbarEx), new PropertyMetadata(ToolbarItemType.Button));
+
         #endregion
     }
 
