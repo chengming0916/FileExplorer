@@ -369,7 +369,10 @@ namespace System.IO
             if (child.FullName.StartsWith(parentFullName, StringComparison.InvariantCultureIgnoreCase))
                 return true;
 
-            if (child.FullName.StartsWith(IID_UserFiles) || child.FullName.StartsWith(IID_Public))
+            if (parentFullName == DirectoryInfoEx.DesktopDirectory.FullName)
+                return true;
+
+            if ((child.FullName.StartsWith(IID_UserFiles) || child.FullName.StartsWith(IID_Public)))
                 return false;
             FileSystemInfoEx current = child.Parent;
             while (current != null && parentFullName != current.FullName)

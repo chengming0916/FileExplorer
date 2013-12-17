@@ -122,6 +122,16 @@ namespace FileExplorer.BaseControls
 
 
 
+        public ControlTemplate HeaderButtonTemplate
+        {
+            get { return (ControlTemplate)GetValue(HeaderButtonTemplateProperty); }
+            set { SetValue(HeaderButtonTemplateProperty, value); }
+        }
+
+        public static readonly DependencyProperty HeaderButtonTemplateProperty =
+            DependencyProperty.Register("HeaderButtonTemplate", typeof(ControlTemplate), typeof(DropDown));
+
+
         public double HorizontalOffset
         {
             get { return (double)GetValue(HorizontalOffsetProperty); }

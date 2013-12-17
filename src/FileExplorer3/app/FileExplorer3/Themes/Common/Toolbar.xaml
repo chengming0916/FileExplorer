@@ -3,6 +3,7 @@
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
     xmlns:bc="clr-namespace:FileExplorer.BaseControls"
     xmlns:cali ="http://www.caliburnproject.org"
+    xmlns:conv="clr-namespace:QuickZip.Converters"
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
@@ -13,16 +14,75 @@
     </ResourceDictionary.MergedDictionaries>
 
 
+    <conv:VisibleIfEqualConverter x:Key="vie" />
 
-    <Style TargetType="{x:Type uc:ToolbarEx}">        
+    <ControlTemplate x:Key="ToolbarItemTemplate" TargetType="{x:Type uc:ToolbarItemEx}" >
+        <!--<Border BorderThickness="1" Padding="10,2" Margin="0,0,5,0" CornerRadius="8"
+                BorderBrush="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}">-->
+        <Grid>
+            <Grid x:Name="buttonGrid"                
+                Visibility="{Binding ContentType, RelativeSource={RelativeSource TemplatedParent}, 
+                            Converter={StaticResource vie}, ConverterParameter={x:Static uc:ToolbarItemType.Button}}">
+                <Button Content="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" />
+            </Grid>
+
+            <Grid x:Name="menuGrid"                
+                Visibility="{Binding ContentType, RelativeSource={RelativeSource TemplatedParent}, 
+                            Converter={StaticResource vie}, ConverterParameter={x:Static uc:ToolbarItemType.Menu}}">
+                <bc:DropDownMenu ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}" 
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                 HeaderButtonTemplate="{StaticResource RoundedButton}"
+                                 >
+                    <bc:DropDownMenu.Header>
+                        <Label Content="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" />
+                    </bc:DropDownMenu.Header>
+                    <!--<bc:DropDownList.ItemTemplate>
+                        <DataTemplate>
+                            <Grid IsHitTestVisible="True" Background="Silver" HorizontalAlignment="Stretch" Width="30">
+                                <TextBlock Text="{Binding}" HorizontalAlignment="Stretch" />
+                            </Grid>
+                        </DataTemplate>
+                    </bc:DropDownList.ItemTemplate>-->
+                </bc:DropDownMenu>
+            </Grid>
+            <Grid x:Name="buttonMenuGrid"                
+                Visibility="{Binding ContentType, RelativeSource={RelativeSource TemplatedParent}, 
+                            Converter={StaticResource vie}, ConverterParameter={x:Static uc:ToolbarItemType.ButtonMenu}}">
+
+            </Grid>
+            <Grid x:Name="rangeGrid"                
+                Visibility="{Binding ContentType, RelativeSource={RelativeSource TemplatedParent}, 
+                            Converter={StaticResource vie}, ConverterParameter={x:Static uc:ToolbarItemType.Range}}">
+
+            </Grid>
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="ToolbarItemStyle" TargetType="{x:Type uc:ToolbarItemEx}">
+        <Setter Property="Template" Value="{StaticResource ToolbarItemTemplate}" />
+    </Style>
+
+
+    <Style TargetType="{x:Type uc:ToolbarEx}">
+        <!--<Style.Resources>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="10,2" />
+                <Setter Property="Margin" Value="0,0,5,0" />
+                <Setter Property="TextBlock.FontSize" Value="15" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" />
+                <Setter Property="Template" Value="{StaticResource RoundedButton}" />
+            </Style>
+        </Style.Resources>-->
         <Setter Property="Template">
             <Setter.Value>
-                
                 <ControlTemplate TargetType="{x:Type uc:ToolbarEx}">
                     <ItemsPresenter />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ToolbarItemStyle}" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>

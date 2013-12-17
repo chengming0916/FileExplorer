@@ -49,7 +49,7 @@ namespace FileExplorer.ViewModels
 
         public void Add(IEntryViewModel item)
         {
-            GC.Collect(0, GCCollectionMode.Forced, true);
+            //GC.Collect(0, GCCollectionMode.Forced, true);
             if (NavigationPosition != -1)
                 for (int i = 0; i < NavigationPosition; i++)
                     NavigationHistory.RemoveAt(0);

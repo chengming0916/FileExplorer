@@ -26,6 +26,7 @@ namespace FileExplorer.Models
         {
             private bool HasParent(FileSystemInfoEx child, DirectoryInfoEx parent)
             {
+
                 DirectoryInfoEx current = child.Parent;
                 while (current != null)
                 {

@@ -7,6 +7,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <ControlTemplate x:Key="BaseToggleButton" TargetType="{x:Type ToggleButton}">
@@ -135,6 +136,29 @@
         </ControlTemplate.Triggers>-->
     </ControlTemplate>
 
+    <ControlTemplate x:Key="RoundedButton" TargetType="{x:Type ButtonBase}">
+        <Border  CornerRadius="8" BorderThickness="{TemplateBinding BorderThickness}" 
+                 BorderBrush="{TemplateBinding BorderBrush}">
+            <Border.Clip>
+                <MultiBinding Converter="{StaticResource bc}">
+                    <Binding Path="ActualWidth"
+                        RelativeSource="{RelativeSource Self}"/>
+                    <Binding Path="ActualHeight"
+                        RelativeSource="{RelativeSource Self}"/>
+                    <Binding Path="CornerRadius"
+                        RelativeSource="{RelativeSource Self}"/>
+                </MultiBinding>
+            </Border.Clip>
+            <bc:HotTrack SelectedBorderBrush="{TemplateBinding BorderBrush}" x:Name="hotTrack"                 
+                Padding="{TemplateBinding Padding}" Background="Transparent" 
+                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                BorderThickness="0">
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"                                   
+                              VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+            </bc:HotTrack>
+        </Border>
+    </ControlTemplate>
+    
     <ControlTemplate x:Key="NavButton" TargetType="{x:Type ButtonBase}">
         <Grid Margin="3">
             <bc:Invert x:Name="cc" 
