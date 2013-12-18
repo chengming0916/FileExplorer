@@ -100,11 +100,11 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Rectangle Opacity="0" x:Name="selected"  Fill="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" 
+                    <Rectangle Opacity="0" x:Name="selected"  Fill="{TemplateBinding SelectedBrush}" 
                                            Grid.RowSpan="2" />
-                    <Rectangle x:Name="background" Opacity="0" Fill="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" 
+                    <Rectangle x:Name="background" Opacity="0" Fill="{TemplateBinding BackgroundBrush}" 
                                            Grid.RowSpan="2" />
-                    <Rectangle x:Name="highlight"  Opacity="0" Fill="#75FFFFFF"  />
+                    <Rectangle x:Name="highlight"  Opacity="0" Fill="{TemplateBinding HighlightBrush}"  />
                 </Grid>
                 <Rectangle 
                     Visibility="{Binding FillFullRow, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btvc}}">
@@ -133,6 +133,9 @@
     </ControlTemplate>
 
     <Style TargetType="{x:Type bc:HotTrack}">
+        <Setter Property="SelectedBrush" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+        <Setter Property="BackgroundBrush" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+        <Setter Property="HighlightBrush" Value="#75FFFFFF" />
         <Setter Property="Template" Value="{StaticResource HotTrackTemplate}" />
     </Style>
 

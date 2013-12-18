@@ -184,12 +184,22 @@ namespace TestTemplate.WPF
         private void setupToolbarItem()
         {
             tbiMenu1.SetValue(ItemsControl.ItemsSourceProperty, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
-            tbiMenu2.SetValue(ItemsControl.ItemsSourceProperty, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+            tbiMenu2.SetValue(ItemsControl.ItemsSourceProperty,
+                 (new int[] { 100, 50, 20, 0 }).Select(num => new ToolbarItemEx()
+                 {                     
+                    SliderStep = num,
+                    Height = num,
+                    Header = num.ToString()  }));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //sbar.Items.Add(new StatusbarItemEx() { Content = "Add", Type = FileExplorer.Defines.DisplayType.Text, Header = "New" });
+        }
+
+        private void ToolbarClose_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.Close();
         }
 
         
