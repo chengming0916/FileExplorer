@@ -527,20 +527,29 @@
             </Grid>
         </TabItem>
         <TabItem Header="Toolbar" IsSelected="True">
+            <TabItem.CommandBindings>
+                <CommandBinding Command="Close" Executed="ToolbarClose_Executed" />
+            </TabItem.CommandBindings>
             <uc:ToolbarEx VerticalAlignment="Top">
                 <!--<Button>Test</Button>
                 <Button>Test</Button>-->
-                <uc:ToolbarItemEx ContentType="Button" Header="Button" />
-                <uc:ToolbarItemEx ContentType="Button" Header="Button" />
-                <uc:ToolbarItemEx x:Name="tbiMenu1" ContentType="Menu" Header="Menu" />
-                <uc:ToolbarItemEx x:Name="tbiMenu2" ContentType="Menu" Header="Menu" />
-                <uc:ToolbarItemEx x:Name="tbibMenu1" ContentType="ButtonMenu" Header="ButtonMenu" />
-                <uc:ToolbarItemEx x:Name="tbibMenu2" ContentType="ButtonMenu" Header="ButtonMenu" />
+                <uc:ToolbarItemEx ContentType="Button" Header="Button" Symbol="&#xE102;"  />
+                <uc:ToolbarItemEx ContentType="Button" Header="Button" Symbol="&#xE103;" />
+                <uc:ToolbarItemEx x:Name="tbiMenu1" Command="Close" ContentType="MenuButton" Header="Close" Symbol="&#xE106; " />
+                <uc:ToolbarItemEx x:Name="tbiMenu2" ContentType="MenuButton" Symbol="&#xE15D;" Header="{Binding SliderValue, ElementName=tbiMenu2}"                                   
+                                  IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="100" >
+                    <uc:ToolbarItemEx.ItemTemplate>
+                        <DataTemplate>
+                            <ProgressBar Minimum="0" Maximum="10" Value="{Binding SliderValue}" />
+                        </DataTemplate>
+                    </uc:ToolbarItemEx.ItemTemplate>
+                </uc:ToolbarItemEx>
+
+                <uc:ToolbarItemEx ContentType="Range" Header="Range"  />
                 <uc:ToolbarItemEx ContentType="Range" Header="Range" />
-                <uc:ToolbarItemEx ContentType="Range" Header="Range" />
-                <uc:ToolbarEx.LayoutTransform>
-                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                </uc:ToolbarEx.LayoutTransform>
+                <!--<uc:ToolbarEx.LayoutTransform>
+                    <ScaleTransform ScaleX="3" ScaleY="3" />
+                </uc:ToolbarEx.LayoutTransform>-->
             </uc:ToolbarEx>
         </TabItem>
     </TabControl>

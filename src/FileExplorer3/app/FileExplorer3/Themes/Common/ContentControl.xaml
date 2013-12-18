@@ -16,7 +16,24 @@
             <ContentPresenter Content="{Binding}" ContentTemplate="{TemplateBinding ContentTemplate}" />
         </DockPanel>
     </ControlTemplate>
-    
+
+    <ControlTemplate x:Key="ThreeContentTemplate" TargetType="{x:Type bc:MultiContentControl}">
+        <DockPanel>
+            <ContentPresenter Content="{Binding}" DockPanel.Dock="Left" 
+                              Visibility="{Binding ContentVisible3, Converter={StaticResource btvc}, 
+                                        RelativeSource={RelativeSource TemplatedParent}}"
+                              ContentTemplate="{TemplateBinding ContentTemplate3}" />
+            <ContentPresenter Content="{Binding}" DockPanel.Dock="Left" 
+                              Visibility="{Binding ContentVisible2, Converter={StaticResource btvc}, 
+                                        RelativeSource={RelativeSource TemplatedParent}}"
+                              ContentTemplate="{TemplateBinding ContentTemplate2}" />
+            <ContentPresenter Content="{Binding}" 
+                              Visibility="{Binding ContentVisible1, Converter={StaticResource btvc}, 
+                                        RelativeSource={RelativeSource TemplatedParent}}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+        </DockPanel>
+    </ControlTemplate>
+
     <Style TargetType="{x:Type bc:MultiContentControl}">
         <Setter Property="Template" Value="{StaticResource TwoContentTemplate}" />
     </Style>

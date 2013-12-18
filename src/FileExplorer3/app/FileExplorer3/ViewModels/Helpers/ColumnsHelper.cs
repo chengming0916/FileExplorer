@@ -69,7 +69,8 @@ namespace FileExplorer.ViewModels.Helpers
             foreach (var f in filters)
                 f.PropertyChanged += (o, e) =>
                     {
-                        NotifyFilterChanged();
+                        if (e.PropertyName == "IsChecked")
+                            NotifyFilterChanged();
                     };
             NotifyOfPropertyChanged(() => ColumnFilters);
         }

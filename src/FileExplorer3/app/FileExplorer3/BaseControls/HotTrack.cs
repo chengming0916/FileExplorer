@@ -118,13 +118,45 @@ namespace FileExplorer.BaseControls
 
         public Brush SelectedBorderBrush
         {
-            get { return (Brush)GetValue(IsSelectedProperty); }
-            set { SetValue(IsSelectedProperty, value); }
+            get { return (Brush)GetValue(SelectedBorderBrushProperty); }
+            set { SetValue(SelectedBorderBrushProperty, value); }
         }
 
         public static readonly DependencyProperty SelectedBorderBrushProperty =
             DependencyProperty.Register("SelectedBorderBrush", typeof(Brush),
             typeof(HotTrack), new UIPropertyMetadata(Brushes.Transparent));
+
+        public Brush BackgroundBrush
+        {
+            get { return (Brush)GetValue(BackgroundBrushProperty); }
+            set { SetValue(BackgroundBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty BackgroundBrushProperty =
+            DependencyProperty.Register("BackgroundBrush", typeof(Brush),
+            typeof(HotTrack), new UIPropertyMetadata(SystemColors.HotTrackBrush));
+
+
+        public Brush SelectedBrush
+        {
+            get { return (Brush)GetValue(SelectedBrushProperty); }
+            set { SetValue(SelectedBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedBrushProperty =
+            DependencyProperty.Register("SelectedBrush", typeof(Brush),
+            typeof(HotTrack), new UIPropertyMetadata(SystemColors.ActiveCaptionBrush));
+
+        public Brush HighlightBrush
+        {
+            get { return (Brush)GetValue(HighlightBrushProperty); }
+            set { SetValue(HighlightBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty HighlightBrushProperty =
+            DependencyProperty.Register("HighlightBrush", typeof(Brush),
+            typeof(HotTrack), new UIPropertyMetadata(new SolidColorBrush(Color.FromArgb(117,255,255,255))));
+
 
         public CornerRadius CornerRadius
         {

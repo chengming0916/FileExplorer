@@ -33,9 +33,19 @@ namespace FileExplorer.BaseControls
 
         #region Public Properties
 
+        public static readonly DependencyProperty ContentVisible1Property =
+           DependencyProperty.Register("ContentVisible1", typeof(bool), typeof(MultiContentControl),
+           new PropertyMetadata(true));
+
+        public bool ContentVisible1
+        {
+            get { return (bool)GetValue(ContentVisible1Property); }
+            set { SetValue(ContentVisible1Property, value); }
+        }
 
         public static readonly DependencyProperty ContentTemplate2Property =
-            DependencyProperty.Register("ContentTemplate2", typeof(DataTemplate), typeof(MultiContentControl));
+            DependencyProperty.Register("ContentTemplate2", typeof(DataTemplate), typeof(MultiContentControl), 
+            new PropertyMetadata(null));
 
         public DataTemplate ContentTemplate2
         {
@@ -45,14 +55,34 @@ namespace FileExplorer.BaseControls
 
         public static readonly DependencyProperty ContentVisible2Property =
             DependencyProperty.Register("ContentVisible2", typeof(bool), typeof(MultiContentControl), 
-            new PropertyMetadata(true));
+            new PropertyMetadata(false));
 
         public bool ContentVisible2
         {
             get { return (bool)GetValue(ContentVisible2Property); }
             set { SetValue(ContentVisible2Property, value); }
         }
-        
+
+
+        public static readonly DependencyProperty ContentTemplate3Property =
+            DependencyProperty.Register("ContentTemplate3", typeof(DataTemplate), typeof(MultiContentControl), new PropertyMetadata(null));
+
+        public DataTemplate ContentTemplate3
+        {
+            get { return (DataTemplate)GetValue(ContentTemplate3Property); }
+            set { SetValue(ContentTemplate3Property, value); }
+        }
+
+        public static readonly DependencyProperty ContentVisible3Property =
+            DependencyProperty.Register("ContentVisible3", typeof(bool), typeof(MultiContentControl),
+            new PropertyMetadata(true));
+
+        public bool ContentVisible3
+        {
+            get { return (bool)GetValue(ContentVisible3Property); }
+            set { SetValue(ContentVisible3Property, value); }
+        }
+
         #endregion
     }
 }
