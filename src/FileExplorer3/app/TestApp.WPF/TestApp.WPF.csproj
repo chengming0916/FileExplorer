@@ -39,6 +39,10 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
+    <Reference Include="DirectoryInfoEx, Version=1.0.23.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\DirectoryInfoEx.dll</HintPath>
+    </Reference>
     <Reference Include="ExifLib">
       <HintPath>..\..\..\..\..\COFE\lib\ExifLib.dll</HintPath>
     </Reference>
@@ -121,10 +125,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DirectoryInfoEx\app\DirectoryInfoEx\DirectoryInfoEx.csproj">
-      <Project>{09df5a9a-989e-410c-ba72-5a94cf481e57}</Project>
-      <Name>DirectoryInfoEx</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
       <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
       <Name>FileExplorer3</Name>
