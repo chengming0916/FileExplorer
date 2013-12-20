@@ -9,7 +9,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="ClippedBorderTemplate" TargetType="{x:Type bc:ClipCorner}">
+    <!--<ControlTemplate x:Key="ClippedBorderTemplate" TargetType="{x:Type bc:ClipCorner}">
         <Border BorderBrush="Transparent" BorderThickness="1" CornerRadius="{TemplateBinding CornerRadius}">
             <Border.Clip>
                 <MultiBinding Converter="{StaticResource bc}">
@@ -21,10 +21,19 @@
             <ContentPresenter />                
             
         </Border>
-    </ControlTemplate>
+    </ControlTemplate>-->
 
     <Style TargetType="{x:Type bc:ClipCorner}">
-        <Setter Property="Template" Value="{StaticResource ClippedBorderTemplate}" />
+        <Setter Property="Clip" >
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource bc}">
+                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource  TemplatedParent}"/>
+                    <Binding Path="ActualHeight" RelativeSource="{RelativeSource TemplatedParent}"/>
+                    <Binding Path="CornerRadius" RelativeSource="{RelativeSource TemplatedParent}"/>
+                </MultiBinding>
+            </Setter.Value>
+            
+        </Setter>
     </Style>
 
 

@@ -533,20 +533,40 @@
             <uc:ToolbarEx VerticalAlignment="Top">
                 <!--<Button>Test</Button>
                 <Button>Test</Button>-->
-                <uc:ToolbarItemEx ContentType="Button" Header="Button" Symbol="&#xE102;"  />
-                <uc:ToolbarItemEx ContentType="Button" Header="Button" Symbol="&#xE103;" />
-                <uc:ToolbarItemEx x:Name="tbiMenu1" Command="Close" ContentType="MenuButton" Header="Close" Symbol="&#xE106; " />
-                <uc:ToolbarItemEx x:Name="tbiMenu2" ContentType="MenuButton" Symbol="&#xE15D;" Header="{Binding SliderValue, ElementName=tbiMenu2}"                                   
+                <uc:ToolbarItemEx HeaderType="Button" Header="Button" Symbol="&#xE102;"  />
+                <uc:ToolbarItemEx HeaderType="Button" Header="Button" Symbol="&#xE103;" />
+                <uc:ToolbarItemEx x:Name="tbiMenu1" Command="Close" HeaderType="MenuButton" Header="Close" Symbol="&#xE106; " />
+                <uc:ToolbarItemEx x:Name="tbiMenu2" HeaderType="MenuButton" Symbol="&#xE15D;" Header="{Binding SliderValue, ElementName=tbiMenu2}"                                   
                                   IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="100" >
                     <uc:ToolbarItemEx.ItemTemplate>
                         <DataTemplate>
-                            <ProgressBar Minimum="0" Maximum="10" Value="{Binding SliderValue}" />
+                            <ProgressBar Minimum="0" Maximum="10" Value="10" />
                         </DataTemplate>
                     </uc:ToolbarItemEx.ItemTemplate>
                 </uc:ToolbarItemEx>
 
-                <uc:ToolbarItemEx ContentType="Range" Header="Range"  />
-                <uc:ToolbarItemEx ContentType="Range" Header="Range" />
+                <uc:ToolbarItemEx x:Name="tbiMenu3" HeaderType="Button" Symbol="&#xE15D;" Width="50"
+                                  Header="{Binding SliderValue, ElementName=tbiMenu3}"
+                                  IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="100"  >                
+                </uc:ToolbarItemEx>
+                <uc:ToolbarItemEx HeaderType="Combo" >
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A2;" IsChecked="True" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A1;" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A0;" />
+
+                    <!--<uc:ToolbarSubItemEx Symbol="&#xE155;" ToolTip="ExtraLargeIcon" />
+                    <uc:ToolbarSubItemEx Symbol="&#xe20f;" ToolTip="LargeIcon" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE138;" ToolTip="Icon" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE14C;" ToolTip="List" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE179;" ToolTip="Details" />-->                   
+
+                </uc:ToolbarItemEx>
+
+                <uc:ToolbarItemEx HeaderType="Check" >
+                    <uc:ToolbarSubItemEx Symbol="&#xE19B;" IsChecked="True" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE199;"  />
+                    <uc:ToolbarSubItemEx Symbol="&#xE19A;"  />
+                </uc:ToolbarItemEx>
                 <!--<uc:ToolbarEx.LayoutTransform>
                     <ScaleTransform ScaleX="3" ScaleY="3" />
                 </uc:ToolbarEx.LayoutTransform>-->
