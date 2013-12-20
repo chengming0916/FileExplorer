@@ -115,7 +115,6 @@ namespace FileExplorer.BaseControls
             typeof(HotTrack), new UIPropertyMetadata(false,
                 new PropertyChangedCallback(OnIsSelectedChanged)));
 
-
         public Brush SelectedBorderBrush
         {
             get { return (Brush)GetValue(SelectedBorderBrushProperty); }

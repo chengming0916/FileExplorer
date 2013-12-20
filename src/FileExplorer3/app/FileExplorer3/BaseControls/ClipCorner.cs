@@ -15,7 +15,7 @@ using FileExplorer.Utils;
 namespace FileExplorer.BaseControls
 {
   
-    public class ClipCorner : ContentControl
+    public class ClipCorner : Border
     {
         #region Constructor
 

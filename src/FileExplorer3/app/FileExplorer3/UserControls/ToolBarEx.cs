@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
@@ -40,8 +42,8 @@ namespace FileExplorer.UserControls
 
     }
 
-    public enum ToolbarItemType { Button, MenuButton, Range }
-
+    public enum ToolbarItemType { Button, Menu, MenuButton, Combo, Check }
+    public enum ToolbarSubItemType { Button, Menu, MenuButton, ComboItem, CheckItem }
 
     public class ToolbarItemEx : MenuItem
     {
@@ -55,10 +57,55 @@ namespace FileExplorer.UserControls
         {
             base.OnApplyTemplate();
 
-            //this.AddValueChanged(MenuItem.RoleProperty, (o, e) =>
-            //    {
+            this.AddHandler(MenuItem.CheckedEvent, (RoutedEventHandler)((o, e) =>
+                {
+                    switch (this.HeaderType)
+                    {
+                        case ToolbarItemType.Combo :
+                            foreach (var item in Items)
+                            {
+                                var subToolbarItem = item as ToolbarSubItemEx;
+                                if (subToolbarItem != null)
+                                    subToolbarItem.IsChecked = subToolbarItem.Equals(e.Source);
+                            }
+                            break;
 
-            //    });
+                    }
+                    //Debug.WriteLine("Checked");
+                }));
+
+            this.AddHandler(Thumb.DragDeltaEvent, (DragDeltaEventHandler)((o, e) =>
+                {
+                    double newValue = this.SliderValue - (e.VerticalChange / 100);
+                    if (newValue > SliderMaximum)
+                        newValue = SliderMaximum;
+                    if (newValue < SliderMinimum)
+                        newValue = SliderMinimum;
+
+                    if (e.VerticalChange < 0)
+                        this.SetValue(SliderValueProperty, Math.Ceiling(newValue));
+                    else this.SetValue(SliderValueProperty, Math.Truncate(newValue));                    
+                }));
+
+            this.AddHandler(MenuItem.ClickEvent, (RoutedEventHandler)((o, e) =>
+                {                    
+                    if (this.HeaderType == ToolbarItemType.MenuButton && this.IsSliderEnabled)
+                    {
+                        ToolbarSubItemEx sourceItem = UITools.FindAncestor<ToolbarSubItemEx>(e.OriginalSource as UIElement);
+                        if (sourceItem != null)
+                        {
+                            double value;
+                            if (double.TryParse(sourceItem.Value.ToString(), out value))
+                                this.SetValue(SliderValueProperty, value);
+                        }
+                    }
+
+                }));
+        }
+
+        protected override DependencyObject GetContainerForItemOverride()
+        {
+            return new ToolbarSubItemEx();
         }
 
         #endregion
@@ -131,7 +178,7 @@ namespace FileExplorer.UserControls
                     new UIPropertyMetadata(new PropertyChangedCallback(delegate { /*Debug.WriteLine("Changed-ToolbarMenuItem");*/ })));
 
 
-        public static readonly DependencyProperty StepsProperty = 
+        public static readonly DependencyProperty StepsProperty =
             DependencyProperty.RegisterAttached("Steps", typeof(ObservableCollection<Step>), typeof(ToolbarItemEx));
 
         public static ObservableCollection<Step> GetSelectionAdorner(DependencyObject target)
@@ -150,49 +197,39 @@ namespace FileExplorer.UserControls
             set { SetValue(SliderValueProperty, value); }
         }
 
-        public static readonly DependencyProperty SliderStepProperty =
-                     DependencyProperty.Register("SliderStep", typeof(double), typeof(ToolbarItemEx),
-                     new UIPropertyMetadata(0.0d));
 
-        public double SliderStep
-        {
-            get { return (double)GetValue(SliderStepProperty); }
-            set { SetValue(SliderStepProperty, value); }
-        }
+        //public static readonly DependencyProperty ItemHeightProperty =
+        //             DependencyProperty.Register("ItemHeight", typeof(double), typeof(ToolbarItemEx),
+        //             new UIPropertyMetadata());
 
-        public static readonly DependencyProperty ItemHeightProperty =
-                     DependencyProperty.Register("ItemHeight", typeof(double), typeof(ToolbarItemEx),
-                     new UIPropertyMetadata());
-
-
-        public static readonly DependencyProperty IsStepStopProperty =
-                    DependencyProperty.Register("IsStepStop", typeof(bool), typeof(ToolbarItemEx),
-                    new UIPropertyMetadata(false));
-
-        public bool IsStepStop
-        {
-            get { return (bool)GetValue(IsStepStopProperty); }
-            set { SetValue(IsStepStopProperty, value); }
-        }
 
         #endregion
 
 
 
 
-
-
-
-
-
-        public ToolbarItemType ContentType
+        public object SelectedValue
         {
-            get { return (ToolbarItemType)GetValue(ContentTypeProperty); }
-            set { SetValue(ContentTypeProperty, value); }
+            get { return (object)GetValue(SelectedValueProperty); }
+            set { SetValue(SelectedValueProperty, value); }
         }
 
-        public static readonly DependencyProperty ContentTypeProperty =
-            DependencyProperty.Register("ContentType", typeof(ToolbarItemType),
+        public static readonly DependencyProperty SelectedValueProperty =
+            DependencyProperty.Register("SelectedValue", typeof(object),
+            typeof(ToolbarItemEx), new PropertyMetadata(null));
+
+
+
+
+
+        public ToolbarItemType HeaderType
+        {
+            get { return (ToolbarItemType)GetValue(HeaderTypeProperty); }
+            set { SetValue(HeaderTypeProperty, value); }
+        }
+
+        public static readonly DependencyProperty HeaderTypeProperty =
+            DependencyProperty.Register("HeaderType", typeof(ToolbarItemType),
             typeof(ToolbarItemEx), new PropertyMetadata(ToolbarItemType.Button));
 
         public CornerRadius CornerRadius
@@ -209,4 +246,84 @@ namespace FileExplorer.UserControls
         #endregion
     }
 
+
+    public class ToolbarSubItemEx : MenuItem
+    {
+
+        #region Constructor
+
+        #endregion
+
+        #region Methods
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+        }
+
+        #endregion
+
+        #region Data
+
+        #endregion
+
+        #region Public Properties
+
+        public static readonly DependencyProperty IsSeparatorProperty =
+           ToolbarItemEx.IsSeparatorProperty.AddOwner(typeof(ToolbarSubItemEx));
+
+        public bool IsSeparator
+        {
+            get { return (bool)GetValue(IsSeparatorProperty); }
+            set { SetValue(IsSeparatorProperty, value); }
+        }
+
+        /// <summary>
+        /// Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
+        /// </summary>
+        public string Symbol
+        {
+            get { return (string)GetValue(SymbolProperty); }
+            set { SetValue(SymbolProperty, value); }
+        }
+
+        public static readonly DependencyProperty SymbolProperty =
+           ToolbarItemEx.SymbolProperty.AddOwner(typeof(ToolbarSubItemEx));
+
+        public ToolbarSubItemType HeaderType
+        {
+            get { return (ToolbarSubItemType)GetValue(HeaderTypeProperty); }
+            set { SetValue(HeaderTypeProperty, value); }
+        }
+
+        public static readonly DependencyProperty HeaderTypeProperty =
+            DependencyProperty.Register("HeaderType", typeof(ToolbarSubItemType),
+            typeof(ToolbarSubItemEx), new PropertyMetadata(ToolbarSubItemType.Button));
+
+
+        public object Value
+        {
+            get { return (object)GetValue(ValueProperty); }
+            set { SetValue(ValueProperty, value); }
+        }
+
+        public static readonly DependencyProperty ValueProperty =
+            DependencyProperty.Register("Value", typeof(object),
+            typeof(ToolbarSubItemEx), new PropertyMetadata(null));
+
+
+        public static readonly DependencyProperty IsStepStopProperty =
+                    DependencyProperty.Register("IsStepStop", typeof(bool), typeof(ToolbarSubItemEx),
+                    new UIPropertyMetadata(false));
+
+        public bool IsStepStop
+        {
+            get { return (bool)GetValue(IsStepStopProperty); }
+            set { SetValue(IsStepStopProperty, value); }
+        }
+
+
+        #endregion
+
+    }
 }

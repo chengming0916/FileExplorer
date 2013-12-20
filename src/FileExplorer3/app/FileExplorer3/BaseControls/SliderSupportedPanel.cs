@@ -52,9 +52,10 @@ namespace FileExplorer.BaseControls
                 //double midPoint = finalSize.Height - ((curY + item.HeaderHeight) / 2.0d);
                 if (child is ToolbarItemEx)
                 {
-                    ToolbarItemEx item = (ToolbarItemEx)child;
-                    if (!item.IsSeparator)
-                        steps.Add(new Step(midPoint, item.SliderStep, item.IsStepStop));
+                    ToolbarSubItemEx item = (ToolbarSubItemEx)child;
+                    double value;
+                    if (!item.IsSeparator && item.Value != null && double.TryParse(item.Value.ToString(), out value))                    
+                        steps.Add(new Step(midPoint, value, item.IsStepStop));
 
                 }
                 curY += child.DesiredSize.Height;
