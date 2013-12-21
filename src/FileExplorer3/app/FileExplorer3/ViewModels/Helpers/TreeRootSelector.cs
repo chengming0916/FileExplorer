@@ -63,14 +63,21 @@ namespace FileExplorer.ViewModels.Helpers
         {
             if (level == 0)
                 return;
+
+            List<ITreeSelector<VM, T>> rootTreeSelectors = new List<ITreeSelector<VM, T>>();
             await selector.LookupAsync(default(T), BroadcastNextLevel<VM, T>.LoadSubentriesIfNotLoaded,
                 new TreeLookupProcessor<VM, T>(HierarchicalResult.All, (hr, p, c) =>
-                    {
-                        c.IsRoot = true;
-                        rootItems.Add(c.ViewModel);                        
-                        AsyncUtils.RunSync(() => updateRootItemsAsync(c, rootItems, level - 1));
+                    {                        
+                        rootTreeSelectors.Add(c);                                                
                         return true;
                     }));
+
+            foreach (var c in rootTreeSelectors)
+            {
+                rootItems.Add(c.ViewModel);
+                c.IsRoot = true;
+                await updateRootItemsAsync(c, rootItems, level - 1);
+            }
         }
 
         private void updateRootItems(Stack<ITreeSelector<VM, T>> path = null)

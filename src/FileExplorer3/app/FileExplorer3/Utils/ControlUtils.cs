@@ -15,7 +15,7 @@ namespace FileExplorer.Utils
         public static Point GetScrollbarPosition(ScrollContentPresenter scp)
         {
             ScrollViewer scrollViewer = UITools.FindAncestor<ScrollViewer>(scp);
-            return new Point(scp.ActualWidth / scrollViewer.ViewportWidth * scrollViewer.HorizontalOffset,
+            return scrollViewer == null ? new Point() : new Point(scp.ActualWidth / scrollViewer.ViewportWidth * scrollViewer.HorizontalOffset,
                 scp.ActualHeight / scrollViewer.ViewportHeight * scrollViewer.VerticalOffset);
         }
 
@@ -37,7 +37,7 @@ namespace FileExplorer.Utils
 
         public static ItemsPresenter GetItemsPresenter(Control c)
         {
-            return  UITools.FindVisualChild<ItemsPresenter>(c);            
+            return  UITools.FindVisualChild<ItemsPresenter>(c, null, 8);            
         }
        
         public static AdornerLayer GetAdornerLayer(Control c)

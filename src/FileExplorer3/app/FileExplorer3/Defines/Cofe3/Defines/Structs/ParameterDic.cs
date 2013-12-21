@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace Cofe.Core
 {
+    public class ParameterPair 
+    {
+        public string Key { get; set; }
+        public object Value { get; set; }
+        public ParameterPair(string key, object value) { Key = key; Value = value; }
+    }
+
     public class ParameterDic : Dictionary<string, object>
     {
         public static ParameterDic Empty = new ParameterDic();
@@ -17,6 +24,14 @@ namespace Cofe.Core
             : base(StringComparer.CurrentCultureIgnoreCase)
         {
 
+        }
+
+        public static ParameterDic FromParameterPair(params ParameterPair[] ppairs)
+        {
+            ParameterDic retVal = new ParameterDic();
+            foreach (var ppair in ppairs)
+                retVal.Add(ppair.Key, ppair.Value);
+            return retVal;
         }
 
         public static ParameterDic FromNameValueCollection(NameValueCollection col, string[] paramToFetch)

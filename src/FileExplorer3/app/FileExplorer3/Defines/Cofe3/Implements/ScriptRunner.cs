@@ -25,5 +25,10 @@ namespace Cofe.Core.Script
                 else throw new Exception(String.Format("Cannot execute {0}", current));
             }
         }
+
+        public void Run(IScriptCommand cmd, ParameterDic initialParameters)
+        {
+            Run(new Queue<IScriptCommand>(new[] { cmd }), initialParameters);
+        }
     }
 }

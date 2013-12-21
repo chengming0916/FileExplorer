@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -73,10 +74,12 @@ namespace FileExplorer.BaseControls
         }
 
         //http://stackoverflow.com/questions/665719/wpf-animate-listbox-scrollviewer-horizontaloffset
-        public static T FindVisualChild<T>(DependencyObject obj, Func<T, bool> filter = null) where T : DependencyObject
+        public static T FindVisualChild<T>(DependencyObject obj, 
+            Func<T, bool> filter = null, int level = -1) where T : DependencyObject
         {
             if (filter == null)
                 filter = (t) => true;
+            
 
             // Search immediate children first (breadth-first)
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -89,10 +92,15 @@ namespace FileExplorer.BaseControls
                 }
                 else
                 {
-                    T childOfChild = FindVisualChild<T>(child, filter);
+                    if (level == -1 || level > 0)
+                    {                        
+                        T childOfChild = FindVisualChild<T>(child, filter, level == -1 ? -1 : level -1);
 
-                    if (childOfChild != null)
-                        return childOfChild;
+                        if (childOfChild != null)
+                            return childOfChild;
+                    }
+                    else
+                        Debug.WriteLine(child);
                 }
             }
 
