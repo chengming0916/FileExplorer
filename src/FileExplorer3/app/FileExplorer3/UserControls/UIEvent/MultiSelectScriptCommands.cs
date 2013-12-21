@@ -108,6 +108,9 @@ namespace FileExplorer.BaseControls.MultiSelect
             var scp = ControlUtils.GetScrollContentPresenter(c);
             var eventArgs = pd.EventArgs as MouseEventArgs;
 
+            if (scp == null)
+                return ResultCommand.NoError;
+
             if (eventArgs.RightButton == MouseButtonState.Pressed)
                 return ResultCommand.NoError;
 

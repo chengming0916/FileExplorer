@@ -42,8 +42,7 @@ namespace FileExplorer.UserControls
 
     }
 
-    public enum ToolbarItemType { Button, Menu, MenuButton, Combo, Check }
-    public enum ToolbarSubItemType { Button, Menu, MenuButton, ComboItem, CheckItem }
+    public enum ToolbarItemType { Button, Menu, MenuButton, Combo, Check, ComboItem, CheckItem }    
 
     public class ToolbarItemEx : MenuItem
     {
@@ -290,15 +289,15 @@ namespace FileExplorer.UserControls
         public static readonly DependencyProperty SymbolProperty =
            ToolbarItemEx.SymbolProperty.AddOwner(typeof(ToolbarSubItemEx));
 
-        public ToolbarSubItemType HeaderType
+        public ToolbarItemType HeaderType
         {
-            get { return (ToolbarSubItemType)GetValue(HeaderTypeProperty); }
+            get { return (ToolbarItemType)GetValue(HeaderTypeProperty); }
             set { SetValue(HeaderTypeProperty, value); }
         }
 
         public static readonly DependencyProperty HeaderTypeProperty =
-            DependencyProperty.Register("HeaderType", typeof(ToolbarSubItemType),
-            typeof(ToolbarSubItemEx), new PropertyMetadata(ToolbarSubItemType.Button));
+            DependencyProperty.Register("HeaderType", typeof(ToolbarItemType),
+            typeof(ToolbarSubItemEx), new PropertyMetadata(ToolbarItemType.Button));
 
 
         public object Value

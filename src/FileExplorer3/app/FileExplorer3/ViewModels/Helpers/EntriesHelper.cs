@@ -44,30 +44,24 @@ namespace FileExplorer.ViewModels.Helpers
 
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
-            if (!_isLoaded || force) //NotLoaded
+            using (var releaser = await loadingLock.LockAsync())
             {
-                while (_isLoading)                
-                    await Task.Delay(100);                
-
-                _isLoading = true;
-                _isLoaded = true;
-                try
+                if (!_isLoaded || force) //NotLoaded
                 {
-                    All.Clear();
-                    _subItemList = (await _loadSubEntryFunc()).ToList();
-                    //foreach (VM item in _subItemList)
-                    //    All.Add(item);
-                    (All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
+                    _isLoaded = true;    
+                    All.Clear();                                        
+                    await _loadSubEntryFunc().ContinueWith(prevTask =>
+                        {
+                            _subItemList = prevTask.Result.ToList();
+                            //bool uiThread = System.Threading.Thread.CurrentThread == System.Windows.Threading.Dispatcher.CurrentDispatcher.Thread;
+                            (All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
                     if (EntriesChanged != null)
                         EntriesChanged(this, EventArgs.Empty);
                 }
-                finally
-                {
-                    _isLoading = false;
-                }
             }
             return _subItemList;
-        }        
+        }
 
         public void SetEntries(params VM[] viewModels)
         {
@@ -83,7 +77,8 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Data
 
-        private bool _isLoading = false;
+        private readonly AsyncLock loadingLock = new AsyncLock();
+        //private bool _isLoading = false;
         private bool _isLoaded = false;
         private bool _isExpanded = false;
         private IEnumerable<VM> _subItemList;
@@ -101,7 +96,7 @@ namespace FileExplorer.ViewModels.Helpers
             {
                 if (value && !_isExpanded) LoadAsync();
                 _isExpanded = value;
-                NotifyOfPropertyChanged(() => IsExpanded);                
+                NotifyOfPropertyChanged(() => IsExpanded);
             }
         }
 
@@ -113,16 +108,16 @@ namespace FileExplorer.ViewModels.Helpers
 
         public event EventHandler EntriesChanged;
 
-        public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }        
+        public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }
 
-        public ObservableCollection<VM> All { get { return _subItems; } private set { _subItems = value; } }        
+        public ObservableCollection<VM> All { get { return _subItems; } private set { _subItems = value; } }
 
         #endregion
 
 
 
 
-    
+
     }
 
 }

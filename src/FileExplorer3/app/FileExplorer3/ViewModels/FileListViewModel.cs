@@ -35,14 +35,14 @@ namespace FileExplorer.ViewModels
 
         #region FileListDrag/DropHelper
         internal class FileListDropHelper : DropHelper<IEntryModel>
-        {            
+        {
             public FileListDropHelper(FileListViewModel flvm)
                 : base(() => flvm.CurrentDirectory.Label,
-                (ems, eff) => flvm.CurrentDirectory.Profile.QueryDrop(ems, flvm.CurrentDirectory, eff),                    
+                (ems, eff) => flvm.CurrentDirectory.Profile.QueryDrop(ems, flvm.CurrentDirectory, eff),
                     da => flvm.CurrentDirectory.Profile.GetEntryModels(da),
                 (ems, da, eff) => flvm.CurrentDirectory.Profile.OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
             { }
-            
+
         }
         private class FileListDragHelper : TreeDragHelper<IEntryModel>
         {
@@ -64,11 +64,11 @@ namespace FileExplorer.ViewModels
             Events = events;
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask);
             ProcessedEntries = new EntriesProcessor<IEntryViewModel>(entryHelper);
-            Columns = new ColumnsHelper(ProcessedEntries, 
+            Columns = new ColumnsHelper(ProcessedEntries,
                 (col, direction) =>
                     new EntryViewModelComparer(
                         col.Comparer != null ? col.Comparer : CurrentDirectory.Profile.GetComparer(col),
-                        direction)            
+                        direction)
             );
             Selection = new ListSelector<IEntryViewModel, IEntryModel>(entryHelper);
             DropHelper = new FileListDropHelper(this);
@@ -76,7 +76,7 @@ namespace FileExplorer.ViewModels
 
             Toolbar = new ToolbarViewModel(events);
 
-            Selection.SelectionChanged += (o, e) => 
+            Selection.SelectionChanged += (o, e) =>
             { Events.Publish(new SelectionChangedEvent(this, Selection.SelectedItems)); };
 
             if (events != null)
@@ -116,13 +116,14 @@ namespace FileExplorer.ViewModels
 
         public async Task SetCurrentDirectoryAsync(IEntryModel em)
         {
-            _currentDirVM = em; 
-                        
+            _currentDirVM = em;
+
             await ProcessedEntries.EntriesHelper.LoadAsync(true);
+
             Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);
 
             NotifyOfPropertyChange(() => CurrentDirectory);
-        }  
+        }
 
         public IEnumerable<IResult> ToggleRename()
         {
@@ -140,18 +141,18 @@ namespace FileExplorer.ViewModels
         public void Handle(DirectoryChangedEvent message)
         {
             if (message.NewModel != null)
-                CurrentDirectory = message.NewModel;                
+                CurrentDirectory = message.NewModel;
         }
 
-      
+
         #endregion
 
         #region Data
 
-        private IEntryModel _currentDirVM = null;        
+        private IEntryModel _currentDirVM = null;
         private int _itemSize = 60;
         private string _viewMode = "Icon";
-     
+
 
         #endregion
 
@@ -172,7 +173,7 @@ namespace FileExplorer.ViewModels
             set { SetCurrentDirectoryAsync(value); }
         }
 
-     
+
         #region ViewMode, ItemSize
 
         public string ViewMode
@@ -195,14 +196,12 @@ namespace FileExplorer.ViewModels
             }
         }
 
-     
-
-        #endregion
 
 
         #endregion
 
 
+        #endregion
 
 
 
@@ -210,7 +209,9 @@ namespace FileExplorer.ViewModels
 
 
 
-        
+
+
+
     }
 }
 
