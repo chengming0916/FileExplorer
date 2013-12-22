@@ -185,11 +185,11 @@ namespace TestTemplate.WPF
         {
             tbiMenu1.SetValue(ItemsControl.ItemsSourceProperty, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
             tbiMenu2.SetValue(ItemsControl.ItemsSourceProperty,
-                 (new int[] { 100, 50, 20, 0 }).Select(num => new ToolbarSubItemEx()
+                 (new int[] { 200, 100, 50, 20, 0 }).Select(num => new ToolbarSubItemEx()
                  {                                      
                     Value = num,
                     Height = num + 20,
-                    VerticalContentAlignment= num == 100 ? VerticalAlignment.Top : num == 0 ? 
+                    VerticalContentAlignment= num == 200 ? VerticalAlignment.Top : num == 0 ? 
                         VerticalAlignment.Bottom : VerticalAlignment.Top,
                     IsStepStop = true,
                     Header = num.ToString()  }));

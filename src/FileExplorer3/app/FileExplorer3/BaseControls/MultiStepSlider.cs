@@ -64,6 +64,10 @@ namespace FileExplorer.BaseControls
                 x => sliderValueToValue(x));
 
             //_valueToSliderValueConverter = new DynamicConverter<double, double>(
+            //   x => Math.Round(valueToSliderValue(x)),
+            //   x => Math.Round(sliderValueToValue(x)));
+
+            //_valueToSliderValueConverter = new DynamicConverter<double, double>(
             //  x => x,
             //  x => x);
         }
@@ -71,7 +75,7 @@ namespace FileExplorer.BaseControls
         #region Methods
         public Step GetStep(int idx)
         {
-            if (idx == -1)
+            if (idx <= -1)
                 return new Step(0, Minimum, false);
             if (idx >= Steps.Count)
                 return new Step(PositionType == PositionType.ptPercent ? 100.0d :
@@ -99,7 +103,7 @@ namespace FileExplorer.BaseControls
 
         bool isWithinStepStop(int idx, double position)
         {
-            if (idx == -1 || idx == Steps.Count)
+            if (idx <= -1 || idx >= Steps.Count)
                 return false;
 
             Step curStep = GetStep(idx);
@@ -142,12 +146,12 @@ namespace FileExplorer.BaseControls
                 ratio = 0;
             double position = newValue;
 
-            if (lowStep.StepStop && isWithinStepStop(lowStepIdx, position))
-                retVal = lowStep.Value;
-            else
-                if (highStep.StepStop && isWithinStepStop(highStepIdx, position))
-                    retVal = highStep.Value;
-                else
+            //if (lowStep.StepStop && isWithinStepStop(lowStepIdx, position))
+            //    retVal = lowStep.Value;
+            //else
+            //    if (highStep.StepStop && isWithinStepStop(highStepIdx, position))
+            //        retVal = highStep.Value;
+            //    else
                     retVal = (ratio * (position - lowStep.Posision)) + lowStep.Value;
 
             Debug.WriteLine(String.Format("s2v: {0} -> {1}", newValue, retVal));
@@ -229,7 +233,7 @@ namespace FileExplorer.BaseControls
                         _embeddedSlider.Maximum = _embeddedSlider.ActualWidth;
                     else _embeddedSlider.Maximum = _embeddedSlider.ActualHeight;
                 }
-                SnapFrequency = _embeddedSlider.Maximum * 0.05;
+                SnapFrequency =  _embeddedSlider.Maximum * 0.05;
                 
                 Value = -1; //Reset the slider                
                 Value = origValue;

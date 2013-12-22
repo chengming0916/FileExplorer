@@ -19,6 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Views.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Toolbar.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -53,8 +54,48 @@
             </i:Interaction.Triggers>
 
             <uc:ListViewEx.ContentBelowHeader>
-                <!--<ContentControl Name="Toolbar" Content="{Binding Toolbar}" Margin="2" />-->
-                <v:ToolbarView x:Name="Toolbar" DataContext="{Binding Toolbar}" />
+                <Border>
+                    <!--<ContentControl Name="Toolbar" Content="{Binding Toolbar}" Margin="2" />-->
+                    <!--<v:ToolbarView x:Name="Toolbar" DataContext="{Binding Toolbar, Mode=OneWay}" />-->
+                    <uc:ToolbarEx ItemsSource="{Binding Commands.All}"
+                                  def:AttachedProperties.SkipLookup="True"
+                                  >
+                        <uc:ToolbarEx.Resources>
+                            <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >
+                                <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
+                                <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
+                                <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />
+                                <Setter Property="IsSliderEnabled" Value="{Binding IsSliderEnabled, Mode=OneWay}" />
+                                <Style.Triggers>
+                                    <Trigger Property="HeaderType" Value="MenuButton">
+                                        <Setter Property="ItemsSource" Value="{Binding SubCommands}" />
+                                    </Trigger>
+                                    <Trigger Property="IsSliderEnabled" Value="True">                                        
+                                        <Setter Property="SliderMaximum" Value="{Binding CommandModel.SliderMaximum, Mode=OneWay}" />
+                                        <Setter Property="SliderMinimum" Value="{Binding CommandModel.SliderMinimum, Mode=OneWay}" />
+                                        <Setter Property="SliderValue" Value="{Binding CommandModel.SliderValue, Mode=TwoWay}" />
+                                    </Trigger>
+                                    
+                                </Style.Triggers>
+                            </Style>
+                            <Style TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource ToolbarSubItemExStyle}"  >
+                                <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
+                                <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
+                                <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />                                
+                                <Style.Triggers>
+                                    <Trigger Property="HeaderType" Value="MenuButton">
+                                        <Setter Property="ItemsSource" Value="{Binding SubCommands}" />
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding IsSliderStep}" Value="True">
+                                        <Setter Property="Value" Value="{Binding CommandModel.SliderStep, Mode=OneWay}" />
+                                        <Setter Property="Height" Value="{Binding CommandModel.ItemHeight, Mode=TwoWay}" />                                        
+                                        <Setter Property="IsStepStop" Value="True" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </uc:ToolbarEx.Resources>
+                    </uc:ToolbarEx>
+                </Border>
             </uc:ListViewEx.ContentBelowHeader>
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>

@@ -12,6 +12,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using FileExplorer.Defines;
 
 namespace FileExplorer.BaseControls
 {
@@ -23,10 +24,10 @@ namespace FileExplorer.BaseControls
             desc.AddValueChanged(obj, handler);
         }
 
-        public static void AddValueChangedDispatcher<T>(this T obj, DependencyProperty property,              
+        public static void AddValueChangedDispatcher<T>(this T obj, DependencyProperty property,
             EventHandler handler, DispatcherPriority priority) where T : DependencyObject
         {
-            AddValueChanged(obj, property, (o,e) =>
+            AddValueChanged(obj, property, (o, e) =>
                 {
                     obj.Dispatcher.BeginInvoke(priority, handler);
                 });
@@ -45,6 +46,9 @@ namespace FileExplorer.BaseControls
                     return o;
 
                 obj = VisualTreeHelper.GetParent(obj);
+
+                if (obj != null && AttachedProperties.GetSkipLookup(obj))
+                    obj = null;
             }
             return default(T);
 
@@ -63,23 +67,32 @@ namespace FileExplorer.BaseControls
                     return o;
 
                 obj = LogicalTreeHelper.GetParent(obj);
+
+                if (obj != null && AttachedProperties.GetSkipLookup(obj))
+                    obj = null;
             }
             return default(T);
 
-        }       
+        }
 
         public static T FindAncestor<T>(this UIElement obj) where T : UIElement
         {
             return FindAncestor<T>((DependencyObject)obj);
         }
 
+        private static bool SameDataContext(DependencyObject obj1, DependencyObject obj2)
+        {
+            var dc1 = obj1.GetValue(FrameworkElement.DataContextProperty);
+            var dc2 = obj2.GetValue(FrameworkElement.DataContextProperty);
+            return dc1 == dc2;
+        }
+
         //http://stackoverflow.com/questions/665719/wpf-animate-listbox-scrollviewer-horizontaloffset
-        public static T FindVisualChild<T>(DependencyObject obj, 
+        public static T FindVisualChild<T>(DependencyObject obj,
             Func<T, bool> filter = null, int level = -1) where T : DependencyObject
         {
             if (filter == null)
                 filter = (t) => true;
-            
 
             // Search immediate children first (breadth-first)
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -93,14 +106,15 @@ namespace FileExplorer.BaseControls
                 else
                 {
                     if (level == -1 || level > 0)
-                    {                        
-                        T childOfChild = FindVisualChild<T>(child, filter, level == -1 ? -1 : level -1);
+                        if (!AttachedProperties.GetSkipLookup(child))
+                        {
+                            T childOfChild = FindVisualChild<T>(child, filter, level == -1 ? -1 : level - 1);
 
-                        if (childOfChild != null)
-                            return childOfChild;
-                    }
-                    else
-                        Debug.WriteLine(child);
+                            if (childOfChild != null)
+                                return childOfChild;
+                        }
+                        else
+                            Debug.WriteLine(child);
                 }
             }
 
@@ -406,7 +420,7 @@ namespace FileExplorer.BaseControls
             return null;
         }
 
-        
+
 
         /// <summary>
         /// Reset scrollbar position of virtualizing panel if scrollBar becomes invisible

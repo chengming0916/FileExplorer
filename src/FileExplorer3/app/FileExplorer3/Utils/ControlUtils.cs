@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using FileExplorer.BaseControls;
+using FileExplorer.Defines;
 
 namespace FileExplorer.Utils
 {
@@ -31,8 +32,14 @@ namespace FileExplorer.Utils
 
         public static ScrollContentPresenter GetScrollContentPresenter(Control c)
         {
-            return UITools.FindAncestor<ScrollContentPresenter>(
+            var retVal = AttachedProperties.GetScrollContentPresenter(c);
+            if (retVal == null)
+            {
+                retVal = UITools.FindAncestor<ScrollContentPresenter>(
                 GetItemsPresenter(c));
+                AttachedProperties.SetScrollContentPresenter(c, retVal);
+            }
+            return retVal;
         }
 
         public static ItemsPresenter GetItemsPresenter(Control c)

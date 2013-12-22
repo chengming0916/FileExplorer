@@ -42,7 +42,11 @@ namespace FileExplorer.BaseControls
 
             for (int i = 0; i < Children.Count; i++)            
             {
-                UIElement child = Children[i];
+                Control child = (Control)Children[i];
+
+                child.VerticalContentAlignment = i == 0 ? VerticalAlignment.Top :
+                    i == Children.Count - 1 ? VerticalAlignment.Bottom : VerticalAlignment.Center;
+                
                 Rect allocatedRect = new Rect(0, curY, finalSize.Width, child.DesiredSize.Height);
                 child.Arrange(allocatedRect);        
                 
@@ -50,7 +54,7 @@ namespace FileExplorer.BaseControls
                     finalSize.Height : 
                     finalSize.Height - ((allocatedRect.Top + allocatedRect.Bottom) / 2.0d);
                 //double midPoint = finalSize.Height - ((curY + item.HeaderHeight) / 2.0d);
-                if (child is ToolbarItemEx)
+                if (child is ToolbarSubItemEx)
                 {
                     ToolbarSubItemEx item = (ToolbarSubItemEx)child;
                     double value;

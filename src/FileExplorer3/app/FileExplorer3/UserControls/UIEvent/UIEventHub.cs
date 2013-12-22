@@ -160,6 +160,11 @@ namespace FileExplorer.BaseControls
         {
             if (e.ClickCount > 1)
                 return;
+            
+            var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
+            if (scp == null || !scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(e.OriginalSource as DependencyObject)))
+                return;
+
             bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;
             bool isOverScrollBar = UITools.FindAncestor<ScrollBar>(e.OriginalSource as DependencyObject) != null;
             if (isOverGridViewHeader || isOverScrollBar)
@@ -168,6 +173,8 @@ namespace FileExplorer.BaseControls
             _mouseDownEvent = e;
 
             Control control = sender as Control;
+            //if (!control.IsFocused)
+            //    return;
             execute(_eventProcessors, p => p.OnPreviewMouseDown, "OnPreviewMouseDown", sender, e);
 
             AttachedProperties.SetIsMouseDragging(control, false);

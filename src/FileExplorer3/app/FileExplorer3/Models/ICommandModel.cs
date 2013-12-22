@@ -44,8 +44,31 @@ namespace FileExplorer.Models
        
     }
 
+    public interface ISeparatorModel : ICommandModel
+    {        
+    }
+
     public interface IDirectoryCommandModel : ICommandModel
     {
         IEnumerable<ICommandModel> SubCommands { get; }
     }
+
+    public interface ISelectorCommandModel : IDirectoryCommandModel
+    {
+        bool IsComboBox { get; }
+    }
+
+    public interface ISliderCommandModel : IDirectoryCommandModel
+    {
+        int SliderMaximum { get; }
+        int SliderMinimum { get; }
+        int SliderValue { get; set; }
+    }
+
+    public interface ISliderStepCommandModel : ICommandModel
+    {
+        int SliderStep { get; }
+        double? ItemHeight { get; }
+    }
+    
 }
