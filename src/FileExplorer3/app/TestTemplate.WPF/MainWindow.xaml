@@ -537,7 +537,7 @@
                 <uc:ToolbarItemEx HeaderType="Button" Header="Button" Symbol="&#xE103;" />
                 <uc:ToolbarItemEx x:Name="tbiMenu1" Command="Close" HeaderType="MenuButton" Header="Close" Symbol="&#xE106; " />
                 <uc:ToolbarItemEx x:Name="tbiMenu2" HeaderType="MenuButton" Symbol="&#xE15D;" Header="{Binding SliderValue, ElementName=tbiMenu2}"                                   
-                                  IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="100" >
+                                  IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="200" >
                     <uc:ToolbarItemEx.ItemTemplate>
                         <DataTemplate>
                             <ProgressBar Minimum="0" Maximum="10" Value="10" />
@@ -547,12 +547,12 @@
 
                 <uc:ToolbarItemEx x:Name="tbiMenu3" HeaderType="Button" Symbol="&#xE15D;" Width="50"
                                   Header="{Binding SliderValue, ElementName=tbiMenu3}"
-                                  IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="100"  >                
+                                  IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="100"  >                 
                 </uc:ToolbarItemEx>
                 <uc:ToolbarItemEx HeaderType="Combo" >
-                    <uc:ToolbarSubItemEx Symbol="&#xE1A2;" IsChecked="True" />
-                    <uc:ToolbarSubItemEx Symbol="&#xE1A1;" />
-                    <uc:ToolbarSubItemEx Symbol="&#xE1A0;" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A2;" IsChecked="True" IsCheckable="True" HeaderType="ComboItem"  />
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A1;" IsCheckable="True" HeaderType="ComboItem" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A0;" IsCheckable="True" HeaderType="ComboItem" />
 
                     <!--<uc:ToolbarSubItemEx Symbol="&#xE155;" ToolTip="ExtraLargeIcon" />
                     <uc:ToolbarSubItemEx Symbol="&#xe20f;" ToolTip="LargeIcon" />
@@ -563,9 +563,9 @@
                 </uc:ToolbarItemEx>
 
                 <uc:ToolbarItemEx HeaderType="Check" >
-                    <uc:ToolbarSubItemEx Symbol="&#xE19B;" IsChecked="True" />
-                    <uc:ToolbarSubItemEx Symbol="&#xE199;"  />
-                    <uc:ToolbarSubItemEx Symbol="&#xE19A;"  />
+                    <uc:ToolbarSubItemEx Symbol="&#xE19B;" IsChecked="True" IsCheckable="True" HeaderType="CheckItem" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE199;" IsCheckable="True" HeaderType="CheckItem" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE19A;" IsCheckable="True" HeaderType="CheckItem" />
                 </uc:ToolbarItemEx>
                 <!--<uc:ToolbarEx.LayoutTransform>
                     <ScaleTransform ScaleX="3" ScaleY="3" />

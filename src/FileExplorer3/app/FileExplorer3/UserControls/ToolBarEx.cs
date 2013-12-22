@@ -42,7 +42,7 @@ namespace FileExplorer.UserControls
 
     }
 
-    public enum ToolbarItemType { Button, Menu, MenuButton, Combo, Check, ComboItem, CheckItem }    
+    public enum ToolbarItemType { Button, Menu, MenuButton, Combo, Check, ComboItem, CheckItem, Separator }    
 
     public class ToolbarItemEx : MenuItem
     {
@@ -91,7 +91,7 @@ namespace FileExplorer.UserControls
                     if (this.HeaderType == ToolbarItemType.MenuButton && this.IsSliderEnabled)
                     {
                         ToolbarSubItemEx sourceItem = UITools.FindAncestor<ToolbarSubItemEx>(e.OriginalSource as UIElement);
-                        if (sourceItem != null)
+                        if (sourceItem != null && sourceItem.Value != null)
                         {
                             double value;
                             if (double.TryParse(sourceItem.Value.ToString(), out value))
@@ -257,7 +257,7 @@ namespace FileExplorer.UserControls
 
         public override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
+            base.OnApplyTemplate(); 
         }
 
         #endregion
@@ -309,6 +309,17 @@ namespace FileExplorer.UserControls
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(object),
             typeof(ToolbarSubItemEx), new PropertyMetadata(null));
+
+        //public double ExtraHeight
+        //{
+        //    get { return (double)GetValue(ExtraHeightProperty); }
+        //    set { SetValue(ExtraHeightProperty, ExtraHeight); }
+        //}
+
+        //public static readonly DependencyProperty ExtraHeightProperty =
+        //    DependencyProperty.Register("ExtraHeight", typeof(double),
+        //    typeof(ToolbarSubItemEx), new PropertyMetadata(0d));
+
 
 
         public static readonly DependencyProperty IsStepStopProperty =

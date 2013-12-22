@@ -74,13 +74,15 @@ namespace FileExplorer.ViewModels
             DropHelper = new FileListDropHelper(this);
             DragHelper = new FileListDragHelper(this);
 
-            Toolbar = new ToolbarViewModel(events);
-
             Selection.SelectionChanged += (o, e) =>
             { Events.Publish(new SelectionChangedEvent(this, Selection.SelectedItems)); };
 
             if (events != null)
                 events.Subscribe(this);
+            
+            Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
+            RefreshCommands();
+
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
             //   ListView.ItemsSourceProperty, "ItemsSource", "SourceUpdated");
@@ -96,6 +98,25 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
+
+        async Task<IEnumerable<ICommandViewModel>> loadCommandsTask()
+        {
+            List<ICommandModel> cmList = new List<ICommandModel>()
+            {
+                new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) },
+                new DirectoryCommandModel(null, 
+                    new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) }
+                ) { Header = "Folder" },
+                new SliderCommandModel(null,
+                    new SliderStepCommandModel() { Header = "ExtraLargeIcon", SliderStep = 200, ItemHeight=100 },
+                    new SliderStepCommandModel() { Header = "LargeIcon", SliderStep = 100, ItemHeight=60 },
+                    new SliderStepCommandModel() { Header = "SmallIcon", SliderStep = 20 },
+                    new SliderStepCommandModel() { Header = "List", SliderStep = 18 })
+                    { Header="View" }
+            };
+
+            return cmList.Select(cm => new CommandViewModel(cm)).ToArray();
+        }
 
         async Task<IEnumerable<IEntryViewModel>> loadEntriesTask()
         {
@@ -130,6 +151,11 @@ namespace FileExplorer.ViewModels
             yield return new ToggleRename(this);
         }
 
+        public void RefreshCommands()
+        {
+            Commands.LoadAsync(true);
+        }
+
         #endregion
 
         public void Handle(ViewChangedEvent message)
@@ -152,11 +178,13 @@ namespace FileExplorer.ViewModels
         private IEntryModel _currentDirVM = null;
         private int _itemSize = 60;
         private string _viewMode = "Icon";
-
+        private IToolbarViewModel _toolbar = null;
 
         #endregion
 
         #region Public Properties
+
+        public EntriesHelper<ICommandViewModel> Commands { get; private set; }
 
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
@@ -165,7 +193,7 @@ namespace FileExplorer.ViewModels
         public ISupportDrag DragHelper { get; private set; }
         public ISupportDrop DropHelper { get; private set; }
 
-        public IToolbarViewModel Toolbar { get; private set; }
+        public IToolbarViewModel Toolbar { get { return _toolbar; } set { _toolbar = value; NotifyOfPropertyChange(() => Toolbar); } }
 
         public IEntryModel CurrentDirectory
         {

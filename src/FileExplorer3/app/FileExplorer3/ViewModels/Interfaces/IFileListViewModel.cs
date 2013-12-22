@@ -23,6 +23,7 @@ namespace FileExplorer.ViewModels
         Task SetCurrentDirectoryAsync(IEntryModel em);
 
         IEntryModel CurrentDirectory { get; set; }
+        IToolbarViewModel Toolbar { get; set; }
 
         string ViewMode { get; set; }
         int ItemSize { get; set; }

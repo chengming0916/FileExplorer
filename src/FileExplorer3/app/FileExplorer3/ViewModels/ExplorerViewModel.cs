@@ -20,11 +20,15 @@ namespace FileExplorer.ViewModels
             _events = events;
             _rootModels = rootModels;
 
+
+            Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents, rootModels);
             FileList = new FileListViewModel(_internalEvents);
             DirectoryTree = new DirectoryTreeViewModel(_internalEvents, rootModels);
             Statusbar = new StatusbarViewModel(_internalEvents);
-            Navigation = new NavigationViewModel(_internalEvents);            
+            Navigation = new NavigationViewModel(_internalEvents);
+
+            FileList.Toolbar = Toolbar;
 
             _internalEvents.Subscribe(this);
         }
@@ -78,6 +82,7 @@ namespace FileExplorer.ViewModels
         public IFileListViewModel FileList { get; private set; }
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
+        public IToolbarViewModel Toolbar { get; private set; }
         
 
         #endregion

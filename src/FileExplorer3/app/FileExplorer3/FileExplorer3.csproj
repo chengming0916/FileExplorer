@@ -84,7 +84,7 @@
     <Compile Include="Defines\Converters\DynamicConverter.cs" />
     <Compile Include="Defines\Converters\VisibleIfEqualConverter.cs" />
     <Compile Include="Models\CommandModel.cs" />
-    <Compile Include="Models\DirectoryCommandModel.cs" />
+    <Compile Include="Models\CommandModelImpl.cs" />
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
