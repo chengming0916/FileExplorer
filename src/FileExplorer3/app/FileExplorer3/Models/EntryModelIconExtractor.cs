@@ -29,7 +29,7 @@ namespace FileExplorer.Models
             FolderIcon = folderIcon;
         }
 
-        public Task<ImageSource> GetIconForModel(IEntryModel model)
+        public Task<ImageSource> GetIconForModelAsync(IEntryModel model)
         {
             if (model.IsDirectory)
                 return Task<ImageSource>.FromResult(FolderIcon);

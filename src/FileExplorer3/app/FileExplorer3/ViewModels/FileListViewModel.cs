@@ -79,9 +79,8 @@ namespace FileExplorer.ViewModels
 
             if (events != null)
                 events.Subscribe(this);
-            
-            Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
-            RefreshCommands();
+
+            CommandsLoader = new CommandsHelper(events); 
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -98,25 +97,6 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
-
-        async Task<IEnumerable<ICommandViewModel>> loadCommandsTask()
-        {
-            List<ICommandModel> cmList = new List<ICommandModel>()
-            {
-                new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) },
-                new DirectoryCommandModel(null, 
-                    new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) }
-                ) { Header = "Folder" },
-                new SliderCommandModel(null,
-                    new SliderStepCommandModel() { Header = "ExtraLargeIcon", SliderStep = 200, ItemHeight=100 },
-                    new SliderStepCommandModel() { Header = "LargeIcon", SliderStep = 100, ItemHeight=60 },
-                    new SliderStepCommandModel() { Header = "SmallIcon", SliderStep = 20 },
-                    new SliderStepCommandModel() { Header = "List", SliderStep = 18 })
-                    { Header="View" }
-            };
-
-            return cmList.Select(cm => new CommandViewModel(cm)).ToArray();
-        }
 
         async Task<IEnumerable<IEntryViewModel>> loadEntriesTask()
         {
@@ -141,7 +121,7 @@ namespace FileExplorer.ViewModels
 
             await ProcessedEntries.EntriesHelper.LoadAsync(true);
 
-            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);
+            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);            
 
             NotifyOfPropertyChange(() => CurrentDirectory);
         }
@@ -151,11 +131,7 @@ namespace FileExplorer.ViewModels
             yield return new ToggleRename(this);
         }
 
-        public void RefreshCommands()
-        {
-            Commands.LoadAsync(true);
-        }
-
+      
         #endregion
 
         public void Handle(ViewChangedEvent message)
@@ -184,7 +160,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public EntriesHelper<ICommandViewModel> Commands { get; private set; }
+        public CommandsHelper CommandsLoader { get; private set; }
 
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }

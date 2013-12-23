@@ -91,6 +91,10 @@ namespace FileExplorer.Models
         {
             HierarchyComparer = new ExHierarchyComparer();
             MetadataProvider = new FileSystemInfoMetadataProvider();
+            CommandProviders = new List<ICommandProvider>()
+            {
+                new OpenCommandProviderEx()
+            };
         }
 
         #endregion
@@ -271,6 +275,8 @@ namespace FileExplorer.Models
         }
         public IEntryHierarchyComparer HierarchyComparer { get; private set; }
         public IMetadataProvider MetadataProvider { get; private set; }
+        public IEnumerable<ICommandProvider> CommandProviders { get; private set; }
+        
 
         #endregion
 
@@ -288,5 +294,8 @@ namespace FileExplorer.Models
 
 
 
+
+
+        
     }
 }

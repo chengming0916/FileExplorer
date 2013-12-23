@@ -57,12 +57,15 @@
                 <Border>
                     <!--<ContentControl Name="Toolbar" Content="{Binding Toolbar}" Margin="2" />-->
                     <!--<v:ToolbarView x:Name="Toolbar" DataContext="{Binding Toolbar, Mode=OneWay}" />-->
-                    <uc:ToolbarEx ItemsSource="{Binding Commands.All}"
+                    <uc:ToolbarEx ItemsSource="{Binding CommandsLoader.Commands.All}"                                  
                                   def:AttachedProperties.SkipLookup="True"
+                                  
                                   >
                         <uc:ToolbarEx.Resources>
-                            <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >
+                            <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >                                
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
+                                <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                                <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
                                 <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
                                 <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />
                                 <Setter Property="IsSliderEnabled" Value="{Binding IsSliderEnabled, Mode=OneWay}" />
@@ -80,8 +83,11 @@
                             </Style>
                             <Style TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource ToolbarSubItemExStyle}"  >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
+                                <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                                <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
                                 <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
                                 <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />                                
+                                <Setter Property="VerticalContentAlignment" Value="{Binding VerticalAlignment, Mode=OneWay}" />
                                 <Style.Triggers>
                                     <Trigger Property="HeaderType" Value="MenuButton">
                                         <Setter Property="ItemsSource" Value="{Binding SubCommands}" />

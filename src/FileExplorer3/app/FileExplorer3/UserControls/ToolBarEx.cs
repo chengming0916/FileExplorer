@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using FileExplorer.BaseControls;
 
 namespace FileExplorer.UserControls
@@ -100,6 +101,7 @@ namespace FileExplorer.UserControls
                     }
 
                 }));
+            
         }
 
         protected override DependencyObject GetContainerForItemOverride()
@@ -114,6 +116,18 @@ namespace FileExplorer.UserControls
         #endregion
 
         #region Public Properties
+
+
+        public Brush InnerBorderBrush
+        {
+            get { return (Brush)GetValue(InnerBorderBrushProperty); }
+            set { SetValue(InnerBorderBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty InnerBorderBrushProperty =
+            DependencyProperty.Register("InnerBorderBrush", typeof(Brush),
+            typeof(ToolbarItemEx), new PropertyMetadata(SystemColors.ActiveBorderBrush));
+        
 
 
         /// <summary>
@@ -267,6 +281,7 @@ namespace FileExplorer.UserControls
         #endregion
 
         #region Public Properties
+
 
         public static readonly DependencyProperty IsSeparatorProperty =
            ToolbarItemEx.IsSeparatorProperty.AddOwner(typeof(ToolbarSubItemEx));

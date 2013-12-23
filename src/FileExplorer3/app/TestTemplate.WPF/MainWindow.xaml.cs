@@ -22,6 +22,7 @@ using Cofe.Core.Script;
 
 using FileExplorer.BaseControls.DragnDrop;
 using FileExplorer.BaseControls.MultiSelect;
+using System.Windows.Media.Animation;
 
 namespace TestTemplate.WPF
 {

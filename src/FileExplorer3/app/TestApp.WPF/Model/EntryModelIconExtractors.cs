@@ -17,7 +17,7 @@ namespace FileExplorer.Models
     {
         private IconExtractor _iconExtractor = new ExIconExtractor();
         public static GetFromSystemImageList Instance = new GetFromSystemImageList();
-        public Task<ImageSource> GetIconForModel(IEntryModel model)
+        public Task<ImageSource> GetIconForModelAsync(IEntryModel model)
         {
             if (model != null && !String.IsNullOrEmpty(model.FullPath))
                 using (FileSystemInfoEx fsi = FileSystemInfoEx.FromString(model.FullPath))
@@ -43,7 +43,7 @@ namespace FileExplorer.Models
     {
         public static GetImageFromImageExtractor Instance = new GetImageFromImageExtractor();
 
-        public Task<ImageSource> GetIconForModel(IEntryModel model)
+        public Task<ImageSource> GetIconForModelAsync(IEntryModel model)
         {
             return Task<ImageSource>.Run(() =>
                 {
@@ -63,7 +63,7 @@ namespace FileExplorer.Models
     {
         public static GetFromIconExtractIcon Instance = new GetFromIconExtractIcon();
 
-        public Task<ImageSource> GetIconForModel(IEntryModel model)
+        public Task<ImageSource> GetIconForModelAsync(IEntryModel model)
         {
             if (model == null || model.IsDirectory)
                 return Task.FromResult<ImageSource>(null);

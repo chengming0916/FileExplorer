@@ -61,7 +61,7 @@ namespace FileExplorer.ViewModels
                 };
 
             foreach (var ext in _iconExtractSequences)
-                await ext.GetIconForModel(EntryModel).ContinueWith(updateIcon);
+                await ext.GetIconForModelAsync(EntryModel).ContinueWith(updateIcon);
         }
 
         public override bool Equals(object obj)
