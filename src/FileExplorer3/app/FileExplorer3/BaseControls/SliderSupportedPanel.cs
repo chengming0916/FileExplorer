@@ -44,8 +44,8 @@ namespace FileExplorer.BaseControls
             {
                 Control child = (Control)Children[i];
 
-                child.VerticalContentAlignment = i == 0 ? VerticalAlignment.Top :
-                    i == Children.Count - 1 ? VerticalAlignment.Bottom : VerticalAlignment.Center;
+                //child.VerticalContentAlignment = i == 0 ? VerticalAlignment.Top :
+                //    i == Children.Count - 1 ? VerticalAlignment.Bottom : VerticalAlignment.Center;
                 
                 Rect allocatedRect = new Rect(0, curY, finalSize.Width, child.DesiredSize.Height);
                 child.Arrange(allocatedRect);        

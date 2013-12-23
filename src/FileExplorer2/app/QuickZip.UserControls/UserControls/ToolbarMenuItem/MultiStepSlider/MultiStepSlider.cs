@@ -61,7 +61,7 @@ namespace QuickZip.UserControls
         {
             _valueToSliderValueConverter = new DynamicConverter<double, double>(
                 x => valueToSliderValue(x),
-                x => sliderValueToValue(x));
+                x => sliderValueToValue(x));            
         }
 
         #region Methods

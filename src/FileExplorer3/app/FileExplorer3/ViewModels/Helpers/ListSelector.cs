@@ -61,9 +61,10 @@ namespace FileExplorer.ViewModels.Helpers
 
         public IEnumerable<VM> getSelectedItems()
         {
-            foreach (var item in EntryHelper.AllNonBindable.ToList())
-                if (item.IsSelected)
-                    yield return item;
+            if (EntryHelper.AllNonBindable != null)
+                foreach (var item in EntryHelper.AllNonBindable.ToList())
+                    if (item.IsSelected)
+                        yield return item;
         }
 
         public void OnSelectionChanged(IList selectedItems)

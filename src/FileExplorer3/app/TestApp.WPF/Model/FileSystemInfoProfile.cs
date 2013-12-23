@@ -22,6 +22,7 @@ namespace FileExplorer.Models
         {
             HierarchyComparer = PathComparer.Default;
             MetadataProvider = new FileSystemInfoExMetadataProvider();
+            CommandProviders = new List<ICommandProvider>();
         }
 
         #endregion
@@ -160,6 +161,7 @@ namespace FileExplorer.Models
         }
         public IEntryHierarchyComparer HierarchyComparer { get; private set; }
         public IMetadataProvider MetadataProvider { get; private set; }
+        public IEnumerable<ICommandProvider> CommandProviders { get; private set; }
 
         #endregion
 

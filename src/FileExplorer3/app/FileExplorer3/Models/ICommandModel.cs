@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using Cofe.Core.Script;
 
 namespace FileExplorer.Models
@@ -12,7 +15,7 @@ namespace FileExplorer.Models
     /// <summary>
     /// Model for a Command, which is shown as ToolbarExItem in FileExplorer.
     /// </summary>
-    public interface ICommandModel : IComparable<ICommandModel>, IComparable
+    public interface ICommandModel : IComparable<ICommandModel>, IComparable, INotifyPropertyChanged
     {
         string CommandType { get; }
 
@@ -28,6 +31,8 @@ namespace FileExplorer.Models
         /// Bitmap Icon.
         /// </summary>
         Bitmap HeaderIcon { get; }
+
+        Func<ICommandModel, System.Windows.Media.ImageSource> HeaderImageFunc { get; }
 
         string ToolTip { get; }
 
@@ -69,6 +74,7 @@ namespace FileExplorer.Models
     {
         int SliderStep { get; }
         double? ItemHeight { get; }
+        VerticalAlignment VerticalAlignment { get; }
     }
     
 }

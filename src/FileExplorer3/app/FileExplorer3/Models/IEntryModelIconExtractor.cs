@@ -9,7 +9,7 @@ namespace FileExplorer.Models
 {
     public interface IEntryModelIconExtractor
     {
-        Task<ImageSource> GetIconForModel(IEntryModel model);
+        Task<ImageSource> GetIconForModelAsync(IEntryModel model);
     }
 
 }

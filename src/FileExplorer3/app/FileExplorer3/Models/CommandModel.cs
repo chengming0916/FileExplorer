@@ -45,6 +45,7 @@ namespace FileExplorer.Models
 
         private char? _symbol;
         private System.Drawing.Bitmap _headerIcon;
+        private Func<ICommandModel, System.Windows.Media.ImageSource> _headerImageFunc;
         private string _toolTip;
         
         private string _header;
@@ -56,10 +57,12 @@ namespace FileExplorer.Models
 
         #region Public Properties
         public string CommandType { get { return _commandType; } set { _commandType = value; NotifyOfPropertyChange(() => CommandType); } }
-        public IScriptCommand Command { get { return _command; } set { _command = value; NotifyOfPropertyChange(() => Command); } } 
-
+        public IScriptCommand Command { get { return _command; } set { _command = value; NotifyOfPropertyChange(() => Command); } }
+        //Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
         public char? Symbol { get { return _symbol; } set { _symbol = value; NotifyOfPropertyChange(() => Symbol); } }
         public System.Drawing.Bitmap HeaderIcon { get { return _headerIcon; } set { _headerIcon = value; NotifyOfPropertyChange(() => HeaderIcon); } }
+        public Func<ICommandModel, System.Windows.Media.ImageSource> HeaderImageFunc { 
+            get { return _headerImageFunc; } set { _headerImageFunc = value; NotifyOfPropertyChange(() => HeaderImageFunc); } }
         public string ToolTip { get { return _toolTip; } set { _toolTip = value; NotifyOfPropertyChange(() => ToolTip); } }
         public string Header { get { return _header; } set { _header = value; NotifyOfPropertyChange(() => Header); } }
          public bool IsChecked { get { return _isChecked; } set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); } }

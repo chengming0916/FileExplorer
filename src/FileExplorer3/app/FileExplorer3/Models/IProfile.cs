@@ -75,9 +75,7 @@ namespace FileExplorer.Models
         /// <param name="source"></param>
         /// <param name="dest"></param>
         /// <returns></returns>
-        Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest);
-
-
+        Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest);        
 
         /// <summary>
         /// Rename an entry.
@@ -98,6 +96,7 @@ namespace FileExplorer.Models
 
         IEntryHierarchyComparer HierarchyComparer { get; }
         IMetadataProvider MetadataProvider { get; }
+        IEnumerable<ICommandProvider> CommandProviders { get; }
         
         #endregion
     }

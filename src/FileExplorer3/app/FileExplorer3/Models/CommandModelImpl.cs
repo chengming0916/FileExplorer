@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Cofe.Core.Script;
 
 namespace FileExplorer.Models
@@ -11,7 +12,7 @@ namespace FileExplorer.Models
     {
         public SeparatorCommandModel() : base(null) { }
 
-     
+
     }
 
     public class DirectoryCommandModel : CommandModel, IDirectoryCommandModel
@@ -29,15 +30,27 @@ namespace FileExplorer.Models
         {
         }
 
+        protected DirectoryCommandModel(IScriptCommand command)
+            : base(command)
+        {
+            _getCommandFunc = null;
+        }
+
         #endregion
 
         #region Methods
+
+        protected virtual IEnumerable<ICommandModel> GetCommands()
+        {
+            return new List<ICommandModel>();
+        }
 
         #endregion
 
         #region Data
 
         private Func<IEnumerable<ICommandModel>> _getCommandFunc;
+        private IEnumerable<ICommandModel> _commandModels = null;
 
         #endregion
 
@@ -45,7 +58,12 @@ namespace FileExplorer.Models
 
         public IEnumerable<ICommandModel> SubCommands
         {
-            get { return _getCommandFunc(); }
+            get
+            {
+                if (_commandModels == null)
+                    _commandModels = _getCommandFunc == null ? GetCommands() : _getCommandFunc();
+                return _commandModels;
+            }
         }
 
         #endregion
@@ -59,6 +77,13 @@ namespace FileExplorer.Models
         public SliderCommandModel(IScriptCommand command, params ICommandModel[] commandModels)
             : base(command, commandModels)
         {
+            var sliderCommandModels = commandModels.Cast<SliderStepCommandModel>();
+            if (sliderCommandModels.Count() > 2)
+            {
+                sliderCommandModels.First().VerticalAlignment = VerticalAlignment.Top;
+                sliderCommandModels.Last().VerticalAlignment = VerticalAlignment.Bottom;
+            }
+
             foreach (ISliderStepCommandModel scm in commandModels)
             {
                 if (scm.SliderStep < SliderMinimum) SliderMinimum = scm.SliderStep;
@@ -109,13 +134,16 @@ namespace FileExplorer.Models
 
         private int _sliderStep;
         private double? _itemHeight;
+        private VerticalAlignment _verticalAlignment = VerticalAlignment.Center;
 
         #endregion
 
         #region Public Properties
 
+        public VerticalAlignment VerticalAlignment { get { return _verticalAlignment; } set { _verticalAlignment = value; NotifyOfPropertyChange(() => VerticalAlignment); } }
+
         public int SliderStep { get { return _sliderStep; } set { _sliderStep = value; NotifyOfPropertyChange(() => SliderStep); } }
-        
+
         public double? ItemHeight
         {
             get { return _itemHeight; }
