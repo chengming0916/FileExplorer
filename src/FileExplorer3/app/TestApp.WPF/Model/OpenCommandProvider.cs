@@ -97,9 +97,9 @@ namespace FileExplorer.Models
 
             Header = "Open";
             //HeaderIcon = System.Drawing.Icon.ExtractAssociatedIcon(
-            HeaderImageFunc = (cm) => 
-                
-                AsyncUtils.RunSync(() => GetFromIconExtractIcon.Instance.GetIconForModelAsync(appliedModel));                                    
+            HeaderImageFunc = (cm) =>
+
+                AsyncUtils.RunSync(() => GetFromSystemImageList.Instance.GetIconForModelAsync(appliedModel));                                    
             //Symbol = Convert.ToChar(0xE188);
             Command = new OpenWithScriptCommand(appliedModel.FullPath, appliedModel.IsDirectory, null);
         }
@@ -111,6 +111,7 @@ namespace FileExplorer.Models
 
         protected override IEnumerable<ICommandModel> GetCommands()
         {
+
             if (!_appliedModel.IsDirectory)
             {
                 string ext = PathEx.GetExtension(_appliedModel.Name);

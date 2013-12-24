@@ -51,16 +51,16 @@ namespace FileExplorer.ViewModels.Helpers
         {
             List<ICommandModel> cmList = new List<ICommandModel>()
             {
-                new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) },
-                new DirectoryCommandModel(null, 
-                    new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) }
-                ) { Header = "Folder" },
-                new SliderCommandModel(null,
-                    new SliderStepCommandModel() { Header = "ExtraLargeIcon", SliderStep = 200, ItemHeight=100 },
-                    new SliderStepCommandModel() { Header = "LargeIcon", SliderStep = 100, ItemHeight=60 },
-                    new SliderStepCommandModel() { Header = "SmallIcon", SliderStep = 20 },
-                    new SliderStepCommandModel() { Header = "List", SliderStep = 18 })
-                    { Header="View" }
+                //new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) },
+                //new DirectoryCommandModel(null, 
+                //    new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) }
+                //) { Header = "Folder" },
+                //new SliderCommandModel(null,
+                //    new SliderStepCommandModel() { Header = "ExtraLargeIcon", SliderStep = 200, ItemHeight=100 },
+                //    new SliderStepCommandModel() { Header = "LargeIcon", SliderStep = 100, ItemHeight=60 },
+                //    new SliderStepCommandModel() { Header = "SmallIcon", SliderStep = 20 },
+                //    new SliderStepCommandModel() { Header = "List", SliderStep = 18 })
+                //    { Header="View" }
             };
 
             if (_appliedModels != null && _appliedModels.Count() > 0)

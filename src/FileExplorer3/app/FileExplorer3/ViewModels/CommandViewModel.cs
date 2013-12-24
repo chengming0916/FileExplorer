@@ -13,6 +13,7 @@ using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.Models;
 using FileExplorer.UserControls;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
@@ -30,7 +31,7 @@ namespace FileExplorer.ViewModels
                 {
                     CanExecuteDelegate = p => CommandModel.Command == null || CommandModel.Command.CanExecute(
                         ParameterDic.FromParameterPair(new ParameterPair("Parameter", p))),
-                    ExecuteDelegate = p => 
+                    ExecuteDelegate = p =>
                     {
                         if (CommandModel.Command != null)
                             new ScriptRunner().Run(CommandModel.Command,
@@ -39,37 +40,39 @@ namespace FileExplorer.ViewModels
 
                 };
 
-            if (CommandModel is IDirectoryCommandModel)
-            {
-                foreach (var c in (CommandModel as IDirectoryCommandModel).SubCommands)
-                {
-                    SubCommands.Add(new CommandViewModel(c, this));
-                }
-            }
-
             CommandModel.PropertyChanged += (o, e) =>
                 {
                     switch (e.PropertyName)
                     {
-                        case "IsChecked": 
-                        case "HeaderImage" : 
-                        case "HeaderIcon" :
+                        case "IsChecked":
+                        case "HeaderImage":
+                        case "HeaderIcon":
                             RefreshIcon();
                             break;
                     }
                 };
 
             RefreshIcon();
+
+            if (commandModel is IDirectoryCommandModel)
+            {                
+                IDirectoryCommandModel directoryModel = CommandModel as IDirectoryCommandModel;
+                SubCommands = new EntriesHelper<ICommandViewModel>(
+                    () => Task.Run<IEnumerable<ICommandViewModel>>(
+                        () => directoryModel.SubCommands.Select(c => (ICommandViewModel)new CommandViewModel(c, this))));
+                SubCommands.LoadAsync(false);
+            }
         }
 
         #endregion
 
         #region Methods
+       
 
         public void RefreshIcon()
         {
             if (CommandModel.IsChecked)
-                Icon = null;            
+                Icon = null;
             if (CommandModel.HeaderImageFunc != null)
                 Icon = new System.Windows.Controls.Image() { Source = CommandModel.HeaderImageFunc(CommandModel) };
             if (CommandModel.HeaderIcon != null)
@@ -120,22 +123,24 @@ namespace FileExplorer.ViewModels
         private object _icon = null;
         private ICommandModel _commandModel;
         private ICommand _command;
-        private ObservableCollection<ICommandViewModel> _subCommands = new ObservableCollection<ICommandViewModel>();
+        private bool _subCommandsLoaded = false;
+        private EntriesHelper<ICommandViewModel> _subCommands;
         private ICommandViewModel _parentCommandViewModel;
 
         #endregion
 
         #region Public Properties
 
-        public ICommandModel CommandModel { get { return _commandModel; } set { _commandModel = value; NotifyOfPropertyChange(() => CommandModel); } }        
+        public IEntriesHelper<ICommandViewModel> SubCommands { get; private set; }
+
+        public ICommandModel CommandModel { get { return _commandModel; } set { _commandModel = value; NotifyOfPropertyChange(() => CommandModel); } }
 
         public ICommand Command { get { return _command; } set { _command = value; NotifyOfPropertyChange(() => Command); } }
 
         public ToolbarItemType CommandType { get { return getCommandType(); } }
 
         public Object Icon { get { return _icon; } set { _icon = value; NotifyOfPropertyChange(() => Icon); } }
-
-        public ObservableCollection<ICommandViewModel> SubCommands { get { return _subCommands; } }
+      
 
         public VerticalAlignment VerticalAlignment
         {
