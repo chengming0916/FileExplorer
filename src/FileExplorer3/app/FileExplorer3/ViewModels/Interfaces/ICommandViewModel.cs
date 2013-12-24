@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using FileExplorer.Models;
 using FileExplorer.UserControls;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
@@ -15,7 +16,7 @@ namespace FileExplorer.ViewModels
         ICommandModel CommandModel { get; }
         ICommand Command { get; }
         ToolbarItemType CommandType { get; }
-        ObservableCollection<ICommandViewModel> SubCommands { get; }
+        IEntriesHelper<ICommandViewModel> SubCommands { get; }
 
         object CommandParameter { get; }
     }

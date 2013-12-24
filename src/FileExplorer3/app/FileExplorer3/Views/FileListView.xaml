@@ -54,7 +54,7 @@
             </i:Interaction.Triggers>
 
             <uc:ListViewEx.ContentBelowHeader>
-                <Border>
+                <Border Height="25">
                     <!--<ContentControl Name="Toolbar" Content="{Binding Toolbar}" Margin="2" />-->
                     <!--<v:ToolbarView x:Name="Toolbar" DataContext="{Binding Toolbar, Mode=OneWay}" />-->
                     <uc:ToolbarEx ItemsSource="{Binding CommandsLoader.Commands.All}"                                  
@@ -71,7 +71,7 @@
                                 <Setter Property="IsSliderEnabled" Value="{Binding IsSliderEnabled, Mode=OneWay}" />
                                 <Style.Triggers>
                                     <Trigger Property="HeaderType" Value="MenuButton">
-                                        <Setter Property="ItemsSource" Value="{Binding SubCommands}" />
+                                        <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" />
                                     </Trigger>
                                     <Trigger Property="IsSliderEnabled" Value="True">                                        
                                         <Setter Property="SliderMaximum" Value="{Binding CommandModel.SliderMaximum, Mode=OneWay}" />
@@ -90,7 +90,7 @@
                                 <Setter Property="VerticalContentAlignment" Value="{Binding VerticalAlignment, Mode=OneWay}" />
                                 <Style.Triggers>
                                     <Trigger Property="HeaderType" Value="MenuButton">
-                                        <Setter Property="ItemsSource" Value="{Binding SubCommands}" />
+                                        <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" />
                                     </Trigger>
                                     <DataTrigger Binding="{Binding IsSliderStep}" Value="True">
                                         <Setter Property="Value" Value="{Binding CommandModel.SliderStep, Mode=OneWay}" />
