@@ -80,7 +80,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            CommandsLoader = new CommandsHelper(events); 
+            //CommandsLoader = new CommandsHelper(events); 
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
