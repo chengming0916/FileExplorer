@@ -65,6 +65,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void SetEntries(params VM[] viewModels)
         {
+            All.Clear();
             foreach (var vm in viewModels)
                 All.Add(vm);
             _subItemList = viewModels.ToList();

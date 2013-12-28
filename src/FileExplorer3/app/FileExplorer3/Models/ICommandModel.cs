@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Cofe.Core.Script;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Models
 {
@@ -46,7 +47,8 @@ namespace FileExplorer.Models
         bool IsChecked { get; }
 
         bool IsEnabled { get; }
-       
+
+        void NotifySelectionChanged(IEntryModel[] appliedModels);
     }
 
     public interface ISeparatorModel : ICommandModel
@@ -55,7 +57,7 @@ namespace FileExplorer.Models
 
     public interface IDirectoryCommandModel : ICommandModel
     {
-        IEnumerable<ICommandModel> SubCommands { get; }
+        List<ICommandModel> SubCommands { get; }
     }
 
     public interface ISelectorCommandModel : IDirectoryCommandModel

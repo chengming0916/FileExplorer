@@ -94,6 +94,7 @@ namespace FileExplorer.ViewModels.Helpers
             //    NotifyOfPropertyChanged(() => SelectedItems);
             //}
         }
+   
 
         public event EventHandler SelectionChanged;
 

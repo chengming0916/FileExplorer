@@ -141,23 +141,24 @@
 
             <bc:HotTrack>
                 <Grid VerticalAlignment="Center"  >
-                    <Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>                        
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <ContentControl x:Name="MenuIcon" Grid.Column="0" Template="{StaticResource ToolbarMenuIconTemplate3}"
-                                    Margin="6,0" />
-                    <Button x:Name="HeaderButton" Template="{StaticResource BlankButton}" Grid.Column="1" Margin="3,0"
+                    </Grid.ColumnDefinitions>                    
+                    <Button x:Name="HeaderButton" Template="{StaticResource BlankButton}" Grid.Column="0" Margin="6,0"
                             Command="{TemplateBinding Command}" CommandParameter="{TemplateBinding CommandParameter}" 
                             IsHitTestVisible="True">
-                        <ContentPresenter ContentSource="Header" VerticalAlignment="Center"
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl x:Name="MenuIcon" Grid.Column="0" Template="{StaticResource ToolbarMenuIconTemplate3}"
+                                    Margin="0,0,6,0" />
+                            <ContentPresenter ContentSource="Header" VerticalAlignment="Center"
                                           RecognizesAccessKey="True" 
                                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </StackPanel>                        
                     </Button>
 
                     <bc:DropDown x:Name="ExpanderDropDown" 
-                                 BorderThickness="0"  Grid.Column="2" HeaderButtonTemplate="{StaticResource BlankButton}" 
+                                 BorderThickness="0"  Grid.Column="1" HeaderButtonTemplate="{StaticResource BlankButton}" 
                                  Padding="6,0" IsDropDownOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                         <bc:DropDown.Header>
                             <bc:HotTrack x:Name="ExpanderHotTrack" IsSelected="False"

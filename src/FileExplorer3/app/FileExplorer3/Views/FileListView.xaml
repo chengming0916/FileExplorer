@@ -57,7 +57,7 @@
                 <Border Height="25">
                     <!--<ContentControl Name="Toolbar" Content="{Binding Toolbar}" Margin="2" />-->
                     <!--<v:ToolbarView x:Name="Toolbar" DataContext="{Binding Toolbar, Mode=OneWay}" />-->
-                    <uc:ToolbarEx ItemsSource="{Binding CommandsLoader.Commands.All}"                                  
+                    <uc:ToolbarEx ItemsSource="{Binding CommandsHelper.Commands.All}"                                  
                                   def:AttachedProperties.SkipLookup="True"
                                   
                                   >
@@ -65,6 +65,9 @@
                             <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >                                
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
                                 <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                                <Setter Property="CommandParameter" Value="{Binding DataContext.CommandsHelper.AppliedModels, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type uc:ToolbarEx}}}" />
+                                <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
                                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
                                 <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
                                 <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />
@@ -84,6 +87,9 @@
                             <Style TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource ToolbarSubItemExStyle}"  >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
                                 <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                                <Setter Property="CommandParameter" Value="{Binding DataContext.CommandsHelper.AppliedModels, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type uc:ToolbarEx}}}" />
+                                <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
                                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
                                 <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
                                 <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />                                
