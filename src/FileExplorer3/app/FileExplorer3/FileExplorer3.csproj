@@ -85,6 +85,7 @@
     <Compile Include="Defines\Converters\VisibleIfEqualConverter.cs" />
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\CommandModelImpl.cs" />
+    <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="BaseControls\DropDownList.cs" />
     <None Include="Diagrams\DragDropUIProcessor.cd" />
     <None Include="Diagrams\MultiSelectUIProcessor.cd" />
+    <None Include="Diagrams\Toolbar.cd" />
     <None Include="Diagrams\TreeSelection.cd" />
     <None Include="Obsoluted\OverflowPanel.cs" />
     <None Include="Obsoluted\OverflowItem.cs" />

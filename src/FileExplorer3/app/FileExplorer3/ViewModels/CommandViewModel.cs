@@ -49,6 +49,10 @@ namespace FileExplorer.ViewModels
                         case "HeaderIcon":
                             RefreshIcon();
                             break;
+                        case "SubCommands":
+                            SubCommands.LoadAsync(true);
+                            RefreshIcon();
+                            break;
                     }
                 };
 

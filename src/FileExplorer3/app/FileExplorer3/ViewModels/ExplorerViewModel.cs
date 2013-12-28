@@ -19,11 +19,11 @@ namespace FileExplorer.ViewModels
         {
             _events = events;
             _rootModels = rootModels;
-
+            var rootProfiles = _rootModels.Select(m => m.Profile).Distinct().ToArray();
 
             Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents, rootModels);
-            FileList = new FileListViewModel(_internalEvents);
+            FileList = new FileListViewModel(_internalEvents, rootProfiles);
             DirectoryTree = new DirectoryTreeViewModel(_internalEvents, rootModels);
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);

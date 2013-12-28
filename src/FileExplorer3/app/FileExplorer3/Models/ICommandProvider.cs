@@ -11,6 +11,6 @@ namespace FileExplorer.Models
     /// </summary>
     public interface ICommandProvider
     {
-        Task<IEnumerable<ICommandModel>> GetCommandsAsync(params IEntryModel[] appliedModels);
+        List<ICommandModel> CommandModels { get; }
     }
 }

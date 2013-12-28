@@ -37,6 +37,11 @@ namespace FileExplorer.Models
                 return -this.Priority.CompareTo(other.Priority);
             return -1;
         }
+
+        public virtual void NotifySelectionChanged(IEntryModel[] appliedModels)
+        {            
+        }
+
         #endregion
 
         #region Data
@@ -71,6 +76,8 @@ namespace FileExplorer.Models
         public int Priority { get { return _priority; } set { _priority = value; NotifyOfPropertyChange(() => Priority); } }
 
         #endregion
+
+
 
     }
 }

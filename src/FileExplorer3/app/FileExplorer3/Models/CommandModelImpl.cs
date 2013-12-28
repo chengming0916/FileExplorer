@@ -19,52 +19,34 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
-        public DirectoryCommandModel(IScriptCommand command, Func<IEnumerable<ICommandModel>> getCommandFunc)
-            : base(command)
-        {
-            _getCommandFunc = getCommandFunc;
-        }
-
         public DirectoryCommandModel(IScriptCommand command, params ICommandModel[] commandModels)
-            : this(command, () => commandModels)
+            : this(command)
         {
+            SubCommands = new List<ICommandModel>(commandModels);
         }
 
         protected DirectoryCommandModel(IScriptCommand command)
             : base(command)
         {
-            _getCommandFunc = null;
+            SubCommands = new List<ICommandModel>();            
         }
 
         #endregion
 
         #region Methods
 
-        protected virtual IEnumerable<ICommandModel> GetCommands()
-        {
-            return new List<ICommandModel>();
-        }
 
         #endregion
 
         #region Data
 
-        private Func<IEnumerable<ICommandModel>> _getCommandFunc;
-        private IEnumerable<ICommandModel> _commandModels = null;
+        List<ICommandModel> _subCommands;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<ICommandModel> SubCommands
-        {
-            get
-            {
-                if (_commandModels == null)
-                    _commandModels = _getCommandFunc == null ? GetCommands() : _getCommandFunc();
-                return _commandModels;
-            }
-        }
+        public List<ICommandModel> SubCommands { get { return _subCommands; } set { _subCommands = value; NotifyOfPropertyChange(() => SubCommands); } }
 
         #endregion
     }

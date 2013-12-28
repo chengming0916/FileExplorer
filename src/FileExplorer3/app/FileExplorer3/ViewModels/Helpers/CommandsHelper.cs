@@ -4,24 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Cofe.Core.Utils;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ICommandsHelper 
+    public interface ICommandsHelper
     {
         void RefreshCommands();
         EntriesHelper<ICommandViewModel> Commands { get; }
     }
 
-    public class CommandsHelper : ICommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
+    public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Constructor
 
-        public CommandsHelper(IEventAggregator events)
+        public CommandsHelper(IEventAggregator events, IProfile[] rootProfiles)
         {
+            _rootProfiles = rootProfiles;
             Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
+            AsyncUtils.RunSync(() => Commands.LoadAsync(true));
             events.Subscribe(this);
         }
 
@@ -31,19 +34,20 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void RefreshCommands()
         {
-            Commands.LoadAsync(true);
+            foreach (var commandVM in Commands.AllNonBindable)
+                commandVM.CommandModel.NotifySelectionChanged(_appliedModels);
         }
 
 
         public void Handle(SelectionChangedEvent message)
         {
-            _appliedModels = message.SelectedModels.ToArray();
+            AppliedModels = message.SelectedModels.ToArray();
             RefreshCommands();
         }
 
         public void Handle(DirectoryChangedEvent message)
         {
-            _appliedModels = new IEntryModel[] { message.NewModel };
+            AppliedModels = new IEntryModel[] { message.NewModel };
             RefreshCommands();
         }
 
@@ -63,11 +67,10 @@ namespace FileExplorer.ViewModels.Helpers
                 //    { Header="View" }
             };
 
-            if (_appliedModels != null && _appliedModels.Count() > 0)
-            {
-                foreach (ICommandProvider cp in _appliedModels.First().Profile.CommandProviders)
-                    cmList.AddRange(await cp.GetCommandsAsync(_appliedModels));
-            }
+
+            foreach (var cp in _rootProfiles.SelectMany(p => p.CommandProviders))
+                cmList.AddRange(cp.CommandModels);
+
             return cmList.Select(cm => new CommandViewModel(cm)).ToArray();
         }
 
@@ -77,11 +80,13 @@ namespace FileExplorer.ViewModels.Helpers
         #region Data
 
         IEntryModel[] _appliedModels = null;
+        IProfile[] _rootProfiles = null;
 
         #endregion
 
         #region Public Properties
 
+        public IEntryModel[] AppliedModels { get { return _appliedModels; } set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels); } }
         public EntriesHelper<ICommandViewModel> Commands { get; private set; }
 
         #endregion
@@ -89,6 +94,6 @@ namespace FileExplorer.ViewModels.Helpers
 
 
 
-       
+
     }
 }

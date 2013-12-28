@@ -59,7 +59,7 @@ namespace FileExplorer.ViewModels
 
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events)
+        public FileListViewModel(IEventAggregator events, IProfile[] rootProfiles)
         {
             Events = events;
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask);
@@ -80,7 +80,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            //CommandsLoader = new CommandsHelper(events); 
+            CommandsHelper = new CommandsHelper(events, rootProfiles); 
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -160,7 +160,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public CommandsHelper CommandsLoader { get; private set; }
+        public CommandsHelper CommandsHelper { get; private set; }
 
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
