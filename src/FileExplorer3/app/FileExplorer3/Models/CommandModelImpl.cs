@@ -63,8 +63,7 @@ namespace FileExplorer.Models
 
         #region Constructor
 
-        public SliderCommandModel(IScriptCommand command, params ICommandModel[] commandModels)
-            : base(command, commandModels)
+        private void init(ICommandModel[] commandModels)
         {
             var sliderCommandModels = commandModels.Cast<SliderStepCommandModel>();
             if (sliderCommandModels.Count() > 2)
@@ -75,9 +74,25 @@ namespace FileExplorer.Models
 
             foreach (ISliderStepCommandModel scm in commandModels)
             {
+                if (scm.Command == null)
+                    scm.Command = new SimpleScriptCommand("", pd => { SliderValue = scm.SliderStep; return ResultCommand.NoError; });
+
                 if (scm.SliderStep < SliderMinimum) SliderMinimum = scm.SliderStep;
                 if (scm.SliderStep > SliderMaximum) SliderMaximum = scm.SliderStep;
             }
+        }
+
+        public SliderCommandModel(IScriptCommand command, params ICommandModel[] commandModels)
+            : base(command, commandModels)
+        {
+            init(commandModels);
+        }
+
+
+        public SliderCommandModel(RoutedUICommand routedCommand, params ICommandModel[] commandModels)
+            : base(routedCommand, commandModels)
+        {
+            init(commandModels);
         }
 
         #endregion
@@ -111,6 +126,7 @@ namespace FileExplorer.Models
         public SliderStepCommandModel(IScriptCommand command = null)
             : base(command)
         {
+            IsEnabled = true;
         }
 
         #endregion
@@ -128,6 +144,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
+
+        public SliderCommandModel SliderCommandModel { get; set; }
 
         public VerticalAlignment VerticalAlignment { get { return _verticalAlignment; } set { _verticalAlignment = value; NotifyOfPropertyChange(() => VerticalAlignment); } }
 

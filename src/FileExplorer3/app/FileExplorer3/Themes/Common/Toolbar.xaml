@@ -313,7 +313,7 @@
     <Style x:Key="ToolbarSubItemExStyle" TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource {x:Type MenuItem}}">
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template" Value="{StaticResource ToolbarEx.SubButtonTemplate}"/>               
-        <Setter Property="SnapsToDevicePixels" Value="True" />        
+        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Style.Triggers>
             <Trigger Property="Role" Value="SubmenuHeader">
                 <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, 
