@@ -160,6 +160,7 @@ namespace FileExplorer.BaseControls
         {
             if (e.ClickCount > 1)
                 return;
+
             
             var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
             if (scp == null )
@@ -180,6 +181,7 @@ namespace FileExplorer.BaseControls
             AttachedProperties.SetIsMouseDragging(control, false);
             AttachedProperties.SetStartPosition(control, e.GetPosition(control));
             AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
+            
         }
 
         void Control_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

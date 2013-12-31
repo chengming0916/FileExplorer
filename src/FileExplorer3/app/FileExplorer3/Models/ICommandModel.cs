@@ -20,8 +20,8 @@ namespace FileExplorer.Models
     {
         string CommandType { get; }
 
-        RoutedUICommand RoutedCommand { get; }
-        IScriptCommand Command { get; }
+        RoutedUICommand RoutedCommand { get; set; }
+        IScriptCommand Command { get; set; }
 
         /// <summary>
         /// Based on Segoe UI Symbol Icons.
@@ -77,7 +77,7 @@ namespace FileExplorer.Models
     {
         int SliderStep { get; }
         double? ItemHeight { get; }
-        VerticalAlignment VerticalAlignment { get; }
+        VerticalAlignment VerticalAlignment { get; }        
     }
     
 }

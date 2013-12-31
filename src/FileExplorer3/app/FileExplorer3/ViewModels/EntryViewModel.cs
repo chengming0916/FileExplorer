@@ -13,6 +13,8 @@ using FileExplorer.Models;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using System.Threading;
+using Cofe.Core.Utils;
 
 namespace FileExplorer.ViewModels
 {
@@ -52,17 +54,49 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        private async Task loadIcon()
+        private void loadIcon()
         {            
-            Action<Task<ImageSource>> updateIcon = (tsk) =>
-                {
-                    if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
-                        Icon = tsk.Result;
-                };
+            var sequence = _iconExtractSequences.ToList();
 
-            foreach (var ext in _iconExtractSequences)
-                await ext.GetIconForModelAsync(EntryModel).ContinueWith(updateIcon);
-        }
+            Task loadIconTask = Task.Run(async () => await _iconExtractSequences.Last().GetIconForModelAsync(EntryModel))
+                .ContinueWith((tsk) =>
+                    {
+                        if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
+                            Icon = tsk.Result;
+                    }, TaskScheduler.FromCurrentSynchronizationContext()
+                    );
+
+            //for (int i = 1; i < sequence.Count - 1; i++)
+            //{
+            //    loadIconTask = loadIconTask.ContinueWith<ImageSource>(
+            //        (tsk) => AsyncUtils.RunSync(() => sequence[i].GetIconForModelAsync(EntryModel)))
+            //        .ContinueWith((tsk) =>
+            //        {
+            //            if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
+            //                Icon = tsk.Result;
+            //        }, TaskScheduler.FromCurrentSynchronizationContext()
+            //        );
+            //}
+
+        } 
+
+        //private async Task loadIcon()
+        //{
+
+
+
+
+        //    Action<Task<ImageSource>> updateIcon = (tsk) =>
+        //        {
+        //            if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
+        //                Icon = tsk.Result;
+        //        };
+
+        //    foreach (var ext in _iconExtractSequences)
+        //    {
+        //        await ext.GetIconForModelAsync(EntryModel).ContinueWith(updateIcon);                
+        //    }
+        //}
 
         public override bool Equals(object obj)
         {
