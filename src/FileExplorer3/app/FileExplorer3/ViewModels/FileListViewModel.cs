@@ -24,6 +24,7 @@ using System.Collections.ObjectModel;
 using FileExplorer.ViewModels.Helpers;
 using Cinch;
 using System.Windows.Input;
+using FileExplorer.Defines.Commands;
 
 
 namespace FileExplorer.ViewModels
@@ -82,7 +83,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            CommandsHelper = new FileListCommandsHelper(events, rootProfiles); 
+            CommandsHelper = new FileListCommandsHelper(this, events, rootProfiles); 
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -139,8 +140,12 @@ namespace FileExplorer.ViewModels
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
+
+            if (ViewAttached != null)
+                ViewAttached(view, EventArgs.Empty);
             UserControl uc = view as UserControl;
-            uc.CommandBindings.Add(new SimpleRoutedCommand(ApplicationCommands.SelectAll, Selection.SelectAllCommand as SimpleCommand).CommandBinding);
+                       
+            uc.CommandBindings.Add(new SimpleRoutedCommand(ApplicationCommands.SelectAll, Selection.SelectAllCommand as SimpleCommand).CommandBinding);            
         }
 
         public void Handle(ViewChangedEvent message)
@@ -164,11 +169,13 @@ namespace FileExplorer.ViewModels
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private IToolbarViewModel _toolbar = null;
-        private bool _isCheckboxVisible = true;
+        private bool _isCheckboxVisible = false;
 
         #endregion
 
         #region Public Properties
+
+        public event EventHandler ViewAttached;
 
         public ICommandsHelper CommandsHelper { get; private set; }
 

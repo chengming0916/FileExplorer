@@ -38,6 +38,10 @@ namespace FileExplorer.ViewModels
 
         string ViewMode { get; set; }
         int ItemSize { get; set; }
+
+        bool IsCheckBoxVisible { get; set; }
+
+        event EventHandler ViewAttached;
         
     }
 }

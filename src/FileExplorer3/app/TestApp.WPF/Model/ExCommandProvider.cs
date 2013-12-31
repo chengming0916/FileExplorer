@@ -28,8 +28,7 @@ namespace FileExplorer.Models
             get
             {
                 return new List<ICommandModel>()
-                    {
-                        new SelectAllCommand(),
+                    {                        
                         new OpenWithCommandEx(_profile)
                     };
             }
@@ -38,14 +37,7 @@ namespace FileExplorer.Models
 
 
     
-    public class SelectAllCommand : CommandModel
-    {
-        public SelectAllCommand()
-            : base(ApplicationCommands.SelectAll)
-        {
-            
-        }
-    }
+   
 
     public class OpenWithCommandEx : DirectoryCommandModel
     {
@@ -114,7 +106,7 @@ namespace FileExplorer.Models
         CancellationTokenSource _cts = new CancellationTokenSource();
 
         public OpenWithCommandEx(FileSystemInfoExProfile profile)
-            : base(null)
+            : base()
         {
             _profile = profile;
             Command = new OpenWithScriptCommand();

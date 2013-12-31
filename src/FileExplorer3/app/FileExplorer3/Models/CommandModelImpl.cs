@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using Cofe.Core.Script;
 
 namespace FileExplorer.Models
@@ -20,13 +21,19 @@ namespace FileExplorer.Models
         #region Constructor
 
         public DirectoryCommandModel(IScriptCommand command, params ICommandModel[] commandModels)
-            : this(command)
+            : base(command)
         {
             SubCommands = new List<ICommandModel>(commandModels);
         }
 
-        protected DirectoryCommandModel(IScriptCommand command)
-            : base(command)
+        public DirectoryCommandModel(RoutedUICommand routedCommand, params ICommandModel[] commandModels)
+             : base(routedCommand)
+        {
+            SubCommands = new List<ICommandModel>(commandModels);
+        }
+
+        protected DirectoryCommandModel()
+            : base()
         {
             SubCommands = new List<ICommandModel>();            
         }

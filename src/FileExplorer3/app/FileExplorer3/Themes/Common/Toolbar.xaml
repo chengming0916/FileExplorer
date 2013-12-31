@@ -224,6 +224,9 @@
             </bc:HotTrack>
         </Border>
         <ControlTemplate.Triggers>
+            <Trigger Property="Header" Value="{x:Null}">
+                <Setter TargetName="MenuIcon" Property="Margin" Value="0" />
+            </Trigger>
             <Trigger Property="Command" Value="{x:Null}">
                 <Setter TargetName="HeaderButton" Property="IsHitTestVisible" Value="False" />
                 <Setter TargetName="ExpanderDropDown" Property="PlacementTarget" Value="{Binding ElementName=templateRoot}" />
@@ -263,9 +266,12 @@
                         <ColumnDefinition SharedSizeGroup="MenuItemIGTColumnGroup" Width="Auto"/>
                         <ColumnDefinition Width="20"/>
                     </Grid.ColumnDefinitions>
-                    <ContentPresenter x:Name="Icon" ContentSource="Icon" HorizontalAlignment="Center" 
-                                  Height="16" Margin="3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                                  VerticalAlignment="Center" Width="16"/>
+                    <ContentControl x:Name="Icon" Grid.Column="0" Template="{StaticResource ToolbarMenuIconTemplate3}"
+                                    VerticalAlignment="Center"
+                                    Height="16" Width="16" Margin="3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"  />
+                    <!--<ContentPresenter x:Name="Icon" ContentSource="Icon" HorizontalAlignment="Center" 
+                                  Height="16" Margin="3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                  VerticalAlignment="Center" Width="16"/>-->
                     <Border x:Name="GlyphPanel" BorderBrush="{StaticResource MenuItem.Selected.Border}" 
                         BorderThickness="1" Background="{StaticResource MenuItem.Selected.Background}" ClipToBounds="False" HorizontalAlignment="Center" Height="22" Margin="-1,0,0,0" Visibility="Hidden" VerticalAlignment="Center" Width="22">
                         <Path x:Name="Glyph" Data="{StaticResource Checkmark}" 
