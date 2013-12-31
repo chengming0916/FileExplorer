@@ -132,7 +132,7 @@ namespace FileExplorer.UserControls
                     fl.View = view;
                 else Debug.WriteLine(String.Format("ListViewEx - {0} not found.", viewResourceName));
             }
-
+            
             if (fl.View != null)
             {
                 //Only update columns if View is updated
@@ -307,6 +307,20 @@ namespace FileExplorer.UserControls
 
         #endregion
 
+        public static readonly DependencyProperty IsCheckBoxVisibleProperty =
+          DependencyProperty.Register("IsCheckBoxVisible", typeof(bool), typeof(ListViewEx),
+          new FrameworkPropertyMetadata(false));
+
+        /// <summary>
+        /// Whether show a checkbox symobl (symbol only) on ListViewItemEx.
+        /// </summary>
+        public bool IsCheckBoxVisible
+        {
+            get { return (bool)GetValue(IsCheckBoxVisibleProperty); }
+            set { SetValue(IsCheckBoxVisibleProperty, value); }
+        }
+
+
         #region SelectionMode property, UnselectAllRequired event.
         public static readonly DependencyProperty SelectionModeExProperty =
        DependencyProperty.Register("SelectionModeEx", typeof(SelectionModeEx), typeof(ListViewEx),
@@ -337,6 +351,7 @@ namespace FileExplorer.UserControls
 
 
         #endregion
+
         public static readonly DependencyProperty ColumnHeaderSortDirectionProperty =
             DependencyProperty.RegisterAttached("ColumnHeaderSortDirection", typeof(int), typeof(ListViewEx),
             new PropertyMetadata(0));
@@ -419,7 +434,17 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
+        public static readonly DependencyProperty IsCheckBoxVisibleProperty =
+            ListViewEx.IsCheckBoxVisibleProperty.AddOwner(typeof(ListViewItemEx));
 
+        /// <summary>
+        /// Whether show a checkbox symobl (symbol only) on ListViewItemEx.
+        /// </summary>
+        public bool IsCheckBoxVisible
+        {
+            get { return (bool)GetValue(IsCheckBoxVisibleProperty); }
+            set { SetValue(IsCheckBoxVisibleProperty, value); }
+        }
 
 
         #endregion

@@ -12,61 +12,42 @@ namespace FileExplorer.ViewModels.Helpers
 {
     public interface ICommandsHelper
     {
-        void RefreshCommands();
+        IEntryModel[] AppliedModels { get; }
         EntriesHelper<ICommandViewModel> Commands { get; }
     }
 
-    public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
+    public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper
     {
         #region Constructor
 
-        public CommandsHelper(IEventAggregator events, IProfile[] rootProfiles)
+        public CommandsHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
         {
+            _extraCommands = extraCommands;
             _rootProfiles = rootProfiles;
-            Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
-            AsyncUtils.RunSync(() => Commands.LoadAsync(true));
-            events.Subscribe(this);
+            Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);                        
         }
 
         #endregion
 
         #region Methods
 
-        public void RefreshCommands()
+        protected override void NotifyOfPropertyChanged(string propertyName)
         {
-            foreach (var commandVM in Commands.AllNonBindable)
-                commandVM.CommandModel.NotifySelectionChanged(_appliedModels);
+            base.NotifyOfPropertyChanged(propertyName);
+
+            switch (propertyName)
+            {
+                case "AppliedModels":
+                    AsyncUtils.RunSync(() => Commands.LoadAsync(false));
+                    foreach (var commandVM in Commands.AllNonBindable)
+                        commandVM.CommandModel.NotifySelectionChanged(AppliedModels);
+                    break;
+            }
         }
-
-
-        public void Handle(SelectionChangedEvent message)
-        {
-            AppliedModels = message.SelectedModels.ToArray();
-            RefreshCommands();
-        }
-
-        public void Handle(DirectoryChangedEvent message)
-        {
-            AppliedModels = new IEntryModel[] { message.NewModel };
-            RefreshCommands();
-        }
-
+        
         async Task<IEnumerable<ICommandViewModel>> loadCommandsTask()
         {
-            List<ICommandModel> cmList = new List<ICommandModel>()
-            {
-                //new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) },
-                //new DirectoryCommandModel(null, 
-                //    new CommandModel(null) { Header = "Play", Symbol= Convert.ToChar(0xE102) }
-                //) { Header = "Folder" },
-                //new SliderCommandModel(null,
-                //    new SliderStepCommandModel() { Header = "ExtraLargeIcon", SliderStep = 200, ItemHeight=100 },
-                //    new SliderStepCommandModel() { Header = "LargeIcon", SliderStep = 100, ItemHeight=60 },
-                //    new SliderStepCommandModel() { Header = "SmallIcon", SliderStep = 20 },
-                //    new SliderStepCommandModel() { Header = "List", SliderStep = 18 })
-                //    { Header="View" }
-            };
-
+            List<ICommandModel> cmList = new List<ICommandModel>(_extraCommands) { };
 
             foreach (var cp in _rootProfiles.SelectMany(p => p.CommandProviders))
                 cmList.AddRange(cp.CommandModels);
@@ -79,14 +60,16 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Data
 
-        IEntryModel[] _appliedModels = null;
+        IEntryModel[] _appliedModels = null;        
         IProfile[] _rootProfiles = null;
+        private ICommandModel[] _extraCommands;
 
         #endregion
 
         #region Public Properties
 
-        public IEntryModel[] AppliedModels { get { return _appliedModels; } set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels); } }
+        public IEntryModel[] AppliedModels { get { return _appliedModels; } 
+            set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels);  } }
         public EntriesHelper<ICommandViewModel> Commands { get; private set; }
 
         #endregion

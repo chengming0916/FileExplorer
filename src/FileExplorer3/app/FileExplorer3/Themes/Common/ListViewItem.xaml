@@ -7,25 +7,33 @@
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 
-    <ControlTemplate x:Key="lbControlTemplate" TargetType="ListBoxItem">
+    <ControlTemplate x:Key="lbControlTemplate" TargetType="uc:ListViewItemEx">
         <Border Name="Border"  SnapsToDevicePixels="true"                             
                             BorderThickness="1"
                             BorderBrush="Transparent"
                             Background="Transparent">
-            <bc:HotTrack IsEnabled="{TemplateBinding IsEnabled}" 
+            <DockPanel>
+                <CheckBox IsChecked="{Binding IsSelected}" 
+                          Visibility="{Binding IsCheckBoxVisible, 
+                                            RelativeSource={RelativeSource AncestorType={x:Type uc:ListViewEx}},
+                                            Converter={StaticResource btvc}}"
+                          DockPanel.Dock="Left" />
+                <bc:HotTrack IsEnabled="{TemplateBinding IsEnabled}" 
                          IsDragging="{Binding (def:AttachedProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
                          IsDraggingOver="{Binding (def:AttachedProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"
                          IsSelected="{TemplateBinding IsSelected}"                           
                          >
-                <Grid>
-                    <Rectangle x:Name="ContentBackground" Fill="Transparent" Opacity="0.5"/>
-                    <ContentPresenter  Margin="2"
+                    <Grid>
+                        <Rectangle x:Name="ContentBackground" Fill="Transparent" Opacity="0.5"/>
+                        <ContentPresenter  Margin="2"
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                </Grid>
-            </bc:HotTrack>
+                    </Grid>
+                </bc:HotTrack>
+            </DockPanel>
         </Border>
         <ControlTemplate.Triggers>
             <!--<Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
@@ -35,7 +43,7 @@
             <!--<Trigger Property="IsSelected" Value="true">
                 <Setter TargetName="ContentBackground" Property="Fill" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
                 <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-            </Trigger>-->            
+            </Trigger>-->
             <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard Storyboard.Target="{Binding}">
@@ -50,10 +58,10 @@
     <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type uc:ListViewItemEx}" >
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
-
+        
         <!-- Bind to ViewModel -->
         <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
-        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />        
+        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
     </Style>
 
     <!--BasedOn="{StaticResource AeroGridViewItemContainerStyleKey}"-->

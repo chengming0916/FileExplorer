@@ -80,6 +80,7 @@
     <Compile Include="BaseControls\ClipCorner.cs" />
     <Compile Include="BaseControls\MultiStepSlider.cs" />
     <Compile Include="BaseControls\SliderSupportedPanel.cs" />
+    <Compile Include="Defines\Commands\FileListCommands.cs" />
     <Compile Include="Defines\Converters\BorderClipConverter.cs" />
     <Compile Include="Defines\Converters\DynamicConverter.cs" />
     <Compile Include="Defines\Converters\VisibleIfEqualConverter.cs" />
@@ -91,7 +92,10 @@
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
+    <Compile Include="Utils\SimpleCommandBinding.cs" />
+    <Compile Include="Utils\SimpleRoutedCommand.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\FileListCommandsHelper.cs" />
     <Compile Include="ViewModels\Helpers\CommandsHelper.cs" />
     <Compile Include="ViewModels\Interfaces\ICommandViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />

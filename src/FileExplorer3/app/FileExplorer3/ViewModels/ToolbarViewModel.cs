@@ -18,7 +18,7 @@ namespace FileExplorer.ViewModels
         {
             List<ICommandModel> cmList = new List<ICommandModel>()
             {
-                new CommandModel(null) { Header = "Test" }
+                new CommandModel() { Header = "Test" }
             };
 
             Commands = new EntriesHelper<ICommandViewModel>(cmList.Select(cm => new CommandViewModel(cm)).ToArray());

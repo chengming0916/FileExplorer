@@ -10,7 +10,7 @@ namespace FileExplorer.Models
 {
     public class SeparatorCommandModel : CommandModel, ISeparatorModel
     {
-        public SeparatorCommandModel() : base(null) { }
+        public SeparatorCommandModel() : base() { }
 
 
     }

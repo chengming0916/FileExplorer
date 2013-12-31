@@ -13,11 +13,17 @@ namespace FileExplorer.ViewModels.Helpers
     /// </summary>
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {
-        protected void NotifyOfPropertyChanged<T>(Expression<Func<T>> expression)
+        protected virtual void NotifyOfPropertyChanged<T>(Expression<Func<T>> expression)
+        {
+            NotifyOfPropertyChanged(GetPropertyName<T>(expression));            
+        }
+        protected virtual void NotifyOfPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(GetPropertyName(expression)));
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
         protected string GetPropertyName<T>(Expression<Func<T>> expression)
         {
             MemberExpression memberExpression = (MemberExpression)expression.Body;

@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         IList<VM> SelectedItems { get;  }
 
-        ICommand UnselectAllCommand { get; }
+        ICommand UnselectAllCommand { get; }        
         ICommand SelectAllCommand { get; }
 
         #endregion

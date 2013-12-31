@@ -20,6 +20,19 @@ namespace FileExplorer.Models
             _parameter = parameter;
         }
 
+        public CommandModel(RoutedUICommand routedCommand, object parameter = null)
+        {
+            _routedCommand = routedCommand;
+            _parameter = parameter;
+            IsEnabled = true;
+            Header = routedCommand.Text;
+        }
+
+        public CommandModel()
+        {            
+        }
+
+
         #endregion
 
         #region Methods
@@ -47,6 +60,7 @@ namespace FileExplorer.Models
         #region Data
         private string _commandType;
         private IScriptCommand _command;
+        private RoutedUICommand _routedCommand = null;
 
         private char? _symbol;
         private System.Drawing.Bitmap _headerIcon;
@@ -63,6 +77,7 @@ namespace FileExplorer.Models
         #region Public Properties
         public string CommandType { get { return _commandType; } set { _commandType = value; NotifyOfPropertyChange(() => CommandType); } }
         public IScriptCommand Command { get { return _command; } set { _command = value; NotifyOfPropertyChange(() => Command); } }
+        public RoutedUICommand RoutedCommand { get { return _routedCommand; } set { _routedCommand = value; NotifyOfPropertyChange(() => RoutedCommand); } }
         //Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
         public char? Symbol { get { return _symbol; } set { _symbol = value; NotifyOfPropertyChange(() => Symbol); } }
         public System.Drawing.Bitmap HeaderIcon { get { return _headerIcon; } set { _headerIcon = value; NotifyOfPropertyChange(() => HeaderIcon); } }
