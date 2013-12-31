@@ -20,6 +20,7 @@ namespace FileExplorer.Models
     {
         string CommandType { get; }
 
+        RoutedUICommand RoutedCommand { get; }
         IScriptCommand Command { get; }
 
         /// <summary>

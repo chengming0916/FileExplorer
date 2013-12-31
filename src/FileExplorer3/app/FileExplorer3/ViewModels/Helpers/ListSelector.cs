@@ -44,9 +44,14 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void SelectAll()
         {
-            foreach (var e in EntryHelper.AllNonBindable.ToList())
-                e.IsSelected = true;
-            notifySelectionChanged();
+            if (SelectedItems.Count() == EntryHelper.AllNonBindable.Count())
+                UnselectAll();
+            else
+            {
+                foreach (var e in EntryHelper.AllNonBindable.ToList())
+                    e.IsSelected = true;
+                notifySelectionChanged();
+            }
         }
 
         public void ReportChildSelected(VM viewModel)
@@ -94,7 +99,7 @@ namespace FileExplorer.ViewModels.Helpers
             //    NotifyOfPropertyChanged(() => SelectedItems);
             //}
         }
-   
+
 
         public event EventHandler SelectionChanged;
 

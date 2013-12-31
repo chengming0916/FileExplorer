@@ -162,7 +162,7 @@ namespace FileExplorer.BaseControls
                 return;
             
             var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
-            if (scp == null || !scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(e.OriginalSource as DependencyObject)))
+            if (scp == null )
                 return;
 
             bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;

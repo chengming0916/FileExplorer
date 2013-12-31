@@ -27,18 +27,20 @@ namespace FileExplorer.ViewModels
             _parentCommandViewModel = parentCommandViewModel;
 
             if (CommandModel != null)
-                Command = new SimpleCommand()
-                {
-                    CanExecuteDelegate = p => CommandModel.Command == null || CommandModel.Command.CanExecute(
-                        ParameterDic.FromParameterPair(new ParameterPair("Parameter", p))),
-                    ExecuteDelegate = p =>
+                if (commandModel.RoutedCommand != null)
+                    Command = commandModel.RoutedCommand;
+                else Command = new SimpleCommand()
                     {
-                        if (CommandModel.Command != null)
-                            new ScriptRunner().Run(CommandModel.Command,
-                                    ParameterDic.FromParameterPair(new ParameterPair("Parameter", p)));
-                    }
+                        CanExecuteDelegate = p => CommandModel.Command == null || CommandModel.Command.CanExecute(
+                            ParameterDic.FromParameterPair(new ParameterPair("Parameter", p))),
+                        ExecuteDelegate = p =>
+                        {
+                            if (CommandModel.Command != null)
+                                new ScriptRunner().Run(CommandModel.Command,
+                                        ParameterDic.FromParameterPair(new ParameterPair("Parameter", p)));
+                        }
 
-                };
+                    };
 
             CommandModel.PropertyChanged += (o, e) =>
                 {
@@ -59,7 +61,7 @@ namespace FileExplorer.ViewModels
             RefreshIcon();
 
             if (commandModel is IDirectoryCommandModel)
-            {                
+            {
                 IDirectoryCommandModel directoryModel = CommandModel as IDirectoryCommandModel;
                 SubCommands = new EntriesHelper<ICommandViewModel>(
                     () => Task.Run<IEnumerable<ICommandViewModel>>(
@@ -71,7 +73,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
-       
+
 
         public void RefreshIcon()
         {
@@ -144,7 +146,7 @@ namespace FileExplorer.ViewModels
         public ToolbarItemType CommandType { get { return getCommandType(); } }
 
         public Object Icon { get { return _icon; } set { _icon = value; NotifyOfPropertyChange(() => Icon); } }
-      
+
 
         public VerticalAlignment VerticalAlignment
         {

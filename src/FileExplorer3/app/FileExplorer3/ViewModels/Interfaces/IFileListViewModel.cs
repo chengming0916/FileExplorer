@@ -14,8 +14,19 @@ namespace FileExplorer.ViewModels
 {
     public interface IFileListViewModel
     {
+        /// <summary>
+        /// Return available commands for current filelist.
+        /// </summary>
+        ICommandsHelper CommandsHelper { get; }
+        
+        /// <summary>
+        /// Load entries and apply filters.
+        /// </summary>
         IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; }
+                
         IColumnsHelper Columns { get; }
+
+
         IListSelector<IEntryViewModel, IEntryModel> Selection { get; }
         
         IEventAggregator Events { get; }

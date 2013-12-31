@@ -22,6 +22,8 @@ using FileExplorer.ViewModels.Actions;
 using FileExplorer.Utils;
 using System.Collections.ObjectModel;
 using FileExplorer.ViewModels.Helpers;
+using Cinch;
+using System.Windows.Input;
 
 
 namespace FileExplorer.ViewModels
@@ -29,7 +31,7 @@ namespace FileExplorer.ViewModels
 #if !WINRT
     [Export(typeof(FileListViewModel))]
 #endif
-    public class FileListViewModel : PropertyChangedBase, IFileListViewModel,
+    public class FileListViewModel : ViewAware, IFileListViewModel,
         IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDragHelper, ISupportDropHelper
     {
 
@@ -80,7 +82,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            CommandsHelper = new CommandsHelper(events, rootProfiles); 
+            CommandsHelper = new FileListCommandsHelper(events, rootProfiles); 
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -133,6 +135,13 @@ namespace FileExplorer.ViewModels
 
       
         #endregion
+        
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            UserControl uc = view as UserControl;
+            uc.CommandBindings.Add(new SimpleRoutedCommand(ApplicationCommands.SelectAll, Selection.SelectAllCommand as SimpleCommand).CommandBinding);
+        }
 
         public void Handle(ViewChangedEvent message)
         {
@@ -155,12 +164,13 @@ namespace FileExplorer.ViewModels
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private IToolbarViewModel _toolbar = null;
+        private bool _isCheckboxVisible = true;
 
         #endregion
 
         #region Public Properties
 
-        public CommandsHelper CommandsHelper { get; private set; }
+        public ICommandsHelper CommandsHelper { get; private set; }
 
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
@@ -179,6 +189,12 @@ namespace FileExplorer.ViewModels
 
 
         #region ViewMode, ItemSize
+
+        public bool IsCheckBoxVisible
+        {
+            get { return _isCheckboxVisible; }
+            set { _isCheckboxVisible = value; NotifyOfPropertyChange(() => IsCheckBoxVisible); } 
+        }
 
         public string ViewMode
         {

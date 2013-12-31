@@ -93,7 +93,7 @@ namespace FileExplorer.Models
             MetadataProvider = new FileSystemInfoMetadataProvider();
             CommandProviders = new List<ICommandProvider>()
             {
-                new OpenCommandProviderEx(this)
+                new ExCommandProvider(this)
             };
         }
 
