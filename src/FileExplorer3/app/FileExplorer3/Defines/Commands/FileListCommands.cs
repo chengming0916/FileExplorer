@@ -9,7 +9,7 @@ namespace FileExplorer.Defines.Commands
 {
     public static class FileListCommands
     {
-        public static string strToggleCheckBox = "Show Checkboxes";
+        public static string strToggleCheckBox = "Checkboxes";
         public static RoutedUICommand ToggleCheckBox = new RoutedUICommand(strToggleCheckBox, "ToggleCheckBox", typeof(FileListCommands));
     }
 }
