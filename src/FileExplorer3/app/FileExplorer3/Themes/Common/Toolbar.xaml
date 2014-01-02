@@ -387,6 +387,9 @@
                 <Setter Property="ItemsPanel" Value="{StaticResource ToolbarEx.SliderSupportedPanelTemplate}" />
             </Trigger>
 
+            <Trigger Property="IsHeaderAlignRight" Value="True">
+                <Setter Property="DockPanel.Dock" Value="Right" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 
@@ -406,7 +409,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
+                    <DockPanel LastChildFill="False" IsItemsHost="True" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>

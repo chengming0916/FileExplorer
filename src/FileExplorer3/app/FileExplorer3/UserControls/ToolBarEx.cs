@@ -243,7 +243,15 @@ namespace FileExplorer.UserControls
             typeof(ToolbarItemEx), new PropertyMetadata(null));
 
 
+        public bool IsHeaderAlignRight
+        {
+            get { return (bool)GetValue(IsHeaderAlignRightProperty); }
+            set { SetValue(IsHeaderAlignRightProperty, value); }
+        }
 
+        public static readonly DependencyProperty IsHeaderAlignRightProperty =
+            DependencyProperty.Register("IsHeaderAlignRight", typeof(bool),
+            typeof(ToolbarItemEx), new PropertyMetadata(false));
 
 
         public ToolbarItemType HeaderType

@@ -96,7 +96,6 @@ namespace FileExplorer.ViewModels
                            new Uri(String.Format(ViewModeViewModel.iconPathMask, view.ToLower()))).Stream;
                     if (imgStream != null)
                         HeaderIcon = new System.Drawing.Bitmap(imgStream);
-
                 }
             }
 
@@ -131,7 +130,7 @@ namespace FileExplorer.ViewModels
             {
                 _flvm = flvm;
                 IsHeaderVisible = false;
-                SliderValue = flvm.ItemSize;
+                SliderValue = flvm.ItemSize;                
             }
 
             internal static void updateViewMode(IFileListViewModel flvm, string viewMode, int step)
