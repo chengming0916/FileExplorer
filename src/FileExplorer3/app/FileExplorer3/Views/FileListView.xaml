@@ -39,7 +39,7 @@
                      AllowDrop="True"
                      cal:View.ApplyConventions="False"                                            
                      def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
-                       >
+                       >            
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
                 <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAllCommand}" />

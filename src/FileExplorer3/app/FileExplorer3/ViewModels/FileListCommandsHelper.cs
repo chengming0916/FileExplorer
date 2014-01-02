@@ -182,12 +182,23 @@ namespace FileExplorer.ViewModels
         #region Constructor
 
         public FileListCommandsHelper(IFileListViewModel flvm, IEventAggregator events, IProfile[] rootProfiles)
-            : base(rootProfiles, new SelectGroupCommand(flvm), new ViewModeCommand(flvm))
+            : base(rootProfiles, new SelectGroupCommand(flvm), new ViewModeCommand(flvm), new SeparatorCommandModel())
         {
             events.Subscribe(this);
-            ToggleCheckBoxCommand = new SimpleCommand() { ExecuteDelegate = (e) => flvm.IsCheckBoxVisible = !flvm.IsCheckBoxVisible };
+            OpenDirectoryCommand = new SimpleCommand()
+            {
+                UICommand = ApplicationCommands.Open,
+                CanExecuteDelegate = (e) => 
+                    flvm.Selection.SelectedItems.Count() == 1,
+                ExecuteDelegate = (e) => flvm.SignalChangeDirectory(flvm.Selection.SelectedItems[0].EntryModel)
+            };
+
+            ToggleCheckBoxCommand = new SimpleCommand() {
+                UICommand = FileListCommands.ToggleCheckBox,
+                ExecuteDelegate = (e) => flvm.IsCheckBoxVisible = !flvm.IsCheckBoxVisible };
             ToggleViewModeCommand = new SimpleCommand()
             {
+                UICommand = FileListCommands.ToggleViewMode,
                 ExecuteDelegate = (e) =>
                     {
                         var viewModeWoSeparator = ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
@@ -203,19 +214,16 @@ namespace FileExplorer.ViewModels
                         vmc.SliderValue = step;
                     }
             };
-            flvm.ViewAttached += (o, e) =>
-                {
-                    UserControl uc = o as UserControl;
-                    uc.CommandBindings.Add(new SimpleRoutedCommand(FileListCommands.ToggleCheckBox, ToggleCheckBoxCommand as SimpleCommand).CommandBinding);
-                    uc.CommandBindings.Add(new SimpleRoutedCommand(FileListCommands.ToggleViewMode, ToggleViewModeCommand as SimpleCommand).CommandBinding);
-                };
+            _exportedCommands.Add(OpenDirectoryCommand);
+            _exportedCommands.Add(ToggleCheckBoxCommand);
+            _exportedCommands.Add(ToggleViewModeCommand);
         }
 
         #endregion
 
         #region Methods
 
-
+      
         public void Handle(SelectionChangedEvent message)
         {
             AppliedModels =
@@ -241,9 +249,10 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-
+        public ICommand OpenDirectoryCommand { get; private set; }
         public ICommand ToggleCheckBoxCommand { get; private set; }
         public ICommand ToggleViewModeCommand { get; private set; }
+        
 
 
         #endregion

@@ -15,7 +15,7 @@ namespace FileExplorer.ViewModels.Helpers
         void ReportChildUnSelected(VM viewModel);
     }
 
-    public interface IListSelector<VM, T> : IReportSelected<VM>, INotifyPropertyChanged
+    public interface IListSelector<VM, T> : IReportSelected<VM>, INotifyPropertyChanged, ICommandContainer
     {
         #region Constructor
 

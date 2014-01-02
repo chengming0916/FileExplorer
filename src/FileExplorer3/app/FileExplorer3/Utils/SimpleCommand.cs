@@ -15,6 +15,16 @@ namespace Cinch
     /// </summary>
     public class SimpleCommand : ICommand
     {
+
+        #region Constructor
+
+        public SimpleCommand()
+        {
+            UICommand = ApplicationCommands.NotACommand;
+        }
+
+        #endregion
+
         #region Data
 
         Action<object> _executeDelegate = null;
@@ -23,6 +33,12 @@ namespace Cinch
 
 
         #region Public Properties
+
+        /// <summary>
+        /// This is used when register to CommandBindings, recognize by SimpleRoutedCommand to indicate which RoutedUICommand is used.
+        /// </summary>
+        public RoutedUICommand UICommand { get; set; }
+
         public Boolean CommandSucceeded { get; set; }
 
         /// <summary>

@@ -255,11 +255,18 @@ namespace FileExplorer.BaseControls.MultiSelect
             var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
             Func<Point, Point> adjustGridHeaderPosition = (pt) =>
                 {
+                    if (c is ListViewEx)
+                    {
+                        var contentBelowHeader = (c as ListViewEx).ContentBelowHeader as FrameworkElement;
+                        if (contentBelowHeader != null)
+                            pt.Offset(0, -contentBelowHeader.ActualHeight);
+                    }
+
                     //Deduct Grid View Header from the position.
                     if (gvhrp != null)
                         pt.Offset(0, -gvhrp.ActualHeight);
                     return pt;
-                };
+                };            
 
             if (!(pd.ContainsKey("StartPosition")))
                 pd["StartPosition"] = adjustGridHeaderPosition(AttachedProperties.GetStartPosition(c));

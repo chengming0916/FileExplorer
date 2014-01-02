@@ -41,7 +41,7 @@ namespace FileExplorer.ViewModels
 
         bool IsCheckBoxVisible { get; set; }
 
-        event EventHandler ViewAttached;
+        void SignalChangeDirectory(IEntryModel newDirectory);
         
     }
 }

@@ -129,26 +129,14 @@ namespace FileExplorer.BaseControls
         void Control_DragEnter(object sender, DragEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            //if (!AttachedProperties.GetIsMouseDragging(control))
-            //{
             if (execute(_eventProcessors, p => p.OnMouseDragEnter, "OnMouseDragEnter", sender, e))
                 e.Handled = true;
-
-            //}
         }
 
         void Control_DragOver(object sender, DragEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            //if (!AttachedProperties.GetIsMouseDragging(control))
-            //{
             execute(_eventProcessors, p => p.OnMouseDragOver, "OnMouseDragOver", sender, e);
-            //}
-            //else
-            //{
-            //    e.Effects = DragDropEffects.None;
-            //    e.Handled = true;
-            //}
         }
 
         void Control_MouseDown(object sender, MouseButtonEventArgs e)

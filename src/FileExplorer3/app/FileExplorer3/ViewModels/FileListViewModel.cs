@@ -83,7 +83,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            CommandsHelper = new FileListCommandsHelper(this, events, rootProfiles); 
+            CommandsHelper = new FileListCommandsHelper(this, events, rootProfiles);
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -124,7 +124,7 @@ namespace FileExplorer.ViewModels
 
             await ProcessedEntries.EntriesHelper.LoadAsync(true);
 
-            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);            
+            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);
 
             NotifyOfPropertyChange(() => CurrentDirectory);
         }
@@ -134,18 +134,22 @@ namespace FileExplorer.ViewModels
             yield return new ToggleRename(this);
         }
 
-      
+
         #endregion
-        
+
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
 
-            if (ViewAttached != null)
-                ViewAttached(view, EventArgs.Empty);
             UserControl uc = view as UserControl;
-                       
-            uc.CommandBindings.Add(new SimpleRoutedCommand(ApplicationCommands.SelectAll, Selection.SelectAllCommand as SimpleCommand).CommandBinding);            
+            CommandsHelper.RegisterCommand(uc);
+            Selection.RegisterCommand(uc);
+        }
+
+        public void SignalChangeDirectory(IEntryModel newDirectory)
+        {
+            Events.Publish(new DirectoryChangedEvent(this,
+                     newDirectory, CurrentDirectory));
         }
 
         public void Handle(ViewChangedEvent message)
@@ -175,8 +179,6 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public event EventHandler ViewAttached;
-
         public ICommandsHelper CommandsHelper { get; private set; }
 
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
@@ -200,7 +202,7 @@ namespace FileExplorer.ViewModels
         public bool IsCheckBoxVisible
         {
             get { return _isCheckboxVisible; }
-            set { _isCheckboxVisible = value; NotifyOfPropertyChange(() => IsCheckBoxVisible); } 
+            set { _isCheckboxVisible = value; NotifyOfPropertyChange(() => IsCheckBoxVisible); }
         }
 
         public string ViewMode
@@ -229,6 +231,9 @@ namespace FileExplorer.ViewModels
 
 
         #endregion
+
+
+
 
 
 

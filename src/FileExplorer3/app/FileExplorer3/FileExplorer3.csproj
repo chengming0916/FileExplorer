@@ -98,6 +98,7 @@
     <Compile Include="ViewModels\FileListCommandsHelper.cs" />
     <Compile Include="ViewModels\Helpers\CommandsHelper.cs" />
     <Compile Include="ViewModels\Interfaces\ICommandViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IExportCommand.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
     <Compile Include="Views\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
