@@ -188,7 +188,7 @@ namespace FileExplorer.ViewModels
             {
                 UICommand = ApplicationCommands.Open,
                 CanExecuteDelegate = (e) => 
-                    flvm.Selection.SelectedItems.Count() == 1,
+                    flvm.Selection.SelectedItems.Count() == 1 && flvm.Selection.SelectedItems[0].EntryModel.IsDirectory,
                 ExecuteDelegate = (e) => flvm.SignalChangeDirectory(flvm.Selection.SelectedItems[0].EntryModel)
             };
 

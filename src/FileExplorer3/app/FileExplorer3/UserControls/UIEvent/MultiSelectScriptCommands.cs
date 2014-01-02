@@ -17,6 +17,7 @@ using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.UserControls;
 using FileExplorer.Utils;
+using FileExplorer.ViewModels;
 
 namespace FileExplorer.BaseControls.MultiSelect
 {
@@ -170,7 +171,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                 List<object> selectedList = new List<object>();
                 if (itemUnderMouse != null)
                     selectedList.Add(itemUnderMouse);
-                pd["SelectedList"] = selectedList;                
+                pd["SelectedList"] = selectedList;
                 return new SelectItems();
             }
         }
@@ -266,7 +267,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                     if (gvhrp != null)
                         pt.Offset(0, -gvhrp.ActualHeight);
                     return pt;
-                };            
+                };
 
             if (!(pd.ContainsKey("StartPosition")))
                 pd["StartPosition"] = adjustGridHeaderPosition(AttachedProperties.GetStartPosition(c));
@@ -614,22 +615,43 @@ namespace FileExplorer.BaseControls.MultiSelect
                     unselectCommand.Execute(ic);
             }
 
-            Action<int, DependencyObject> updateSelected = null;
-            if (selectedIdList != null)
-                updateSelected = (idx, item) => item.SetValue(ListBoxItem.IsSelectedProperty, selectedIdList.Contains(idx));
-            else if (selectedList != null)
-                updateSelected = (idx, item) => item.SetValue(ListBoxItem.IsSelectedProperty, selectedList.Contains(item));
 
-            if (updateSelected != null)
+            bool isISelectable = ic.Items.Count > 0 && ic.Items[0] is ISelectable;
+
+
+            Action<int, object, DependencyObject> updateSelected = null;
+            Func<int, DependencyObject, bool> returnSelected = (idx, item) => false;
+            if (selectedIdList != null)
+                returnSelected = (idx, item) => selectedIdList.Contains(idx);
+            else if (selectedList != null)
+                returnSelected = (idx, item) => selectedList.Contains(item);
+
+
+            if (isISelectable)
+            {
+                updateSelected =
+                    (idx, vm, item) =>
+                        (vm as ISelectable).IsSelected = returnSelected(idx, item);
+
+                for (int i = 0; i < ic.Items.Count; i++)
+                {
+                    updateSelected(i, ic.Items[i], null);
+                }
+            }
+            else
+            {
+                updateSelected = (idx, vm, item) => returnSelected(idx, item);
+
                 for (int i = 0; i < ic.Items.Count; i++)
                 {
                     DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
                     if (item != null)
                     {
                         AttachedProperties.SetIsSelecting(item, false);
-                        updateSelected(i, item);
+                        updateSelected(i, ic.Items[i], item);
                     }
                 }
+            }
 
             return new DetachAdorner();
         }

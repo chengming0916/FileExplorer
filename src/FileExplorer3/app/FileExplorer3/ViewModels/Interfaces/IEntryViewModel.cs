@@ -10,13 +10,12 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IEntryViewModel : INotifyPropertyChangedEx, IDraggable
+    public interface IEntryViewModel : INotifyPropertyChangedEx, IDraggable, ISelectable
     {
         IEntryModel EntryModel { get; }
 
         bool IsEditable { get; set; }
-        bool IsEditing { get; set; }
-        bool IsSelected { get; set; }
+        bool IsEditing { get; set; }        
 
         ImageSource Icon { get; }
 

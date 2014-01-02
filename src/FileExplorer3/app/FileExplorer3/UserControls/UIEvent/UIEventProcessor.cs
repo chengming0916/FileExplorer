@@ -19,17 +19,6 @@ namespace FileExplorer.BaseControls
         int Priority { get; }
         IScriptCommand OnEvent(RoutedEvent eventId);
         IEnumerable<RoutedEvent> ProcessEvents { get; }
-        //IScriptCommand OnMouseDrag { get; }
-        //IScriptCommand OnMouseDragOver { get; }
-        //IScriptCommand OnMouseDragEnter { get; }
-        //IScriptCommand OnMouseDragLeave { get; }
-        //IScriptCommand OnMouseDrop { get; }
-        //IScriptCommand OnMouseUp { get; }
-        //IScriptCommand OnPreviewMouseDown { get; }
-        //IScriptCommand OnMouseDown { get; }
-        //IScriptCommand OnMouseMove { get; }
-
-        //IScriptCommand OnKeyDown { get; }
     }
 
     public abstract class UIEventProcessorBase : Freezable, IUIEventProcessor
@@ -40,32 +29,8 @@ namespace FileExplorer.BaseControls
 
         public UIEventProcessorBase()
         {
-            //OnMouseDrag = ScriptCommands.NoCommand;
-            //OnMouseDown = ScriptCommands.NoCommand;
-            //OnPreviewMouseDown = ScriptCommands.NoCommand;
-            //OnMouseUp = ScriptCommands.NoCommand;
-            //OnMouseMove = ScriptCommands.NoCommand;
-
-            //OnMouseDragEnter = ScriptCommands.NoCommand;
-            //OnMouseDragOver = ScriptCommands.NoCommand;
-            //OnMouseDragLeave = ScriptCommands.NoCommand;
-            //OnMouseDrop = ScriptCommands.NoCommand;
-
-            //OnKeyDown = ScriptCommands.NoCommand;
+     
         }
-
-        //public IScriptCommand OnMouseDrag { get; protected set; }
-        //public IScriptCommand OnMouseUp { get; protected set; }
-        //public IScriptCommand OnPreviewMouseDown { get; protected set; }
-        //public IScriptCommand OnMouseDown { get; protected set; }
-        //public IScriptCommand OnMouseMove { get; protected set; }
-
-        //public IScriptCommand OnMouseDragEnter { get; protected set; }
-        //public IScriptCommand OnMouseDragOver { get; protected set; }
-        //public IScriptCommand OnMouseDragLeave { get; protected set; }
-        //public IScriptCommand OnMouseDrop { get; protected set; }
-
-        //public IScriptCommand OnKeyDown { get; protected set; }
 
         public virtual IScriptCommand OnEvent(RoutedEvent eventId)
         {
@@ -97,16 +62,7 @@ namespace FileExplorer.BaseControls
 
         public DebugUIEventProcessor()
         {
-            Priority = 0;
-            //OnPreviewMouseDown = ScriptCommands.PrintSourceDC;
-            ////OnMouseMove = ScriptCommands.PrintSourceDC;
-            //OnMouseDrag = ScriptCommands.PrepareDrag;
-            //OnMouseUp = ScriptCommands.PrintSourceDC;
-
-            ////OnMouseDragEnter = ScriptCommands.PrintSourceDC;
-            ////OnMouseDragOver = ScriptCommands.PrintSourceDC;
-            ////OnMouseDragLeave = ScriptCommands.PrintSourceDC;
-            //OnMouseDrop = ScriptCommands.PrintSourceDC;
+            Priority = 0;         
         }
     }
 
