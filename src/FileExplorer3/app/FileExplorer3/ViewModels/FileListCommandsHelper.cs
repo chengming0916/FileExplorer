@@ -18,6 +18,9 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
+
+
+
     public class FileListCommandsHelper : CommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Commands
@@ -33,9 +36,55 @@ namespace FileExplorer.ViewModels
                 Header = null;
             }
         }
-        //new SliderCommandModel(null,
-        //    
-        //    { Header="View" }
+
+        //ViewModes, name then slider steps.
+        public static string[] ViewModes = new string[]
+        {
+             "ExtraLargeIcon,200,60",
+             "LargeIcon,100,60",
+             "Icon,65",
+             "SmallIcon,60",
+             "Separator,-1",
+             "List,55",
+             "Separator,-1",
+             "Grid,50"
+        };
+
+        //Given a view mode string (LargeIcon,100,60), parse usable value.
+        internal static void parseViewMode(string viewModeStr, out string viewMode, out int step, out int itemHeight)
+        {
+            string[] vmSplit = viewModeStr.Split(',');
+            viewMode = null;
+            step = -1;
+            itemHeight = 0;
+            if (vmSplit.Count() >= 2)
+            {
+                viewMode = vmSplit[0];
+                step = Int32.Parse(vmSplit[1]);
+                itemHeight = 0;
+                if (vmSplit.Count() >= 3)
+                    itemHeight = Int32.Parse(vmSplit[2]);
+            }
+        }
+       
+        //Find ViewMode using a step number  (e.g. 103 return LargeIcon = 2)
+        internal static int findViewMode(string[] viewModes, int forStep)
+        {
+            int retVal = 0;
+            for (int i = viewModes.Count() - 1; i >= 0; i--)
+            {
+                string viewMode; int step; int itemHeight;
+                parseViewMode(viewModes[i], out viewMode, out step, out itemHeight);
+                if (step != -1)
+                    if (forStep >= step)
+                    {
+                        retVal = i;
+                    }
+                    else break;
+            }
+            return retVal;
+        }
+
         public class ViewModeCommand : SliderCommandModel
         {
             private class ViewModeStepCommandModel : SliderStepCommandModel
@@ -51,17 +100,33 @@ namespace FileExplorer.ViewModels
                 }
             }
 
+            private static IEnumerable<ICommandModel> generateCommandModel()
+            {
+                foreach (string vm in ViewModes)
+                {
+                    string viewMode; int step; int itemHeight;
+                    parseViewMode(vm, out viewMode, out step, out itemHeight);
+
+                    if (viewMode != null)
+                    {
+                        if (step == -1)
+                            yield return new SeparatorCommandModel();
+                        else
+                        {
+                            var scm = new ViewModeStepCommandModel(viewMode) { SliderStep = step };
+                            if (itemHeight != 0)
+                                scm.ItemHeight = itemHeight;
+                            yield return scm;
+                        }
+                    }
+                }
+
+            }
+
             private IFileListViewModel _flvm;
             public ViewModeCommand(IFileListViewModel flvm)
                 : base(FileListCommands.ToggleViewMode,
-                     new ViewModeStepCommandModel("ExtraLargeIcon") { SliderStep = 200, ItemHeight = 60 },
-                     new ViewModeStepCommandModel("LargeIcon") { SliderStep = 100, ItemHeight = 60 },
-                     new ViewModeStepCommandModel("Icon") { SliderStep = 65 },
-                     new ViewModeStepCommandModel("SmallIcon") { SliderStep = 60 },
-                      new SeparatorCommandModel(),
-                      new ViewModeStepCommandModel("List") { SliderStep = 55 },
-                      new SeparatorCommandModel(),
-                      new ViewModeStepCommandModel("Grid") { SliderStep = 50 }
+                     generateCommandModel().ToArray()
                 )
             {
                 _flvm = flvm;
@@ -69,41 +134,43 @@ namespace FileExplorer.ViewModels
                 SliderValue = flvm.ItemSize;
             }
 
+            internal static void updateViewMode(IFileListViewModel flvm, string viewMode, int step)
+            {
+                flvm.ItemSize = step;
+                switch (viewMode)
+                {
+                    case "ExtraLargeIcon":
+                    case "LargeIcon":
+                        flvm.ViewMode = "Icon";
+                        break;
+                    default:
+                        flvm.ViewMode = viewMode;
+                        break;
+                }
+            }
+
+
             public override void NotifyOfPropertyChange(string propertyName = "")
             {
                 base.NotifyOfPropertyChange(propertyName);
                 switch (propertyName)
                 {
                     case "SliderValue":
-                        ViewModeStepCommandModel commandModel = null;
-                        for (int i = SubCommands.Count - 1; i >= 0; i--)
-                        {
-                            ViewModeStepCommandModel vcm = SubCommands[i] as ViewModeStepCommandModel;
-                            if (vcm != null)
-                                if (SliderValue >= vcm.SliderStep)
-                                    commandModel = vcm;
-                                else break;
-                        }
+
+                        int curIdx = findViewMode(ViewModes, SliderValue);
+                        string viewMode; int step; int itemHeight;
+                        parseViewMode(ViewModes[curIdx], out viewMode, out step, out itemHeight);
+                        ViewModeStepCommandModel commandModel = SubCommands
+                            .Where(c => c is ViewModeStepCommandModel)
+                            .First(c => (c as ViewModeStepCommandModel).SliderStep == step) as ViewModeStepCommandModel;
 
                         if (commandModel != null)
                             this.HeaderIcon = commandModel.HeaderIcon;
 
                         if (_flvm.ItemSize != SliderValue)
                         {
-                            _flvm.ItemSize = SliderValue;
-                            //Debug.WriteLine(commandModel.Header + SliderValue.ToString());
-                            if (commandModel != null)
-                                switch (commandModel.Header)
-                                {
-                                    case "ExtraLargeIcon":
-                                    case "LargeIcon":
-                                        _flvm.ViewMode = "Icon";
-                                        break;
-                                    default :
-                                        _flvm.ViewMode = commandModel.Header;
-                                        break;
-                                }
-
+                            updateViewMode(_flvm, commandModel.Header, SliderValue);
+                            //Debug.WriteLine(commandModel.Header + SliderValue.ToString());                            
                         }
 
                         break;
@@ -124,7 +191,17 @@ namespace FileExplorer.ViewModels
             {
                 ExecuteDelegate = (e) =>
                     {
-                        //events.Publish(new ViewChangedEvent(this, 
+                        var viewModeWoSeparator = ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
+
+                        int curIdx = findViewMode(viewModeWoSeparator, flvm.ItemSize);
+                        int nextIdx = curIdx + 1;
+                        if (nextIdx >= viewModeWoSeparator.Count()) nextIdx = 0;
+
+                        string viewMode; int step; int itemHeight;
+                        parseViewMode(viewModeWoSeparator[nextIdx], out viewMode, out step, out itemHeight);
+                        ViewModeCommand vmc = this.Commands.AllNonBindable.First(c => c.CommandModel is ViewModeCommand)
+                            .CommandModel as ViewModeCommand;
+                        vmc.SliderValue = step;
                     }
             };
             flvm.ViewAttached += (o, e) =>
