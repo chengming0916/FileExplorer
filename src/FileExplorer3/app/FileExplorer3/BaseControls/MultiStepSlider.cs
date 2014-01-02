@@ -91,14 +91,7 @@ namespace FileExplorer.BaseControls
             Debug.Assert(_embeddedSlider != null);
             _embeddedSlider.SizeChanged += delegate { UpdateMaximum(); };
 
-            _embeddedSlider.SetValue(Slider.ValueProperty, this.Value);
-            Binding sliderValueBinding = new Binding("Value");
-            sliderValueBinding.Source = this;
-            sliderValueBinding.Converter = _valueToSliderValueConverter;
-            _embeddedSlider.SetBinding(Slider.ValueProperty, sliderValueBinding);
-
-            UpdateMaximum();
-            //_embeddedSlider.Value = valueToSliderValue(Value);
+          
         }
 
         bool isWithinStepStop(int idx, double position)
@@ -122,15 +115,18 @@ namespace FileExplorer.BaseControls
             int highStepIdx = Steps.Count;          //Steps.Count = Maximum
             for (int i = -1; i <= Steps.Count; i++)
             {
-                if (GetStep(i).Posision < newValue)
+                if (GetStep(i).Posision <= newValue)
                     lowStepIdx = i;
             }
 
             for (int i = Steps.Count; i >= -1; i--)
             {
-                if (GetStep(i).Posision > newValue)
+                if (GetStep(i).Posision >= newValue)
                     highStepIdx = i;
             }
+
+            if (lowStepIdx == highStepIdx)
+                return GetStep(lowStepIdx).Value;
 
             Step lowStep = GetStep(lowStepIdx);
             Step highStep = GetStep(highStepIdx);
@@ -152,7 +148,7 @@ namespace FileExplorer.BaseControls
             //    if (highStep.StepStop && isWithinStepStop(highStepIdx, position))
             //        retVal = highStep.Value;
             //    else
-                    retVal = (ratio * (position - lowStep.Posision)) + lowStep.Value;
+            retVal = (ratio * (position - lowStep.Posision)) + lowStep.Value;
 
             Debug.WriteLine(String.Format("s2v: {0} -> {1}", newValue, retVal));
             return retVal;
@@ -233,9 +229,9 @@ namespace FileExplorer.BaseControls
                         _embeddedSlider.Maximum = _embeddedSlider.ActualWidth;
                     else _embeddedSlider.Maximum = _embeddedSlider.ActualHeight;
                 }
-                SnapFrequency =  _embeddedSlider.Maximum * 0.05;
-                
-                Value = -1; //Reset the slider                
+                SnapFrequency = _embeddedSlider.Maximum * 0.05;
+
+                //Value = -1; //Reset the slider                
                 Value = origValue;
             }
         }
@@ -258,6 +254,35 @@ namespace FileExplorer.BaseControls
             _embeddedSlider.Ticks.Clear();
         }
 
+        private void setupBindings()
+        {
+            _embeddedSlider.SetValue(Slider.ValueProperty, valueToSliderValue(this.Value));
+            Binding sliderValueBinding = new Binding("Value");
+            sliderValueBinding.Source = this;
+            sliderValueBinding.Mode = BindingMode.TwoWay;
+            //sliderValueBinding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
+            sliderValueBinding.Delay = 5000;
+            sliderValueBinding.Converter = _valueToSliderValueConverter;            
+            _embeddedSlider.SetBinding(Slider.ValueProperty, sliderValueBinding);
+
+            UpdateMaximum();
+
+
+            //_embeddedSlider.AddValueChanged(Slider.ValueProperty, (o, e) =>
+            //    {
+            //        if (_embeddedSlider.IsFocused)
+            //            _embeddedSlider.GetBindingExpression(Slider.ValueProperty).UpdateTarget();
+            //    });
+
+            //this.AddValueChanged(ValueProperty, (o, e) =>
+            //{
+            //    if (!_embeddedSlider.IsFocused)
+            //        _embeddedSlider.SetValue(Slider.ValueProperty, valueToSliderValue(this.Value));
+            //});
+
+            //_embeddedSlider.Value = valueToSliderValue(Value);
+        }
+
 
         public static void OnStepsChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -271,6 +296,7 @@ namespace FileExplorer.BaseControls
                     mss._embeddedSlider.Ticks.Add(step.Posision);
                 //mss.valueToSliderValue(origValue);
                 //mss.Value = origValue;
+                mss.setupBindings();
             }
         }
 

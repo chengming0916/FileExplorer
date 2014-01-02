@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
@@ -15,7 +18,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class FileListCommandsHelper : CommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>        
+    public class FileListCommandsHelper : CommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Commands
 
@@ -35,14 +38,76 @@ namespace FileExplorer.ViewModels
         //    { Header="View" }
         public class ViewModeCommand : SliderCommandModel
         {
+            private class ViewModeStepCommandModel : SliderStepCommandModel
+            {
+                public ViewModeStepCommandModel(string view)
+                {
+                    Header = view;
+                    Stream imgStream = Application.GetResourceStream(
+                           new Uri(String.Format(ViewModeViewModel.iconPathMask, view.ToLower()))).Stream;
+                    if (imgStream != null)
+                        HeaderIcon = new System.Drawing.Bitmap(imgStream);
+
+                }
+            }
+
+            private IFileListViewModel _flvm;
             public ViewModeCommand(IFileListViewModel flvm)
                 : base(FileListCommands.ToggleViewMode,
-                     new SliderStepCommandModel() { Header = "ExtraLargeIcon", SliderStep = 200, ItemHeight = 100 },
-                     new SliderStepCommandModel() { Header = "LargeIcon", SliderStep = 100, ItemHeight = 60 },
-                      new SliderStepCommandModel() { Header = "SmallIcon", SliderStep = 20 },
-                      new SliderStepCommandModel() { Header = "List", SliderStep = 18 })
+                     new ViewModeStepCommandModel("ExtraLargeIcon") { SliderStep = 200, ItemHeight = 60 },
+                     new ViewModeStepCommandModel("LargeIcon") { SliderStep = 100, ItemHeight = 60 },
+                     new ViewModeStepCommandModel("Icon") { SliderStep = 65 },
+                     new ViewModeStepCommandModel("SmallIcon") { SliderStep = 60 },
+                      new SeparatorCommandModel(),
+                      new ViewModeStepCommandModel("List") { SliderStep = 55 },
+                      new SeparatorCommandModel(),
+                      new ViewModeStepCommandModel("Grid") { SliderStep = 50 }
+                )
             {
+                _flvm = flvm;
+                IsHeaderVisible = false;
+                SliderValue = flvm.ItemSize;
+            }
 
+            public override void NotifyOfPropertyChange(string propertyName = "")
+            {
+                base.NotifyOfPropertyChange(propertyName);
+                switch (propertyName)
+                {
+                    case "SliderValue":
+                        ViewModeStepCommandModel commandModel = null;
+                        for (int i = SubCommands.Count - 1; i >= 0; i--)
+                        {
+                            ViewModeStepCommandModel vcm = SubCommands[i] as ViewModeStepCommandModel;
+                            if (vcm != null)
+                                if (SliderValue >= vcm.SliderStep)
+                                    commandModel = vcm;
+                                else break;
+                        }
+
+                        if (commandModel != null)
+                            this.HeaderIcon = commandModel.HeaderIcon;
+
+                        if (_flvm.ItemSize != SliderValue)
+                        {
+                            _flvm.ItemSize = SliderValue;
+                            //Debug.WriteLine(commandModel.Header + SliderValue.ToString());
+                            if (commandModel != null)
+                                switch (commandModel.Header)
+                                {
+                                    case "ExtraLargeIcon":
+                                    case "LargeIcon":
+                                        _flvm.ViewMode = "Icon";
+                                        break;
+                                    default :
+                                        _flvm.ViewMode = commandModel.Header;
+                                        break;
+                                }
+
+                        }
+
+                        break;
+                }
             }
         }
 
@@ -73,7 +138,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
-        
+
 
         public void Handle(SelectionChangedEvent message)
         {

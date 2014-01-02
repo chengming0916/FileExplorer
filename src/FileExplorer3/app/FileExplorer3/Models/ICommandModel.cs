@@ -49,6 +49,8 @@ namespace FileExplorer.Models
 
         bool IsEnabled { get; }
 
+        bool IsHeaderVisible { get; }
+
         void NotifySelectionChanged(IEntryModel[] appliedModels);
     }
 

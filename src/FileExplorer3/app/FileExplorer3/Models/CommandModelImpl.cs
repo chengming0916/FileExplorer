@@ -11,7 +11,7 @@ namespace FileExplorer.Models
 {
     public class SeparatorCommandModel : CommandModel, ISeparatorModel
     {
-        public SeparatorCommandModel() : base() { }
+        public SeparatorCommandModel() : base() { IsEnabled = true; }
 
 
     }
@@ -65,17 +65,21 @@ namespace FileExplorer.Models
 
         private void init(ICommandModel[] commandModels)
         {
-            var sliderCommandModels = commandModels.Cast<SliderStepCommandModel>();
+            SliderMinimum = Int32.MaxValue;
+            SliderMaximum = Int32.MinValue;
+            var sliderCommandModels = commandModels.Where(cm => cm is SliderStepCommandModel).Cast<SliderStepCommandModel>();
             if (sliderCommandModels.Count() > 2)
             {
                 sliderCommandModels.First().VerticalAlignment = VerticalAlignment.Top;
                 sliderCommandModels.Last().VerticalAlignment = VerticalAlignment.Bottom;
             }
 
-            foreach (ISliderStepCommandModel scm in commandModels)
+            foreach (ISliderStepCommandModel scm in sliderCommandModels)
             {
                 if (scm.Command == null)
-                    scm.Command = new SimpleScriptCommand("", pd => { SliderValue = scm.SliderStep; return ResultCommand.NoError; });
+                    scm.Command = new SimpleScriptCommand("", 
+                        pd => { 
+                            SliderValue = scm.SliderStep; return ResultCommand.NoError; });
 
                 if (scm.SliderStep < SliderMinimum) SliderMinimum = scm.SliderStep;
                 if (scm.SliderStep > SliderMaximum) SliderMaximum = scm.SliderStep;
@@ -113,7 +117,7 @@ namespace FileExplorer.Models
 
         public int SliderMaximum { get { return _sliderMaximum; } set { _sliderMaximum = value; NotifyOfPropertyChange(() => SliderMaximum); } }
         public int SliderMinimum { get { return _sliderMinimum; } set { _sliderMinimum = value; NotifyOfPropertyChange(() => SliderMinimum); } }
-        public int SliderValue { get { return _sliderValue; } set { _sliderValue = value; NotifyOfPropertyChange(() => SliderValue); Header = value.ToString(); } }
+        public int SliderValue { get { return _sliderValue; } set { _sliderValue = value; NotifyOfPropertyChange(() => SliderValue); } }
 
         #endregion
     }
@@ -132,6 +136,11 @@ namespace FileExplorer.Models
         #endregion
 
         #region Methods
+
+        public override string ToString()
+        {
+            return String.Format("SliderStepCommandModel {0} Step:{1} Height:{2}", Header, _sliderStep, _itemHeight);
+        }
 
         #endregion
 

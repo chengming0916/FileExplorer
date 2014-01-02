@@ -55,15 +55,13 @@
             </i:Interaction.Triggers>
 
             <uc:ListViewEx.ContentBelowHeader>
-                <Border Height="25">
-                    <!--<ContentControl Name="Toolbar" Content="{Binding Toolbar}" Margin="2" />-->
-                    <!--<v:ToolbarView x:Name="Toolbar" DataContext="{Binding Toolbar, Mode=OneWay}" />-->
+                <Border Margin="2" >
                     <uc:ToolbarEx ItemsSource="{Binding CommandsHelper.Commands.All}"                                  
                                   def:AttachedProperties.SkipLookup="True"
                                   
                                   >
                         <uc:ToolbarEx.Resources>
-                            <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >                                
+                            <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
                                 <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
                                 <Setter Property="CommandParameter" Value="{Binding DataContext.CommandsHelper.AppliedModels, 
@@ -72,17 +70,18 @@
                                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
                                 <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
                                 <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />
+                                <Setter Property="IsHeaderVisible" Value="{Binding CommandModel.IsHeaderVisible, Mode=OneWay}" />
                                 <Setter Property="IsSliderEnabled" Value="{Binding IsSliderEnabled, Mode=OneWay}" />
                                 <Style.Triggers>
                                     <Trigger Property="HeaderType" Value="MenuButton">
                                         <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" />
                                     </Trigger>
-                                    <Trigger Property="IsSliderEnabled" Value="True">                                        
+                                    <Trigger Property="IsSliderEnabled" Value="True">
                                         <Setter Property="SliderMaximum" Value="{Binding CommandModel.SliderMaximum, Mode=OneWay}" />
                                         <Setter Property="SliderMinimum" Value="{Binding CommandModel.SliderMinimum, Mode=OneWay}" />
                                         <Setter Property="SliderValue" Value="{Binding CommandModel.SliderValue, Mode=TwoWay}" />
                                     </Trigger>
-                                    
+
                                 </Style.Triggers>
                             </Style>
                             <Style TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource ToolbarSubItemExStyle}"  >
@@ -93,7 +92,7 @@
                                 <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
                                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
                                 <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
-                                <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />                                
+                                <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />
                                 <Setter Property="VerticalContentAlignment" Value="{Binding VerticalAlignment, Mode=OneWay}" />
                                 <Style.Triggers>
                                     <Trigger Property="HeaderType" Value="MenuButton">
@@ -101,14 +100,18 @@
                                     </Trigger>
                                     <DataTrigger Binding="{Binding IsSliderStep}" Value="True">
                                         <Setter Property="Value" Value="{Binding CommandModel.SliderStep, Mode=OneWay}" />
-                                        <Setter Property="Height" Value="{Binding CommandModel.ItemHeight, Mode=TwoWay}" />                                        
+                                        <Setter Property="Height" Value="{Binding CommandModel.ItemHeight, Mode=TwoWay}" />
                                         <Setter Property="IsStepStop" Value="True" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </uc:ToolbarEx.Resources>
                     </uc:ToolbarEx>
+                    <!--<Border.LayoutTransform>
+                        <ScaleTransform ScaleX="2" ScaleY="2" />
+                    </Border.LayoutTransform>-->
                 </Border>
+
             </uc:ListViewEx.ContentBelowHeader>
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>

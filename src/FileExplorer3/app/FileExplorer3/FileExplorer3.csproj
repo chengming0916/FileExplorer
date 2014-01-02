@@ -545,10 +545,10 @@
     <Resource Include="Themes\Resources\ViewMode\grid_16.png" />
     <Resource Include="Themes\Resources\ViewMode\details_16_2.png" />
     <Resource Include="Themes\Resources\ViewMode\details_25.png" />
-    <Resource Include="Themes\Resources\ViewMode\extralarge_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\extralargeicon_16.png" />
     <Resource Include="Themes\Resources\ViewMode\icon_16.png" />
     <Resource Include="Themes\Resources\ViewMode\Icon_16_2.png" />
-    <Resource Include="Themes\Resources\ViewMode\large_16.png" />
+    <Resource Include="Themes\Resources\ViewMode\largeicon_16.png" />
     <Resource Include="Themes\Resources\ViewMode\list_16.png" />
     <Resource Include="Themes\Resources\ViewMode\list_16_2.png" />
     <Resource Include="Themes\Resources\ViewMode\organize_25.png" />
