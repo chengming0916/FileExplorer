@@ -13,22 +13,32 @@ namespace FileExplorer.BaseControls
     {
         public MultiSelectEventProcessor()
         {
-            OnPreviewMouseDown = new SetHandledIfNotFocused();
-            OnMouseDrag = new BeginSelect();
-            OnMouseMove = new ContinueSelect();
-            OnMouseUp = new EndSelect();
+            _processEvents.AddRange(
+               new[] {
+                    FrameworkElement.PreviewMouseDownEvent,
+                    UIEventHub.MouseDragEvent,
+                    FrameworkElement.MouseUpEvent,
+                    FrameworkElement.MouseMoveEvent
+                }
+            );
         }
 
-        public static void OnCommandChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        public override Cofe.Core.Script.IScriptCommand OnEvent(RoutedEvent eventId)
         {
-            var sender = (MultiSelectEventProcessor)s;
-            (sender.OnMouseDrag as BeginSelect).UnselectCommand = sender.UnselectAllCommand;
-            (sender.OnMouseUp as EndSelect).UnselectCommand = sender.UnselectAllCommand;
+            switch (eventId.Name)
+            {
+                case "PreviewMouseDown": return new SetHandledIfNotFocused();
+                case "MouseDrag": return new BeginSelect() { UnselectCommand = UnselectAllCommand };
+                case "MouseMove": return new ContinueSelect();
+                case "MouseUp": return new EndSelect() { UnselectCommand = UnselectAllCommand };
+            }
+
+            return base.OnEvent(eventId);
         }
 
         public static DependencyProperty UnselectAllCommandProperty =
-            DependencyProperty.Register("UnselectAllCommand", typeof(ICommand), 
-            typeof(MultiSelectEventProcessor), new PropertyMetadata(OnCommandChanged));
+            DependencyProperty.Register("UnselectAllCommand", typeof(ICommand),
+            typeof(MultiSelectEventProcessor));
 
         public ICommand UnselectAllCommand
         {
