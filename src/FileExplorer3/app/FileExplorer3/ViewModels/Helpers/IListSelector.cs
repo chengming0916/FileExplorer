@@ -47,5 +47,6 @@ namespace FileExplorer.ViewModels.Helpers
         ICommand SelectAllCommand { get; }
 
         #endregion
+        
     }
 }

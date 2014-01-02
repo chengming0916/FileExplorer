@@ -23,6 +23,7 @@ namespace FileExplorer.BaseControls
                 : base("QueryInputBindings")
             {
                 _processor = processor;
+                
             }            
             public override IScriptCommand Execute(ParameterDic pm)
             {
@@ -32,14 +33,22 @@ namespace FileExplorer.BaseControls
                     if (ib.Gesture.Matches(sender, eventArgs))
                         if (ib.Command.CanExecute(ib.CommandParameter))
                             ib.Command.Execute(ib.CommandParameter);
-                return ResultCommand.NoError;
+                return ResultCommand.OK;
             }
         }
 
         public InputBindingsEventProcessor()
+        {            
+            _processEvents.AddRange(
+                new [] {
+                    FrameworkElement.KeyDownEvent, 
+                    FrameworkElement.PreviewMouseDownEvent
+                });
+        }
+
+        public override IScriptCommand OnEvent(RoutedEvent eventId)
         {
-            //OnPreviewMouseDown = new QueryInputBindings(this);
-            //OnKeyDown = new QueryInputBindings(this);
+            return new QueryInputBindings(this);
         }
 
         public static DependencyProperty InputBindingsProperty =
