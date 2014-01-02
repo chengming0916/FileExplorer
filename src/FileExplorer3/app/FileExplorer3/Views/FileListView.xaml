@@ -72,6 +72,7 @@
                                 <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />
                                 <Setter Property="IsHeaderVisible" Value="{Binding CommandModel.IsHeaderVisible, Mode=OneWay}" />
                                 <Setter Property="IsSliderEnabled" Value="{Binding IsSliderEnabled, Mode=OneWay}" />
+                                <Setter Property="IsHeaderAlignRight" Value="{Binding CommandModel.IsHeaderAlignRight, Mode=OneWay}" />
                                 <Style.Triggers>
                                     <Trigger Property="HeaderType" Value="MenuButton">
                                         <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" />

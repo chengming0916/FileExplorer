@@ -50,6 +50,7 @@ namespace FileExplorer.Models
         bool IsEnabled { get; }
 
         bool IsHeaderVisible { get; }
+        bool IsHeaderAlignRight { get; }
 
         void NotifySelectionChanged(IEntryModel[] appliedModels);
     }
