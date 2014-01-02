@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
@@ -10,10 +12,10 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ICommandsHelper
+    public interface ICommandsHelper : ICommandContainer
     {
         IEntryModel[] AppliedModels { get; }
-        EntriesHelper<ICommandViewModel> Commands { get; }
+        EntriesHelper<ICommandViewModel> Commands { get; }        
     }
 
     public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper
@@ -63,6 +65,7 @@ namespace FileExplorer.ViewModels.Helpers
         IEntryModel[] _appliedModels = null;        
         IProfile[] _rootProfiles = null;
         private ICommandModel[] _extraCommands;
+        protected List<ICommand> _exportedCommands = new List<ICommand>();
 
         #endregion
 
@@ -72,11 +75,18 @@ namespace FileExplorer.ViewModels.Helpers
             set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels);  } }
         public EntriesHelper<ICommandViewModel> Commands { get; private set; }
 
+        public IEnumerable<ICommand> ExportedCommands
+        {
+            get { return _exportedCommands; }
+        }
+
         #endregion
 
 
 
 
 
+
+       
     }
 }

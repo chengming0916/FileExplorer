@@ -258,6 +258,10 @@
 
 
 
+    <ControlTemplate x:Key="ToolbarEx.SeparatorTemplate" TargetType="{x:Type uc:ToolbarItemEx}">
+        <Rectangle Fill="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" Width="1" VerticalAlignment="Stretch" />
+    </ControlTemplate>
+
     <ControlTemplate x:Key="ToolbarEx.SubSeparatorTemplate" TargetType="{x:Type uc:ToolbarSubItemEx}">        
             <Separator Height="5" HorizontalAlignment="Stretch" />
     </ControlTemplate>
@@ -367,6 +371,9 @@
                         </Style>
                     </Setter.Value>
                 </Setter>-->
+            </Trigger>
+            <Trigger Property="HeaderType" Value="Separator">
+                <Setter Property="Template" Value="{DynamicResource ToolbarEx.SeparatorTemplate}" />
             </Trigger>
             <Trigger Property="HeaderType" Value="Check">
                 <Setter Property="Template" Value="{StaticResource ToolbarEx.ComboTemplate}"/>

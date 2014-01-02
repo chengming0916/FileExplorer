@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cinch;
+using FileExplorer.Defines.Commands;
 
 namespace FileExplorer.ViewModels.Helpers
 {
@@ -19,9 +20,9 @@ namespace FileExplorer.ViewModels.Helpers
         {
             EntryHelper = entryHelper;
             EntryHelper.EntriesChanged += (o, e) => { notifySelectionChanged(); };
-            //SelectedItems = new List<VM>();
-            UnselectAllCommand = new SimpleCommand() { ExecuteDelegate = (param) => UnselectAll() };
-            SelectAllCommand = new SimpleCommand() { ExecuteDelegate = (param) => SelectAll() };
+            
+            UnselectAllCommand = new SimpleCommand() { UICommand = FileListCommands.UnselectAll, ExecuteDelegate = (param) => UnselectAll() };
+            SelectAllCommand = new SimpleCommand() { UICommand = ApplicationCommands.SelectAll, ExecuteDelegate = (param) => SelectAll() };
         }
 
         #endregion
@@ -77,6 +78,7 @@ namespace FileExplorer.ViewModels.Helpers
             //SelectedItems = selectedItems.Cast<VM>().Distinct().ToList();
         }
 
+
         #endregion
 
         #region Data
@@ -106,9 +108,16 @@ namespace FileExplorer.ViewModels.Helpers
         public ICommand UnselectAllCommand { get; private set; }
         public ICommand SelectAllCommand { get; private set; }
 
+        public IEnumerable<ICommand> ExportedCommands
+        {
+            get { return new [] { UnselectAllCommand, SelectAllCommand }; }
+        }
+
         #endregion
 
 
 
+
+        
     }
 }

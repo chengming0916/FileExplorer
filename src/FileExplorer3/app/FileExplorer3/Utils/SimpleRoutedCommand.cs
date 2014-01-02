@@ -49,6 +49,12 @@ namespace Cinch
             init();
         }
 
+        public SimpleRoutedCommand(SimpleCommand simpleCommand)
+            : this(simpleCommand.UICommand, simpleCommand)
+        {
+
+        }
+
         private void init()
         {
             _commandBinding = new CommandBinding(_routedCommand,

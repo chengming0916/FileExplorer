@@ -48,6 +48,12 @@ namespace FileExplorer.Defines
             NewViewModel = newVM;
             OriginalViewModel = originalVM;
         }
+
+        public DirectoryChangedEvent(PropertyChangedBase sender, IEntryModel newM, IEntryModel originalM)
+            : this(sender, EntryViewModel.FromEntryModel(newM), EntryViewModel.FromEntryModel(originalM))
+        {
+            
+        }
     }
 
     public class SelectionChangedEvent : ViewModelEvent

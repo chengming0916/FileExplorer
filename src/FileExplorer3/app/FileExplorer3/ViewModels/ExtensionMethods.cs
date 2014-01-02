@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
+using Cinch;
 using FileExplorer.Models;
 using FileExplorer.ViewModels;
 
@@ -39,6 +42,16 @@ namespace FileExplorer
             }
         }
 
+
+        public static void RegisterCommand(this ICommandContainer container, UIElement ele)
+        {
+            foreach (var c in container.ExportedCommands)
+            {
+                SimpleCommand sc = c as SimpleCommand;
+                if (sc != null && sc.UICommand != ApplicationCommands.NotACommand)
+                    ele.CommandBindings.Add(new SimpleRoutedCommand(sc).CommandBinding);
+            }
+        }
       
     }
 }
