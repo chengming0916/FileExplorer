@@ -24,7 +24,7 @@ using System.Collections.ObjectModel;
 using FileExplorer.ViewModels.Helpers;
 using Cinch;
 using System.Windows.Input;
-using FileExplorer.Defines.Commands;
+using FileExplorer.Defines;
 
 
 namespace FileExplorer.ViewModels

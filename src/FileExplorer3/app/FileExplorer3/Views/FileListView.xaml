@@ -39,21 +39,16 @@
                      AllowDrop="True"
                      cal:View.ApplyConventions="False"                                            
                      def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
-                       >
-            <!--<uc:ListViewEx.InputBindings>
-                <MouseBinding Command="{Binding CommandsHelper.OpenDirectoryCommand}" 
-                              CommandParameter="{Binding RelativeSource={RelativeSource {x:Type uc:ListViewEx}}}"
-                              MouseAction="LeftClick" />
-                <KeyBinding Key="B"
-              Modifiers="Control" 
-              Command="ApplicationCommands.Open" />
-            </uc:ListViewEx.InputBindings>-->
+                       >            
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
                 <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAllCommand}" />
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
+                        <KeyBinding Key="A" Command="def:FileListCommands.UnselectAll" /> <!-- Testing -->
+                        <KeyBinding Key="C" Command="def:FileListCommands.ToggleCheckBox" />
+                        <KeyBinding Key="V" Command="def:FileListCommands.ToggleViewMode" />
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
             </bc:UIEventAdapter.Processors>

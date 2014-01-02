@@ -67,15 +67,11 @@ namespace FileExplorer.BaseControls
 
         private void setIsEnabled(bool value)
         {
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
                 {
                     if (value != _isEnabled)
                     {
                         var listenEvents = _eventProcessors.SelectMany(ep => ep.ProcessEvents).Distinct().ToArray();
-
-                        //Action<RoutedEvent, bool, Delegate> registerEvent = (evt, isRegister, handler) =>
-                        //    { if (isRegister) Control.AddHandler(evt, handler); else Control.RemoveHandler(evt, handler); };
-
 
                         _isEnabled = value;
 
@@ -88,6 +84,7 @@ namespace FileExplorer.BaseControls
                                     case "PreviewMouseDown":
                                     case "MouseMove":
                                     case "MouseDrag":
+                                    case "MouseUp":
                                         break;
                                     default:
                                         RoutedEventHandler handler = (RoutedEventHandler)(
@@ -99,48 +96,26 @@ namespace FileExplorer.BaseControls
 
                             }
 
-
+                            //These has to be handled for detecting drag.
                             Control.PreviewMouseDown += Control_PreviewMouseDown;
-                            //Control.MouseDown += Control_MouseDown;
                             Control.MouseMove += Control_MouseMove;
-                            //Control.MouseUp += Control_MouseUp;
-
-                            //Control.DragOver += Control_DragOver;
-                            //Control.DragEnter += Control_DragEnter;
-                            //Control.DragLeave += Control_DragLeave;
-                            //Control.Drop += Control_Drop;
-
-                            //Control.KeyDown += Control_KeyDown;
+                            Control.MouseUp += Control_MouseUp;
                         }
                         else
                         {
 
                             foreach (var evt in _registeredHandler.Keys)
-                            {
                                 Control.RemoveHandler(evt, _registeredHandler[evt]);
-                            }
                             _registeredHandler.Clear();
 
                             Control.PreviewMouseDown -= Control_PreviewMouseDown;
                             Control.MouseMove -= Control_MouseMove;
-                            //Control.MouseUp -= Control_MouseUp;
-
-                            //Control.DragOver -= Control_DragOver;
-                            //Control.DragEnter -= Control_DragEnter;
-                            //Control.DragLeave -= Control_DragLeave;
-                            //Control.Drop -= Control_Drop;
-
-                            //Control.KeyDown -= Control_KeyDown;
+                            Control.MouseUp -= Control_MouseUp;
                         }
                     }
                 }));
         }
 
-        void Control_KeyDown(object sender, KeyEventArgs e)
-        {
-            FrameworkElement control = sender as FrameworkElement;
-            execute(_eventProcessors, FrameworkElement.KeyDownEvent, sender, e);
-        }
 
         private bool execute(IList<UIEventProcessorBase> processors, RoutedEvent eventId, object sender, RoutedEventArgs e)
         {
@@ -148,90 +123,50 @@ namespace FileExplorer.BaseControls
             //    Debug.WriteLine(eventName);
             UIParameterDic pd = new UIParameterDic() { EventArgs = e, EventName = eventId.Name, Sender = sender };
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
-                processors.Select(p => p.OnEvent(eventId)).Where(c => c.CanExecute(pd)));
+                processors
+                .Where(p => p.ProcessEvents.Contains(eventId))
+                .Select(p => p.OnEvent(eventId))
+                .Where(c => c.CanExecute(pd)));
             _scriptRunner.Run(commands, pd);
             return pd.IsHandled;
         }
 
 
-        //private bool execute(IList<UIEventProcessorBase> processors, Func<IUIEventProcessor, IScriptCommand> commandFunc,
-        //    string eventName, object sender, RoutedEventArgs e)
-        //{
-        //    //if (eventName != "OnMouseMove")
-        //    //    Debug.WriteLine(eventName);
-        //    UIParameterDic pd = new UIParameterDic() { EventArgs = e, EventName = eventName, Sender = sender };
-        //    Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
-        //        processors.Select(p => commandFunc(p)).Where(c => c.CanExecute(pd)));
-        //    _scriptRunner.Run(commands, pd);
-        //    return pd.IsHandled;
-        //}
-
-        void Control_DragLeave(object sender, DragEventArgs e)
-        {
-            FrameworkElement control = sender as FrameworkElement;
-            execute(_eventProcessors, FrameworkElement.DragLeaveEvent, sender, e);
-        }
-
-        void Control_Drop(object sender, DragEventArgs e)
-        {
-            FrameworkElement control = sender as FrameworkElement;
-            //if (!AttachedProperties.GetIsMouseDragging(control))
-            //{
-            //Debug.WriteLine("Drop");
-            execute(_eventProcessors, FrameworkElement.DropEvent, sender, e);
-            //}
-
-        }
-
-        void Control_DragEnter(object sender, DragEventArgs e)
-        {
-            FrameworkElement control = sender as FrameworkElement;
-            if (execute(_eventProcessors, FrameworkElement.DragEnterEvent, sender, e))
-                e.Handled = true;
-        }
-
-        void Control_DragOver(object sender, DragEventArgs e)
-        {
-            FrameworkElement control = sender as FrameworkElement;
-            execute(_eventProcessors, FrameworkElement.DragOverEvent, sender, e);
-        }
-
-        void Control_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            execute(_eventProcessors, FrameworkElement.MouseDownEvent, sender, e);
-        }
 
 
         MouseButtonEventArgs _mouseDownEvent = null;
         void Control_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount > 1)
-                return;
+            if (e.ClickCount == 1)
+            {
+                var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
+                if (scp == null ||
+                    //ListViewEx contains ContentBelowHeader, allow placing other controls in it, this is to avoid that)
+                    (!scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(e.OriginalSource as DependencyObject)) &&
+                    //This is for handling user click in empty area of a panel.
+                     !(e.OriginalSource is ScrollViewer))
+                    )
+                    return;
 
-            var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
-            if (scp == null ||
-                //ListViewEx contains ContentBelowHeader, allow placing other controls in it, this is to avoid that)
-                (!scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(e.OriginalSource as DependencyObject)) &&
-                //This is for handling user click in empty area of a panel.
-                 !(e.OriginalSource is ScrollViewer))
-                )
-                return;
+                bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;
+                bool isOverScrollBar = UITools.FindAncestor<ScrollBar>(e.OriginalSource as DependencyObject) != null;
+                if (isOverGridViewHeader || isOverScrollBar)
+                    return;
 
-            bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;
-            bool isOverScrollBar = UITools.FindAncestor<ScrollBar>(e.OriginalSource as DependencyObject) != null;
-            if (isOverGridViewHeader || isOverScrollBar)
-                return;
-
-            _mouseDownEvent = e;
-
-            Control control = sender as Control;
+                _mouseDownEvent = e;
+                
+            }
             //if (!control.IsFocused)
             //    return;
             execute(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e);
 
-            AttachedProperties.SetIsMouseDragging(control, false);
-            AttachedProperties.SetStartPosition(control, e.GetPosition(control));
-            AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
+            if (e.ClickCount == 1)
+            {
+                Control control = sender as Control;
+                AttachedProperties.SetIsMouseDragging(control, false);
+                AttachedProperties.SetStartPosition(control, e.GetPosition(control));
+                AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
+            }
 
         }
 

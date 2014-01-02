@@ -12,7 +12,6 @@ using Caliburn.Micro;
 using Cinch;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
-using FileExplorer.Defines.Commands;
 using FileExplorer.Models;
 using FileExplorer.ViewModels.Helpers;
 

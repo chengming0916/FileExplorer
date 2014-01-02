@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FileExplorer.Defines.Commands
+namespace FileExplorer.Defines
 {
     public static class FileListCommands
     {

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cinch;
-using FileExplorer.Defines.Commands;
+using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels.Helpers
 {

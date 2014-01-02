@@ -28,13 +28,6 @@ namespace FileExplorer.BaseControls
             typeof(UIEventAdapter),
             new PropertyMetadata(null));
 
-        //public static void OnProcessorsChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
-        //{
-        //    var sender = (UIEventAdapter)s;
-        //    var control = UITools.FindAncestor<Control>(sender);
-        //    control.RegisterEventProcessors((e.NewValue as List<IUIEventProcessor>).ToArray());
-        //}
-
         public static FreezableCollection<UIEventProcessorBase> GetProcessors(DependencyObject obj)
         {
             var retVal = (FreezableCollection<UIEventProcessorBase>)obj.GetValue(ProcessorsProperty);
