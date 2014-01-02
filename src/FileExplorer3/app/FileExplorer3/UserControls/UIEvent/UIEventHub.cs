@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Threading;
 using Cofe.Core.Script;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
@@ -42,9 +43,9 @@ namespace FileExplorer.BaseControls
         public UIEventHub(IScriptRunner runner, UIElement control, bool startIsEnabled = true, params UIEventProcessorBase[] eventProcessors)
         {
             Control = control;
-            IsEnabled = startIsEnabled;
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
             _scriptRunner = runner;
+            IsEnabled = startIsEnabled;
         }
 
         #endregion
@@ -61,58 +62,114 @@ namespace FileExplorer.BaseControls
 
 
         #endregion
+
+
+
         private void setIsEnabled(bool value)
         {
-            if (value != _isEnabled)
-            {
-                _isEnabled = value;
-
-                if (_isEnabled)
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.ContextIdle, new Action(() =>
                 {
-                    Control.PreviewMouseDown += Control_PreviewMouseDown;
-                    Control.MouseDown += Control_MouseDown;
-                    Control.MouseMove += Control_MouseMove;
-                    Control.MouseUp += Control_MouseUp;
+                    if (value != _isEnabled)
+                    {
+                        var listenEvents = _eventProcessors.SelectMany(ep => ep.ProcessEvents).Distinct().ToArray();
 
-                    Control.DragOver += Control_DragOver;
-                    Control.DragEnter += Control_DragEnter;
-                    Control.DragLeave += Control_DragLeave;
-                    Control.Drop += Control_Drop;
-                }
-                else
-                {
-                    Control.PreviewMouseDown -= Control_PreviewMouseDown;
-                    Control.MouseMove -= Control_MouseMove;
-                    Control.MouseUp -= Control_MouseUp;
+                        //Action<RoutedEvent, bool, Delegate> registerEvent = (evt, isRegister, handler) =>
+                        //    { if (isRegister) Control.AddHandler(evt, handler); else Control.RemoveHandler(evt, handler); };
 
-                    Control.DragOver -= Control_DragOver;
-                    Control.DragEnter -= Control_DragEnter;
-                    Control.DragLeave -= Control_DragLeave;
-                    Control.Drop -= Control_Drop;
-                }
-            }
+
+                        _isEnabled = value;
+
+                        if (_isEnabled)
+                        {
+                            foreach (var e in listenEvents)
+                            {
+                                switch (e.Name)
+                                {
+                                    case "PreviewMouseDown":
+                                    case "MouseMove":
+                                    case "MouseDrag":
+                                        break;
+                                    default:
+                                        RoutedEventHandler handler = (RoutedEventHandler)(
+                                            (o, re) => { execute(_eventProcessors, e, o, re); });
+                                        _registeredHandler.Add(e, handler);
+                                        Control.AddHandler(e, handler);
+                                        break;
+                                }
+
+                            }
+
+
+                            Control.PreviewMouseDown += Control_PreviewMouseDown;
+                            //Control.MouseDown += Control_MouseDown;
+                            Control.MouseMove += Control_MouseMove;
+                            //Control.MouseUp += Control_MouseUp;
+
+                            //Control.DragOver += Control_DragOver;
+                            //Control.DragEnter += Control_DragEnter;
+                            //Control.DragLeave += Control_DragLeave;
+                            //Control.Drop += Control_Drop;
+
+                            //Control.KeyDown += Control_KeyDown;
+                        }
+                        else
+                        {
+
+                            foreach (var evt in _registeredHandler.Keys)
+                            {
+                                Control.RemoveHandler(evt, _registeredHandler[evt]);
+                            }
+                            _registeredHandler.Clear();
+
+                            Control.PreviewMouseDown -= Control_PreviewMouseDown;
+                            Control.MouseMove -= Control_MouseMove;
+                            //Control.MouseUp -= Control_MouseUp;
+
+                            //Control.DragOver -= Control_DragOver;
+                            //Control.DragEnter -= Control_DragEnter;
+                            //Control.DragLeave -= Control_DragLeave;
+                            //Control.Drop -= Control_Drop;
+
+                            //Control.KeyDown -= Control_KeyDown;
+                        }
+                    }
+                }));
         }
 
+        void Control_KeyDown(object sender, KeyEventArgs e)
+        {
+            FrameworkElement control = sender as FrameworkElement;
+            execute(_eventProcessors, FrameworkElement.KeyDownEvent, sender, e);
+        }
 
-        private bool execute(IList<UIEventProcessorBase> processors, Func<IUIEventProcessor, IScriptCommand> commandFunc,
-            string eventName, object sender, RoutedEventArgs e)
+        private bool execute(IList<UIEventProcessorBase> processors, RoutedEvent eventId, object sender, RoutedEventArgs e)
         {
             //if (eventName != "OnMouseMove")
             //    Debug.WriteLine(eventName);
-            UIParameterDic pd = new UIParameterDic() { EventArgs = e, EventName = eventName, Sender = sender };
+            UIParameterDic pd = new UIParameterDic() { EventArgs = e, EventName = eventId.Name, Sender = sender };
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
-                processors.Select(p => commandFunc(p)).Where(c => c.CanExecute(pd)));
+                processors.Select(p => p.OnEvent(eventId)).Where(c => c.CanExecute(pd)));
             _scriptRunner.Run(commands, pd);
             return pd.IsHandled;
         }
 
+
+        //private bool execute(IList<UIEventProcessorBase> processors, Func<IUIEventProcessor, IScriptCommand> commandFunc,
+        //    string eventName, object sender, RoutedEventArgs e)
+        //{
+        //    //if (eventName != "OnMouseMove")
+        //    //    Debug.WriteLine(eventName);
+        //    UIParameterDic pd = new UIParameterDic() { EventArgs = e, EventName = eventName, Sender = sender };
+        //    Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
+        //        processors.Select(p => commandFunc(p)).Where(c => c.CanExecute(pd)));
+        //    _scriptRunner.Run(commands, pd);
+        //    return pd.IsHandled;
+        //}
+
         void Control_DragLeave(object sender, DragEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            //if (!AttachedProperties.GetIsMouseDragging(control))
-            //{
-            execute(_eventProcessors, p => p.OnMouseDragLeave, "OnMouseDragLeave", sender, e);
-            //}
+            execute(_eventProcessors, FrameworkElement.DragLeaveEvent, sender, e);
         }
 
         void Control_Drop(object sender, DragEventArgs e)
@@ -121,7 +178,7 @@ namespace FileExplorer.BaseControls
             //if (!AttachedProperties.GetIsMouseDragging(control))
             //{
             //Debug.WriteLine("Drop");
-            execute(_eventProcessors, p => p.OnMouseDrop, "OnMouseDrop", sender, e);
+            execute(_eventProcessors, FrameworkElement.DropEvent, sender, e);
             //}
 
         }
@@ -129,19 +186,19 @@ namespace FileExplorer.BaseControls
         void Control_DragEnter(object sender, DragEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            if (execute(_eventProcessors, p => p.OnMouseDragEnter, "OnMouseDragEnter", sender, e))
+            if (execute(_eventProcessors, FrameworkElement.DragEnterEvent, sender, e))
                 e.Handled = true;
         }
 
         void Control_DragOver(object sender, DragEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            execute(_eventProcessors, p => p.OnMouseDragOver, "OnMouseDragOver", sender, e);
+            execute(_eventProcessors, FrameworkElement.DragOverEvent, sender, e);
         }
 
         void Control_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            execute(_eventProcessors, p => p.OnMouseDown, "OnMouseDown", sender, e);
+            execute(_eventProcessors, FrameworkElement.MouseDownEvent, sender, e);
         }
 
 
@@ -170,7 +227,7 @@ namespace FileExplorer.BaseControls
             Control control = sender as Control;
             //if (!control.IsFocused)
             //    return;
-            execute(_eventProcessors, p => p.OnPreviewMouseDown, "OnPreviewMouseDown", sender, e);
+            execute(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e);
 
             AttachedProperties.SetIsMouseDragging(control, false);
             AttachedProperties.SetStartPosition(control, e.GetPosition(control));
@@ -186,7 +243,7 @@ namespace FileExplorer.BaseControls
             Point startPosition = AttachedProperties.GetStartPosition(control);
             if (startPosition.IsValidPosition())
             {
-                execute(_eventProcessors, p => p.OnMouseMove, "OnMouseMove", sender, e);
+                execute(_eventProcessors, FrameworkElement.MouseMoveEvent, sender, e);
 
                 if (!AttachedProperties.GetIsMouseDragging(control))
                     if ((e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed))
@@ -198,11 +255,14 @@ namespace FileExplorer.BaseControls
             }
         }
 
+        public static RoutedEvent MouseDragEvent = EventManager.RegisterRoutedEvent(
+                "MouseDrag", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UIEventHub));
+
         public void Control_MouseDrag(object sender, MouseEventArgs e)
-        {            
+        {
             FrameworkElement control = sender as FrameworkElement;
             AttachedProperties.SetIsMouseDragging(control, true);
-            if (execute(_eventProcessors, p => p.OnMouseDrag, "OnMouseDrag ", sender, e))
+            if (execute(_eventProcessors, UIEventHub.MouseDragEvent, sender, e))
             //DragDropEventProcessor set e.IsHandled to true
             {
                 //DragDrop does not raise MouseUp, so have to raise manually.
@@ -215,7 +275,7 @@ namespace FileExplorer.BaseControls
         {
             FrameworkElement control = sender as FrameworkElement;
 
-            execute(_eventProcessors, p => p.OnMouseUp, "OnMouseUp ", sender, e);
+            execute(_eventProcessors, FrameworkElement.MouseUpEvent, sender, e);
 
             AttachedProperties.SetIsMouseDragging(control, false);
             AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
@@ -227,6 +287,7 @@ namespace FileExplorer.BaseControls
         #region Data
 
         private IList<UIEventProcessorBase> _eventProcessors;
+        private Dictionary<RoutedEvent, RoutedEventHandler> _registeredHandler = new Dictionary<RoutedEvent, RoutedEventHandler>();
         private IScriptRunner _scriptRunner;
         private bool _isEnabled = false;
 
@@ -236,11 +297,15 @@ namespace FileExplorer.BaseControls
 
         public bool IsEnabled { get { return _isEnabled; } set { setIsEnabled(value); } }
         public UIElement Control { get; private set; }
-        public IList<UIEventProcessorBase> EventProcessors { get { return _eventProcessors; } set { _eventProcessors = value; } }
+        public IList<UIEventProcessorBase> EventProcessors
+        {
+            get { return _eventProcessors; }
+            set { _eventProcessors = value; }
+        }
+
 
 
         #endregion
-
 
     }
 

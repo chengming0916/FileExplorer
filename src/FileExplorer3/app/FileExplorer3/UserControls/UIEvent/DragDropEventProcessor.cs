@@ -15,60 +15,48 @@ namespace FileExplorer.BaseControls
     {
         public DragDropEventProcessor()
         {
+            _processEvents.AddRange(
+                new[] {
+                    FrameworkElement.PreviewMouseDownEvent,
+                    UIEventHub.MouseDragEvent,
+                    FrameworkElement.MouseUpEvent,
+                    FrameworkElement.MouseMoveEvent,
 
+                    FrameworkElement.DragEnterEvent,
+                    FrameworkElement.DragOverEvent,
+                    FrameworkElement.DragLeaveEvent,
+                    FrameworkElement.DropEvent
+                }
+             );
         }
 
-        public void SetEnableDrag(bool enable)
+        public override Cofe.Core.Script.IScriptCommand OnEvent(RoutedEvent eventId)
         {
-            if (enable)
-            {
-                //Register Drag
-                OnPreviewMouseDown = new RecordStartSelectedItem();
-                OnMouseDrag = new BeginDrag();
-                OnMouseUp = new EndDrag();
-                OnMouseMove = new ContinueDrag();
-            }
-            else
-            {
-                //Unregister Drag
-                OnPreviewMouseDown = ScriptCommands.NoCommand;
-                OnMouseDrag = ScriptCommands.NoCommand;
-                OnMouseUp = ScriptCommands.NoCommand;
-                OnMouseMove = ScriptCommands.NoCommand;
-            }
+            if (EnableDrag)
+                switch (eventId.Name)
+                {
+                    case "PreviewMouseDown": return new RecordStartSelectedItem();
+                    case "MouseDrag": return new BeginDrag();
+                    case "MouseUp": return new EndDrag();
+                    case "MouseMove": return new ContinueDrag();
+                }
+
+            if (EnableDrop)
+                switch (eventId.Name)
+                {
+                    case "DragEnter": return new QueryDragDropEffects(QueryDragDropEffectMode.Enter);
+                    case "DragOver": return new ContinueDrop();
+                    case "DragLeave": return new QueryDragDropEffects(QueryDragDropEffectMode.Leave);
+                    case "Drop": return new BeginDrop();
+                }
+
+            return base.OnEvent(eventId);
         }
 
-        public void SetEnableDrop(bool enable)
-        {
-            if (enable)
-            {
-                //Register Drag                
-                OnMouseDragEnter = new QueryDragDropEffects(QueryDragDropEffectMode.Enter);
-                OnMouseDragOver = new ContinueDrop();
-                OnMouseDragLeave = new QueryDragDropEffects(QueryDragDropEffectMode.Leave);
-                OnMouseDrop = new BeginDrop();
-
-            }
-            else
-            {
-                //Unregister Drag                
-                OnMouseDragEnter = ScriptCommands.NoCommand;
-                OnMouseDragOver = ScriptCommands.NoCommand;
-                OnMouseDragLeave = ScriptCommands.NoCommand;
-                OnMouseDrop = ScriptCommands.NoCommand;
-            }
-        }
-
-
-        public static void OnEnableDragChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
-        {
-            var sender = (DragDropEventProcessor)s;
-            sender.SetEnableDrag((bool)e.NewValue);
-        }
 
         public static DependencyProperty EnableDragProperty =
             DependencyProperty.Register("EnableDrag", typeof(bool),
-            typeof(DragDropEventProcessor), new PropertyMetadata(false, OnEnableDragChanged));
+            typeof(DragDropEventProcessor), new PropertyMetadata(false));
 
         public bool EnableDrag
         {
@@ -76,15 +64,9 @@ namespace FileExplorer.BaseControls
             set { SetValue(EnableDragProperty, value); }
         }
 
-        public static void OnEnableDropChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
-        {
-            var sender = (DragDropEventProcessor)s;
-            sender.SetEnableDrop((bool)e.NewValue);
-        }
-
         public static DependencyProperty EnableDropProperty =
             DependencyProperty.Register("EnableDrop", typeof(bool),
-            typeof(DragDropEventProcessor), new PropertyMetadata(false, OnEnableDropChanged));
+            typeof(DragDropEventProcessor), new PropertyMetadata(false));
 
         public bool EnableDrop
         {

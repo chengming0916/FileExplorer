@@ -41,10 +41,12 @@ namespace FileExplorer.BaseControls
             if (retVal == null)
             {
                 retVal = new FreezableCollection<UIEventProcessorBase>();
+                
+                
                 var ehub = new UIEventHub(new ScriptRunner(), obj as UIElement, true) 
                 { EventProcessors = retVal };
                 SetUIEventHub(obj, ehub);
-                SetProcessors(obj, retVal);
+                SetProcessors(obj, retVal);                
             }
             return retVal;
         }
@@ -52,7 +54,9 @@ namespace FileExplorer.BaseControls
         public static void SetProcessors(DependencyObject obj, FreezableCollection<UIEventProcessorBase> value)
         {
             if (obj != null)
-                obj.SetValue(ProcessorsProperty, value);
+            {
+                obj.SetValue(ProcessorsProperty, value);                
+            }
         }
 
 

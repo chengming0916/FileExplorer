@@ -27,7 +27,7 @@ namespace FileExplorer.Views
     {
         public FileListView()
         {
-            InitializeComponent();
+            InitializeComponent();            
             //CommandBindings.Add(new CommandBinding(this.ProcessedItems.RenameCommand));
         }
 
