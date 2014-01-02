@@ -113,8 +113,8 @@ namespace FileExplorer.BaseControls
                             if (childOfChild != null)
                                 return childOfChild;
                         }
-                        else
-                            Debug.WriteLine(child);
+                        //else
+                        //    Debug.WriteLine(child);
                 }
             }
 

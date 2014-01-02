@@ -19,13 +19,15 @@
     <Grid Height="20">
         
         <uc:ToolbarEx ItemsSource="{Binding Commands.All}">
+            <!-- This is obsoluted, move to FileListView -->
             <uc:ToolbarEx.ItemContainerStyle>
                 <Style TargetType="{x:Type uc:ToolbarItemEx}" 
                        BasedOn="{StaticResource ToolbarItemExStyle}" >
                     <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
                     <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
-                    <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />
+                    <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />                    
                     <Setter Property="ItemsSource" Value="{Binding SubCommands}" />
+                    <Setter Property="IsHeaderVisible" Value="{Binding CommandModel.IsHeaderVisibleaaaa, Mode=TwoWay}" />
                     <!--<Setter Property="AllowDrop" Value="True" />-->
                     <!--<Setter Property="def:AttachedProperties.DragItemTemplate" Value="{StaticResource GridLabelTemplate}" />-->
                 </Style>

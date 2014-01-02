@@ -30,7 +30,7 @@
 
     <!-- Either Symbol or Icon -->
     <ControlTemplate x:Key="ToolbarMenuIconTemplate2" TargetType="{x:Type ContentControl}">
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="16">
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="16">
             <TextBlock FontFamily="Segoe UI Symbol"                        
                        Text="{Binding Symbol, RelativeSource={RelativeSource AncestorType={x:Type MenuItem}}}" />
             <ContentControl Content="{Binding Icon, RelativeSource={RelativeSource AncestorType={x:Type MenuItem}}}"   
@@ -40,7 +40,7 @@
 
     <!-- Either Symbol or Icon or Checkmark -->
     <ControlTemplate x:Key="ToolbarMenuIconTemplate3" TargetType="{x:Type ContentControl}">
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="16">
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="16">
             <ContentControl Template="{StaticResource ToolbarMenuIconTemplate2}" />
             <Path x:Name="GlyphPanel" Data="{StaticResource Checkmark}" 
                           Fill="{TemplateBinding Foreground}" 
@@ -141,10 +141,10 @@
 
             <bc:HotTrack>
                 <Grid VerticalAlignment="Center"  >
-                    <Grid.ColumnDefinitions>                        
+                    <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>                    
+                    </Grid.ColumnDefinitions>
                     <Button x:Name="HeaderButton" Template="{StaticResource BlankButton}" Grid.Column="0" Margin="6,0"
                             Command="{TemplateBinding Command}" CommandParameter="{TemplateBinding CommandParameter}" 
                             IsHitTestVisible="True">
@@ -153,8 +153,9 @@
                                     Margin="0,0,6,0" />
                             <ContentPresenter ContentSource="Header" VerticalAlignment="Center"
                                           RecognizesAccessKey="True" 
+                                          Visibility="{Binding IsHeaderVisible, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource btvc}}"
                                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                        </StackPanel>                        
+                        </StackPanel>
                     </Button>
 
                     <bc:DropDown x:Name="ExpanderDropDown" 
@@ -178,19 +179,22 @@
                                         TypeInTargetAssembly={x:Type FrameworkElement}}}">
                                 <Grid RenderOptions.ClearTypeHint="Enabled">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <!-- Slider -->
                                         <ColumnDefinition MinWidth="22" SharedSizeGroup="MenuItemIconColumnGroup" Width="Auto"/>
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                    <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0" Grid.ColumnSpan="2">
                                         <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=SubMenuBorder}" 
                                                Height="{Binding ActualHeight, ElementName=SubMenuBorder}"
                                                Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>
                                     </Canvas>
 
-                                    <Rectangle Fill="{StaticResource Menu.Static.Separator}" HorizontalAlignment="Left" Margin="29,2,0,2" Width="1"/>
+                                    <Rectangle Fill="{StaticResource Menu.Static.Separator}" HorizontalAlignment="Left" 
+                                               Margin="29,2,0,2" Width="1" Grid.Column="1"/>
 
-                                    <ItemsPresenter x:Name="ItemsPresenter" Grid.ColumnSpan="2" 
+                                    <ItemsPresenter x:Name="ItemsPresenter" Grid.ColumnSpan="2" Grid.Column="1"
                                                 KeyboardNavigation.DirectionalNavigation="Cycle" Grid.IsSharedSizeScope="true" 
                                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
                                                 KeyboardNavigation.TabNavigation="Cycle"/>
@@ -227,6 +231,9 @@
             <Trigger Property="Header" Value="{x:Null}">
                 <Setter TargetName="MenuIcon" Property="Margin" Value="0" />
             </Trigger>
+            <Trigger Property="IsHeaderVisible" Value="false">
+                <Setter TargetName="MenuIcon" Property="Margin" Value="0" />
+            </Trigger>
             <Trigger Property="Command" Value="{x:Null}">
                 <Setter TargetName="HeaderButton" Property="IsHitTestVisible" Value="False" />
                 <Setter TargetName="ExpanderDropDown" Property="PlacementTarget" Value="{Binding ElementName=templateRoot}" />
@@ -251,13 +258,17 @@
 
 
 
+    <ControlTemplate x:Key="ToolbarEx.SubSeparatorTemplate" TargetType="{x:Type uc:ToolbarSubItemEx}">        
+            <Separator Height="5" HorizontalAlignment="Stretch" />
+    </ControlTemplate>
+
     <ControlTemplate x:Key="ToolbarEx.SubButtonTemplate" TargetType="{x:Type uc:ToolbarSubItemEx}">
         <Border x:Name="templateRoot" BorderBrush="{TemplateBinding BorderBrush}" 
                 BorderThickness="{TemplateBinding BorderThickness}" 
                 Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
             <bc:HotTrack IsSelected="{TemplateBinding IsHighlighted}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                          HighlightBrush="Transparent" BackgroundBrush="Transparent" >
-                <Grid Margin="-1" MinHeight="30">
+                <Grid Margin="-1" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition MinWidth="22" SharedSizeGroup="MenuItemIconColumnGroup" Width="Auto"/>
                         <ColumnDefinition Width="13"/>
@@ -266,7 +277,7 @@
                         <ColumnDefinition SharedSizeGroup="MenuItemIGTColumnGroup" Width="Auto"/>
                         <ColumnDefinition Width="20"/>
                     </Grid.ColumnDefinitions>
-                    <ContentControl x:Name="Icon" Grid.Column="0" Template="{StaticResource ToolbarMenuIconTemplate3}"
+                    <ContentControl x:Name="Icon" Grid.Column="0" Template="{DynamicResource ToolbarMenuIconTemplate3}"
                                     VerticalAlignment="Center"
                                     Height="16" Width="16" Margin="3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"  />
                     <!--<ContentPresenter x:Name="Icon" ContentSource="Icon" HorizontalAlignment="Center" 
@@ -306,45 +317,48 @@
 
     <ControlTemplate x:Key="ToolbarEx.ComboItemTemplate" TargetType="{x:Type uc:ToolbarSubItemEx}">
         <bc:HotTrack IsSelected="{TemplateBinding IsChecked}" >
-            <ContentControl x:Name="MenuIcon" Grid.Column="0" Template="{StaticResource ToolbarMenuIconTemplate2}" />
+            <ContentControl x:Name="MenuIcon" Grid.Column="0" Template="{DynamicResource ToolbarMenuIconTemplate2}" />
         </bc:HotTrack>
     </ControlTemplate>
 
     <Style x:Key="ToolbarSubItemExStyle" TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource {x:Type MenuItem}}">
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Template" Value="{StaticResource ToolbarEx.SubButtonTemplate}"/>               
+        <Setter Property="Template" Value="{DynamicResource ToolbarEx.SubButtonTemplate}"/>
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Style.Triggers>
-            <Trigger Property="Role" Value="SubmenuHeader">
+            <!--<Trigger Property="Role" Value="SubmenuHeader">
                 <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, 
                     TypeInTargetAssembly={x:Type MenuItem}}}"/>
-            </Trigger>
+            </Trigger>-->
             <Trigger Property="HeaderType" Value="ComboItem">
-                <Setter Property="Template" Value="{StaticResource ToolbarEx.ComboItemTemplate}"/>
+                <Setter Property="Template" Value="{DynamicResource ToolbarEx.ComboItemTemplate}"/>
+            </Trigger>
+            <Trigger Property="HeaderType" Value="Separator">
+                <Setter Property="Template" Value="{DynamicResource ToolbarEx.SubSeparatorTemplate}" />
             </Trigger>
             <Trigger Property="HeaderType" Value="CheckItem">
-                <Setter Property="Template" Value="{StaticResource ToolbarEx.ComboItemTemplate}"/>
+                <Setter Property="Template" Value="{DynamicResource ToolbarEx.ComboItemTemplate}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="ToolbarItemExStyle" TargetType="{x:Type uc:ToolbarItemEx}">
-        <Setter Property="Padding" Value="6,0" />
-        <Setter Property="Margin" Value="6,3,6,0"/>
+        <!--<Setter Property="Padding" Value="6,0" />
+        <Setter Property="Margin" Value="3,3,3,0"/>-->        
         <Setter Property="CornerRadius" Value="0"/>
-        <Setter Property="Background" Value="Transparent"/>        
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Foreground" Value="{StaticResource Menu.Static.Foreground}"/>
         <!--<Setter Property="ItemContainerStyle" Value="{StaticResource ToolbarSubItemExStyle}" />-->
         <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
         <Style.Triggers>
             <Trigger Property="HeaderType" Value="Button">
-                <Setter Property="Foreground" Value="{StaticResource Menu.Static.Foreground}"/>
-                <Setter Property="Template" Value="{StaticResource ToolbarEx.ButtonTemplate}"/>
+                <Setter Property="Foreground" Value="{DynamicResource Menu.Static.Foreground}"/>
+                <Setter Property="Template" Value="{DynamicResource ToolbarEx.ButtonTemplate}"/>
             </Trigger>
             <Trigger Property="HeaderType" Value="Combo">
-                <Setter Property="Template" Value="{StaticResource ToolbarEx.ComboTemplate}"/>
-                <Setter Property="ItemsPanel" Value="{StaticResource ToolbarEx.HorizontalStackPanelTemplate}" />
+                <Setter Property="Template" Value="{DynamicResource ToolbarEx.ComboTemplate}"/>
+                <Setter Property="ItemsPanel" Value="{DynamicResource ToolbarEx.HorizontalStackPanelTemplate}" />
                 <!--<Setter Property="ItemContainerStyle">
                     <Setter.Value>
                         <Style BasedOn="{StaticResource ToolbarSubItemExStyle}" TargetType="{x:Type uc:ToolbarSubItemEx}">

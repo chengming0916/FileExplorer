@@ -111,7 +111,7 @@ namespace FileExplorer.ViewModels
                             }
                             //else not found
                         }
-                    }).Start();
+                    });//.Start();
             }
         }
 

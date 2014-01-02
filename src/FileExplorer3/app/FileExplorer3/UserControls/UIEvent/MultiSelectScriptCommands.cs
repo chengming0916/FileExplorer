@@ -60,7 +60,7 @@ namespace FileExplorer.BaseControls.MultiSelect
         public SetHandledIfNotFocused()
             : base("SetHandledIfNotFocused", "EventArgs")
         {
-            
+
         }
         public ICommand UnselectCommand { get; set; }
 
@@ -150,8 +150,8 @@ namespace FileExplorer.BaseControls.MultiSelect
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
-            var scp = ControlUtils.GetScrollContentPresenter(c);
+            var ic = pd.Sender as ItemsControl;
+            var scp = ControlUtils.GetScrollContentPresenter(ic);
             var eventArgs = pd.EventArgs as MouseEventArgs;
             pm["UnselectCommand"] = UnselectCommand;
 
@@ -160,15 +160,18 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             Mouse.Capture(null);
 
-            if (AttachedProperties.GetIsSelecting(c))
+            if (AttachedProperties.GetIsSelecting(ic))
                 return new UpdateIsSelecting(false);
             else
             {
-                //If not mouse over item and is selecting (dragging), unselect all.
-                if (!UITools.IsMouseOverSelectedItem(c))
-                    return new SelectItems(); 
-                //Otherwise do nothing.
-                return ResultCommand.NoError;
+                //Select the mouse over item.
+                //(If not mouse over item and is selecting (dragging), this will unselect all)
+                object itemUnderMouse = UITools.GetItemUnderMouse(ic, eventArgs.GetPosition(scp));
+                List<object> selectedList = new List<object>();
+                if (itemUnderMouse != null)
+                    selectedList.Add(itemUnderMouse);
+                pd["SelectedList"] = selectedList;                
+                return new SelectItems();
             }
         }
     }
@@ -234,7 +237,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             Point retVal = new Point(0, 0);
             foreach (var pt in pts)
                 retVal = new Point(retVal.X + pt.X, retVal.Y + pt.Y);
-            return retVal;            
+            return retVal;
         }
 
         private Point adjustScrollBarPosition(Point pt, Point startScrollbarPosition, Point currentScrollbarPosition)
@@ -283,7 +286,7 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             if (!pm.ContainsKey("SelectionBounds") || !(pm["SelectionBounds"] is Rect))
                 pd["SelectionBounds"] = new Rect((Point)pd["StartPosition"], (Point)pd["CurrentPosition"]);
-         
+
             return new FindSelectedItems();
         }
     }
@@ -586,7 +589,7 @@ namespace FileExplorer.BaseControls.MultiSelect
     /// </summary>
     public class SelectItems : ScriptCommandBase
     {
-        public SelectItems() : base("SelectItems", "EventArgs", "SelectedIdList") { }
+        public SelectItems() : base("SelectItems", "EventArgs", "SelectedList", "SelectedIdList") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -594,8 +597,8 @@ namespace FileExplorer.BaseControls.MultiSelect
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             var eventArgs = pd.EventArgs as MouseEventArgs;
-            var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
-                : new List<int>();
+            var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int> : null;
+            var selectedList = pm.ContainsKey("SelectedList") ? pm["SelectedList"] as List<object> : null;
 
             if (pm.ContainsKey("UnselectCommand"))
             {
@@ -604,15 +607,22 @@ namespace FileExplorer.BaseControls.MultiSelect
                     unselectCommand.Execute(ic);
             }
 
-            for (int i = 0; i < ic.Items.Count; i++)
-            {
-                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
-                if (item != null)
+            Action<int, DependencyObject> updateSelected = null;
+            if (selectedIdList != null)
+                updateSelected = (idx, item) => item.SetValue(ListBoxItem.IsSelectedProperty, selectedIdList.Contains(idx));
+            else if (selectedList != null)
+                updateSelected = (idx, item) => item.SetValue(ListBoxItem.IsSelectedProperty, selectedList.Contains(item));
+
+            if (updateSelected != null)
+                for (int i = 0; i < ic.Items.Count; i++)
                 {
-                    AttachedProperties.SetIsSelecting(item, false);
-                    item.SetValue(ListBoxItem.IsSelectedProperty, selectedIdList.Contains(i));
+                    DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                    if (item != null)
+                    {
+                        AttachedProperties.SetIsSelecting(item, false);
+                        updateSelected(i, item);
+                    }
                 }
-            }
 
             return new DetachAdorner();
         }
@@ -688,7 +698,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                 return ResultCommand.Error(new Exception("Adorner not found."));
 
             lastAdorner.IsSelecting = AttachedProperties.GetIsSelecting(c);
-        
+
             lastAdorner.StartPosition = (Point)pd["StartAdjustedPosition"];
             lastAdorner.EndPosition = (Point)pd["CurrentPosition"];
 

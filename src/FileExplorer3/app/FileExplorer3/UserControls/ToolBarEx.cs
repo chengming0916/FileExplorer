@@ -144,6 +144,17 @@ namespace FileExplorer.UserControls
             typeof(ToolbarItemEx), new PropertyMetadata(""));
 
 
+
+        public static readonly DependencyProperty IsHeaderVisibleProperty =
+            DependencyProperty.Register("IsHeaderVisible", typeof(bool), typeof(ToolbarItemEx),
+            new UIPropertyMetadata(true));
+
+        public bool IsHeaderVisible
+        {
+            get { return (bool)GetValue(IsHeaderVisibleProperty); }
+            set { SetValue(IsHeaderVisibleProperty, value); }
+        }
+
         public static readonly DependencyProperty IsSeparatorProperty =
             DependencyProperty.Register("IsSeparator", typeof(bool), typeof(ToolbarItemEx),
             new UIPropertyMetadata(false));

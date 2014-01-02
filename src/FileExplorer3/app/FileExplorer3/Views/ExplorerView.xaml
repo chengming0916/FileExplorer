@@ -29,6 +29,8 @@
             <ContentControl  Name="FileList" Grid.Column="1" Grid.Row="1" Margin="2" />            
             <ContentControl Grid.ColumnSpan="2" Grid.Row="2"  Name="Statusbar" Margin="0,5,0,0" />
 
+            <GridSplitter Grid.Row="1" Grid.Column="0" ResizeDirection="Columns" Width="1"  Margin="0,5"
+                          HorizontalAlignment="Right" VerticalAlignment="Stretch" />
             <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1"  Margin="5,0"
                           HorizontalAlignment="Stretch" VerticalAlignment="Top" />
             <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1" Margin="5,0"

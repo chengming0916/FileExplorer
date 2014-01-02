@@ -27,7 +27,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-            <ComboBox x:Name="ViewModes" Grid.Row="1" Grid.Column="1" 
+            <!--<ComboBox x:Name="ViewModes" Grid.Row="1" Grid.Column="1" 
                       SelectedValue="{Binding SelectedViewMode}" SelectedValuePath="ViewMode" 
                       VerticalAlignment="Bottom" 
                   Style="{StaticResource RadioCombo}" >
@@ -36,7 +36,7 @@
                         <Image Source="{Binding ViewModeIcon.Value}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
-            </ComboBox>
+            </ComboBox>-->
         
         <!--<ItemsControl DockPanel.Dock="Right" x:Name="ViewModes">
             <ItemsControl.ItemTemplate>

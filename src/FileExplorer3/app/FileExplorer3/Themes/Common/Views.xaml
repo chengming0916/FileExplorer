@@ -55,7 +55,17 @@
                              HorizontalContentAlignment="Left" >
     </uc:VirtualWrapPanelView>
 
-    
+    <uc:VirtualWrapPanelView x:Key="ListView"  
+                             ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}"
+                             SmallChanges="{Binding Path=ItemHeight, RelativeSource={RelativeSource Self}}"                             
+                             CacheItemCount="5"  
+                             ItemHeight="30"
+                             ItemWidth="250"
+                             Orientation="Vertical"
+                             ItemTemplate="{DynamicResource SmallIconItemTemplate}"
+                             ItemContainerStyle="{StaticResource SmallIconItemContainerStyle}"
+                             HorizontalContentAlignment="Left" >
+    </uc:VirtualWrapPanelView>
 
 
 </ResourceDictionary>

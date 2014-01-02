@@ -93,10 +93,12 @@ namespace FileExplorer.BaseControls
             }
         }
 
-     
+
         private bool execute(IList<UIEventProcessorBase> processors, Func<IUIEventProcessor, IScriptCommand> commandFunc,
             string eventName, object sender, RoutedEventArgs e)
         {
+            //if (eventName != "OnMouseMove")
+            //    Debug.WriteLine(eventName);
             UIParameterDic pd = new UIParameterDic() { EventArgs = e, EventName = eventName, Sender = sender };
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
                 processors.Select(p => commandFunc(p)).Where(c => c.CanExecute(pd)));
@@ -161,9 +163,13 @@ namespace FileExplorer.BaseControls
             if (e.ClickCount > 1)
                 return;
 
-            
             var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
-            if (scp == null )
+            if (scp == null ||
+                //ListViewEx contains ContentBelowHeader, allow placing other controls in it, this is to avoid that)
+                (!scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(e.OriginalSource as DependencyObject)) &&
+                //This is for handling user click in empty area of a panel.
+                 !(e.OriginalSource is ScrollViewer))
+                )
                 return;
 
             bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;
@@ -181,7 +187,7 @@ namespace FileExplorer.BaseControls
             AttachedProperties.SetIsMouseDragging(control, false);
             AttachedProperties.SetStartPosition(control, e.GetPosition(control));
             AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
-            
+
         }
 
         void Control_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -205,7 +211,7 @@ namespace FileExplorer.BaseControls
         }
 
         public void Control_MouseDrag(object sender, MouseEventArgs e)
-        {
+        {            
             FrameworkElement control = sender as FrameworkElement;
             AttachedProperties.SetIsMouseDragging(control, true);
             if (execute(_eventProcessors, p => p.OnMouseDrag, "OnMouseDrag ", sender, e))

@@ -69,7 +69,7 @@ namespace FileExplorer.Models
         
         private string _header;
         private int _priority;
-        private bool _isChecked, _isEnabled;
+        private bool _isChecked, _isEnabled, _isHeaderVisible = true;
         private object _parameter;        
 
         #endregion
@@ -85,6 +85,7 @@ namespace FileExplorer.Models
             get { return _headerImageFunc; } set { _headerImageFunc = value; NotifyOfPropertyChange(() => HeaderImageFunc); } }
         public string ToolTip { get { return _toolTip; } set { _toolTip = value; NotifyOfPropertyChange(() => ToolTip); } }
         public string Header { get { return _header; } set { _header = value; NotifyOfPropertyChange(() => Header); } }
+        public bool IsHeaderVisible { get { return _isHeaderVisible; } set { _isHeaderVisible = value; NotifyOfPropertyChange(() => IsHeaderVisible); } }
          public bool IsChecked { get { return _isChecked; } set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); } }
          public bool IsEnabled { get { return _isEnabled; } set { _isEnabled = value; NotifyOfPropertyChange(() => IsEnabled); } }
 
