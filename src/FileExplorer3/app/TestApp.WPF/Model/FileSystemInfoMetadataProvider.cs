@@ -24,12 +24,12 @@ namespace FileExplorer.Models
                 yield return new Metadata(DisplayType.Text, "", String.Format("{0} items selected", 
                     selectedModels.Count())) { IsHeader = true };
 
-                long size = 0;
-                foreach (var m in selectedModels)
-                    if (m is FileSystemInfoModel)
-                        size += (m as FileSystemInfoModel).Size;
-                if (size > 0)
-                    yield return new Metadata(DisplayType.Kb, "Size", size);
+                //long size = 0;
+                //foreach (var m in selectedModels)
+                //    if (m is FileSystemInfoModel)
+                //        size += (m as FileSystemInfoModel).Size;
+                //if (size > 0)
+                //    yield return new Metadata(DisplayType.Kb, "Size", size);
 
                 yield return new Metadata(DisplayType.Number, "Number", 10000);
                 yield return new Metadata(DisplayType.Percent, "Percent", 10);

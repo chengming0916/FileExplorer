@@ -18,7 +18,7 @@ using QuickZip.UserControls.Logic.Tools.IconExtractor;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoExProfile : IProfile
+    public class FileSystemInfoExProfile : ProfileBase
     {
         #region Constructor
 
@@ -95,6 +95,8 @@ namespace FileExplorer.Models
             {
                 new ExCommandProvider(this)
             };
+            DragDrop = new FileSystemInfoExDragDropHandler(this);
+            
         }
 
         #endregion
@@ -106,12 +108,8 @@ namespace FileExplorer.Models
             return obj is FileSystemInfoExProfile;
         }
 
-        public BaseControls.ISuggestSource GetSuggestSource()
-        {
-            return new ProfileSuggestionSource(this);
-        }
-
-        public IComparer<IEntryModel> GetComparer(ColumnInfo column)
+        
+        public override IComparer<IEntryModel> GetComparer(ColumnInfo column)
         {
             return new ValueComparer<IEntryModel>(p => p.FullPath);
         }
@@ -128,7 +126,7 @@ namespace FileExplorer.Models
             return new FileInfoEx(path);
         }
 
-        public Task<IEntryModel> ParseAsync(string path)
+        public override Task<IEntryModel> ParseAsync(string path)
         {
             IEntryModel retVal = null;
             if (DirectoryEx.Exists(path))
@@ -139,7 +137,7 @@ namespace FileExplorer.Models
             return Task.FromResult<IEntryModel>(retVal);
         }
 
-        public Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
+        public override Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
         {
             return Task.Factory.StartNew(() =>
                 {
@@ -158,7 +156,7 @@ namespace FileExplorer.Models
                 });
         }
 
-        public IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
+        public override IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
         {
             yield return GetDefaultIcon.Instance;
             yield return GetFromSystemImageList.Instance;
@@ -170,88 +168,13 @@ namespace FileExplorer.Models
                     yield return GetImageFromImageExtractor.Instance;
         }
 
-        public IDataObject GetDataObject(IEnumerable<IEntryModel> entries)
-        {
-            //var retVal = new FileDropDataObject(null);
-            //retVal.SetFileDropData(entries.Cast<FileSystemInfoExModel>()
-            //    .Select(m => new FileDrop(m.FullPath, m.IsDirectory)).ToArray());
-            var retVal = new DataObject();
-            retVal.SetData(
-                DataFormats.FileDrop,
-                entries.Cast<FileSystemInfoExModel>()
-                .Select(m => m.FullPath).ToArray());
-            return retVal;            
-        }
 
-        public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
-        {
-            return DragDropEffects.Copy | DragDropEffects.Move;
-        }
-
-        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)
-        {
-
-        }
-
-
-
-
-        public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
-        {
-            if (dataObject.GetDataPresent(DataFormats.FileDrop))
-            {
-                string[] fileNameList = dataObject.GetData(DataFormats.FileDrop) as string[];                
-                foreach (var fn in fileNameList)
-                {
-                    FileSystemInfoExModel vm;
-                    try
-                    {
-                        vm = new FileSystemInfoExModel(this, FileSystemInfoEx.FromString(fn));
-                    }
-                    catch
-                    {
-                        vm = null;
-                    }
-
-                    if (vm != null)
-                        yield return vm;
-                }
-            }
-        }
-
-        public bool QueryCanDrop(IEntryModel destDir)
-        {
-            return (destDir as FileSystemInfoExModel).IsDirectory;
-        }
-
-        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
-        {
-            if ((destDir as FileSystemInfoExModel).IsDirectory)
-                return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
-            else return QueryDropResult.None;
-        }
-
-
-        public DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffects allowedEffects)
-        {
-            MessageBox.Show(
-                String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
-                entries.Count(), PathEx.GetFileName(destDir.FullPath), allowedEffects));
-            return DragDropEffects.None;
-        }
-
-        public Task<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
+        public override Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest)
         {
             throw new NotImplementedException();
         }
 
-
-        public Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Rename(IEntryModel source, string newName)
+        public override Task<bool> RenameAsync(IEntryModel source, string newName)
         {
             throw new NotImplementedException();
         }
@@ -268,14 +191,6 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
-
-        public string RootDisplayName
-        {
-            get { return "Root"; }
-        }
-        public IEntryHierarchyComparer HierarchyComparer { get; private set; }
-        public IMetadataProvider MetadataProvider { get; private set; }
-        public IEnumerable<ICommandProvider> CommandProviders { get; private set; }
         
 
         #endregion

@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels
                 .Select(r => new BreadcrumbItemViewModel(events, this, r, null)).ToArray());
 
 
-            SuggestSources = _profiles.Select(p => p.GetSuggestSource());
+            SuggestSources = _profiles.Select(p => p.SuggestSource);
 
          
         }

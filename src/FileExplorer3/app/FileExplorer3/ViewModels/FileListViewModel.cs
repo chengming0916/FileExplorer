@@ -32,7 +32,7 @@ namespace FileExplorer.ViewModels
 #if !WINRT
     [Export(typeof(FileListViewModel))]
 #endif
-    public class FileListViewModel : ViewAware, IFileListViewModel,
+    public class FileListViewModel : PropertyChangedBase, IFileListViewModel,
         IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDragHelper, ISupportDropHelper
     {
 
@@ -41,9 +41,9 @@ namespace FileExplorer.ViewModels
         {
             public FileListDropHelper(FileListViewModel flvm)
                 : base(() => flvm.CurrentDirectory.Label,
-                (ems, eff) => flvm.CurrentDirectory.Profile.QueryDrop(ems, flvm.CurrentDirectory, eff),
-                    da => flvm.CurrentDirectory.Profile.GetEntryModels(da),
-                (ems, da, eff) => flvm.CurrentDirectory.Profile.OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
+                (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop.QueryDrop(ems, flvm.CurrentDirectory, eff),
+                    da => flvm.CurrentDirectory.Profile.DragDrop.GetEntryModels(da),
+                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop.OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
             { }
 
         }
@@ -52,9 +52,9 @@ namespace FileExplorer.ViewModels
             public FileListDragHelper(FileListViewModel flvm)
                 : base(
                 () => flvm.Selection.SelectedItems.ToArray(),
-                ems => ems.First().Profile.QueryDrag(ems),
-                ems => ems.First().Profile.GetDataObject(ems),
-                (ems, da, eff) => ems.First().Profile.OnDragCompleted(ems, da, eff)
+                ems => ems.First().Profile.DragDrop.QueryDrag(ems),
+                ems => ems.First().Profile.DragDrop.GetDataObject(ems),
+                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }
@@ -137,13 +137,9 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        protected override void OnViewAttached(object view, object context)
+        private IEnumerable<ICommand> getExportedCommands()
         {
-            base.OnViewAttached(view, context);
-
-            UserControl uc = view as UserControl;
-            CommandsHelper.RegisterCommand(uc);
-            Selection.RegisterCommand(uc);
+            return CommandsHelper.ExportedCommands.Union(Selection.ExportedCommands);            
         }
 
         public void SignalChangeDirectory(IEntryModel newDirectory)
@@ -180,7 +176,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
 
         public ICommandsHelper CommandsHelper { get; private set; }
-
+        public IEnumerable<ICommand> ExportedCommands { get { return getExportedCommands(); } }
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
         public IEventAggregator Events { get; private set; }
@@ -231,17 +227,6 @@ namespace FileExplorer.ViewModels
 
 
         #endregion
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

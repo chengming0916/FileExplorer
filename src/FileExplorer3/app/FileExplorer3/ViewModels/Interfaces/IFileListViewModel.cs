@@ -12,7 +12,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IFileListViewModel
+    public interface IFileListViewModel : ICommandContainer
     {
         /// <summary>
         /// Return available commands for current filelist.

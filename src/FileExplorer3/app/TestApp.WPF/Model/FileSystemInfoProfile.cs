@@ -14,7 +14,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoProfile : IProfile
+    public class FileSystemInfoProfile : ProfileBase
     {
         #region Cosntructor
 
@@ -23,6 +23,7 @@ namespace FileExplorer.Models
             HierarchyComparer = PathComparer.Default;
             MetadataProvider = new FileSystemInfoExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
+
         }
 
         #endregion
@@ -32,11 +33,6 @@ namespace FileExplorer.Models
         public override bool Equals(object obj)
         {
             return obj is FileSystemInfoProfile;
-        }
-
-        public BaseControls.ISuggestSource GetSuggestSource()
-        {
-            return new ProfileSuggestionSource(this);
         }
 
         public IComparer<IEntryModel> GetComparer(ColumnInfo column)
@@ -56,7 +52,7 @@ namespace FileExplorer.Models
             return new FileInfo(path);
         }
 
-        public Task<IEntryModel> ParseAsync(string path)
+        public override Task<IEntryModel> ParseAsync(string path)
         {
             IEntryModel retVal = null;
             if (Directory.Exists(path))
@@ -67,7 +63,7 @@ namespace FileExplorer.Models
             return Task.FromResult<IEntryModel>(retVal);
         }
 
-        public Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
+        public override Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
         {
             List<IEntryModel> retVal = new List<IEntryModel>();
             if (entry.IsDirectory)
@@ -76,50 +72,7 @@ namespace FileExplorer.Models
                 retVal.AddRange(from fsi in di.GetFileSystemInfos() select new FileSystemInfoModel(this, fsi));
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
-        }
-
-        public IDataObject GetDataObject(IEnumerable<IEntryModel> entries)
-        {            
-            var retVal = new DataObject();
-            retVal.SetData(
-               DataFormats.FileDrop,
-               entries.Cast<FileSystemInfoModel>()
-               .Select(m => m.FullPath).ToArray());
-            return retVal;            
-        }
-
-        public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
-        {
-            return DragDropEffects.Copy;
-        }
-
-        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)
-        {
-
-        }
-
-
-        public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
-        {
-            yield break; ;
-        }
-
-        public bool QueryCanDrop(IEntryModel destDir)
-        {
-            return (destDir as FileSystemInfoModel).IsDirectory;
-        }
-
-
-        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
-        {
-            return QueryDropResult.None;
-        }
-
-        public DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffects allowedEffects)
-        {
-            throw new NotImplementedException();
-        }
-
+        }      
 
         private Icon getFolderIcon()
         {
@@ -128,7 +81,7 @@ namespace FileExplorer.Models
         }
 
 
-        public IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
+        public override IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
         {
             yield return GetDefaultIcon.Instance;
             if (entry.IsDirectory)
@@ -155,29 +108,12 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
-        public string RootDisplayName
-        {
-            get { return "Root"; }
-        }
-        public IEntryHierarchyComparer HierarchyComparer { get; private set; }
-        public IMetadataProvider MetadataProvider { get; private set; }
-        public IEnumerable<ICommandProvider> CommandProviders { get; private set; }
-
+    
         #endregion
 
 
 
 
-
-        public Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IProfile.Rename(IEntryModel source, string newName)
-        {
-            throw new NotImplementedException();
-        }
 
 
 
