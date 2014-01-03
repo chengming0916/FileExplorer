@@ -14,8 +14,7 @@
     <!--Grid View-->
     
     <GridView x:Key="GridView"
-        ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}" >
-        <!--<GridViewColumn Width="200" Header="Label"  CellTemplate="{StaticResource GridLabelTemplate}" />-->
+        ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}" >        
     </GridView>
 
     <!--Icon View-->
@@ -66,6 +65,7 @@
                              ItemContainerStyle="{StaticResource SmallIconItemContainerStyle}"
                              HorizontalContentAlignment="Left" >
     </uc:VirtualWrapPanelView>
+
 
 
 </ResourceDictionary>

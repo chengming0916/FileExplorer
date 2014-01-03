@@ -28,9 +28,9 @@ namespace FileExplorer.ViewModels
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
                 () => new [] { selection.RootSelector.SelectedViewModel },
-                ems => ems.First().Profile.QueryDrag(ems),
-                ems => ems.First().Profile.GetDataObject(ems),
-                (ems, da, eff) => ems.First().Profile.OnDragCompleted(ems,da, eff) 
+                ems => ems.First().Profile.DragDrop.QueryDrag(ems),
+                ems => ems.First().Profile.DragDrop.GetDataObject(ems),
+                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff) 
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

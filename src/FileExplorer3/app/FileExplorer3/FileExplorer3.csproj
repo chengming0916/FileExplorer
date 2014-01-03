@@ -89,6 +89,9 @@
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />
+    <Compile Include="Models\IDragDropHandler.cs" />
+    <Compile Include="Models\NullDragDropHandler.cs" />
+    <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="Utils\SimpleRoutedCommand.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\FileListCommandsHelper.cs" />
+    <Compile Include="ViewModels\FileListScriptCommands.cs" />
     <Compile Include="ViewModels\Helpers\CommandsHelper.cs" />
     <Compile Include="ViewModels\Interfaces\ICommandViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IExportCommand.cs" />
@@ -563,6 +567,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\Common\BrushUpdate.txt" />
+    <Resource Include="Themes\Resources\ViewMode\flip_16.png" />
     <Content Include="ViewModels\Helpers\Selector.html" />
     <Resource Include="Themes\Resources\folder.ico" />
     <Resource Include="Themes\Resources\file.ico" />

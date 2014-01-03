@@ -13,19 +13,17 @@ using FileExplorer.Defines;
 using FileExplorer.BaseControls;
 using System.Windows;
 using FileExplorer.ViewModels.Helpers;
+using Cofe.Core.Script;
 
 namespace FileExplorer.Models
 {
    
     public interface IProfile
     {
-        #region Cosntructor
         
-        #endregion
-
         #region Methods
 
-        ISuggestSource GetSuggestSource();
+        
 
         IComparer<IEntryModel> GetComparer(ColumnInfo column);
 
@@ -38,25 +36,6 @@ namespace FileExplorer.Models
 
         Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
 
-
-        #region Drag and Drop
-
-        IDataObject GetDataObject(IEnumerable<IEntryModel> entries);
-
-        DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries);
-
-        void OnDragCompleted(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects effect);
-
-        IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject);        
-
-        bool QueryCanDrop(IEntryModel dest);
-        QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel dest, DragDropEffects allowedEffects);        
-        DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffects allowedEffects);
-
-        #endregion
-
-        //Task<ImageSource> GetIconAsync(IEntryModel entry, int size);
-
         /// <summary>
         /// Return the sequence of icon is extracted and returned, EntryViewModel will run each extractor 
         /// and set Icon to it's GetIconForModel() result.
@@ -68,24 +47,6 @@ namespace FileExplorer.Models
 
         string RootDisplayName { get; }
 
-        /// <summary>
-        /// Transfer the source entries to dest directory.
-        /// </summary>
-        /// <param name="mode"></param>
-        /// <param name="source"></param>
-        /// <param name="dest"></param>
-        /// <returns></returns>
-        Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest);        
-
-        /// <summary>
-        /// Rename an entry.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="newName"></param>
-        /// <returns></returns>
-        Task<bool> Rename(IEntryModel source, string newName);
-        //IResult<ImageSource> GetIcon();
-        
         #endregion
 
         #region Data
@@ -97,6 +58,9 @@ namespace FileExplorer.Models
         IEntryHierarchyComparer HierarchyComparer { get; }
         IMetadataProvider MetadataProvider { get; }
         IEnumerable<ICommandProvider> CommandProviders { get; }
+        ISuggestSource SuggestSource { get; }
+        IDragDropHandler DragDrop { get; }
+
         
         #endregion
     }

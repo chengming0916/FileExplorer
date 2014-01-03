@@ -29,7 +29,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="IconOnlyTemplate">
-        <Image Source="{Binding Icon, Mode=OneWay}"  />
+        <Image Source="{Binding Icon, Mode=OneWay}" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />        
     </DataTemplate>
 
     <DataTemplate x:Key="IconItemTemplate">
@@ -97,7 +97,7 @@
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Stretch" Stretch="Uniform">
             <TextBlock Text="{Binding EntryModel.Label}" 
                    Padding="2,0" />
-        </Viewbox>        
+        </Viewbox>
     </HierarchicalDataTemplate>
 
 

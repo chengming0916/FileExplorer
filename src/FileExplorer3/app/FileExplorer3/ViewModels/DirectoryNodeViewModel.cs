@@ -30,7 +30,7 @@ namespace FileExplorer.ViewModels
                 var profiles = selection.RootSelector.EntryHelper.All.Select(rvm => rvm.EntryModel.Profile);
                 foreach (var p in profiles)
                 {
-                    var retVal = p.GetEntryModels(da);
+                    var retVal = p.DragDrop.GetEntryModels(da);
                     if (retVal != null)
                         return retVal;
                 }
@@ -43,9 +43,9 @@ namespace FileExplorer.ViewModels
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
                 () => curDir.Label,
-                (ems, eff) => curDir.Profile.QueryDrop(ems, curDir, eff),                
-                da => dataObjectFunc(da, selection),                
-                (ems, da, eff) => curDir.Profile.OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
+                (ems, eff) => curDir.Profile.DragDrop.QueryDrop(ems, curDir, eff),                
+                da => dataObjectFunc(da, selection),
+                (ems, da, eff) => curDir.Profile.DragDrop.OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
             { }
         }
         #endregion

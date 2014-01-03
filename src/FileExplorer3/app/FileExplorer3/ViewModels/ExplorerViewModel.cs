@@ -54,6 +54,13 @@ namespace FileExplorer.ViewModels
             }
         }
 
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            var uiEle = view as System.Windows.UIElement;
+            FileList.RegisterCommand(uiEle);
+        }
+
         public void ChangeView(string viewMode)
         {
             FileList.ViewMode = viewMode;

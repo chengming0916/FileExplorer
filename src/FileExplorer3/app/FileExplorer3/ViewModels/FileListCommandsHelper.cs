@@ -184,12 +184,12 @@ namespace FileExplorer.ViewModels
             : base(rootProfiles, new SelectGroupCommand(flvm), new ViewModeCommand(flvm), new SeparatorCommandModel())
         {
             events.Subscribe(this);
+            _flvm = flvm;
             OpenDirectoryCommand = new SimpleCommand()
             {
                 UICommand = ApplicationCommands.Open,
-                CanExecuteDelegate = (e) => 
-                    flvm.Selection.SelectedItems.Count() == 1 && flvm.Selection.SelectedItems[0].EntryModel.IsDirectory,
-                ExecuteDelegate = (e) => flvm.SignalChangeDirectory(flvm.Selection.SelectedItems[0].EntryModel)
+                CanExecuteDelegate = (e) => CanOpenDirectory,                    
+                ExecuteDelegate = (e) => OpenDirectory()
             };
 
             ToggleCheckBoxCommand = new SimpleCommand() {
@@ -237,11 +237,19 @@ namespace FileExplorer.ViewModels
             AppliedModels = new IEntryModel[] { _currentDirectoryModel };
         }
 
+        public bool CanOpenDirectory { get { return _flvm.Selection.SelectedItems.Count() == 1 
+            && _flvm.Selection.SelectedItems[0].EntryModel.IsDirectory; } }
+
+        public void OpenDirectory()
+        {
+            _flvm.SignalChangeDirectory(_flvm.Selection.SelectedItems[0].EntryModel);
+        }
 
         #endregion
 
         #region Data
 
+        IFileListViewModel _flvm = null;
         IEntryModel _currentDirectoryModel = null;
 
         #endregion
