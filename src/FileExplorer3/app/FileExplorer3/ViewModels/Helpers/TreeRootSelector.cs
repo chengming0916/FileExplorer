@@ -88,8 +88,10 @@ namespace FileExplorer.ViewModels.Helpers
             if (path != null && path.Count() > 0)
             {
                 foreach (var p in path.Reverse())
+                {                    
                     if (!(this.EntryHelper.AllNonBindable.Contains(p.ViewModel)))
                         _rootItems.Add(p.ViewModel);
+                }
                 _rootItems.Add(default(VM)); //Separator
             }
 
