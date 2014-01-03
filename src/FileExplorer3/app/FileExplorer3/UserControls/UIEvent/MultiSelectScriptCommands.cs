@@ -627,31 +627,22 @@ namespace FileExplorer.BaseControls.MultiSelect
                 returnSelected = (idx, item) => selectedList.Contains(item);
 
 
-            if (isISelectable)
-            {
-                updateSelected =
-                    (idx, vm, item) =>
-                        (vm as ISelectable).IsSelected = returnSelected(idx, item);
+            if (isISelectable)            
+                updateSelected = (idx, vm, item) => (vm as ISelectable).IsSelected = returnSelected(idx, item);            
+            else            
+                updateSelected = (idx, vm, item) => returnSelected(idx, item);            
 
-                for (int i = 0; i < ic.Items.Count; i++)
-                {
-                    updateSelected(i, ic.Items[i], null);
-                }
-            }
-            else
+            for (int i = 0; i < ic.Items.Count; i++)
             {
-                updateSelected = (idx, vm, item) => returnSelected(idx, item);
-
-                for (int i = 0; i < ic.Items.Count; i++)
+                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                if (isISelectable || item != null)
                 {
-                    DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
                     if (item != null)
-                    {
                         AttachedProperties.SetIsSelecting(item, false);
-                        updateSelected(i, ic.Items[i], item);
-                    }
+                    updateSelected(i, ic.Items[i], item);
                 }
             }
+
 
             return new DetachAdorner();
         }

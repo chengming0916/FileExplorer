@@ -63,7 +63,14 @@ namespace FileExplorer.ViewModels
 
             _sbox = (view as UserControl).FindName("sbox") as SuggestBoxBase;
             _switch = (view as UserControl).FindName("switch") as FileExplorer.BaseControls.Switch;
+            _bexp = (view as UserControl).FindName("bexp") as DropDownList;
 
+            _bexp.AddValueChanged(ComboBox.SelectedValueProperty, (o, e) =>
+            {
+                IEntryViewModel evm = _bexp.SelectedItem as IEntryViewModel;
+                if (evm != null)
+                    BroadcastDirectoryChanged(evm);
+            });
 
             _switch.AddValueChanged(FileExplorer.BaseControls.Switch.IsSwitchOnProperty, (o, e) =>
                 {
@@ -134,6 +141,7 @@ namespace FileExplorer.ViewModels
         private IEventAggregator _events;
         private FileExplorer.BaseControls.Switch _switch;
         private SuggestBoxBase _sbox;
+        private DropDownList _bexp;
         //private bool _updatingSuggestBox = false;
 
         #endregion
