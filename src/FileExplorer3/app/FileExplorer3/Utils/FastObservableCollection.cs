@@ -61,6 +61,36 @@ namespace FileExplorer.Utils
             }
         }
 
+        public void ReplaceItems(IList items)
+        {
+            this.SuspendCollectionChangeNotification();
+            try
+            {
+                while (Count > items.Count)
+                    RemoveAt(Count - 1);
+
+                for (int i = 0; i < items.Count; i++)
+                {
+                    if (i < Count)
+                        SetItem(i, (T)items[i]);
+                    else InsertItem(Count, (T)items[i]);
+                }
+
+                //foreach (var i in items)
+                //{
+                //    InsertItem(Count, (T)i);
+                //}
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException("Please check the type of item.", ex);
+            }
+            finally
+            {
+                this.NotifyChanges();
+            }
+        }
+
         /// <summary>
         /// Raises collection change event.
         /// </summary>

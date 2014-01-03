@@ -226,6 +226,7 @@ namespace FileExplorer.ViewModels.Helpers
                 SetIsSelected(false);
                 NotifyOfPropertyChanged(() => IsSelected);
                 OnChildSelected(value);
+                EntryHelper.IsExpanded = false;
             }
         }
 

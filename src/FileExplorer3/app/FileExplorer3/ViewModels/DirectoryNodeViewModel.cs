@@ -78,8 +78,8 @@ namespace FileExplorer.ViewModels
 
             _events = events;
             _rootModel = rootModel;
-            
-            Entries = new EntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask);
+
+            Entries = new EntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask) { ClearBeforeLoad = true };
             Selection = new TreeSelector<IDirectoryNodeViewModel, IEntryModel>(curDirModel, this, 
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
             DropHelper = new DirectoryNodeDropHelper(curDirModel, Entries, Selection);
