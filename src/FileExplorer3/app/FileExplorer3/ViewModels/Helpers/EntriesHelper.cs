@@ -48,16 +48,18 @@ namespace FileExplorer.ViewModels.Helpers
             {
                 if (!_isLoaded || force) //NotLoaded
                 {
-                    _isLoaded = true;    
-                    All.Clear();                                        
+                    _isLoaded = true;
+                    
+                    if (_clearBeforeLoad)
+                        All.Clear();                                        
                     await _loadSubEntryFunc().ContinueWith(prevTask =>
-                        {
-                            _subItemList = prevTask.Result.ToList();
+                        {                            
                             //bool uiThread = System.Threading.Thread.CurrentThread == System.Windows.Threading.Dispatcher.CurrentDispatcher.Thread;
-                            (All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
+                            //(All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
+                            SetEntries(prevTask.Result.ToArray());
                         }, TaskScheduler.FromCurrentSynchronizationContext());
-                    if (EntriesChanged != null)
-                        EntriesChanged(this, EventArgs.Empty);
+                    //if (EntriesChanged != null)
+                    //    EntriesChanged(this, EventArgs.Empty);
                 }
             }
             return _subItemList;
@@ -65,19 +67,26 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void SetEntries(params VM[] viewModels)
         {
-            All.Clear();
-            foreach (var vm in viewModels)
-                All.Add(vm);
             _subItemList = viewModels.ToList();
+
+            FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
+            all.SuspendCollectionChangeNotification();
+            all.Clear();
+            //foreach (var vm in viewModels)
+            //    All.Add(vm);
+            all.AddItems(viewModels);
+            all.NotifyChanges();
+            
             if (EntriesChanged != null)
                 EntriesChanged(this, EventArgs.Empty);
-            _isExpanded = true;
+            //_isExpanded = true;
         }
 
         #endregion
 
         #region Data
 
+        private bool _clearBeforeLoad = false;
         private readonly AsyncLock loadingLock = new AsyncLock();
         //private bool _isLoading = false;
         private bool _isLoaded = false;
@@ -89,6 +98,12 @@ namespace FileExplorer.ViewModels.Helpers
         #endregion
 
         #region Public Properties
+
+        public bool ClearBeforeLoad
+        {
+            get { return _clearBeforeLoad; }
+            set { _clearBeforeLoad = value; }
+        }
 
         public bool IsExpanded
         {
