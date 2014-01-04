@@ -8,7 +8,7 @@ namespace Cofe.Core.Script
 {
     public static class ScriptRunnerSources
     {
-        public static IScriptRunnerSource Null = new NullScriptRunnerSource();
+        public static IScriptRunnerSource Default = new NullScriptRunnerSource();
     }
 
     public class NullScriptRunnerSource : IScriptRunnerSource

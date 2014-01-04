@@ -10,10 +10,11 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : ViewAware, IExplorerViewModel, IHandle<SelectionChangedEvent>
+    public class ExplorerViewModel : PropertyChangedBase, IExplorerViewModel, IHandle<SelectionChangedEvent>, IScriptCommandContainer
     {
         #region Cosntructor
 
@@ -41,6 +42,10 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
+        private IEnumerable<IScriptCommandBinding> getExportedCommands()
+        {
+            return FileList.ExportedCommandBindings;
+        }
 
         public void Go(string gotoPath)
         {
@@ -57,13 +62,7 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        protected override void OnViewAttached(object view, object context)
-        {
-            base.OnViewAttached(view, context);
-            var uiEle = view as System.Windows.UIElement;
-            FileList.RegisterCommand(uiEle);
-        }
-
+      
         public void ChangeView(string viewMode)
         {
             FileList.ViewMode = viewMode;
@@ -94,6 +93,7 @@ namespace FileExplorer.ViewModels
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
 
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
 
         #endregion
     }

@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels
         /// <summary>
         /// Return available commands for current filelist.
         /// </summary>
-        ICommandsHelper CommandsHelper { get; }
+        IFileListCommandsHelper CommandsHelper { get; }
         
         /// <summary>
         /// Load entries and apply filters.

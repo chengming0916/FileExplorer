@@ -175,7 +175,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public ICommandsHelper CommandsHelper { get; private set; }
+        public IFileListCommandsHelper CommandsHelper { get; private set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }

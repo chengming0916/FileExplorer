@@ -10,6 +10,8 @@ using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.ViewModels;
 using FileExplorer;
+using FileExplorer.Utils;
+using Cofe.Core.Script;
 
 namespace TestApp.WPF
 {
@@ -32,6 +34,16 @@ namespace TestApp.WPF
                 profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result
                 //profile.ParseAsync(rootPath).Result
                 );
+
+
+            ExplorerModel.FileList.CommandsHelper.Open.ScriptCommand =
+                new IfFileListSelection(evm => evm.Count == 1,
+                    new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
+                        new OpenSelectedDirectory(),  //Selected directory
+                        new OpenSelectedFileEx()),   //Selected non-directory
+                    ResultCommand.NoError //Selected more than one item.
+                    );
+
 
 
             ExplorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
@@ -57,6 +69,14 @@ namespace TestApp.WPF
         #endregion
 
         #region Methods
+
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            var uiEle = view as System.Windows.UIElement;
+            ExplorerModel.RegisterCommand(uiEle);
+        }
+
 
         //public IEnumerable<IResult> Load()
         //{
