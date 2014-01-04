@@ -42,7 +42,7 @@
                        >            
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
-                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAllCommand}" />
+                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />

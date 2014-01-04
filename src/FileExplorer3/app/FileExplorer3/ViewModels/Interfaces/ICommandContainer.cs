@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
     /// <summary>
     /// Indicate the view model contains a number of ICommands.
     /// </summary>
-    public interface ICommandContainer
+    public interface IScriptCommandContainer
     {
-        IEnumerable<ICommand> ExportedCommands { get; }
+        IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; }
     }
 
     

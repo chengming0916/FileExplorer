@@ -62,36 +62,5 @@ namespace FileExplorer.Models
         
         #endregion
 
-               
-
-       
-
-        
-
-        
-
-       
-
-        public virtual Task<IEnumerable<IEntryModel>> TransferAsync(Defines.TransferMode mode, IEntryModel[] source, IEntryModel dest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> RenameAsync(IEntryModel source, string newName)
-        {
-            throw new NotImplementedException();
-        }
-
-       
-
-        public Cofe.Core.Script.IScriptCommand OnOpenDirectory
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public Cofe.Core.Script.IScriptCommand OnOpenItem
-        {
-            get { throw new NotImplementedException(); }
-        }
     }
 }

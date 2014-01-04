@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Cofe.Core.Script
-{    
+{
+
     public abstract class ScriptCommandBase : IScriptCommand
     {
-       
+
 
         #region Constructor
 
@@ -25,7 +27,7 @@ namespace Cofe.Core.Script
 
             _nextCommand = nextCommand;
         }
-        
+
         #endregion
 
         #region Methods
@@ -41,19 +43,19 @@ namespace Cofe.Core.Script
         {
             return true;
         }
-        
+
         #endregion
 
         #region Data
 
         protected IScriptCommand _nextCommand;
-        
+
         #endregion
 
         #region Public Properties
 
         public string CommandKey { get; private set; }
-        public string[] CommandParameters { get; private set; }        
+        public string[] CommandParameters { get; private set; }
 
         #endregion
 
@@ -61,4 +63,6 @@ namespace Cofe.Core.Script
 
 
     }
+
+    
 }

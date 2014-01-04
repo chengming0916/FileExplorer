@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Cinch;
 using FileExplorer.Defines;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels.Helpers
 {
@@ -21,8 +22,12 @@ namespace FileExplorer.ViewModels.Helpers
             EntryHelper = entryHelper;
             EntryHelper.EntriesChanged += (o, e) => { notifySelectionChanged(); };
             
-            UnselectAllCommand = new SimpleCommand() { UICommand = FileListCommands.UnselectAll, ExecuteDelegate = (param) => UnselectAll() };
-            SelectAllCommand = new SimpleCommand() { UICommand = ApplicationCommands.SelectAll, ExecuteDelegate = (param) => SelectAll() };
+            UnselectAll = new ScriptCommandBinding(FileListCommands.UnselectAll, p => true, p => unselectAll());
+            SelectAll = new ScriptCommandBinding(ApplicationCommands.SelectAll, p => true, p => selectAll());
+            ExportedCommandBindings = new List<IScriptCommandBinding>()
+            {
+                UnselectAll, SelectAll                
+            };
         }
 
         #endregion
@@ -36,17 +41,17 @@ namespace FileExplorer.ViewModels.Helpers
                 SelectionChanged(this, EventArgs.Empty);
         }
 
-        public void UnselectAll()
+        private void unselectAll()
         {
             foreach (var e in EntryHelper.AllNonBindable.ToList())
                 e.IsSelected = false;
             notifySelectionChanged();
         }
 
-        public void SelectAll()
+        private void selectAll()
         {
             if (SelectedItems.Count() == EntryHelper.AllNonBindable.Count())
-                UnselectAll();
+                unselectAll();
             else
             {
                 foreach (var e in EntryHelper.AllNonBindable.ToList())
@@ -105,15 +110,14 @@ namespace FileExplorer.ViewModels.Helpers
 
         public event EventHandler SelectionChanged;
 
-        public ICommand UnselectAllCommand { get; private set; }
-        public ICommand SelectAllCommand { get; private set; }
+        public IScriptCommandBinding UnselectAll { get; private set; }
+        public IScriptCommandBinding SelectAll { get; private set; }
 
-        public IEnumerable<ICommand> ExportedCommands
-        {
-            get { return new [] { UnselectAllCommand, SelectAllCommand }; }
-        }
-
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; private set; }
+        
         #endregion
+
+
 
 
 

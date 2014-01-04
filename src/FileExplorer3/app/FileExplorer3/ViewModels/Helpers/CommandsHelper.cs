@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
+using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ICommandsHelper : ICommandContainer
+    public interface ICommandsHelper : IScriptCommandContainer
     {
         IEntryModel[] AppliedModels { get; }
         EntriesHelper<ICommandViewModel> Commands { get; }        
@@ -26,7 +28,8 @@ namespace FileExplorer.ViewModels.Helpers
         {
             _extraCommands = extraCommands;
             _rootProfiles = rootProfiles;
-            Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);                        
+            Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
+            ParameterDicConverter = ParameterDicConverters.ConvertParameterOnly;         
         }
 
         #endregion
@@ -65,7 +68,7 @@ namespace FileExplorer.ViewModels.Helpers
         IEntryModel[] _appliedModels = null;        
         IProfile[] _rootProfiles = null;
         private ICommandModel[] _extraCommands;
-        protected List<ICommand> _exportedCommands = new List<ICommand>();
+        protected List<IScriptCommandBinding> _exportedCommandBindings = new List<IScriptCommandBinding>();
 
         #endregion
 
@@ -74,13 +77,16 @@ namespace FileExplorer.ViewModels.Helpers
         public IEntryModel[] AppliedModels { get { return _appliedModels; } 
             set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels);  } }
         public EntriesHelper<ICommandViewModel> Commands { get; private set; }
+        public IParameterDicConverter ParameterDicConverter { get; protected set; }
 
-        public IEnumerable<ICommand> ExportedCommands
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings
         {
-            get { return _exportedCommands; }
+            get { return _exportedCommandBindings; }
         }
 
         #endregion
+
+
 
 
 

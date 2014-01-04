@@ -12,7 +12,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IFileListViewModel : ICommandContainer
+    public interface IFileListViewModel : IScriptCommandContainer
     {
         /// <summary>
         /// Return available commands for current filelist.
@@ -42,6 +42,7 @@ namespace FileExplorer.ViewModels
         bool IsCheckBoxVisible { get; set; }
 
         void SignalChangeDirectory(IEntryModel newDirectory);
+
         
     }
 }

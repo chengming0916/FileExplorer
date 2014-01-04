@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Cofe.Core;
+using Cofe.Core.Script;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 
@@ -19,6 +21,7 @@ namespace FileExplorer.ViewModels
         {
             _events = events;
             _rootModels = rootModels;
+            
             var rootProfiles = _rootModels.Select(m => m.Profile).Distinct().ToArray();
 
             Toolbar = new ToolbarViewModel(events);
@@ -32,7 +35,7 @@ namespace FileExplorer.ViewModels
 
             _internalEvents.Subscribe(this);
         }
-            
+
 
         #endregion
 
@@ -45,7 +48,7 @@ namespace FileExplorer.ViewModels
             {
                 var model = evm.Profile.ParseAsync(gotoPath).Result;
                 if (model != null)
-                {                    
+                {
                     DirectoryTree.SelectAsync(model);
                     FileList.SetCurrentDirectoryAsync(model);
                     Breadcrumb.Selection.AsRoot().SelectAsync(model);
@@ -68,14 +71,14 @@ namespace FileExplorer.ViewModels
 
         public void Handle(SelectionChangedEvent message)
         {
-           
+
         }
 
 
         #endregion
 
         #region Data
-
+        
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();
@@ -90,7 +93,7 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
-        
+
 
         #endregion
     }
