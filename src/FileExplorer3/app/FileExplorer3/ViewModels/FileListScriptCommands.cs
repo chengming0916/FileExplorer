@@ -3,11 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
+using FileExplorer.BaseControls;
+using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels
 {
+    public class IfFileList : IfScriptCommand
+    {
+        public IfFileList(Func<IFileListViewModel, bool> condition, IScriptCommand ifTrueCommand,
+            IScriptCommand otherwiseCommand)
+            : base(pd =>
+                {
+                    if (!pd.ContainsKey("FileList"))
+                        return false;
+                    IFileListViewModel flvm = pd["FileList"] as IFileListViewModel;
+                    return condition(flvm);
+                }, ifTrueCommand, otherwiseCommand)
+        {
+
+        }
+
+    }
+
+    public class IfFileListSelection : IfFileList
+    {
+        public IfFileListSelection(Func<IList<IEntryViewModel>, bool> condition, IScriptCommand ifTrueCommand,
+            IScriptCommand otherwiseCommand)
+            : base(flvm => condition(flvm.Selection.SelectedItems), ifTrueCommand, otherwiseCommand)
+        {
+
+        }
+    }
+
+    
+
     public class OpenSelectedDirectory : ScriptCommandBase
     {
         public OpenSelectedDirectory()
@@ -31,8 +63,11 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.Error(new KeyNotFoundException("FileList"));
 
             IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
+            IEventAggregator events = pm["Events"] as IEventAggregator;
 
-            flvm.SignalChangeDirectory(flvm.Selection.SelectedItems[0].EntryModel);
+            var newDirectory = flvm.Selection.SelectedItems[0].EntryModel;
+            events.Publish(new DirectoryChangedEvent(flvm,
+                   newDirectory, flvm.CurrentDirectory));            
 
             return ResultCommand.OK;
         }

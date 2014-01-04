@@ -16,7 +16,7 @@ namespace FileExplorer.Defines
         public string ViewMode { get; set; }
         public string OldViewMode { get; set; }
 
-        public ViewChangedEvent(PropertyChangedBase sender, string viewMode, string oldViewMode)
+        public ViewChangedEvent(object sender, string viewMode, string oldViewMode)
             : base(sender)
         {
             ViewMode = viewMode;
@@ -26,9 +26,9 @@ namespace FileExplorer.Defines
 
     public class ViewModelEvent
     {
-        public PropertyChangedBase Sender { get; private set; }
+        public object Sender { get; private set; }
 
-        public ViewModelEvent(PropertyChangedBase sender)
+        public ViewModelEvent(object sender)
         {
             Sender = sender;
         }
@@ -42,14 +42,14 @@ namespace FileExplorer.Defines
         public IEntryModel NewModel { get { return NewViewModel == null ? null : NewViewModel.EntryModel; } }
 
 
-        public DirectoryChangedEvent(PropertyChangedBase sender, IEntryViewModel newVM, IEntryViewModel originalVM)
+        public DirectoryChangedEvent(object sender, IEntryViewModel newVM, IEntryViewModel originalVM)
             : base(sender)
         {
             NewViewModel = newVM;
             OriginalViewModel = originalVM;
         }
 
-        public DirectoryChangedEvent(PropertyChangedBase sender, IEntryModel newM, IEntryModel originalM)
+        public DirectoryChangedEvent(object sender, IEntryModel newM, IEntryModel originalM)
             : this(sender, EntryViewModel.FromEntryModel(newM), EntryViewModel.FromEntryModel(originalM))
         {
             
@@ -61,7 +61,7 @@ namespace FileExplorer.Defines
         public IEnumerable<IEntryViewModel> SelectedViewModels { get; private set; }
         public IEnumerable<IEntryModel> SelectedModels { get { return from vm in SelectedViewModels select vm.EntryModel; } }
 
-        public SelectionChangedEvent(PropertyChangedBase sender, IEnumerable<IEntryViewModel> evms)
+        public SelectionChangedEvent(object sender, IEnumerable<IEntryViewModel> evms)
             : base(sender)
         {
             SelectedViewModels = evms.ToList();
@@ -73,7 +73,7 @@ namespace FileExplorer.Defines
         public IEnumerable<IEntryViewModel> ListedViewModels { get; private set; }
         public IEnumerable<IEntryModel> ListedModels { get { return from vm in ListedViewModels select vm.EntryModel; } }
 
-        public ListCompletedEvent(PropertyChangedBase sender, IEnumerable<IEntryViewModel> evms)
+        public ListCompletedEvent(object sender, IEnumerable<IEntryViewModel> evms)
             : base(sender)
         {
             ListedViewModels = evms.ToList();

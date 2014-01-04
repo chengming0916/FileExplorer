@@ -21,9 +21,14 @@ using FileExplorer.ViewModels.Helpers;
 namespace FileExplorer.ViewModels
 {
 
+    public interface IFileListCommandsHelper : ICommandsHelper
+    {
+        IScriptCommandBinding Open { get; }
+        IScriptCommandBinding ToggleCheckBox { get; }
+        IScriptCommandBinding ToggleViewMode { get; }
+    }
 
-
-    public class FileListCommandsHelper : CommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
+    public class FileListCommandsHelper : CommandsHelper, IFileListCommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Commands
 
@@ -192,32 +197,39 @@ namespace FileExplorer.ViewModels
             ParameterDicConverter = new ParameterDicConverterBase(p =>
                 new ParameterDic() 
                 {                     
-                    { "FileList", flvm } 
+                    { "FileList", flvm },
+                    { "Events", events }
                 },
                 pd => null, base.ParameterDicConverter);
 
-            OpenDirectory = new ScriptCommandBinding(ApplicationCommands.Open, new OpenSelectedDirectory(),
-                null, ParameterDicConverter);
-            ToggleCheckBox = new ScriptCommandBinding(FileListCommands.ToggleCheckBox, 
+            Open = new ScriptCommandBinding(ApplicationCommands.Open,
+                new IfFileListSelection(evm => evm.Count == 1,
+                    new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
+                        new OpenSelectedDirectory(),  //Selected directory
+                        ResultCommand.NoError),   //Selected non-directory
+                    ResultCommand.NoError //Selected more than one item.
+                    ), ParameterDicConverter);
+
+            ToggleCheckBox = new ScriptCommandBinding(FileListCommands.ToggleCheckBox,
                 p => true, p => flvm.IsCheckBoxVisible = !flvm.IsCheckBoxVisible);
             ToggleViewMode = new ScriptCommandBinding(FileListCommands.ToggleViewMode,
-                p => true, 
-                p => 
-             {
-                        var viewModeWoSeparator = ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
+                p => true,
+                p =>
+                {
+                    var viewModeWoSeparator = ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
 
-                        int curIdx = findViewMode(viewModeWoSeparator, flvm.ItemSize);
-                        int nextIdx = curIdx + 1;
-                        if (nextIdx >= viewModeWoSeparator.Count()) nextIdx = 0;
+                    int curIdx = findViewMode(viewModeWoSeparator, flvm.ItemSize);
+                    int nextIdx = curIdx + 1;
+                    if (nextIdx >= viewModeWoSeparator.Count()) nextIdx = 0;
 
-                        string viewMode; int step; int itemHeight;
-                        parseViewMode(viewModeWoSeparator[nextIdx], out viewMode, out step, out itemHeight);
-                        ViewModeCommand vmc = this.Commands.AllNonBindable.First(c => c.CommandModel is ViewModeCommand)
-                            .CommandModel as ViewModeCommand;
-                        vmc.SliderValue = step;
-                    }
+                    string viewMode; int step; int itemHeight;
+                    parseViewMode(viewModeWoSeparator[nextIdx], out viewMode, out step, out itemHeight);
+                    ViewModeCommand vmc = this.Commands.AllNonBindable.First(c => c.CommandModel is ViewModeCommand)
+                        .CommandModel as ViewModeCommand;
+                    vmc.SliderValue = step;
+                }
                     );
-            _exportedCommandBindings.Add(OpenDirectory);
+            _exportedCommandBindings.Add(Open);
             _exportedCommandBindings.Add(ToggleCheckBox);
             _exportedCommandBindings.Add(ToggleViewMode);
         }
@@ -255,7 +267,7 @@ namespace FileExplorer.ViewModels
 
 
 
-        public IScriptCommandBinding OpenDirectory { get; private set; }
+        public IScriptCommandBinding Open { get; private set; }
         public IScriptCommandBinding ToggleCheckBox { get; private set; }
         public IScriptCommandBinding ToggleViewMode { get; private set; }
 

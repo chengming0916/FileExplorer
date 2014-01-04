@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,10 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Utils
 {
-    public interface IScriptCommandBinding
+    public interface IScriptCommandBinding : INotifyPropertyChanged
     {
-        IScriptCommand ScriptCommand { get; }
-        ICommand Command { get; }
+        IScriptCommand ScriptCommand { get; set; }
+        ICommand Command { get; set; }
         RoutedUICommand UICommandKey { get; }
         CommandBinding CommandBinding { get; }        
     }
@@ -27,25 +28,17 @@ namespace FileExplorer.Utils
         public ScriptCommandBinding(RoutedUICommand uICommandKey, ICommand command, IParameterDicConverter parameterDicConverter = null)
         {
             Command = command;
-            UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;
-            ScriptRunnerSource = ScriptRunnerSources.Null;
-            ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;
-            ScriptCommand = new ICommandScriptCommand(command, ParameterDicConverter);
+            UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;            
+            ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;            
         }
 
         public ScriptCommandBinding(RoutedUICommand uICommandKey, IScriptCommand scriptCommand,
-            IScriptRunnerSource scriptRunnerSource = null, IParameterDicConverter parameterDicConverter = null)
+            IParameterDicConverter parameterDicConverter = null)
         {
             ScriptCommand = scriptCommand;
-            UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;
-            ScriptRunnerSource = scriptRunnerSource == null ? ScriptRunnerSources.Null : scriptRunnerSource;
+            UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;            
             ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;
-            Command = new SimpleCommand()
-            {
-                CanExecuteDelegate = (p) => scriptCommand.CanExecute(ParameterDicConverter.Convert(p)),
-                ExecuteDelegate = (p) => ScriptRunnerSource.GetScriptRunner().Run(
-                    new Queue<IScriptCommand>(new[] { scriptCommand }), ParameterDicConverter.Convert(p))
-            };
+           
         }
 
         public ScriptCommandBinding(RoutedUICommand uICommandKey, Func<object, bool> canExecuteFunc, Action<object> executeFunc, 
@@ -72,18 +65,37 @@ namespace FileExplorer.Utils
                    e.CanExecute = Command.CanExecute(e.Parameter);
                });
         }
+
+        void setScriptCommand(IScriptCommand value)
+        {
+            _scriptCommand = value;
+            _command = new SimpleCommand()
+            {
+                CanExecuteDelegate = (p) => ScriptCommand.CanExecute(ParameterDicConverter.Convert(p)),
+                ExecuteDelegate = (p) => ScriptRunnerSources.Default.GetScriptRunner().Run(
+                    new Queue<IScriptCommand>(new[] { ScriptCommand }), ParameterDicConverter.Convert(p))
+            };
+        }
+
+        void setCommand(ICommand value)
+        {
+            _command = value;
+            _scriptCommand = new ICommandScriptCommand(Command, ParameterDicConverter);
+        }
       
         #endregion
 
         #region Data
 
+        private IScriptCommand _scriptCommand = null;
+        private ICommand _command = null;
+
         #endregion
 
         #region Public Properties
 
-        public IScriptCommand ScriptCommand { get; private set; }
-        public ICommand Command { get; private set; }
-        private IScriptRunnerSource ScriptRunnerSource { get; set; }
+        public IScriptCommand ScriptCommand { get { return _scriptCommand; } set { setScriptCommand(value); } }
+        public ICommand Command { get { return _command; } set { setCommand(value); } }        
         private IParameterDicConverter ParameterDicConverter { get; set; }
         public RoutedUICommand UICommandKey { get; private set; }
         public CommandBinding CommandBinding { get { return getCommandBiniding(); } }
