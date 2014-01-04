@@ -167,18 +167,7 @@ namespace FileExplorer.Models
                     )
                     yield return GetImageFromImageExtractor.Instance;
         }
-
-
-        public override Task<IEnumerable<IEntryModel>> TransferAsync(TransferMode mode, IEntryModel[] source, IEntryModel dest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Task<bool> RenameAsync(IEntryModel source, string newName)
-        {
-            throw new NotImplementedException();
-        }
-
+        
 
 
         #endregion

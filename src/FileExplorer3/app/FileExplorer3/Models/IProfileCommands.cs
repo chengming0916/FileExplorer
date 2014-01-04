@@ -12,7 +12,7 @@ namespace FileExplorer.Models
     /// (e.g. double click on an item in file list)
     /// Because it's run by IExplorerViewModel, certain parameter is always available:
     /// - Profile:IProfile
-    /// - FileList:IFileListViewModel
+    /// - Explorer:IExplorerViewModel
     /// </summary>
     public interface IProfileCommands
     {
@@ -24,13 +24,6 @@ namespace FileExplorer.Models
         /// <summary>
         /// Transfer(Mode:string) a group of entries (SourceEntries:IEntryModel[]) to destination (DestDirectory:IEntryModel)
         /// </summary>
-        IScriptCommand Transfer { get; }
-
-        /// <summary>
-        /// How to react when double click an item (SelectedItem:IEntryModel) on file list (FileList:IFileListViewModel).
-        /// </summary>
-        IScriptCommand DoubleClickFileList { get; }
-        
-        IScriptCommand OpenItem { get; }
+        IScriptCommand Transfer { get; }        
     }
 }

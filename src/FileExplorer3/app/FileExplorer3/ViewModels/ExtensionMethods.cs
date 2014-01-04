@@ -19,7 +19,7 @@ namespace FileExplorer
         //{
         //    if (includeCurrent)
         //        yield return node;
-            
+
         //    IDirectoryNodeViewModel current = node.ParentNode;
         //    while (current != null)
         //    {
@@ -43,15 +43,15 @@ namespace FileExplorer
         }
 
 
-        public static void RegisterCommand(this ICommandContainer container, UIElement ele)
+        public static void RegisterCommand(this IScriptCommandContainer container, UIElement ele)
         {
-            foreach (var c in container.ExportedCommands)
+            foreach (var c in container.ExportedCommandBindings)
             {
-                SimpleCommand sc = c as SimpleCommand;
-                if (sc != null && sc.UICommand != ApplicationCommands.NotACommand)
-                    ele.CommandBindings.Add(new SimpleRoutedCommand(sc).CommandBinding);
+                var binding = c.CommandBinding;
+                if (binding != null)
+                    ele.CommandBindings.Add(binding);
             }
         }
-      
+
     }
 }

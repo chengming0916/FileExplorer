@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels.Helpers
 {
@@ -15,16 +16,14 @@ namespace FileExplorer.ViewModels.Helpers
         void ReportChildUnSelected(VM viewModel);
     }
 
-    public interface IListSelector<VM, T> : IReportSelected<VM>, INotifyPropertyChanged, ICommandContainer
+    public interface IListSelector<VM, T> : IReportSelected<VM>, INotifyPropertyChanged, IScriptCommandContainer
     {
         #region Constructor
 
         #endregion
 
         #region Methods
-        
-        void SelectAll();
-        void UnselectAll();
+
 
         ///// <summary>
         ///// Called by FileListViewModel to notify selectedItems is changed.
@@ -43,8 +42,8 @@ namespace FileExplorer.ViewModels.Helpers
 
         IList<VM> SelectedItems { get;  }
 
-        ICommand UnselectAllCommand { get; }        
-        ICommand SelectAllCommand { get; }
+        IScriptCommandBinding UnselectAll { get; }
+        IScriptCommandBinding SelectAll { get; }
 
         #endregion
         

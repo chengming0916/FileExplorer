@@ -87,16 +87,7 @@ namespace FileExplorer.Models
             if (entry.IsDirectory)
                 yield return GetFromIconExtractIcon.Instance;
         }
-
-        public IResult<IEnumerable<IEntryModel>> Transfer(TransferMode mode, IEntryModel[] source, IEntryModel dest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IResult<bool> Rename(IEntryModel source, string newName)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         #endregion
 

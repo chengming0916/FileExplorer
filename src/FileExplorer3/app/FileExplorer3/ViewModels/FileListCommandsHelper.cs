@@ -10,9 +10,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Cinch;
+using Cofe.Core;
+using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
@@ -65,7 +68,7 @@ namespace FileExplorer.ViewModels
                     itemHeight = Int32.Parse(vmSplit[2]);
             }
         }
-       
+
         //Find ViewMode using a step number  (e.g. 103 return LargeIcon = 2)
         internal static int findViewMode(string[] viewModes, int forStep)
         {
@@ -129,7 +132,7 @@ namespace FileExplorer.ViewModels
             {
                 _flvm = flvm;
                 IsHeaderVisible = false;
-                SliderValue = flvm.ItemSize;                
+                SliderValue = flvm.ItemSize;
             }
 
             internal static void updateViewMode(IFileListViewModel flvm, string viewMode, int step)
@@ -185,21 +188,22 @@ namespace FileExplorer.ViewModels
         {
             events.Subscribe(this);
             _flvm = flvm;
-            OpenDirectoryCommand = new SimpleCommand()
-            {
-                UICommand = ApplicationCommands.Open,
-                CanExecuteDelegate = (e) => CanOpenDirectory,                    
-                ExecuteDelegate = (e) => OpenDirectory()
-            };
 
-            ToggleCheckBoxCommand = new SimpleCommand() {
-                UICommand = FileListCommands.ToggleCheckBox,
-                ExecuteDelegate = (e) => flvm.IsCheckBoxVisible = !flvm.IsCheckBoxVisible };
-            ToggleViewModeCommand = new SimpleCommand()
-            {
-                UICommand = FileListCommands.ToggleViewMode,
-                ExecuteDelegate = (e) =>
-                    {
+            ParameterDicConverter = new ParameterDicConverterBase(p =>
+                new ParameterDic() 
+                {                     
+                    { "FileList", flvm } 
+                },
+                pd => null, base.ParameterDicConverter);
+
+            OpenDirectory = new ScriptCommandBinding(ApplicationCommands.Open, new OpenSelectedDirectory(),
+                null, ParameterDicConverter);
+            ToggleCheckBox = new ScriptCommandBinding(FileListCommands.ToggleCheckBox, 
+                p => true, p => flvm.IsCheckBoxVisible = !flvm.IsCheckBoxVisible);
+            ToggleViewMode = new ScriptCommandBinding(FileListCommands.ToggleViewMode,
+                p => true, 
+                p => 
+             {
                         var viewModeWoSeparator = ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
 
                         int curIdx = findViewMode(viewModeWoSeparator, flvm.ItemSize);
@@ -212,17 +216,17 @@ namespace FileExplorer.ViewModels
                             .CommandModel as ViewModeCommand;
                         vmc.SliderValue = step;
                     }
-            };
-            _exportedCommands.Add(OpenDirectoryCommand);
-            _exportedCommands.Add(ToggleCheckBoxCommand);
-            _exportedCommands.Add(ToggleViewModeCommand);
+                    );
+            _exportedCommandBindings.Add(OpenDirectory);
+            _exportedCommandBindings.Add(ToggleCheckBox);
+            _exportedCommandBindings.Add(ToggleViewMode);
         }
 
         #endregion
 
         #region Methods
 
-      
+
         public void Handle(SelectionChangedEvent message)
         {
             AppliedModels =
@@ -237,13 +241,6 @@ namespace FileExplorer.ViewModels
             AppliedModels = new IEntryModel[] { _currentDirectoryModel };
         }
 
-        public bool CanOpenDirectory { get { return _flvm.Selection.SelectedItems.Count() == 1 
-            && _flvm.Selection.SelectedItems[0].EntryModel.IsDirectory; } }
-
-        public void OpenDirectory()
-        {
-            _flvm.SignalChangeDirectory(_flvm.Selection.SelectedItems[0].EntryModel);
-        }
 
         #endregion
 
@@ -256,10 +253,12 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public ICommand OpenDirectoryCommand { get; private set; }
-        public ICommand ToggleCheckBoxCommand { get; private set; }
-        public ICommand ToggleViewModeCommand { get; private set; }
-        
+
+
+        public IScriptCommandBinding OpenDirectory { get; private set; }
+        public IScriptCommandBinding ToggleCheckBox { get; private set; }
+        public IScriptCommandBinding ToggleViewMode { get; private set; }
+
 
 
         #endregion

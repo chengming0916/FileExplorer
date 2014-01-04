@@ -137,9 +137,9 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        private IEnumerable<ICommand> getExportedCommands()
+        private IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
-            return CommandsHelper.ExportedCommands.Union(Selection.ExportedCommands);            
+            return CommandsHelper.ExportedCommandBindings.Union(Selection.ExportedCommandBindings);            
         }
 
         public void SignalChangeDirectory(IEntryModel newDirectory)
@@ -176,7 +176,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
 
         public ICommandsHelper CommandsHelper { get; private set; }
-        public IEnumerable<ICommand> ExportedCommands { get { return getExportedCommands(); } }
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
         public IEventAggregator Events { get; private set; }
