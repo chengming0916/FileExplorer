@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cofe.Core.Script;
 
 namespace FileExplorer.Models
 {
@@ -11,6 +12,6 @@ namespace FileExplorer.Models
     /// </summary>
     public interface ICommandProvider
     {
-        List<ICommandModel> CommandModels { get; }
+        List<ICommandModel> GetCommandModels();
     }
 }

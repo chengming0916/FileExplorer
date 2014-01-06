@@ -23,15 +23,12 @@ namespace FileExplorer.Models
             _profile = profile;
         }
 
-        public List<ICommandModel> CommandModels
+        public List<ICommandModel> GetCommandModels()
         {
-            get
-            {
-                return new List<ICommandModel>()
+            return new List<ICommandModel>()
                     {                        
                         new OpenWithCommandEx(_profile)
                     };
-            }
         }
     }
 

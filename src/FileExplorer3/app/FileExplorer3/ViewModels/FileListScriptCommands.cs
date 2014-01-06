@@ -28,6 +28,20 @@ namespace FileExplorer.ViewModels
 
     }
 
+    public class AssignSelectionToParameterAsEntryModelArray : RunInSequenceScriptCommand
+    {
+        public AssignSelectionToParameterAsEntryModelArray(IScriptCommand thenCommand)
+            : base(
+            new SimpleScriptCommand("AssignSelectionToParameterAsEntryModelArray",
+                pd => { pd["Parameter"] = (pd["FileList"] as IFileListViewModel).Selection
+                    .SelectedItems.Select(evm => evm.EntryModel).ToArray(); 
+                    return ResultCommand.NoError; }),
+            thenCommand)
+        {
+
+        }
+    }
+
     public class IfFileListSelection : IfFileList
     {
         public IfFileListSelection(Func<IList<IEntryViewModel>, bool> condition, IScriptCommand ifTrueCommand,

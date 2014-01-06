@@ -14,21 +14,22 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-    public interface ICommandsHelper : IScriptCommandContainer
+
+    public interface IEntryModelCommandHelper : IScriptCommandContainer
     {
         IEntryModel[] AppliedModels { get; }
-        EntriesHelper<ICommandViewModel> Commands { get; }        
+        EntriesHelper<ICommandViewModel> CommandModels { get; }        
     }
 
-    public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper
+    public class EntryModelCommandHelper : NotifyPropertyChanged, IEntryModelCommandHelper
     {
         #region Constructor
 
-        public CommandsHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
+        public EntryModelCommandHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
         {
             _extraCommands = extraCommands;
             _rootProfiles = rootProfiles;
-            Commands = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
+            CommandModels = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
             ParameterDicConverter = ParameterDicConverters.ConvertParameterOnly;         
         }
 
@@ -43,8 +44,8 @@ namespace FileExplorer.ViewModels.Helpers
             switch (propertyName)
             {
                 case "AppliedModels":
-                    AsyncUtils.RunSync(() => Commands.LoadAsync(false));
-                    foreach (var commandVM in Commands.AllNonBindable)
+                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(false));
+                    foreach (var commandVM in CommandModels.AllNonBindable)
                         commandVM.CommandModel.NotifySelectionChanged(AppliedModels);
                     break;
             }
@@ -55,7 +56,7 @@ namespace FileExplorer.ViewModels.Helpers
             List<ICommandModel> cmList = new List<ICommandModel>(_extraCommands) { };
 
             foreach (var cp in _rootProfiles.SelectMany(p => p.CommandProviders))
-                cmList.AddRange(cp.CommandModels);
+                cmList.AddRange(cp.GetCommandModels());
 
             return cmList.Select(cm => new CommandViewModel(cm)).ToArray();
         }
@@ -76,7 +77,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public IEntryModel[] AppliedModels { get { return _appliedModels; } 
             set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels);  } }
-        public EntriesHelper<ICommandViewModel> Commands { get; private set; }
+        public EntriesHelper<ICommandViewModel> CommandModels { get; private set; }
         public IParameterDicConverter ParameterDicConverter { get; protected set; }
 
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings

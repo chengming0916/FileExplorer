@@ -45,26 +45,26 @@
                 <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
-                        <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
+                        <MouseBinding Command="ApplicationCommands.Open"                                    
+                                      MouseAction="LeftDoubleClick" />
                         <KeyBinding Key="A" Command="def:FileListCommands.UnselectAll" /> <!-- Testing -->
                         <KeyBinding Key="C" Command="def:FileListCommands.ToggleCheckBox" />
                         <KeyBinding Key="V" Command="def:FileListCommands.ToggleViewMode" />
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
             </bc:UIEventAdapter.Processors>
-            <i:Interaction.Triggers>
-                <uc:InputBindingTrigger>
+            <i:Interaction.Triggers>                
+                <uc:InputBindingTrigger>                                        
                     <uc:InputBindingTrigger.InputBinding>
                         <KeyBinding Key="F2"/>
                     </uc:InputBindingTrigger.InputBinding>
-
                     <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
             </i:Interaction.Triggers>
 
             <uc:ListViewEx.ContentBelowHeader>
                 <Border Margin="2" >
-                    <uc:ToolbarEx ItemsSource="{Binding CommandsHelper.Commands.All}"                                  
+                    <uc:ToolbarEx ItemsSource="{Binding Commands.CommandModels.All}"                                  
                                   def:AttachedProperties.SkipLookup="True"
                                   
                                   >
