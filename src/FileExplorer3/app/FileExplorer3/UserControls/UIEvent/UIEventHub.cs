@@ -84,7 +84,7 @@ namespace FileExplorer.BaseControls
                                     case "PreviewMouseDown":
                                     case "MouseMove":
                                     case "MouseDrag":
-                                    case "MouseUp":
+                                    case "PreviewMouseUp":
                                         break;
                                     default:
                                         RoutedEventHandler handler = (RoutedEventHandler)(
@@ -99,7 +99,7 @@ namespace FileExplorer.BaseControls
                             //These has to be handled for detecting drag.
                             Control.PreviewMouseDown += Control_PreviewMouseDown;
                             Control.MouseMove += Control_MouseMove;
-                            Control.MouseUp += Control_MouseUp;
+                            Control.PreviewMouseUp += Control_PreviewMouseUp;
                         }
                         else
                         {
@@ -110,7 +110,7 @@ namespace FileExplorer.BaseControls
 
                             Control.PreviewMouseDown -= Control_PreviewMouseDown;
                             Control.MouseMove -= Control_MouseMove;
-                            Control.MouseUp -= Control_MouseUp;
+                            Control.PreviewMouseUp -= Control_PreviewMouseUp;
                         }
                     }
                 }));
@@ -165,6 +165,7 @@ namespace FileExplorer.BaseControls
                 Control control = sender as Control;
                 AttachedProperties.SetIsMouseDragging(control, false);
                 AttachedProperties.SetStartPosition(control, e.GetPosition(control));
+                AttachedProperties.SetStartInput(control, e.ChangedButton);                
                 AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
             }
 
@@ -174,7 +175,7 @@ namespace FileExplorer.BaseControls
         {
             FrameworkElement control = sender as FrameworkElement;
 
-            Point position = e.GetPosition(null);
+            Point position = e.GetPosition(control);
             Point startPosition = AttachedProperties.GetStartPosition(control);
             if (startPosition.IsValidPosition())
             {
@@ -201,16 +202,16 @@ namespace FileExplorer.BaseControls
             //DragDropEventProcessor set e.IsHandled to true
             {
                 //DragDrop does not raise MouseUp, so have to raise manually.
-                Control_MouseUp(sender,
+                Control_PreviewMouseUp(sender,
                     _mouseDownEvent ?? new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left));
             }
         }
 
-        void Control_MouseUp(object sender, MouseButtonEventArgs e)
+        void Control_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
 
-            execute(_eventProcessors, FrameworkElement.MouseUpEvent, sender, e);
+            execute(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);
 
             AttachedProperties.SetIsMouseDragging(control, false);
             AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);

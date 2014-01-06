@@ -159,20 +159,24 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (eventArgs.Handled)
                 return ResultCommand.NoError;
 
-            Mouse.Capture(null);
+            Mouse.Capture(null);                       
 
             if (AttachedProperties.GetIsSelecting(ic))
                 return new UpdateIsSelecting(false);
             else
-            {
-                //Select the mouse over item.
-                //(If not mouse over item and is selecting (dragging), this will unselect all)
-                object itemUnderMouse = UITools.GetItemUnderMouse(ic, eventArgs.GetPosition(scp));
-                List<object> selectedList = new List<object>();
-                if (itemUnderMouse != null)
-                    selectedList.Add(itemUnderMouse);
-                pd["SelectedList"] = selectedList;
-                return new SelectItems();
+            {                
+                if (AttachedProperties.GetStartInput(ic).Equals(MouseButton.Left))
+                {
+                    //Select the mouse over item.
+                    //(If not mouse over item and is selecting (dragging), this will unselect all)
+                    object itemUnderMouse = UITools.GetItemUnderMouse(ic, eventArgs.GetPosition(scp));
+                    List<object> selectedList = new List<object>();
+                    if (itemUnderMouse != null)
+                        selectedList.Add(itemUnderMouse);
+                    pd["SelectedList"] = selectedList;
+                    return new SelectItems();
+                }
+                return ResultCommand.NoError;
             }
         }
     }

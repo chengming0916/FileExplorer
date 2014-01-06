@@ -145,8 +145,14 @@ namespace FileExplorer.ViewModels
 
         public ToolbarItemType CommandType { get { return getCommandType(); } }
 
-        public Object Icon { get { return _icon; } set { _icon = value; NotifyOfPropertyChange(() => Icon); } }
+        public Object Icon { get {
+            return _icon is System.Windows.Controls.Image ?
+                new System.Windows.Controls.Image() { Source = (_icon as System.Windows.Controls.Image).Source } : null;
+                ;
+        
+        } set { _icon = value; NotifyOfPropertyChange(() => Icon); } }
 
+        public bool IsVisibleInContextMenu { get { return CommandType != ToolbarItemType.Separator; } }
 
         public VerticalAlignment VerticalAlignment
         {

@@ -17,7 +17,7 @@ namespace FileExplorer.BaseControls
                new[] {
                     FrameworkElement.PreviewMouseDownEvent,
                     UIEventHub.MouseDragEvent,
-                    FrameworkElement.MouseUpEvent,
+                    FrameworkElement.PreviewMouseUpEvent,
                     FrameworkElement.MouseMoveEvent
                 }
             );
@@ -30,7 +30,7 @@ namespace FileExplorer.BaseControls
                 case "PreviewMouseDown": return new SetHandledIfNotFocused();
                 case "MouseDrag": return new BeginSelect() { UnselectCommand = UnselectAllCommand };
                 case "MouseMove": return new ContinueSelect();
-                case "MouseUp": return new EndSelect() { UnselectCommand = UnselectAllCommand };
+                case "PreviewMouseUp": return new EndSelect() { UnselectCommand = UnselectAllCommand };
             }
 
             return base.OnEvent(eventId);

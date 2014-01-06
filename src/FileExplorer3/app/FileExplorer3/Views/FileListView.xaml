@@ -62,12 +62,38 @@
                 </uc:InputBindingTrigger>
             </i:Interaction.Triggers>
 
+            <uc:ListViewEx.ContextMenu>
+                <ContextMenu ItemsSource="{Binding Commands.CommandModels.All}" >
+                    <ContextMenu.Resources>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
+                            <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />                            
+                            <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                            <Setter Property="CommandParameter" Value="{Binding DataContext.Commands.AppliedModels, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                            <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
+                            <Setter Property="IsCheckable" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
+                            <Setter Property="IsChecked" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
+                            <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" /> 
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CommandType}" Value="Separator">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Separator HorizontalAlignment="Stretch" Height="1" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContextMenu.Resources>
+                </ContextMenu>
+            </uc:ListViewEx.ContextMenu>
             <uc:ListViewEx.ContentBelowHeader>
                 <Border Margin="2" >
                     <uc:ToolbarEx ItemsSource="{Binding Commands.CommandModels.All}"                                  
-                                  def:AttachedProperties.SkipLookup="True"
-                                  
-                                  >
+                                  def:AttachedProperties.SkipLookup="True">
                         <uc:ToolbarEx.Resources>
                             <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />

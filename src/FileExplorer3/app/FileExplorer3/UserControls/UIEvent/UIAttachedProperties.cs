@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace FileExplorer.Defines
 {
@@ -42,6 +43,22 @@ namespace FileExplorer.Defines
         public static void SetStartPosition(DependencyObject obj, Point value)
         {
             obj.SetValue(StartPositionProperty, value);
+        }
+        #endregion
+
+        #region StartInput
+        private static DependencyProperty StartInputProperty =
+          DependencyProperty.RegisterAttached("StartInput", typeof(object), typeof(AttachedProperties),
+          new PropertyMetadata(null));
+
+        public static object GetStartInput(DependencyObject obj)
+        {
+            return (object)obj.GetValue(StartInputProperty);
+        }
+
+        public static void SetStartInput(DependencyObject obj, object value)
+        {
+            obj.SetValue(StartInputProperty, value);
         }
         #endregion
 

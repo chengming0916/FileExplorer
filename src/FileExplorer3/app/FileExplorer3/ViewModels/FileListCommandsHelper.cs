@@ -33,7 +33,7 @@ namespace FileExplorer.ViewModels
                 new CommandModel(FileListCommands.ToggleCheckBox) { Symbol = Convert.ToChar(0xe1ef) })
             {
                 Symbol = Convert.ToChar(0xE10B);
-                Header = null;
+                Header = Strings.txtSelection;
             }
         }
 
