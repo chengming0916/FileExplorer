@@ -21,12 +21,11 @@ namespace FileExplorer.ViewModels.Helpers
         {
             EntryHelper = entryHelper;
             EntryHelper.EntriesChanged += (o, e) => { notifySelectionChanged(); };
-            
-            UnselectAll = new ScriptCommandBinding(FileListCommands.UnselectAll, p => true, p => unselectAll());
-            SelectAll = new ScriptCommandBinding(ApplicationCommands.SelectAll, p => true, p => selectAll());
+                        
             ExportedCommandBindings = new List<IScriptCommandBinding>()
             {
-                UnselectAll, SelectAll                
+                new ScriptCommandBinding(FileListCommands.UnselectAll, p => true, p => UnselectAll()), 
+                new ScriptCommandBinding(ApplicationCommands.SelectAll, p => true, p => SelectAll())
             };
         }
 
@@ -41,17 +40,17 @@ namespace FileExplorer.ViewModels.Helpers
                 SelectionChanged(this, EventArgs.Empty);
         }
 
-        private void unselectAll()
+        public void UnselectAll()
         {
             foreach (var e in EntryHelper.AllNonBindable.ToList())
                 e.IsSelected = false;
             notifySelectionChanged();
         }
 
-        private void selectAll()
+        public void SelectAll()
         {
             if (SelectedItems.Count() == EntryHelper.AllNonBindable.Count())
-                unselectAll();
+                UnselectAll();
             else
             {
                 foreach (var e in EntryHelper.AllNonBindable.ToList())
@@ -109,9 +108,6 @@ namespace FileExplorer.ViewModels.Helpers
 
 
         public event EventHandler SelectionChanged;
-
-        public IScriptCommandBinding UnselectAll { get; private set; }
-        public IScriptCommandBinding SelectAll { get; private set; }
 
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; private set; }
         

@@ -20,19 +20,8 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    /// <summary>
-    /// Included command bindings and CommandViewModel for both selected entry model and current file list.
-    /// </summary>
-    public interface IFileListCommandsHelper : IEntryModelCommandHelper
-    {
-        IScriptCommandBinding Open { get; }
 
-
-        IScriptCommandBinding ToggleCheckBox { get; }
-        IScriptCommandBinding ToggleViewMode { get; }
-    }
-
-    public class FileListCommandsHelper : EntryModelCommandHelper, IFileListCommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
+    public class FileListCommandsHelper : CommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Commands
 
@@ -198,44 +187,9 @@ namespace FileExplorer.ViewModels
             events.Subscribe(this);
             _flvm = flvm;
 
-            ParameterDicConverter = new ParameterDicConverterBase(p =>
-                new ParameterDic() 
-                {                     
-                    { "FileList", flvm },
-                    { "Events", events }
-                },
-                pd => null, base.ParameterDicConverter);
-
-            Open = new ScriptCommandBinding(ApplicationCommands.Open,
-                new IfFileListSelection(evm => evm.Count == 1,
-                    new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                        new OpenSelectedDirectory(),  //Selected directory
-                        ResultCommand.NoError),   //Selected non-directory
-                    ResultCommand.NoError //Selected more than one item.
-                    ), ParameterDicConverter);
-
-            ToggleCheckBox = new ScriptCommandBinding(FileListCommands.ToggleCheckBox,
-                p => true, p => flvm.IsCheckBoxVisible = !flvm.IsCheckBoxVisible);
-            ToggleViewMode = new ScriptCommandBinding(FileListCommands.ToggleViewMode,
-                p => true,
-                p =>
-                {
-                    var viewModeWoSeparator = ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
-
-                    int curIdx = findViewMode(viewModeWoSeparator, flvm.ItemSize);
-                    int nextIdx = curIdx + 1;
-                    if (nextIdx >= viewModeWoSeparator.Count()) nextIdx = 0;
-
-                    string viewMode; int step; int itemHeight;
-                    parseViewMode(viewModeWoSeparator[nextIdx], out viewMode, out step, out itemHeight);
-                    ViewModeCommand vmc = this.CommandModels.AllNonBindable.First(c => c.CommandModel is ViewModeCommand)
-                        .CommandModel as ViewModeCommand;
-                    vmc.SliderValue = step;
-                }
-                    );
-            _exportedCommandBindings.Add(Open);
-            _exportedCommandBindings.Add(ToggleCheckBox);
-            _exportedCommandBindings.Add(ToggleViewMode);
+  
+            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleCheckBox,p => true, p => ToggleCheckBox()));
+            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleViewMode, p => true, p => ToggleViewMode()));
         }
 
         #endregion
@@ -257,6 +211,27 @@ namespace FileExplorer.ViewModels
             AppliedModels = new IEntryModel[] { _currentDirectoryModel };
         }
 
+        public void ToggleViewMode()
+        {
+            var viewModeWoSeparator = ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
+
+            int curIdx = findViewMode(viewModeWoSeparator, _flvm.ItemSize);
+            int nextIdx = curIdx + 1;
+            if (nextIdx >= viewModeWoSeparator.Count()) nextIdx = 0;
+
+            string viewMode; int step; int itemHeight;
+            parseViewMode(viewModeWoSeparator[nextIdx], out viewMode, out step, out itemHeight);
+            ViewModeCommand vmc = this.CommandModels.AllNonBindable.First(c => c.CommandModel is ViewModeCommand)
+                .CommandModel as ViewModeCommand;
+            vmc.SliderValue = step;
+        }
+
+        public void ToggleCheckBox()
+        {
+            _flvm.IsCheckBoxVisible = !_flvm.IsCheckBoxVisible;
+        }
+
+
 
         #endregion
 
@@ -268,12 +243,6 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
-
-
-
-        public IScriptCommandBinding Open { get; private set; }
-        public IScriptCommandBinding ToggleCheckBox { get; private set; }
-        public IScriptCommandBinding ToggleViewMode { get; private set; }
 
 
 

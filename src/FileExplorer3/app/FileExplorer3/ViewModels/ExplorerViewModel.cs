@@ -14,7 +14,7 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : PropertyChangedBase, IExplorerViewModel, IHandle<SelectionChangedEvent>, IScriptCommandContainer
+    public class ExplorerViewModel : PropertyChangedBase, IExplorerViewModel, IHandle<SelectionChangedEvent>, IExportCommandBindings
     {
         #region Cosntructor
 
@@ -25,14 +25,12 @@ namespace FileExplorer.ViewModels
             
             var rootProfiles = _rootModels.Select(m => m.Profile).Distinct().ToArray();
 
-            Toolbar = new ToolbarViewModel(events);
+            //Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents, rootModels);
             FileList = new FileListViewModel(_internalEvents, rootProfiles);
             DirectoryTree = new DirectoryTreeViewModel(_internalEvents, rootModels);
             Statusbar = new StatusbarViewModel(_internalEvents);
-            Navigation = new NavigationViewModel(_internalEvents);
-
-            FileList.Toolbar = Toolbar;
+            Navigation = new NavigationViewModel(_internalEvents);            
 
             _internalEvents.Subscribe(this);
         }
@@ -55,7 +53,7 @@ namespace FileExplorer.ViewModels
                 if (model != null)
                 {
                     DirectoryTree.SelectAsync(model);
-                    FileList.SetCurrentDirectoryAsync(model);
+                    FileList.CurrentDirectory = model;
                     Breadcrumb.Selection.AsRoot().SelectAsync(model);
                     return;
                 }

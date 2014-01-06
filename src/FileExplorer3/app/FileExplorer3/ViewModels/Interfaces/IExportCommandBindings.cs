@@ -11,7 +11,7 @@ namespace FileExplorer.ViewModels
     /// <summary>
     /// Indicate the view model contains a number of ICommands.
     /// </summary>
-    public interface IScriptCommandContainer
+    public interface IExportCommandBindings
     {
         IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; }
     }
