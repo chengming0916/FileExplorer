@@ -20,15 +20,19 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-
-    public interface IFileListCommandsHelper : ICommandsHelper
+    /// <summary>
+    /// Included command bindings and CommandViewModel for both selected entry model and current file list.
+    /// </summary>
+    public interface IFileListCommandsHelper : IEntryModelCommandHelper
     {
         IScriptCommandBinding Open { get; }
+
+
         IScriptCommandBinding ToggleCheckBox { get; }
         IScriptCommandBinding ToggleViewMode { get; }
     }
 
-    public class FileListCommandsHelper : CommandsHelper, IFileListCommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
+    public class FileListCommandsHelper : EntryModelCommandHelper, IFileListCommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Commands
 
@@ -224,7 +228,7 @@ namespace FileExplorer.ViewModels
 
                     string viewMode; int step; int itemHeight;
                     parseViewMode(viewModeWoSeparator[nextIdx], out viewMode, out step, out itemHeight);
-                    ViewModeCommand vmc = this.Commands.AllNonBindable.First(c => c.CommandModel is ViewModeCommand)
+                    ViewModeCommand vmc = this.CommandModels.AllNonBindable.First(c => c.CommandModel is ViewModeCommand)
                         .CommandModel as ViewModeCommand;
                     vmc.SliderValue = step;
                 }

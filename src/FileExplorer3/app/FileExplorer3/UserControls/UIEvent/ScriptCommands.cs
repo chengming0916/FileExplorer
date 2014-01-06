@@ -58,7 +58,7 @@ namespace FileExplorer.BaseControls
             get { return String.Join(",", _scriptCommands.Select(c => c.CommandKey)); }
         }
 
-        public IScriptCommand Execute(ParameterDic pm)
+        public virtual IScriptCommand Execute(ParameterDic pm)
         {
             foreach (var c in _scriptCommands)
             {
@@ -69,7 +69,7 @@ namespace FileExplorer.BaseControls
             return ResultCommand.NoError;
         }
 
-        public bool CanExecute(ParameterDic pm)
+        public virtual bool CanExecute(ParameterDic pm)
         {
             return _scriptCommands.First().CanExecute(pm);
         }

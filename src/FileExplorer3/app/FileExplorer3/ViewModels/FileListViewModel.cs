@@ -83,7 +83,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            CommandsHelper = new FileListCommandsHelper(this, events, rootProfiles);
+            Commands = new FileListCommandsHelper(this, events, rootProfiles);
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -139,7 +139,7 @@ namespace FileExplorer.ViewModels
 
         private IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
-            return CommandsHelper.ExportedCommandBindings.Union(Selection.ExportedCommandBindings);            
+            return Commands.ExportedCommandBindings.Union(Selection.ExportedCommandBindings);            
         }
 
         public void SignalChangeDirectory(IEntryModel newDirectory)
@@ -175,7 +175,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IFileListCommandsHelper CommandsHelper { get; private set; }
+        public IFileListCommandsHelper Commands { get; private set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
