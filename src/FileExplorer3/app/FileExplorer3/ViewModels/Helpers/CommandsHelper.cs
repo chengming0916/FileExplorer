@@ -14,23 +14,25 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels.Helpers
 {
-
-    public interface IEntryModelCommandHelper : IScriptCommandContainer
+    /// <summary>
+    /// Populate Commands (CommandViewModel, e.g. ToggleView), and notify the commands when AppliedModels changes.
+    /// For use in toolbar and context menu.
+    /// </summary>
+    public interface ICommandsHelper : IExportCommandBindings
     {
         IEntryModel[] AppliedModels { get; }
         EntriesHelper<ICommandViewModel> CommandModels { get; }        
     }
 
-    public class EntryModelCommandHelper : NotifyPropertyChanged, IEntryModelCommandHelper
+    public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper
     {
         #region Constructor
 
-        public EntryModelCommandHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
+        public CommandsHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
         {
             _extraCommands = extraCommands;
             _rootProfiles = rootProfiles;
             CommandModels = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
-            ParameterDicConverter = ParameterDicConverters.ConvertParameterOnly;         
         }
 
         #endregion
@@ -78,7 +80,6 @@ namespace FileExplorer.ViewModels.Helpers
         public IEntryModel[] AppliedModels { get { return _appliedModels; } 
             set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels);  } }
         public EntriesHelper<ICommandViewModel> CommandModels { get; private set; }
-        public IParameterDicConverter ParameterDicConverter { get; protected set; }
 
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings
         {

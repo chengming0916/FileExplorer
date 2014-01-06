@@ -12,29 +12,37 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IFileListViewModel : IScriptCommandContainer
+    public interface IFileListViewModel : IExportCommandBindings
     {
         /// <summary>
-        /// Return available commands for current filelist.
+        /// Return available commands for current filelist, for toolbar and context menu.
         /// </summary>
-        IFileListCommandsHelper Commands { get; }
+        ICommandsHelper Commands { get; }
+
+        /// <summary>
+        /// All changable script commands for the current file list, allow customize what to execute when certain action.
+        /// </summary>
+        IFileListScriptCommandContainer ScriptCommands { get; }
         
         /// <summary>
         /// Load entries and apply filters.
         /// </summary>
         IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; }
                 
+        /// <summary>
+        /// Allow customize columns and filters.
+        /// </summary>
         IColumnsHelper Columns { get; }
 
-
+        /// <summary>
+        /// Responsible for item selection of the file list.
+        /// </summary>
         IListSelector<IEntryViewModel, IEntryModel> Selection { get; }
-        
-        IEventAggregator Events { get; }
 
-        Task SetCurrentDirectoryAsync(IEntryModel em);
-
+        /// <summary>
+        /// Setting the current directory will start the load of entries.
+        /// </summary>
         IEntryModel CurrentDirectory { get; set; }
-        IToolbarViewModel Toolbar { get; set; }
 
         string ViewMode { get; set; }
         int ItemSize { get; set; }

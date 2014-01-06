@@ -35,7 +35,9 @@ namespace FileExplorer.Models
 
     
    
-
+    /// <summary>
+    /// Launch a file.
+    /// </summary>
     public class OpenWithCommandEx : DirectoryCommandModel
     {
         #region OpenWithScriptCommand
@@ -43,6 +45,10 @@ namespace FileExplorer.Models
         {
             OpenWithInfo _info;
 
+            /// <summary>
+            /// Launch a file (e.g. txt) using the OpenWithInfo, if null then default method will be used, Require Parameter (IEntryModel[])
+            /// </summary>
+            /// <param name="info"></param>
             public OpenWithScriptCommand(OpenWithInfo info = null)
                 : base("OpenWith")
             {

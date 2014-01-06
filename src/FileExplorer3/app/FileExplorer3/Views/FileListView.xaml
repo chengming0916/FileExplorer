@@ -72,7 +72,7 @@
                             <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
                                 <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
-                                <Setter Property="CommandParameter" Value="{Binding DataContext.CommandsHelper.AppliedModels, 
+                                <Setter Property="CommandParameter" Value="{Binding DataContext.Commands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type uc:ToolbarEx}}}" />
                                 <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
                                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
@@ -96,7 +96,7 @@
                             <Style TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource ToolbarSubItemExStyle}"  >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
                                 <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
-                                <Setter Property="CommandParameter" Value="{Binding DataContext.CommandsHelper.AppliedModels, 
+                                <Setter Property="CommandParameter" Value="{Binding DataContext.Commands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type uc:ToolbarEx}}}" />
                                 <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
                                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />

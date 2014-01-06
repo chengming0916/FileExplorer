@@ -36,14 +36,12 @@ namespace TestApp.WPF
                 );
 
 
-            ExplorerModel.FileList.Commands.Open.ScriptCommand =
+            ExplorerModel.FileList.ScriptCommands.Open =
                 new IfFileListSelection(evm => evm.Count == 1,
                     new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                        //Selected directory
-                        new OpenSelectedDirectory(),  //Require FileList (IFileListViewModel)
-                        //Selected non-directory
-                        new AssignSelectionToParameterAsEntryModelArray( //FileList.Selection.SelectedItems as IEntryModel[] -> Parameter
-                            new OpenWithCommandEx.OpenWithScriptCommand(null))), //Require Parameter (IEntryModel[])
+                        new OpenSelectedDirectory(), //Selected directory                        
+                        new AssignSelectionToParameterAsEntryModelArray(
+                            new OpenWithCommandEx.OpenWithScriptCommand(null))),  //Selected non-directory
                     ResultCommand.NoError //Selected more than one item, ignore.
                     );
 

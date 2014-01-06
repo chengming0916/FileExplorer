@@ -43,7 +43,7 @@ namespace FileExplorer
         }
 
 
-        public static void RegisterCommand(this IScriptCommandContainer container, UIElement ele)
+        public static void RegisterCommand(this IExportCommandBindings container, UIElement ele)
         {
             foreach (var c in container.ExportedCommandBindings)
             {

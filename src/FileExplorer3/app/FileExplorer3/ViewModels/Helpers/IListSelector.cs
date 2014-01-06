@@ -16,7 +16,7 @@ namespace FileExplorer.ViewModels.Helpers
         void ReportChildUnSelected(VM viewModel);
     }
 
-    public interface IListSelector<VM, T> : IReportSelected<VM>, INotifyPropertyChanged, IScriptCommandContainer
+    public interface IListSelector<VM, T> : IReportSelected<VM>, INotifyPropertyChanged, IExportCommandBindings
     {
         #region Constructor
 
@@ -31,6 +31,10 @@ namespace FileExplorer.ViewModels.Helpers
         ///// <param name="selectedItems"></param>
         //void OnSelectionChanged(IList selectedItems);
 
+        void SelectAll();
+        void UnselectAll();
+
+
         #endregion
 
         #region Data
@@ -41,9 +45,6 @@ namespace FileExplorer.ViewModels.Helpers
         event EventHandler SelectionChanged;
 
         IList<VM> SelectedItems { get;  }
-
-        IScriptCommandBinding UnselectAll { get; }
-        IScriptCommandBinding SelectAll { get; }
 
         #endregion
         

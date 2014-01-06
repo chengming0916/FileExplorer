@@ -84,6 +84,7 @@ namespace FileExplorer.ViewModels
                 events.Subscribe(this);
 
             Commands = new FileListCommandsHelper(this, events, rootProfiles);
+            ScriptCommands = new FileListScriptCommandContainer(this, events);
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -139,7 +140,9 @@ namespace FileExplorer.ViewModels
 
         private IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
-            return Commands.ExportedCommandBindings.Union(Selection.ExportedCommandBindings);            
+            return Commands.ExportedCommandBindings
+                .Union(Selection.ExportedCommandBindings)
+                .Union(ScriptCommands.ExportedCommandBindings);            
         }
 
         public void SignalChangeDirectory(IEntryModel newDirectory)
@@ -175,7 +178,8 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IFileListCommandsHelper Commands { get; private set; }
+        public ICommandsHelper Commands { get; private set; }
+        public IFileListScriptCommandContainer ScriptCommands { get; private set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
