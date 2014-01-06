@@ -19,7 +19,7 @@ namespace FileExplorer.BaseControls
                 new[] {
                     FrameworkElement.PreviewMouseDownEvent,
                     UIEventHub.MouseDragEvent,
-                    FrameworkElement.MouseUpEvent,
+                    FrameworkElement.PreviewMouseUpEvent,
                     FrameworkElement.MouseMoveEvent,
 
                     FrameworkElement.DragEnterEvent,
@@ -37,7 +37,7 @@ namespace FileExplorer.BaseControls
                 {
                     case "PreviewMouseDown": return new RecordStartSelectedItem();
                     case "MouseDrag": return new BeginDrag();
-                    case "MouseUp": return new EndDrag();
+                    case "PreviewMouseUp": return new EndDrag();
                     case "MouseMove": return new ContinueDrag();
                 }
 
