@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core;
@@ -130,5 +132,23 @@ namespace FileExplorer.ViewModels
 
             return ResultCommand.OK;
         }
+    }
+
+    public class ShowContextMenu : ScriptCommandBase
+    {
+        private Control _control;        
+        public ShowContextMenu(Control control) : base("EventArgs") { _control = control; }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {            
+            if (_control.ContextMenu != null)
+            {
+                _control.ContextMenu.PlacementTarget = _control;
+                _control.ContextMenu.SetValue(ContextMenu.IsOpenProperty, true);
+            }
+            return ResultCommand.NoError; //Set Handled to true.
+        }
+
+
     }
 }

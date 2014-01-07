@@ -164,8 +164,9 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (AttachedProperties.GetIsSelecting(ic))
                 return new UpdateIsSelecting(false);
             else
-            {                
-                if (AttachedProperties.GetStartInput(ic).Equals(MouseButton.Left))
+            {
+                var startInput = AttachedProperties.GetStartInput(ic);
+                if (startInput != null && startInput.Equals(MouseButton.Left))
                 {
                     //Select the mouse over item.
                     //(If not mouse over item and is selecting (dragging), this will unselect all)

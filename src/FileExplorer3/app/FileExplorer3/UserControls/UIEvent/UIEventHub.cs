@@ -99,7 +99,7 @@ namespace FileExplorer.BaseControls
                             //These has to be handled for detecting drag.
                             Control.PreviewMouseDown += Control_PreviewMouseDown;
                             Control.MouseMove += Control_MouseMove;
-                            Control.PreviewMouseUp += Control_PreviewMouseUp;
+                            Control.PreviewMouseUp += Control_PreviewMouseUp;                            
                         }
                         else
                         {
@@ -115,7 +115,6 @@ namespace FileExplorer.BaseControls
                     }
                 }));
         }
-
 
         private bool execute(IList<UIEventProcessorBase> processors, RoutedEvent eventId, object sender, RoutedEventArgs e)
         {

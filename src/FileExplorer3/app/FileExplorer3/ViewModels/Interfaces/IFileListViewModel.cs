@@ -49,6 +49,8 @@ namespace FileExplorer.ViewModels
 
         bool IsCheckBoxVisible { get; set; }
 
+        bool IsContextMenuVisible { get; set; }
+
         void SignalChangeDirectory(IEntryModel newDirectory);
 
         
