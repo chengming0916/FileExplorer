@@ -99,6 +99,8 @@
     <Compile Include="Models\NullDragDropHandler.cs" />
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
+    <Compile Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
+    <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
@@ -370,6 +372,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Common\Border.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\ContextMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

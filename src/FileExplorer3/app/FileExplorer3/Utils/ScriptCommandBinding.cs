@@ -12,12 +12,15 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Utils
 {
+    public enum ScriptBindingScope { Application, Explorer, Local }
+
     public interface IScriptCommandBinding : INotifyPropertyChanged
     {
         IScriptCommand ScriptCommand { get; set; }
         ICommand Command { get; set; }
         RoutedUICommand UICommandKey { get; }
-        CommandBinding CommandBinding { get; }        
+        CommandBinding CommandBinding { get; }
+        ScriptBindingScope Scope { get; }
     }
 
    
@@ -27,13 +30,14 @@ namespace FileExplorer.Utils
         #region Constructor
 
         public static IScriptCommandBinding FromScriptCommand<T>(RoutedUICommand uiCommandKey,
-         T targetObject, Func<T, IScriptCommand> scriptCommandFunc, IParameterDicConverter parameterDicConverter = null)
+         T targetObject, Func<T, IScriptCommand> scriptCommandFunc, IParameterDicConverter parameterDicConverter = null, ScriptBindingScope scope = ScriptBindingScope.Application)
         {
-            return new ScriptCommandBinding<T>(uiCommandKey, targetObject, scriptCommandFunc, parameterDicConverter);
+            return new ScriptCommandBinding<T>(uiCommandKey, targetObject, scriptCommandFunc, parameterDicConverter) { Scope = scope };
         }
 
         public ScriptCommandBinding(RoutedUICommand uICommandKey, ICommand command, IParameterDicConverter parameterDicConverter = null)
         {
+            Scope = ScriptBindingScope.Application;
             Command = command;
             UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;            
             ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;            
@@ -42,6 +46,7 @@ namespace FileExplorer.Utils
         public ScriptCommandBinding(RoutedUICommand uICommandKey, IScriptCommand scriptCommand,
             IParameterDicConverter parameterDicConverter = null)
         {
+            Scope = ScriptBindingScope.Application;
             ScriptCommand = scriptCommand;
             UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;            
             ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;
@@ -57,6 +62,7 @@ namespace FileExplorer.Utils
 
         protected ScriptCommandBinding(RoutedUICommand uiCommandKey, IParameterDicConverter parameterDicConverter = null)
         {
+            Scope = ScriptBindingScope.Application;
             UICommandKey = uiCommandKey;
             ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;
         }
@@ -112,6 +118,7 @@ namespace FileExplorer.Utils
         private IParameterDicConverter ParameterDicConverter { get; set; }
         public RoutedUICommand UICommandKey { get; private set; }
         public CommandBinding CommandBinding { get { return getCommandBiniding(); } }
+        public ScriptBindingScope Scope { get; set; }
 
         #endregion
 

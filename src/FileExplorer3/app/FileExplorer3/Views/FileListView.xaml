@@ -21,7 +21,33 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Toolbar.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+
+            <Style x:Key="ContextMenuMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
+                <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
+                <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                <Setter Property="CommandParameter" Value="{Binding DataContext.Commands.AppliedModels, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
+                <Setter Property="IsCheckable" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
+                <Setter Property="IsChecked" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
+                <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding CommandType}" Value="Separator">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Separator HorizontalAlignment="Stretch" Height="1" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
+
+
     </UserControl.Resources>
     <Grid>
 
@@ -42,11 +68,11 @@
                        >            
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
-                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />
+                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />             
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
-                        <MouseBinding Command="ApplicationCommands.Open"                                    
-                                      MouseAction="LeftDoubleClick" />
+                        <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
+                        <MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />
                         <KeyBinding Key="A" Command="def:FileListCommands.UnselectAll" /> <!-- Testing -->
                         <KeyBinding Key="C" Command="def:FileListCommands.ToggleCheckBox" />
                         <KeyBinding Key="V" Command="def:FileListCommands.ToggleViewMode" />
@@ -63,33 +89,12 @@
             </i:Interaction.Triggers>
 
             <uc:ListViewEx.ContextMenu>
-                <ContextMenu ItemsSource="{Binding Commands.CommandModels.All}" >
-                    <ContextMenu.Resources>
-                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                            <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
-                            <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />                            
-                            <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
-                            <Setter Property="CommandParameter" Value="{Binding DataContext.Commands.AppliedModels, 
-                                    RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                            <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
-                            <Setter Property="IsCheckable" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
-                            <Setter Property="IsChecked" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
-                            <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" /> 
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding CommandType}" Value="Separator">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate>
-                                                <Separator HorizontalAlignment="Stretch" Height="1" />
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ContextMenu.Resources>
-                </ContextMenu>
+                <ContextMenu ItemsSource="{Binding Commands.CommandModels.All}" 
+                             PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                             IsOpen="{Binding IsContextMenuVisible, Mode=TwoWay}"
+                                     ItemContainerStyle="{StaticResource ContextMenuMenuItemStyle}" />
             </uc:ListViewEx.ContextMenu>
+            
             <uc:ListViewEx.ContentBelowHeader>
                 <Border Margin="2" >
                     <uc:ToolbarEx ItemsSource="{Binding Commands.CommandModels.All}"                                  

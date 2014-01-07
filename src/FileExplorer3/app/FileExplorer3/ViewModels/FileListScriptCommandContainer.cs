@@ -18,6 +18,7 @@ namespace FileExplorer.ViewModels
     public interface IFileListScriptCommandContainer : IScriptCommandContainer
     {
         IScriptCommand Open { get; set; }
+        IScriptCommand ContextMenu { get; set; }
     }
 
     public class FileListScriptCommandContainer : IFileListScriptCommandContainer, IExportCommandBindings
@@ -41,10 +42,17 @@ namespace FileExplorer.ViewModels
                    ResultCommand.NoError //Selected more than one item.
                    );
 
-            IScriptCommand[] allCommands = new[] { Open };
+            ContextMenu = new SimpleScriptCommand("ShowContextMenu", pm =>
+            {
+                (pm["FileList"] as IFileListViewModel).IsContextMenuVisible = true;
+                return ResultCommand.OK;
+            });
+
             ExportedCommandBindings = new[] 
             {
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter)
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.ContextMenu, this, (ch) => ch.ContextMenu, 
+                    ParameterDicConverter, ScriptBindingScope.Local)
             };
         }
 
@@ -63,6 +71,7 @@ namespace FileExplorer.ViewModels
         public ParameterDicConverterBase ParameterDicConverter { get; private set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; private set; }
         public IScriptCommand Open { get; set; }
+        public IScriptCommand ContextMenu { get; set; }
 
         #endregion
     }

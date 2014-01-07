@@ -172,7 +172,7 @@ namespace FileExplorer.ViewModels
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         private IToolbarViewModel _toolbar = null;
-        private bool _isCheckboxVisible = false;
+        private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
 
         #endregion
 
@@ -203,6 +203,12 @@ namespace FileExplorer.ViewModels
         {
             get { return _isCheckboxVisible; }
             set { _isCheckboxVisible = value; NotifyOfPropertyChange(() => IsCheckBoxVisible); }
+        }
+
+        public bool IsContextMenuVisible
+        {
+            get { return _isContextMenuVisible; }
+            set { _isContextMenuVisible = value; NotifyOfPropertyChange(() => IsContextMenuVisible); }
         }
 
         public string ViewMode
