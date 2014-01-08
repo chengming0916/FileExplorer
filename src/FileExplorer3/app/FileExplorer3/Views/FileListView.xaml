@@ -69,6 +69,12 @@
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
                 <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />             
+                <bc:ContextMenuEventProcessor>
+                    <bc:ContextMenuEventProcessor.ContextMenu>
+                        <ContextMenu ItemsSource="{Binding Commands.CommandModels.All}" 
+                                     ItemContainerStyle="{StaticResource ContextMenuMenuItemStyle}" />
+                    </bc:ContextMenuEventProcessor.ContextMenu>
+                </bc:ContextMenuEventProcessor>
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
@@ -87,13 +93,6 @@
                     <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
             </i:Interaction.Triggers>
-
-            <uc:ListViewEx.ContextMenu>
-                <ContextMenu ItemsSource="{Binding Commands.CommandModels.All}" 
-                             PlacementTarget="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
-                             IsOpen="{Binding IsContextMenuVisible, Mode=TwoWay}"
-                                     ItemContainerStyle="{StaticResource ContextMenuMenuItemStyle}" />
-            </uc:ListViewEx.ContextMenu>
             
             <uc:ListViewEx.ContentBelowHeader>
                 <Border Margin="2" >

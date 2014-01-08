@@ -21,7 +21,7 @@ namespace FileExplorer.ViewModels.Helpers
     public interface ICommandsHelper : IExportCommandBindings
     {
         IEntryModel[] AppliedModels { get; }
-        EntriesHelper<ICommandViewModel> CommandModels { get; }        
+       IEntriesHelper<ICommandViewModel> CommandModels { get; }        
     }
 
     public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper
@@ -79,7 +79,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public IEntryModel[] AppliedModels { get { return _appliedModels; } 
             set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels);  } }
-        public EntriesHelper<ICommandViewModel> CommandModels { get; private set; }
+        public IEntriesHelper<ICommandViewModel> CommandModels { get; private set; }
 
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings
         {
