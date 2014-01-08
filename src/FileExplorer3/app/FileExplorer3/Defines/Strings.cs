@@ -14,5 +14,6 @@ namespace FileExplorer.Defines
         public static string strToggleViewMode = "ViewMode";
         public static string strUnselectAll = "Unselect all";
         public static string strInvertSelect = "Invert selection";
+        public static string strUpOneLevel = "Up";
     }
 }

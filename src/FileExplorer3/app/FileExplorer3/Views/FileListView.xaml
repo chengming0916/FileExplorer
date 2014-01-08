@@ -79,6 +79,7 @@
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />
+                        <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
                         <KeyBinding Key="A" Command="def:FileListCommands.UnselectAll" /> <!-- Testing -->
                         <KeyBinding Key="C" Command="def:FileListCommands.ToggleCheckBox" />
                         <KeyBinding Key="V" Command="def:FileListCommands.ToggleViewMode" />
