@@ -21,7 +21,7 @@ using FileExplorer.ViewModels.Helpers;
 namespace FileExplorer.ViewModels
 {
 
-    public class FileListCommandsHelper : CommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
+    public class FileListCommandsHelper : ToolbarCommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
         #region Commands
 
