@@ -13,6 +13,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
@@ -120,7 +121,8 @@ namespace FileExplorer.BaseControls
         {
             //if (eventName != "OnMouseMove")
             //    Debug.WriteLine(eventName);
-            UIParameterDic pd = new UIParameterDic() { EventArgs = e, EventName = eventId.Name, Sender = sender };
+
+            ParameterDic pd = ParameterDicConverters.ConvertUIParameter.Convert(null, eventId.Name, sender, e);                                
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
                 processors
                 .Where(p => p.ProcessEvents.Contains(eventId))

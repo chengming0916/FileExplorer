@@ -26,7 +26,7 @@
             <Style x:Key="ContextMenuMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                 <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
-                <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                <Setter Property="Command" Value="{Binding  CommandBinding.Command, Mode=OneWay}" />
                 <Setter Property="CommandParameter" Value="{Binding DataContext.ToolbarCommands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
@@ -92,8 +92,8 @@
                     </uc:InputBindingTrigger.InputBinding>
                     <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
-            </i:Interaction.Triggers>
-            
+            </i:Interaction.Triggers>           
+                
             <uc:ListViewEx.ContentBelowHeader>
                 <Border Margin="2" >
                     <uc:ToolbarEx ItemsSource="{Binding ToolbarCommands.CommandModels.All}"                                  
@@ -101,7 +101,7 @@
                         <uc:ToolbarEx.Resources>
                             <Style TargetType="{x:Type uc:ToolbarItemEx}" BasedOn="{StaticResource ToolbarItemExStyle}" >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
-                                <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                                <Setter Property="Command" Value="{Binding CommandBinding.Command, Mode=OneWay}" />
                                 <Setter Property="CommandParameter" Value="{Binding DataContext.ToolbarCommands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type uc:ToolbarEx}}}" />
                                 <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
@@ -125,7 +125,7 @@
                             </Style>
                             <Style TargetType="{x:Type uc:ToolbarSubItemEx}" BasedOn="{StaticResource ToolbarSubItemExStyle}"  >
                                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
-                                <Setter Property="Command" Value="{Binding Command, Mode=OneWay}" />
+                                <Setter Property="Command" Value="{Binding CommandBinding.Command, Mode=OneWay}" />
                                 <Setter Property="CommandParameter" Value="{Binding DataContext.ToolbarCommands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type uc:ToolbarEx}}}" />
                                 <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />

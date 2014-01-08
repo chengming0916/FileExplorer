@@ -11,7 +11,7 @@ namespace Cofe.Core.Script
     /// </summary>
     public interface IParameterDicConverter
     {
-        ParameterDic Convert(object parameter);
-        object ConvertBack(ParameterDic pd);
+        ParameterDic Convert(object parameter, params object[] additionalParameters);
+        object ConvertBack(ParameterDic pd, params object[] additionalParameters);
     }
 }

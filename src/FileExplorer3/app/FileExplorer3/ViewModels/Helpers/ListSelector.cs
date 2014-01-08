@@ -24,8 +24,9 @@ namespace FileExplorer.ViewModels.Helpers
                         
             ExportedCommandBindings = new List<IScriptCommandBinding>()
             {
-                new ScriptCommandBinding(FileListCommands.UnselectAll, p => true, p => UnselectAll()), 
-                new ScriptCommandBinding(ApplicationCommands.SelectAll, p => true, p => SelectAll())
+                new ScriptCommandBinding(FileListCommands.InvertSelect, p => true, p => InvertSelect(), null, ScriptBindingScope.Explorer), 
+                new ScriptCommandBinding(FileListCommands.UnselectAll, p => true, p => UnselectAll(), null, ScriptBindingScope.Explorer), 
+                new ScriptCommandBinding(ApplicationCommands.SelectAll, p => true, p => SelectAll(), null, ScriptBindingScope.Explorer)
             };
         }
 
@@ -38,6 +39,13 @@ namespace FileExplorer.ViewModels.Helpers
             NotifyOfPropertyChanged(() => SelectedItems);
             if (SelectionChanged != null)
                 SelectionChanged(this, EventArgs.Empty);
+        }
+
+        public void InvertSelect()
+        {
+            foreach (var e in EntryHelper.AllNonBindable.ToList())
+                e.IsSelected = !e.IsSelected;
+            notifySelectionChanged();
         }
 
         public void UnselectAll()

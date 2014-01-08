@@ -38,7 +38,13 @@ namespace FileExplorer.BaseControls
     {
         public static UIParameterDic AsUIParameterDic(this ParameterDic dic)
         {
-            return (UIParameterDic)dic;
+            if (dic is UIParameterDic)
+                return (UIParameterDic)dic;
+
+            var retVal = new UIParameterDic();
+            foreach (var pp in dic)
+                retVal.Add(pp.Key, pp.Value);
+            return retVal;
         }
     }
 }

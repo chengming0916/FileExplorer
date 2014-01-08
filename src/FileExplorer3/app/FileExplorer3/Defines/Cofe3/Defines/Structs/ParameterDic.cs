@@ -76,6 +76,12 @@ namespace Cofe.Core
             set { if (this.ContainsKey("Handled")) this["Handled"] = value; else this.Add("Handled", value); }
         }
 
+        public object Parameter
+        {
+            get { return this.ContainsKey("Parameter") && this["Parameter"] is object ? this["Parameter"] as object : null; }
+            set { if (this.ContainsKey("Parameter")) this["Parameter"] = value; else this.Add("Parameter", value); }
+        }             
+
         /// <summary>
         /// Most exception is throw directly, if not, it will set the Error property, which will be thrown 
         /// in PropertyInvoker.ensureNoError() method.

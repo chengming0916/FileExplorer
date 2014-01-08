@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Cinch;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 using FileExplorer.ViewModels;
 
 namespace FileExplorer
@@ -43,14 +44,15 @@ namespace FileExplorer
         }
 
 
-        public static void RegisterCommand(this IExportCommandBindings container, UIElement ele)
+        public static void RegisterCommand(this IExportCommandBindings container, UIElement ele, ScriptBindingScope scope)
         {
             foreach (var c in container.ExportedCommandBindings)
-            {
-                var binding = c.CommandBinding;
-                if (binding != null)
-                    ele.CommandBindings.Add(binding);
-            }
+                if (scope.HasFlag(c.Scope))
+                {
+                    var binding = c.CommandBinding;
+                    if (binding != null)
+                        ele.CommandBindings.Add(binding);
+                }
         }
 
     }
