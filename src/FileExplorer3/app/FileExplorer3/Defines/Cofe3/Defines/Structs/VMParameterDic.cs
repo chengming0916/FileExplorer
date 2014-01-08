@@ -28,6 +28,12 @@ namespace FileExplorer.BaseControls
         {
             get { return this.ContainsKey("FileList") && this["FileList"] is IFileListViewModel ? this["FileList"] as IFileListViewModel : null; }
             set { if (this.ContainsKey("FileList")) this["FileList"] = value; else this.Add("FileList", value); }
+        }
+
+        public INavigationViewModel Navigation
+        {
+            get { return this.ContainsKey("Navigation") && this["Navigation"] is INavigationViewModel ? this["Navigation"] as INavigationViewModel : null; }
+            set { if (this.ContainsKey("Navigation")) this["Navigation"] = value; else this.Add("Navigation", value); }
         }     
 
     }    

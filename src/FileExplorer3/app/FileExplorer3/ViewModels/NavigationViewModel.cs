@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Defines;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
-    public class NavigationViewModel : PropertyChangedBase, INavigationViewModel,
+    public class NavigationViewModel : ViewAware, INavigationViewModel,
         IHandle<SelectionChangedEvent>
     {
         #region Constructor
@@ -19,13 +20,20 @@ namespace FileExplorer.ViewModels
             Events = events;
             if (events != null)
                 events.Subscribe(this);
+
+            ScriptCommands = new NavigationScriptCommandContainer(this, events);
         }
 
         #endregion
 
         #region Methods       
 
-        
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            var uiEle = view as System.Windows.UIElement;
+            this.RegisterCommand(uiEle, ScriptBindingScope.Local);
+        }
 
         public void Handle(SelectionChangedEvent message)
         {
@@ -120,6 +128,11 @@ namespace FileExplorer.ViewModels
             ChangeNavigationPosition(NavigationPosition - 1);
         }
 
+        private IEnumerable<IScriptCommandBinding> getExportedCommands()
+        {
+            return ScriptCommands.ExportedCommandBindings;
+        }
+
 
         #endregion
 
@@ -137,6 +150,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
+        public INavigationScriptCommandContainer ScriptCommands { get; private set; }
         public IEventAggregator Events { get; set; }
         public int NavigationPosition { get { return _position; } set { ChangeNavigationPosition(value); } }
         public IObservableCollection<IEntryViewModel> NavigationHistory { get { return _navigationHistory; } }
@@ -144,10 +158,17 @@ namespace FileExplorer.ViewModels
         public bool CanGoNext { get { return _canGoNext; } private set { _canGoNext = value; NotifyOfPropertyChange(() => CanGoNext); } }
         public bool CanGoUp { get { return _canGoUp; } private set { _canGoUp = value; NotifyOfPropertyChange(() => CanGoUp); } }
 
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings
+        {
+            get { return getExportedCommands(); }
+        }
+
         #endregion
 
 
 
-        
+
+
+       
     }
 }

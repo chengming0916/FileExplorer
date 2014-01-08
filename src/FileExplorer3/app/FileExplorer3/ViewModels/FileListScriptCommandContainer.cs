@@ -47,8 +47,8 @@ namespace FileExplorer.ViewModels
 
             ExportedCommandBindings = new[] 
             {
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter),
-                ScriptCommandBinding.FromScriptCommand(FileListCommands.Refresh, this, (ch) => ch.Refresh, ParameterDicConverter)
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(FileListCommands.Refresh, this, (ch) => ch.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer)
             };
         }
 
