@@ -9,11 +9,12 @@ using System.Windows;
 using System.Windows.Input;
 using Cinch;
 using FileExplorer.UserControls;
+using FileExplorer.ViewModels;
 using FileExplorer.ViewModels.Helpers;
 
 namespace TestTemplate.WPF
 {
-    public class DragDropItemViewModel : NotifyPropertyChanged, ISupportDrag, ISupportDrop, IDraggable
+    public class DragDropItemViewModel : NotifyPropertyChanged, ISupportDrag, ISupportDrop, IDraggable, ISelectable
     {
         public static string Format_DragDropItem = "DragDropItemVM";
         #region Constructor
