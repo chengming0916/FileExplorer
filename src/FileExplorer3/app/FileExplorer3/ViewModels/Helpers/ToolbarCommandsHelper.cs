@@ -18,17 +18,17 @@ namespace FileExplorer.ViewModels.Helpers
     /// Populate Commands (CommandViewModel, e.g. ToggleView), and notify the commands when AppliedModels changes.
     /// For use in toolbar and context menu.
     /// </summary>
-    public interface ICommandsHelper : IExportCommandBindings
+    public interface IToolbarCommandsHelper : IExportCommandBindings
     {
         IEntryModel[] AppliedModels { get; }
        IEntriesHelper<ICommandViewModel> CommandModels { get; }        
     }
 
-    public class CommandsHelper : NotifyPropertyChanged, ICommandsHelper
+    public class ToolbarCommandsHelper : NotifyPropertyChanged, IToolbarCommandsHelper
     {
         #region Constructor
 
-        public CommandsHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
+        public ToolbarCommandsHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
         {
             _extraCommands = extraCommands;
             _rootProfiles = rootProfiles;

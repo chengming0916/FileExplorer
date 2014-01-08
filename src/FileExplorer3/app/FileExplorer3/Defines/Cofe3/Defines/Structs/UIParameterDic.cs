@@ -10,6 +10,9 @@ using Cofe.Core;
 
 namespace FileExplorer.BaseControls
 {
+    /// <summary>
+    /// Specialized for IUIEventHub uses.
+    /// </summary>
     public class UIParameterDic : ParameterDic
     {
         public string EventName

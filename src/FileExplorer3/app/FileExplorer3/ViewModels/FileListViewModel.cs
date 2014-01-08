@@ -83,7 +83,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            Commands = new FileListCommandsHelper(this, events, rootProfiles);
+            ToolbarCommands = new FileListCommandsHelper(this, events, rootProfiles);
             ScriptCommands = new FileListScriptCommandContainer(this, events);
 
             #region Unused
@@ -140,7 +140,7 @@ namespace FileExplorer.ViewModels
 
         private IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
-            return Commands.ExportedCommandBindings
+            return ToolbarCommands.ExportedCommandBindings
                 .Union(Selection.ExportedCommandBindings)
                 .Union(ScriptCommands.ExportedCommandBindings);            
         }
@@ -178,7 +178,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public ICommandsHelper Commands { get; private set; }
+        public IToolbarCommandsHelper ToolbarCommands { get; private set; }
         public IFileListScriptCommandContainer ScriptCommands { get; private set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }

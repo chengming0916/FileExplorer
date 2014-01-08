@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels
         /// <summary>
         /// Return available commands for current filelist, for toolbar and context menu.
         /// </summary>
-        ICommandsHelper Commands { get; }
+        IToolbarCommandsHelper ToolbarCommands { get; }
 
         /// <summary>
         /// All changable script commands for the current file list, allow customize what to execute when certain action.

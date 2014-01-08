@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileExplorer.BaseControls;
 
 namespace Cofe.Core.Script
 {
@@ -12,6 +13,13 @@ namespace Cofe.Core.Script
         public static IParameterDicConverter ConvertParameterOnly =
             new ParameterDicConverterBase(p => new ParameterDic() { { "Parameter", p } },
                 pd => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
+
+        //public static IParameterDicConverter ConvertUIParameter = 
+        //    new ParameterDicConverterBase(p =>
+        //        {
+        //            var tup = p as Tuple<string, object, EventArgs>; //Event name
+        //            return new UIParameterDic() { Sender = tup.Item1, EventArgs = tup.Item2, 
+        //        }
     }
 
     public class ParameterDicConverterBase : IParameterDicConverter
@@ -51,5 +59,6 @@ namespace Cofe.Core.Script
             return retVal;
         }
     }
+
 
 }
