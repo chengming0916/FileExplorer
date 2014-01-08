@@ -18,9 +18,9 @@ namespace FileExplorer.Models
     /// </summary>
     public interface ICommandModel : IComparable<ICommandModel>, IComparable, INotifyPropertyChanged
     {
-        string CommandType { get; }
+        //string CommandType { get; }
 
-        RoutedUICommand RoutedCommand { get; set; }
+        //RoutedUICommand RoutedCommand { get; set; }
         IScriptCommand Command { get; set; }
 
         /// <summary>

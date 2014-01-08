@@ -134,21 +134,4 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    public class ShowContextMenu : ScriptCommandBase
-    {
-        private Control _control;        
-        public ShowContextMenu(Control control) : base("EventArgs") { _control = control; }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {            
-            if (_control.ContextMenu != null)
-            {
-                _control.ContextMenu.PlacementTarget = _control;
-                _control.ContextMenu.SetValue(ContextMenu.IsOpenProperty, true);
-            }
-            return ResultCommand.NoError; //Set Handled to true.
-        }
-
-
-    }
 }

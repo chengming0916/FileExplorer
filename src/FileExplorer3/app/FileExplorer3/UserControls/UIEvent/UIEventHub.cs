@@ -131,27 +131,33 @@ namespace FileExplorer.BaseControls
         }
 
 
+        private bool isValidPosition(object sender, MouseButtonEventArgs e)
+        {
+            var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
+            if (scp == null ||
+                //ListViewEx contains ContentBelowHeader, allow placing other controls in it, this is to avoid that)
+                (!scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(e.OriginalSource as DependencyObject)) &&
+                //This is for handling user click in empty area of a panel.
+                 !(e.OriginalSource is ScrollViewer))
+                )
+                return false;
 
+            bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;
+            bool isOverScrollBar = UITools.FindAncestor<ScrollBar>(e.OriginalSource as DependencyObject) != null;
+            if (isOverGridViewHeader || isOverScrollBar)
+                return false;
+
+            return true;
+        }
 
         MouseButtonEventArgs _mouseDownEvent = null;
         void Control_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!isValidPosition(sender, e))
+                return;
+
             if (e.ClickCount == 1)
             {
-                var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
-                if (scp == null ||
-                    //ListViewEx contains ContentBelowHeader, allow placing other controls in it, this is to avoid that)
-                    (!scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(e.OriginalSource as DependencyObject)) &&
-                    //This is for handling user click in empty area of a panel.
-                     !(e.OriginalSource is ScrollViewer))
-                    )
-                    return;
-
-                bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject) != null;
-                bool isOverScrollBar = UITools.FindAncestor<ScrollBar>(e.OriginalSource as DependencyObject) != null;
-                if (isOverGridViewHeader || isOverScrollBar)
-                    return;
-
                 _mouseDownEvent = e;
                 
             }
@@ -208,6 +214,9 @@ namespace FileExplorer.BaseControls
 
         void Control_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (!isValidPosition(sender, e))
+                return;
+
             FrameworkElement control = sender as FrameworkElement;
 
             execute(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);

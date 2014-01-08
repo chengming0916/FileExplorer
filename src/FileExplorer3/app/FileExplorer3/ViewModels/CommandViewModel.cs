@@ -27,9 +27,10 @@ namespace FileExplorer.ViewModels
             _parentCommandViewModel = parentCommandViewModel;
 
             if (CommandModel != null)
-                if (commandModel.RoutedCommand != null)
-                    Command = commandModel.RoutedCommand;
-                else Command = new SimpleCommand()
+                //if (commandModel.RoutedCommand != null)
+                //    Command = commandModel.RoutedCommand;
+                //else 
+                    Command = new SimpleCommand()
                     {
                         CanExecuteDelegate = p => CommandModel.Command == null || CommandModel.Command.CanExecute(
                             ParameterDic.FromParameterPair(new ParameterPair("Parameter", p))),
