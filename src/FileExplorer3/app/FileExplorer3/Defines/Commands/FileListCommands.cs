@@ -9,12 +9,13 @@ namespace FileExplorer.Defines
 {
     public static class FileListCommands
     {
-        public static string strToggleCheckBox = "Checkboxes";
-        public static string strToggleViewMode = "ViewMode";
-        public static string strUnselectAll = "Unselect all";
+        public static RoutedUICommand UpOneLevel = new RoutedUICommand(Strings.strInvertSelect, "InvertSelect", typeof(FileListCommands));
+        public static RoutedUICommand InvertSelect = new RoutedUICommand(Strings.strInvertSelect, "InvertSelect", typeof(FileListCommands));
+        public static RoutedUICommand UnselectAll = new RoutedUICommand(Strings.strUnselectAll, "UnselectAll", typeof(FileListCommands));
+        public static RoutedUICommand ToggleCheckBox = new RoutedUICommand(Strings.strToggleCheckBox, "ToggleCheckBox", typeof(FileListCommands));
+        public static RoutedUICommand ToggleViewMode = new RoutedUICommand(Strings.strToggleViewMode, "ToggleViewMode", typeof(FileListCommands));
 
-        public static RoutedUICommand UnselectAll = new RoutedUICommand(strUnselectAll, "UnselectAll", typeof(FileListCommands));
-        public static RoutedUICommand ToggleCheckBox = new RoutedUICommand(strToggleCheckBox, "ToggleCheckBox", typeof(FileListCommands));
-        public static RoutedUICommand ToggleViewMode = new RoutedUICommand(strToggleViewMode, "ToggleViewMode", typeof(FileListCommands));
+        public static RoutedUICommand Refresh = new RoutedUICommand(Strings.strRefresh, "Refresh", typeof(FileListCommands),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.R, ModifierKeys.Control) }));
     }
 }

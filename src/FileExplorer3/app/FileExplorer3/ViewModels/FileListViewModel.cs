@@ -32,7 +32,7 @@ namespace FileExplorer.ViewModels
 #if !WINRT
     [Export(typeof(FileListViewModel))]
 #endif
-    public class FileListViewModel : PropertyChangedBase, IFileListViewModel,
+    public class FileListViewModel : ViewAware, IFileListViewModel,
         IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDragHelper, ISupportDropHelper
     {
 
@@ -143,6 +143,13 @@ namespace FileExplorer.ViewModels
             return ToolbarCommands.ExportedCommandBindings
                 .Union(Selection.ExportedCommandBindings)
                 .Union(ScriptCommands.ExportedCommandBindings);            
+        }
+
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+              var uiEle = view as System.Windows.UIElement;
+            this.RegisterCommand(uiEle, ScriptBindingScope.Local);            
         }
 
         public void SignalChangeDirectory(IEntryModel newDirectory)

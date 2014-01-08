@@ -223,7 +223,7 @@
     <Compile Include="BaseControls\OverlappingPanel.cs" />
     <Compile Include="UserControls\StatusbarEx.cs" />
     <Compile Include="UserControls\TreeViewEx.cs" />
-    <Compile Include="UserControls\ExplorerCommands.cs" />
+    <Compile Include="Defines\Commands\ExplorerCommands.cs" />
     <Compile Include="BaseControls\VirtualizingWrapPanel.cs" />
     <Compile Include="UnitTests\UnitTestExtensions.cs" />
     <Compile Include="BaseControls\AnimatedVirtualizingPanel.cs" />

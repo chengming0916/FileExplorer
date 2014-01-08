@@ -14,7 +14,7 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : PropertyChangedBase, IExplorerViewModel, IHandle<SelectionChangedEvent>, IExportCommandBindings
+    public class ExplorerViewModel : ViewAware, IExplorerViewModel, IHandle<SelectionChangedEvent>, IExportCommandBindings
     {
         #region Cosntructor
 
@@ -43,6 +43,13 @@ namespace FileExplorer.ViewModels
         private IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
             return FileList.ExportedCommandBindings;
+        }
+
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            var uiEle = view as System.Windows.UIElement;
+            this.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
         }
 
         public void Go(string gotoPath)

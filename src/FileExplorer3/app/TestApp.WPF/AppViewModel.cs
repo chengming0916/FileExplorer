@@ -75,7 +75,7 @@ namespace TestApp.WPF
         {
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
-            ExplorerModel.RegisterCommand(uiEle);
+            ExplorerModel.RegisterCommand(uiEle, ScriptBindingScope.Application);
         }
 
 

@@ -187,9 +187,9 @@ namespace FileExplorer.ViewModels
             events.Subscribe(this);
             _flvm = flvm;
 
-  
-            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleCheckBox,p => true, p => ToggleCheckBox()));
-            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleViewMode, p => true, p => ToggleViewMode()));
+
+            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), null, ScriptBindingScope.Explorer));
+            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleViewMode, p => true, p => ToggleViewMode(), null, ScriptBindingScope.Explorer));
         }
 
         #endregion

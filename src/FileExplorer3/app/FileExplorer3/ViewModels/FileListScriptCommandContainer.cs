@@ -18,7 +18,7 @@ namespace FileExplorer.ViewModels
     public interface IFileListScriptCommandContainer : IScriptCommandContainer
     {
         IScriptCommand Open { get; set; }
-        IScriptCommand ContextMenu { get; set; }
+        IScriptCommand Refresh { get; set; }   
     }
 
     public class FileListScriptCommandContainer : IFileListScriptCommandContainer, IExportCommandBindings
@@ -27,32 +27,28 @@ namespace FileExplorer.ViewModels
 
         public FileListScriptCommandContainer(IFileListViewModel flvm, IEventAggregator events)
         {
-            ParameterDicConverter = new ParameterDicConverterBase(p =>
-              new ParameterDic() 
-                {                     
-                    { "FileList", flvm },
-                    { "Events", events }
-                },
-              pd => null, ParameterDicConverters.ConvertParameterOnly);
+            ParameterDicConverter =
+                ParameterDicConverters.ConvertVMParameter(
+                    new Tuple<string, object>("FileList", flvm),
+                    new Tuple<string, object>("Events", events));                
 
             Open = new IfFileListSelection(evm => evm.Count == 1,
                    new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
                        new OpenSelectedDirectory(),  //Selected directory
                        ResultCommand.NoError),   //Selected non-directory
-                   ResultCommand.NoError //Selected more than one item.
+                   ResultCommand.NoError //Selected more than one item.                   
                    );
 
-            ContextMenu = new SimpleScriptCommand("ShowContextMenu", pm =>
+            Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
-                (pm["FileList"] as IFileListViewModel).IsContextMenuVisible = true;
+                pd.AsVMParameterDic().FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
                 return ResultCommand.OK;
             });
 
             ExportedCommandBindings = new[] 
             {
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter),
-                //ScriptCommandBinding.FromScriptCommand(ApplicationCommands.ContextMenu, this, (ch) => ch.ContextMenu, 
-                //    ParameterDicConverter, ScriptBindingScope.Local)
+                ScriptCommandBinding.FromScriptCommand(FileListCommands.Refresh, this, (ch) => ch.Refresh, ParameterDicConverter)
             };
         }
 
@@ -68,10 +64,10 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public ParameterDicConverterBase ParameterDicConverter { get; private set; }
+        public IParameterDicConverter ParameterDicConverter { get; private set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; private set; }
         public IScriptCommand Open { get; set; }
-        public IScriptCommand ContextMenu { get; set; }
+        public IScriptCommand Refresh { get; set; }    
 
         #endregion
     }

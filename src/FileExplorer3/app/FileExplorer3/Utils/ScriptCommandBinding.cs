@@ -29,24 +29,30 @@ namespace FileExplorer.Utils
     {
         #region Constructor
 
+        public static IScriptCommandBinding ForRoutedUICommand(RoutedUICommand uiCommandKey)
+        {
+            return new ScriptCommandBinding(null, uiCommandKey, null, ScriptBindingScope.Local);
+        }
+
         public static IScriptCommandBinding FromScriptCommand<T>(RoutedUICommand uiCommandKey,
          T targetObject, Func<T, IScriptCommand> scriptCommandFunc, IParameterDicConverter parameterDicConverter = null, ScriptBindingScope scope = ScriptBindingScope.Application)
         {
             return new ScriptCommandBinding<T>(uiCommandKey, targetObject, scriptCommandFunc, parameterDicConverter) { Scope = scope };
         }
 
-        public ScriptCommandBinding(RoutedUICommand uICommandKey, ICommand command, IParameterDicConverter parameterDicConverter = null)
+        public ScriptCommandBinding(RoutedUICommand uICommandKey, ICommand command, IParameterDicConverter parameterDicConverter = null,
+            ScriptBindingScope scope = ScriptBindingScope.Application)
         {
-            Scope = ScriptBindingScope.Application;
+            Scope = scope;
             Command = command;
             UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;            
             ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;            
         }
 
         public ScriptCommandBinding(RoutedUICommand uICommandKey, IScriptCommand scriptCommand,
-            IParameterDicConverter parameterDicConverter = null)
+            IParameterDicConverter parameterDicConverter = null, ScriptBindingScope scope = ScriptBindingScope.Application)
         {
-            Scope = ScriptBindingScope.Application;
+            Scope = scope;
             ScriptCommand = scriptCommand;
             UICommandKey = uICommandKey == null ? ApplicationCommands.NotACommand : uICommandKey;            
             ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;
@@ -54,15 +60,16 @@ namespace FileExplorer.Utils
         }
 
         public ScriptCommandBinding(RoutedUICommand uICommandKey, Func<object, bool> canExecuteFunc, Action<object> executeFunc, 
-            IParameterDicConverter parameterDicConverter = null)
+            IParameterDicConverter parameterDicConverter = null, ScriptBindingScope scope = ScriptBindingScope.Application)
             : this(uICommandKey, new SimpleCommand() { CanExecuteDelegate = (p) => canExecuteFunc == null || canExecuteFunc(p), 
-                ExecuteDelegate = executeFunc, UICommand = uICommandKey }, parameterDicConverter)
+                ExecuteDelegate = executeFunc, UICommand = uICommandKey }, parameterDicConverter, scope)
         {
         }
 
-        protected ScriptCommandBinding(RoutedUICommand uiCommandKey, IParameterDicConverter parameterDicConverter = null)
+        protected ScriptCommandBinding(RoutedUICommand uiCommandKey, IParameterDicConverter parameterDicConverter = null, 
+            ScriptBindingScope scope = ScriptBindingScope.Application)
         {
-            Scope = ScriptBindingScope.Application;
+            Scope = scope;
             UICommandKey = uiCommandKey;
             ParameterDicConverter = parameterDicConverter == null ? ParameterDicConverters.ConvertParameterOnly : parameterDicConverter;
         }
@@ -76,12 +83,14 @@ namespace FileExplorer.Utils
             return new CommandBinding(UICommandKey,
                (ExecutedRoutedEventHandler)delegate(object sender, ExecutedRoutedEventArgs e)
                {
-                   Command.Execute(e.Parameter);
+                   var pd = ParameterDicConverter.Convert(e.Parameter, "Executed", sender, e);
+                   Command.Execute(pd);
                    e.Handled = true;
                },
                (CanExecuteRoutedEventHandler)delegate(object sender, CanExecuteRoutedEventArgs e)
                {
-                   e.CanExecute = Command.CanExecute(e.Parameter);
+                   var pd = ParameterDicConverter.Convert(e.Parameter, "Executed", sender, e);
+                   e.CanExecute = Command.CanExecute(pd);
                });
         }
 
@@ -90,7 +99,8 @@ namespace FileExplorer.Utils
             _scriptCommand = value;
             _command = new SimpleCommand()
             {
-                CanExecuteDelegate = (p) => ScriptCommand.CanExecute(ParameterDicConverter.Convert(p)),
+                CanExecuteDelegate = (p) => 
+                    ScriptCommand.CanExecute(ParameterDicConverter.Convert(p)),
                 ExecuteDelegate = (p) => ScriptRunnerSources.Default.GetScriptRunner().Run(
                     new Queue<IScriptCommand>(new[] { ScriptCommand }), ParameterDicConverter.Convert(p))
             };
@@ -158,7 +168,8 @@ namespace FileExplorer.Utils
 
         #region Public Properties
 
-        public override IScriptCommand ScriptCommand { get { return _scriptCommandFunc(_targetObject); } }
+        public override IScriptCommand ScriptCommand { get { var retVal = _scriptCommandFunc(_targetObject); 
+            return retVal == null ? ResultCommand.NoError : retVal; } }
 
         #endregion
     }

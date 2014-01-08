@@ -13,6 +13,7 @@ using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.Models;
 using FileExplorer.UserControls;
+using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
@@ -27,21 +28,12 @@ namespace FileExplorer.ViewModels
             _parentCommandViewModel = parentCommandViewModel;
 
             if (CommandModel != null)
-                //if (commandModel.RoutedCommand != null)
-                //    Command = commandModel.RoutedCommand;
-                //else 
-                    Command = new SimpleCommand()
-                    {
-                        CanExecuteDelegate = p => CommandModel.Command == null || CommandModel.Command.CanExecute(
-                            ParameterDic.FromParameterPair(new ParameterPair("Parameter", p))),
-                        ExecuteDelegate = p =>
-                        {
-                            if (CommandModel.Command != null)
-                                new ScriptRunner().Run(CommandModel.Command,
-                                        ParameterDic.FromParameterPair(new ParameterPair("Parameter", p)));
-                        }
-
-                    };
+                if (commandModel.RoutedCommand != null)
+                    CommandBinding = ScriptCommandBinding.ForRoutedUICommand(commandModel.RoutedCommand);
+                else
+                    CommandBinding = ScriptCommandBinding.FromScriptCommand(
+                        ApplicationCommands.NotACommand, commandModel, cm => cm.Command,
+                        ParameterDicConverters.ConvertUIParameter, ScriptBindingScope.Local);
 
             CommandModel.PropertyChanged += (o, e) =>
                 {
@@ -129,7 +121,7 @@ namespace FileExplorer.ViewModels
 
         private object _icon = null;
         private ICommandModel _commandModel;
-        private ICommand _command;
+        private IScriptCommandBinding _commandBinding;
         private bool _subCommandsLoaded = false;
         private EntriesHelper<ICommandViewModel> _subCommands;
         private ICommandViewModel _parentCommandViewModel;
@@ -142,16 +134,21 @@ namespace FileExplorer.ViewModels
 
         public ICommandModel CommandModel { get { return _commandModel; } set { _commandModel = value; NotifyOfPropertyChange(() => CommandModel); } }
 
-        public ICommand Command { get { return _command; } set { _command = value; NotifyOfPropertyChange(() => Command); } }
+        public IScriptCommandBinding CommandBinding { get { return _commandBinding; } set { _commandBinding = value; NotifyOfPropertyChange(() => CommandBinding); } }
 
         public ToolbarItemType CommandType { get { return getCommandType(); } }
 
-        public Object Icon { get {
-            return _icon is System.Windows.Controls.Image ?
-                new System.Windows.Controls.Image() { Source = (_icon as System.Windows.Controls.Image).Source } : null;
+        public Object Icon
+        {
+            get
+            {
+                return _icon is System.Windows.Controls.Image ?
+                    new System.Windows.Controls.Image() { Source = (_icon as System.Windows.Controls.Image).Source } : null;
                 ;
-        
-        } set { _icon = value; NotifyOfPropertyChange(() => Icon); } }
+
+            }
+            set { _icon = value; NotifyOfPropertyChange(() => Icon); }
+        }
 
         public bool IsVisibleInContextMenu { get { return CommandType != ToolbarItemType.Separator; } }
 
