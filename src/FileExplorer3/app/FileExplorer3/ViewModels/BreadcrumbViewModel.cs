@@ -21,31 +21,23 @@ namespace FileExplorer.ViewModels
     {
         #region Constructor
 
-        public BreadcrumbViewModel(IEventAggregator events, 
-            IEntryModel[] rootModels)
-        {
-            _profiles = rootModels.Select(rm => rm.Profile).Distinct();
+        public BreadcrumbViewModel(IEventAggregator events)
+        {            
             _events = events;
 
             if (events != null)
                 events.Subscribe(this);
-
+            
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
-            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries,
-                _profiles.First().HierarchyComparer.CompareHierarchy);
+            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
+                PathComparer.Default.CompareHierarchy);                
             selection.SelectionChanged += (o, e) =>
                 {
                     BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
                 };
             Selection = selection;
+           
 
-            Entries.SetEntries(rootModels
-                .Select(r => new BreadcrumbItemViewModel(events, this, r, null)).ToArray());
-
-
-            SuggestSources = _profiles.Select(p => p.SuggestSource);
-
-         
         }
 
         #endregion
@@ -122,6 +114,25 @@ namespace FileExplorer.ViewModels
             }
         }
 
+        void setRootModels(IEntryModel[] rootModels)
+        {
+            _profiles = rootModels.Select(rm => rm.Profile).Distinct();
+            Entries.SetEntries(rootModels
+                .Select(r => new BreadcrumbItemViewModel(_events, this, r, null)).ToArray());
+            
+        }
+
+        private void setProfiles(IProfile[] profiles)
+        {
+            _profiles = profiles;
+            if (profiles != null && profiles.Length > 0)
+            {
+                (Selection as ITreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>)
+                    .CompareFunc = profiles.First().HierarchyComparer.CompareHierarchy;
+                SuggestSources = profiles.Select(p => p.SuggestSource);
+            }
+        }
+
         public void Handle(DirectoryChangedEvent message)
         {
             if (message.NewModel != null)
@@ -134,7 +145,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        private IEnumerable<IProfile> _profiles;
+        private IEnumerable<IProfile> _profiles = new List<IProfile>();
         private string _suggestedPath;
         private bool _showBreadcrumb = true;
         private IEnumerable<ISuggestSource> _suggestSources;
@@ -144,13 +155,18 @@ namespace FileExplorer.ViewModels
         private DropDownList _bexp;
         //private bool _updatingSuggestBox = false;
 
+        private IEntriesHelper<IBreadcrumbItemViewModel> _entries;
+        private ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> _selection;
+
         #endregion
 
         #region Public Properties
 
+        public IEntryModel[] RootModels { set { setRootModels(value); }}
+        public IProfile[] Profiles { set { setProfiles(value); } }
+
         public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
-
 
         public bool ShowBreadcrumb
         {

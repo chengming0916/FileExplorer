@@ -119,7 +119,7 @@ namespace FileExplorer.ViewModels.Helpers
         /// <summary>
         /// Compare Hierarchy of two value.
         /// </summary>
-        Func<T, T, HierarchicalResult> CompareFunc { get; }
+        Func<T, T, HierarchicalResult> CompareFunc { get; set; }        
 
         ObservableCollection<VM> OverflowedAndRootItems { get; set; }
 

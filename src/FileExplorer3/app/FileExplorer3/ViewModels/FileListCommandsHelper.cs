@@ -181,7 +181,7 @@ namespace FileExplorer.ViewModels
 
         #region Constructor
 
-        public FileListCommandsHelper(IFileListViewModel flvm, IEventAggregator events, IProfile[] rootProfiles)
+        public FileListCommandsHelper(IFileListViewModel flvm, IEventAggregator events, params IProfile[] rootProfiles)
             : base(rootProfiles, new SelectGroupCommand(flvm), new ViewModeCommand(flvm), new SeparatorCommandModel())
         {
             events.Subscribe(this);

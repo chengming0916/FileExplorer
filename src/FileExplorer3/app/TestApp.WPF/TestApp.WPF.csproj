@@ -82,6 +82,9 @@
     <Compile Include="Model\DirectoryInfoEx\ExDragDropHandler.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExCommandProvider.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveModel.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveModelCache.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveProfile.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />
     <Compile Include="Utils\ImageTools.cs" />
     <Compile Include="Utils\SystemImageList.cs" />

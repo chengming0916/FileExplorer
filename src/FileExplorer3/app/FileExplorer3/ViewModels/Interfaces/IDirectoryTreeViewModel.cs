@@ -11,6 +11,9 @@ namespace FileExplorer.ViewModels
 {
     public interface IDirectoryTreeViewModel : ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>
     {
+        IEntryModel[] RootModels { set; }
+        IProfile[] Profiles { set; }
+
         Task SelectAsync(IEntryModel value);
     }
 

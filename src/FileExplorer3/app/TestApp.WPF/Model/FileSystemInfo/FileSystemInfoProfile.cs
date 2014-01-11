@@ -65,11 +65,17 @@ namespace FileExplorer.Models
 
         public override Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
         {
+            if (filter == null)
+                filter = (m) => true;
+
             List<IEntryModel> retVal = new List<IEntryModel>();
             if (entry.IsDirectory)
             {
                 DirectoryInfo di = createDirectoryInfo(entry.FullPath);
-                retVal.AddRange(from fsi in di.GetFileSystemInfos() select new FileSystemInfoModel(this, fsi));
+                retVal.AddRange(from fsi in di.GetFileSystemInfos() 
+                                let m = new FileSystemInfoModel(this, fsi)
+                                where filter(m)
+                                select m);
             }
             return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
         }      
@@ -84,7 +90,7 @@ namespace FileExplorer.Models
         public override IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
         {
             yield return GetDefaultIcon.Instance;
-            if (entry.IsDirectory)
+            if (!entry.IsDirectory)
                 yield return GetFromIconExtractIcon.Instance;
         }
         

@@ -20,20 +20,26 @@ namespace TestApp.WPF
     {
         static string rootPath = @"C:\";
         static string rootPath2 = @"C:\Temp";
-        static string lookupPath = @"C:\Temp\COFE3\DB";
+        static string lookupPath = @"C:\";
 
         #region Cosntructor
 
         [ImportingConstructor]
         public AppViewModel(IEventAggregator events)
         {
-
+            _events = events;
             IProfile profile = new FileSystemInfoProfile();
             IProfile profileEx = new FileSystemInfoExProfile();
-            ExplorerModel = new ExplorerViewModel(events,                
-                profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result
-                //profile.ParseAsync(rootPath).Result
-                );
+            ExplorerModel = new ExplorerViewModel(events)
+            {
+                RootModels = new[] 
+                {
+                    profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result,
+                    profile.ParseAsync(rootPath).Result
+                }
+            };
+            
+
 
 
             ExplorerModel.FileList.ScriptCommands.Open =
@@ -89,14 +95,32 @@ namespace TestApp.WPF
         public void Go()
         {
             ExplorerModel.Go(GotoPath);
+        }        
+
+        public void Change()
+        {
+            //ExplorerModel.Go(GotoPath);
+            IProfile profileEx = new FileSystemInfoExProfile();
+            ExplorerModel.RootModels = new[] {
+                profileEx.ParseAsync(GotoPath).Result
+            };
         }
-     
+
+        public void Add()
+        {
+            
+            IProfile profileEx = new FileSystemInfoExProfile();
+            ExplorerModel.RootModels = ExplorerModel.RootModels.Union(new[] {
+                profileEx.ParseAsync(GotoPath).Result
+            }).ToArray();
+        }
+
         public void ChangeView(string viewMode)
         {
             ExplorerModel.FileList.ViewMode = viewMode;
         }
-     
-        
+
+
 
         #endregion
 
@@ -104,13 +128,14 @@ namespace TestApp.WPF
         private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
         //private int _selectionCount = 0;
         private string _gotoPath = lookupPath;
+        private IEventAggregator _events;
         #endregion
 
         #region Public Properties
 
-        public ExplorerViewModel ExplorerModel { get; private set; }
-        
-        
+        public IExplorerViewModel ExplorerModel { get; private set; }
+
+
         public List<string> ViewModes { get { return _viewModes; } }
         //public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
         public string GotoPath { get { return _gotoPath; } set { _gotoPath = value; NotifyOfPropertyChange(() => GotoPath); } }

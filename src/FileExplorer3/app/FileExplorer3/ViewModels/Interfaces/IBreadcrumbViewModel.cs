@@ -10,6 +10,9 @@ namespace FileExplorer.ViewModels
 {
     public interface IBreadcrumbViewModel : ISupportTreeSelector<IBreadcrumbItemViewModel, IEntryModel>
     {
+        IEntryModel[] RootModels { set; }
+        IProfile[] Profiles { set; }
+
         Task SelectAsync(IEntryModel value);
     }
 }

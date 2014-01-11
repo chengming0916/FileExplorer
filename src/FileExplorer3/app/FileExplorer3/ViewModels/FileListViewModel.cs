@@ -62,7 +62,7 @@ namespace FileExplorer.ViewModels
 
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events, IProfile[] rootProfiles)
+        public FileListViewModel(IEventAggregator events)
         {
             Events = events;
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask) { ClearBeforeLoad = true };
@@ -83,7 +83,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            ToolbarCommands = new FileListCommandsHelper(this, events, rootProfiles);
+            ToolbarCommands = new FileListCommandsHelper(this, events);
             ScriptCommands = new FileListScriptCommandContainer(this, events);
 
             #region Unused
@@ -158,6 +158,11 @@ namespace FileExplorer.ViewModels
                      newDirectory, CurrentDirectory));
         }
 
+        private void setProfiles(IProfile[] profiles)
+        {
+            ToolbarCommands.RootProfiles = profiles;
+        }
+
         public void Handle(ViewChangedEvent message)
         {
             if (!(message.Sender.Equals(this)))
@@ -184,6 +189,9 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
+        public IProfile[] Profiles { set { setProfiles(value); } }
+
+  
 
         public IToolbarCommandsHelper ToolbarCommands { get; private set; }
         public IFileListScriptCommandContainer ScriptCommands { get; private set; }

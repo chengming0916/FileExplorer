@@ -20,8 +20,11 @@ namespace FileExplorer.ViewModels.Helpers
     /// </summary>
     public interface IToolbarCommandsHelper : IExportCommandBindings
     {
+        IProfile[] RootProfiles { set; }
+
         IEntryModel[] AppliedModels { get; }
-       IEntriesHelper<ICommandViewModel> CommandModels { get; }        
+        IEntriesHelper<ICommandViewModel> CommandModels { get; }
+
     }
 
     public class ToolbarCommandsHelper : NotifyPropertyChanged, IToolbarCommandsHelper
@@ -52,7 +55,7 @@ namespace FileExplorer.ViewModels.Helpers
                     break;
             }
         }
-        
+
         async Task<IEnumerable<ICommandViewModel>> loadCommandsTask()
         {
             List<ICommandModel> cmList = new List<ICommandModel>(_extraCommands) { };
@@ -68,7 +71,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Data
 
-        IEntryModel[] _appliedModels = null;        
+        IEntryModel[] _appliedModels = null;
         IProfile[] _rootProfiles = null;
         private ICommandModel[] _extraCommands;
         protected List<IScriptCommandBinding> _exportedCommandBindings = new List<IScriptCommandBinding>();
@@ -77,8 +80,13 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Public Properties
 
-        public IEntryModel[] AppliedModels { get { return _appliedModels; } 
-            set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels);  } }
+        public IProfile[] RootProfiles { set { _rootProfiles = value; } }
+
+        public IEntryModel[] AppliedModels
+        {
+            get { return _appliedModels; }
+            set { _appliedModels = value; NotifyOfPropertyChanged(() => AppliedModels); }
+        }
         public IEntriesHelper<ICommandViewModel> CommandModels { get; private set; }
 
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings
@@ -95,6 +103,6 @@ namespace FileExplorer.ViewModels.Helpers
 
 
 
-       
+
     }
 }

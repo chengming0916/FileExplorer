@@ -366,6 +366,10 @@ namespace FileExplorer.BaseControls.DragnDrop
 
             var draggables = _isd.GetDraggables().ToList();
             _dataObj = _isd.GetDataObject(draggables);
+            
+            if (_dataObj == null)
+                return ResultCommand.NoError; //Nothing to drag.
+
             var effect = _isd.QueryDrag(draggables);
 
             System.Windows.DragDrop.AddQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));

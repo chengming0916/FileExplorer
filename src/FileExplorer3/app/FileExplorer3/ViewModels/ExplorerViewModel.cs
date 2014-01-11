@@ -14,7 +14,7 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : ViewAware, IExplorerViewModel, IHandle<SelectionChangedEvent>, IExportCommandBindings
+    public class ExplorerViewModel : ViewAware, IExplorerViewModel, IHandle<SelectionChangedEvent>
     {
         #region Cosntructor
 
@@ -23,14 +23,14 @@ namespace FileExplorer.ViewModels
             _events = events;
             _rootModels = rootModels;
             
-            var rootProfiles = _rootModels.Select(m => m.Profile).Distinct().ToArray();
-
             //Toolbar = new ToolbarViewModel(events);
-            Breadcrumb = new BreadcrumbViewModel(_internalEvents, rootModels);
-            FileList = new FileListViewModel(_internalEvents, rootProfiles);
-            DirectoryTree = new DirectoryTreeViewModel(_internalEvents, rootModels);
+            Breadcrumb = new BreadcrumbViewModel(_internalEvents);
+            FileList = new FileListViewModel(_internalEvents);
+            DirectoryTree = new DirectoryTreeViewModel(_internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
-            Navigation = new NavigationViewModel(_internalEvents);            
+            Navigation = new NavigationViewModel(_internalEvents);
+
+            setRootModels(_rootModels);
 
             _internalEvents.Subscribe(this);
         }
@@ -74,6 +74,16 @@ namespace FileExplorer.ViewModels
             FileList.ViewMode = viewMode;
         }
 
+        private void setRootModels(IEntryModel[] rootModels)
+        {
+            _rootModels = rootModels;
+             var rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
+
+             Breadcrumb.Profiles = rootProfiles; Breadcrumb.RootModels = rootModels;
+             DirectoryTree.Profiles = rootProfiles; DirectoryTree.RootModels = rootModels;             
+             FileList.Profiles = rootProfiles;
+        }
+
         public void Handle(SelectionChangedEvent message)
         {
 
@@ -91,6 +101,10 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
+
+        public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
+
+     
 
         public IBreadcrumbViewModel Breadcrumb { get; private set; }
         public IDirectoryTreeViewModel DirectoryTree { get; private set; }
