@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels.Helpers
 {
@@ -146,7 +147,7 @@ namespace FileExplorer.ViewModels.Helpers
             set { SelectAsync(value); }
         }
 
-        public Func<T, T, HierarchicalResult> CompareFunc { get { return _compareFunc; } }
+        public Func<T, T, HierarchicalResult> CompareFunc { get { return _compareFunc; } set { _compareFunc = value; } }
 
         #endregion
 

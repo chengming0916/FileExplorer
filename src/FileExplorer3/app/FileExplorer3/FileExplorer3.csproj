@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseControls\ClipCorner.cs" />
+    <Compile Include="BaseControls\LoginControl.cs" />
     <Compile Include="BaseControls\MultiStepSlider.cs" />
     <Compile Include="BaseControls\SliderSupportedPanel.cs" />
     <Compile Include="Defines\Cofe3\Defines\Structs\VMParameterDic.cs" />
@@ -85,6 +86,8 @@
     <Compile Include="Defines\Cofe3\Implements\ScriptRunnerSource.cs" />
     <Compile Include="Defines\Cofe3\Interfaces\IScriptRunnerSource.cs" />
     <Compile Include="Defines\Cofe3\Interfaces\IParameterDicConverter.cs" />
+    <Compile Include="Defines\Cofe3\Utils\AttributeUtils.cs" />
+    <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
     <Compile Include="Defines\Commands\FileListCommands.cs" />
     <Compile Include="Defines\Converters\BorderClipConverter.cs" />
     <Compile Include="Defines\Converters\DynamicConverter.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="Utils\SimpleCommandBinding.cs" />
     <Compile Include="Utils\SimpleRoutedCommand.cs" />
     <Compile Include="Utils\ScriptCommandBinding.cs" />
+    <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\NavigationScriptCommandContainer.cs" />
     <Compile Include="ViewModels\FileListScriptCommandContainer.cs" />
@@ -378,6 +382,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Common\ContextMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\LoginControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

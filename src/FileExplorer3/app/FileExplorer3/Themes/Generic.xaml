@@ -19,7 +19,9 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Switch.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/HotTrack.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TextBox.xaml" />
-        
+
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/LoginControl.xaml" />
+
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TreeView.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Statusbar.xaml" />

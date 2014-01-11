@@ -52,7 +52,7 @@ namespace FileExplorer.ViewModels
         //bool IsContextMenuVisible { get; set; }
 
         void SignalChangeDirectory(IEntryModel newDirectory);
-
         
+        IProfile[] Profiles { set; }        
     }
 }

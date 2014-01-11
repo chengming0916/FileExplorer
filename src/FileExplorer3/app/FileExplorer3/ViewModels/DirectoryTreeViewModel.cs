@@ -39,9 +39,8 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        public DirectoryTreeViewModel(IEventAggregator events, params IEntryModel[] rootModels)
-        {
-            _profiles = rootModels.Select(rm => rm.Profile).Distinct();
+        public DirectoryTreeViewModel(IEventAggregator events)
+        {            
             _events = events;
 
             if (events != null)
@@ -49,18 +48,15 @@ namespace FileExplorer.ViewModels
 
             Entries = new EntriesHelper<IDirectoryNodeViewModel>();
             var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries,
-                _profiles.First().HierarchyComparer.CompareHierarchy);
+                PathComparer.Default.CompareHierarchy);                
             selection.SelectionChanged += (o, e) =>
             {
                 BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
             };
             Selection = selection;
 
-            DirectoryNodeViewModel[] rootViewModels = rootModels
-                .Select(r => new DirectoryNodeViewModel(events, this, r, null)).ToArray();
-            foreach (var rvm in rootViewModels)
-                rvm.Entries.IsExpanded = true;
-            Entries.SetEntries(rootViewModels);
+           
+           
             DragHelper = new DirectoryTreeDragHelper(Entries, Selection);
         }
 
@@ -90,17 +86,39 @@ namespace FileExplorer.ViewModels
             }
         }
 
+        void setRootModels(IEntryModel[] rootModels)
+        {           
+            DirectoryNodeViewModel[] rootViewModels = rootModels
+               .Select(r => new DirectoryNodeViewModel(_events, this, r, null)).ToArray();
+            foreach (var rvm in rootViewModels)
+                rvm.Entries.IsExpanded = true;
+            Entries.SetEntries(rootViewModels);            
+        }
+
+        private void setProfiles(IProfile[] profiles)
+        {
+            _profiles = profiles;
+            if (profiles != null && profiles.Length > 0)
+            {
+                (Selection as ITreeRootSelector<IDirectoryNodeViewModel, IEntryModel>)
+                    .CompareFunc = profiles.First().HierarchyComparer.CompareHierarchy;
+            }
+        }
+
         #endregion
 
         #region Data
 
 
-        private IEnumerable<IProfile> _profiles;
+        private IEnumerable<IProfile> _profiles = new List<IProfile>();
         private IEventAggregator _events;
 
         #endregion
 
         #region Public Properties
+
+        public IEntryModel[] RootModels { set { setRootModels(value); } }
+        public IProfile[] Profiles { set { setProfiles(value); } }
 
         public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
