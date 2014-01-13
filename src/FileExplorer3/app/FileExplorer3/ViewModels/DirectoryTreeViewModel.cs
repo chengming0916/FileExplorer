@@ -13,7 +13,7 @@ namespace FileExplorer.ViewModels
 {
 
 
- 
+
 
 
     public class DirectoryTreeViewModel : PropertyChangedBase, IDirectoryTreeViewModel,
@@ -27,20 +27,20 @@ namespace FileExplorer.ViewModels
             public DirectoryTreeDragHelper(IEntriesHelper<IDirectoryNodeViewModel> entries,
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
-                () => new [] { selection.RootSelector.SelectedViewModel },
+                () => new[] { selection.RootSelector.SelectedViewModel },
                 ems => ems.First().Profile.DragDrop.QueryDrag(ems),
                 ems => ems.First().Profile.DragDrop.GetDataObject(ems),
-                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff) 
+                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }
 
-        
+
 
         #endregion
 
         public DirectoryTreeViewModel(IEventAggregator events)
-        {            
+        {
             _events = events;
 
             if (events != null)
@@ -48,15 +48,15 @@ namespace FileExplorer.ViewModels
 
             Entries = new EntriesHelper<IDirectoryNodeViewModel>();
             var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries,
-                PathComparer.Default.CompareHierarchy);                
+                PathComparer.Default.CompareHierarchy);
             selection.SelectionChanged += (o, e) =>
             {
                 BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
             };
             Selection = selection;
 
-           
-           
+
+
             DragHelper = new DirectoryTreeDragHelper(Entries, Selection);
         }
 
@@ -87,12 +87,16 @@ namespace FileExplorer.ViewModels
         }
 
         void setRootModels(IEntryModel[] rootModels)
-        {           
+        {
             DirectoryNodeViewModel[] rootViewModels = rootModels
                .Select(r => new DirectoryNodeViewModel(_events, this, r, null)).ToArray();
-            foreach (var rvm in rootViewModels)
-                rvm.Entries.IsExpanded = true;
             Entries.SetEntries(rootViewModels);            
+        }
+
+        public void ExpandRootEntryModels()
+        {
+            foreach (var rvm in Entries.AllNonBindable)
+                rvm.Entries.IsExpanded = true;
         }
 
         private void setProfiles(IProfile[] profiles)
@@ -112,10 +116,14 @@ namespace FileExplorer.ViewModels
 
         private IEnumerable<IProfile> _profiles = new List<IProfile>();
         private IEventAggregator _events;
+        private bool _enableDrag = true, _enableDrop = true;
 
         #endregion
 
         #region Public Properties
+
+        public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
+        public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
 
         public IEntryModel[] RootModels { set { setRootModels(value); } }
         public IProfile[] Profiles { set { setProfiles(value); } }

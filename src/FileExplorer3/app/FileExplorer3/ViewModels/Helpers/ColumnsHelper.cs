@@ -83,7 +83,7 @@ namespace FileExplorer.ViewModels.Helpers
         public event EventHandler SortChanged;
 
         private IEntriesProcessor _processor;
-        private ColumnFilter[] _colFilters;
+        private ColumnFilter[] _colFilters = new ColumnFilter[] { };
         private ColumnInfo[] _colList = new ColumnInfo[]
         {
             ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", null, 200),   

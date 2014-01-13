@@ -26,6 +26,11 @@ namespace FileExplorer.BaseControls
 
         #region Methods
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();            
+        }
+
         #endregion
 
         #region Data

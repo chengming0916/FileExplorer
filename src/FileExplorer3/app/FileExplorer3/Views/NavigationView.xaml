@@ -37,13 +37,13 @@
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
         <Button x:Name="GoBack" Style="{StaticResource NavButtonStyle}">
-            <Path Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type bc:Invert}}}" 
+            <Path Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" 
                   StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" StrokeLineJoin="Round" 
                   SnapsToDevicePixels="False" Data="M8,0 L1,5 8,10 M0,5 L13,5">
             </Path>
         </Button>
         <Button x:Name="GoNext" Style="{StaticResource NavButtonStyle}">
-            <Path Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type bc:Invert}}}" 
+            <Path Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" 
                   StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" StrokeLineJoin="Round" 
                   SnapsToDevicePixels="False" Data="M8,0 L13,5 8,10 M0,5 L13,5"/>
         </Button>

@@ -67,8 +67,9 @@
                      def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
                        >            
             <bc:UIEventAdapter.Processors>
-                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
-                <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />             
+                <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
+                <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
+                    UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />             
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding ToolbarCommands.CommandModels.All}" 

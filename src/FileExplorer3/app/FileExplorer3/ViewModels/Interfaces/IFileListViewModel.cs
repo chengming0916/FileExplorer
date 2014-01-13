@@ -47,6 +47,10 @@ namespace FileExplorer.ViewModels
         string ViewMode { get; set; }
         int ItemSize { get; set; }
 
+        bool EnableDrag { get; set; }
+        bool EnableDrop { get; set; }
+        bool EnableMultiSelect { get; set; }
+
         bool IsCheckBoxVisible { get; set; }
 
         //bool IsContextMenuVisible { get; set; }

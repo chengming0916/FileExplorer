@@ -14,21 +14,25 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : ViewAware, IExplorerViewModel, IHandle<SelectionChangedEvent>
+    public class ExplorerViewModel : Screen, IExplorerViewModel, IHandle<DirectoryChangedEvent>
     {
         #region Cosntructor
 
-        public ExplorerViewModel(IEventAggregator events, params IEntryModel[] rootModels)
+        public ExplorerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
         {
             _events = events;
             _rootModels = rootModels;
+            _windowManager = windowManager;
             
+
             //Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents);
             FileList = new FileListViewModel(_internalEvents);
             DirectoryTree = new DirectoryTreeViewModel(_internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
+
+            
 
             setRootModels(_rootModels);
 
@@ -84,9 +88,9 @@ namespace FileExplorer.ViewModels
              FileList.Profiles = rootProfiles;
         }
 
-        public void Handle(SelectionChangedEvent message)
+        public void Handle(DirectoryChangedEvent message)
         {
-
+            this.DisplayName =  message.NewModel.Label;
         }
 
 
@@ -97,14 +101,13 @@ namespace FileExplorer.ViewModels
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();
+        private IWindowManager _windowManager = new WindowManager();
 
         #endregion
 
         #region Public Properties
 
-        public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
-
-     
+        public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }             
 
         public IBreadcrumbViewModel Breadcrumb { get; private set; }
         public IDirectoryTreeViewModel DirectoryTree { get; private set; }

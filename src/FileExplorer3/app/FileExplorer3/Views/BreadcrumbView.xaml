@@ -36,7 +36,7 @@
                     <bc:DropDownList x:Name="bexp" DockPanel.Dock="Left" 
                                            ItemsSource="{Binding Selection.OverflowedAndRootItems}"
                                            SelectedValuePath="Selection.Value"
-                                           ItemTemplate="{Binding MenuItemTemplate, ElementName=btree}">
+                                           ItemTemplate="{StaticResource BreadcrumbMenuNodeItemTemplate}">
                         <bc:DropDownList.Header>
                             <Path x:Name="path"  Stroke="Black" StrokeThickness="1.2" Data="{StaticResource ExpanderArrow}"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="True" />

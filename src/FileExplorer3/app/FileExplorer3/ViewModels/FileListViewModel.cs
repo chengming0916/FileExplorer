@@ -185,13 +185,16 @@ namespace FileExplorer.ViewModels
         private string _viewMode = "Icon";
         private IToolbarViewModel _toolbar = null;
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
+        private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
 
         #endregion
 
         #region Public Properties
         public IProfile[] Profiles { set { setProfiles(value); } }
 
-  
+        public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
+        public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
+        public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
 
         public IToolbarCommandsHelper ToolbarCommands { get; private set; }
         public IFileListScriptCommandContainer ScriptCommands { get; private set; }
