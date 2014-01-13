@@ -104,19 +104,23 @@ namespace FileExplorer.UserControls
                 return;
 
             GridViewHeaderRowPresenter presenter = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);
-            GridViewColumnHeader foundHeader = findColumnHeader(presenter, sortCol);
-            IEnumerable<GridViewColumnHeader> headers = UITools.FindAllVisualChildren<GridViewColumnHeader>(presenter);
 
-            foreach (var curHeader in headers)
+            if (presenter != null)
             {
-                if (curHeader.Equals(foundHeader))
+                GridViewColumnHeader foundHeader = findColumnHeader(presenter, sortCol);
+                IEnumerable<GridViewColumnHeader> headers = UITools.FindAllVisualChildren<GridViewColumnHeader>(presenter);
+
+                foreach (var curHeader in headers)
                 {
-                    if (sortDirection == ListSortDirection.Ascending)
-                        ListViewEx.SetColumnHeaderSortDirection(curHeader, -1);
-                    else ListViewEx.SetColumnHeaderSortDirection(curHeader, 1);
+                    if (curHeader.Equals(foundHeader))
+                    {
+                        if (sortDirection == ListSortDirection.Ascending)
+                            ListViewEx.SetColumnHeaderSortDirection(curHeader, -1);
+                        else ListViewEx.SetColumnHeaderSortDirection(curHeader, 1);
+                    }
+                    else
+                        ListViewEx.SetColumnHeaderSortDirection(curHeader, 0);
                 }
-                else
-                    ListViewEx.SetColumnHeaderSortDirection(curHeader, 0);
             }
         }
 
@@ -149,10 +153,10 @@ namespace FileExplorer.UserControls
             Func<ColumnFilter, MenuItem> createMenuItem =
                 f =>
                 {
-                    var style = listView.FindResource("ListViewExHeaderMenuItemHeaderStyle") as Style;                    
+                    var style = listView.FindResource("ListViewExHeaderMenuItemHeaderStyle") as Style;
                     var retVal = new MenuItem()
                     {
-                        
+
                         IsCheckable = true,
                         Style = style,
                         Header = f,
@@ -165,24 +169,26 @@ namespace FileExplorer.UserControls
             if (columns == null)
                 return;
             GridViewHeaderRowPresenter presenter = UITools.FindVisualChild<GridViewHeaderRowPresenter>(listView);
-            foreach (var col in columns)
-            {
-                GridViewColumnHeader foundHeader = findColumnHeader(presenter, col);
-                if (foundHeader != null)
+
+            if (presenter != null)
+                foreach (var col in columns)
                 {
-                    var dropDown = UITools.FindVisualChildByName<DropDown>(foundHeader, "PART_DropDown");
-                    if (dropDown != null)
+                    GridViewColumnHeader foundHeader = findColumnHeader(presenter, col);
+                    if (foundHeader != null)
                     {
-                        StackPanel sp = new StackPanel() {  Name="PART_Menu", DataContext = col };
-                        foreach (var f in filters)
-                            if (f.ValuePath == col.ValuePath)
-                                sp.Children.Add(createMenuItem(f));
-                        if (sp.Children.Count > 0)
-                            dropDown.Content = sp;
-                        else dropDown.Content = null;
+                        var dropDown = UITools.FindVisualChildByName<DropDown>(foundHeader, "PART_DropDown");
+                        if (dropDown != null)
+                        {
+                            StackPanel sp = new StackPanel() { Name = "PART_Menu", DataContext = col };
+                            foreach (var f in filters)
+                                if (f.ValuePath == col.ValuePath)
+                                    sp.Children.Add(createMenuItem(f));
+                            if (sp.Children.Count > 0)
+                                dropDown.Content = sp;
+                            else dropDown.Content = null;
+                        }
                     }
                 }
-            }
 
 
         }

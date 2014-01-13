@@ -25,10 +25,12 @@ namespace FileExplorer.BaseControls
 
         public override Cofe.Core.Script.IScriptCommand OnEvent(RoutedEvent eventId)
         {
+
             switch (eventId.Name)
             {
                 case "PreviewMouseDown": return new SetHandledIfNotFocused();
-                case "MouseDrag": return new BeginSelect() { UnselectCommand = UnselectAllCommand };
+                case "MouseDrag": if (EnableMultiSelect)
+                        return new BeginSelect() { UnselectCommand = UnselectAllCommand }; break;
                 case "MouseMove": return new ContinueSelect();
                 case "PreviewMouseUp": return new EndSelect() { UnselectCommand = UnselectAllCommand };
             }
@@ -45,5 +47,16 @@ namespace FileExplorer.BaseControls
             get { return (ICommand)GetValue(UnselectAllCommandProperty); }
             set { SetValue(UnselectAllCommandProperty, value); }
         }
+
+        public static DependencyProperty EnableMultiSelectProperty =
+        DependencyProperty.Register("EnableMultiSelect", typeof(bool),
+        typeof(MultiSelectEventProcessor), new PropertyMetadata(true));
+
+        public bool EnableMultiSelect
+        {
+            get { return (bool)GetValue(EnableMultiSelectProperty); }
+            set { SetValue(EnableMultiSelectProperty, value); }
+        }
+
     }
 }

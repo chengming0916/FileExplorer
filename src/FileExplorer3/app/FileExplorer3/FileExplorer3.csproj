@@ -116,6 +116,7 @@
     <Compile Include="Utils\ScriptCommandBinding.cs" />
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
     <Compile Include="ViewModels\NavigationScriptCommandContainer.cs" />
     <Compile Include="ViewModels\FileListScriptCommandContainer.cs" />
     <Compile Include="ViewModels\FileListCommandsHelper.cs" />
@@ -126,6 +127,9 @@
     <Compile Include="ViewModels\Interfaces\IScriptCommandContainer.cs" />
     <Compile Include="ViewModels\Interfaces\ISelectable.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
+    <Compile Include="Views\DirectoryPickerView.xaml.cs">
+      <DependentUpon>DirectoryPickerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
@@ -544,6 +548,10 @@
     <Page Include="Views\BreadcrumbView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DirectoryPickerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DirectoryTreeView.xaml">
       <SubType>Designer</SubType>

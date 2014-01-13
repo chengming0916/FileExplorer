@@ -14,7 +14,11 @@ namespace FileExplorer.ViewModels
         IEntryModel[] RootModels { set; }
         IProfile[] Profiles { set; }
 
+        bool EnableDrag { get; set; }
+        bool EnableDrop { get; set; }
+
         Task SelectAsync(IEntryModel value);
+        void ExpandRootEntryModels();
     }
 
     public interface IDirectoryNodeViewModel : IEntryViewModel, ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>, IDraggable

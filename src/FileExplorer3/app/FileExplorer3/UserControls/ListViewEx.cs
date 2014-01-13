@@ -44,13 +44,16 @@ namespace FileExplorer.UserControls
             base.OnApplyTemplate();
             this.HandleScrollBarInvisible();
             this.AddHandler(ListViewEx.LoadedEvent, (RoutedEventHandler)((o, e) => OnLoaded()));
-
+            
         }
 
         public void OnLoaded()
         {
             ListViewColumnUtils.RegisterFilterEvent(this);
             ListViewColumnUtils.UpdateFilterPanel(this, Columns, ColumnFilters);
+            ColumnInfo sortColumn = Columns.Find(SortBy);
+            if (sortColumn != null)
+                ListViewColumnUtils.UpdateSortSymbol(this, sortColumn, SortDirection);
         }
 
 
@@ -59,7 +62,8 @@ namespace FileExplorer.UserControls
         public static void OnColumnsFilterChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             ListViewEx lv = (ListViewEx)sender;
-            ListViewColumnUtils.UpdateFilterPanel(lv, lv.Columns, lv.ColumnFilters);
+            if (lv.ColumnFilters != null)
+                ListViewColumnUtils.UpdateFilterPanel(lv, lv.Columns, lv.ColumnFilters);
         }
 
         public static void OnColumnsVisibilityChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
@@ -132,7 +136,7 @@ namespace FileExplorer.UserControls
                     fl.View = view;
                 else Debug.WriteLine(String.Format("ListViewEx - {0} not found.", viewResourceName));
             }
-            
+
             if (fl.View != null)
             {
                 //Only update columns if View is updated
@@ -260,7 +264,7 @@ namespace FileExplorer.UserControls
 
         public event RoutedEventHandler FilterChanged
         {
-            add { AddHandler(FilterChangedEvent, value);  }
+            add { AddHandler(FilterChangedEvent, value); }
             remove { RemoveHandler(FilterChangedEvent, value); }
         }
 
@@ -272,7 +276,7 @@ namespace FileExplorer.UserControls
             set { SetValue(ContentBelowHeaderProperty, value); }
         }
 
-        
+
         #endregion
 
         #region SortBy, SortDirection property

@@ -101,6 +101,9 @@ namespace FileExplorer.ViewModels
                     {
                         foreach (var p in _profiles)
                         {
+                            if (String.IsNullOrEmpty(SuggestedPath) && Entries.AllNonBindable.Count() > 0)                            
+                                SuggestedPath = Entries.AllNonBindable.First().EntryModel.FullPath;                            
+
                             var found = await p.ParseAsync(SuggestedPath);
                             if (found != null)
                             {

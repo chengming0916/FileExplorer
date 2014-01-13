@@ -23,7 +23,7 @@ namespace TestApp.WPF
 
             CompositionBatch batch = new CompositionBatch();
 
-            batch.AddExportedValue<IWindowManager>(new WindowManager());
+            batch.AddExportedValue<IWindowManager>(new AppWindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());            
             
             batch.AddExportedValue(container);

@@ -46,7 +46,7 @@
                 </Style>
             </uc:TreeViewEx.ItemContainerStyle>
             <bc:UIEventAdapter.Processors>
-                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
             </bc:UIEventAdapter.Processors>
         </uc:TreeViewEx>
     </DockPanel>

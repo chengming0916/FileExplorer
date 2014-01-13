@@ -12,6 +12,8 @@ using FileExplorer.ViewModels;
 using FileExplorer;
 using FileExplorer.Utils;
 using Cofe.Core.Script;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace TestApp.WPF
 {
@@ -25,24 +27,30 @@ namespace TestApp.WPF
         #region Cosntructor
 
         [ImportingConstructor]
-        public AppViewModel(IEventAggregator events)
+        public AppViewModel(IEventAggregator events, IWindowManager windowManager)
         {
+            _windowManager = windowManager;
             _events = events;
-            IProfile profile = new FileSystemInfoProfile();
-            IProfile profileEx = new FileSystemInfoExProfile();
-            ExplorerModel = new ExplorerViewModel(events)
-            {
-                RootModels = new[] 
-                {
-                    profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result,
-                    profile.ParseAsync(rootPath).Result
-                }
-            };
-            
 
+            RootModels.Add(_profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result);
+            //ExplorerModel = processExplorerModel(new ExplorerViewModel(events, windowManager)
+            //{
+            //    RootModels = new[] 
+            //    {
+            //        _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result,
+            //        //profile.ParseAsync(rootPath).Result
+            //    }
+            //});
+        }
 
+        #endregion
 
-            ExplorerModel.FileList.ScriptCommands.Open =
+        #region Methods
+
+        private IExplorerViewModel initExplorerModel(IExplorerViewModel explorerModel)
+        {
+
+            explorerModel.FileList.ScriptCommands.Open =
                 new IfFileListSelection(evm => evm.Count == 1,
                     new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
                         new OpenSelectedDirectory(), //Selected directory                        
@@ -51,9 +59,7 @@ namespace TestApp.WPF
                     ResultCommand.NoError //Selected more than one item, ignore.
                     );
 
-
-
-            ExplorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
+            explorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
             {
                 ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
                 ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
@@ -61,7 +67,7 @@ namespace TestApp.WPF
                 ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
             };
 
-            ExplorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
+            explorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
             {
                 ColumnFilter.CreateNew("0 - 9", "EntryModel.Label", e => Regex.Match(e.Label, "^[0-9]").Success),
                 ColumnFilter.CreateNew("A - H", "EntryModel.Label", e => Regex.Match(e.Label, "^[A-Ha-h]").Success),
@@ -71,74 +77,112 @@ namespace TestApp.WPF
                 ColumnFilter.CreateNew("Directories", "EntryModel.Description", e => e.IsDirectory),
                 ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory),
             };
+            return explorerModel;
         }
-
-        #endregion
-
-        #region Methods
 
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
-            ExplorerModel.RegisterCommand(uiEle, ScriptBindingScope.Application);
+            //ExplorerModel.RegisterCommand(uiEle, ScriptBindingScope.Application);
         }
 
-
-        //public IEnumerable<IResult> Load()
-        //{
-        //    IProfile profile = new FileSystemInfoProfile();
-        //    var parentModel = profile.ParseAsync(rootPath).Result;
-        //    return FileListModel.Load(parentModel, null);
-        //}
-
-        public void Go()
+        private void updateExplorerModel(IExplorerViewModel explorerViewModel)
         {
-            ExplorerModel.Go(GotoPath);
-        }        
-
-        public void Change()
-        {
-            //ExplorerModel.Go(GotoPath);
-            IProfile profileEx = new FileSystemInfoExProfile();
-            ExplorerModel.RootModels = new[] {
-                profileEx.ParseAsync(GotoPath).Result
-            };
+            explorerViewModel.FileList.EnableDrag = EnableDrag;
+            explorerViewModel.FileList.EnableDrop = EnableDrop;
+            explorerViewModel.FileList.EnableMultiSelect = EnableMultiSelect;
+            explorerViewModel.DirectoryTree.EnableDrag = EnableDrag;
+            explorerViewModel.DirectoryTree.EnableDrop = EnableDrop;
+            if (_expandRootDirectories)
+                explorerViewModel.DirectoryTree.ExpandRootEntryModels();
         }
 
-        public void Add()
+        public void OpenWindow()
         {
-            
-            IProfile profileEx = new FileSystemInfoExProfile();
-            ExplorerModel.RootModels = ExplorerModel.RootModels.Union(new[] {
-                profileEx.ParseAsync(GotoPath).Result
-            }).ToArray();
+            _explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
+            updateExplorerModel(initExplorerModel(_explorer));
+            _windowManager.ShowWindow(_explorer);            
         }
 
-        public void ChangeView(string viewMode)
+        public void UpdateWindow()
         {
-            ExplorerModel.FileList.ViewMode = viewMode;
+            if (_explorer != null)
+            {
+                _explorer.RootModels = RootModels.ToArray();
+                updateExplorerModel(_explorer);
+            }
         }
 
+        private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
+        {
+            var directoryPicker = new DirectoryPickerViewModel(_events, _windowManager, rootModels);
+            directoryPicker.DirectoryTree.ExpandRootEntryModels();
+            directoryPicker.FileList.EnableDrag = false;
+            directoryPicker.FileList.EnableDrop = false;
+            directoryPicker.FileList.EnableMultiSelect = false;
+            directoryPicker.DirectoryTree.EnableDrag = false;
+            directoryPicker.DirectoryTree.EnableDrop = false;
+            if (_windowManager.ShowDialog(initExplorerModel(directoryPicker)).Value)
+                return directoryPicker.SelectedDirectory;
+            return null;
+        }
+
+        public void Clear()
+        {
+            RootModels.Clear();
+        }
+
+        public void AddDirectoryInfo()
+        {
+            var rootModel = new [] { _profile.ParseAsync("C:\\").Result };
+            IEntryModel selectedModel = showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                RootModels.Add(selectedModel);            
+        }
+
+        public void AddDirectoryInfoEx()
+        {
+            var rootModel = new[] { _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result };
+            IEntryModel selectedModel = showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                RootModels.Add(selectedModel);                
+        }
 
 
         #endregion
 
         #region Data
+        
+        IProfile _profile = new FileSystemInfoProfile();
+        IProfile _profileEx = new FileSystemInfoExProfile();
+
         private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
         //private int _selectionCount = 0;
-        private string _gotoPath = lookupPath;
+        private string _addPath = lookupPath;
         private IEventAggregator _events;
+        private IWindowManager _windowManager;
+        private IExplorerViewModel _explorer = null;
+        private bool _expandRootDirectories = false;
+        private bool _enableDrag, _enableDrop, _enableMultiSelect;
+
+        private ObservableCollection<IEntryModel> _rootModels = new ObservableCollection<IEntryModel>();
         #endregion
 
         #region Public Properties
 
-        public IExplorerViewModel ExplorerModel { get; private set; }
+        public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
+        public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }
+        public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
+        public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }        
+        public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
+
+        //public IExplorerViewModel ExplorerModel { get; private set; }
 
 
-        public List<string> ViewModes { get { return _viewModes; } }
+        //public List<string> ViewModes { get { return _viewModes; } }
         //public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
-        public string GotoPath { get { return _gotoPath; } set { _gotoPath = value; NotifyOfPropertyChange(() => GotoPath); } }
+        //public string GotoPath { get { return _gotoPath; } set { _gotoPath = value; NotifyOfPropertyChange(() => GotoPath); } }
 
         #endregion
 
