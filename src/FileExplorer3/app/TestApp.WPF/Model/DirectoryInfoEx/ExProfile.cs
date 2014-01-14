@@ -42,7 +42,7 @@ namespace FileExplorer.Models
                 if (a == null || b == null)
                     return HierarchicalResult.Unrelated;
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
-                    return PathComparer.Default.CompareHierarchy(a, b);                
+                    return PathComparer.LocalDefault.CompareHierarchy(a, b);                
                 FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);
                 FileSystemInfoEx fsib = FileSystemInfoEx.FromString(b.FullPath);
                 if (a.FullPath == b.FullPath)

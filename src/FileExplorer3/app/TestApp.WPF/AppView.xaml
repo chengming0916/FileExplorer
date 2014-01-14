@@ -34,6 +34,7 @@
         <StackPanel Orientation="Horizontal">
             <Button x:Name="AddDirectoryInfo" Content="Add (using DirectoryInfo)" ToolTip="Drag n Drop is not coded in DirectoryInfo" />
             <Button x:Name="AddDirectoryInfoEx" Content="Add (using DirectoryInfoEx)" />
+            <Button x:Name="AddSkyDrive" Content="Add (using SkyDrive)" ToolTip="Not working yet" />
         </StackPanel>
                        
         <Rectangle Height="50" />

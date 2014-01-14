@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -8,7 +11,7 @@ using System.Windows.Media.Imaging;
 
 namespace FileExplorer.Models
 {
- 
+
     public class GetDefaultIcon : IEntryModelIconExtractor
     {
         private static ImageSource FileIcon { get; set; }
@@ -37,15 +40,41 @@ namespace FileExplorer.Models
         }
     }
 
-    //public class GetFromProfile : IEntryModelIconExtractor
-    //{
-    //    public static GetFromProfile Instance = new GetFromProfile();
+    public class GetUriIcon : IEntryModelIconExtractor
+    {
+        private Func<IEntryModel, Uri> _uriFunc;
+        public GetUriIcon(Func<IEntryModel, Uri> uriFunc)
+        {
+            _uriFunc = uriFunc;
+        }
 
-    //    public async Task<ImageSource> GetIconForModel(IEntryModel model)
-    //    {
-    //        var icon = await model.Profile.GetIconAsync(model, 32);
-    //        icon.Freeze();
-    //        return icon;
-    //    }
-    //}
+
+        private async Task<byte[]> downloadAsync(Uri uri)
+        {
+            byte[] imageBytes = null;
+            using (WebClient webClient = new WebClient())
+            {
+                webClient.Proxy = null;  //avoids dynamic proxy discovery delay
+                webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
+                try
+                {
+                    imageBytes = await webClient.DownloadDataTaskAsync(uri);
+                }
+                catch { }
+            }
+            return imageBytes;
+        }
+
+        public async Task<ImageSource> GetIconForModelAsync(IEntryModel model)
+        {
+            var output = await downloadAsync(_uriFunc(model));
+
+            BitmapImage retIcon = new BitmapImage();
+            retIcon.BeginInit();
+            retIcon.StreamSource = new MemoryStream(output);
+            retIcon.EndInit();
+            retIcon.Freeze();
+            return retIcon;
+        }
+    }
 }

@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseControls\ClipCorner.cs" />
-    <Compile Include="BaseControls\LoginControl.cs" />
+    <None Include="BaseControls\LoginControl.cs" />
     <Compile Include="BaseControls\MultiStepSlider.cs" />
     <Compile Include="BaseControls\SliderSupportedPanel.cs" />
     <Compile Include="Defines\Cofe3\Defines\Structs\VMParameterDic.cs" />
@@ -99,7 +99,9 @@
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
+    <Compile Include="Models\ILoginInfo.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
+    <Compile Include="Models\LoginInfoImpl.cs" />
     <Compile Include="Models\NullDragDropHandler.cs" />
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
+    <Compile Include="Utils\ParamStringUtils.cs" />
     <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\ICommandScriptCommand.cs" />
     <Compile Include="Utils\MouseWheelGesture.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NavigationScriptCommandContainer.cs" />
     <Compile Include="ViewModels\FileListScriptCommandContainer.cs" />
     <Compile Include="ViewModels\FileListCommandsHelper.cs" />
@@ -129,6 +133,9 @@
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
     <Compile Include="Views\DirectoryPickerView.xaml.cs">
       <DependentUpon>DirectoryPickerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
@@ -165,7 +172,7 @@
     <Compile Include="BaseControls\PathExistsValidationRule.cs" />
     <Compile Include="BaseControls\PathHierarchyHelper.cs" />
     <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
-    <Compile Include="BaseControls\AutoSuggestSource.cs" />
+    <Compile Include="BaseControls\SuggestSourceImpl.cs" />
     <Compile Include="BaseControls\HotTrack.cs" />
     <Compile Include="BaseControls\SuggestBox.cs" />
     <Compile Include="Defines\Converters\BoolToVisibilityCollapsed.cs" />
@@ -271,7 +278,7 @@
     <Compile Include="ViewModels\BreadcrumbItemViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbViewModel.cs" />
     <Compile Include="ViewModels\DirectoryNodeBroadcastHandler.cs" />
-    <Compile Include="Models\EntryModelIconExtractor.cs" />
+    <Compile Include="Models\IconExtractorImpl.cs" />
     <Compile Include="ViewModels\ExtensionMethods.cs" />
     <Compile Include="ViewModels\FileListItemViewModel.cs" />
     <Compile Include="ViewModels\Helpers\ColumnsHelper.cs" />
@@ -389,10 +396,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Common\LoginControl.xaml">
+    <None Include="Themes\Common\LoginControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </None>
     <Page Include="Themes\Common\Thumb.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -568,6 +575,10 @@
     <Page Include="Views\FileListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NavigationView.xaml">
       <SubType>Designer</SubType>

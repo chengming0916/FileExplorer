@@ -30,7 +30,7 @@ namespace FileExplorer.ViewModels
             
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
             var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
-                PathComparer.Default.CompareHierarchy);                
+                PathComparer.LocalDefault.CompareHierarchy);                
             selection.SelectionChanged += (o, e) =>
                 {
                     BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));

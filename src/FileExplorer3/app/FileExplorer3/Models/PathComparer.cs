@@ -11,7 +11,8 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public static PathComparer Default = new PathComparer('\\', StringComparison.InvariantCultureIgnoreCase);
+        public static PathComparer LocalDefault = new PathComparer('\\', StringComparison.InvariantCultureIgnoreCase);
+        public static PathComparer WebDefault = new PathComparer('/', StringComparison.InvariantCultureIgnoreCase);
 
         public PathComparer(char separator, StringComparison comparsion)
         {

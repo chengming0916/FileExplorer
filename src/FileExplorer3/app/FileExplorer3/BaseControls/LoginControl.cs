@@ -79,7 +79,7 @@ namespace FileExplorer.BaseControls
 
         public LoginControl()
         {
-            Parameters = new Dictionary<string, string>();
+            //Parameters = new Dictionary<string, string>();
         }
 
         #endregion
@@ -138,7 +138,7 @@ namespace FileExplorer.BaseControls
 
         #region Public Properties
 
-        public Dictionary<string, string> Parameters { get; private set; }
+        //public Dictionary<string, string> Parameters { get; private set; }
 
         public ILoginInfo LoginInfo
         {

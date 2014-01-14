@@ -14,6 +14,7 @@ using FileExplorer.Utils;
 using Cofe.Core.Script;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Cofe.Core.Utils;
 
 namespace TestApp.WPF
 {
@@ -79,14 +80,7 @@ namespace TestApp.WPF
             };
             return explorerModel;
         }
-
-        protected override void OnViewAttached(object view, object context)
-        {
-            base.OnViewAttached(view, context);
-            var uiEle = view as System.Windows.UIElement;
-            //ExplorerModel.RegisterCommand(uiEle, ScriptBindingScope.Application);
-        }
-
+  
         private void updateExplorerModel(IExplorerViewModel explorerViewModel)
         {
             explorerViewModel.FileList.EnableDrag = EnableDrag;
@@ -149,6 +143,19 @@ namespace TestApp.WPF
                 RootModels.Add(selectedModel);                
         }
 
+        public async Task AddSkyDrive()
+        {
+            string clientId = "0000000040112888";
+            var login = new SkyDriveLogin(clientId);
+            if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+            {
+                var profile = new SkyDriveProfile(clientId, login.AuthCode);
+                var rootDirectoryModel = await profile.ParseAsync("/me/skydrive");
+                var list = await profile.ListAsync(rootDirectoryModel);
+                if (rootDirectoryModel != null)
+                    RootModels.Add(rootDirectoryModel);
+            }
+        }
 
         #endregion
 
@@ -157,9 +164,8 @@ namespace TestApp.WPF
         IProfile _profile = new FileSystemInfoProfile();
         IProfile _profileEx = new FileSystemInfoExProfile();
 
-        private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
-        //private int _selectionCount = 0;
-        private string _addPath = lookupPath;
+        //private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
+        //private string _addPath = lookupPath;
         private IEventAggregator _events;
         private IWindowManager _windowManager;
         private IExplorerViewModel _explorer = null;
@@ -177,12 +183,6 @@ namespace TestApp.WPF
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }        
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
 
-        //public IExplorerViewModel ExplorerModel { get; private set; }
-
-
-        //public List<string> ViewModes { get { return _viewModes; } }
-        //public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
-        //public string GotoPath { get { return _gotoPath; } set { _gotoPath = value; NotifyOfPropertyChange(() => GotoPath); } }
 
         #endregion
 
