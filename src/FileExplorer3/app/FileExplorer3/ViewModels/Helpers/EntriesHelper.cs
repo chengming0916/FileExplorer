@@ -48,15 +48,14 @@ namespace FileExplorer.ViewModels.Helpers
             {
                 if (!_isLoaded || force) //NotLoaded
                 {
-                    _isLoaded = true;
-                    
                     if (_clearBeforeLoad)
-                        All.Clear();                                        
+                        All.Clear();
                     await _loadSubEntryFunc().ContinueWith(prevTask =>
-                        {                            
+                        {
                             //bool uiThread = System.Threading.Thread.CurrentThread == System.Windows.Threading.Dispatcher.CurrentDispatcher.Thread;
                             //(All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
                             SetEntries(prevTask.Result.ToArray());
+                            _isLoaded = true;
                         }, TaskScheduler.FromCurrentSynchronizationContext());
                     //if (EntriesChanged != null)
                     //    EntriesChanged(this, EventArgs.Empty);
@@ -76,7 +75,7 @@ namespace FileExplorer.ViewModels.Helpers
             //    All.Add(vm);
             all.AddItems(viewModels);
             all.NotifyChanges();
-            
+
             if (EntriesChanged != null)
                 EntriesChanged(this, EventArgs.Empty);
             //_isExpanded = true;

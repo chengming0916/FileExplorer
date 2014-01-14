@@ -21,7 +21,7 @@ namespace FileExplorer.Models
 
             SuggestSource = new ProfileSuggestionSource(this);
             
-            HierarchyComparer = PathComparer.Default;
+            HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
 

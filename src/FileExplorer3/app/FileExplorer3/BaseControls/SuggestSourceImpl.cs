@@ -71,4 +71,13 @@ namespace FileExplorer.BaseControls
         
         #endregion
     }
+
+    public class NullSuggestSource : ISuggestSource
+    {
+
+        public Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
+        {
+            return Task.Run<IList<object>>(() => new List<object>() );
+        }
+    }
 }

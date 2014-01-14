@@ -10,7 +10,7 @@ namespace FileExplorer.Models
 {
     public interface ISkyDriveModelCache
     {
-        SkyDriveInfoModel RegisterModel(SkyDriveInfoModel model);
+        SkyDriveItemModel RegisterModel(SkyDriveItemModel model);
         string GetUniqueId(string path);
         string GetPath(string uniqueId);
 
@@ -20,11 +20,19 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
+        public SkyDriveModelCache()
+        {
+            UniqueIdLookup = new ConcurrentDictionary<string, string>();
+            ChildLookup = new ConcurrentDictionary<string, IList<string>>();
+            ModelCache = new ConcurrentDictionary<string, SkyDriveItemModel>();
+            ModelLookup = new Dictionary<string, SkyDriveItemModel>();
+        }
+
         #endregion
 
         #region Methods
 
-        public SkyDriveInfoModel RegisterModel(SkyDriveInfoModel model)
+        public SkyDriveItemModel RegisterModel(SkyDriveItemModel model)
         {
             UniqueIdLookup[model.FullPath] = model.UniqueId;
             ModelCache[model.UniqueId] = model;
@@ -67,13 +75,13 @@ namespace FileExplorer.Models
         /// <summary>
         /// DIctionary for uniqueId -> SkyDriveInfoModel
         /// </summary>
-        public ConcurrentDictionary<string, SkyDriveInfoModel> ModelCache { get; private set; }
+        public ConcurrentDictionary<string, SkyDriveItemModel> ModelCache { get; private set; }
 
 
         /// <summary>
         /// Directory for uniqueId -> SkyDriveInfoModel
         /// </summary>
-        public Dictionary<string, SkyDriveInfoModel> ModelLookup { get; private set; }
+        public Dictionary<string, SkyDriveItemModel> ModelLookup { get; private set; }
 
         #endregion
 

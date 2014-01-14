@@ -6,19 +6,23 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
-    public class SkyDriveInfoModel : EntryModelBase
+    public class SkyDriveItemModel : EntryModelBase
     {
         #region Constructor
 
-        public SkyDriveInfoModel(SkyDriveProfile profile, object data, string parentUniqueId = null)
+        public SkyDriveItemModel(SkyDriveProfile profile, string path, object data, string parentUniqueId = null)
             : base(profile)
         {
+            AccessPath = path;
+
             dynamic d = data as dynamic;
             UniqueId = d.id;
+            this.IsDirectory = d.type == "folder" || d.type == "album";
             this.Type = d.type; //photo, album or folder
             this.Description = d.description;
+            this.Label = d.name;
             this.FullPath = profile.ModelCache.GetPath(parentUniqueId) + "/" + d.name;
-            this.ImageUrl = null;
+            this.ImageUrl = d.picture;
         }
 
         #endregion
@@ -33,66 +37,67 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        public string AccessPath { get; private set; }
         public string Description { get; private set; }
         public string UniqueId { get; private set; }
         public string Type { get; private set; }
-        public string ImageUrl { get; protected set; }
+        public string ImageUrl { get; protected set; }        
 
         #endregion
     }
 
-    public class SkyDriveItemModel : SkyDriveInfoModel
-    {
-        #region Constructor
+    //public class SkyDriveItemModel : SkyDriveInfoModel
+    //{
+    //    #region Constructor
 
-        public SkyDriveItemModel(SkyDriveProfile profile, object data, string parentUniqueId = null)
-            : base(profile, data, parentUniqueId)
-        {
-            dynamic d = data as dynamic;
+    //    public SkyDriveItemModel(SkyDriveProfile profile, string path, object data, string parentUniqueId = null)
+    //        : base(profile, path, data, parentUniqueId)
+    //    {
+    //        dynamic d = data as dynamic;
 
 
-        }
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Methods
+    //    #region Methods
 
-        #endregion
+    //    #endregion
 
-        #region Data
+    //    #region Data
 
-        #endregion
+    //    #endregion
 
-        #region Public Properties
+    //    #region Public Properties
 
-        #endregion
+    //    #endregion
 
-    }
+    //}
 
-    public class SkyDriveDirectoryModel : SkyDriveInfoModel
-    {
-        #region Constructor
+    //public class SkyDriveDirectoryModel : SkyDriveInfoModel
+    //{
+    //    #region Constructor
 
-        public SkyDriveDirectoryModel(SkyDriveProfile profile, object data, string parentUniqueId = null)
-            : base(profile, data, parentUniqueId)
-        {
-            dynamic d = data as dynamic;            
+    //    public SkyDriveDirectoryModel(SkyDriveProfile profile, string path, object data, string parentUniqueId = null)
+    //        : base(profile, path, data, parentUniqueId)
+    //    {
+    //        dynamic d = data as dynamic;            
 
-        }
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Methods
+    //    #region Methods
 
-        #endregion
+    //    #endregion
 
-        #region Data
+    //    #region Data
 
-        #endregion
+    //    #endregion
 
-        #region Public Properties
+    //    #region Public Properties
 
-        #endregion
+    //    #endregion
 
-    }
+    //}
 }

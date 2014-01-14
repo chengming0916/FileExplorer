@@ -20,7 +20,7 @@ namespace FileExplorer.Models
 
         public FileSystemInfoProfile()
         {
-            HierarchyComparer = PathComparer.Default;
+            HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new FileSystemInfoExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
 

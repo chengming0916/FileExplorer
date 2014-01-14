@@ -20,6 +20,10 @@ namespace TestApp.WPF
             {
                 window.Width = 800; window.Height = 500;
             }
+            else if (model is FileExplorer.ViewModels.LoginViewModel)
+            {
+                window.Width = 800; window.Height = 500;
+            }
             else
             {
                 window.Width = 500; window.Height = 300;

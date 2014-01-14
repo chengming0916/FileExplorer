@@ -48,7 +48,7 @@ namespace FileExplorer.ViewModels
 
             Entries = new EntriesHelper<IDirectoryNodeViewModel>();
             var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries,
-                PathComparer.Default.CompareHierarchy);
+                PathComparer.LocalDefault.CompareHierarchy);
             selection.SelectionChanged += (o, e) =>
             {
                 BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
