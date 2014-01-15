@@ -24,6 +24,7 @@ namespace FileExplorer.Models
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
+            PathMapper = NullDiskPatheMapper.Instance;
 
             DragDrop = new NullDragDropHandler();
         }
@@ -59,8 +60,8 @@ namespace FileExplorer.Models
         public IEntryHierarchyComparer HierarchyComparer { get; protected set; }
         public IMetadataProvider MetadataProvider { get; protected set; }        
         public IEnumerable<ICommandProvider> CommandProviders { get; protected set; }
-        
-        #endregion
+        public IDiskPathMapper PathMapper { get; protected set; }
 
+        #endregion
     }
 }

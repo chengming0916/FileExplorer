@@ -23,7 +23,8 @@ namespace FileExplorer.Models
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new FileSystemInfoExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
-
+            PathMapper = IODiskPatheMapper.Instance;
+            DragDrop = new FileBasedDragDropHandler(this);
         }
 
         #endregion

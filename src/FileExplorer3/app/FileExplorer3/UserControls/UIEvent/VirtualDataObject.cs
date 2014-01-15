@@ -6,6 +6,7 @@ using System.Windows;
 using System.IO;
 using FileExplorer.Defines;
 using System.Diagnostics;
+using FileExplorer.Models;
 
 namespace FileExplorer.UserControls.DragDrop
 {
@@ -121,7 +122,7 @@ namespace FileExplorer.UserControls.DragDrop
 
         #region Public Properties
 
-        public IFileDropItem[] FileDrops { get { return _fileDrops; } }
+        public IFileDropItem[] FileDrops { get { return _fileDrops; } }        
 
         #endregion
 

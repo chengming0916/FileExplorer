@@ -60,7 +60,7 @@ namespace FileExplorer.Models
         IEnumerable<ICommandProvider> CommandProviders { get; }
         ISuggestSource SuggestSource { get; }
         IDragDropHandler DragDrop { get; }
-
+        IDiskPathMapper PathMapper { get; }
         
         #endregion
     }

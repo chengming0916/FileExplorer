@@ -95,9 +95,11 @@
     <Compile Include="Defines\Strings.cs" />
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\CommandModelImpl.cs" />
+    <Compile Include="Models\DiskPathMapperImpl.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />
+    <Compile Include="Models\IDiskPathMapper.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
     <Compile Include="Models\ILoginInfo.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="Utils\SimpleCommandBinding.cs" />
     <Compile Include="Utils\SimpleRoutedCommand.cs" />
     <Compile Include="Utils\ScriptCommandBinding.cs" />
+    <Compile Include="Utils\WebUtils.cs" />
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />

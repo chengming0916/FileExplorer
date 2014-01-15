@@ -56,7 +56,7 @@ namespace TestApp.WPF
                     new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
                         new OpenSelectedDirectory(), //Selected directory                        
                         new AssignSelectionToParameterAsEntryModelArray(
-                            new OpenWithCommandEx.OpenWithScriptCommand(null))),  //Selected non-directory
+                            new OpenWithScriptCommand(null))),  //Selected non-directory
                     ResultCommand.NoError //Selected more than one item, ignore.
                     );
 
