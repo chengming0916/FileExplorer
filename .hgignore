@@ -6,3 +6,5 @@ src/FileExplorer3/release/*
 doc/*.bak
 src/FileExplorer3/app/FileExplorer3/UserControls/Notused/*
 src/FileExplorer3/app/TestSkyDrive/*
+*/Thumbs.db
+Thumbs.db
