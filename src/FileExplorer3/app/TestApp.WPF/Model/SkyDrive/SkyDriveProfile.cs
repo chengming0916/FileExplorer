@@ -65,6 +65,10 @@ namespace FileExplorer.Models
         {
             await CheckLoginAsync();
 
+            string uid = ModelCache.GetUniqueId(path);
+            if (uid != null)
+                return ModelCache.GetModel(uid);
+
             LiveConnectClient client = new LiveConnectClient(Session);
             LiveOperationResult liveOpResult = await client.GetAsync(path);
             dynamic dynResult = liveOpResult.Result;
@@ -86,6 +90,11 @@ namespace FileExplorer.Models
             SkyDriveItemModel dirModel = entry as SkyDriveItemModel;
             if (dirModel != null)
             {
+                var cachedChild = ModelCache.GetChildModel(dirModel);
+                if (cachedChild != null)
+                    return cachedChild.ToList();
+
+
                 LiveConnectClient client = new LiveConnectClient(Session);
                 LiveOperationResult listOpResult = await client.GetAsync(dirModel.UniqueId + "/files");
                 dynamic listResult = listOpResult.Result;
@@ -101,6 +110,7 @@ namespace FileExplorer.Models
                     if (retVal != null && filter(retVal))
                         retList.Add(ModelCache.RegisterModel(retVal));
                 }
+                ModelCache.RegisterChildModels(dirModel, retList.Cast<SkyDriveItemModel>().ToArray());
             }
 
             return retList;

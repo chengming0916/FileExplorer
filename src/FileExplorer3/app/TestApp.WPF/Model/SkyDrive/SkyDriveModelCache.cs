@@ -11,8 +11,12 @@ namespace FileExplorer.Models
     public interface ISkyDriveModelCache
     {
         SkyDriveItemModel RegisterModel(SkyDriveItemModel model);
+        void RegisterChildModels(SkyDriveItemModel parentModel, SkyDriveItemModel[] childModels);
+        SkyDriveItemModel[] GetChildModel(SkyDriveItemModel parentModel);
+
         string GetUniqueId(string path);
         string GetPath(string uniqueId);
+        SkyDriveItemModel GetModel(string uniqueId);
 
     }
 
@@ -24,8 +28,7 @@ namespace FileExplorer.Models
         {
             UniqueIdLookup = new ConcurrentDictionary<string, string>();
             ChildLookup = new ConcurrentDictionary<string, IList<string>>();
-            ModelCache = new ConcurrentDictionary<string, SkyDriveItemModel>();
-            ModelLookup = new Dictionary<string, SkyDriveItemModel>();
+            ModelCache = new ConcurrentDictionary<string, SkyDriveItemModel>();            
         }
 
         #endregion
@@ -42,7 +45,7 @@ namespace FileExplorer.Models
         public string GetUniqueId(string path)
         {
             if (!(UniqueIdLookup.ContainsKey(path)))
-                throw new KeyNotFoundException();
+                return null;
             else return UniqueIdLookup[path];
         }
 
@@ -50,8 +53,29 @@ namespace FileExplorer.Models
         {
             var ppair = UniqueIdLookup.FirstOrDefault(pp => pp.Value == uniqueId);
             if (ppair.Equals(default(KeyValuePair<string, string>)))
-                return "";
+                return null;
             else return ppair.Key;
+        }
+
+        public SkyDriveItemModel GetModel(string uniqueId)
+        {
+            return ModelCache[uniqueId];
+        }
+
+        public void RegisterChildModels(SkyDriveItemModel parentModel, SkyDriveItemModel[] childModels)
+        {
+            foreach (var cm in childModels)
+                RegisterModel(cm);
+            ChildLookup[parentModel.UniqueId] = (from cm in childModels select cm.UniqueId).ToList();
+        }
+
+        public SkyDriveItemModel[] GetChildModel(SkyDriveItemModel parentModel)
+        {
+            if (ChildLookup.ContainsKey(parentModel.UniqueId))
+            {
+                return (from uid in ChildLookup[parentModel.UniqueId] select GetModel(uid)).ToArray();
+            }
+            else return null;
         }
 
         #endregion
@@ -76,12 +100,7 @@ namespace FileExplorer.Models
         /// DIctionary for uniqueId -> SkyDriveInfoModel
         /// </summary>
         public ConcurrentDictionary<string, SkyDriveItemModel> ModelCache { get; private set; }
-
-
-        /// <summary>
-        /// Directory for uniqueId -> SkyDriveInfoModel
-        /// </summary>
-        public Dictionary<string, SkyDriveItemModel> ModelLookup { get; private set; }
+      
 
         #endregion
 

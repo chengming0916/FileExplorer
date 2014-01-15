@@ -46,7 +46,7 @@ namespace FileExplorer.Models
 
         public DiskMapInfo this[IEntryModel model]
         {
-            get { return new DiskMapInfo(model.FullPath, true); }
+            get { return new DiskMapInfo(model.FullPath, true, false); }
         }
 
 

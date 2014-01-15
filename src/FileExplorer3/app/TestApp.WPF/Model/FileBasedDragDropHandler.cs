@@ -26,19 +26,20 @@ namespace FileExplorer.Models
         public void NotifyPrepareDrop(VirtualDataObject sender, string format)
         {
               FileDropDataObject dataObject = sender as FileDropDataObject;
-              Task.Run(async () =>
+              AsyncUtils.RunSync(() => Task.Run(async () =>
                   {
                       foreach (var m in _models)
                           if (!m.Profile.PathMapper[m].IsCached)
                           {
                               await m.Profile.PathMapper.UpdateCacheAsync(m);
                           }
-                  }).Wait();
+                  }));
         }
     }
 
     public class FileBasedDragDropHandler : IDragDropHandler
     {
+        private static IProfile _fsiProfile = new FileSystemInfoProfile(); //For loading drag items.
         private IProfile _profile;
         public FileBasedDragDropHandler(IProfile profile)
         {
@@ -58,6 +59,9 @@ namespace FileExplorer.Models
 
         public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
         {
+            foreach (var e in entries)
+                if (e.Profile.PathMapper[e].IsVirtual)
+                    return DragDropEffects.Copy;
             return DragDropEffects.Copy | DragDropEffects.Move;
         }
 
@@ -73,10 +77,13 @@ namespace FileExplorer.Models
                 string[] fileNameList = dataObject.GetData(DataFormats.FileDrop) as string[];
                 foreach (var fn in fileNameList)
                 {
-                    IEntryModel vm;
+                    IEntryModel vm = null;
                     try
                     {
-                        vm = AsyncUtils.RunSync(() => _profile.ParseAsync(fn));                        
+                        if (Directory.Exists(fn))
+                            vm = new FileSystemInfoModel(_fsiProfile, new DirectoryInfo(fn));
+                        else if (File.Exists(fn))
+                            vm = new FileSystemInfoModel(_fsiProfile, new FileInfo(fn));                                                    
                     }
                     catch
                     {
