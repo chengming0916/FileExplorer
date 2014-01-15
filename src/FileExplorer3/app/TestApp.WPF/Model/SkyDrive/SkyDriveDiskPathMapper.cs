@@ -24,7 +24,7 @@ namespace FileExplorer.Models
 
         #region Methods
 
-      
+
         /// <summary>
         /// Download
         /// </summary>
@@ -43,14 +43,14 @@ namespace FileExplorer.Models
                         await UpdateCacheAsync(subEm);
                 }
                 else //File
-                {                    
+                {
                     byte[] bytes = await WebUtils.DownloadAsync(mapInfo.SourceUrl);
                     Directory.CreateDirectory(Path.GetDirectoryName(mapInfo.IOPath));
                     using (var s = File.OpenWrite(mapInfo.IOPath))
                         s.Write(bytes, 0, bytes.Length);
                     _isCachedDictionary[model.FullPath] = true;
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -78,14 +78,18 @@ namespace FileExplorer.Models
 
         public DiskMapInfo this[IEntryModel model]
         {
-            get 
+            get
             {
                 string path = Path.Combine(_tempPath, model.FullPath.Replace('/', '\\').TrimStart('\\'));
                 bool isCached = _isCachedDictionary.ContainsKey(model.FullPath) && _isCachedDictionary[model.FullPath];
                 string sourceUrl = (model as SkyDriveItemModel).SourceUrl;
                 if (sourceUrl == null)
-                    return null;
-                return new DiskMapInfo(path, isCached) { SourceUrl = new Uri(sourceUrl) };
+                {
+                    if (model.IsDirectory)
+                        return new DiskMapInfo(path, isCached, true);
+                    else return null;
+                }
+                return new DiskMapInfo(path, isCached, true) { SourceUrl = new Uri(sourceUrl) };
             }
         }
 
@@ -93,6 +97,6 @@ namespace FileExplorer.Models
         #endregion
 
 
-      
+
     }
 }

@@ -78,8 +78,8 @@
     </Compile>
     <Compile Include="AppViewModel.cs" />
     <Compile Include="AppWindowManager.cs" />
-    <Compile Include="Model\FileSystemInfo\EntryModelIconExtractors.cs" />
-    <Compile Include="Model\DirectoryInfoEx\ExScriptCommands.cs" />
+    <Compile Include="Model\FileBasedIconExtractors.cs" />
+    <Compile Include="Model\FileBasedScriptCommands.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExCommandProvider.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
