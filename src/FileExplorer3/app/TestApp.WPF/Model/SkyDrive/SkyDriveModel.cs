@@ -20,9 +20,11 @@ namespace FileExplorer.Models
             this.IsDirectory = d.type == "folder" || d.type == "album";
             this.Type = d.type; //photo, album or folder
             this.Description = d.description;
-            this.Label = d.name;
+            this.Label = this.Name = d.name;
             this.FullPath = profile.ModelCache.GetPath(parentUniqueId) + "/" + d.name;
+            
             this.ImageUrl = d.picture;
+            this.SourceUrl = d.source;
         }
 
         #endregion
@@ -41,7 +43,8 @@ namespace FileExplorer.Models
         public string Description { get; private set; }
         public string UniqueId { get; private set; }
         public string Type { get; private set; }
-        public string ImageUrl { get; protected set; }        
+        public string ImageUrl { get; protected set; }
+        public string SourceUrl { get; protected set; }
 
         #endregion
     }

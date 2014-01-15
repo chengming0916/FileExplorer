@@ -21,6 +21,8 @@ namespace FileExplorer.Models
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
 
+            PathMapper = new SkyDriveDiskPathMapper(this, null);
+            DragDrop = new FileBasedDragDropHandler(this);
             _authClient = new LiveAuthClient(clientId);
             _authCode = authCode;
             _userId = userId;
@@ -93,14 +95,14 @@ namespace FileExplorer.Models
                 {
                     SkyDriveItemModel retVal = null;
                     //if (itemData.type == "folder")
-                        retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.UniqueId);
+                    retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.UniqueId);
                     //else retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.UniqueId);
 
                     if (retVal != null && filter(retVal))
                         retList.Add(ModelCache.RegisterModel(retVal));
                 }
             }
-            
+
             return retList;
         }
 
@@ -111,7 +113,10 @@ namespace FileExplorer.Models
 
             SkyDriveItemModel model = entry as SkyDriveItemModel;
             if (model.ImageUrl != null)
-                yield return new GetUriIcon(e => new Uri((e as SkyDriveItemModel).ImageUrl));            
+                yield return new GetUriIcon(e => new Uri((e as SkyDriveItemModel).ImageUrl));
+            else
+                if (model.Name.IndexOf('.') != -1)
+                    yield return GetFromSystemImageListUsingExtension.Instance;
         }
 
         #endregion

@@ -39,6 +39,35 @@ namespace FileExplorer.Models
         }
     }
 
+    public class GetFromSystemImageListUsingExtension : IEntryModelIconExtractor
+    {
+        private IconExtractor _iconExtractor = new IconExtractor();
+        private Func<IEntryModel, string> _fileNameFunc;
+        public static GetFromSystemImageListUsingExtension Instance = new GetFromSystemImageListUsingExtension();
+
+        public GetFromSystemImageListUsingExtension(Func<IEntryModel, string> fileNameFunc = null)
+        {
+            _fileNameFunc = fileNameFunc == null ? e => e.Label : fileNameFunc;
+        }
+
+        public Task<ImageSource> GetIconForModelAsync(IEntryModel model)
+        {
+            return Task<ImageSource>.Run(() =>
+                {
+                    if (model != null)
+                    {
+                        string fname = _fileNameFunc(model);
+                        Bitmap bitmap = _iconExtractor.GetBitmap(IconSize.large, fname, model.IsDirectory, false);
+                        if (bitmap != null)
+                            return (ImageSource)Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap);
+                    }
+                    return null;
+                });
+
+                
+        }
+    }
+
     public class GetImageFromImageExtractor : IEntryModelIconExtractor
     {
         public static GetImageFromImageExtractor Instance = new GetImageFromImageExtractor();

@@ -95,8 +95,9 @@ namespace FileExplorer.Models
             {
                 new ExCommandProvider(this)
             };
-            DragDrop = new FileSystemInfoExDragDropHandler(this);
-            
+            //DragDrop = new FileSystemInfoExDragDropHandler(this);
+            DragDrop = new FileBasedDragDropHandler(this);
+            PathMapper = IODiskPatheMapper.Instance;
         }
 
         #endregion

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
@@ -49,25 +50,11 @@ namespace FileExplorer.Models
         }
 
 
-        private async Task<byte[]> downloadAsync(Uri uri)
-        {
-            byte[] imageBytes = null;
-            using (WebClient webClient = new WebClient())
-            {
-                webClient.Proxy = null;  //avoids dynamic proxy discovery delay
-                webClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
-                try
-                {
-                    imageBytes = await webClient.DownloadDataTaskAsync(uri);
-                }
-                catch { }
-            }
-            return imageBytes;
-        }
+        
 
         public async Task<ImageSource> GetIconForModelAsync(IEntryModel model)
         {
-            var output = await downloadAsync(_uriFunc(model));
+            var output = await WebUtils.DownloadAsync(_uriFunc(model));
 
             BitmapImage retIcon = new BitmapImage();
             retIcon.BeginInit();

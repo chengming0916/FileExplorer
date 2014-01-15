@@ -13,7 +13,7 @@ using QuickZip.Converters;
 
 namespace QuickZip.UserControls.Logic.Tools.IconExtractor
 {
-    public abstract class IconExtractor
+    public class IconExtractor
     {
         public static string ImageFilter = ".jpg,.jpeg,.png,.gif,.bmp,.tiff";
         public static string SpecialFilter = ".exe,.lnk";

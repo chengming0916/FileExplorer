@@ -30,9 +30,14 @@ namespace FileExplorer.BaseControls
                 object sender = pm["Sender"];
                 InputEventArgs eventArgs = pm["EventArgs"] as InputEventArgs;
                 foreach (InputBinding ib in _processor.InputBindings)
+                {
                     if (ib.Gesture.Matches(sender, eventArgs))
                         if (ib.Command.CanExecute(ib.CommandParameter))
+                        {
                             ib.Command.Execute(ib.CommandParameter);
+                            return ResultCommand.OK;
+                        }
+                }
                 return ResultCommand.OK;
             }
         }
