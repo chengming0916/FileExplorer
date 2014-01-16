@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels.Helpers
 {
@@ -83,12 +84,14 @@ namespace FileExplorer.ViewModels.Helpers
         ITreeSelector<VM, T> Selection { get; set; }
     }
 
+ 
+
     /// <summary>
     /// Implemented in tree node view model, to provide selection support.
     /// </summary>
     /// <typeparam name="VM">ViewModel.</typeparam>
     /// <typeparam name="T">Value</typeparam>
-    public interface ITreeRootSelector<VM, T> : ITreeSelector<VM,T>
+    public interface ITreeRootSelector<VM, T> : ITreeSelector<VM, T>, ICompareHierarchy<T>
     {
 
         /// <summary>
@@ -116,10 +119,12 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         T SelectedValue { get; set; }
 
+        
+
         /// <summary>
         /// Compare Hierarchy of two value.
         /// </summary>
-        Func<T, T, HierarchicalResult> CompareFunc { get; set; }        
+        IEnumerable<ICompareHierarchy<T>> Comparers { get; set; }        
 
         ObservableCollection<VM> OverflowedAndRootItems { get; set; }
 

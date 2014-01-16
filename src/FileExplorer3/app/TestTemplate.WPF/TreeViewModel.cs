@@ -9,24 +9,25 @@ using FileExplorer.Defines;
 using FileExplorer.ViewModels.Helpers;
 using FileExplorer;
 using System.Windows;
+using FileExplorer.Models;
 
 namespace TestTemplate.WPF
 {
-    public class TreeViewModel : INotifyPropertyChanged, 
-        ISupportTreeSelector<TreeNodeViewModel, string>
+    public class TreeViewModel : INotifyPropertyChanged,
+        ISupportTreeSelector<TreeNodeViewModel, string>, ICompareHierarchy<string>
     {
         public TreeViewModel()
         {
             //Submodel is TreeNodeViewModel,
             Entries = new EntriesHelper<TreeNodeViewModel>();
             //Value is based on string
-            Selection = new TreeRootSelector<TreeNodeViewModel, string>(Entries, compareFunc);
+            Selection = new TreeRootSelector<TreeNodeViewModel, string>(Entries) { Comparers = new[] { this } };
 
             Entries.SetEntries(new TreeNodeViewModel("", "Root", this, null));
 
         }
 
-        HierarchicalResult compareFunc(string path1, string path2)
+        public HierarchicalResult CompareHierarchy(string path1, string path2)
         {
             if (path1 == null || path2 == null)
                 return HierarchicalResult.Unrelated;

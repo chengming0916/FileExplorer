@@ -23,12 +23,13 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="compareFunc"></param>
         /// <param name="rootLevel">Level of TreeItem to consider as root, root items should shown in expander 
         /// (e.g. in OverflowedAndRootItems) and have caption and expander hidden when the path is longer than it.</param>
-        public TreeRootSelector(IEntriesHelper<VM> entryHelper,
-            Func<T, T, HierarchicalResult> compareFunc, int rootLevel = 0)
+        public TreeRootSelector(IEntriesHelper<VM> entryHelper)// int rootLevel = 0,
+            //params Func<T, T, HierarchicalResult>[] compareFuncs)
             : base(entryHelper)
         {
-            _rootLevel = rootLevel;
-            _compareFunc = compareFunc;
+            //_rootLevel = rootLevel;
+            //_compareFuncs = compareFuncs;
+            //Comparers = new [] { PathComparer.LocalDefault };
         }
 
         #endregion
@@ -101,12 +102,23 @@ namespace FileExplorer.ViewModels.Helpers
      
         public async Task SelectAsync(T value)
         {
-            if (_selectedValue == null || _compareFunc(_selectedValue, value) != HierarchicalResult.Current)
+            if (_selectedValue == null || CompareHierarchy(_selectedValue, value) != HierarchicalResult.Current)
             {
                 await LookupAsync(value, RecrusiveSearch<VM, T>.LoadSubentriesIfNotLoaded,
-                    SetSelected<VM, T>.WhenSelected, SetChildSelected<VM, T>.ToSelectedChild);
+                    SetSelected<VM, T>.WhenSelected, SetChildSelected<VM, T>.ToSelectedChild);                
             }
-        }      
+        }
+
+        public HierarchicalResult CompareHierarchy(T value1, T value2)
+        {
+            foreach (var c in Comparers)
+            {
+                var retVal = c.CompareHierarchy(value1, value2);
+                if (retVal != HierarchicalResult.Unrelated)
+                    return retVal;
+            }
+            return HierarchicalResult.Unrelated;
+        }
 
         #endregion
 
@@ -115,7 +127,7 @@ namespace FileExplorer.ViewModels.Helpers
         T _selectedValue = default(T);
         ITreeSelector<VM, T> _selectedSelector;
         Stack<ITreeSelector<VM, T>> _prevPath = null;
-        private Func<T, T, HierarchicalResult> _compareFunc;        
+        private IEnumerable<ICompareHierarchy<T>> _comparers;
         private ObservableCollection<VM> _rootItems = null;
 
         #endregion
@@ -123,7 +135,7 @@ namespace FileExplorer.ViewModels.Helpers
         #region Public Properties
 
         public event EventHandler SelectionChanged;
-        private int _rootLevel;
+        //private int _rootLevel;
 
         public ObservableCollection<VM> OverflowedAndRootItems
         {
@@ -147,12 +159,17 @@ namespace FileExplorer.ViewModels.Helpers
             set { SelectAsync(value); }
         }
 
-        public Func<T, T, HierarchicalResult> CompareFunc { get { return _compareFunc; } set { _compareFunc = value; } }
+
+        //public int RootLevel { get { return _rootLevel; } set { _rootLevel = value; } }
+
+        public IEnumerable<ICompareHierarchy<T>> Comparers { get { return _comparers; } set { _comparers = value; } }
 
         #endregion
 
 
 
 
+
+  
     }
 }

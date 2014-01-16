@@ -52,7 +52,8 @@ namespace FileExplorer.ViewModels.Helpers
             if (path.Count() > 0)
             {
                 _selectedValue = path.Peek().Value;
-                NotifyOfPropertyChanged(() => IsChildSelected);
+                
+
                 NotifyOfPropertyChanged(() => SelectedChild);
             }
 
@@ -96,7 +97,7 @@ namespace FileExplorer.ViewModels.Helpers
             ITreeLookup<VM, T> lookupProc,
             params ITreeLookupProcessor<VM, T>[] processors)
         {
-            await lookupProc.Lookup(value, this, RootSelector.CompareFunc, processors);
+            await lookupProc.Lookup(value, this, RootSelector, processors);
         }
 
         public void SetIsSelected(bool value)
@@ -210,7 +211,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public virtual bool IsChildSelected
         {
-            get { return _selectedValue != null; }
+            get { return _selectedValue != null; }            
         }
 
         public virtual bool IsRootAndIsChildSelected
@@ -224,8 +225,9 @@ namespace FileExplorer.ViewModels.Helpers
             set
             {
                 SetIsSelected(false);
-                NotifyOfPropertyChanged(() => IsSelected);
-                OnChildSelected(value);                
+                NotifyOfPropertyChanged(() => IsSelected);                
+                OnChildSelected(value);
+                NotifyOfPropertyChanged(() => IsChildSelected);
             }
         }
 

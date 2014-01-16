@@ -132,7 +132,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty IsChildSelectedProperty =
             DependencyProperty.Register("IsChildSelected", typeof(bool), typeof(BreadcrumbTreeItem), 
-                new UIPropertyMetadata(false));
+                new UIPropertyMetadata());
 
         public bool IsChildSelected
         {

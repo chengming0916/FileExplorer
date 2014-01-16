@@ -47,8 +47,8 @@ namespace FileExplorer.ViewModels
                 events.Subscribe(this);
 
             Entries = new EntriesHelper<IDirectoryNodeViewModel>();
-            var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries,
-                PathComparer.LocalDefault.CompareHierarchy);
+            var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries) 
+            { Comparers = new[] { PathComparer.LocalDefault } };
             selection.SelectionChanged += (o, e) =>
             {
                 BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
@@ -105,7 +105,7 @@ namespace FileExplorer.ViewModels
             if (profiles != null && profiles.Length > 0)
             {
                 (Selection as ITreeRootSelector<IDirectoryNodeViewModel, IEntryModel>)
-                    .CompareFunc = profiles.First().HierarchyComparer.CompareHierarchy;
+                    .Comparers = profiles.Select(p => p.HierarchyComparer);
             }
         }
 

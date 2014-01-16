@@ -39,8 +39,12 @@ namespace FileExplorer.Models
 
             public HierarchicalResult CompareHierarchyInner(IEntryModel a, IEntryModel b)
             {
+
                 if (a == null || b == null)
                     return HierarchicalResult.Unrelated;
+                if (!(a is FileSystemInfoExModel) || !(b is FileSystemInfoExModel))
+                    return HierarchicalResult.Unrelated;
+
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);                
                 FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);

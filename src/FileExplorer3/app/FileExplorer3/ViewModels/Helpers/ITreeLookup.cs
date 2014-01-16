@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels.Helpers
 {
     public interface ITreeLookup<VM, T>
     {
         Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors);
+            ICompareHierarchy<T> comparer, params ITreeLookupProcessor<VM, T>[] processors);
     }
 
     public class SearchNextLevel<VM, T> : ITreeLookup<VM, T>
@@ -18,13 +19,13 @@ namespace FileExplorer.ViewModels.Helpers
         public static SearchNextLevel<VM, T> LoadSubentriesIfNotLoaded = new SearchNextLevel<VM, T>();
 
         public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+            ICompareHierarchy<T> comparer, params ITreeLookupProcessor<VM, T>[] processors)
         {
             foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
                 if (current is ISupportTreeSelector<VM, T>)
                 {
                     var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
                     switch (compareResult)
                     {
                         case HierarchicalResult.Current:
@@ -41,13 +42,13 @@ namespace FileExplorer.ViewModels.Helpers
         public static BroadcastNextLevel<VM, T> LoadSubentriesIfNotLoaded = new BroadcastNextLevel<VM, T>();
 
         public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+            ICompareHierarchy<T> comparer, params ITreeLookupProcessor<VM, T>[] processors)
         {
             foreach (VM current in await parentSelector.EntryHelper.LoadAsync())
                 if (current is ISupportTreeSelector<VM, T>)
                 {
                     var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
                     processors.Process(compareResult, parentSelector, currentSelectionHelper);                    
                 }
         }
@@ -70,14 +71,14 @@ namespace FileExplorer.ViewModels.Helpers
         Stack<ITreeSelector<VM, T>> _hierarchy;
         private ITreeSelector<VM, T> _targetSelector;
         public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
-            Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+            ICompareHierarchy<T> comparer, params ITreeLookupProcessor<VM, T>[] processors)
         {
             if (parentSelector.EntryHelper.IsLoaded)
                 foreach (VM current in parentSelector.EntryHelper.AllNonBindable)
                     if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
                     {
                         var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                        var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                        var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
                         switch (compareResult)
                         {
                             case HierarchicalResult.Child:
@@ -106,7 +107,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
 
         public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
-           Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+           ICompareHierarchy<T> comparer, params ITreeLookupProcessor<VM, T>[] processors)
         {
             IEnumerable<VM> subentries = _loadSubEntries ?
                 await parentSelector.EntryHelper.LoadAsync() :
@@ -116,7 +117,7 @@ namespace FileExplorer.ViewModels.Helpers
                 if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
                 {
                     var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
                     switch (compareResult)
                     {
                         case HierarchicalResult.Current:
@@ -126,7 +127,7 @@ namespace FileExplorer.ViewModels.Helpers
                         case HierarchicalResult.Child:
                             if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
                             {
-                                await Lookup(value, currentSelectionHelper, compareFunc, processors);
+                                await Lookup(value, currentSelectionHelper, comparer, processors);
 
                                 return;
                             }
@@ -150,7 +151,7 @@ namespace FileExplorer.ViewModels.Helpers
         }
 
         public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
-          Func<T, T, HierarchicalResult> compareFunc, params ITreeLookupProcessor<VM, T>[] processors)
+          ICompareHierarchy<T> comparer, params ITreeLookupProcessor<VM, T>[] processors)
         {
 
             IEnumerable<VM> subentries = _loadSubEntries ?
@@ -161,10 +162,10 @@ namespace FileExplorer.ViewModels.Helpers
                 if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
                 {
                     var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                    var compareResult = compareFunc(currentSelectionHelper.Value, value);
+                    var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
                     if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
                     {
-                        await Lookup(value, currentSelectionHelper, compareFunc, processors);
+                        await Lookup(value, currentSelectionHelper, comparer, processors);
                         return;
                     }
                     break;
