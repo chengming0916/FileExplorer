@@ -25,7 +25,7 @@ namespace FileExplorer.UserControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new BreadcrumbTreeItem() { IsChildSelected = true };
+            return new BreadcrumbTreeItem() {  };
         }
 
         #endregion

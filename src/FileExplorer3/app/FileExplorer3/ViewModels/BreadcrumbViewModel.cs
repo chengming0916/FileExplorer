@@ -29,8 +29,8 @@ namespace FileExplorer.ViewModels
                 events.Subscribe(this);
             
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
-            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries, 
-                PathComparer.LocalDefault.CompareHierarchy);                
+            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries)
+                 { Comparers = new[] { PathComparer.LocalDefault } };                
             selection.SelectionChanged += (o, e) =>
                 {
                     BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
@@ -131,7 +131,7 @@ namespace FileExplorer.ViewModels
             if (profiles != null && profiles.Length > 0)
             {
                 (Selection as ITreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>)
-                    .CompareFunc = profiles.First().HierarchyComparer.CompareHierarchy;
+                    .Comparers = profiles.Select(p => p.HierarchyComparer);
                 SuggestSources = profiles.Select(p => p.SuggestSource);
             }
         }

@@ -29,8 +29,8 @@ namespace FileExplorer.Models
             if (a == null || b == null)
                 return HierarchicalResult.Unrelated;
 
-            string apath = a.FullPath.TrimEnd('\\');
-            string bpath = b.FullPath.TrimEnd('\\');
+            string apath = a.FullPath.TrimEnd(_separator);
+            string bpath = b.FullPath.TrimEnd(_separator);
             if (apath.Equals(bpath, _stringComparsion))
                 return HierarchicalResult.Current;
 
