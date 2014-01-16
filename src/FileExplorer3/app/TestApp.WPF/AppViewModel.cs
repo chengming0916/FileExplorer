@@ -15,6 +15,7 @@ using Cofe.Core.Script;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Cofe.Core.Utils;
+using System.Configuration;
 
 namespace TestApp.WPF
 {
@@ -80,7 +81,7 @@ namespace TestApp.WPF
             };
             return explorerModel;
         }
-  
+
         private void updateExplorerModel(IExplorerViewModel explorerViewModel)
         {
             explorerViewModel.FileList.EnableDrag = EnableDrag;
@@ -96,7 +97,7 @@ namespace TestApp.WPF
         {
             _explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
             updateExplorerModel(initExplorerModel(_explorer));
-            _windowManager.ShowWindow(_explorer);            
+            _windowManager.ShowWindow(_explorer);
         }
 
         public void UpdateWindow()
@@ -129,10 +130,10 @@ namespace TestApp.WPF
 
         public void AddDirectoryInfo()
         {
-            var rootModel = new [] { _profile.ParseAsync("C:\\").Result };
+            var rootModel = new[] { _profile.ParseAsync("C:\\").Result };
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
-                RootModels.Add(selectedModel);            
+                RootModels.Add(selectedModel);
         }
 
         public void AddDirectoryInfoEx()
@@ -140,29 +141,38 @@ namespace TestApp.WPF
             var rootModel = new[] { _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result };
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
-                RootModels.Add(selectedModel);                
+                RootModels.Add(selectedModel);
         }
 
-        public async Task AddSkyDrive()
+        private string loginSkyDrive()
         {
-            string clientId = "0000000040112888";
-            var login = new SkyDriveLogin(clientId);
+            var login = new SkyDriveLogin(Properties.Settings.Default.skydrive_client_id);
             if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
             {
-                var profile = new SkyDriveProfile(clientId, login.AuthCode);
-                var rootDirectoryModel = await profile.ParseAsync("/me/skydrive");
-                var list = await profile.ListAsync(rootDirectoryModel);
-                if (rootDirectoryModel != null)
-                    RootModels.Add(rootDirectoryModel);
+                Properties.Settings.Default.skydrive_auth_code = login.AuthCode;
+                Properties.Settings.Default.Save();
+                return login.AuthCode;
             }
+            return null;
+        }
+        
+        public async Task AddSkyDrive()
+        {
+            if (_profileSkyDrive == null)
+                _profileSkyDrive = new SkyDriveProfile(Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
+            var rootModel = new[] { await _profileSkyDrive.ParseAsync("/me/skydrive") };            
+            IEntryModel selectedModel = showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                RootModels.Add(selectedModel);
         }
 
         #endregion
 
         #region Data
-        
+
         IProfile _profile = new FileSystemInfoProfile();
         IProfile _profileEx = new FileSystemInfoExProfile();
+        IProfile _profileSkyDrive;
 
         //private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
         //private string _addPath = lookupPath;
@@ -180,7 +190,7 @@ namespace TestApp.WPF
         public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
         public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
-        public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }        
+        public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
 
 

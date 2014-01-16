@@ -12,7 +12,7 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
-        public SkyDriveProfile(string clientId, string authCode, string userId = "me")
+        public SkyDriveProfile(string clientId, Func<string> authCodeFunc, string userId = "me")
         {
             ModelCache = new SkyDriveModelCache();
 
@@ -24,7 +24,7 @@ namespace FileExplorer.Models
             PathMapper = new SkyDriveDiskPathMapper(this, null);
             DragDrop = new FileBasedDragDropHandler(this);
             _authClient = new LiveAuthClient(clientId);
-            _authCode = authCode;
+            _authCodeFunc = authCodeFunc;
             _userId = userId;
         }
 
@@ -43,27 +43,45 @@ namespace FileExplorer.Models
             return path.Substring(0, idx);
         }
 
-        private async Task<bool> CheckLoginAsync()
+        private async Task<bool> connectAsync(string authCode)
         {
-            if (Session != null)
-                return true;
-            LiveConnectSession session = await _authClient.ExchangeAuthCodeAsync(_authCode);
-            Session = session;
-            return Session != null;
+            if (authCode == null)
+                return false;
 
-            //if (_authResult.Status == LiveConnectSessionStatus.Connected)
-            //{
-            //    Session = _authResult.Session;
-            //    return true;
-            //}
-            //return false;
+            try
+            {
+                Session = await _authClient.ExchangeAuthCodeAsync(_authCode);                
+            }
+            catch
+            {
+                Session = null;
+            }
+            return Session != null;
+        }
+
+        private async Task<bool> checkLoginAsync()
+        {                          
+            if (Session != null && 
+                Session.Expires.Subtract(DateTimeOffset.UtcNow) > TimeSpan.FromSeconds(1))
+            {                
+                return true;
+            }
+
+            else 
+            {
+                _authCode = _authCodeFunc();
+                if (await connectAsync(_authCode))
+                    return true;
+            }
+
+            return false;
         }
 
 
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
-            await CheckLoginAsync();
+            await checkLoginAsync();
 
             string uid = ModelCache.GetUniqueId(path);
             if (uid != null)
@@ -82,6 +100,8 @@ namespace FileExplorer.Models
 
         public override async Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
         {
+            await checkLoginAsync();
+
             if (filter == null)
                 filter = e => true;
 
@@ -92,7 +112,7 @@ namespace FileExplorer.Models
             {
                 var cachedChild = ModelCache.GetChildModel(dirModel);
                 if (cachedChild != null)
-                    return cachedChild.ToList();
+                    return cachedChild.Where(m => filter(m)).ToList();
 
 
                 LiveConnectClient client = new LiveConnectClient(Session);
@@ -134,8 +154,9 @@ namespace FileExplorer.Models
         #region Data
 
         private LiveAuthClient _authClient;
-        private string _authCode;
+        private string _authCode = null;
         private string _userId;
+        private Func<string> _authCodeFunc;
 
         #endregion
 
