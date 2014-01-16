@@ -13,7 +13,7 @@ namespace FileExplorer.Models
         {
             StartUrl = "https://login.live.com/oauth20_authorize.srf?client_id=" + clientId +
                 "&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf" +
-                "&scope=wl.signin%20wl.basic%20wl.skydrive&response_type=code&display=windesktop&locale=en-GB&state=&theme=win7";
+                "&scope=wl.signin%20wl.basic%20wl.offline_access%20wl.skydrive&response_type=code&display=windesktop&locale=en-GB&state=&theme=win7";
         }
 
         public bool CheckLogin(Uri url)
