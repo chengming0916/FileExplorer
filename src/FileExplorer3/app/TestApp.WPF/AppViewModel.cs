@@ -52,14 +52,7 @@ namespace TestApp.WPF
         private IExplorerViewModel initExplorerModel(IExplorerViewModel explorerModel)
         {
 
-            explorerModel.FileList.ScriptCommands.Open =
-                new IfFileListSelection(evm => evm.Count == 1,
-                    new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                        new OpenSelectedDirectory(), //Selected directory                        
-                        new AssignSelectionToParameterAsEntryModelArray(
-                            new OpenWithScriptCommand(null))),  //Selected non-directory
-                    ResultCommand.NoError //Selected more than one item, ignore.
-                    );
+          
 
             explorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
             {
@@ -95,9 +88,19 @@ namespace TestApp.WPF
 
         public void OpenWindow()
         {
-            _explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
-            updateExplorerModel(initExplorerModel(_explorer));
-            _windowManager.ShowWindow(_explorer);
+            var explorerModel = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
+
+            explorerModel.FileList.ScriptCommands.Open =
+              new IfFileListSelection(evm => evm.Count == 1,
+                  new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
+                      new OpenSelectedDirectory(), //Selected directory                        
+                      new AssignSelectionToParameterAsEntryModelArray(
+                          new OpenWithScriptCommand(null))),  //Selected non-directory
+                  ResultCommand.NoError //Selected more than one item, ignore.
+                  );
+
+            updateExplorerModel(initExplorerModel(explorerModel));
+            _windowManager.ShowWindow(explorerModel);
         }
 
         public void UpdateWindow()
