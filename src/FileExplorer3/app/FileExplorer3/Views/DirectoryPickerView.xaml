@@ -36,19 +36,23 @@
                           HorizontalAlignment="Stretch" VerticalAlignment="Top" />
             <!--<GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1" Margin="5,0"
                           HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />-->
-            
-            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right" Grid.Row="3" Grid.ColumnSpan="2" >
-                <StackPanel.Resources>
-                    <Style TargetType="Button" >
-                        <Setter Property="Margin" Value="5" />
-                        <Setter Property="Width" Value="100" />
-                    </Style>
-                </StackPanel.Resources>
-                <Button x:Name="Cancel" Content="Cancel"  />
-                <Button x:Name="Open" IsDefault="True" >
-                    <TextBlock FontWeight="Bold" Text="Open"  />                    
-                </Button>                
-            </StackPanel>
+
+            <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="3" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal" 
+                        
+                        HorizontalAlignment="Right"  >
+                    <StackPanel.Resources>
+                        <Style TargetType="Button" >
+                            <Setter Property="Margin" Value="5" />
+                            <Setter Property="Width" Value="100" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button x:Name="Cancel" Content="Cancel"  />
+                    <Button x:Name="Open" IsDefault="True" >
+                        <TextBlock FontWeight="Bold" Text="Open"  />
+                    </Button>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

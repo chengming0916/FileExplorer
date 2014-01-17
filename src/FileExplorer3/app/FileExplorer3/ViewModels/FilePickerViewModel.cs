@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Caliburn.Micro;
 using Cofe.Core;
+using Cofe.Core.Script;
 using FileExplorer.Models;
 using FileExplorer.ViewModels.Helpers;
 
@@ -44,6 +45,16 @@ namespace FileExplorer.ViewModels
                         .Select(evm => PathFE.GetFileName(evm.EntryModel.FullPath)));
 
                 };
+
+            FileList.ScriptCommands.Open = new IfFileListSelection(evm => evm.Count == 1,
+                   new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
+                       new OpenSelectedDirectory(),  //Selected directory
+                       new SimpleScriptCommand("", (pd) => { 
+                           Open(); 
+                           return ResultCommand.NoError; })),   //Selected non-directory
+                   ResultCommand.NoError //Selected more than one item.                   
+                   );
+
             FileList.EnableDrag = false;
             FileList.EnableDrop = false;
             FileList.EnableMultiSelect = false;
