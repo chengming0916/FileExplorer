@@ -87,7 +87,9 @@
     <Compile Include="Defines\Cofe3\Interfaces\IScriptRunnerSource.cs" />
     <Compile Include="Defines\Cofe3\Interfaces\IParameterDicConverter.cs" />
     <Compile Include="Defines\Cofe3\Utils\AttributeUtils.cs" />
+    <Compile Include="Defines\Cofe3\Utils\CofePath.cs" />
     <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
+    <Compile Include="Defines\Cofe3\Utils\RegexPatterns.cs" />
     <Compile Include="Defines\Commands\FileListCommands.cs" />
     <Compile Include="Defines\Converters\BorderClipConverter.cs" />
     <Compile Include="Defines\Converters\DynamicConverter.cs" />
@@ -122,6 +124,8 @@
     <Compile Include="Utils\WebUtils.cs" />
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\Helpers\DialogFilterViewModel.cs" />
+    <Compile Include="ViewModels\FilePickerViewModel.cs" />
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NavigationScriptCommandContainer.cs" />
@@ -134,6 +138,9 @@
     <Compile Include="ViewModels\Interfaces\IScriptCommandContainer.cs" />
     <Compile Include="ViewModels\Interfaces\ISelectable.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
+    <Compile Include="Views\FilePickerView.xaml.cs">
+      <DependentUpon>FilePickerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DirectoryPickerView.xaml.cs">
       <DependentUpon>DirectoryPickerView.xaml</DependentUpon>
     </Compile>
@@ -558,6 +565,10 @@
     <Page Include="Views\BreadcrumbView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FilePickerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DirectoryPickerView.xaml">
       <Generator>MSBuild:Compile</Generator>

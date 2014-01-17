@@ -109,6 +109,16 @@ namespace TestApp.WPF
             }
         }
 
+        public void PickFiles()
+        {
+            var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, RootModels.ToArray());
+            updateExplorerModel(initExplorerModel(filePicker));
+            if (_windowManager.ShowDialog(filePicker).Value)
+            {
+                MessageBox.Show(String.Join(",", filePicker.SelectedFiles.Select(em => em.FullPath)));
+            }
+        }
+
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
         {
             var directoryPicker = new DirectoryPickerViewModel(_events, _windowManager, rootModels);
@@ -183,6 +193,7 @@ namespace TestApp.WPF
         private bool _enableDrag, _enableDrop, _enableMultiSelect;
 
         private ObservableCollection<IEntryModel> _rootModels = new ObservableCollection<IEntryModel>();
+        private string _fileFilter = "Text Files (.txt)|*.txt|All Files (*.*)|*.*";
         #endregion
 
         #region Public Properties
@@ -192,7 +203,7 @@ namespace TestApp.WPF
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
-
+        public string FileFilter { get { return _fileFilter; } set { _fileFilter = value; NotifyOfPropertyChange(() => FileFilter); } }
 
         #endregion
 
