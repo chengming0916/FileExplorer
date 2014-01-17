@@ -45,8 +45,13 @@
             <CheckBox x:Name="EnableMultiSelect" Content="MultiSelect" ToolTip="Enable Multiselect using drag" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button x:Name="OpenWindow"  Content="Open new Window" />
+            <Button x:Name="OpenWindow"  Content="Open new Explorer Window" />
             <Button x:Name="UpdateWindow" Content="Update Previous Opened Window" />
+            
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="PickFiles"  Content="Pick files" />
+            <TextBox x:Name="FileFilter" />
         </StackPanel>
     </StackPanel>
 

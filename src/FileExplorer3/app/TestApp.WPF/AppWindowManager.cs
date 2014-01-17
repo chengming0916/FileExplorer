@@ -26,7 +26,7 @@ namespace TestApp.WPF
             }
             else
             {
-                window.Width = 500; window.Height = 300;
+                window.Width = 500; window.Height = 500;
             }
 
             return window;

@@ -83,6 +83,9 @@ namespace FileExplorer.Models
         {
             await checkLoginAsync();
 
+            if (Session == null)
+                return null;
+
             string uid = ModelCache.GetUniqueId(path);
             if (uid != null)
                 return ModelCache.GetModel(uid);

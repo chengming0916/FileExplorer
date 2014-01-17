@@ -96,7 +96,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #endregion
 
-        #region Public Properties
+        #region Public Properties        
 
         public bool ClearBeforeLoad
         {
