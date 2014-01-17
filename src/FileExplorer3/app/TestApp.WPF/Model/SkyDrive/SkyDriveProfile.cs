@@ -109,6 +109,7 @@ namespace FileExplorer.Models
                 filter = e => true;
 
             List<IEntryModel> retList = new List<IEntryModel>();
+            List<SkyDriveItemModel> cacheList = new List<SkyDriveItemModel>();
 
             SkyDriveItemModel dirModel = entry as SkyDriveItemModel;
             if (dirModel != null)
@@ -130,10 +131,14 @@ namespace FileExplorer.Models
                     retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.UniqueId);
                     //else retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.UniqueId);
 
-                    if (retVal != null && filter(retVal))
-                        retList.Add(ModelCache.RegisterModel(retVal));
+                    if (retVal != null)
+                    {
+                        cacheList.Add(ModelCache.RegisterModel(retVal));
+                        if (filter(retVal))
+                            retList.Add(retVal);
+                    }
                 }
-                ModelCache.RegisterChildModels(dirModel, retList.Cast<SkyDriveItemModel>().ToArray());
+                ModelCache.RegisterChildModels(dirModel, cacheList.ToArray());
             }
 
             return retList;

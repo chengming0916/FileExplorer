@@ -193,7 +193,7 @@ namespace TestApp.WPF
         private bool _enableDrag, _enableDrop, _enableMultiSelect;
 
         private ObservableCollection<IEntryModel> _rootModels = new ObservableCollection<IEntryModel>();
-        private string _fileFilter = "Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+        private string _fileFilter = "Texts (.txt)|*.txt|Pictures (.jpg, .png)|*.jpg,*.png|Songs (.mp3)|*.mp3|All Files (*.*)|*.*";
         #endregion
 
         #region Public Properties
