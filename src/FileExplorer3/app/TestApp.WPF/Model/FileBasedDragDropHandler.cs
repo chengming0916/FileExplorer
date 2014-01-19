@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Cofe.Core;
+using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.Models;
 using FileExplorer.UserControls.DragDrop;
@@ -113,9 +115,37 @@ namespace FileExplorer.Models
         {
             string fileName = PathEx.GetFileName(destDir.FullPath);
             if (fileName == null) fileName = destDir.FullPath;
-            MessageBox.Show(
+            if (MessageBox.Show(
                 String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
-                entries.Count(), fileName, allowedEffects));
+                entries.Count(), fileName, allowedEffects), "FileBasedDragDropHandler.OnDropCompleted", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                DragDropEffects effect = allowedEffects.HasFlag(DragDropEffects.Copy) ? DragDropEffects.Copy :
+                    allowedEffects.HasFlag(DragDropEffects.Move) ? DragDropEffects.Move : DragDropEffects.None;
+
+                if (effect == DragDropEffects.None)
+                    return DragDropEffects.None;
+
+                var sr = new ScriptRunner();
+                var scriptToRun = new Queue<IScriptCommand>( entries.Select(e => new FileTransferScriptCommand(e, destDir, effect)));
+                sr.Run(scriptToRun, new ParameterDic());
+                return effect;
+                //var destMapInfo = destDir.Profile.PathMapper[destDir];
+                //string destRootIoPath = destMapInfo .IOPath;
+                //foreach (var e in entries)
+                //{
+                //    string srcIoPath = e.Profile.PathMapper[e].IOPath;
+                //    string srcName = PathFE.GetFileName(srcIoPath); //To-DO:Convert to new FileTransfer() (IScriptCommand)
+
+                //    if (allowedEffec.Copy))
+                //        if (e.IsDirectory)
+                //            throw new NotImplementedException();
+                //        //Directory.m(srcIoPath, PathFE.Combine(destRootIoPath, srcName));
+                //        else File.Move(srcIoPath, PathFE.Combine(destRootIoPath, srcName));                    
+                //    if (destMapInfo.IsVirtual)
+                //        destDir.Profile.
+                //}
+                
+            };
             return DragDropEffects.None;
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Cofe.Core.Utils;
 
 namespace Cofe.Core.Script
 {
@@ -34,9 +35,12 @@ namespace Cofe.Core.Script
 
         public virtual IScriptCommand Execute(ParameterDic pm)
         {
-            if (_nextCommand != null)
-                return _nextCommand;
-            return ResultCommand.NoError;
+            return AsyncUtils.RunSync(() => ExecuteAsync(pm));            
+        }
+
+        public virtual async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            return Execute(pm);
         }
 
         public virtual bool CanExecute(ParameterDic pm)
@@ -62,6 +66,9 @@ namespace Cofe.Core.Script
 
 
 
+
+
+      
     }
 
     

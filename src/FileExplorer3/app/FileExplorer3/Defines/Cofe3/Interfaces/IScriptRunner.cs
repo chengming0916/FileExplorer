@@ -9,6 +9,7 @@ namespace Cofe.Core.Script
     public interface IScriptRunner
     {
         void Run(Queue<IScriptCommand> cmds, ParameterDic initialParameters);
+        Task RunAsync(Queue<IScriptCommand> cmds, ParameterDic initialParameters);
     }
 
 }

@@ -12,6 +12,8 @@ namespace Cofe.Core.Script
         string CommandKey { get; }
 
         IScriptCommand Execute(ParameterDic pm);
+        Task<IScriptCommand> ExecuteAsync(ParameterDic pm);
+
         bool CanExecute(ParameterDic pm);
     }
 

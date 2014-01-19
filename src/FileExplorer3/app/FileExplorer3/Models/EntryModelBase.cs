@@ -44,7 +44,7 @@ namespace FileExplorer.Models
 
         #region Data
 
-        private string _name;
+        protected string _name;
         private bool _isRenamable = false;        
         protected Lazy<IEntryModel> _parentFunc = new Lazy<IEntryModel>(() => null);
 

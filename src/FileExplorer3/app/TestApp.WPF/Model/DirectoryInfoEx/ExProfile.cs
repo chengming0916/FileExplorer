@@ -46,7 +46,7 @@ namespace FileExplorer.Models
                     return HierarchicalResult.Unrelated;
 
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
-                    return PathComparer.LocalDefault.CompareHierarchy(a, b);                
+                    return PathComparer.LocalDefault.CompareHierarchy(a, b);
                 FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);
                 FileSystemInfoEx fsib = FileSystemInfoEx.FromString(b.FullPath);
                 if (a.FullPath == b.FullPath)
@@ -113,7 +113,7 @@ namespace FileExplorer.Models
             return obj is FileSystemInfoExProfile;
         }
 
-        
+
         public override IComparer<IEntryModel> GetComparer(ColumnInfo column)
         {
             return new ValueComparer<IEntryModel>(p => p.FullPath);
@@ -142,23 +142,21 @@ namespace FileExplorer.Models
             return Task.FromResult<IEntryModel>(retVal);
         }
 
-        public override Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
         {
-            return Task.Factory.StartNew(() =>
-                {
-                    if (filter == null)
-                        filter = (m) => true;
-                    List<IEntryModel> retVal = new List<IEntryModel>();
-                    if (entry.IsDirectory)
-                    {
-                        DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
-                        retVal.AddRange(from fsi in di.GetFileSystemInfos()
-                                        let m = new FileSystemInfoExModel(this, fsi)
-                                        where filter(m)
-                                        select m);
-                    }
-                    return (IEnumerable<IEntryModel>)retVal;
-                });
+            if (filter == null)
+                filter = (m) => true;
+            List<IEntryModel> retVal = new List<IEntryModel>();
+            if (entry.IsDirectory)
+            {
+                DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
+                retVal.AddRange(from fsi in di.GetFileSystemInfos()
+                                let m = new FileSystemInfoExModel(this, fsi)
+                                where filter(m)
+                                select m);
+            }
+            return (IList<IEntryModel>)retVal;
+
         }
 
         public override IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
@@ -172,7 +170,7 @@ namespace FileExplorer.Models
                     )
                     yield return GetImageFromImageExtractor.Instance;
         }
-        
+
 
 
         #endregion
@@ -185,7 +183,7 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
-        
+
 
         #endregion
 
@@ -205,6 +203,6 @@ namespace FileExplorer.Models
 
 
 
-        
+
     }
 }

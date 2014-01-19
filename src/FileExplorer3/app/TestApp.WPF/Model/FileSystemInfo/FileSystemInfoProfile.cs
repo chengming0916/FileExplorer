@@ -64,7 +64,7 @@ namespace FileExplorer.Models
             return Task.FromResult<IEntryModel>(retVal);
         }
 
-        public override Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
         {
             if (filter == null)
                 filter = (m) => true;
@@ -73,13 +73,13 @@ namespace FileExplorer.Models
             if (entry.IsDirectory)
             {
                 DirectoryInfo di = createDirectoryInfo(entry.FullPath);
-                retVal.AddRange(from fsi in di.GetFileSystemInfos() 
+                retVal.AddRange(from fsi in di.GetFileSystemInfos()
                                 let m = new FileSystemInfoModel(this, fsi)
                                 where filter(m)
                                 select m);
             }
-            return Task.FromResult<IEnumerable<IEntryModel>>(retVal);
-        }      
+            return (IList<IEntryModel>)retVal;
+        }
 
         private Icon getFolderIcon()
         {
@@ -94,7 +94,7 @@ namespace FileExplorer.Models
             if (!entry.IsDirectory)
                 yield return GetFromIconExtractIcon.Instance;
         }
-        
+
 
         #endregion
 
@@ -106,7 +106,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
-    
+
         #endregion
 
 

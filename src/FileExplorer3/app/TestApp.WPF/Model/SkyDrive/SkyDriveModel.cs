@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cofe.Core;
+using Cofe.Core.Utils;
 
 namespace FileExplorer.Models
 {
@@ -10,21 +12,53 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
-        public SkyDriveItemModel(SkyDriveProfile profile, string path, object data, string parentUniqueId = null)
+        private SkyDriveItemModel(SkyDriveProfile profile)
             : base(profile)
-        {
-            AccessPath = path;
+        {}
 
-            dynamic d = data as dynamic;
+
+        internal void init(SkyDriveProfile profile, string path)
+        {
+            FullPath = path;
+            this.Label = this.Name = PathFE.GetFileNameR(path);            
+            this._parentFunc = new Lazy<IEntryModel>(() =>
+                AsyncUtils.RunSync(() => profile.ParseAsync(PathFE.GetDirectoryNameR(path))));
+        }
+
+        internal void init(SkyDriveProfile profile, string path, dynamic d)
+        {            
+            init(profile, path);
             UniqueId = d.id;
             this.IsDirectory = d.type == "folder" || d.type == "album";
+
             this.Type = d.type; //photo, album or folder
             this.Description = d.description;
-            this.Label = this.Name = d.name;
-            this.FullPath = profile.ModelCache.GetPath(parentUniqueId) + "/" + d.name;
-            
             this.ImageUrl = d.picture;
             this.SourceUrl = d.source;
+        }
+        /// <summary>
+        /// Generate a temporary model for uploading.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="path"></param>
+        /// <param name="isDirectory"></param>
+        public SkyDriveItemModel(SkyDriveProfile profile, string path, bool isDirectory)
+            : this(profile)
+        {
+            AccessPath = profile.GetAccessPath(path);
+            init(profile, path);
+            this.IsDirectory = isDirectory;
+            //SourceUrl = "Unknown";
+        }
+
+        public SkyDriveItemModel(SkyDriveProfile profile, string accessPath, object data, string parentFullPath = null)
+            : this(profile)
+        {
+            AccessPath = accessPath;
+
+            dynamic d = data as dynamic;
+            string path = parentFullPath + "/" + d.name;
+            init(profile, path, d);
         }
 
         #endregion
@@ -44,6 +78,10 @@ namespace FileExplorer.Models
         public string UniqueId { get; private set; }
         public string Type { get; private set; }
         public string ImageUrl { get; protected set; }
+
+        /// <summary>
+        /// Url for downloading a file.
+        /// </summary>
         public string SourceUrl { get; protected set; }
 
         #endregion
