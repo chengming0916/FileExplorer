@@ -44,7 +44,7 @@ namespace FileExplorer.Models
         }
 
          public abstract Task<IEntryModel> ParseAsync(string path);
-         public abstract Task<IEnumerable<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
+         public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
         
         #endregion
 

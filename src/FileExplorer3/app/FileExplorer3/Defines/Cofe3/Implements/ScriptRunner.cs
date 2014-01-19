@@ -30,5 +30,23 @@ namespace Cofe.Core.Script
         {
             Run(new Queue<IScriptCommand>(new[] { cmd }), initialParameters);
         }
+
+        public async Task RunAsync(Queue<IScriptCommand> cmds, ParameterDic initialParameters)
+        {
+            ParameterDic pd = initialParameters;
+
+            while (cmds.Any())
+            {
+                var current = cmds.Dequeue();
+                if (current.CanExecute(pd))
+                {
+                    var retCmd = await current.ExecuteAsync(pd);
+                    if (retCmd != null)
+                        cmds.Enqueue(retCmd);
+                }
+                else throw new Exception(String.Format("Cannot execute {0}", current));
+            }
+        }
+       
     }
 }

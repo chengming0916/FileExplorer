@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using Cofe.Core.Utils;
 using System.Configuration;
+using System.IO;
 
 namespace TestApp.WPF
 {
@@ -47,7 +48,7 @@ namespace TestApp.WPF
 
         #endregion
 
-        #region Methods
+        #region Methods       
 
         private IExplorerViewModel initExplorerModel(IExplorerViewModel explorerModel)
         {
@@ -88,9 +89,9 @@ namespace TestApp.WPF
 
         public void OpenWindow()
         {
-            var explorerModel = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
+            _explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
 
-            explorerModel.FileList.ScriptCommands.Open =
+            _explorer.FileList.ScriptCommands.Open =
               new IfFileListSelection(evm => evm.Count == 1,
                   new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
                       new OpenSelectedDirectory(), //Selected directory                        
@@ -99,8 +100,8 @@ namespace TestApp.WPF
                   ResultCommand.NoError //Selected more than one item, ignore.
                   );
 
-            updateExplorerModel(initExplorerModel(explorerModel));
-            _windowManager.ShowWindow(explorerModel);
+            updateExplorerModel(initExplorerModel(_explorer));
+            _windowManager.ShowWindow(_explorer);
         }
 
         public void UpdateWindow()
@@ -119,7 +120,7 @@ namespace TestApp.WPF
             if (_windowManager.ShowDialog(filePicker).Value)
             {
                 MessageBox.Show(String.Join(",", filePicker.SelectedFiles.Select(em => em.FullPath)));
-            }
+            }            
         }
 
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
@@ -173,10 +174,27 @@ namespace TestApp.WPF
         {
             if (_profileSkyDrive == null)
                 _profileSkyDrive = new SkyDriveProfile(Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
-            var rootModel = new[] { await _profileSkyDrive.ParseAsync("/me/skydrive") };            
+            var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };            
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
                 RootModels.Add(selectedModel);
+        }
+
+        public async Task TestUpload()
+        {
+            if (_profileSkyDrive == null)
+                _profileSkyDrive = new SkyDriveProfile(Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
+            //var photos = await _profileSkyDrive.ParseAsync("/photos");
+            var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/photos/upload.txt", false);
+            string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;
+            Directory.CreateDirectory(Path.GetDirectoryName(ioPath));
+            //var rootModel = new[] { await _profileSkyDrive.ParseAsync("/photos") };
+            //var newFile = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile,
+            //    "/me/skydrive/upload.txt", "/SkyDrive/upload.txt", "/me/skydrive", 1);
+            //string ioPath = _profileSkyDrive.PathMapper[newFile].IOPath;
+            using (var sw = new StreamWriter(File.Create(ioPath)))
+                sw.WriteLine("upload");
+            await _profileSkyDrive.PathMapper.UpdateSourceAsync(uploadtxt);           
         }
 
         #endregion

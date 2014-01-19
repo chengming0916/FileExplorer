@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Utils;
+using Microsoft.Live;
 
 namespace FileExplorer.Models
 {
@@ -32,6 +35,8 @@ namespace FileExplorer.Models
         /// <returns></returns>
         public async Task UpdateCacheAsync(IEntryModel model)
         {
+            await _profile.checkLoginAsync();
+
             var skyModel = model as SkyDriveItemModel;
             var mapInfo = this[model];
             if (mapInfo != null)
@@ -58,9 +63,37 @@ namespace FileExplorer.Models
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Task UpdateSourceAsync(IEntryModel model)
+        public async Task UpdateSourceAsync(IEntryModel model)
         {
-            throw new NotImplementedException();
+            await _profile.checkLoginAsync();
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            var skyModel = model as SkyDriveItemModel;
+            var mapInfo = this[model];
+            var progressHandler = new Progress<LiveOperationProgress>(
+                (progress) => { });
+
+            if (mapInfo != null)
+            {
+                if (model.IsDirectory)
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {                    
+                    LiveConnectClient liveClient = new LiveConnectClient(_profile.Session);
+                    LiveOperationResult result;
+                    using (var s = File.OpenRead(mapInfo.IOPath))                    
+                    {
+                        var uid = (skyModel.Parent as SkyDriveItemModel).UniqueId;
+                        result = await liveClient.UploadAsync(uid,
+                            skyModel.Name, s, OverwriteOption.Overwrite, cts.Token, progressHandler);
+                    }
+
+                    (model as SkyDriveItemModel).init(_profile, model.FullPath, result.Result);                    
+                }
+            }
+            
         }
 
         #endregion
@@ -87,7 +120,7 @@ namespace FileExplorer.Models
                 {
                     if (model.IsDirectory)
                         return new DiskMapInfo(path, isCached, true);
-                    else return null;
+                    else return new DiskMapInfo(path, isCached, true);
                 }
                 return new DiskMapInfo(path, isCached, true) { SourceUrl = new Uri(sourceUrl) };
             }

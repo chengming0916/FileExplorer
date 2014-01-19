@@ -45,6 +45,12 @@ namespace FileExplorer.BaseControls
         {
             return true;
         }
+
+
+        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            return Execute(pm);
+        }
     }
 
     public class RunInSequenceScriptCommand : IScriptCommand
@@ -72,6 +78,11 @@ namespace FileExplorer.BaseControls
         public virtual bool CanExecute(ParameterDic pm)
         {
             return _scriptCommands.First().CanExecute(pm);
+        }
+
+        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            return Execute(pm);
         }
     }
 
@@ -135,6 +146,10 @@ namespace FileExplorer.BaseControls
         {
             return true;
         }
+        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            return Execute(pm);
+        }
 
     }
 
@@ -154,6 +169,11 @@ namespace FileExplorer.BaseControls
         public bool CanExecute(ParameterDic pm)
         {
             return false;
+        }
+
+        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            return Execute(pm);
         }
     }
 }

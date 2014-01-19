@@ -52,7 +52,10 @@
         <StackPanel Orientation="Horizontal">
             <Button x:Name="PickFiles"  Content="Pick files" />
             <TextBox x:Name="FileFilter" />
+
+            
         </StackPanel>
+        <Button x:Name="TestUpload" Content="TestUpload" />
     </StackPanel>
 
     <!--<Grid>

@@ -115,6 +115,17 @@ namespace Cofe.Core
             return path.Substring(0, idx);
         }
 
+        public static string GetDirectoryNameR(string path)
+        {
+            if (path.EndsWith("/"))
+                path = path.Substring(0, path.Length - 1); //Remove ending slash.
+
+            int idx = path.LastIndexOf('/');
+            if (idx == -1)
+                return "";
+            return path.Substring(0, idx);
+        }
+
         public static string GetFileName(string path)
         {
             int idx = path.LastIndexOf('\\');
@@ -122,6 +133,15 @@ namespace Cofe.Core
                 return path;
             return path.Substring(idx + 1);
         }
+
+        public static string GetFileNameR(string path)
+        {
+            int idx = path.LastIndexOf('/');
+            if (idx == -1)
+                return path;
+            return path.Substring(idx + 1);
+        }
+
 
         public static string GetExtension(string path)
         {
@@ -176,16 +196,6 @@ namespace Cofe.Core
 
 
             return retVal.TrimStart('\\');
-
-
-            //if (paths.Length == 1)
-            //    return System.IO.Path.Combine(path1, paths[0]);
-            //foreach (var path in paths)
-            //{
-            //    path1 = System.IO.Path.Combine(path1, path);
-            //}
-
-            //return path1;
         }
 
 

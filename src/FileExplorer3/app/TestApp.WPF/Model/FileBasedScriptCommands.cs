@@ -6,9 +6,11 @@ using System.IO.Tools;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
+using FileExplorer.BaseControls;
 using FileExplorer.ViewModels;
 
 namespace FileExplorer.Models
@@ -46,7 +48,7 @@ namespace FileExplorer.Models
                     return ResultCommand.NoError;
                 if (!mapInfo0.IsCached)
                     AsyncUtils.RunSync(() => pathMapper.UpdateCacheAsync(parameter[0]));
-                
+
                 string _appliedFileName = mapInfo0.IOPath;
                 if (_isFolder || _appliedFileName.StartsWith("::{"))
                 {
@@ -81,6 +83,76 @@ namespace FileExplorer.Models
                 return ResultCommand.OK;
             }
             else return ResultCommand.Error(new Exception("Wrong Parameter type or more than one item."));
+        }
+    }
+
+    public class FileTransferScriptCommand : ScriptCommandBase
+    {
+        private IEntryModel _srcModel;
+        private IEntryModel _destDirModel;
+        private DragDropEffects _transferMode;
+
+        public FileTransferScriptCommand(IEntryModel srcModel, IEntryModel destDirModel,
+            DragDropEffects transferMode = DragDropEffects.Copy)
+            : base(transferMode.ToString())
+        {
+            _srcModel = srcModel;
+            _destDirModel = destDirModel;
+            _transferMode = transferMode;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            try
+            {
+                var destMapping = _destDirModel.Profile.PathMapper[_destDirModel];
+                var srcMapping = _srcModel.Profile.PathMapper[_srcModel];
+                string destName = PathFE.GetFileName(srcMapping.IOPath);
+                string destFullName = PathFE.Combine(destMapping.IOPath, destName);
+
+                if (_srcModel.IsDirectory)
+                {
+                    switch (_transferMode)
+                    {
+                        case DragDropEffects.Move:
+                            Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
+                            break;
+                        case DragDropEffects.Copy:
+                            Directory.CreateDirectory(destFullName);
+                            var destModel = AsyncUtils.RunSync(() =>
+                                _destDirModel.Profile
+                                .ListAsync(_destDirModel, em =>
+                                    em.FullPath.Equals(destFullName,
+                                    StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
+                            var srcSubModels = AsyncUtils.RunSync(() => _srcModel.Profile.ListAsync(_srcModel)).ToList();
+
+                            return new RunInSequenceScriptCommand(srcSubModels
+                                .Select(m => new FileTransferScriptCommand(m, destModel, _transferMode)).ToArray());
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                }
+                else
+                {
+                    Directory.CreateDirectory(destMapping.IOPath);
+                    switch (_transferMode)
+                    {
+                        case DragDropEffects.Move:
+                            File.Move(srcMapping.IOPath, destFullName);
+                            break;
+                        case DragDropEffects.Copy:
+                            File.Copy(srcMapping.IOPath, destFullName);
+                            break;
+                    }
+                }
+
+                return ResultCommand.NoError;
+            }
+            catch (Exception ex)
+            {
+                return ResultCommand.Error(ex);
+            }
         }
     }
 }
