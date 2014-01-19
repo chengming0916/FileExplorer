@@ -101,7 +101,7 @@ namespace FileExplorer.Models
             _transferMode = transferMode;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             try
             {
@@ -119,12 +119,10 @@ namespace FileExplorer.Models
                             break;
                         case DragDropEffects.Copy:
                             Directory.CreateDirectory(destFullName);
-                            var destModel = AsyncUtils.RunSync(() =>
-                                _destDirModel.Profile
-                                .ListAsync(_destDirModel, em =>
+                            var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
                                     em.FullPath.Equals(destFullName,
                                     StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
-                            var srcSubModels = AsyncUtils.RunSync(() => _srcModel.Profile.ListAsync(_srcModel)).ToList();
+                            var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
 
                             return new RunInSequenceScriptCommand(srcSubModels
                                 .Select(m => new FileTransferScriptCommand(m, destModel, _transferMode)).ToArray());
@@ -136,12 +134,17 @@ namespace FileExplorer.Models
                 else
                 {
                     Directory.CreateDirectory(destMapping.IOPath);
+                    
                     switch (_transferMode)
                     {
                         case DragDropEffects.Move:
+                            if (File.Exists(destFullName))
+                                File.Delete(destFullName);
                             File.Move(srcMapping.IOPath, destFullName);
                             break;
                         case DragDropEffects.Copy:
+                            if (File.Exists(destFullName))
+                                File.Delete(destFullName);
                             File.Copy(srcMapping.IOPath, destFullName);
                             break;
                     }

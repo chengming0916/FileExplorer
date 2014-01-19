@@ -51,11 +51,12 @@ namespace FileExplorer.BaseControls
         {
             return Execute(pm);
         }
-    }
+    }    
 
     public class RunInSequenceScriptCommand : IScriptCommand
     {
         private IScriptCommand[] _scriptCommands;
+        public IScriptCommand[] ScriptCommands { get { return _scriptCommands; } }
         public RunInSequenceScriptCommand(params IScriptCommand[] scriptCommands)
         { if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands; }
 
@@ -66,13 +67,11 @@ namespace FileExplorer.BaseControls
 
         public virtual IScriptCommand Execute(ParameterDic pm)
         {
-            foreach (var c in _scriptCommands)
-            {
-                var result = c.Execute(pm);
-                if (result != ResultCommand.NoError && result != ResultCommand.OK)
-                    return result;
-            }
-            return ResultCommand.NoError;
+            var sr = new ScriptRunner();
+            sr.Run(new Queue<IScriptCommand>(ScriptCommands), pm);
+            if (pm.Error != null)
+                return ResultCommand.Error(pm.Error);
+            else return ResultCommand.NoError;
         }
 
         public virtual bool CanExecute(ParameterDic pm)
