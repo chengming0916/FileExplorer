@@ -55,6 +55,8 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        IPathHelper Path { get; }
+
         IEntryHierarchyComparer HierarchyComparer { get; }
         IMetadataProvider MetadataProvider { get; }
         IEnumerable<ICommandProvider> CommandProviders { get; }

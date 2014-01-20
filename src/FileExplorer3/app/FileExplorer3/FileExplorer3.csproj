@@ -104,6 +104,7 @@
     <Compile Include="Models\IDiskPathMapper.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
     <Compile Include="Models\ILoginInfo.cs" />
+    <Compile Include="Models\IPathHelper.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
     <Compile Include="Models\LoginInfoImpl.cs" />
     <Compile Include="Models\NullDragDropHandler.cs" />

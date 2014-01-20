@@ -126,25 +126,10 @@ namespace FileExplorer.Models
                     return DragDropEffects.None;
 
                 var sr = new ScriptRunner();
-                var scriptToRun = new Queue<IScriptCommand>( entries.Select(e => new FileTransferScriptCommand(e, destDir, effect)));
+                var scriptToRun = new Queue<IScriptCommand>( 
+                    entries.Select(e => new FileTransferScriptCommand(e, destDir, effect)));
                 sr.Run(scriptToRun, new ParameterDic());
-                return effect;
-                //var destMapInfo = destDir.Profile.PathMapper[destDir];
-                //string destRootIoPath = destMapInfo .IOPath;
-                //foreach (var e in entries)
-                //{
-                //    string srcIoPath = e.Profile.PathMapper[e].IOPath;
-                //    string srcName = PathFE.GetFileName(srcIoPath); //To-DO:Convert to new FileTransfer() (IScriptCommand)
-
-                //    if (allowedEffec.Copy))
-                //        if (e.IsDirectory)
-                //            throw new NotImplementedException();
-                //        //Directory.m(srcIoPath, PathFE.Combine(destRootIoPath, srcName));
-                //        else File.Move(srcIoPath, PathFE.Combine(destRootIoPath, srcName));                    
-                //    if (destMapInfo.IsVirtual)
-                //        destDir.Profile.
-                //}
-                
+                return effect;                
             };
             return DragDropEffects.None;
         }

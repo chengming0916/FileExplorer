@@ -87,6 +87,33 @@ namespace FileExplorer.Models
         }
     }
 
+    public class NotifyChangedCommand : ScriptCommandBase
+    {
+        
+        private string _fullParseName;
+        private ChangeType _changeType;
+        private IProfile _profile;
+        public NotifyChangedCommand(IProfile profile, string fullParseName, ChangeType changeType)
+            : base("NotifyChanges")
+        {
+            _profile = profile;
+            _fullParseName = fullParseName;
+            _changeType = changeType;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {            
+            _profile.Events.Publish(new EntryChangedEvent(_fullParseName, _changeType));
+            return ResultCommand.NoError;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is NotifyChangedCommand && (obj as NotifyChangedCommand)._profile.Equals(_profile) &&
+                (obj as NotifyChangedCommand)._fullParseName.Equals(_fullParseName);
+        }
+    }
+
     public class FileTransferScriptCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;
@@ -103,7 +130,7 @@ namespace FileExplorer.Models
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {            
+        {
             try
             {
                 var destMapping = _destDirModel.Profile.PathMapper[_destDirModel];
@@ -117,9 +144,8 @@ namespace FileExplorer.Models
                     {
                         case DragDropEffects.Move:
                             Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
+                            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
 
-                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, _srcModel.FullPath));
-                            break;
                         case DragDropEffects.Copy:
                             Directory.CreateDirectory(destFullName);
                             _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
@@ -129,8 +155,11 @@ namespace FileExplorer.Models
                                     StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
                             var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
 
-                            return new RunInSequenceScriptCommand(srcSubModels
-                                .Select(m => new FileTransferScriptCommand(m, destModel, _transferMode)).ToArray());
+                            var resultCommands = srcSubModels.Select(m => 
+                                (IScriptCommand)new FileTransferScriptCommand(m, destModel, _transferMode)).ToList();
+                            resultCommands.Insert(0, new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
+
+                            return new RunInSequenceScriptCommand(resultCommands.ToArray());
                         default:
                             throw new NotImplementedException();
                     }
@@ -139,16 +168,15 @@ namespace FileExplorer.Models
                 else
                 {
                     Directory.CreateDirectory(destMapping.IOPath);
-                    
+
                     switch (_transferMode)
                     {
                         case DragDropEffects.Move:
                             if (File.Exists(destFullName))
                                 File.Delete(destFullName);
                             File.Move(srcMapping.IOPath, destFullName);
-                            
-                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, _srcModel.FullPath));
-                            break;
+
+                            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
                         case DragDropEffects.Copy:
                             ChangeType ct = ChangeType.Created;
                             if (File.Exists(destFullName))
@@ -158,8 +186,7 @@ namespace FileExplorer.Models
                             }
                             File.Copy(srcMapping.IOPath, destFullName);
 
-                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ct));
-                            break;
+                            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
                     }
                 }
 

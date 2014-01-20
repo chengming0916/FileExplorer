@@ -20,6 +20,7 @@ namespace FileExplorer.Models
         {
             RootDisplayName = "Root";
 
+            Path = PathHelper.Disk;
             SuggestSource = new ProfileSuggestionSource(this);
             
             HierarchyComparer = PathComparer.LocalDefault;
@@ -29,6 +30,7 @@ namespace FileExplorer.Models
 
             DragDrop = new NullDragDropHandler();
             Events = events;
+
         }
         
         #endregion
@@ -56,6 +58,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+         public IPathHelper Path { get; protected set; }
         public ISuggestSource SuggestSource { get; protected set; }
         public IDragDropHandler DragDrop { get; protected set; }
         public string RootDisplayName { get; protected set; }
