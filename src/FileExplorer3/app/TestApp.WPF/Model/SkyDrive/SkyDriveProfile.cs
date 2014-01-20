@@ -18,6 +18,8 @@ namespace FileExplorer.Models
         {
             ModelCache = new SkyDriveModelCache();
 
+            Path = PathHelper.Web;
+
             HierarchyComparer = PathComparer.WebDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
