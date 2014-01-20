@@ -41,7 +41,7 @@ namespace FileExplorer.Models
 
     public class FileBasedDragDropHandler : IDragDropHandler
     {
-        private static IProfile _fsiProfile = new FileSystemInfoProfile(); //For loading drag items.
+        private static IProfile _fsiProfile = new FileSystemInfoProfile(null); //For loading drag items.
         private IProfile _profile;
         public FileBasedDragDropHandler(IProfile profile)
         {

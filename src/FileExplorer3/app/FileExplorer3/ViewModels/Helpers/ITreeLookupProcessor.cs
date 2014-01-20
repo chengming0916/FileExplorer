@@ -139,4 +139,22 @@ namespace FileExplorer.ViewModels.Helpers
         }
     }
 
+    public class RefreshDirectory<VM, T> : ITreeLookupProcessor<VM, T>
+    {
+        public static RefreshDirectory<VM, T> WhenFound = new RefreshDirectory<VM, T>(HierarchicalResult.Current);        
+
+        public RefreshDirectory(HierarchicalResult hr)
+        {
+            _hr = hr;
+        }
+
+        private HierarchicalResult _hr;
+
+        public bool Process(HierarchicalResult hr, ITreeSelector<VM, T> parentSelector, ITreeSelector<VM, T> selector)
+        {
+            if (_hr.HasFlag(hr))
+               selector.EntryHelper.LoadAsync(true);
+            return true;
+        }
+    }
 }

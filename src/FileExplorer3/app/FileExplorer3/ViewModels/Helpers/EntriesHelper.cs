@@ -36,30 +36,31 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
 
-        public async Task<IEnumerable<VM>> LoadAsync(Func<Task<IEnumerable<VM>>> loadFunc)
-        {
-            _loadSubEntryFunc = loadFunc;
-            return await LoadAsync(true);
-        }
+        //public async Task<IEnumerable<VM>> LoadAsync(Func<Task<IEnumerable<VM>>> loadFunc)
+        //{
+        //    _loadSubEntryFunc = loadFunc;
+        //    return await LoadAsync(true);
+        //}
 
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
             using (var releaser = await loadingLock.LockAsync())
             {
-                if (!_isLoaded || force) //NotLoaded
-                {
-                    if (_clearBeforeLoad)
-                        All.Clear();
-                    await _loadSubEntryFunc().ContinueWith(prevTask =>
-                        {
-                            //bool uiThread = System.Threading.Thread.CurrentThread == System.Windows.Threading.Dispatcher.CurrentDispatcher.Thread;
-                            //(All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
-                            SetEntries(prevTask.Result.ToArray());
-                            _isLoaded = true;
-                        }, TaskScheduler.FromCurrentSynchronizationContext());
-                    //if (EntriesChanged != null)
-                    //    EntriesChanged(this, EventArgs.Empty);
-                }
+                if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
+                    if (!_isLoaded || force) //NotLoaded
+                    {
+                        if (_clearBeforeLoad)
+                            All.Clear();
+                        await _loadSubEntryFunc().ContinueWith(prevTask =>
+                            {
+                                //bool uiThread = System.Threading.Thread.CurrentThread == System.Windows.Threading.Dispatcher.CurrentDispatcher.Thread;
+                                //(All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
+                                SetEntries(prevTask.Result.ToArray());
+                                _isLoaded = true;
+                            }, TaskScheduler.FromCurrentSynchronizationContext());
+                        //if (EntriesChanged != null)
+                        //    EntriesChanged(this, EventArgs.Empty);
+                    }
             }
             return _subItemList;
         }
@@ -96,7 +97,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         #endregion
 
-        #region Public Properties        
+        #region Public Properties
 
         public bool ClearBeforeLoad
         {

@@ -91,7 +91,8 @@ namespace FileExplorer.Models
             }
         }
 
-        public FileSystemInfoExProfile()
+        public FileSystemInfoExProfile(IEventAggregator events)
+            : base(events)
         {
             HierarchyComparer = new ExHierarchyComparer();
             MetadataProvider = new FileSystemInfoMetadataProvider();

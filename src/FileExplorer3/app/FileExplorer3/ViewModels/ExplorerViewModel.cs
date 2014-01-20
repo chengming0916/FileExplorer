@@ -11,10 +11,13 @@ using Cofe.Core.Script;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : Screen, IExplorerViewModel, IHandle<DirectoryChangedEvent>
+    public class ExplorerViewModel : Screen, IExplorerViewModel, 
+        IHandle<DirectoryChangedEvent>, 
+        IHandle<EntryChangedEvent>
     {
         #region Cosntructor
 
@@ -36,6 +39,7 @@ namespace FileExplorer.ViewModels
 
             setRootModels(_rootModels);
 
+            _events.Subscribe(this);
             _internalEvents.Subscribe(this);
         }
 
@@ -81,11 +85,23 @@ namespace FileExplorer.ViewModels
         private void setRootModels(IEntryModel[] rootModels)
         {
             _rootModels = rootModels;
-             var rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
+             _rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
 
-             Breadcrumb.Profiles = rootProfiles; Breadcrumb.RootModels = rootModels;
-             DirectoryTree.Profiles = rootProfiles; DirectoryTree.RootModels = rootModels;             
-             FileList.Profiles = rootProfiles;
+             Breadcrumb.Profiles = _rootProfiles; Breadcrumb.RootModels = rootModels;
+             DirectoryTree.Profiles = _rootProfiles; DirectoryTree.RootModels = rootModels;
+             FileList.Profiles = _rootProfiles;
+        }
+
+        public async Task BroascastAsync(EntryChangedEvent message)
+        {
+            IEntryModel affectedEntry = await _rootProfiles.ParseAsync(message.ParseName);
+            if (affectedEntry != null)
+            {
+                await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
+                await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
+                if (FileList.CurrentDirectory.Equals(affectedEntry) || FileList.CurrentDirectory.Equals(affectedEntry.Parent))
+                    await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+            }
         }
 
         public void Handle(DirectoryChangedEvent message)
@@ -93,6 +109,10 @@ namespace FileExplorer.ViewModels
             this.DisplayName =  message.NewModel.Label;
         }
 
+        public void Handle(EntryChangedEvent message)
+        {
+            BroascastAsync(message);
+        }
 
         #endregion
 
@@ -102,6 +122,7 @@ namespace FileExplorer.ViewModels
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();
         private IWindowManager _windowManager = new WindowManager();
+        private IProfile[] _rootProfiles = new IProfile[] {};
 
         #endregion
 
@@ -119,5 +140,7 @@ namespace FileExplorer.ViewModels
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
 
         #endregion
+
+       
     }
 }
