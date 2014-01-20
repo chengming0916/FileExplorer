@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Caliburn.Micro;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.ViewModels.Helpers;
@@ -15,7 +16,7 @@ namespace FileExplorer.Models
 
         #region Constructor
 
-        public ProfileBase()
+        public ProfileBase(IEventAggregator events)
         {
             RootDisplayName = "Root";
 
@@ -27,6 +28,7 @@ namespace FileExplorer.Models
             PathMapper = NullDiskPatheMapper.Instance;
 
             DragDrop = new NullDragDropHandler();
+            Events = events;
         }
         
         #endregion
@@ -61,6 +63,7 @@ namespace FileExplorer.Models
         public IMetadataProvider MetadataProvider { get; protected set; }        
         public IEnumerable<ICommandProvider> CommandProviders { get; protected set; }
         public IDiskPathMapper PathMapper { get; protected set; }
+        public IEventAggregator Events { get; protected set; }
 
         #endregion
     }

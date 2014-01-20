@@ -23,27 +23,18 @@ namespace TestApp.WPF
     [Export(typeof(IScreen))]
     public class AppViewModel : Screen//, IHandle<SelectionChangedEvent>
     {
-        static string rootPath = @"C:\";
-        static string rootPath2 = @"C:\Temp";
-        static string lookupPath = @"C:\";
-
         #region Cosntructor
 
         [ImportingConstructor]
         public AppViewModel(IEventAggregator events, IWindowManager windowManager)
         {
             _windowManager = windowManager;
-            _events = events;
+            _events = events;            
 
-            RootModels.Add(_profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result);
-            //ExplorerModel = processExplorerModel(new ExplorerViewModel(events, windowManager)
-            //{
-            //    RootModels = new[] 
-            //    {
-            //        _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result,
-            //        //profile.ParseAsync(rootPath).Result
-            //    }
-            //});
+            _profile = new FileSystemInfoProfile(_events);
+            _profileEx = new FileSystemInfoExProfile(events);
+
+            RootModels.Add(_profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result);            
         }
 
         #endregion
@@ -173,7 +164,7 @@ namespace TestApp.WPF
         public async Task AddSkyDrive()
         {
             if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
+                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };            
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
@@ -183,7 +174,7 @@ namespace TestApp.WPF
         public async Task TestUpload()
         {
             if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
+                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
             //var photos = await _profileSkyDrive.ParseAsync("/photos");
             var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/photos/upload.txt", false);
             string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;
@@ -201,8 +192,8 @@ namespace TestApp.WPF
 
         #region Data
 
-        IProfile _profile = new FileSystemInfoProfile();
-        IProfile _profileEx = new FileSystemInfoExProfile();
+        IProfile _profile;
+        IProfile _profileEx;
         IProfile _profileSkyDrive;
 
         //private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };

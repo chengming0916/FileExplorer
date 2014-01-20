@@ -49,14 +49,14 @@ namespace FileExplorer.ViewModels.Helpers
                 {
                     var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
                     var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
-                    processors.Process(compareResult, parentSelector, currentSelectionHelper);                    
+                    processors.Process(compareResult, parentSelector, currentSelectionHelper);
                 }
         }
     }
 
     public class SearchNextUsingReverseLookup<VM, T> : ITreeLookup<VM, T>
     {
-        public SearchNextUsingReverseLookup(ITreeSelector<VM,T> targetSelector)
+        public SearchNextUsingReverseLookup(ITreeSelector<VM, T> targetSelector)
         {
             _targetSelector = targetSelector;
             _hierarchy = new Stack<ITreeSelector<VM, T>>();
@@ -67,7 +67,7 @@ namespace FileExplorer.ViewModels.Helpers
                 current = current.ParentSelector;
             }
         }
-        
+
         Stack<ITreeSelector<VM, T>> _hierarchy;
         private ITreeSelector<VM, T> _targetSelector;
         public async Task Lookup(T value, ITreeSelector<VM, T> parentSelector,
@@ -97,7 +97,7 @@ namespace FileExplorer.ViewModels.Helpers
     public class RecrusiveSearch<VM, T> : ITreeLookup<VM, T>
     {
         public static RecrusiveSearch<VM, T> LoadSubentriesIfNotLoaded = new RecrusiveSearch<VM, T>(true);
-        public static RecrusiveSearch<VM, T> SkipIfNotLoaded = new RecrusiveSearch<VM, T>(false);        
+        public static RecrusiveSearch<VM, T> SkipIfNotLoaded = new RecrusiveSearch<VM, T>(false);
 
         bool _loadSubEntries;
 
@@ -113,28 +113,29 @@ namespace FileExplorer.ViewModels.Helpers
                 await parentSelector.EntryHelper.LoadAsync() :
                  parentSelector.EntryHelper.AllNonBindable;
 
-            foreach (VM current in subentries)
-                if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
-                {
-                    var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
-                    var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
-                    switch (compareResult)
+            if (subentries != null)
+                foreach (VM current in subentries)
+                    if (current is ISupportTreeSelector<VM, T> && current is ISupportEntriesHelper<VM>)
                     {
-                        case HierarchicalResult.Current:
-                            processors.Process(compareResult, parentSelector, currentSelectionHelper);
-                            return;
-
-                        case HierarchicalResult.Child:
-                            if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
-                            {
-                                await Lookup(value, currentSelectionHelper, comparer, processors);
-
+                        var currentSelectionHelper = (current as ISupportTreeSelector<VM, T>).Selection;
+                        var compareResult = comparer.CompareHierarchy(currentSelectionHelper.Value, value);
+                        switch (compareResult)
+                        {
+                            case HierarchicalResult.Current:
+                                processors.Process(compareResult, parentSelector, currentSelectionHelper);
                                 return;
-                            }
 
-                            break;
+                            case HierarchicalResult.Child:
+                                if (processors.Process(compareResult, parentSelector, currentSelectionHelper))
+                                {
+                                    await Lookup(value, currentSelectionHelper, comparer, processors);
+
+                                    return;
+                                }
+
+                                break;
+                        }
                     }
-                }
         }
     }
 

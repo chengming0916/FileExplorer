@@ -11,6 +11,7 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.BaseControls;
+using FileExplorer.Defines;
 using FileExplorer.ViewModels;
 
 namespace FileExplorer.Models
@@ -102,7 +103,7 @@ namespace FileExplorer.Models
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {
+        {            
             try
             {
                 var destMapping = _destDirModel.Profile.PathMapper[_destDirModel];
@@ -116,9 +117,13 @@ namespace FileExplorer.Models
                     {
                         case DragDropEffects.Move:
                             Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
+
+                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, _srcModel.FullPath));
                             break;
                         case DragDropEffects.Copy:
                             Directory.CreateDirectory(destFullName);
+                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
+
                             var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
                                     em.FullPath.Equals(destFullName,
                                     StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
@@ -141,11 +146,19 @@ namespace FileExplorer.Models
                             if (File.Exists(destFullName))
                                 File.Delete(destFullName);
                             File.Move(srcMapping.IOPath, destFullName);
+                            
+                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, _srcModel.FullPath));
                             break;
                         case DragDropEffects.Copy:
+                            ChangeType ct = ChangeType.Created;
                             if (File.Exists(destFullName))
+                            {
                                 File.Delete(destFullName);
+                                ct = ChangeType.Changed;
+                            }
                             File.Copy(srcMapping.IOPath, destFullName);
+
+                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ct));
                             break;
                     }
                 }

@@ -11,6 +11,7 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer.Defines
 {
+    #region UI Events
     public class ViewChangedEvent : ViewModelEvent
     {
         public string ViewMode { get; set; }
@@ -79,8 +80,6 @@ namespace FileExplorer.Defines
             ListedViewModels = evms.ToList();
         }
     }
-    
-
 
     public class FilterChangedEventArgs : RoutedEventArgs
     {
@@ -103,7 +102,28 @@ namespace FileExplorer.Defines
             return null;
         }
     }
+    #endregion
 
+
+
+    public class EntryChangedEvent
+    {
+        public EntryChangedEvent(string parseName, ChangeType changeType)
+        {
+            ChangeType = changeType;
+            ParseName = parseName;
+        }
+
+        public EntryChangedEvent(string parseName, string orgParseName)
+            : this(parseName, ChangeType.Moved)
+        {
+            OrgParseName = orgParseName;
+        }
+
+        public ChangeType ChangeType { get; private set; }
+        public string ParseName { get; private set; }
+        public string OrgParseName { get; private set; }
+    }
   
 
     public class ColumnInfo

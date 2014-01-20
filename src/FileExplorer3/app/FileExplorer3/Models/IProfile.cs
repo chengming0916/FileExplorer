@@ -61,6 +61,8 @@ namespace FileExplorer.Models
         ISuggestSource SuggestSource { get; }
         IDragDropHandler DragDrop { get; }
         IDiskPathMapper PathMapper { get; }
+
+        IEventAggregator Events { get; }
         
         #endregion
     }

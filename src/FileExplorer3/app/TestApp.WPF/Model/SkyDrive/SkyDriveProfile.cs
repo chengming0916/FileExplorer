@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using FileExplorer.BaseControls;
 using Microsoft.Live;
 
@@ -12,7 +13,8 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
-        public SkyDriveProfile(string clientId, Func<string> authCodeFunc, string rootAccessPath = "/me/skydrive")
+        public SkyDriveProfile(IEventAggregator events, string clientId, Func<string> authCodeFunc, string rootAccessPath = "/me/skydrive")
+            : base(events)
         {
             ModelCache = new SkyDriveModelCache();
 

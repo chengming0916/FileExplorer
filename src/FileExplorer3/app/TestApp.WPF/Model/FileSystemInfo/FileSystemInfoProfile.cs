@@ -18,7 +18,8 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public FileSystemInfoProfile()
+        public FileSystemInfoProfile(IEventAggregator events)
+            : base(events)
         {
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new FileSystemInfoExMetadataProvider();

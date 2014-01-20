@@ -13,5 +13,15 @@ namespace FileExplorer
         {
             return selector as ITreeRootSelector<VM, T>;
         }
+
+        /// <summary>
+        /// Broadcast changes, so the tree can refresh changed items.
+        /// </summary>
+        public static async Task BroascastAsync<VM, T>(this ITreeRootSelector<VM, T> rootSelector, T changedItem)
+        {
+            await rootSelector.LookupAsync(changedItem,
+                    RecrusiveSearch<VM, T>.SkipIfNotLoaded,
+                    RefreshDirectory<VM, T>.WhenFound);
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace FileExplorer.Defines
     //ToAdd a template, you have to update DisplayTemplateSelector.cs
     public enum DisplayType { Auto, Text, Number, Kb, Percent, Filename, Boolean }
 
+    public enum ChangeType { Changed, Created, Deleted, Moved }
+
     public enum ViewMode : int
     {
         vmTile = 13,
