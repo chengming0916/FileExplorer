@@ -68,4 +68,9 @@ namespace FileExplorer.Models
         
         #endregion
     }
+
+    public interface IDiskProfile : IProfile
+    {
+        IDiskIOHelper DiskIO { get; }
+    }
 }

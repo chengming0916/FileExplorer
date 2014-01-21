@@ -177,15 +177,17 @@ namespace TestApp.WPF
                 _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
             //var photos = await _profileSkyDrive.ParseAsync("/photos");
             var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/photos/upload.txt", false);
-            string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;
-            Directory.CreateDirectory(Path.GetDirectoryName(ioPath));
+            //string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;
+            //Directory.CreateDirectory(Path.GetDirectoryName(ioPath));
             //var rootModel = new[] { await _profileSkyDrive.ParseAsync("/photos") };
             //var newFile = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile,
             //    "/me/skydrive/upload.txt", "/SkyDrive/upload.txt", "/me/skydrive", 1);
             //string ioPath = _profileSkyDrive.PathMapper[newFile].IOPath;
-            using (var sw = new StreamWriter(File.Create(ioPath)))
-                sw.WriteLine("upload");
-            await _profileSkyDrive.PathMapper.UpdateSourceAsync(uploadtxt);           
+            //using (var sw = new StreamWriter(File.Create(ioPath)))
+            //    sw.WriteLine("upload");
+            using (var sw = new StreamWriter(SkyDriveFileStream.OpenWrite(uploadtxt)))
+                sw.WriteLine("upload123");
+            //await _profileSkyDrive.PathMapper.UpdateSourceAsync(uploadtxt);           
         }
 
         #endregion
