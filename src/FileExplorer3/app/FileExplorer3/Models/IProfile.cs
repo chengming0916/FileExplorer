@@ -34,7 +34,7 @@ namespace FileExplorer.Models
         /// <returns></returns>
         Task<IEntryModel> ParseAsync(string path);
 
-        Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
+        Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null, bool refresh = false);
 
         /// <summary>
         /// Return the sequence of icon is extracted and returned, EntryViewModel will run each extractor 
@@ -62,7 +62,7 @@ namespace FileExplorer.Models
         IEnumerable<ICommandProvider> CommandProviders { get; }
         ISuggestSource SuggestSource { get; }
         IDragDropHandler DragDrop { get; }
-        IDiskPathMapper PathMapper { get; }
+        //IDiskPathMapper PathMapper { get; }
 
         IEventAggregator Events { get; }
         

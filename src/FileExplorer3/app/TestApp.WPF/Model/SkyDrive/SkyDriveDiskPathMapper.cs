@@ -14,11 +14,11 @@ namespace FileExplorer.Models
 {
     public class SkyDriveDiskPathMapper : IDiskPathMapper
     {
-        #region Constructor
+        #region Constructor        
 
-        public SkyDriveDiskPathMapper(SkyDriveProfile profile, string tempPath = null)
+        public SkyDriveDiskPathMapper(string tempPath = null)
         {
-            _profile = profile;
+            //_profile = profile;
             _tempPath = tempPath != null ? tempPath : Path.Combine(Path.GetTempPath(), "FileExplorer");
             Directory.CreateDirectory(_tempPath);
         }
@@ -29,7 +29,7 @@ namespace FileExplorer.Models
 
 
         /// <summary>
-        /// Download
+        /// Does not work, use DiskIOHelper
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -114,6 +114,7 @@ namespace FileExplorer.Models
             get
             {
                 string path = Path.Combine(_tempPath, model.FullPath.Replace('/', '\\').TrimStart('\\'));
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
                 bool isCached = _isCachedDictionary.ContainsKey(model.FullPath) && _isCachedDictionary[model.FullPath];
                 string sourceUrl = (model as SkyDriveItemModel).SourceUrl;
                 if (sourceUrl == null)

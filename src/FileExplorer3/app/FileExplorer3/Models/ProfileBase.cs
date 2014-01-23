@@ -26,7 +26,7 @@ namespace FileExplorer.Models
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
-            PathMapper = NullDiskPatheMapper.Instance;
+            //PathMapper = NullDiskPatheMapper.Instance;
 
             DragDrop = new NullDragDropHandler();
             Events = events;
@@ -48,7 +48,7 @@ namespace FileExplorer.Models
         }
 
          public abstract Task<IEntryModel> ParseAsync(string path);
-         public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null);
+         public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null, bool refresh = false);
         
         #endregion
 
@@ -65,9 +65,21 @@ namespace FileExplorer.Models
         public IEntryHierarchyComparer HierarchyComparer { get; protected set; }
         public IMetadataProvider MetadataProvider { get; protected set; }        
         public IEnumerable<ICommandProvider> CommandProviders { get; protected set; }
-        public IDiskPathMapper PathMapper { get; protected set; }
+        //public IDiskPathMapper PathMapper { get; protected set; }
         public IEventAggregator Events { get; protected set; }
 
         #endregion
+    }
+
+    public abstract class DiskProfileBase : ProfileBase, IDiskProfile
+    {
+        
+        public DiskProfileBase(IEventAggregator events)
+            : base(events)
+        {
+            DiskIO = new DefaultDiskIOHelper(this);
+        }
+
+        public IDiskIOHelper DiskIO { get; protected set; }        
     }
 }

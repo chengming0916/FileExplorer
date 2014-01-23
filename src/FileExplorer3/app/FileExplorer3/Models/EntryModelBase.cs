@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Cofe.Core.Utils;
 
 namespace FileExplorer.Models
 {
@@ -17,6 +18,8 @@ namespace FileExplorer.Models
         {
             Profile = profile;
             IsRenamable = false;
+            _parentFunc = () => AsyncUtils.RunSync(() => Profile.ParseAsync(Profile.Path.GetDirectoryName(FullPath)));
+
         }
 
 
@@ -45,8 +48,9 @@ namespace FileExplorer.Models
         #region Data
 
         protected string _name;
-        private bool _isRenamable = false;        
-        protected Lazy<IEntryModel> _parentFunc = new Lazy<IEntryModel>(() => null);
+        private bool _isRenamable = false;
+        private IEntryModel _parent = null;
+        protected Func<IEntryModel> _parentFunc;
 
         #endregion
 
@@ -54,7 +58,7 @@ namespace FileExplorer.Models
 
         public IProfile Profile { get; protected set; }
         public bool IsDirectory { get; protected set; }
-        public IEntryModel Parent { get { return _parentFunc.Value; } }
+        public IEntryModel Parent { get { return _parent != null ? _parent  : _parent = _parentFunc(); } }
         public string Name { get { return _name; } set { string org = _name; _name = value; OnRenamed(org, _name); } }
         public string Label { get; protected set; }
         public bool IsRenamable { get { return _isRenamable; } set { _isRenamable = value; NotifyOfPropertyChange(() => IsRenamable); } }

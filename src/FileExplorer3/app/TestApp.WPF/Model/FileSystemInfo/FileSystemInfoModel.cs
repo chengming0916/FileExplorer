@@ -24,12 +24,13 @@ namespace FileExplorer.Models
             if (fsi is FileInfo)
                 Size = (fsi as FileInfo).Length;
             string parentPath = Path.GetDirectoryName(fsi.FullName);
-            this._parentFunc = 
-                new Lazy<IEntryModel>(() => {
+            this._parentFunc =
+                () =>
+                {
                     return String.IsNullOrEmpty(parentPath) ? null :
                     new FileSystemInfoModel(profile,
                         (profile as FileSystemInfoProfile).createDirectoryInfo(parentPath));
-                });
+                };
             this.Description = fsi.GetType().ToString();
         }
 

@@ -33,20 +33,20 @@ namespace FileExplorer.Models
 
         #endregion
 
-        #region Methods
+        #region Methods        
 
         public SkyDriveItemModel RegisterModel(SkyDriveItemModel model)
         {
-            UniqueIdLookup[model.FullPath] = model.UniqueId;
+            UniqueIdLookup[model.AccessPath] = model.UniqueId;
             ModelCache[model.UniqueId] = model;
             return model;
         }
 
-        public string GetUniqueId(string path)
+        public string GetUniqueId(string accessPath)
         {
-            if (!(UniqueIdLookup.ContainsKey(path)))
+            if (!(UniqueIdLookup.ContainsKey(accessPath)))
                 return null;
-            else return UniqueIdLookup[path];
+            else return UniqueIdLookup[accessPath];
         }
 
         public string GetPath(string uniqueId)

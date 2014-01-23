@@ -9,6 +9,7 @@ namespace FileExplorer.Models
     public interface IPathHelper
     {
         string Combine(string path1, params string[] paths);
+        string GetDirectoryName(string path);
     }
 
     public class PathHelper : IPathHelper
@@ -37,6 +38,16 @@ namespace FileExplorer.Models
             return retVal.TrimStart(_separator);
         }
 
+        public string GetDirectoryName(string path)
+        {
+            if (path.EndsWith(_separator + ""))
+                path = path.Substring(0, path.Length - 1); //Remove ending slash.
+
+            int idx = path.LastIndexOf(_separator);
+            if (idx == -1)
+                return "";
+            return path.Substring(0, idx);
+        }
 
         #endregion
 
@@ -49,5 +60,8 @@ namespace FileExplorer.Models
         #region Public Properties
 
         #endregion
+
+
+
     }
 }

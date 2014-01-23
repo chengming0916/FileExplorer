@@ -14,7 +14,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoProfile : ProfileBase
+    public class FileSystemInfoProfile : DiskProfileBase
     {
         #region Cosntructor
 
@@ -24,7 +24,7 @@ namespace FileExplorer.Models
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new FileSystemInfoExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
-            PathMapper = IODiskPatheMapper.Instance;
+            //PathMapper = IODiskPatheMapper.Instance;
             DragDrop = new FileBasedDragDropHandler(this);
         }
 
@@ -65,7 +65,7 @@ namespace FileExplorer.Models
             return Task.FromResult<IEntryModel>(retVal);
         }
 
-        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null, bool refresh = false)
         {
             if (filter == null)
                 filter = (m) => true;
