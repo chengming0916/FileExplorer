@@ -41,39 +41,38 @@ namespace FileExplorer.Models
             if (parameter != null && parameter.Count() == 1)
             {
                 bool _isFolder = parameter[0].IsDirectory;
-                IDiskPathMapper pathMapper = parameter[0].Profile.PathMapper;
-                if (pathMapper is NullDiskPatheMapper)
+                IDiskProfile profile = parameter[0].Profile as IDiskProfile;
+                if (profile == null)
+                    return ResultCommand.Error(new NotSupportedException("IDiskProfile"));
+                
+                if (profile.DiskIO.DiskPath is NullDiskPatheMapper)
                     return ResultCommand.Error(new NotSupportedException());
-                var mapInfo0 = pathMapper[parameter[0]];
-                if (mapInfo0 == null)
-                    return ResultCommand.NoError;
-                if (!mapInfo0.IsCached)
-                    AsyncUtils.RunSync(() => pathMapper.UpdateCacheAsync(parameter[0]));
-
-                string _appliedFileName = mapInfo0.IOPath;
-                if (_isFolder || _appliedFileName.StartsWith("::{"))
+                
+                string appliedFileName = AsyncUtils.RunSync(() => profile.DiskIO.WriteToCacheAsync(parameter[0]));
+                
+                if (_isFolder || appliedFileName.StartsWith("::{"))
                 {
-                    if (_appliedFileName.StartsWith("::{") || Directory.Exists(_appliedFileName))
-                        try { Process.Start(_appliedFileName); }
+                    if (appliedFileName.StartsWith("::{") || Directory.Exists(appliedFileName))
+                        try { Process.Start(appliedFileName); }
                         catch (Exception ex) { return ResultCommand.Error(ex); }
                 }
                 else
                 {
 
                     ProcessStartInfo psi = null;
-                    if (File.Exists(_appliedFileName))
+                    if (File.Exists(appliedFileName))
                         if (_info != null)
                         {
                             if (!_info.Equals(OpenWithInfo.OpenAs))
-                                psi = new ProcessStartInfo(OpenWithInfo.GetExecutablePath(_info.OpenCommand), _appliedFileName);
+                                psi = new ProcessStartInfo(OpenWithInfo.GetExecutablePath(_info.OpenCommand), appliedFileName);
                             else
                             {
                                 //http://bytes.com/topic/c-sharp/answers/826842-call-windows-open-dialog
                                 psi = new ProcessStartInfo("Rundll32.exe");
-                                psi.Arguments = String.Format(" shell32.dll, OpenAs_RunDLL {0}", _appliedFileName);
+                                psi.Arguments = String.Format(" shell32.dll, OpenAs_RunDLL {0}", appliedFileName);
                             }
                         }
-                        else psi = new ProcessStartInfo(_appliedFileName);
+                        else psi = new ProcessStartInfo(appliedFileName);
 
                     if (psi != null)
                         try { Process.Start(psi); }
@@ -102,8 +101,8 @@ namespace FileExplorer.Models
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {            
-            _profile.Events.Publish(new EntryChangedEvent(_fullParseName, _changeType));
+        {
+            _profile.NotifyEntryChanges(_fullParseName, _changeType);
             return ResultCommand.NoError;
         }
 
@@ -127,53 +126,59 @@ namespace FileExplorer.Models
             _srcModel = srcModel;
             _destDirModel = destDirModel;
             _transferMode = transferMode;
+
+            if (!(srcModel.Profile is IDiskProfile) || !(destDirModel.Profile is IDiskProfile))
+                throw new NotSupportedException();
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             try
             {
-                var destMapping = _destDirModel.Profile.PathMapper[_destDirModel];
-                var srcMapping = _srcModel.Profile.PathMapper[_srcModel];
+                var srcProfile = _srcModel.Profile as IDiskProfile;
+                var destProfile = _destDirModel.Profile as IDiskProfile;
+
+                var destMapping = (_destDirModel.Profile as IDiskProfile).DiskIO.DiskPath[_destDirModel];
+                var srcMapping = (_srcModel.Profile as IDiskProfile).DiskIO.DiskPath[_srcModel];
                 string destName = PathFE.GetFileName(srcMapping.IOPath);
-                string destFullName = PathFE.Combine(destMapping.IOPath, destName);
+                string destFullName = destProfile.Path.Combine(_destDirModel.FullPath, destName); //PathFE.Combine(destMapping.IOPath, destName);
 
                 if (_srcModel.IsDirectory)
                 {
-                    switch (_transferMode)
-                    {
-                        case DragDropEffects.Move:
-                            Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
-                            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
+                    //switch (_transferMode)
+                    //{
+                    //    case DragDropEffects.Move:
+                    //        Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
+                    //        return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
 
-                        case DragDropEffects.Copy:
-                            Directory.CreateDirectory(destFullName);
-                            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
+                    //    case DragDropEffects.Copy:
+                    //        Directory.CreateDirectory(destFullName);
+                    //        _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
 
-                            var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
-                                    em.FullPath.Equals(destFullName,
-                                    StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
-                            var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
+                    //        var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
+                    //                em.FullPath.Equals(destFullName,
+                    //                StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
+                    //        var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
 
-                            var resultCommands = srcSubModels.Select(m => 
-                                (IScriptCommand)new FileTransferScriptCommand(m, destModel, _transferMode)).ToList();
-                            resultCommands.Insert(0, new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
+                    //        var resultCommands = srcSubModels.Select(m => 
+                    //            (IScriptCommand)new FileTransferScriptCommand(m, destModel, _transferMode)).ToList();
+                    //        resultCommands.Insert(0, new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
 
-                            return new RunInSequenceScriptCommand(resultCommands.ToArray());
-                        default:
-                            throw new NotImplementedException();
-                    }
+                    //        return new RunInSequenceScriptCommand(resultCommands.ToArray());
+                    //    default:
+                    //        throw new NotImplementedException();
+                    //}
 
                 }
                 else
                 {
-                    Directory.CreateDirectory(destMapping.IOPath);
+                    //Directory.CreateDirectory(destMapping.IOPath);
 
                     switch (_transferMode)
                     {
                         case DragDropEffects.Move:
                             if (File.Exists(destFullName))
-                                File.Delete(destFullName);
+                                File.Delete(destFullName);                            
                             File.Move(srcMapping.IOPath, destFullName);
 
                             return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
@@ -184,7 +189,12 @@ namespace FileExplorer.Models
                                 File.Delete(destFullName);
                                 ct = ChangeType.Changed;
                             }
-                            File.Copy(srcMapping.IOPath, destFullName);
+
+                            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read))
+                            using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write))
+                                await StreamUtils.CopyStreamAsync(srcStream, destStream);
+
+                            //File.Copy(srcMapping.IOPath, destFullName);
 
                             return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
                     }

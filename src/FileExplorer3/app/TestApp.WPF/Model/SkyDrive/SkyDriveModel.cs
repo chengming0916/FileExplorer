@@ -14,15 +14,17 @@ namespace FileExplorer.Models
 
         private SkyDriveItemModel(SkyDriveProfile profile)
             : base(profile)
-        {}
+        {            
+            
+        }
 
 
         internal void init(SkyDriveProfile profile, string path)
-        {
+        {            
             FullPath = path;
             this.Label = this.Name = PathFE.GetFileNameR(path);            
-            this._parentFunc = new Lazy<IEntryModel>(() =>
-                AsyncUtils.RunSync(() => profile.ParseAsync(PathFE.GetDirectoryNameR(path))));
+            //this._parentFunc = new Lazy<IEntryModel>(() =>
+            //    AsyncUtils.RunSync(() => profile.ParseAsync(PathFE.GetDirectoryNameR(path))));
         }
 
         internal void init(SkyDriveProfile profile, string path, dynamic d)
@@ -57,7 +59,7 @@ namespace FileExplorer.Models
             AccessPath = accessPath;
 
             dynamic d = data as dynamic;
-            string path = parentFullPath + "/" + d.name;
+            string path = parentFullPath == null ? profile.Alias :  parentFullPath  + "/" + d.name;
             init(profile, path, d);
         }
 
@@ -72,7 +74,7 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
-
+        
         public string AccessPath { get; private set; }
         public string Description { get; private set; }
         public string UniqueId { get; private set; }

@@ -90,6 +90,8 @@
     <Compile Include="Defines\Cofe3\Utils\CofePath.cs" />
     <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\RegexPatterns.cs" />
+    <Compile Include="Defines\Cofe3\Utils\StreamUtils.cs" />
+    <Compile Include="Defines\Cofe3\Utils\StringUtils.cs" />
     <Compile Include="Defines\Commands\FileListCommands.cs" />
     <Compile Include="Defines\Converters\BorderClipConverter.cs" />
     <Compile Include="Defines\Converters\DynamicConverter.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />
+    <Compile Include="Models\IDiskIOHelper.cs" />
     <Compile Include="Models\IDiskPathMapper.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
     <Compile Include="Models\ILoginInfo.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\ICommandScriptCommand.cs" />
     <Compile Include="Utils\MouseWheelGesture.cs" />
+    <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\SimpleCommandBinding.cs" />
     <Compile Include="Utils\SimpleRoutedCommand.cs" />
     <Compile Include="Utils\ScriptCommandBinding.cs" />

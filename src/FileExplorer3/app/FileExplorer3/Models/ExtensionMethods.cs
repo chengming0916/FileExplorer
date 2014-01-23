@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cofe.Core.Utils;
+using FileExplorer.Defines;
 
 namespace FileExplorer.Models
 {
@@ -28,6 +31,43 @@ namespace FileExplorer.Models
                     return result;
             }
             return new List<IEntryModelIconExtractor>();
+        }
+
+        public static void NotifyEntryChanges(this IProfile profile, string fullPath, ChangeType changeType)
+        {
+            profile.Events.Publish(new EntryChangedEvent(fullPath, changeType));
+        }
+
+        public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath, FileAccess access)
+        {
+            IEntryModel entryModel = await ioHelper.Profile.ParseAsync(fullPath);
+            if (entryModel == null)
+                if (access == FileAccess.Write)
+                    entryModel = await ioHelper.CreateAsync(fullPath, false);
+                else throw new IOException("File not found.");
+            return await ioHelper.OpenStreamAsync(entryModel, access);
+        }
+
+
+
+        public static async Task<string> WriteToCacheAsync(this IDiskIOHelper ioHelper, IEntryModel entry, bool force = false)
+        {
+            var mapping = ioHelper.DiskPath[entry];
+
+            if (!mapping.IsCached || force)
+                using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read))
+                using (var outputStream = System.IO.File.OpenWrite(mapping.IOPath))
+                    await StreamUtils.CopyStreamAsync(srcStream, outputStream);
+
+            return mapping.IOPath;
+        }
+
+        public static async Task<IEntryModel> GetParentAsync(this IProfile profile, IEntryModel entry)
+        {
+            var parentFullPath = profile.Path.GetDirectoryName(entry.FullPath);
+            if (String.IsNullOrEmpty(parentFullPath))
+                return null;
+            return await profile.ParseAsync(parentFullPath);
         }
 
     }

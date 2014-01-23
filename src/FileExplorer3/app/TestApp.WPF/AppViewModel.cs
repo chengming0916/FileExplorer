@@ -163,8 +163,9 @@ namespace TestApp.WPF
         
         public async Task AddSkyDrive()
         {
+            string alias = "Lycjs SkyDrive";
             if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
+                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, alias);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };            
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
@@ -176,7 +177,7 @@ namespace TestApp.WPF
             if (_profileSkyDrive == null)
                 _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
             //var photos = await _profileSkyDrive.ParseAsync("/photos");
-            var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/photos/upload.txt", false);
+            var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/upload1.txt", false);
             //string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;
             //Directory.CreateDirectory(Path.GetDirectoryName(ioPath));
             //var rootModel = new[] { await _profileSkyDrive.ParseAsync("/photos") };

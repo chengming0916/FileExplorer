@@ -9,23 +9,25 @@ using Microsoft.Live;
 
 namespace FileExplorer.Models
 {
-    public class SkyDriveProfile : ProfileBase
+    public class SkyDriveProfile : DiskProfileBase
     {
         #region Constructor
 
-        public SkyDriveProfile(IEventAggregator events, string clientId, Func<string> authCodeFunc, string rootAccessPath = "/me/skydrive")
+        public SkyDriveProfile(IEventAggregator events, string clientId, Func<string> authCodeFunc,
+            string alias = "SkyDrive",
+            string rootAccessPath = "/me/skydrive")
             : base(events)
         {
             ModelCache = new SkyDriveModelCache();
-
+            Alias = alias;
             Path = PathHelper.Web;
-
+            DiskIO = new SkyDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
 
-            PathMapper = new SkyDriveDiskPathMapper(this, null);
+            //PathMapper = new SkyDriveDiskPathMapper(this, null);
             DragDrop = new FileBasedDragDropHandler(this);
             _authClient = new LiveAuthClient(clientId);
             _authCodeFunc = authCodeFunc;
@@ -54,7 +56,7 @@ namespace FileExplorer.Models
 
             try
             {
-                Session = await _authClient.ExchangeAuthCodeAsync(_authCode);                
+                Session = await _authClient.ExchangeAuthCodeAsync(_authCode);
             }
             catch
             {
@@ -64,14 +66,14 @@ namespace FileExplorer.Models
         }
 
         internal async Task<bool> checkLoginAsync()
-        {                          
-            if (Session != null && 
+        {
+            if (Session != null &&
                 Session.Expires.Subtract(DateTimeOffset.UtcNow) > TimeSpan.FromSeconds(1))
-            {                
+            {
                 return true;
             }
 
-            else 
+            else
             {
                 _authCode = _authCodeFunc();
                 if (await connectAsync(_authCode))
@@ -86,7 +88,7 @@ namespace FileExplorer.Models
             if (idx < path.Length)
             {
                 IEntryModel foundModel = (await ListAsync(currentModel, em => em.Label.Equals(path[idx],
-                    StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
+                    StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
                 if (foundModel == null)
                     return null;
                 else return await LookupAsync(foundModel, path, idx + 1);
@@ -96,7 +98,17 @@ namespace FileExplorer.Models
 
         public string GetAccessPath(string path)
         {
-            return String.IsNullOrEmpty(path) ? _rootAccessPath : _rootAccessPath + '/' + path.TrimStart('/');
+            if (string.IsNullOrEmpty(path))
+                return _rootAccessPath;
+
+            path = path.TrimStart('/');
+
+            if (path.StartsWith(Alias, StringComparison.CurrentCultureIgnoreCase))
+                if (path.Equals(Alias, StringComparison.CurrentCultureIgnoreCase))
+                    path = "";
+                else path = path.Substring((Alias).Length + 1);
+
+            return String.IsNullOrEmpty(path) ? _rootAccessPath : _rootAccessPath + '/' + path;
         }
 
         public override async Task<IEntryModel> ParseAsync(string path)
@@ -124,10 +136,16 @@ namespace FileExplorer.Models
 
                 return ModelCache.RegisterModel(new SkyDriveItemModel(this, accessPath, dynResult, null));
             }
-            else return await LookupAsync(await ParseAsync(""), path.Split(new [] { '/' }, StringSplitOptions.RemoveEmptyEntries));
+            else
+            {
+                var rootModel = await ParseAsync("");
+                return await LookupAsync(rootModel,
+                    path.Replace(rootModel.FullPath, "")
+                    .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries));
+            }
         }
 
-        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null, bool refresh = false)
         {
             await checkLoginAsync();
 
@@ -140,10 +158,12 @@ namespace FileExplorer.Models
             SkyDriveItemModel dirModel = entry as SkyDriveItemModel;
             if (dirModel != null)
             {
-                var cachedChild = ModelCache.GetChildModel(dirModel);
-                if (cachedChild != null)
-                    return cachedChild.Where(m => filter(m)).Cast<IEntryModel>().ToList();
-
+                if (!refresh)
+                {
+                    var cachedChild = ModelCache.GetChildModel(dirModel);
+                    if (cachedChild != null)
+                        return cachedChild.Where(m => filter(m)).Cast<IEntryModel>().ToList();
+                }
 
                 LiveConnectClient client = new LiveConnectClient(Session);
                 LiveOperationResult listOpResult = await client.GetAsync(dirModel.UniqueId + "/files");
@@ -152,8 +172,8 @@ namespace FileExplorer.Models
 
                 foreach (dynamic itemData in listResult.data)
                 {
-                    SkyDriveItemModel retVal = null;                    
-                    retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.FullPath);                    
+                    SkyDriveItemModel retVal = null;
+                    retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.FullPath);
 
                     if (retVal != null)
                     {
@@ -194,6 +214,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        public string Alias { get; protected set; }
         public string RootAccessPath { get { return _rootAccessPath; } }
         public LiveConnectSession Session { get; private set; }
         public ISkyDriveModelCache ModelCache { get; private set; }

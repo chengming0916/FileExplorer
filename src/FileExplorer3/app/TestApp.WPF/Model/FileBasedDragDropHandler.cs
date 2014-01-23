@@ -31,9 +31,11 @@ namespace FileExplorer.Models
               AsyncUtils.RunSync(() => Task.Run(async () =>
                   {
                       foreach (var m in _models)
-                          if (!m.Profile.PathMapper[m].IsCached)
+                          if (m.Profile is IDiskProfile)
                           {
-                              await m.Profile.PathMapper.UpdateCacheAsync(m);
+                              var mapping = (m.Profile as IDiskProfile).DiskIO.DiskPath[m];
+                              if (mapping != null && !mapping.IsCached)
+                                  await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m);
                           }
                   }));
         }
@@ -52,7 +54,8 @@ namespace FileExplorer.Models
         {
             var retVal = new FileDropDataObject(new HandleFileDropped(entries.ToArray()));
             retVal.SetFileDropData(entries
-                .Select(m => new FileDrop(m.Profile.PathMapper[m].IOPath, m.IsDirectory))
+                .Where(m => m.Profile is IDiskProfile)
+                .Select(m => new FileDrop((m.Profile as IDiskProfile).DiskIO.DiskPath[m].IOPath, m.IsDirectory))
                 .Where (fd => fd.FileSystemPath != null)
                 .ToArray());
             
@@ -62,7 +65,7 @@ namespace FileExplorer.Models
         public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
         {
             foreach (var e in entries)
-                if (e.Profile.PathMapper[e].IsVirtual)
+                if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.DiskPath[e].IsVirtual)
                     return DragDropEffects.Copy;
             return DragDropEffects.Copy | DragDropEffects.Move;
         }

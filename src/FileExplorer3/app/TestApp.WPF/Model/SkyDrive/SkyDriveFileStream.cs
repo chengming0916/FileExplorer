@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Cofe.Core.Utils;
 using FileExplorer.Utils;
 using Microsoft.Live;
 
@@ -36,14 +38,21 @@ namespace FileExplorer.Models
         public static async Task<SkyDriveFileStream> OpenReadWriteAsync(IEntryModel entryModel)
         {
             SkyDriveFileStream stream = await OpenReadAsync(entryModel);
-            stream._udateSrcFunc = (s) => updateSourceAsync(s);
+            stream._udateSrcFunc = (s) => 
+            {
+                AsyncUtils.RunSync(() => updateSourceAsync(s));
+            };
             return stream;
         }
 
         public static SkyDriveFileStream OpenWrite(IEntryModel entryModel)
         {
             SkyDriveFileStream stream = 
-                new SkyDriveFileStream(entryModel) { _udateSrcFunc = (s) => updateSourceAsync(s) };
+                new SkyDriveFileStream(entryModel) { 
+                    _udateSrcFunc = (s) => {
+                         AsyncUtils.RunSync(() => updateSourceAsync(s));
+                    } };
+                    
 
             return stream;
         }
@@ -67,10 +76,20 @@ namespace FileExplorer.Models
 
             stream.Seek(0, SeekOrigin.Begin);
             var uid = (skyModel.Parent as SkyDriveItemModel).UniqueId;
-            result = await liveClient.UploadAsync(uid,
-                skyModel.Name, stream, OverwriteOption.Overwrite, cts.Token, progressHandler);
+            try
+            {
+                result = await liveClient.UploadAsync(uid,
+                    skyModel.Name, stream, OverwriteOption.Overwrite, cts.Token, progressHandler);
 
-            skyModel.init(stream._profile, skyModel.FullPath, result.Result);
+                stream._profile.NotifyEntryChanges(skyModel.FullPath,
+                skyModel.SourceUrl == null ? Defines.ChangeType.Created : Defines.ChangeType.Changed);
+                skyModel.init(stream._profile, skyModel.FullPath, result.Result);    
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+                    
         }
 
 
@@ -92,7 +111,7 @@ namespace FileExplorer.Models
         private bool _closed = false;
         private SkyDriveProfile _profile;
         private IEntryModel _entryModel;
-        private Func<SkyDriveFileStream, Task> _udateSrcFunc = null;
+        private Action<SkyDriveFileStream> _udateSrcFunc = null;
 
         #endregion
 

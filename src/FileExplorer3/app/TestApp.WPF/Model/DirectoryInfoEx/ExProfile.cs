@@ -18,7 +18,7 @@ using QuickZip.UserControls.Logic.Tools.IconExtractor;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoExProfile : ProfileBase
+    public class FileSystemInfoExProfile : DiskProfileBase
     {
         #region Constructor
 
@@ -102,7 +102,7 @@ namespace FileExplorer.Models
             };
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
             DragDrop = new FileBasedDragDropHandler(this);
-            PathMapper = IODiskPatheMapper.Instance;
+            //PathMapper = IODiskPatheMapper.Instance;
         }
 
         #endregion
@@ -143,7 +143,7 @@ namespace FileExplorer.Models
             return Task.FromResult<IEntryModel>(retVal);
         }
 
-        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null)
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null, bool refresh = false)
         {
             if (filter == null)
                 filter = (m) => true;

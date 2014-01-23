@@ -84,6 +84,7 @@
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExCommandProvider.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveDiskIOHelper.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveDiskPathMapper.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveFileStream.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveModel.cs" />
