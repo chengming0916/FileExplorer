@@ -218,12 +218,23 @@ namespace FileExplorer.Models
             string destName = PathFE.GetFileName(srcMapping.IOPath);
             string destFullName = destProfile.Path.Combine(_destDirModel.FullPath, destName); //PathFE.Combine(destMapping.IOPath, destName);
 
-            await destProfile.DiskIO.CreateAsync(destFullName, true);
-            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
+            IEntryModel destModel = await _destDirModel.Profile.ParseAsync(destFullName);
 
-            var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
-                    em.FullPath.Equals(destFullName,
-                    StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
+            if (destModel == null)
+            {
+                destModel = await destProfile.DiskIO.CreateAsync(destFullName, true);
+
+                destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
+                        em.FullPath.Equals(destFullName,
+                        StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
+                _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
+
+               
+            }
+
+            if (destModel == null)
+                return ResultCommand.Error(new Exception("Cannot construct destination " + destFullName));
+
             var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
 
             var resultCommands = srcSubModels.Select(m =>
