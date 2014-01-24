@@ -26,9 +26,9 @@ namespace FileExplorer.Models
 
         public SkyDriveModelCache()
         {
-            UniqueIdLookup = new ConcurrentDictionary<string, string>();
-            ChildLookup = new ConcurrentDictionary<string, IList<string>>();
-            ModelCache = new ConcurrentDictionary<string, SkyDriveItemModel>();            
+            UniqueIdLookup = new ConcurrentDictionary<string, string>(2, 5, StringComparer.CurrentCultureIgnoreCase);
+            ChildLookup = new ConcurrentDictionary<string, IList<string>>(2, 5, StringComparer.CurrentCultureIgnoreCase);
+            ModelCache = new ConcurrentDictionary<string, SkyDriveItemModel>(2, 5, StringComparer.CurrentCultureIgnoreCase);            
         }
 
         #endregion
@@ -42,11 +42,11 @@ namespace FileExplorer.Models
             return model;
         }
 
-        public string GetUniqueId(string accessPath)
+        public string GetUniqueId(string fullPath)
         {
-            if (!(UniqueIdLookup.ContainsKey(accessPath)))
+            if (!(UniqueIdLookup.ContainsKey(fullPath)))
                 return null;
-            else return UniqueIdLookup[accessPath];
+            else return UniqueIdLookup[fullPath];
         }
 
         public string GetPath(string uniqueId)
