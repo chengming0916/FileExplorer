@@ -163,7 +163,7 @@ namespace TestApp.WPF
         
         public async Task AddSkyDrive()
         {
-            string alias = "Lycj's SkyDrive";
+            string alias = "Lycj's SkyDrive"; //This is hardcoded currently, please changed to your username.
             if (_profileSkyDrive == null)
                 _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, alias);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };            
