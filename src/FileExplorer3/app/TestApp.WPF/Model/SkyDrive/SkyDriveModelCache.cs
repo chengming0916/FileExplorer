@@ -37,7 +37,7 @@ namespace FileExplorer.Models
 
         public SkyDriveItemModel RegisterModel(SkyDriveItemModel model)
         {
-            UniqueIdLookup[model.AccessPath] = model.UniqueId;
+            UniqueIdLookup[model.FullPath] = model.UniqueId;
             ModelCache[model.UniqueId] = model;
             return model;
         }
