@@ -99,6 +99,7 @@
     <Compile Include="Defines\Strings.cs" />
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\CommandModelImpl.cs" />
+    <Compile Include="Models\CommonScriptCommands.cs" />
     <Compile Include="Models\DiskPathMapperImpl.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\ICommandModel.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Utils\WebUtils.cs" />
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\MessageDialogViewModel.cs" />
     <Compile Include="ViewModels\Helpers\DialogFilterViewModel.cs" />
     <Compile Include="ViewModels\FilePickerViewModel.cs" />
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
@@ -151,6 +153,9 @@
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageDialogView.xaml.cs">
+      <DependentUpon>MessageDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
@@ -596,6 +601,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MessageDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

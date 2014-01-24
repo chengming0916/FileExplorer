@@ -16,6 +16,10 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer.Models
 {
+    /// <summary>
+    /// These Commands require IDIskProfile.
+    /// </summary>
+
     public class OpenWithScriptCommand : ScriptCommandBase
     {
         OpenWithInfo _info;
@@ -86,34 +90,9 @@ namespace FileExplorer.Models
         }
     }
 
-    public class NotifyChangedCommand : ScriptCommandBase
-    {
-
-        private string _fullParseName;
-        private ChangeType _changeType;
-        private IProfile _profile;
-        public NotifyChangedCommand(IProfile profile, string fullParseName, ChangeType changeType)
-            : base("NotifyChanges")
-        {
-            _profile = profile;
-            _fullParseName = fullParseName;
-            _changeType = changeType;
-        }
-
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            _profile.NotifyEntryChanges(_fullParseName, _changeType);
-            return ResultCommand.NoError;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is NotifyChangedCommand && (obj as NotifyChangedCommand)._profile.Equals(_profile) &&
-                (obj as NotifyChangedCommand)._fullParseName.Equals(_fullParseName);
-        }
-    }
 
 
+    #region FileTransferScriptCommand and it's subcommands
 
     public class StreamFileTransferCommand : ScriptCommandBase
     {
@@ -229,7 +208,7 @@ namespace FileExplorer.Models
                         StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
                 _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
 
-               
+
             }
 
             if (destModel == null)
@@ -247,7 +226,6 @@ namespace FileExplorer.Models
             return new RunInSequenceScriptCommand(resultCommands.ToArray());
         }
     }
-
 
     public class FileTransferScriptCommand : ScriptCommandBase
     {
@@ -347,4 +325,6 @@ namespace FileExplorer.Models
             }
         }
     }
+
+    #endregion
 }
