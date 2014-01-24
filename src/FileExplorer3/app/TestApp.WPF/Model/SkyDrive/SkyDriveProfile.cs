@@ -96,25 +96,15 @@ namespace FileExplorer.Models
             else return currentModel;
         }
 
-        //public string GetAccessPath(string path)
-        //{
-        //    if (string.IsNullOrEmpty(path))
-        //        return _rootAccessPath;
-
-        //    path = path.TrimStart('/');
-
-        //    if (path.StartsWith(Alias, StringComparison.CurrentCultureIgnoreCase))
-        //        if (path.Equals(Alias, StringComparison.CurrentCultureIgnoreCase))
-        //            path = "";
-        //        else path = path.Substring((Alias).Length + 1);
-
-        //    return String.IsNullOrEmpty(path) ? _rootAccessPath : _rootAccessPath + '/' + path;
-        //}
-
-        private string getKey(string path)
+        /// <summary>
+        /// Make sure input path is recognizable by ModelCache
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private string checkPath(string path)
         {
             if (string.IsNullOrEmpty(path))
-                return _rootAccessPath;
+                return Alias;
 
             path = path.TrimStart('/');
 
@@ -123,8 +113,8 @@ namespace FileExplorer.Models
                     path = "";
                 else path = path.Substring((Alias).Length + 1);
 
-            return String.IsNullOrEmpty(path) ? _rootAccessPath : _rootAccessPath + '/' + path;
-        }
+            return String.IsNullOrEmpty(path) ? Alias : Alias + '/' + path;
+        }        
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
@@ -133,13 +123,11 @@ namespace FileExplorer.Models
             if (Session == null)
                 return null;
 
-            string key = getKey(path); //ModelCache.GetKey()
-
-            string uid = ModelCache.GetUniqueId(key);
+            string uid = ModelCache.GetUniqueId(checkPath(path));
             if (uid != null)
                 return ModelCache.GetModel(uid);
 
-            if (key == _rootAccessPath)
+            if (path == "")
             {
                 LiveConnectClient client = new LiveConnectClient(Session);
                 LiveOperationResult liveOpResult = await client.GetAsync(_rootAccessPath);
@@ -149,7 +137,7 @@ namespace FileExplorer.Models
                 //   |-album
                 //       |-id, etc
 
-                return ModelCache.RegisterModel(new SkyDriveItemModel(this, null, dynResult, null));
+                return ModelCache.RegisterModel(new SkyDriveItemModel(this, dynResult, null));
             }
             else
             {
@@ -188,7 +176,7 @@ namespace FileExplorer.Models
                 foreach (dynamic itemData in listResult.data)
                 {
                     SkyDriveItemModel retVal = null;
-                    retVal = new SkyDriveItemModel(this, null, itemData, dirModel.FullPath);
+                    retVal = new SkyDriveItemModel(this, itemData, dirModel.FullPath);
 
                     if (retVal != null)
                     {

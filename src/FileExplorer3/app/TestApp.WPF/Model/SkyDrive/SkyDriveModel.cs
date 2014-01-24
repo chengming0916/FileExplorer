@@ -48,17 +48,14 @@ namespace FileExplorer.Models
         public SkyDriveItemModel(SkyDriveProfile profile, string path, bool isDirectory)
             : this(profile)
         {
-            //AccessPath = profile.GetAccessPath(path);
             init(profile, path);
             this.IsDirectory = isDirectory;
             //SourceUrl = "Unknown";
         }
 
-        public SkyDriveItemModel(SkyDriveProfile profile, string accessPath, object data, string parentFullPath = null)
+        public SkyDriveItemModel(SkyDriveProfile profile, object data, string parentFullPath = null)
             : this(profile)
         {
-            //AccessPath = accessPath;
-            //Debug.WriteLine(AccessPath);
             dynamic d = data as dynamic;
             string path = parentFullPath == null ? profile.Alias :  parentFullPath  + "/" + d.name;
             init(profile, path, d);
@@ -76,7 +73,6 @@ namespace FileExplorer.Models
 
         #region Public Properties
         
-        //public string AccessPath { get; private set; }
         public string Description { get; private set; }
         public string UniqueId { get; private set; }
         public string Type { get; private set; }
