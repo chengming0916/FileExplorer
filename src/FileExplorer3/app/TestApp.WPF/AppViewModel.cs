@@ -191,6 +191,12 @@ namespace TestApp.WPF
             //await _profileSkyDrive.PathMapper.UpdateSourceAsync(uploadtxt);           
         }
 
+        public void ShowDialog()
+        {
+            _windowManager.ShowDialog(new MessageDialogViewModel("Caption", "Message 1 2 3 4 5 6 7 8 9 10",
+                MessageDialogViewModel.DialogButtons.OK | MessageDialogViewModel.DialogButtons.Cancel));
+        }
+
         #endregion
 
         #region Data
