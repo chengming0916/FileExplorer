@@ -8,3 +8,5 @@ src/FileExplorer3/app/FileExplorer3/UserControls/Notused/*
 src/FileExplorer3/app/TestSkyDrive/*
 */Thumbs.db
 Thumbs.db
+*/_UpgradeReport_Files/*
+*/UpgradeLog.*

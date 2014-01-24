@@ -114,34 +114,14 @@ namespace Cofe.Core
                 return "";
             return path.Substring(0, idx);
         }
-
-        public static string GetDirectoryNameR(string path)
-        {
-            if (path.EndsWith("/"))
-                path = path.Substring(0, path.Length - 1); //Remove ending slash.
-
-            int idx = path.LastIndexOf('/');
-            if (idx == -1)
-                return "";
-            return path.Substring(0, idx);
-        }
-
+        
         public static string GetFileName(string path)
         {
             int idx = path.LastIndexOf('\\');
             if (idx == -1)
                 return path;
             return path.Substring(idx + 1);
-        }
-
-        public static string GetFileNameR(string path)
-        {
-            int idx = path.LastIndexOf('/');
-            if (idx == -1)
-                return path;
-            return path.Substring(idx + 1);
-        }
-
+        }       
 
         public static string GetExtension(string path)
         {

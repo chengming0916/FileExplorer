@@ -42,7 +42,7 @@ namespace FileExplorer.ViewModels
                     FileName =
                         String.Join(",",
                         FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
-                        .Select(evm => PathFE.GetFileName(evm.EntryModel.FullPath)));
+                        .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
 
                 };
 
@@ -109,12 +109,12 @@ namespace FileExplorer.ViewModels
         {
             List<IEntryModel> selectedFiles = new List<IEntryModel>();
             foreach (string fname in FileName.Split(','))
-            {
-                string fullPath = PathFE.Combine(FileList.CurrentDirectory.FullPath, fname);
+            {                
+                string fullPath = FileList.CurrentDirectory.Profile.Path.Combine(FileList.CurrentDirectory.FullPath, fname);
                 var foundItem = FileList.ProcessedEntries.EntriesHelper.AllNonBindable.Select(evm => evm.EntryModel)
                     .FirstOrDefault(em =>
                     em.FullPath.Equals(fullPath, StringComparison.CurrentCultureIgnoreCase) ||
-                    PathFE.GetFileName(em.FullPath).Equals(fname));
+                    em.Profile.Path.GetFileName(em.FullPath).Equals(fname));
                 if (foundItem == null)
                 {
                     foundItem = FileList.CurrentDirectory.Profile.ParseAsync(fullPath).Result;
@@ -143,7 +143,7 @@ namespace FileExplorer.ViewModels
             
             base.FileList.ProcessedEntries.SetFilters(
                 ColumnFilter.CreateNew(value, "FullPath", 
-                e => e.IsDirectory || PathFE.MatchFileMasks(PathFE.GetFileName(e.FullPath), value)));
+                e => e.IsDirectory || PathFE.MatchFileMasks(e.Profile.Path.GetFileName(e.FullPath), value)));
             NotifyOfPropertyChange(() => SelectedFilter);
         }
 

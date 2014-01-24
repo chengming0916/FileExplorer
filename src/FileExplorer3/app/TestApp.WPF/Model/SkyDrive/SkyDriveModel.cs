@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace FileExplorer.Models
         internal void init(SkyDriveProfile profile, string path)
         {            
             FullPath = path;
-            this.Label = this.Name = PathFE.GetFileNameR(path);            
+            this.Label = this.Name = profile.Path.GetFileName(path);            
             //this._parentFunc = new Lazy<IEntryModel>(() =>
             //    AsyncUtils.RunSync(() => profile.ParseAsync(PathFE.GetDirectoryNameR(path))));
         }
@@ -57,7 +58,7 @@ namespace FileExplorer.Models
             : this(profile)
         {
             AccessPath = accessPath;
-
+            Debug.WriteLine(AccessPath);
             dynamic d = data as dynamic;
             string path = parentFullPath == null ? profile.Alias :  parentFullPath  + "/" + d.name;
             init(profile, path, d);

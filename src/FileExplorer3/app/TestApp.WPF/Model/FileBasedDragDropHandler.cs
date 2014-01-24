@@ -33,7 +33,7 @@ namespace FileExplorer.Models
                       foreach (var m in _models)
                           if (m.Profile is IDiskProfile)
                           {
-                              var mapping = (m.Profile as IDiskProfile).DiskIO.DiskPath[m];
+                              var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];
                               if (mapping != null && !mapping.IsCached)
                                   await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m);
                           }
@@ -55,7 +55,7 @@ namespace FileExplorer.Models
             var retVal = new FileDropDataObject(new HandleFileDropped(entries.ToArray()));
             retVal.SetFileDropData(entries
                 .Where(m => m.Profile is IDiskProfile)
-                .Select(m => new FileDrop((m.Profile as IDiskProfile).DiskIO.DiskPath[m].IOPath, m.IsDirectory))
+                .Select(m => new FileDrop((m.Profile as IDiskProfile).DiskIO.Mapper[m].IOPath, m.IsDirectory))
                 .Where (fd => fd.FileSystemPath != null)
                 .ToArray());
             
@@ -65,7 +65,7 @@ namespace FileExplorer.Models
         public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
         {
             foreach (var e in entries)
-                if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.DiskPath[e].IsVirtual)
+                if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.Mapper[e].IsVirtual)
                     return DragDropEffects.Copy;
             return DragDropEffects.Copy | DragDropEffects.Move;
         }
@@ -130,7 +130,7 @@ namespace FileExplorer.Models
 
                 var sr = new ScriptRunner();
                 var scriptToRun = new Queue<IScriptCommand>( 
-                    entries.Select(e => new FileTransferScriptCommand(e, destDir, effect)));
+                    entries.Select(e => new FileTransferScriptCommand(e, destDir, effect == DragDropEffects.Move)));
                 sr.Run(scriptToRun, new ParameterDic());
                 return effect;                
             };
