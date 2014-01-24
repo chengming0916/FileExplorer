@@ -9,7 +9,7 @@ namespace FileExplorer.Models
 {
     public interface IDiskIOHelper
     {
-        IDiskPathMapper DiskPath { get; }
+        IDiskPathMapper Mapper { get; }
         IDiskProfile Profile { get; }
 
         Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access);
@@ -24,12 +24,12 @@ namespace FileExplorer.Models
 
         protected DiskIOHelperBase(IDiskProfile profile)
         {
-            DiskPath = new IODiskPatheMapper();
+            Mapper = new IODiskPatheMapper();
             Profile = profile;
         }
 
         public IDiskProfile Profile { get; protected set; }
-        public IDiskPathMapper DiskPath { get; protected set; }
+        public IDiskPathMapper Mapper { get; protected set; }
 
         public virtual Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access)
         {

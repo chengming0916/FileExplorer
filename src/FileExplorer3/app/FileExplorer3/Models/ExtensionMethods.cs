@@ -38,6 +38,16 @@ namespace FileExplorer.Models
             profile.Events.Publish(new EntryChangedEvent(fullPath, changeType));
         }
 
+        public static string GetName(this IEntryModel model)
+        {
+            return model.Profile.Path.GetFileName(model.FullPath);
+        }
+
+        public static string Combine(this IEntryModel model, params string[] paths)
+        {
+            return model.Profile.Path.Combine(model.FullPath, paths);
+        }
+
         public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath, FileAccess access)
         {
             IEntryModel entryModel = await ioHelper.Profile.ParseAsync(fullPath);
@@ -52,7 +62,7 @@ namespace FileExplorer.Models
 
         public static async Task<string> WriteToCacheAsync(this IDiskIOHelper ioHelper, IEntryModel entry, bool force = false)
         {
-            var mapping = ioHelper.DiskPath[entry];
+            var mapping = ioHelper.Mapper[entry];
 
             if (!mapping.IsCached || force)
                 using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read))

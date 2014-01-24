@@ -29,21 +29,7 @@ namespace FileExplorer.Models
     public interface IDiskPathMapper
     {
         DiskMapInfo this[IEntryModel model] { get; }
-        
-        ///// <summary>
-        ///// Download the entry from source.
-        ///// </summary>
-        ///// <param name="model"></param>
-        ///// <returns></returns>
-        //Task UpdateCacheAsync(IEntryModel model);
-
-
-        ///// <summary>
-        ///// Upload the entry back to source.
-        ///// </summary>
-        ///// <param name="model"></param>
-        ///// <returns></returns>
-        //Task UpdateSourceAsync(IEntryModel model);
+     
     }
 
    

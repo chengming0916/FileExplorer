@@ -44,12 +44,12 @@ namespace FileExplorer.Models
                 IDiskProfile profile = parameter[0].Profile as IDiskProfile;
                 if (profile == null)
                     return ResultCommand.Error(new NotSupportedException("IDiskProfile"));
-                
-                if (profile.DiskIO.DiskPath is NullDiskPatheMapper)
+
+                if (profile.DiskIO.Mapper is NullDiskPatheMapper)
                     return ResultCommand.Error(new NotSupportedException());
-                
+
                 string appliedFileName = AsyncUtils.RunSync(() => profile.DiskIO.WriteToCacheAsync(parameter[0]));
-                
+
                 if (_isFolder || appliedFileName.StartsWith("::{"))
                 {
                     if (appliedFileName.StartsWith("::{") || Directory.Exists(appliedFileName))
@@ -88,7 +88,7 @@ namespace FileExplorer.Models
 
     public class NotifyChangedCommand : ScriptCommandBase
     {
-        
+
         private string _fullParseName;
         private ChangeType _changeType;
         private IProfile _profile;
@@ -113,23 +113,151 @@ namespace FileExplorer.Models
         }
     }
 
+
+
+    public class StreamFileTransferCommand : ScriptCommandBase
+    {
+        private IEntryModel _srcModel;
+        private IEntryModel _destDirModel;
+        private bool _removeOriginal;
+
+        public StreamFileTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
+            : base("StreamFileTransfer")
+        {
+            if (srcModel.Profile is IDiskProfile && destDirModel.Profile is IDiskProfile)
+            {
+                _srcModel = srcModel;
+                _destDirModel = destDirModel;
+                _removeOriginal = removeOriginal;
+            }
+            else throw new ArgumentException("Transfer work with IDiskProfile only.");
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            var srcProfile = _srcModel.Profile as IDiskProfile;
+            var destProfile = _destDirModel.Profile as IDiskProfile;
+            string destName = _srcModel.GetName();
+            string destFullName = _destDirModel.Combine(destName);
+
+            ChangeType ct = ChangeType.Created;
+            if (File.Exists(destFullName))
+            {
+                File.Delete(destFullName);
+                ct = ChangeType.Changed;
+            }
+
+            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read))
+            using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write))
+                await StreamUtils.CopyStreamAsync(srcStream, destStream);
+
+            if (_removeOriginal)
+                await srcProfile.DiskIO.DeleteAsync(_srcModel.FullPath);
+
+            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
+        }
+
+    }
+
+    public class DeleteEntryCommand : ScriptCommandBase
+    {
+        private IEntryModel _srcModel;
+        private IDiskProfile _profile;
+        private string _path;
+        public DeleteEntryCommand(IEntryModel srcModel)
+            : base("Delete")
+        {
+            if (srcModel.Profile is IDiskProfile)
+                _srcModel = srcModel;
+            else throw new ArgumentException("Support IDiskProfile only.");
+        }
+
+        public DeleteEntryCommand(IDiskProfile profile, string path)
+            : base("Delete")
+        {
+            _profile = profile;
+            _path = path;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            if (_srcModel == null)
+                _srcModel = await _profile.ParseAsync(_path);
+
+            if (_srcModel != null)
+                await (_srcModel.Profile as IDiskProfile).DiskIO.DeleteAsync(_srcModel.FullPath);
+            else return ResultCommand.Error(new FileNotFoundException(_path));
+
+            return ResultCommand.NoError;
+        }
+    }
+
+    public class CopyDirectoryTransferCommand : ScriptCommandBase
+    {
+        private IEntryModel _srcModel;
+        private IEntryModel _destDirModel;
+        private bool _removeOriginal;
+        public CopyDirectoryTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
+            : base("CopyDirectoryTransfer")
+        {
+            if (srcModel.Profile is IDiskProfile && destDirModel.Profile is IDiskProfile)
+            {
+                _srcModel = srcModel;
+                _destDirModel = destDirModel;
+                _removeOriginal = removeOriginal;
+            }
+            else throw new ArgumentException("Transfer work with IDiskProfile only.");
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            var destProfile = _destDirModel.Profile as IDiskProfile;
+
+            var destMapping = (_destDirModel.Profile as IDiskProfile).DiskIO.Mapper[_destDirModel];
+            var srcMapping = (_srcModel.Profile as IDiskProfile).DiskIO.Mapper[_srcModel];
+            string destName = PathFE.GetFileName(srcMapping.IOPath);
+            string destFullName = destProfile.Path.Combine(_destDirModel.FullPath, destName); //PathFE.Combine(destMapping.IOPath, destName);
+
+            await destProfile.DiskIO.CreateAsync(destFullName, true);
+            _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
+
+            var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
+                    em.FullPath.Equals(destFullName,
+                    StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
+            var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
+
+            var resultCommands = srcSubModels.Select(m =>
+                (IScriptCommand)new FileTransferScriptCommand(m, destModel, _removeOriginal)).ToList();
+            resultCommands.Insert(0, new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
+
+            //if (_removeOriginal)
+            //    resultCommands.Add(new DeleteEntryCommand(_srcModel));
+
+            return new RunInSequenceScriptCommand(resultCommands.ToArray());
+        }
+    }
+
+
     public class FileTransferScriptCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;
         private IEntryModel _destDirModel;
-        private DragDropEffects _transferMode;
+        private bool _removeOriginal;
 
         public FileTransferScriptCommand(IEntryModel srcModel, IEntryModel destDirModel,
-            DragDropEffects transferMode = DragDropEffects.Copy)
-            : base(transferMode.ToString())
+            bool removeOriginal = false)
+            : base(removeOriginal ? "Move" : "Copy")
         {
             _srcModel = srcModel;
             _destDirModel = destDirModel;
-            _transferMode = transferMode;
+            _removeOriginal = removeOriginal;
 
             if (!(srcModel.Profile is IDiskProfile) || !(destDirModel.Profile is IDiskProfile))
                 throw new NotSupportedException();
         }
+
+
+
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
@@ -138,67 +266,67 @@ namespace FileExplorer.Models
                 var srcProfile = _srcModel.Profile as IDiskProfile;
                 var destProfile = _destDirModel.Profile as IDiskProfile;
 
-                var destMapping = (_destDirModel.Profile as IDiskProfile).DiskIO.DiskPath[_destDirModel];
-                var srcMapping = (_srcModel.Profile as IDiskProfile).DiskIO.DiskPath[_srcModel];
+                var destMapping = (_destDirModel.Profile as IDiskProfile).DiskIO.Mapper[_destDirModel];
+                var srcMapping = (_srcModel.Profile as IDiskProfile).DiskIO.Mapper[_srcModel];
                 string destName = PathFE.GetFileName(srcMapping.IOPath);
                 string destFullName = destProfile.Path.Combine(_destDirModel.FullPath, destName); //PathFE.Combine(destMapping.IOPath, destName);
 
-                if (_srcModel.IsDirectory)
+
+                if (!srcMapping.IsVirtual && !destMapping.IsVirtual && _removeOriginal)
                 {
-                    //switch (_transferMode)
-                    //{
-                    //    case DragDropEffects.Move:
-                    //        Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
-                    //        return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
-
-                    //    case DragDropEffects.Copy:
-                    //        Directory.CreateDirectory(destFullName);
-                    //        _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
-
-                    //        var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
-                    //                em.FullPath.Equals(destFullName,
-                    //                StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
-                    //        var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
-
-                    //        var resultCommands = srcSubModels.Select(m => 
-                    //            (IScriptCommand)new FileTransferScriptCommand(m, destModel, _transferMode)).ToList();
-                    //        resultCommands.Insert(0, new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
-
-                    //        return new RunInSequenceScriptCommand(resultCommands.ToArray());
-                    //    default:
-                    //        throw new NotImplementedException();
-                    //}
-
+                    if (_srcModel.IsDirectory)
+                    {
+                        if (Directory.Exists(destFullName))
+                            Directory.Delete(destFullName, true);
+                        Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
+                    }
+                    else
+                    {
+                        if (File.Exists(destFullName))
+                            File.Delete(destFullName);
+                        File.Move(srcMapping.IOPath, destFullName);
+                    }
+                    return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
                 }
                 else
                 {
-                    //Directory.CreateDirectory(destMapping.IOPath);
-
-                    switch (_transferMode)
-                    {
-                        case DragDropEffects.Move:
-                            if (File.Exists(destFullName))
-                                File.Delete(destFullName);                            
-                            File.Move(srcMapping.IOPath, destFullName);
-
-                            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
-                        case DragDropEffects.Copy:
-                            ChangeType ct = ChangeType.Created;
-                            if (File.Exists(destFullName))
-                            {
-                                File.Delete(destFullName);
-                                ct = ChangeType.Changed;
-                            }
-
-                            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read))
-                            using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write))
-                                await StreamUtils.CopyStreamAsync(srcStream, destStream);
-
-                            //File.Copy(srcMapping.IOPath, destFullName);
-
-                            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
-                    }
+                    if (_srcModel.IsDirectory)
+                        return new CopyDirectoryTransferCommand(_srcModel, _destDirModel, _removeOriginal);
+                    else
+                        return new StreamFileTransferCommand(_srcModel, _destDirModel, _removeOriginal);
                 }
+
+
+
+                //switch (_transferMode)
+                //{
+                //    case DragDropEffects.Move:
+                //      
+                //       
+
+                //    case DragDropEffects.Copy:
+                //        Directory.CreateDirectory(destFullName);
+                //        _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
+
+                //        var destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
+                //                em.FullPath.Equals(destFullName,
+                //                StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault();
+                //        var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
+
+                //        var resultCommands = srcSubModels.Select(m => 
+                //            (IScriptCommand)new FileTransferScriptCommand(m, destModel, _transferMode)).ToList();
+                //        resultCommands.Insert(0, new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
+
+                //        return new RunInSequenceScriptCommand(resultCommands.ToArray());
+                //    default:
+                //        throw new NotImplementedException();
+                //}
+
+                //}
+                //else
+                //{
+
+                //}
 
                 return ResultCommand.NoError;
             }

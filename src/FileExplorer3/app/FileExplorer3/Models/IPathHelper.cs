@@ -10,6 +10,7 @@ namespace FileExplorer.Models
     {
         string Combine(string path1, params string[] paths);
         string GetDirectoryName(string path);
+        string GetFileName(string path);
     }
 
     public class PathHelper : IPathHelper
@@ -48,6 +49,15 @@ namespace FileExplorer.Models
                 return "";
             return path.Substring(0, idx);
         }
+
+        public string GetFileName(string path)
+        {
+            int idx = path.LastIndexOf(_separator);
+            if (idx == -1)
+                return path;
+            return path.Substring(idx + 1);
+        }
+
 
         #endregion
 
