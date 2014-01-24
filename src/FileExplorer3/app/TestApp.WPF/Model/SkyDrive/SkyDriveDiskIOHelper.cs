@@ -56,7 +56,7 @@ namespace FileExplorer.Models
                 LiveConnectClient liveClient = new LiveConnectClient(_profile.Session);
 
                 LiveOperationResult result = await liveClient.PostAsync(parentDir.UniqueId, folderData);
-                return new SkyDriveItemModel(_profile, parentDir.AccessPath + "/" + name, result.Result, parentDir.FullPath);
+                return new SkyDriveItemModel(_profile, null, result.Result, parentDir.FullPath);
 
 
 

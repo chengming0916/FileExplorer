@@ -96,7 +96,22 @@ namespace FileExplorer.Models
             else return currentModel;
         }
 
-        public string GetAccessPath(string path)
+        //public string GetAccessPath(string path)
+        //{
+        //    if (string.IsNullOrEmpty(path))
+        //        return _rootAccessPath;
+
+        //    path = path.TrimStart('/');
+
+        //    if (path.StartsWith(Alias, StringComparison.CurrentCultureIgnoreCase))
+        //        if (path.Equals(Alias, StringComparison.CurrentCultureIgnoreCase))
+        //            path = "";
+        //        else path = path.Substring((Alias).Length + 1);
+
+        //    return String.IsNullOrEmpty(path) ? _rootAccessPath : _rootAccessPath + '/' + path;
+        //}
+
+        private string getKey(string path)
         {
             if (string.IsNullOrEmpty(path))
                 return _rootAccessPath;
@@ -114,27 +129,27 @@ namespace FileExplorer.Models
         public override async Task<IEntryModel> ParseAsync(string path)
         {
             await checkLoginAsync();
-
-            string accessPath = GetAccessPath(path);
-
+            
             if (Session == null)
                 return null;
 
-            string uid = ModelCache.GetUniqueId(accessPath);
+            string key = getKey(path); //ModelCache.GetKey()
+
+            string uid = ModelCache.GetUniqueId(key);
             if (uid != null)
                 return ModelCache.GetModel(uid);
 
-            if (accessPath == _rootAccessPath)
+            if (key == _rootAccessPath)
             {
                 LiveConnectClient client = new LiveConnectClient(Session);
-                LiveOperationResult liveOpResult = await client.GetAsync(accessPath);
+                LiveOperationResult liveOpResult = await client.GetAsync(_rootAccessPath);
                 dynamic dynResult = liveOpResult.Result;
 
                 //data
                 //   |-album
                 //       |-id, etc
 
-                return ModelCache.RegisterModel(new SkyDriveItemModel(this, accessPath, dynResult, null));
+                return ModelCache.RegisterModel(new SkyDriveItemModel(this, null, dynResult, null));
             }
             else
             {
@@ -173,7 +188,7 @@ namespace FileExplorer.Models
                 foreach (dynamic itemData in listResult.data)
                 {
                     SkyDriveItemModel retVal = null;
-                    retVal = new SkyDriveItemModel(this, dirModel.AccessPath + "/" + itemData.name, itemData, dirModel.FullPath);
+                    retVal = new SkyDriveItemModel(this, null, itemData, dirModel.FullPath);
 
                     if (retVal != null)
                     {
