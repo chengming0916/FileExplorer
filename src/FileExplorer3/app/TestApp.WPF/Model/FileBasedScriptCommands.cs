@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Tools;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core;
@@ -203,7 +204,7 @@ namespace FileExplorer.Models
             {
                 destModel = await destProfile.DiskIO.CreateAsync(destFullName, true);
 
-                destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, em =>
+                destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, CancellationToken.None, em =>
                         em.FullPath.Equals(destFullName,
                         StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
                 _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
@@ -214,7 +215,7 @@ namespace FileExplorer.Models
             if (destModel == null)
                 return ResultCommand.Error(new Exception("Cannot construct destination " + destFullName));
 
-            var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel)).ToList();
+            var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel, CancellationToken.None)).ToList();
 
             var resultCommands = srcSubModels.Select(m =>
                 (IScriptCommand)new FileTransferScriptCommand(m, destModel, _removeOriginal)).ToList();

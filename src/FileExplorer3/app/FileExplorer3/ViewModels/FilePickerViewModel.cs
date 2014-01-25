@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,7 +49,7 @@ namespace FileExplorer.ViewModels
 
             FileList.ScriptCommands.Open = new IfFileListSelection(evm => evm.Count == 1,
                    new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                       new OpenSelectedDirectory(),  //Selected directory
+                       OpenSelectedDirectory.FromFileList,  //Selected directory
                        new SimpleScriptCommand("", (pd) => { 
                            Open(); 
                            return ResultCommand.NoError; })),   //Selected non-directory

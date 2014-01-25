@@ -74,7 +74,7 @@ namespace TestTemplate.WPF
             _header = header;
 
 
-            Entries = new EntriesHelper<TreeNodeViewModel>(() => Task.Run(() =>
+            Entries = new EntriesHelper<TreeNodeViewModel>((ct) => Task.Run(() =>
             {
                 return (IEnumerable<TreeNodeViewModel>)new List<TreeNodeViewModel>(
                     from i in Enumerable.Range(1, 9)

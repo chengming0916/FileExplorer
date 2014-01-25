@@ -18,7 +18,8 @@ namespace FileExplorer.ViewModels
     public interface IFileListScriptCommandContainer : IScriptCommandContainer
     {
         IScriptCommand Open { get; set; }
-        IScriptCommand Refresh { get; set; }   
+        IScriptCommand Refresh { get; set; }
+        IScriptCommand Delete { get; set; }
     }
 
     public class FileListScriptCommandContainer : IFileListScriptCommandContainer, IExportCommandBindings
@@ -34,10 +35,12 @@ namespace FileExplorer.ViewModels
 
             Open = new IfFileListSelection(evm => evm.Count == 1,
                    new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                       new OpenSelectedDirectory(),  //Selected directory
+                       OpenSelectedDirectory.FromFileList,  //Selected directory
                        ResultCommand.NoError),   //Selected non-directory
                    ResultCommand.NoError //Selected more than one item.                   
                    );
+
+            Delete = new NullScriptCommand();
 
             Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
@@ -48,7 +51,8 @@ namespace FileExplorer.ViewModels
             ExportedCommandBindings = new[] 
             {
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(FileListCommands.Refresh, this, (ch) => ch.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer)
+                ScriptCommandBinding.FromScriptCommand(FileListCommands.Refresh, this, (ch) => ch.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.Delete, ParameterDicConverter, ScriptBindingScope.Local),
             };
         }
 
@@ -67,7 +71,8 @@ namespace FileExplorer.ViewModels
         public IParameterDicConverter ParameterDicConverter { get; private set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; private set; }
         public IScriptCommand Open { get; set; }
-        public IScriptCommand Refresh { get; set; }    
+        public IScriptCommand Refresh { get; set; }
+        public IScriptCommand Delete { get; set; }
 
         #endregion
     }

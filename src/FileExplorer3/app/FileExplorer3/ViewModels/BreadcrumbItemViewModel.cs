@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Caliburn.Micro;
@@ -32,10 +33,10 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        async Task<IEnumerable<IBreadcrumbItemViewModel>> loadEntriesTask()
+        async Task<IEnumerable<IBreadcrumbItemViewModel>> loadEntriesTask(bool refresh)
         {
             IEntryModel currentDir = Selection.Value;
-            var subDir = await currentDir.Profile.ListAsync(currentDir, em => em.IsDirectory);
+            var subDir = await currentDir.Profile.ListAsync(currentDir, CancellationToken.None, em => em.IsDirectory, refresh);
             return subDir.Select(s => CreateSubmodel(s));
         }
 

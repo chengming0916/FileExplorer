@@ -25,6 +25,7 @@ using FileExplorer.ViewModels.Helpers;
 using Cinch;
 using System.Windows.Input;
 using FileExplorer.Defines;
+using System.Threading;
 
 
 namespace FileExplorer.ViewModels
@@ -102,12 +103,12 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        async Task<IEnumerable<IEntryViewModel>> loadEntriesTask()
+        async Task<IEnumerable<IEntryViewModel>> loadEntriesTask(bool refresh)
         {
             if (CurrentDirectory == null)
                 return new List<IEntryViewModel>();
 
-            var subEntries = await CurrentDirectory.Profile.ListAsync(CurrentDirectory);
+            var subEntries = await CurrentDirectory.Profile.ListAsync(CurrentDirectory, CancellationToken.None, null, refresh);
             return subEntries.Select(s => CreateSubmodel(s));
         }
 
@@ -123,7 +124,8 @@ namespace FileExplorer.ViewModels
         {
             _currentDirVM = em;
 
-            await ProcessedEntries.EntriesHelper.LoadAsync(true);
+            ProcessedEntries.EntriesHelper.IsLoaded = false;
+            await ProcessedEntries.EntriesHelper.LoadAsync(false);
 
             Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);
 

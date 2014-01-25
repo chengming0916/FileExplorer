@@ -11,6 +11,7 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
@@ -100,35 +101,33 @@ namespace FileExplorer.ViewModels
     /// </summary>
     public class OpenSelectedDirectory : ScriptCommandBase
     {
+        public static OpenSelectedDirectory FromFileList = new OpenSelectedDirectory(ExtensionMethods.GetFileListSelectionFunc);
+        private Func<ParameterDic, IEntryModel[]> _getSelectionFunc;
+
         /// <summary>
         /// Broadcast change directory to current selected directory, required FileList (IFileListViewModel)
         /// </summary>
-        public OpenSelectedDirectory()
+        public OpenSelectedDirectory(Func<ParameterDic, IEntryModel[]> getSelectionFunc)
             : base("OpenSelectedDirectory")
         {
-
+            _getSelectionFunc = getSelectionFunc;
         }
 
         public override bool CanExecute(ParameterDic pm)
-        {
-            if (!pm.ContainsKey("FileList"))
-                return false;
-
-            var selectedItems = (pm["FileList"] as IFileListViewModel).Selection.SelectedItems;
-            return selectedItems.Count == 1 && selectedItems[0].EntryModel.IsDirectory;
+        {            
+            var selectedItems =_getSelectionFunc(pm);
+            return selectedItems.Length == 1 && selectedItems[0].IsDirectory;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            if (!pm.ContainsKey("FileList") || !(pm["FileList"] is IFileListViewModel))
-                return ResultCommand.Error(new KeyNotFoundException("FileList"));
+            var selectedItem = _getSelectionFunc(pm).FirstOrDefault();
 
             IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
             IEventAggregator events = pm["Events"] as IEventAggregator;
-
-            var newDirectory = flvm.Selection.SelectedItems[0].EntryModel;
+            
             events.Publish(new DirectoryChangedEvent(flvm,
-                   newDirectory, flvm.CurrentDirectory));
+                   selectedItem, flvm.CurrentDirectory));
 
             return ResultCommand.OK;
         }

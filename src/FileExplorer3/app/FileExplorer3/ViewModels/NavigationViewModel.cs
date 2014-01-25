@@ -57,19 +57,27 @@ namespace FileExplorer.ViewModels
 
         public void Add(IEntryViewModel item)
         {
-            //GC.Collect(0, GCCollectionMode.Forced, true);
-            if (NavigationPosition != -1)
-                for (int i = 0; i < NavigationPosition; i++)
-                    NavigationHistory.RemoveAt(0);
-            while (NavigationHistory.Count > 10)
-                NavigationHistory.RemoveAt(NavigationHistory.Count - 1);
+            _updatingNavigationHistory = true;
+            try
+            {
+                //GC.Collect(0, GCCollectionMode.Forced, true);
+                if (NavigationPosition != -1)
+                    for (int i = 0; i < NavigationPosition; i++)
+                        NavigationHistory.RemoveAt(0);
+                while (NavigationHistory.Count > 10)
+                    NavigationHistory.RemoveAt(NavigationHistory.Count - 1);
 
-            if (NavigationHistory.IndexOf(item) != -1)
-                NavigationHistory.Remove(item);
-            NavigationHistory.Insert(0, item);
-            NavigationPosition = 0;
+                if (NavigationHistory.IndexOf(item) != -1)
+                    NavigationHistory.Remove(item);
+                NavigationHistory.Insert(0, item);
+                NavigationPosition = 0;
 
-            UpdateState();
+                UpdateState();
+            }
+            finally
+            {
+                _updatingNavigationHistory = false;
+            }
         }
 
         private void UpdateState()
@@ -99,9 +107,12 @@ namespace FileExplorer.ViewModels
 
                 if (newPosition != -1 && newPosition < NavigationHistory.Count)
                 {
-                    Events.Publish(new DirectoryChangedEvent(this,
-                        NavigationHistory[newPosition], NavigationHistory[orgPosition]));
-                    _currentFolder = NavigationHistory[newPosition];
+                    if (!_updatingNavigationHistory)
+                    {
+                        Events.Publish(new DirectoryChangedEvent(this,
+                            NavigationHistory[newPosition], NavigationHistory[orgPosition]));
+                        _currentFolder = NavigationHistory[newPosition];
+                    }
                 }
             }
             finally
@@ -138,7 +149,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        bool _updatingNavPosition = false;
+        bool _updatingNavPosition = false, _updatingNavigationHistory = false;
         int _position = 0;
         IEntryViewModel _currentFolder;
         IObservableCollection<IEntryViewModel> _navigationHistory = new BindableCollection<IEntryViewModel>();
@@ -152,7 +163,7 @@ namespace FileExplorer.ViewModels
 
         public INavigationScriptCommandContainer ScriptCommands { get; private set; }
         public IEventAggregator Events { get; set; }
-        public int NavigationPosition { get { return _position; } set { ChangeNavigationPosition(value); } }
+        public int NavigationPosition { get { return _position; } set {  ChangeNavigationPosition(value); } }
         public IObservableCollection<IEntryViewModel> NavigationHistory { get { return _navigationHistory; } }
         public bool CanGoBack { get { return _canGoBack; } private set { _canGoBack = value; NotifyOfPropertyChange(() => CanGoBack); } }
         public bool CanGoNext { get { return _canGoNext; } private set { _canGoNext = value; NotifyOfPropertyChange(() => CanGoNext); } }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.BaseControls;
@@ -87,7 +88,7 @@ namespace FileExplorer.Models
         {
             if (idx < path.Length)
             {
-                IEntryModel foundModel = (await ListAsync(currentModel, em => em.Label.Equals(path[idx],
+                IEntryModel foundModel = (await ListAsync(currentModel, CancellationToken.None, em => em.Label.Equals(path[idx],
                     StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
                 if (foundModel == null)
                     return null;
@@ -148,7 +149,7 @@ namespace FileExplorer.Models
             }
         }
 
-        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null, bool refresh = false)
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false)
         {
             await checkLoginAsync();
 
@@ -169,7 +170,10 @@ namespace FileExplorer.Models
                 }
 
                 LiveConnectClient client = new LiveConnectClient(Session);
-                LiveOperationResult listOpResult = await client.GetAsync(dirModel.UniqueId + "/files");
+                LiveOperationResult listOpResult = await client.GetAsync(dirModel.UniqueId + "/files", ct);
+                if (ct.IsCancellationRequested)
+                    return retList;
+
                 dynamic listResult = listOpResult.Result;
 
 

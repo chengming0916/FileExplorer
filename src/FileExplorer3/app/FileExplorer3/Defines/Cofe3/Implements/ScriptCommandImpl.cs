@@ -40,7 +40,27 @@ namespace Cofe.Core.Script
         
     }
 
-   
+    /// <summary>
+    /// A script command that cannot execute.
+    /// </summary>
+    public class NullScriptCommand : IScriptCommand
+    {
+        public string CommandKey { get { return "Null"; } }        
+        public IScriptCommand Execute(ParameterDic pm)
+        {
+            return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
+        }
+
+        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
+        }
+
+        public bool CanExecute(ParameterDic pm)
+        {
+            return false;
+        }
+    }
 
 
 }
