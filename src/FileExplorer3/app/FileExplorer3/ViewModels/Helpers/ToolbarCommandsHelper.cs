@@ -54,7 +54,7 @@ namespace FileExplorer.ViewModels.Helpers
                 case "AppliedModels":
                     if (propertyName == "ExtraCommandProviders")
                         CommandModels.IsLoaded = false; //Reset CommandModels
-                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(true));
+                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(propertyName == "ExtraCommandProviders"));
                     if (AppliedModels != null)
                         foreach (var commandVM in CommandModels.AllNonBindable)
                             commandVM.CommandModel.NotifySelectionChanged(AppliedModels);

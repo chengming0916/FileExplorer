@@ -17,9 +17,7 @@ namespace FileExplorer.Models
     /// Model for a Command, which is shown as ToolbarExItem in FileExplorer.
     /// </summary>
     public interface ICommandModel : IComparable<ICommandModel>, IComparable, INotifyPropertyChanged
-    {
-        //string CommandType { get; }
-
+    {        
         RoutedUICommand RoutedCommand { get; set; }
         IScriptCommand Command { get; set; }
 
@@ -51,6 +49,9 @@ namespace FileExplorer.Models
 
         bool IsHeaderVisible { get; }
         bool IsHeaderAlignRight { get; }
+
+        bool IsVisibleOnToolbar { get; }
+        bool IsVisibleOnMenu { get; }
 
         void NotifySelectionChanged(IEntryModel[] appliedModels);
     }

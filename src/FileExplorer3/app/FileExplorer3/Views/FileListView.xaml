@@ -24,7 +24,7 @@
 
 
             <Style x:Key="ContextMenuMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
+                <Setter Property="Visibility" Value="{Binding IsVisibleOnMenu, Converter={StaticResource btvc}}" />
                 <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
                 <Setter Property="Command" Value="{Binding  CommandBinding.Command, Mode=OneWay}" />
                 <Setter Property="CommandParameter" Value="{Binding DataContext.ToolbarCommands.AppliedModels, 
@@ -34,7 +34,10 @@
                 <Setter Property="IsChecked" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
                 <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" />
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding CommandType}" Value="Separator">
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </Trigger>
+                        <DataTrigger Binding="{Binding CommandType}" Value="Separator">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
@@ -106,7 +109,7 @@
                                 <Setter Property="Command" Value="{Binding CommandBinding.Command, Mode=OneWay}" />
                                 <Setter Property="CommandParameter" Value="{Binding DataContext.ToolbarCommands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type uc:ToolbarEx}}}" />
-                                <Setter Property="Visibility" Value="{Binding CommandModel.IsEnabled, Converter={StaticResource btvc}}" />
+                                <Setter Property="Visibility" Value="{Binding IsVisibleOnToolbar, Converter={StaticResource btvc}}" />
                                 <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
                                 <Setter Property="Symbol" Value="{Binding CommandModel.Symbol, Mode=OneWay}"  />
                                 <Setter Property="HeaderType" Value="{Binding CommandType, Mode=OneWay}" />

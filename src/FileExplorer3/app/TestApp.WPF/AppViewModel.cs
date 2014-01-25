@@ -30,22 +30,22 @@ namespace TestApp.WPF
         public AppViewModel(IEventAggregator events, IWindowManager windowManager)
         {
             _windowManager = windowManager;
-            _events = events;            
+            _events = events;
 
             _profile = new FileSystemInfoProfile(_events);
             _profileEx = new FileSystemInfoExProfile(events);
 
-            RootModels.Add(_profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result);            
+            RootModels.Add(_profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result);
         }
 
         #endregion
 
-        #region Methods       
+        #region Methods
 
         private IExplorerViewModel initExplorerModel(IExplorerViewModel explorerModel)
         {
 
-          
+
 
             explorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
             {
@@ -92,13 +92,25 @@ namespace TestApp.WPF
                   ResultCommand.NoError //Selected more than one item, ignore.
                   );
 
+            _explorer.FileList.ScriptCommands.Delete =
+                 new IfFileListSelection(evm => evm.Count >= 1,
+                    new IfOkCancel(_windowManager, pd => "Delete",
+                        pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+                         new AssignSelectionToParameterAsEntryModelArray(
+                             DeleteFileBasedEntryCommand.FromParameter
+                             ),
+                        ResultCommand.NoError),
+                    NullScriptCommand.Instance);
+
+            //new ShowMessageBox(_windowManager, "Delete", "Pending to implement.");
+
             _explorer.FileList.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
                     new SelectGroupCommand( _explorer.FileList),    
                     new ViewModeCommand( _explorer.FileList),
                     new SeparatorCommandModel(),
-                    new CommandModel(FileListCommands.Refresh),
-                    new CommandModel(ApplicationCommands.Delete)
+                    new CommandModel(FileListCommands.Refresh) { IsVisibleOnToolbar = false },
+                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false }
                     
                     )
             };
@@ -124,7 +136,7 @@ namespace TestApp.WPF
             if (_windowManager.ShowDialog(filePicker).Value)
             {
                 MessageBox.Show(String.Join(",", filePicker.SelectedFiles.Select(em => em.FullPath)));
-            }            
+            }
         }
 
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
@@ -173,13 +185,13 @@ namespace TestApp.WPF
             }
             return null;
         }
-        
+
         public async Task AddSkyDrive()
         {
             string alias = "Lycj's SkyDrive"; //This is hardcoded currently, please changed to your username.
             if (_profileSkyDrive == null)
                 _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, alias);
-            var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };            
+            var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
                 RootModels.Add(selectedModel);

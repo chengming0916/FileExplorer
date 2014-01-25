@@ -50,8 +50,8 @@ namespace FileExplorer.ViewModels.Helpers
 
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
-            //using (var releaser = await loadingLock.LockAsync())
-            //{
+            using (var releaser = await loadingLock.LockAsync())
+            {
                 if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
                     if (!_isLoaded || force) //NotLoaded
                     {
@@ -67,7 +67,7 @@ namespace FileExplorer.ViewModels.Helpers
                         //if (EntriesChanged != null)
                         //    EntriesChanged(this, EventArgs.Empty);
                     }
-            //}
+            }
             return _subItemList;
         }
 
