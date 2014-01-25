@@ -57,7 +57,7 @@ namespace FileExplorer.ViewModels
             {
                 IDirectoryCommandModel directoryModel = CommandModel as IDirectoryCommandModel;
                 SubCommands = new EntriesHelper<ICommandViewModel>(
-                    () => Task.Run<IEnumerable<ICommandViewModel>>(
+                    (cts) => Task.Run<IEnumerable<ICommandViewModel>>(
                         () => directoryModel.SubCommands.Select(c => (ICommandViewModel)new CommandViewModel(c, this))));
                 SubCommands.LoadAsync(false);
             }

@@ -130,6 +130,7 @@
     <Compile Include="Utils\WebUtils.cs" />
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />
     <Compile Include="ViewModels\Helpers\DialogFilterViewModel.cs" />
     <Compile Include="ViewModels\FilePickerViewModel.cs" />

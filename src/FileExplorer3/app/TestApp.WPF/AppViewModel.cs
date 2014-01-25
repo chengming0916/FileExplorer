@@ -17,6 +17,7 @@ using System.Windows;
 using Cofe.Core.Utils;
 using System.Configuration;
 using System.IO;
+using System.Windows.Input;
 
 namespace TestApp.WPF
 {
@@ -85,11 +86,23 @@ namespace TestApp.WPF
             _explorer.FileList.ScriptCommands.Open =
               new IfFileListSelection(evm => evm.Count == 1,
                   new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                      new OpenSelectedDirectory(), //Selected directory                        
+                      OpenSelectedDirectory.FromFileList, //Selected directory                        
                       new AssignSelectionToParameterAsEntryModelArray(
                           new OpenWithScriptCommand(null))),  //Selected non-directory
                   ResultCommand.NoError //Selected more than one item, ignore.
                   );
+
+            _explorer.FileList.ToolbarCommands.ExtraCommandProviders = new[] { 
+                new StaticCommandProvider(
+                    new SelectGroupCommand( _explorer.FileList),    
+                    new ViewModeCommand( _explorer.FileList),
+                    new SeparatorCommandModel(),
+                    new CommandModel(FileListCommands.Refresh),
+                    new CommandModel(ApplicationCommands.Delete)
+                    
+                    )
+            };
+
 
             updateExplorerModel(initExplorerModel(_explorer));
             _windowManager.ShowWindow(_explorer);

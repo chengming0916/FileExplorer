@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.BaseControls;
 using FileExplorer.Models;
@@ -54,7 +55,10 @@ namespace FileExplorer.Models
 
             if (found != null)
             {
-                foreach (var item in await _profile.ListAsync(found, em => em.IsDirectory))
+                if (_cts != null)
+                    _cts.Cancel();
+                _cts = new CancellationTokenSource();
+                foreach (var item in await _profile.ListAsync(found, _cts.Token, em => em.IsDirectory))
                 {
                     if (item.FullPath.StartsWith(input, StringComparison.CurrentCultureIgnoreCase) &&
                         !item.FullPath.Equals(input, StringComparison.CurrentCultureIgnoreCase))
@@ -69,6 +73,8 @@ namespace FileExplorer.Models
 
         #region Data
         private IProfile _profile;
+        private CancellationTokenSource _cts;
+
 
         #endregion
 

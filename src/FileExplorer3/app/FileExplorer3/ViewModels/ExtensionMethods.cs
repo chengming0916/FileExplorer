@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Cinch;
+using Cofe.Core;
 using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels;
@@ -15,6 +16,12 @@ namespace FileExplorer
 {
     public static partial class ExtensionMethods
     {
+        public static Func<ParameterDic, IEntryModel[]> GetFileListSelectionFunc =
+            pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
+                (pd["FileList"] as IFileListViewModel).Selection.SelectedItems
+                .Select(evm => evm.EntryModel).ToArray()
+                : new IEntryModel[] { };
+
         //public static IEnumerable<IDirectoryNodeViewModel> GetHierarchy(
         //    this IDirectoryNodeViewModel node, bool includeCurrent)
         //{

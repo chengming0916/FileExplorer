@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Utils;
@@ -14,12 +15,17 @@ namespace FileExplorer.ViewModels.Helpers
     {
         #region Constructor
 
-        public EntriesHelper(Func<Task<IEnumerable<VM>>> loadSubEntryFunc)
+        public EntriesHelper(Func<bool, Task<IEnumerable<VM>>> loadSubEntryFunc)
         {
             _loadSubEntryFunc = loadSubEntryFunc;
 
             All = new FastObservableCollection<VM>();
             All.Add(default(VM));
+        }
+
+        public EntriesHelper(Func<Task<IEnumerable<VM>>> loadSubEntryFunc)
+            : this(_ => loadSubEntryFunc())
+        {            
         }
 
         public EntriesHelper(params VM[] entries)
@@ -44,14 +50,14 @@ namespace FileExplorer.ViewModels.Helpers
 
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
-            using (var releaser = await loadingLock.LockAsync())
-            {
+            //using (var releaser = await loadingLock.LockAsync())
+            //{
                 if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
                     if (!_isLoaded || force) //NotLoaded
                     {
                         if (_clearBeforeLoad)
                             All.Clear();
-                        await _loadSubEntryFunc().ContinueWith(prevTask =>
+                        await _loadSubEntryFunc(_isLoaded).ContinueWith(prevTask =>
                             {
                                 //bool uiThread = System.Threading.Thread.CurrentThread == System.Windows.Threading.Dispatcher.CurrentDispatcher.Thread;
                                 //(All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
@@ -61,7 +67,7 @@ namespace FileExplorer.ViewModels.Helpers
                         //if (EntriesChanged != null)
                         //    EntriesChanged(this, EventArgs.Empty);
                     }
-            }
+            //}
             return _subItemList;
         }
 
@@ -86,13 +92,14 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Data
 
+        private CancellationTokenSource _cts = new CancellationTokenSource();
         private bool _clearBeforeLoad = false;
         private readonly AsyncLock loadingLock = new AsyncLock();
         //private bool _isLoading = false;
         private bool _isLoaded = false;
         private bool _isExpanded = false;
         private IEnumerable<VM> _subItemList;
-        private Func<Task<IEnumerable<VM>>> _loadSubEntryFunc;
+        private Func<bool, Task<IEnumerable<VM>>> _loadSubEntryFunc;
         private ObservableCollection<VM> _subItems;
 
         #endregion

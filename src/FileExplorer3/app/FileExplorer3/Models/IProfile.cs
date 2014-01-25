@@ -14,6 +14,7 @@ using FileExplorer.BaseControls;
 using System.Windows;
 using FileExplorer.ViewModels.Helpers;
 using Cofe.Core.Script;
+using System.Threading;
 
 namespace FileExplorer.Models
 {
@@ -34,7 +35,7 @@ namespace FileExplorer.Models
         /// <returns></returns>
         Task<IEntryModel> ParseAsync(string path);
 
-        Task<IList<IEntryModel>> ListAsync(IEntryModel entry, Func<IEntryModel, bool> filter = null, bool refresh = false);
+        Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct , Func<IEntryModel, bool> filter = null, bool refresh = false);
 
         /// <summary>
         /// Return the sequence of icon is extracted and returned, EntryViewModel will run each extractor 

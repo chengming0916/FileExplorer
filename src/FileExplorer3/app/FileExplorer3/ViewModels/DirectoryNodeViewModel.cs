@@ -11,6 +11,7 @@ using FileExplorer.Models;
 using FileExplorer.ViewModels.Actions;
 using FileExplorer.ViewModels.Helpers;
 using System.Windows;
+using System.Threading;
 
 namespace FileExplorer.ViewModels
 {
@@ -91,10 +92,10 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        async Task<IEnumerable<IDirectoryNodeViewModel>> loadEntriesTask()
+        async Task<IEnumerable<IDirectoryNodeViewModel>> loadEntriesTask(bool refresh)
         {
             IEntryModel currentDir = Selection.Value;
-            var subDir = await currentDir.Profile.ListAsync(currentDir, em => em.IsDirectory);
+            var subDir = await currentDir.Profile.ListAsync(currentDir, CancellationToken.None, em => em.IsDirectory, refresh);
             return subDir.Select(s => CreateSubmodel(s));
         }
 

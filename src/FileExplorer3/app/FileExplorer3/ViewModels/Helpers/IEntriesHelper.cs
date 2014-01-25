@@ -37,13 +37,13 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         bool IsExpanded { get; set; }
 
-        event EventHandler EntriesChanged;
-
         /// <summary>
         /// Whether subentries loaded.
         /// </summary>
-        bool IsLoaded { get; }
+        bool IsLoaded { get; set; }
 
+        event EventHandler EntriesChanged;
+        
         IEnumerable<VM> AllNonBindable { get; }
 
         /// <summary>

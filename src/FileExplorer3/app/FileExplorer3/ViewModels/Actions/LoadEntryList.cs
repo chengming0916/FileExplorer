@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Models;
@@ -29,7 +30,7 @@ namespace FileExplorer.ViewModels
 
         public void Execute(ActionExecutionContext context)
         {
-            _parentModel.EntryModel.Profile.ListAsync(_parentModel.EntryModel, _filter).ContinueWithCheck(
+            _parentModel.EntryModel.Profile.ListAsync(_parentModel.EntryModel, CancellationToken.None,  _filter).ContinueWithCheck(
                 (prev) =>
                 {
                     if (prev.IsFaulted)

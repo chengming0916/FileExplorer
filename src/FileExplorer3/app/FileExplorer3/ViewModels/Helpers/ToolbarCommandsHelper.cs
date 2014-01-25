@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -25,15 +26,16 @@ namespace FileExplorer.ViewModels.Helpers
         IEntryModel[] AppliedModels { get; }
         IEntriesHelper<ICommandViewModel> CommandModels { get; }
 
+        ICommandProvider[] ExtraCommandProviders { get; set; }
     }
 
     public class ToolbarCommandsHelper : NotifyPropertyChanged, IToolbarCommandsHelper
     {
         #region Constructor
 
-        public ToolbarCommandsHelper(IProfile[] rootProfiles, params ICommandModel[] extraCommands)
+        public ToolbarCommandsHelper(IProfile[] rootProfiles, params ICommandProvider[] extraCommandProviders)
         {
-            _extraCommands = extraCommands;
+            _extraCommandProviders = extraCommandProviders;
             _rootProfiles = rootProfiles;
             CommandModels = new EntriesHelper<ICommandViewModel>(loadCommandsTask);
         }
@@ -48,17 +50,24 @@ namespace FileExplorer.ViewModels.Helpers
 
             switch (propertyName)
             {
+                case "ExtraCommandProviders":
                 case "AppliedModels":
-                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(false));
-                    foreach (var commandVM in CommandModels.AllNonBindable)
-                        commandVM.CommandModel.NotifySelectionChanged(AppliedModels);
+                    if (propertyName == "ExtraCommandProviders")
+                        CommandModels.IsLoaded = false; //Reset CommandModels
+                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(true));
+                    if (AppliedModels != null)
+                        foreach (var commandVM in CommandModels.AllNonBindable)
+                            commandVM.CommandModel.NotifySelectionChanged(AppliedModels);
                     break;
             }
         }
 
-        async Task<IEnumerable<ICommandViewModel>> loadCommandsTask()
-        {
-            List<ICommandModel> cmList = new List<ICommandModel>(_extraCommands) { };
+        async Task<IEnumerable<ICommandViewModel>> loadCommandsTask(bool refresh)
+        {            
+            List<ICommandModel> cmList = new List<ICommandModel>() { };
+
+            foreach (var cp in _extraCommandProviders)
+                cmList.AddRange(cp.GetCommandModels());
 
             foreach (var cp in _rootProfiles.SelectMany(p => p.CommandProviders))
                 cmList.AddRange(cp.GetCommandModels());
@@ -73,7 +82,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         IEntryModel[] _appliedModels = null;
         IProfile[] _rootProfiles = null;
-        private ICommandModel[] _extraCommands;
+        private ICommandProvider[] _extraCommandProviders;
         protected List<IScriptCommandBinding> _exportedCommandBindings = new List<IScriptCommandBinding>();
 
         #endregion
@@ -81,6 +90,12 @@ namespace FileExplorer.ViewModels.Helpers
         #region Public Properties
 
         public IProfile[] RootProfiles { set { _rootProfiles = value; } }
+
+        public ICommandProvider[] ExtraCommandProviders
+        {
+            get { return _extraCommandProviders; }
+            set { _extraCommandProviders = value; NotifyOfPropertyChanged(() => ExtraCommandProviders); }
+        }
 
         public IEntryModel[] AppliedModels
         {
