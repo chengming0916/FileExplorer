@@ -29,14 +29,14 @@ namespace FileExplorer.Models
         }
 
         public CommandModel()
-        {            
+        {
         }
 
 
         #endregion
 
         #region Methods
-       
+
         public int CompareTo(object obj)
         {
             if (obj is ICommandModel)
@@ -52,7 +52,7 @@ namespace FileExplorer.Models
         }
 
         public virtual void NotifySelectionChanged(IEntryModel[] appliedModels)
-        {            
+        {
         }
 
         #endregion
@@ -66,11 +66,12 @@ namespace FileExplorer.Models
         private System.Drawing.Bitmap _headerIcon;
         private Func<ICommandModel, System.Windows.Media.ImageSource> _headerImageFunc;
         private string _toolTip;
-        
+
         private string _header;
         private int _priority;
-        private bool _isChecked, _isEnabled, _isHeaderVisible = true, _isHeaderAlignRight;        
-        private object _parameter;        
+        private bool _isChecked, _isEnabled, _isHeaderVisible = true, _isHeaderAlignRight;
+        private object _parameter;
+        private bool _isVisibleOnToolbar = true, _isVisibleOnMenu = true;
 
         #endregion
 
@@ -81,14 +82,20 @@ namespace FileExplorer.Models
         //Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
         public char? Symbol { get { return _symbol; } set { _symbol = value; NotifyOfPropertyChange(() => Symbol); } }
         public System.Drawing.Bitmap HeaderIcon { get { return _headerIcon; } set { _headerIcon = value; NotifyOfPropertyChange(() => HeaderIcon); } }
-        public Func<ICommandModel, System.Windows.Media.ImageSource> HeaderImageFunc { 
-            get { return _headerImageFunc; } set { _headerImageFunc = value; NotifyOfPropertyChange(() => HeaderImageFunc); } }
+        public Func<ICommandModel, System.Windows.Media.ImageSource> HeaderImageFunc
+        {
+            get { return _headerImageFunc; }
+            set { _headerImageFunc = value; NotifyOfPropertyChange(() => HeaderImageFunc); }
+        }
         public string ToolTip { get { return _toolTip; } set { _toolTip = value; NotifyOfPropertyChange(() => ToolTip); } }
         public string Header { get { return _header; } set { _header = value; NotifyOfPropertyChange(() => Header); } }
         public bool IsHeaderVisible { get { return _isHeaderVisible; } set { _isHeaderVisible = value; NotifyOfPropertyChange(() => IsHeaderVisible); } }
         public bool IsHeaderAlignRight { get { return _isHeaderAlignRight; } set { _isHeaderAlignRight = value; NotifyOfPropertyChange(() => IsHeaderAlignRight); } }
-         public bool IsChecked { get { return _isChecked; } set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); } }
-         public bool IsEnabled { get { return _isEnabled; } set { _isEnabled = value; NotifyOfPropertyChange(() => IsEnabled); } }
+        public bool IsChecked { get { return _isChecked; } set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); } }
+        public bool IsEnabled { get { return _isEnabled; } set { _isEnabled = value; NotifyOfPropertyChange(() => IsEnabled); } }
+
+        public bool IsVisibleOnToolbar { get { return _isVisibleOnToolbar; } set { _isVisibleOnToolbar = value; NotifyOfPropertyChange(() => IsVisibleOnToolbar); } }
+        public bool IsVisibleOnMenu { get { return _isVisibleOnMenu; } set { _isVisibleOnMenu = value; NotifyOfPropertyChange(() => IsVisibleOnMenu); } }
 
         public int Priority { get { return _priority; } set { _priority = value; NotifyOfPropertyChange(() => Priority); } }
 

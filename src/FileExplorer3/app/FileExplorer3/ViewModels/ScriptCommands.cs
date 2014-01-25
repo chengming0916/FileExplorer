@@ -17,8 +17,65 @@ using FileExplorer.Utils;
 namespace FileExplorer.ViewModels
 {
 
+    #region MessageBox
 
-   
+    /// <summary>
+    /// If user clicked Ok, do first command, otherwise do second command.
+    /// </summary>
+    public class IfOkCancel : IfScriptCommand
+    {
+        private IScriptCommand _okCommand;
+        private IScriptCommand _cancelCommand;
+        public IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
+            Func<ParameterDic, string> messageFunc, IScriptCommand okCommand,
+            IScriptCommand cancelCommand)
+            : base(
+                   pd =>
+                   {
+                       var mdv = new MessageDialogViewModel(captionFunc(pd), messageFunc(pd),
+                           MessageDialogViewModel.DialogButtons.Cancel | MessageDialogViewModel.DialogButtons.OK);
+                       if (wm.ShowDialog(mdv).Value)
+                           return mdv.SelectedButton == MessageDialogViewModel.DialogButtons.OK;
+                       return false;
+                   },
+                    okCommand, cancelCommand)
+        {
+            _okCommand = okCommand;
+            _cancelCommand = cancelCommand;
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            return _okCommand.CanExecute(pm);
+        }
+    }
+
+    public class ShowMessageBox : ScriptCommandBase
+    {
+        private IWindowManager _wm;
+        private string _caption;
+        private string _message;
+        public ShowMessageBox(IWindowManager wm, string caption, string message)
+            : base("ShowMessageBox")
+        {
+            _wm = wm;
+            _caption = caption;
+            _message = message;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var mdv = new MessageDialogViewModel(_caption, _message,
+                                 MessageDialogViewModel.DialogButtons.OK);
+            _wm.ShowDialog(mdv);
+            return ResultCommand.NoError;
+        }
+    }
+
+    #endregion
+
+
+    #region FileList based.
 
     /// <summary>
     /// If Condition for the file list is true, then do the first command, otherwise do the second command.
@@ -114,8 +171,8 @@ namespace FileExplorer.ViewModels
         }
 
         public override bool CanExecute(ParameterDic pm)
-        {            
-            var selectedItems =_getSelectionFunc(pm);
+        {
+            var selectedItems = _getSelectionFunc(pm);
             return selectedItems.Length == 1 && selectedItems[0].IsDirectory;
         }
 
@@ -125,7 +182,7 @@ namespace FileExplorer.ViewModels
 
             IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
             IEventAggregator events = pm["Events"] as IEventAggregator;
-            
+
             events.Publish(new DirectoryChangedEvent(flvm,
                    selectedItem, flvm.CurrentDirectory));
 
@@ -133,4 +190,5 @@ namespace FileExplorer.ViewModels
         }
     }
 
+    #endregion
 }

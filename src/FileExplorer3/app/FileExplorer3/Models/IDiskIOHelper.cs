@@ -13,7 +13,7 @@ namespace FileExplorer.Models
         IDiskProfile Profile { get; }
 
         Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access);
-        Task DeleteAsync(string fullPath);
+        Task DeleteAsync(IEntryModel entryModel);
         Task RenameAsync(string fullPath, string newName);
         Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory);
 
@@ -36,7 +36,7 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
-        public virtual Task DeleteAsync(string fullPath)
+        public virtual Task DeleteAsync(IEntryModel entryModel)
         {
             throw new NotImplementedException();
         }
@@ -58,6 +58,13 @@ namespace FileExplorer.Models
             : base(profile)
         {
 
+        }
+
+        public override async Task DeleteAsync(IEntryModel entryModel)
+        {
+            if (entryModel.IsDirectory)
+                Directory.Delete(entryModel.FullPath, true);
+            else File.Delete(entryModel.FullPath);
         }
 
         public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access)

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using FileExplorer.BaseControls;
 
 namespace Cofe.Core.Script
-{        
+{
     public class ScriptRunner : IScriptRunner
     {
-        public void Run(Queue<IScriptCommand> cmds, ParameterDic initialParameters) 
+        public void Run(Queue<IScriptCommand> cmds, ParameterDic initialParameters)
         {
             ParameterDic pd = initialParameters;
 
@@ -23,7 +23,9 @@ namespace Cofe.Core.Script
                     if (retCmd != null)
                         cmds.Enqueue(retCmd);
                 }
-                else throw new Exception(String.Format("Cannot execute {0}", current));
+                else
+                    if (!(current is NullScriptCommand))
+                        throw new Exception(String.Format("Cannot execute {0}", current));
             }
         }
 
@@ -48,6 +50,6 @@ namespace Cofe.Core.Script
                 else throw new Exception(String.Format("Cannot execute {0}", current));
             }
         }
-       
+
     }
 }

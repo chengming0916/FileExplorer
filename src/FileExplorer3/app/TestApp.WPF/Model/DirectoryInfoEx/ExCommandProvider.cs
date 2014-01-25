@@ -27,7 +27,7 @@ namespace FileExplorer.Models
         {
             return new List<ICommandModel>()
                     {                        
-                        new OpenWithCommandEx(_profile)
+                        new OpenWithCommandEx(_profile) { IsVisibleOnMenu = false }
                     };
         }
     }

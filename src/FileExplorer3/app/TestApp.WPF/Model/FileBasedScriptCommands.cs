@@ -17,22 +17,37 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer.Models
 {
+    public static class FileBasedScriptCommandsHelper
+    {
+        /// <summary>
+        /// Return pd["Parameter"] as IEntryModel[]
+        /// </summary>
+        /// <param name="pd"></param>
+        /// <returns></returns>
+        public static IEntryModel[] GetEntryModelFromParameter(ParameterDic pd)
+        {
+            return pd["Parameter"] as IEntryModel[];
+        }
+    }
+
+
     /// <summary>
     /// These Commands require IDIskProfile.
-    /// </summary>
-
+    /// </summary>    
     public class OpenWithScriptCommand : ScriptCommandBase
     {
+        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;     
         OpenWithInfo _info;
 
         /// <summary>
         /// Launch a file (e.g. txt) using the OpenWithInfo, if null then default method will be used, Require Parameter (IEntryModel[])
         /// </summary>
         /// <param name="info"></param>
-        public OpenWithScriptCommand(OpenWithInfo info = null)
+        public OpenWithScriptCommand(OpenWithInfo info = null, Func<ParameterDic, IEntryModel[]> srcModelFunc = null)
             : base("OpenWith")
         {
             _info = info;
+            _srcModelFunc = srcModelFunc ?? FileBasedScriptCommandsHelper.GetEntryModelFromParameter;
         }
 
         public override bool CanExecute(ParameterDic pm)
@@ -42,7 +57,7 @@ namespace FileExplorer.Models
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            var parameter = pm["Parameter"] as IEntryModel[];
+            var parameter = _srcModelFunc(pm);
             if (parameter != null && parameter.Count() == 1)
             {
                 bool _isFolder = parameter[0].IsDirectory;
@@ -89,7 +104,41 @@ namespace FileExplorer.Models
             }
             else return ResultCommand.Error(new Exception("Wrong Parameter type or more than one item."));
         }
+    }    
+
+    public class DeleteFileBasedEntryCommand : ScriptCommandBase
+    {
+        public static DeleteFileBasedEntryCommand FromParameter = new DeleteFileBasedEntryCommand(FileBasedScriptCommandsHelper.GetEntryModelFromParameter);
+
+        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;        
+        private string _path;
+        public DeleteFileBasedEntryCommand(Func<ParameterDic, IEntryModel[]> srcModelFunc)
+            : base("Delete")
+        {
+            _srcModelFunc = srcModelFunc;
+        }
+        
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            var _srcModels = _srcModelFunc(pm);
+
+            if (_srcModels != null)
+            {
+                Task[] tasks = _srcModels.Select(m => 
+                    (m.Profile as IDiskProfile).DiskIO.DeleteAsync(m)                    
+                    ).ToArray();
+                await Task.WhenAll(tasks);
+
+                return new RunInSequenceScriptCommand(
+                    _srcModels.Select(m => new NotifyChangedCommand(m.Profile, m.FullPath, ChangeType.Deleted))
+                    .ToArray());
+            }
+
+            return ResultCommand.NoError;
+        }
     }
+
 
 
 
@@ -132,46 +181,13 @@ namespace FileExplorer.Models
                 await StreamUtils.CopyStreamAsync(srcStream, destStream);
 
             if (_removeOriginal)
-                await srcProfile.DiskIO.DeleteAsync(_srcModel.FullPath);
+                await srcProfile.DiskIO.DeleteAsync(_srcModel);
 
             return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
         }
 
     }
-
-    public class DeleteEntryCommand : ScriptCommandBase
-    {
-        private IEntryModel _srcModel;
-        private IDiskProfile _profile;
-        private string _path;
-        public DeleteEntryCommand(IEntryModel srcModel)
-            : base("Delete")
-        {
-            if (srcModel.Profile is IDiskProfile)
-                _srcModel = srcModel;
-            else throw new ArgumentException("Support IDiskProfile only.");
-        }
-
-        public DeleteEntryCommand(IDiskProfile profile, string path)
-            : base("Delete")
-        {
-            _profile = profile;
-            _path = path;
-        }
-
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {
-            if (_srcModel == null)
-                _srcModel = await _profile.ParseAsync(_path);
-
-            if (_srcModel != null)
-                await (_srcModel.Profile as IDiskProfile).DiskIO.DeleteAsync(_srcModel.FullPath);
-            else return ResultCommand.Error(new FileNotFoundException(_path));
-
-            return ResultCommand.NoError;
-        }
-    }
-
+   
     public class CopyDirectoryTransferCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;

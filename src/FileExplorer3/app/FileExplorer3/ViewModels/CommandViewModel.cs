@@ -48,6 +48,12 @@ namespace FileExplorer.ViewModels
                             SubCommands.LoadAsync(true);
                             RefreshIcon();
                             break;
+                        case "IsEnabled" :
+                        case "IsVisibleOnMenu":
+                        case "IsVisibleOnToolbar":
+                            NotifyOfPropertyChange(() => IsVisibleOnMenu);
+                            NotifyOfPropertyChange(() => IsVisibleOnToolbar);
+                            break;
                     }
                 };
 
@@ -171,6 +177,9 @@ namespace FileExplorer.ViewModels
                     CommandType != ToolbarItemType.Separator;
             }
         }
+
+        public bool IsVisibleOnMenu { get { return _commandModel.IsEnabled && _commandModel.IsVisibleOnMenu; } }
+        public bool IsVisibleOnToolbar { get { return _commandModel.IsEnabled && _commandModel.IsVisibleOnToolbar; } }
 
         #endregion
 

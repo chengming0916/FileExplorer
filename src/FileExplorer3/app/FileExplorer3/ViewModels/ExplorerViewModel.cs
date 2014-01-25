@@ -15,8 +15,8 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public class ExplorerViewModel : Screen, IExplorerViewModel, 
-        IHandle<DirectoryChangedEvent>, 
+    public class ExplorerViewModel : Screen, IExplorerViewModel,
+        IHandle<DirectoryChangedEvent>,
         IHandle<EntryChangedEvent>
     {
         #region Cosntructor
@@ -26,7 +26,7 @@ namespace FileExplorer.ViewModels
             _events = events;
             _rootModels = rootModels;
             _windowManager = windowManager;
-            
+
 
             //Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents);
@@ -35,7 +35,7 @@ namespace FileExplorer.ViewModels
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
 
-            
+
 
             setRootModels(_rootModels);
 
@@ -76,7 +76,7 @@ namespace FileExplorer.ViewModels
             }
         }
 
-      
+
         public void ChangeView(string viewMode)
         {
             FileList.ViewMode = viewMode;
@@ -85,28 +85,47 @@ namespace FileExplorer.ViewModels
         private void setRootModels(IEntryModel[] rootModels)
         {
             _rootModels = rootModels;
-             _rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
+            _rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
 
-             Breadcrumb.Profiles = _rootProfiles; Breadcrumb.RootModels = rootModels;
-             DirectoryTree.Profiles = _rootProfiles; DirectoryTree.RootModels = rootModels;
-             FileList.Profiles = _rootProfiles;
+            Breadcrumb.Profiles = _rootProfiles; Breadcrumb.RootModels = rootModels;
+            DirectoryTree.Profiles = _rootProfiles; DirectoryTree.RootModels = rootModels;
+            FileList.Profiles = _rootProfiles;
         }
 
         public async Task BroascastAsync(EntryChangedEvent message)
         {
-            IEntryModel affectedEntry = await _rootProfiles.ParseAsync(message.ParseName);
-            if (affectedEntry != null)
+            switch (message.ChangeType)
             {
-                await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
-                await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
-                if (FileList.CurrentDirectory.Equals(affectedEntry) || FileList.CurrentDirectory.Equals(affectedEntry.Parent))
-                    await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                case ChangeType.Deleted:
+                    string path = message.ParseName.Contains('\\') ?
+                        PathHelper.Disk.GetDirectoryName(message.ParseName) :
+                        PathHelper.Web.GetDirectoryName(message.ParseName);
+
+                    IEntryModel affectedParentEntry = await _rootProfiles.ParseAsync(path);
+
+                    await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedParentEntry);
+                    await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedParentEntry);
+                    if (FileList.CurrentDirectory.Equals(affectedParentEntry))
+                        await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                    break;
+                default:
+                    IEntryModel affectedEntry = await _rootProfiles.ParseAsync(message.ParseName);
+                    if (affectedEntry != null)
+                    {
+                        await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
+                        await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
+                        if (FileList.CurrentDirectory.Equals(affectedEntry) || FileList.CurrentDirectory.Equals(affectedEntry.Parent))
+                            await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                    }
+                    break;
             }
+
+
         }
 
         public void Handle(DirectoryChangedEvent message)
         {
-            this.DisplayName =  message.NewModel.Label;
+            this.DisplayName = message.NewModel.Label;
         }
 
         public void Handle(EntryChangedEvent message)
@@ -117,18 +136,18 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Data
-        
+
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();
         private IWindowManager _windowManager = new WindowManager();
-        private IProfile[] _rootProfiles = new IProfile[] {};
+        private IProfile[] _rootProfiles = new IProfile[] { };
 
         #endregion
 
         #region Public Properties
 
-        public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }             
+        public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 
         public IBreadcrumbViewModel Breadcrumb { get; private set; }
         public IDirectoryTreeViewModel DirectoryTree { get; private set; }
@@ -137,10 +156,10 @@ namespace FileExplorer.ViewModels
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
 
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }
 
         #endregion
 
-       
+
     }
 }

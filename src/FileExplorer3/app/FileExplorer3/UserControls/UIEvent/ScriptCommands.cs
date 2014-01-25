@@ -41,15 +41,19 @@ namespace FileExplorer.BaseControls
             return _otherwiseCommand;
         }
 
-        public bool CanExecute(ParameterDic pm)
+        public virtual bool CanExecute(ParameterDic pm)
         {
-            return true;
+            if (_condition(pm))
+                return _ifTrueCommand.CanExecute(pm);
+            else return _otherwiseCommand.CanExecute(pm);            
         }
 
 
         public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            return Execute(pm);
+            if (_condition(pm))
+                return _ifTrueCommand;
+            return _otherwiseCommand;
         }
     }    
 

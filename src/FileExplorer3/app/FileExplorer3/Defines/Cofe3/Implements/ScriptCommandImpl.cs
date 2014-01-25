@@ -15,7 +15,8 @@ namespace Cofe.Core.Script
         /// <summary>
         /// Represent no error and does not mark IsHandled.
         /// </summary>
-        public static ResultCommand NoError = new ResultCommand(null, false);
+        public static ResultCommand NoError = new ResultCommand(null, false);        
+
         /// <summary>
         /// Represent there's an error.
         /// </summary>
@@ -45,6 +46,9 @@ namespace Cofe.Core.Script
     /// </summary>
     public class NullScriptCommand : IScriptCommand
     {
+
+        public static NullScriptCommand Instance = new NullScriptCommand();
+
         public string CommandKey { get { return "Null"; } }        
         public IScriptCommand Execute(ParameterDic pm)
         {
