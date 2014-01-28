@@ -81,8 +81,8 @@ namespace FileExplorer.Models
                 result = await liveClient.UploadAsync(uid,
                     skyModel.Name, stream, OverwriteOption.Overwrite, cts.Token, progressHandler);
 
-                stream._profile.NotifyEntryChanges(skyModel.FullPath,
-                skyModel.SourceUrl == null ? Defines.ChangeType.Created : Defines.ChangeType.Changed);
+                //stream._profile.NotifyEntryChanges(skyModel.FullPath,
+                //skyModel.SourceUrl == null ? Defines.ChangeType.Created : Defines.ChangeType.Changed);
                 skyModel.init(stream._profile, skyModel.FullPath, result.Result);    
             }
             catch (Exception ex)

@@ -37,6 +37,16 @@ namespace FileExplorer.Models
             throw new NotSupportedException();
         }
 
+        public override async Task DeleteAsync(IEntryModel[] entryModels)
+        {
+            await _profile.checkLoginAsync();
+            LiveConnectClient liveClient = new LiveConnectClient(_profile.Session);
+            foreach (var entryModel in entryModels)
+            {
+                LiveOperationResult result = await liveClient.DeleteAsync((entryModel as SkyDriveItemModel).UniqueId);                
+            }
+
+        }
 
         public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory)
         {
