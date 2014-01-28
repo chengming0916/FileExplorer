@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -94,30 +95,37 @@ namespace FileExplorer.ViewModels
 
         public async Task BroascastAsync(EntryChangedEvent message)
         {
-            switch (message.ChangeType)
+            try
             {
-                case ChangeType.Deleted:
-                    string path = message.ParseName.Contains('\\') ?
-                        PathHelper.Disk.GetDirectoryName(message.ParseName) :
-                        PathHelper.Web.GetDirectoryName(message.ParseName);
+                switch (message.ChangeType)
+                {
+                    case ChangeType.Deleted:
+                        string path = message.ParseName.Contains('\\') ?
+                            PathHelper.Disk.GetDirectoryName(message.ParseName) :
+                            PathHelper.Web.GetDirectoryName(message.ParseName);
 
-                    IEntryModel affectedParentEntry = await _rootProfiles.ParseAsync(path);
+                        IEntryModel affectedParentEntry = await _rootProfiles.ParseAsync(path);
 
-                    await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedParentEntry);
-                    await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedParentEntry);
-                    if (FileList.CurrentDirectory.Equals(affectedParentEntry))
-                        await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
-                    break;
-                default:
-                    IEntryModel affectedEntry = await _rootProfiles.ParseAsync(message.ParseName);
-                    if (affectedEntry != null)
-                    {
-                        await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
-                        await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
-                        if (FileList.CurrentDirectory.Equals(affectedEntry) || FileList.CurrentDirectory.Equals(affectedEntry.Parent))
+                        await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedParentEntry);
+                        await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedParentEntry);
+                        if (FileList.CurrentDirectory.Equals(affectedParentEntry))
                             await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
-                    }
-                    break;
+                        break;                   
+                    default:
+                        IEntryModel affectedEntry = await _rootProfiles.ParseAsync(message.ParseName);
+                        if (affectedEntry != null)
+                        {
+                            await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
+                            await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedEntry.Parent);
+                            if (FileList.CurrentDirectory.Equals(affectedEntry) || FileList.CurrentDirectory.Equals(affectedEntry.Parent))
+                                await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
 
 

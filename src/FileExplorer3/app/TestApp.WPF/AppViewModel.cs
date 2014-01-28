@@ -106,6 +106,8 @@ namespace TestApp.WPF
 
             _explorer.FileList.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
+                    new CommandModel(ApplicationCommands.Open) { IsVisibleOnToolbar = false },
+                    new SeparatorCommandModel(),
                     new SelectGroupCommand( _explorer.FileList),    
                     new ViewModeCommand( _explorer.FileList),
                     new SeparatorCommandModel(),

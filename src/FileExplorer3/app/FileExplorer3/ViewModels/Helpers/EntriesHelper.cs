@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public EntriesHelper(Func<Task<IEnumerable<VM>>> loadSubEntryFunc)
             : this(_ => loadSubEntryFunc())
-        {            
+        {
         }
 
         public EntriesHelper(params VM[] entries)
@@ -41,33 +41,26 @@ namespace FileExplorer.ViewModels.Helpers
         #endregion
 
         #region Methods
-
-        //public async Task<IEnumerable<VM>> LoadAsync(Func<Task<IEnumerable<VM>>> loadFunc)
-        //{
-        //    _loadSubEntryFunc = loadFunc;
-        //    return await LoadAsync(true);
-        //}
-
+   
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
-            using (var releaser = await loadingLock.LockAsync())
-            {
-                if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
-                    if (!_isLoaded || force) //NotLoaded
+            if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
+                    using (var releaser = await loadingLock.LockAsync())
                     {
-                        if (_clearBeforeLoad)
-                            All.Clear();
-                        await _loadSubEntryFunc(_isLoaded).ContinueWith(prevTask =>
-                            {
-                                //bool uiThread = System.Threading.Thread.CurrentThread == System.Windows.Threading.Dispatcher.CurrentDispatcher.Thread;
-                                //(All as FastObservableCollection<VM>).AddItems(_subItemList.ToList());
-                                SetEntries(prevTask.Result.ToArray());
-                                _isLoaded = true;
-                            }, TaskScheduler.FromCurrentSynchronizationContext());
-                        //if (EntriesChanged != null)
-                        //    EntriesChanged(this, EventArgs.Empty);
+                        if (!_isLoaded || force)
+                        {
+                            if (_clearBeforeLoad)
+                                All.Clear();
+                            await _loadSubEntryFunc(_isLoaded).ContinueWith(prevTask =>
+                                {
+                                    if (!prevTask.IsFaulted)
+                                    {
+                                        SetEntries(prevTask.Result.ToArray());
+                                        _isLoaded = true;
+                                    }
+                                }, TaskScheduler.FromCurrentSynchronizationContext());
+                        }
                     }
-            }
             return _subItemList;
         }
 

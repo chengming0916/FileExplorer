@@ -128,10 +128,10 @@ namespace FileExplorer.Models
                 if (effect == DragDropEffects.None)
                     return DragDropEffects.None;
 
-                var sr = new ScriptRunner();
-                var scriptToRun = new Queue<IScriptCommand>( 
-                    entries.Select(e => new FileTransferScriptCommand(e, destDir, effect == DragDropEffects.Move)));
-                sr.Run(scriptToRun, new ParameterDic());
+                var sr = new ScriptRunner();                
+                sr.RunAsync(new ParameterDic(),
+                    entries.Select(e => 
+                        new FileTransferScriptCommand(e, destDir, effect == DragDropEffects.Move)).ToArray());
                 return effect;                
             };
             return DragDropEffects.None;
