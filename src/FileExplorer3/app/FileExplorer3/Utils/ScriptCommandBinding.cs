@@ -101,7 +101,7 @@ namespace FileExplorer.Utils
             {
                 CanExecuteDelegate = (p) => 
                     ScriptCommand.CanExecute(ParameterDicConverter.Convert(p)),
-                ExecuteDelegate = (p) => ScriptRunnerSources.Default.GetScriptRunner().Run(
+                ExecuteDelegate = (p) => ScriptRunnerSources.Default.GetScriptRunner().RunAsync(
                     new Queue<IScriptCommand>(new[] { ScriptCommand }), ParameterDicConverter.Convert(p))
             };
         }

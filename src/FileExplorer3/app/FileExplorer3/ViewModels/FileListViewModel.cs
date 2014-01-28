@@ -66,7 +66,7 @@ namespace FileExplorer.ViewModels
         public FileListViewModel(IEventAggregator events)
         {
             Events = events;
-            var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask) { ClearBeforeLoad = true };
+            var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask) { ClearBeforeLoad = false };
             ProcessedEntries = new EntriesProcessor<IEntryViewModel>(entryHelper);
             Columns = new ColumnsHelper(ProcessedEntries,
                 (col, direction) =>
