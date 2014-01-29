@@ -61,6 +61,16 @@ namespace FileExplorer.Models
 
         }
 
+        public override async Task<IEntryModel> RenameAsync(string fullPath, string newName)
+        {
+            string destPath = Path.Combine( Path.GetDirectoryName(fullPath), newName);
+            if (File.Exists(fullPath))
+                File.Move(fullPath, destPath);
+            else if (Directory.Exists(fullPath))
+                Directory.Move(fullPath, destPath);
+            return await Profile.ParseAsync(destPath);
+        }
+
         public override async Task DeleteAsync(IEntryModel[] entryModels)
         {
             foreach (var entryModel in entryModels)

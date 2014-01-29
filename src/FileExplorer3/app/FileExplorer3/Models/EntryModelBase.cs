@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Cofe.Core;
+using Cofe.Core.Script;
 using Cofe.Core.Utils;
 
 namespace FileExplorer.Models
@@ -59,7 +61,8 @@ namespace FileExplorer.Models
         public IProfile Profile { get; protected set; }
         public bool IsDirectory { get; protected set; }
         public IEntryModel Parent { get { return _parent != null ? _parent  : _parent = _parentFunc(); } }
-        public string Name { get { return _name; } set { string org = _name; _name = value; OnRenamed(org, _name); } }
+        public string Name { get { return _name; } set { string org = _name; _name = value;
+            if (org != null) OnRenamed(org, _name); } }
         public string Label { get; protected set; }
         public bool IsRenamable { get { return _isRenamable; } set { _isRenamable = value; NotifyOfPropertyChange(() => IsRenamable); } }
         public string Description { get; protected set; }
@@ -83,9 +86,8 @@ namespace FileExplorer.Models
 
         protected override void OnRenamed(string orgName, string newName)
         {            
-
-            string dirName = this.Profile.Path.GetDirectoryName(this.FullPath);
-            DiskProfile.DiskIO.RenameAsync(this.FullPath, newName); 
+            //string dirName = this.Profile.Path.GetDirectoryName(this.FullPath);
+            new ScriptRunner().RunAsync(new ParameterDic(), this.Rename(newName));            
             //Then DiskIO raise NotifyChange, and refresh the ExplorerViewModel.
         }
 

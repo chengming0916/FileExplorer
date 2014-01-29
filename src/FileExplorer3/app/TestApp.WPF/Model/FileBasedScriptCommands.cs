@@ -111,37 +111,7 @@ namespace FileExplorer.Models
         }
     }
 
-    public class RenameFileBasedEntryCommand : ScriptCommandBase
-    {
-        public static RenameFileBasedEntryCommand FromParameter = new RenameFileBasedEntryCommand(
-            FileBasedScriptCommandsHelper.GetFirstEntryModelFromParameter);
-
-
-        private Func<ParameterDic, IEntryModel> _srcModelFunc;
-
-        public RenameFileBasedEntryCommand(Func<ParameterDic, IEntryModel> srcModelFunc)
-            : base("Rename", "NewName")
-        {
-            _srcModelFunc = srcModelFunc;            
-        }
-
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {
-            string newName = pm["NewName"] as string;
-            if (String.IsNullOrEmpty(newName))
-                return ResultCommand.Error(new ArgumentException("NewName"));
-            var srcModel = _srcModelFunc(pm);
-            if (srcModel == null)
-                return ResultCommand.Error(new ArgumentException());
-
-            IDiskProfile profile = srcModel.Profile as IDiskProfile;
-            if (profile == null)
-                return ResultCommand.Error(new ArgumentException());
-
-            IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel.FullPath, newName);
-            return new NotifyChangedCommand(destModel.Profile, destModel.FullPath, ChangeType.Moved, srcModel.FullPath);
-        }
-    }
+    
 
     public class DeleteFileBasedEntryCommand : ScriptCommandBase
     {

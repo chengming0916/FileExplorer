@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Cinch;
 using Cofe.Core;
+using Cofe.Core.Script;
 using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels;
@@ -66,6 +67,11 @@ namespace FileExplorer
                     if (binding != null)
                         ele.CommandBindings.Add(binding);
                 }
+        }
+
+        public static IScriptCommand Rename(this IEntryModel entryModel, string newName)
+        {
+            return new RenameFileBasedEntryCommand(pm => entryModel, newName);
         }
 
     }
