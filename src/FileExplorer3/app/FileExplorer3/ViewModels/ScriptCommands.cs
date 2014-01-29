@@ -264,7 +264,7 @@ namespace FileExplorer.ViewModels
             if (profile == null)
                 return ResultCommand.Error(new ArgumentException());
 
-            IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel.FullPath, newName);
+            IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel, newName);
             return new NotifyChangedCommand(destModel.Profile, destModel.FullPath, ChangeType.Moved, srcModel.FullPath);
         }
     }

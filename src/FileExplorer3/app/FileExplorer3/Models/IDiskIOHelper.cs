@@ -14,7 +14,7 @@ namespace FileExplorer.Models
 
         Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access);
         Task DeleteAsync(params IEntryModel[] entryModels);
-        Task<IEntryModel> RenameAsync(string fullPath, string newName);
+        Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName);
         Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory);
 
     }
@@ -41,7 +41,7 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
-        public virtual Task<IEntryModel> RenameAsync(string fullPath, string newName)
+        public virtual Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName)
         {
             throw new NotImplementedException();
         }
@@ -61,13 +61,13 @@ namespace FileExplorer.Models
 
         }
 
-        public override async Task<IEntryModel> RenameAsync(string fullPath, string newName)
+        public override async Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName)
         {
-            string destPath = Path.Combine( Path.GetDirectoryName(fullPath), newName);
-            if (File.Exists(fullPath))
-                File.Move(fullPath, destPath);
-            else if (Directory.Exists(fullPath))
-                Directory.Move(fullPath, destPath);
+            string destPath = Path.Combine( Path.GetDirectoryName(entryModel.FullPath), newName);
+            if (!entryModel.IsDirectory)
+                File.Move(entryModel.FullPath, destPath);
+            else if (Directory.Exists(entryModel.FullPath))
+                Directory.Move(entryModel.FullPath, destPath);
             return await Profile.ParseAsync(destPath);
         }
 
