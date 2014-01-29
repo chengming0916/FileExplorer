@@ -84,19 +84,19 @@ namespace TestApp.WPF
             _explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
 
             _explorer.FileList.ScriptCommands.Open =
-              new IfFileListSelection(evm => evm.Count == 1,
-                  new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                      OpenSelectedDirectory.FromFileList, //Selected directory                        
-                      new AssignSelectionToParameterAsEntryModelArray(
+              FileList.IfSelection(evm => evm.Count() == 1,
+                  FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
+                      FileList.OpenSelectedDirectory, //Selected directory                        
+                      FileList.AssignSelectionToParameter(
                           new OpenWithScriptCommand(null))),  //Selected non-directory
                   ResultCommand.NoError //Selected more than one item, ignore.
                   );
 
             _explorer.FileList.ScriptCommands.Delete =
-                 new IfFileListSelection(evm => evm.Count >= 1,
+                 FileList.IfSelection(evm => evm.Count() >= 1,
                     new IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                         new AssignSelectionToParameterAsEntryModelArray(
+                         FileList.AssignSelectionToParameter(
                              DeleteFileBasedEntryCommand.FromParameter
                              ),
                         ResultCommand.NoError),

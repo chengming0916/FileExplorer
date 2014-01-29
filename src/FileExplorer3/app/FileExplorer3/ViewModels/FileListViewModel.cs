@@ -132,10 +132,10 @@ namespace FileExplorer.ViewModels
             NotifyOfPropertyChange(() => CurrentDirectory);
         }
 
-        public IEnumerable<IResult> ToggleRename()
-        {
-            yield return new ToggleRename(this);
-        }
+        //public IEnumerable<IResult> ToggleRename()
+        //{
+        //    yield return new ToggleRename(this);
+        //}
 
 
         #endregion

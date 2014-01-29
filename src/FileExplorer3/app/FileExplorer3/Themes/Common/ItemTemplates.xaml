@@ -18,8 +18,8 @@
 
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
-                        IsEditable="{Binding IsEditable}"        
-                        IsEditing="{Binding IsEditing, Mode=TwoWay}"
+                        IsEditable="{Binding IsRenamable}"        
+                        IsEditing="{Binding IsRenaming, Mode=TwoWay}"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Padding="10,0,0,0"
@@ -37,8 +37,8 @@
         <DockPanel LastChildFill="True">
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
-                        IsEditable="{Binding IsEditable}"        
-                        IsEditing="{Binding IsEditing, Mode=TwoWay}"
+                        IsEditable="{Binding IsRenamable}"        
+                        IsEditing="{Binding IsRenaming, Mode=TwoWay}"
                         HorizontalAlignment="Center"
                         DockPanel.Dock="Bottom"
                         />
@@ -58,8 +58,8 @@
 
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
-                        IsEditable="{Binding IsEditable}"        
-                        IsEditing="{Binding IsEditing}"
+                        IsEditable="{Binding IsRenamable}"        
+                        IsEditing="{Binding IsRenaming}"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Padding="10,0,0,0"

@@ -38,7 +38,8 @@ namespace FileExplorer.Models
 
         #endregion
 
-        #region Methods
+        #region Methods   
+        
 
         #endregion
 

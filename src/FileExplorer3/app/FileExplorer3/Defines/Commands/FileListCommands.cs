@@ -17,5 +17,8 @@ namespace FileExplorer.Defines
 
         public static RoutedUICommand Refresh = new RoutedUICommand(Strings.strRefresh, "Refresh", typeof(FileListCommands),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.R, ModifierKeys.Control) }));
+
+        public static RoutedUICommand Rename = new RoutedUICommand(Strings.strRename, "Rename", typeof(FileListCommands),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F2) }));
     }
 }

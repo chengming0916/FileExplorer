@@ -10,6 +10,7 @@ namespace FileExplorer.Defines
     {
         public static string txtSelection = "Selection";
         public static string strRefresh = "Refresh";
+        public static string strRename = "Rename";
         public static string strToggleCheckBox = "Checkboxes";
         public static string strToggleViewMode = "ViewMode";
         public static string strUnselectAll = "Unselect all";

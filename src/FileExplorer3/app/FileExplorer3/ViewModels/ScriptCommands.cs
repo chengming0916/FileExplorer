@@ -13,6 +13,7 @@ using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
+using FileExplorer.ViewModels;
 
 namespace FileExplorer.ViewModels
 {
@@ -77,11 +78,44 @@ namespace FileExplorer.ViewModels
 
     #region FileList based.
 
+    public static class FileList
+    {
+        public static IScriptCommand If(Func<IFileListViewModel, bool> condition, IScriptCommand ifTrueCommand,
+            IScriptCommand otherwiseCommand)
+        {
+            return new IfFileList(condition, ifTrueCommand, otherwiseCommand);
+        }
+
+        public static IScriptCommand IfSelection(Func<IEntryViewModel[], bool> condition, IScriptCommand ifTrueCommand,
+            IScriptCommand otherwiseCommand)
+        {
+            return new IfFileList(flvm => condition(flvm.Selection.SelectedItems.ToArray()), ifTrueCommand, otherwiseCommand);
+        }
+
+        public static IScriptCommand IfSelectionModel(Func<IEntryModel[], bool> condition, IScriptCommand ifTrueCommand,
+            IScriptCommand otherwiseCommand)
+        {
+            return new IfFileList(flvm => condition(flvm.Selection.SelectedItems.Select(vm => vm.EntryModel).ToArray()),
+                ifTrueCommand, otherwiseCommand);
+        }
+
+        public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand)
+        {
+            return new AssignSelectionToParameterAsEntryModelArray(thenCommand);
+        }
+
+        public static IScriptCommand OpenSelectedDirectory =
+            new OpenSelectedDirectory(ExtensionMethods.GetFileListSelectionFunc);
+
+        public static IScriptCommand ToggleRename =
+            new ToggleRenameCommand(ExtensionMethods.GetFileListSelectionVMFunc);
+    }
+
     /// <summary>
     /// If Condition for the file list is true, then do the first command, otherwise do the second command.
     /// required FileList (IFileListViewModel)
     /// </summary>
-    public class IfFileList : IfScriptCommand
+    internal class IfFileList : IfScriptCommand
     {
         /// <summary>
         /// If Condition for the file list is true, then do the first command, otherwise do the second command,
@@ -90,7 +124,7 @@ namespace FileExplorer.ViewModels
         /// <param name="condition"></param>
         /// <param name="ifTrueCommand"></param>
         /// <param name="otherwiseCommand"></param>
-        public IfFileList(Func<IFileListViewModel, bool> condition, IScriptCommand ifTrueCommand,
+        internal IfFileList(Func<IFileListViewModel, bool> condition, IScriptCommand ifTrueCommand,
             IScriptCommand otherwiseCommand)
             : base(pd =>
                 {
@@ -103,13 +137,15 @@ namespace FileExplorer.ViewModels
 
         }
 
+        
+
     }
 
     /// <summary>
     /// Set Selected item to parameter, so it can be used in Toolbar based command.
     /// required FileList (IFileListViewModel)
     /// </summary>
-    public class AssignSelectionToParameterAsEntryModelArray : RunInSequenceScriptCommand
+    internal class AssignSelectionToParameterAsEntryModelArray : RunInSequenceScriptCommand
     {
         /// <summary>
         /// FileList.Selection.SelectedItems as IEntryModel[] -> Parameter, required FileList (IFileListViewModel)
@@ -130,33 +166,12 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    /// <summary>
-    /// If Condition for the selected items is true, then do the first command, otherwise do the second command,
-    /// required FileList (IFileListViewModel)
-    /// </summary>
-    public class IfFileListSelection : IfFileList
-    {
-        /// <summary>
-        /// If Condition for the selected items is true, then do the first command, otherwise do the second command,
-        /// required FileList (IFileListViewModel)
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="ifTrueCommand"></param>
-        /// <param name="otherwiseCommand"></param>
-        public IfFileListSelection(Func<IList<IEntryViewModel>, bool> condition, IScriptCommand ifTrueCommand,
-            IScriptCommand otherwiseCommand)
-            : base(flvm => condition(flvm.Selection.SelectedItems), ifTrueCommand, otherwiseCommand)
-        {
-
-        }
-    }
-
 
     /// <summary>
     /// Broadcast change directory to current selected directory
     /// required FileList (IFileListViewModel)
     /// </summary>
-    public class OpenSelectedDirectory : ScriptCommandBase
+    internal class OpenSelectedDirectory : ScriptCommandBase
     {
         public static OpenSelectedDirectory FromFileList = new OpenSelectedDirectory(ExtensionMethods.GetFileListSelectionFunc);
         private Func<ParameterDic, IEntryModel[]> _getSelectionFunc;
@@ -189,6 +204,38 @@ namespace FileExplorer.ViewModels
             return ResultCommand.OK;
         }
     }
+
+    internal class ToggleRenameCommand : ScriptCommandBase
+    {
+        public static ToggleRenameCommand ForSelectedItem = new ToggleRenameCommand(ExtensionMethods.GetFileListSelectionVMFunc);
+        private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
+
+        /// <summary>
+        /// Broadcast change directory to current selected directory, required FileList (IFileListViewModel)
+        /// </summary>
+        public ToggleRenameCommand(Func<ParameterDic, IEntryViewModel[]> getSelectionFunc)
+            : base("ToggleRenameCommand")
+        {
+            _getSelectionFunc = getSelectionFunc;
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            var selectedItems = _getSelectionFunc(pm);
+            return selectedItems.Length == 1 && selectedItems[0].IsRenamable;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var selectedItem = _getSelectionFunc(pm).FirstOrDefault();
+
+            if (selectedItem != null)
+                selectedItem.IsRenaming = !selectedItem.IsRenaming;
+
+            return ResultCommand.OK;
+        }
+    }
+
 
     #endregion
 }

@@ -90,14 +90,14 @@
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
             </bc:UIEventAdapter.Processors>
-            <i:Interaction.Triggers>                
+            <!--<i:Interaction.Triggers>                
                 <uc:InputBindingTrigger>                                        
                     <uc:InputBindingTrigger.InputBinding>
                         <KeyBinding Key="F2"/>
                     </uc:InputBindingTrigger.InputBinding>
                     <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
-            </i:Interaction.Triggers>           
+            </i:Interaction.Triggers>-->           
                 
             <uc:ListViewEx.ContentBelowHeader>
                 <Border Margin="2" >

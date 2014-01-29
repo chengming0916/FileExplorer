@@ -11,6 +11,7 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.Models;
 using FileExplorer.ViewModels.Helpers;
+using vms = FileExplorer.ViewModels;
 
 namespace FileExplorer.ViewModels
 {
@@ -47,8 +48,8 @@ namespace FileExplorer.ViewModels
 
                 };
 
-            FileList.ScriptCommands.Open = new IfFileListSelection(evm => evm.Count == 1,
-                   new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
+            FileList.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
+                   vms.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        OpenSelectedDirectory.FromFileList,  //Selected directory
                        new SimpleScriptCommand("", (pd) => { 
                            Open(); 

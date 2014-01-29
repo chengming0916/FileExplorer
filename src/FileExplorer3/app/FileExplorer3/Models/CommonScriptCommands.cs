@@ -15,12 +15,14 @@ namespace FileExplorer.Models
         private string _fullParseName;
         private ChangeType _changeType;
         private IProfile _profile;
-        public NotifyChangedCommand(IProfile profile, string fullParseName, ChangeType changeType)
+        private string _orgParseName;
+        public NotifyChangedCommand(IProfile profile, string fullParseName, ChangeType changeType, string orgParseName = null)
             : base("NotifyChanges")
         {
             _profile = profile;
             _fullParseName = fullParseName;
             _changeType = changeType;
+            _orgParseName = orgParseName;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
