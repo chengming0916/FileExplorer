@@ -17,7 +17,7 @@ namespace FileExplorer.Models
         #region Constructor
 
         private SkyDriveFileStream(IEntryModel entryModel)
-        {            
+        {
             _profile = entryModel.Profile as SkyDriveProfile;
             if (_profile == null)
                 throw new ArgumentException();
@@ -25,7 +25,7 @@ namespace FileExplorer.Models
         }
 
         public static async Task<SkyDriveFileStream> OpenReadAsync(IEntryModel entryModel)
-        {            
+        {
             string sourceUrl = (entryModel as SkyDriveItemModel).SourceUrl;
             byte[] bytes = await WebUtils.DownloadAsync(new Uri(sourceUrl));
             SkyDriveFileStream stream = new SkyDriveFileStream(entryModel);
@@ -38,7 +38,7 @@ namespace FileExplorer.Models
         public static async Task<SkyDriveFileStream> OpenReadWriteAsync(IEntryModel entryModel)
         {
             SkyDriveFileStream stream = await OpenReadAsync(entryModel);
-            stream._udateSrcFunc = (s) => 
+            stream._udateSrcFunc = (s) =>
             {
                 AsyncUtils.RunSync(() => updateSourceAsync(s));
             };
@@ -47,12 +47,15 @@ namespace FileExplorer.Models
 
         public static SkyDriveFileStream OpenWrite(IEntryModel entryModel)
         {
-            SkyDriveFileStream stream = 
-                new SkyDriveFileStream(entryModel) { 
-                    _udateSrcFunc = (s) => {
-                         AsyncUtils.RunSync(() => updateSourceAsync(s));
-                    } };
-                    
+            SkyDriveFileStream stream =
+                new SkyDriveFileStream(entryModel)
+                {
+                    _udateSrcFunc = (s) =>
+                    {
+                        AsyncUtils.RunSync(() => updateSourceAsync(s));
+                    }
+                };
+
 
             return stream;
         }
@@ -66,7 +69,7 @@ namespace FileExplorer.Models
             await stream._profile.checkLoginAsync();
 
             CancellationTokenSource cts = new CancellationTokenSource();
-            var skyModel = stream._entryModel as SkyDriveItemModel;            
+            var skyModel = stream._entryModel as SkyDriveItemModel;
             var progressHandler = new Progress<LiveOperationProgress>(
                 (progress) => { });
 
@@ -76,20 +79,15 @@ namespace FileExplorer.Models
 
             stream.Seek(0, SeekOrigin.Begin);
             var uid = (skyModel.Parent as SkyDriveItemModel).UniqueId;
-            try
-            {
-                result = await liveClient.UploadAsync(uid,
-                    skyModel.Name, stream, OverwriteOption.Overwrite, cts.Token, progressHandler);
 
-                //stream._profile.NotifyEntryChanges(skyModel.FullPath,
-                //skyModel.SourceUrl == null ? Defines.ChangeType.Created : Defines.ChangeType.Changed);
-                skyModel.init(stream._profile, skyModel.FullPath, result.Result);    
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-                    
+            result = await liveClient.UploadAsync(uid,
+                skyModel.Name, stream, OverwriteOption.Overwrite, cts.Token, progressHandler);
+
+            //stream._profile.NotifyEntryChanges(skyModel.FullPath,
+            //skyModel.SourceUrl == null ? Defines.ChangeType.Created : Defines.ChangeType.Changed);
+            skyModel.init(stream._profile, skyModel.FullPath, result.Result);
+
+
         }
 
 
@@ -102,7 +100,7 @@ namespace FileExplorer.Models
                     _udateSrcFunc(this);
             }
             //base.Close();
-        }       
+        }
 
         #endregion
 

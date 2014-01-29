@@ -22,6 +22,12 @@ namespace FileExplorer
                 .Select(evm => evm.EntryModel).ToArray()
                 : new IEntryModel[] { };
 
+        public static Func<ParameterDic, IEntryViewModel[]> GetFileListSelectionVMFunc =
+            pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
+                (pd["FileList"] as IFileListViewModel).Selection.SelectedItems
+                .ToArray()
+                : new IEntryViewModel[] { };
+
         //public static IEnumerable<IDirectoryNodeViewModel> GetHierarchy(
         //    this IDirectoryNodeViewModel node, bool includeCurrent)
         //{

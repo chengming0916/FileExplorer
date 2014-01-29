@@ -7,44 +7,44 @@ using Caliburn.Micro;
 
 namespace FileExplorer.ViewModels.Actions
 {
-    public class ToggleRename : IResult
-    { 
-        #region Cosntructor
+    //public class ToggleRename : IResult
+    //{ 
+    //    #region Cosntructor
 
-        public ToggleRename(IFileListViewModel model, bool? value = null)
-        {
-            _model = model;
-            _value = value;
-        }
+    //    public ToggleRename(IFileListViewModel model, bool? value = null)
+    //    {
+    //        _model = model;
+    //        _value = value;
+    //    }
         
-        #endregion
+    //    #endregion
 
-        #region Methods
+    //    #region Methods
 
-        public event EventHandler<ResultCompletionEventArgs> Completed;
+    //    public event EventHandler<ResultCompletionEventArgs> Completed;
 
-        public void Execute(ActionExecutionContext context)
-        {
-            var first = _model.Selection.SelectedItems.FirstOrDefault();
-            if (first != null && first.IsEditable)
-                if (_value.HasValue)
-                    first.IsEditing = _value.Value;
-                else first.IsEditing = !first.IsEditing;
-            Completed(this, new ResultCompletionEventArgs());
-        }
+    //    public void Execute(ActionExecutionContext context)
+    //    {
+    //        var first = _model.Selection.SelectedItems.FirstOrDefault();
+    //        if (first != null && first.IsRenamable)
+    //            if (_value.HasValue)
+    //                first.IsRenaming = _value.Value;
+    //            else first.IsRenaming = !first.IsRenaming;
+    //        Completed(this, new ResultCompletionEventArgs());
+    //    }
 
         
-        #endregion
+    //    #endregion
 
-        #region Data
+    //    #region Data
 
-        IFileListViewModel _model;
-        bool? _value;
+    //    IFileListViewModel _model;
+    //    bool? _value;
         
-        #endregion
+    //    #endregion
 
-        #region Public Properties
+    //    #region Public Properties
         
-        #endregion
-    }
+    //    #endregion
+    //}
 }

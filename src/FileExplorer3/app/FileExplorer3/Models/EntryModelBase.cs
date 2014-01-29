@@ -33,7 +33,7 @@ namespace FileExplorer.Models
             return FullPath.Equals(other.FullPath);
         }
 
-        protected void OnRenamed(string orgName, string newName)
+        protected virtual void OnRenamed(string orgName, string newName)
         {
 
         }
@@ -69,5 +69,27 @@ namespace FileExplorer.Models
 
 
         
+    }
+
+    public class DiskEntryModelBase : EntryModelBase
+    {
+        public DiskEntryModelBase(IProfile profile)
+            : base(profile)
+        {
+            DiskProfile = profile as IDiskProfile;
+            if (DiskProfile == null)
+                throw new ArgumentException();
+        }
+
+        protected override void OnRenamed(string orgName, string newName)
+        {            
+
+            string dirName = this.Profile.Path.GetDirectoryName(this.FullPath);
+            DiskProfile.DiskIO.RenameAsync(this.FullPath, newName); 
+            //Then DiskIO raise NotifyChange, and refresh the ExplorerViewModel.
+        }
+
+        protected IDiskProfile DiskProfile { get; set; }
+
     }
 }

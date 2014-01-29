@@ -9,7 +9,7 @@ using Cofe.Core.Utils;
 
 namespace FileExplorer.Models
 {
-    public class SkyDriveItemModel : EntryModelBase
+    public class SkyDriveItemModel : DiskEntryModelBase
     {
         #region Constructor
 

@@ -14,8 +14,8 @@ namespace FileExplorer.ViewModels
     {
         IEntryModel EntryModel { get; }
 
-        bool IsEditable { get; set; }
-        bool IsEditing { get; set; }        
+        bool IsRenamable { get; set; }
+        bool IsRenaming { get; set; }        
 
         ImageSource Icon { get; }
 

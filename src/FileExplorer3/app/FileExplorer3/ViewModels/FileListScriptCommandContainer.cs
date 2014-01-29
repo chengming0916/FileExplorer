@@ -20,6 +20,8 @@ namespace FileExplorer.ViewModels
         IScriptCommand Open { get; set; }
         IScriptCommand Refresh { get; set; }
         IScriptCommand Delete { get; set; }
+        IScriptCommand ToggleRename { get; set; }
+        IScriptCommand Rename { get; set; }
     }
 
     public class FileListScriptCommandContainer : IFileListScriptCommandContainer, IExportCommandBindings
@@ -31,16 +33,16 @@ namespace FileExplorer.ViewModels
             ParameterDicConverter =
                 ParameterDicConverters.ConvertVMParameter(
                     new Tuple<string, object>("FileList", flvm),
-                    new Tuple<string, object>("Events", events));                
-
-            Open = new IfFileListSelection(evm => evm.Count == 1,
-                   new IfFileListSelection(evm => evm[0].EntryModel.IsDirectory,
-                       OpenSelectedDirectory.FromFileList,  //Selected directory
+                    new Tuple<string, object>("Events", events));
+            
+            Open = FileList.IfSelection(evm => evm.Count() == 1,
+                   FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
+                       FileList.OpenSelectedDirectory,  //Selected directory
                        ResultCommand.NoError),   //Selected non-directory
                    ResultCommand.NoError //Selected more than one item.                   
                    );
 
-            Delete = new NullScriptCommand();
+            Delete = NullScriptCommand.Instance;
 
             Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
@@ -48,11 +50,17 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.OK;
             });
 
+            ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable && !(Rename is NullScriptCommand),
+                FileList.ToggleRename, NullScriptCommand.Instance);
+
+            Rename = NullScriptCommand.Instance;
+            
             ExportedCommandBindings = new[] 
             {
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(FileListCommands.Refresh, this, (ch) => ch.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.Delete, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(FileListCommands.Rename, this, (ch) => ch.Rename, ParameterDicConverter, ScriptBindingScope.Local),
             };
         }
 
@@ -73,6 +81,8 @@ namespace FileExplorer.ViewModels
         public IScriptCommand Open { get; set; }
         public IScriptCommand Refresh { get; set; }
         public IScriptCommand Delete { get; set; }
+        public IScriptCommand ToggleRename { get; set; }
+        public IScriptCommand Rename { get; set; }
 
         #endregion
     }

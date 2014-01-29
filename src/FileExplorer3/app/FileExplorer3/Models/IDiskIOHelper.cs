@@ -14,7 +14,7 @@ namespace FileExplorer.Models
 
         Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access);
         Task DeleteAsync(params IEntryModel[] entryModels);
-        Task RenameAsync(string fullPath, string newName);
+        Task<IEntryModel> RenameAsync(string fullPath, string newName);
         Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory);
 
     }
@@ -41,7 +41,7 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
-        public virtual Task RenameAsync(string fullPath, string newName)
+        public virtual Task<IEntryModel> RenameAsync(string fullPath, string newName)
         {
             throw new NotImplementedException();
         }
@@ -50,6 +50,7 @@ namespace FileExplorer.Models
         {
             throw new NotImplementedException();
         }
+
     }
 
     public class DefaultDiskIOHelper : DiskIOHelperBase

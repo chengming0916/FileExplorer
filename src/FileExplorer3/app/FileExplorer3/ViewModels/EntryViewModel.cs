@@ -34,7 +34,7 @@ namespace FileExplorer.ViewModels
         {
             EntryModel = model;
             _iconExtractSequences = model.Profile.GetIconExtractSequence(model);
-            IsEditable = model.IsRenamable;
+            IsRenamable = model.IsRenamable;
         }
 
         public static EntryViewModel FromEntryModel(IEntryModel model)
@@ -121,7 +121,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        bool _isSelected = false, _isEditing = false, _isEditable = false, _isIconLoaded = false;
+        bool _isSelected = false, _isRenaming = false, _isRenamable = false, _isIconLoaded = false;
         private ImageSource _icon = null;
         private IEnumerable<IEntryModelIconExtractor> _iconExtractSequences;
 
@@ -129,23 +129,23 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public bool IsEditing
+        public bool IsRenaming
         {
-            get { return _isEditing; }
+            get { return _isRenaming; }
             set
             {
-                _isEditing = value;
+                _isRenaming = value;
                 NotifyOfPropertyChange(() => EntryModel);
-                NotifyOfPropertyChange(() => IsEditing);
+                NotifyOfPropertyChange(() => IsRenaming);
             }
         }
-        public bool IsEditable
+        public bool IsRenamable
         {
-            get { return _isEditable; }
+            get { return _isRenamable; }
             set
             {
-                _isEditable = value;
-                NotifyOfPropertyChange(() => IsEditable);
+                _isRenamable = value;
+                NotifyOfPropertyChange(() => IsRenamable);
 
             }
         }

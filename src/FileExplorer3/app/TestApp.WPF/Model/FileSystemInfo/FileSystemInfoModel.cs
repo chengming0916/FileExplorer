@@ -8,7 +8,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoModel : EntryModelBase
+    public class FileSystemInfoModel : DiskEntryModelBase
     {
         #region Cosntructor
 
