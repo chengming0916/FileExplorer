@@ -34,6 +34,7 @@ namespace FileExplorer.Models
             UniqueId = d.id;
             this.IsDirectory = d.type == "folder" || d.type == "album";
 
+            this.IsRenamable = true;
             this.Type = d.type; //photo, album or folder
             this.Description = d.description;
             this.ImageUrl = d.picture;

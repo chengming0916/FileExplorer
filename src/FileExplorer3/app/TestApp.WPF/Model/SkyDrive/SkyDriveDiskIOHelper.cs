@@ -37,6 +37,18 @@ namespace FileExplorer.Models
             throw new NotSupportedException();
         }
 
+        public override async Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName)
+        {
+             await _profile.checkLoginAsync();
+             
+             var fileData = new Dictionary<string, object>();
+             fileData.Add("name", newName);
+             LiveConnectClient liveClient = new LiveConnectClient(_profile.Session);
+             LiveOperationResult result =
+                 await liveClient.PutAsync((entryModel as SkyDriveItemModel).UniqueId , fileData);
+             return new SkyDriveItemModel(_profile, result.Result, entryModel.Parent.FullPath);
+        }
+
         public override async Task DeleteAsync(IEntryModel[] entryModels)
         {
             await _profile.checkLoginAsync();
