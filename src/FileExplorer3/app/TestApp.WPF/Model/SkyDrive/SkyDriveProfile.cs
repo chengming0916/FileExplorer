@@ -15,12 +15,13 @@ namespace FileExplorer.Models
         #region Constructor
 
         public SkyDriveProfile(IEventAggregator events, string clientId, Func<string> authCodeFunc,
-            string alias = "SkyDrive",
+            string aliasMask = "{0}'s SkyDrive",
             string rootAccessPath = "/me/skydrive")
             : base(events)
         {
             ModelCache = new SkyDriveModelCache();
-            Alias = alias;
+            Alias = "SkyDrive";
+            _aliasMask = aliasMask;
             Path = PathHelper.Web;
             DiskIO = new SkyDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
@@ -58,6 +59,10 @@ namespace FileExplorer.Models
             try
             {
                 Session = await _authClient.ExchangeAuthCodeAsync(_authCode);
+                LiveConnectClient client = new LiveConnectClient(Session);
+                LiveOperationResult liveOpResult = await client.GetAsync("me");
+                dynamic dynResult = liveOpResult.Result;
+                Alias = String.Format(_aliasMask, dynResult.name);
             }
             catch
             {
@@ -216,6 +221,7 @@ namespace FileExplorer.Models
         private string _authCode = null;
         private string _rootAccessPath;
         private Func<string> _authCodeFunc;
+        private string _aliasMask;
 
         #endregion
 

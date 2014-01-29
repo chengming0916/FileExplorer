@@ -188,11 +188,12 @@ namespace TestApp.WPF
             return null;
         }
 
+        public static string skyDriveAliasMask = "{0}'s OneDrive"; 
         public async Task AddSkyDrive()
         {
-            string alias = "Lycj's SkyDrive"; //This is hardcoded currently, please changed to your username.
+            
             if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, alias);
+                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, skyDriveAliasMask);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
@@ -202,7 +203,7 @@ namespace TestApp.WPF
         public async Task TestUpload()
         {
             if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive);
+                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, skyDriveAliasMask);
             //var photos = await _profileSkyDrive.ParseAsync("/photos");
             var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/upload1.txt", false);
             //string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;
