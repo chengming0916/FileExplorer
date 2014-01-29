@@ -62,7 +62,7 @@ namespace FileExplorer.Models
         public bool IsDirectory { get; protected set; }
         public IEntryModel Parent { get { return _parent != null ? _parent  : _parent = _parentFunc(); } }
         public string Name { get { return _name; } set { string org = _name; _name = value;
-            if (org != null) OnRenamed(org, _name); } }
+            if (org != null && !org.Equals(Name)) OnRenamed(org, _name); } }
         public string Label { get; protected set; }
         public bool IsRenamable { get { return _isRenamable; } set { _isRenamable = value; NotifyOfPropertyChange(() => IsRenamable); } }
         public string Description { get; protected set; }

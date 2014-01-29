@@ -105,11 +105,13 @@ namespace FileExplorer.ViewModels
                             PathHelper.Web.GetDirectoryName(message.ParseName);
 
                         IEntryModel affectedParentEntry = await _rootProfiles.ParseAsync(path);
-
-                        await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedParentEntry);
-                        await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedParentEntry);
-                        if (FileList.CurrentDirectory.Equals(affectedParentEntry))
-                            await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                        if (affectedParentEntry != null)
+                        {
+                            await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedParentEntry);
+                            await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedParentEntry);
+                            if (FileList.CurrentDirectory.Equals(affectedParentEntry))
+                                await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                        }
                         break;                   
                     default:
                         IEntryModel affectedEntry = await _rootProfiles.ParseAsync(message.ParseName);
