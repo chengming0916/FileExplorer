@@ -237,5 +237,37 @@ namespace FileExplorer.ViewModels
     }
 
 
+    internal class RenameFileBasedEntryCommand : ScriptCommandBase
+    {
+        //public static RenameFileBasedEntryCommand FromParameter = new RenameFileBasedEntryCommand(
+        //    FileBasedScriptCommandsHelper.GetFirstEntryModelFromParameter);
+        private Func<ParameterDic, IEntryModel> _srcModelFunc;
+        private string _newName;
+
+        public RenameFileBasedEntryCommand(Func<ParameterDic, IEntryModel> srcModelFunc, string newName = null)
+            : base("Rename")
+        {
+            _srcModelFunc = srcModelFunc;
+            _newName = newName;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            string newName = _newName ?? pm["NewName"] as string;
+            if (String.IsNullOrEmpty(newName))
+                return ResultCommand.Error(new ArgumentException("NewName"));
+            var srcModel = _srcModelFunc(pm);
+            if (srcModel == null)
+                return ResultCommand.Error(new ArgumentException());
+
+            IDiskProfile profile = srcModel.Profile as IDiskProfile;
+            if (profile == null)
+                return ResultCommand.Error(new ArgumentException());
+
+            IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel.FullPath, newName);
+            return new NotifyChangedCommand(destModel.Profile, destModel.FullPath, ChangeType.Moved, srcModel.FullPath);
+        }
+    }
+
     #endregion
 }

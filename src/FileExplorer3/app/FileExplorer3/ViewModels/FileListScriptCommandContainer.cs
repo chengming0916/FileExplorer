@@ -21,7 +21,6 @@ namespace FileExplorer.ViewModels
         IScriptCommand Refresh { get; set; }
         IScriptCommand Delete { get; set; }
         IScriptCommand ToggleRename { get; set; }
-        IScriptCommand Rename { get; set; }
     }
 
     public class FileListScriptCommandContainer : IFileListScriptCommandContainer, IExportCommandBindings
@@ -50,17 +49,15 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.OK;
             });
 
-            ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable && !(Rename is NullScriptCommand),
-                FileList.ToggleRename, NullScriptCommand.Instance);
-
-            Rename = NullScriptCommand.Instance;
+            ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
+                FileList.ToggleRename, NullScriptCommand.Instance);            
             
             ExportedCommandBindings = new[] 
             {
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Open, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(FileListCommands.Refresh, this, (ch) => ch.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.Delete, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(FileListCommands.Rename, this, (ch) => ch.Rename, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(FileListCommands.Rename, this, (ch) => ch.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
             };
         }
 
@@ -82,7 +79,7 @@ namespace FileExplorer.ViewModels
         public IScriptCommand Refresh { get; set; }
         public IScriptCommand Delete { get; set; }
         public IScriptCommand ToggleRename { get; set; }
-        public IScriptCommand Rename { get; set; }
+
 
         #endregion
     }
