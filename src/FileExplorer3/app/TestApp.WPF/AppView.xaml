@@ -50,12 +50,11 @@
             
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button x:Name="PickFiles"  Content="Pick files" />
+            <Button x:Name="PickFiles"  Content="FilePicker" />
+            <Button x:Name="SaveFile"  Content="FilePicker(Save)" />
             <TextBox x:Name="FileFilter" />
-
-            
         </StackPanel>
-        <Button x:Name="TestUpload" Content="TestUpload" />
+        <!--<Button x:Name="TestUpload" Content="TestUpload" />-->
         <Button x:Name="ShowDialog" Content="ShowDialog" />
         
     </StackPanel>

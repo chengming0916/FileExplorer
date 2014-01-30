@@ -58,8 +58,13 @@
                           SelectedValue="{Binding SelectedFilter}" >
                 </ComboBox>
                 <Button x:Name="Cancel" Content="Cancel" Grid.Row="1" Grid.Column="1" Margin="10,5,5,5" />
-                <Button x:Name="Open" IsDefault="True" Grid.Row="1" Grid.Column="2" Margin="5,5,10,5" >
+                <Button x:Name="Open" IsDefault="True" Grid.Row="1" Grid.Column="2" Margin="5,5,10,5"
+                        Visibility="{Binding IsOpenEnabled, Converter={StaticResource btvc}}">
                     <TextBlock FontWeight="Bold" Text="Open"  />
+                </Button>
+                <Button x:Name="Save" IsDefault="True" Grid.Row="1" Grid.Column="2" Margin="5,5,10,5" 
+                        Visibility="{Binding IsSaveEnabled, Converter={StaticResource btvc}}">
+                    <TextBlock FontWeight="Bold" Text="Save"  />
                 </Button>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10,5" HorizontalAlignment="Right"  >
                     <Label Content="File _name:" Target="{Binding ElementName=tboxFileName}"/>

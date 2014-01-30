@@ -34,48 +34,47 @@ namespace FileExplorer.ViewModels
     {
         #region Constructor
 
-        private void initOpenMode()
+        public FilePickerViewModel(IEventAggregator events, IWindowManager windowManager, string filterStr,
+            FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
+            : base(events, windowManager, rootModels)
         {
+            _mode = mode;
+            _tryCloseCommand = new SimpleScriptCommand("TryClose", pd => { TryClose(true); return ResultCommand.NoError; });
+
             FileList.Selection.SelectionChanged += (o, e) =>
             {
-                int selectedCount = FileList.Selection.SelectedItems.Count();
                 FileName =
                     String.Join(",",
                     FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
                     .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
             };
 
+
             FileList.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
                    vms.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        OpenSelectedDirectory.FromFileList,  //Selected directory
                        new SimpleScriptCommand("", (pd) =>
                        {
-                           Open();
+                           switch (mode)
+                           {
+                               case FilePickerMode.Open: Open(); break;
+                               case FilePickerMode.Save: Save(); break;
+                           }
+
                            return ResultCommand.NoError;
                        })),   //Selected non-directory
                    ResultCommand.NoError //Selected more than one item.                   
                    );
 
-            FileList.EnableDrag = false;
-            FileList.EnableDrop = false;
-            FileList.EnableMultiSelect = false;
 
-
-        }
-
-        public FilePickerViewModel(IEventAggregator events, IWindowManager windowManager, string filterStr,
-            FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
-            : base(events, windowManager, rootModels)
-        {
-
-            switch (mode)
-            {
-                case FilePickerMode.Open: initOpenMode(); break;
-            }
 
             _filterStr = filterStr;
             Filters = new EntriesHelper<FileNameFilter>(loadFiltersTask);
             Filters.SetEntries(getFilters(filterStr).ToArray());
+
+            FileList.EnableDrag = false;
+            FileList.EnableDrop = false;
+            FileList.EnableMultiSelect = false;
         }
 
         #endregion
@@ -131,9 +130,44 @@ namespace FileExplorer.ViewModels
 
         //}
 
+        public void Save()
+        {
+            var pm = FileList.ScriptCommands.ParameterDicConverter.Convert(new ParameterDic());
+            var profile = FileList.CurrentDirectory.Profile;
+
+            //Update FileName in case user does not enter full path name.
+            IScriptCommand updateFileName =
+                new SimpleScriptCommand("updateFileName", pd =>
+                { FileName = profile.Path.Combine(FileList.CurrentDirectory.FullPath, FileName); return ResultCommand.NoError; });
+
+            //Update SelectedFiles property (if it's exists.")
+            Func<IEntryModel, IScriptCommand> setSelectedFiles =
+                m => new SimpleScriptCommand("SetSelectedFiles", pd =>
+                {
+                    SelectedFiles = new[] { m }; FileName = m.FullPath; return ResultCommand.NoError;
+                });
+
+            //Query whether to overwrite and if so, setSelectedFiles, otherwise throw a user cancel exception and no window close.
+            Func<IEntryModel, IScriptCommand> queryOverwrite =
+                m => new IfOkCancel(_windowManager,
+                        pd => "Overwrite",
+                        pd => "Overwrite " + profile.Path.GetFileName(FileName),
+                        setSelectedFiles(m), ResultCommand.Error(new Exception("User cancel")) /* Cancel if user press cancel. */);
+
+            new ScriptRunner().Run(pm,
+                ScriptCommands.RunInSequence(
+                     ViewModels.FileList.Lookup(
+                               m => m.FullPath.Equals(FileName) || m.Profile.Path.GetFileName(m.FullPath).Equals(FileName),
+                               queryOverwrite,
+                               FileList.CurrentDirectory.Profile.Parse(FileName, queryOverwrite,
+                               updateFileName))),
+                    _tryCloseCommand
+                );
+        }
+
         public void Open()
         {
-            List<IEntryModel> selectedFiles = new List<IEntryModel>();            
+            List<IEntryModel> selectedFiles = new List<IEntryModel>();
             Func<IEntryModel, IScriptCommand> addToSelectedFiles =
                 m => new SimpleScriptCommand("AddToSelectedFiles", pd => { selectedFiles.Add(m); return ResultCommand.NoError; });
             var pm = FileList.ScriptCommands.ParameterDicConverter.Convert(new ParameterDic());
@@ -147,34 +181,8 @@ namespace FileExplorer.ViewModels
                             FileList.CurrentDirectory.Profile.Parse(f, addToSelectedFiles,
                             ResultCommand.Error(new System.IO.FileNotFoundException(f + " is not found.")))))),
                 new SimpleScriptCommand("AssignSelectedFiles", pd => { SelectedFiles = selectedFiles.ToArray(); return ResultCommand.NoError; }),
-                new SimpleScriptCommand("TryClose", pd => {  TryClose(true); return ResultCommand.NoError; })
+                _tryCloseCommand
              );
-
-
-
-            //List<IEntryModel> selectedFiles = new List<IEntryModel>();
-            //foreach (string fname in FileName.Split(','))
-            //{
-            //    string fullPath = FileList.CurrentDirectory.Profile.Path.Combine(FileList.CurrentDirectory.FullPath, fname);
-            //    var foundItem = FileList.ProcessedEntries.EntriesHelper.AllNonBindable.Select(evm => evm.EntryModel)
-            //        .FirstOrDefault(em =>
-            //        em.FullPath.Equals(fullPath, StringComparison.CurrentCultureIgnoreCase) ||
-            //        em.Profile.Path.GetFileName(em.FullPath).Equals(fname));
-            //    if (foundItem == null)
-            //    {
-            //        foundItem = FileList.CurrentDirectory.Profile.ParseAsync(fullPath).Result;
-            //        if (foundItem == null)
-            //        {
-            //            MessageBox.Show(fname + " is not found.");
-            //            return;
-            //        }
-            //    }
-
-            //    selectedFiles.Add(foundItem);
-            //}
-
-            //SelectedFiles = selectedFiles.ToArray();
-            //TryClose(true);
         }
 
         public void Cancel()
@@ -204,12 +212,14 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
+        protected IScriptCommand _tryCloseCommand;
         private static ColumnFilter _directoryOnlyFilter = ColumnFilter.CreateNew("DirectoryOnly", "IsDirectory", em => em.IsDirectory);
         IEntryModel[] _selectedFiles;
         bool _canOpen = false;
         private string _filterStr;
         private string _selectedFilter;
         private string _selectedFileName = "";
+        private FilePickerMode _mode;
 
         #endregion
 
@@ -218,6 +228,9 @@ namespace FileExplorer.ViewModels
         public IEntriesHelper<FileNameFilter> Filters { get; set; }
         public string SelectedFilter { get { return _selectedFilter; } set { setFilter(value); } }
         public string FileName { get { return _selectedFileName; } set { setFileName(value); } }
+
+        public bool IsOpenEnabled { get { return _mode == FilePickerMode.Open; } }
+        public bool IsSaveEnabled { get { return _mode == FilePickerMode.Save; } }
 
         public bool CanOpen { get { return _canOpen; } set { _canOpen = value; NotifyOfPropertyChange(() => CanOpen); } }
         public IEntryModel[] SelectedFiles
