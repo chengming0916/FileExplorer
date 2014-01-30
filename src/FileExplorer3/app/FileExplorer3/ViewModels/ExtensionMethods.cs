@@ -17,6 +17,18 @@ namespace FileExplorer
 {
     public static partial class ExtensionMethods
     {
+        public static Func<ParameterDic, IEntryModel[]> GetFileListItemsFunc =
+            pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
+                (pd["FileList"] as IFileListViewModel).ProcessedEntries.EntriesHelper.AllNonBindable
+                .Select(evm => evm.EntryModel).ToArray()
+                : new IEntryModel[] { };
+
+        public static Func<ParameterDic, IEntryViewModel[]> GetFileListItemsVMFunc =
+            pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
+                (pd["FileList"] as IFileListViewModel).ProcessedEntries.EntriesHelper.AllNonBindable
+                .ToArray()
+                : new IEntryViewModel[] { };
+
         public static Func<ParameterDic, IEntryModel[]> GetFileListSelectionFunc =
             pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
                 (pd["FileList"] as IFileListViewModel).Selection.SelectedItems

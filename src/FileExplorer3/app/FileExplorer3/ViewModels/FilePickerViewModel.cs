@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
+using FileExplorer.BaseControls;
 using FileExplorer.Models;
 using FileExplorer.ViewModels.Helpers;
 using vms = FileExplorer.ViewModels;
@@ -27,33 +28,31 @@ namespace FileExplorer.ViewModels
         }
     }
 
+    public enum FilePickerMode { Open, Save }
+
     public class FilePickerViewModel : ExplorerViewModel
     {
         #region Constructor
 
-
-        public FilePickerViewModel(IEventAggregator events, IWindowManager windowManager, string filterStr, params IEntryModel[] rootModels)
-            : base(events, windowManager, rootModels)
+        private void initOpenMode()
         {
             FileList.Selection.SelectionChanged += (o, e) =>
-                {
-                    int selectedCount = FileList.Selection.SelectedItems.Count();
-                    
-                        //(selectedCount == 1 && !FileList.Selection.SelectedItems[0].EntryModel.IsDirectory);
-
-                    FileName =
-                        String.Join(",",
-                        FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
-                        .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
-
-                };
+            {
+                int selectedCount = FileList.Selection.SelectedItems.Count();
+                FileName =
+                    String.Join(",",
+                    FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
+                    .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
+            };
 
             FileList.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
                    vms.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        OpenSelectedDirectory.FromFileList,  //Selected directory
-                       new SimpleScriptCommand("", (pd) => { 
-                           Open(); 
-                           return ResultCommand.NoError; })),   //Selected non-directory
+                       new SimpleScriptCommand("", (pd) =>
+                       {
+                           Open();
+                           return ResultCommand.NoError;
+                       })),   //Selected non-directory
                    ResultCommand.NoError //Selected more than one item.                   
                    );
 
@@ -61,11 +60,22 @@ namespace FileExplorer.ViewModels
             FileList.EnableDrop = false;
             FileList.EnableMultiSelect = false;
 
+
+        }
+
+        public FilePickerViewModel(IEventAggregator events, IWindowManager windowManager, string filterStr,
+            FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
+            : base(events, windowManager, rootModels)
+        {
+
+            switch (mode)
+            {
+                case FilePickerMode.Open: initOpenMode(); break;
+            }
+
             _filterStr = filterStr;
             Filters = new EntriesHelper<FileNameFilter>(loadFiltersTask);
             Filters.SetEntries(getFilters(filterStr).ToArray());
-            
-            //Filters.LoadAsync();//.ContinueWith((tsk) => { SelectedFilter = tsk.Result.First().Filter; });
         }
 
         #endregion
@@ -93,7 +103,7 @@ namespace FileExplorer.ViewModels
 
                     return ff as IEnumerable<FileNameFilter>;
                 });
-            
+
 
         }
 
@@ -107,31 +117,64 @@ namespace FileExplorer.ViewModels
                 };
         }
 
+        //public void Save()
+        //{
+        //    string fullPath = FileList.CurrentDirectory.Profile.Path.Combine(FileList.CurrentDirectory.FullPath, FileName);
+        //    var foundItem = FileList.ProcessedEntries.EntriesHelper.AllNonBindable.Select(evm => evm.EntryModel)
+        //            .FirstOrDefault(em =>
+        //            em.FullPath.Equals(fullPath, StringComparison.CurrentCultureIgnoreCase));
+        //    if (foundItem != null)
+        //    {
+        //        string name = foundItem.Profile.Path.GetFileName(foundItem.FullPath);
+        //        new IfOkCancel(_windowManager, () => "Overwrite", String.Format("Overwrite {0}?", name), 
+        //    }
+
+        //}
+
         public void Open()
         {
-            List<IEntryModel> selectedFiles = new List<IEntryModel>();
-            foreach (string fname in FileName.Split(','))
-            {                
-                string fullPath = FileList.CurrentDirectory.Profile.Path.Combine(FileList.CurrentDirectory.FullPath, fname);
-                var foundItem = FileList.ProcessedEntries.EntriesHelper.AllNonBindable.Select(evm => evm.EntryModel)
-                    .FirstOrDefault(em =>
-                    em.FullPath.Equals(fullPath, StringComparison.CurrentCultureIgnoreCase) ||
-                    em.Profile.Path.GetFileName(em.FullPath).Equals(fname));
-                if (foundItem == null)
-                {
-                    foundItem = FileList.CurrentDirectory.Profile.ParseAsync(fullPath).Result;
-                    if (foundItem == null)
-                    {
-                        MessageBox.Show(fname + " is not found.");
-                        return;
-                    }
-                }
+            List<IEntryModel> selectedFiles = new List<IEntryModel>();            
+            Func<IEntryModel, IScriptCommand> addToSelectedFiles =
+                m => new SimpleScriptCommand("AddToSelectedFiles", pd => { selectedFiles.Add(m); return ResultCommand.NoError; });
+            var pm = FileList.ScriptCommands.ParameterDicConverter.Convert(new ParameterDic());
+            new ScriptRunner().Run(pm,
+            ScriptCommands.RunInSequence(
+                ScriptCommands.ForEach(
+                    FileName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
+                    f => ViewModels.FileList.Lookup(
+                            m => m.FullPath.Equals(f) || m.Profile.Path.GetFileName(m.FullPath).Equals(f),
+                            addToSelectedFiles,
+                            FileList.CurrentDirectory.Profile.Parse(f, addToSelectedFiles,
+                            ResultCommand.Error(new System.IO.FileNotFoundException(f + " is not found.")))))),
+                new SimpleScriptCommand("AssignSelectedFiles", pd => { SelectedFiles = selectedFiles.ToArray(); return ResultCommand.NoError; }),
+                new SimpleScriptCommand("TryClose", pd => {  TryClose(true); return ResultCommand.NoError; })
+             );
 
-                selectedFiles.Add(foundItem);
-            }
 
-            SelectedFiles = selectedFiles.ToArray();
-            TryClose(true);
+
+            //List<IEntryModel> selectedFiles = new List<IEntryModel>();
+            //foreach (string fname in FileName.Split(','))
+            //{
+            //    string fullPath = FileList.CurrentDirectory.Profile.Path.Combine(FileList.CurrentDirectory.FullPath, fname);
+            //    var foundItem = FileList.ProcessedEntries.EntriesHelper.AllNonBindable.Select(evm => evm.EntryModel)
+            //        .FirstOrDefault(em =>
+            //        em.FullPath.Equals(fullPath, StringComparison.CurrentCultureIgnoreCase) ||
+            //        em.Profile.Path.GetFileName(em.FullPath).Equals(fname));
+            //    if (foundItem == null)
+            //    {
+            //        foundItem = FileList.CurrentDirectory.Profile.ParseAsync(fullPath).Result;
+            //        if (foundItem == null)
+            //        {
+            //            MessageBox.Show(fname + " is not found.");
+            //            return;
+            //        }
+            //    }
+
+            //    selectedFiles.Add(foundItem);
+            //}
+
+            //SelectedFiles = selectedFiles.ToArray();
+            //TryClose(true);
         }
 
         public void Cancel()
@@ -142,9 +185,9 @@ namespace FileExplorer.ViewModels
         private void setFilter(string value)
         {
             _selectedFilter = value;
-            
+
             base.FileList.ProcessedEntries.SetFilters(
-                ColumnFilter.CreateNew(value, "FullPath", 
+                ColumnFilter.CreateNew(value, "FullPath",
                 e => e.IsDirectory || PathFE.MatchFileMasks(e.Profile.Path.GetFileName(e.FullPath), value)));
             NotifyOfPropertyChange(() => SelectedFilter);
         }
@@ -175,9 +218,11 @@ namespace FileExplorer.ViewModels
         public IEntriesHelper<FileNameFilter> Filters { get; set; }
         public string SelectedFilter { get { return _selectedFilter; } set { setFilter(value); } }
         public string FileName { get { return _selectedFileName; } set { setFileName(value); } }
-       
+
         public bool CanOpen { get { return _canOpen; } set { _canOpen = value; NotifyOfPropertyChange(() => CanOpen); } }
-        public IEntryModel[] SelectedFiles { get { return _selectedFiles; }
+        public IEntryModel[] SelectedFiles
+        {
+            get { return _selectedFiles; }
             set { _selectedFiles = value; NotifyOfPropertyChange(() => SelectedFiles); }
         }
 

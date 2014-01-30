@@ -112,7 +112,8 @@ namespace TestApp.WPF
                     new ViewModeCommand( _explorer.FileList),
                     new SeparatorCommandModel(),
                     new CommandModel(FileListCommands.Refresh) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false }
+                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
+                    new CommandModel(FileListCommands.Rename)  { IsVisibleOnToolbar = false }
                     
                     )
             };
@@ -133,7 +134,7 @@ namespace TestApp.WPF
 
         public void PickFiles()
         {
-            var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, RootModels.ToArray());
+            var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
             updateExplorerModel(initExplorerModel(filePicker));
             if (_windowManager.ShowDialog(filePicker).Value)
             {

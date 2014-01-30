@@ -114,6 +114,7 @@
     <Compile Include="Models\LoginInfoImpl.cs" />
     <Compile Include="Models\NullDragDropHandler.cs" />
     <Compile Include="Models\ProfileBase.cs" />
+    <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />

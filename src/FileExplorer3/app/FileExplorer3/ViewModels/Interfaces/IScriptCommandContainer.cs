@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cofe.Core.Script;
 
 namespace FileExplorer.ViewModels
 {
@@ -11,6 +12,6 @@ namespace FileExplorer.ViewModels
     /// </summary>
     public interface IScriptCommandContainer : IExportCommandBindings
     {
-
+        IParameterDicConverter ParameterDicConverter { get; }
     }    
 }

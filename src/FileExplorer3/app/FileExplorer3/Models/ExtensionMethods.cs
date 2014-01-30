@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
 
@@ -20,6 +21,19 @@ namespace FileExplorer.Models
                     return result;
             }
             return null;
+        }
+
+        public static IScriptCommand Parse(this IProfile[] profiles, string path, 
+            Func<IEntryModel, IScriptCommand> ifFoundFunc, IScriptCommand ifNotFound)
+        {
+            return new ParsePathCommand(profiles, path, ifFoundFunc, ifNotFound);
+        }
+
+
+        public static IScriptCommand Parse(this IProfile profile, string path, 
+            Func<IEntryModel, IScriptCommand> ifFoundFunc, IScriptCommand ifNotFound)
+        {
+            return new ParsePathCommand(new [] { profile }, path, ifFoundFunc, ifNotFound);
         }
 
         public static IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(this IProfile[] profiles, IEntryModel entry)

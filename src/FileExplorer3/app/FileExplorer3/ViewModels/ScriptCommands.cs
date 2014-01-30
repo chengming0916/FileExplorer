@@ -109,6 +109,13 @@ namespace FileExplorer.ViewModels
 
         public static IScriptCommand ToggleRename =
             new ToggleRenameCommand(ExtensionMethods.GetFileListSelectionVMFunc);
+
+        public static IScriptCommand Lookup(Func<IEntryModel, bool> lookupFunc,
+            Func<IEntryModel, IScriptCommand> foundCommandFunc, IScriptCommand notFoundCommand)
+        {
+            return new LookupEntryCommand(lookupFunc, foundCommandFunc, notFoundCommand, ExtensionMethods.GetFileListItemsFunc);
+        }
+
     }
 
     /// <summary>
@@ -137,7 +144,7 @@ namespace FileExplorer.ViewModels
 
         }
 
-        
+
 
     }
 
@@ -266,6 +273,36 @@ namespace FileExplorer.ViewModels
 
             IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel, newName);
             return new NotifyChangedCommand(destModel.Profile, destModel.FullPath, ChangeType.Moved, srcModel.FullPath);
+        }
+    }
+
+
+    internal class LookupEntryCommand : ScriptCommandBase
+    {
+        private Func<ParameterDic, IEntryModel[]> _getItemsFunc;
+        private Func<IEntryModel, bool> _lookupFunc;
+        private Func<IEntryModel, IScriptCommand> _foundCommandFunc;
+        private IScriptCommand _notFoundCommand;
+
+        public LookupEntryCommand(
+            Func<IEntryModel, bool> lookupFunc,
+            Func<IEntryModel, IScriptCommand> foundCommandFunc, IScriptCommand notFoundCommand,
+            Func<ParameterDic, IEntryModel[]> getItemsFunc = null
+            )
+            : base("LookupEntry")
+        {
+            _getItemsFunc = getItemsFunc ?? ExtensionMethods.GetFileListItemsFunc;
+            _lookupFunc = lookupFunc;
+            _foundCommandFunc = foundCommandFunc;
+            _notFoundCommand = notFoundCommand;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var foundItem = _getItemsFunc(pm).FirstOrDefault(_lookupFunc);
+            if (foundItem != null)
+                return _foundCommandFunc(foundItem);
+            else return _notFoundCommand;
         }
     }
 
