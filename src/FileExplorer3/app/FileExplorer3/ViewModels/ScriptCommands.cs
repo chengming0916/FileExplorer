@@ -20,11 +20,13 @@ namespace FileExplorer.ViewModels
 
     #region MessageBox
 
+    
+
     /// <summary>
     /// If user clicked Ok, do first command, otherwise do second command.
     /// </summary>
     public class IfOkCancel : IfScriptCommand
-    {
+    {        
         private IScriptCommand _okCommand;
         private IScriptCommand _cancelCommand;
         public IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,

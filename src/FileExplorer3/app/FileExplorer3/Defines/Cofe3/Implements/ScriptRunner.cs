@@ -23,7 +23,11 @@ namespace Cofe.Core.Script
                 {                    
                     var retCmd = current.Execute(pd);
                     if (retCmd != null)
+                    {
+                        if (pd.Error != null)
+                            return;
                         cmds.Enqueue(retCmd);
+                    }
                 }
                 else
                     if (!(current is NullScriptCommand))
@@ -47,7 +51,11 @@ namespace Cofe.Core.Script
                 {
                     var retCmd = await current.ExecuteAsync(pd);
                     if (retCmd != null)
+                    {
+                        if (pd.Error != null)
+                            return;
                         cmds.Enqueue(retCmd);
+                    }
                 }
                 else throw new Exception(String.Format("Cannot execute {0}", current));
             }

@@ -142,6 +142,16 @@ namespace TestApp.WPF
             }
         }
 
+        public void SaveFile()
+        {
+            var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Save, RootModels.ToArray());
+            updateExplorerModel(initExplorerModel(filePicker));
+            if (_windowManager.ShowDialog(filePicker).Value)
+            {
+                MessageBox.Show(filePicker.FileName);
+            }
+        }
+
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
         {
             var directoryPicker = new DirectoryPickerViewModel(_events, _windowManager, rootModels);
