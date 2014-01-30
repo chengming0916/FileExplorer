@@ -17,7 +17,24 @@ namespace FileExplorer.BaseControls
         public static DebugScriptCommand PrintSelectedDC = new DebugScriptCommand(DebugScriptCommand.HandleType.printSelector);
         public static DebugScriptCommand PrepareDrag = new DebugScriptCommand(DebugScriptCommand.HandleType.prepareDataObject);
         public static NoScriptCommand NoCommand = new NoScriptCommand();
+
+        public static IScriptCommand If(Func<ParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise)
+        {
+            return new IfScriptCommand(condition, ifTrue, otherwise);
+        }
+
+        public static IScriptCommand RunInSequence(params IScriptCommand[] scriptCommands)
+        {
+            return new RunInSequenceScriptCommand(scriptCommands);
+        }
+
+        public static IScriptCommand ForEach<T>(T[] source, Func<T, IScriptCommand> commandFunc)
+        {
+            return new ForEachCommand<T>(source, commandFunc);
+        }
     }
+
+
 
 
     public class IfScriptCommand : IScriptCommand
@@ -45,7 +62,7 @@ namespace FileExplorer.BaseControls
         {
             if (_condition(pm))
                 return _ifTrueCommand.CanExecute(pm);
-            else return _otherwiseCommand.CanExecute(pm);            
+            else return _otherwiseCommand.CanExecute(pm);
         }
 
 
@@ -55,7 +72,39 @@ namespace FileExplorer.BaseControls
                 return _ifTrueCommand;
             return _otherwiseCommand;
         }
-    }    
+    }
+
+    public class ForEachCommand<T> : ScriptCommandBase
+    {
+        private T[] _source;
+        private Func<T, IScriptCommand> _commandFunc;
+        public ForEachCommand(T[] source, Func<T, IScriptCommand> commandFunc)
+            : base("ForEach")
+        {
+            _source = source;
+            _commandFunc = commandFunc;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            List<IScriptCommand> outputCommands = new List<IScriptCommand>();
+            foreach (var s in _source)
+            {
+                var command = _commandFunc(s);
+                var outputCommand = command.Execute(pm);
+                if (pm.Error != null)
+                    return outputCommand;
+                if (outputCommand != ResultCommand.NoError && outputCommand != ResultCommand.OK)
+                    outputCommands.Add(outputCommand);
+            }
+            return new RunInSequenceScriptCommand(outputCommands.ToArray());
+        }
+
+        public virtual bool CanExecute(ParameterDic pm)
+        {
+            return _source.Count() > 0 && _commandFunc(_source.First()).CanExecute(pm);
+        }
+    }
 
     public class RunInSequenceScriptCommand : IScriptCommand
     {
@@ -116,7 +165,7 @@ namespace FileExplorer.BaseControls
             UIParameterDic parameterDic = pm.AsUIParameterDic();
             FrameworkElement control = parameterDic.Sender as FrameworkElement;
 
-            object value = parameterDic.EventArgs.OriginalSource is FrameworkElement ? 
+            object value = parameterDic.EventArgs.OriginalSource is FrameworkElement ?
                 (parameterDic.EventArgs.OriginalSource as FrameworkElement).DataContext : null;
             switch (_handleType)
             {
@@ -158,7 +207,7 @@ namespace FileExplorer.BaseControls
 
     public class NoScriptCommand : IScriptCommand
     {
-     
+
         public string CommandKey
         {
             get { return "None"; }

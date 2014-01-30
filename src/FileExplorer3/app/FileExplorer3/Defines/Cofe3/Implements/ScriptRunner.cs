@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +18,9 @@ namespace Cofe.Core.Script
             while (cmds.Any())
             {
                 var current = cmds.Dequeue();
+                Debug.WriteLine("ScriptRunner:" + current.CommandKey);
                 if (current.CanExecute(pd))
-                {
+                {                    
                     var retCmd = current.Execute(pd);
                     if (retCmd != null)
                         cmds.Enqueue(retCmd);

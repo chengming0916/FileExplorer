@@ -150,7 +150,7 @@ namespace FileExplorer.ViewModels
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();
-        private IWindowManager _windowManager = new WindowManager();
+        protected IWindowManager _windowManager = new WindowManager();
         private IProfile[] _rootProfiles = new IProfile[] { };
 
         #endregion
