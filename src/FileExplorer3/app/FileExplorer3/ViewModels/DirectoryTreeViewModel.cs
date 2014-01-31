@@ -17,7 +17,7 @@ namespace FileExplorer.ViewModels
 
 
 
-    public class DirectoryTreeViewModel : ViewAware, IDirectoryTreeViewModel,
+    public class DirectoryTreeViewModel : CommandViewAware, IDirectoryTreeViewModel,
         IHandle<DirectoryChangedEvent>, ISupportDragHelper
     {
         #region Cosntructor
@@ -56,8 +56,8 @@ namespace FileExplorer.ViewModels
             };
             Selection = selection;
 
-            ToolbarCommands = new DirectoryTreeToolbarCommandsHelper(this, events);
-            ScriptCommands = new DirectoryTreeScriptCommandContainer(this, events);
+            base.ToolbarCommands = new DirectoryTreeToolbarCommandsHelper(this, events);
+            base.ScriptCommands = new DirectoryTreeScriptCommandContainer(this, events);
 
             DragHelper = new DirectoryTreeDragHelper(Entries, Selection);
         }
@@ -65,13 +65,6 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
-
-        protected override void OnViewAttached(object view, object context)
-        {
-            base.OnViewAttached(view, context);
-            var uiEle = view as System.Windows.UIElement;
-            this.RegisterCommand(uiEle, ScriptBindingScope.Local);
-        }
 
         protected void BroadcastDirectoryChanged(IEntryViewModel viewModel)
         {
@@ -118,12 +111,6 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        private IEnumerable<IScriptCommandBinding> getExportedCommands()
-        {
-            return ToolbarCommands.ExportedCommandBindings                
-                .Union(ScriptCommands.ExportedCommandBindings);
-        }
-
         #endregion
 
         #region Data
@@ -137,9 +124,10 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IToolbarCommandsHelper ToolbarCommands { get; private set; }
-        public IDirectoryTreeScriptCommandContainer ScriptCommands { get; private set; }
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
+        public new IDirectoryTreeScriptCommandContainer ScriptCommands
+        {
+            get { return base.ScriptCommands as IDirectoryTreeScriptCommandContainer; }
+        }
 
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
@@ -158,5 +146,8 @@ namespace FileExplorer.ViewModels
 
 
 
+
+
+       
     }
 }

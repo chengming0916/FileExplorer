@@ -50,7 +50,9 @@ namespace FileExplorer.ViewModels
             };
 
 
-            FileList.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
+            IFileListScriptCommandContainer flscc = FileList.ScriptCommands as IFileListScriptCommandContainer;
+
+            flscc.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
                    vms.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        OpenSelectedDirectory.FromFileList,  //Selected directory
                        new SimpleScriptCommand("", (pd) =>

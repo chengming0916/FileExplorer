@@ -135,6 +135,7 @@
     <Compile Include="ViewModels\DirectoryTreeScriptCommandContainer.cs" />
     <Compile Include="ViewModels\DirectoryTreeToolbarCommanHelper.cs" />
     <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
+    <Compile Include="ViewModels\Helpers\CommandViewAware.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />
     <Compile Include="ViewModels\Helpers\DialogFilterViewModel.cs" />
     <Compile Include="ViewModels\FilePickerViewModel.cs" />
