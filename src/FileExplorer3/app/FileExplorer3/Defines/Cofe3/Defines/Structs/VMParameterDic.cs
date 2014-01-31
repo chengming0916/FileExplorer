@@ -30,6 +30,13 @@ namespace FileExplorer.BaseControls
             set { if (this.ContainsKey("FileList")) this["FileList"] = value; else this.Add("FileList", value); }
         }
 
+        public IDirectoryTreeViewModel DirectoryTree
+        {
+            get { return this.ContainsKey("DirectoryTree") && this["DirectoryTree"] is IDirectoryTreeViewModel ? this["DirectoryTree"] as IDirectoryTreeViewModel : null; }
+            set { if (this.ContainsKey("DirectoryTree")) this["DirectoryTree"] = value; else this.Add("DirectoryTree", value); }
+        }
+
+
         public INavigationViewModel Navigation
         {
             get { return this.ContainsKey("Navigation") && this["Navigation"] is INavigationViewModel ? this["Navigation"] as INavigationViewModel : null; }

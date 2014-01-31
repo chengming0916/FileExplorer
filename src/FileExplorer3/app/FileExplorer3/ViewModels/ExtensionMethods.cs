@@ -17,6 +17,16 @@ namespace FileExplorer
 {
     public static partial class ExtensionMethods
     {
+        public static Func<ParameterDic, IEntryModel[]> GetCurrentDirectoryFunc =
+           pd => pd.ContainsKey("DirectoryTree") && pd["DirectoryTree"] is IDirectoryTreeViewModel ?
+               new [] { (pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue }               
+               : new IEntryModel[] { };
+
+        public static Func<ParameterDic, IEntryViewModel[]> GetCurrentDirectoryVMFunc =
+           pd => pd.ContainsKey("DirectoryTree") && pd["DirectoryTree"] is IDirectoryTreeViewModel ?
+               new[] { (pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedViewModel }
+               : new IEntryViewModel[] { };
+
         public static Func<ParameterDic, IEntryModel[]> GetFileListItemsFunc =
             pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
                 (pd["FileList"] as IFileListViewModel).ProcessedEntries.EntriesHelper.AllNonBindable

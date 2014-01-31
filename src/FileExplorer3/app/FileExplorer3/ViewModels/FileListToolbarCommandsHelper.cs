@@ -23,16 +23,11 @@ namespace FileExplorer.ViewModels
 
 
 
-    public class FileListCommandsHelper : ToolbarCommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
+    public class FileListToolbarCommandsHelper : ToolbarCommandsHelper, IHandle<SelectionChangedEvent>, IHandle<DirectoryChangedEvent>
     {
-        #region Commands
-
-
-        #endregion
-
         #region Constructor
 
-        public FileListCommandsHelper(IFileListViewModel flvm, IEventAggregator events, params IProfile[] rootProfiles)
+        public FileListToolbarCommandsHelper(IFileListViewModel flvm, IEventAggregator events, params IProfile[] rootProfiles)
             : base(rootProfiles)            
         {
             events.Subscribe(this);
@@ -45,8 +40,8 @@ namespace FileExplorer.ViewModels
                     new SeparatorCommandModel()                    
                     ) 
             };
-            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), null, ScriptBindingScope.Explorer));
-            _exportedCommandBindings.Add(new ScriptCommandBinding(FileListCommands.ToggleViewMode, p => true, p => ToggleViewMode(), null, ScriptBindingScope.Explorer));
+            _exportedCommandBindings.Add(new ScriptCommandBinding(ExplorerCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), null, ScriptBindingScope.Explorer));
+            _exportedCommandBindings.Add(new ScriptCommandBinding(ExplorerCommands.ToggleViewMode, p => true, p => ToggleViewMode(), null, ScriptBindingScope.Explorer));
         }
 
         #endregion

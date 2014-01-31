@@ -77,6 +77,20 @@ namespace FileExplorer.ViewModels
 
     #endregion
 
+    #region DirectoryTreeBased
+
+    public static class DirectoryTree
+    {
+        public static IScriptCommand ToggleRename =
+          new ToggleRenameCommand(ExtensionMethods.GetCurrentDirectoryVMFunc);
+
+        public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand)
+        {
+            return new AssignSelectionToParameterAsEntryModelArray(ExtensionMethods.GetCurrentDirectoryFunc, thenCommand);
+        }
+    }
+
+    #endregion
 
     #region FileList based.
 
@@ -103,7 +117,7 @@ namespace FileExplorer.ViewModels
 
         public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand)
         {
-            return new AssignSelectionToParameterAsEntryModelArray(thenCommand);
+            return new AssignSelectionToParameterAsEntryModelArray(ExtensionMethods.GetFileListSelectionFunc, thenCommand);
         }
 
         public static IScriptCommand OpenSelectedDirectory =
@@ -160,13 +174,12 @@ namespace FileExplorer.ViewModels
         /// FileList.Selection.SelectedItems as IEntryModel[] -> Parameter, required FileList (IFileListViewModel)
         /// </summary>
         /// <param name="thenCommand"></param>
-        public AssignSelectionToParameterAsEntryModelArray(IScriptCommand thenCommand)
+        public AssignSelectionToParameterAsEntryModelArray(Func<ParameterDic, IEntryModel[]> getSelectionFunc, IScriptCommand thenCommand)
             : base(
             new SimpleScriptCommand("AssignSelectionToParameterAsEntryModelArray",
                 pd =>
                 {
-                    pd["Parameter"] = (pd["FileList"] as IFileListViewModel).Selection
-                        .SelectedItems.Select(evm => evm.EntryModel).ToArray();
+                    pd["Parameter"] = getSelectionFunc(pd);
                     return ResultCommand.NoError;
                 }),
             thenCommand)

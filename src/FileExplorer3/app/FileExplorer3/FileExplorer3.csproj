@@ -132,6 +132,8 @@
     <Compile Include="Utils\WebUtils.cs" />
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
+    <Compile Include="ViewModels\DirectoryTreeScriptCommandContainer.cs" />
+    <Compile Include="ViewModels\DirectoryTreeToolbarCommanHelper.cs" />
     <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />
     <Compile Include="ViewModels\Helpers\DialogFilterViewModel.cs" />
@@ -140,7 +142,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NavigationScriptCommandContainer.cs" />
     <Compile Include="ViewModels\FileListScriptCommandContainer.cs" />
-    <Compile Include="ViewModels\FileListCommandsHelper.cs" />
+    <Compile Include="ViewModels\FileListToolbarCommandsHelper.cs" />
     <Compile Include="ViewModels\ScriptCommands.cs" />
     <Compile Include="ViewModels\Helpers\ToolbarCommandsHelper.cs" />
     <Compile Include="ViewModels\Interfaces\ICommandViewModel.cs" />

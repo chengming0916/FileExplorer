@@ -52,7 +52,8 @@ namespace FileExplorer.ViewModels
         private IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
             return FileList.ExportedCommandBindings
-                .Union(Navigation.ExportedCommandBindings);
+                .Union(Navigation.ExportedCommandBindings)
+                .Union(DirectoryTree.ExportedCommandBindings);
         }
 
         protected override void OnViewAttached(object view, object context)

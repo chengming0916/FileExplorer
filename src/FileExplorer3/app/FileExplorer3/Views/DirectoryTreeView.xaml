@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TreeView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ContextMenu.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 
@@ -47,6 +48,13 @@
             </uc:TreeViewEx.ItemContainerStyle>
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
+
+                <bc:ContextMenuEventProcessor>
+                    <bc:ContextMenuEventProcessor.ContextMenu>
+                        <ContextMenu ItemsSource="{Binding ToolbarCommands.CommandModels.All}" 
+                                     ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
+                    </bc:ContextMenuEventProcessor.ContextMenu>
+                </bc:ContextMenuEventProcessor>
             </bc:UIEventAdapter.Processors>
         </uc:TreeViewEx>
     </DockPanel>

@@ -372,7 +372,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                 }
             }
 
-            return ResultCommand.Error(new Exception("Control do not have parent window."));
+            return ResultCommand.NoError;
         }
     }
 
