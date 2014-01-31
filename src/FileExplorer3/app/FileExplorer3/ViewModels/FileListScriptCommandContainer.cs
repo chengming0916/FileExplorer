@@ -15,13 +15,6 @@ namespace FileExplorer.ViewModels
 {
 
 
-    public interface IFileListScriptCommandContainer : IScriptCommandContainer
-    {
-        IScriptCommand Open { get; set; }
-        IScriptCommand Refresh { get; set; }
-        IScriptCommand Delete { get; set; }
-        IScriptCommand ToggleRename { get; set; }
-    }
 
     public class FileListScriptCommandContainer : IFileListScriptCommandContainer, IExportCommandBindings
     {

@@ -15,12 +15,6 @@ namespace FileExplorer.ViewModels
 {
 
 
-    public interface INavigationScriptCommandContainer : IScriptCommandContainer
-    {
-        IScriptCommand Back { get; set; }
-        IScriptCommand Next { get; set; }
-        IScriptCommand Up { get; set; }   
-    }
 
     public class NavigationScriptCommandContainer : INavigationScriptCommandContainer, IExportCommandBindings
     {

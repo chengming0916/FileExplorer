@@ -33,7 +33,7 @@ namespace FileExplorer.ViewModels
 #if !WINRT
     [Export(typeof(FileListViewModel))]
 #endif
-    public class FileListViewModel : ViewAware, IFileListViewModel,
+    public class FileListViewModel : CommandViewAware, IFileListViewModel,
         IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDragHelper, ISupportDropHelper
     {
 
@@ -84,8 +84,8 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            ToolbarCommands = new FileListToolbarCommandsHelper(this, events);
-            ScriptCommands = new FileListScriptCommandContainer(this, events);
+            base.ToolbarCommands = new FileListToolbarCommandsHelper(this, events);
+            base.ScriptCommands = new FileListScriptCommandContainer(this, events);
 
             #region Unused
             //var ec = ConventionManager.AddElementConvention<ListView>(
@@ -140,18 +140,10 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        private IEnumerable<IScriptCommandBinding> getExportedCommands()
+        protected override IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
-            return ToolbarCommands.ExportedCommandBindings
-                .Union(Selection.ExportedCommandBindings)
-                .Union(ScriptCommands.ExportedCommandBindings);            
-        }
-
-        protected override void OnViewAttached(object view, object context)
-        {
-            base.OnViewAttached(view, context);
-              var uiEle = view as System.Windows.UIElement;
-            this.RegisterCommand(uiEle, ScriptBindingScope.Local);            
+            return base.getExportedCommands()
+                .Union(Selection.ExportedCommandBindings);
         }
 
         public void SignalChangeDirectory(IEntryModel newDirectory)
@@ -194,13 +186,15 @@ namespace FileExplorer.ViewModels
         #region Public Properties
         public IProfile[] Profiles { set { setProfiles(value); } }
 
+        public new IFileListScriptCommandContainer ScriptCommands
+        {
+            get { return base.ScriptCommands as IFileListScriptCommandContainer; }
+        }
+
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
 
-        public IToolbarCommandsHelper ToolbarCommands { get; private set; }
-        public IFileListScriptCommandContainer ScriptCommands { get; private set; }
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
         public IEventAggregator Events { get; private set; }
@@ -259,6 +253,9 @@ namespace FileExplorer.ViewModels
         #endregion
 
 
+
+
+       
     }
 }
 

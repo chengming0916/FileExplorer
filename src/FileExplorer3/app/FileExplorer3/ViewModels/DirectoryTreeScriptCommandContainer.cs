@@ -12,12 +12,6 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IDirectoryTreeScriptCommandContainer : IScriptCommandContainer
-    {
-        IScriptCommand Refresh { get; set; }
-        IScriptCommand Delete { get; set; }
-        IScriptCommand ToggleRename { get; set; }
-    }
 
     public class DirectoryTreeScriptCommandContainer : IDirectoryTreeScriptCommandContainer, IExportCommandBindings
     {
