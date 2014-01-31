@@ -18,6 +18,7 @@ using Cofe.Core.Utils;
 using System.Configuration;
 using System.IO;
 using System.Windows.Input;
+using FileExplorer.ViewModels.Helpers;
 
 namespace TestApp.WPF
 {
@@ -111,13 +112,26 @@ namespace TestApp.WPF
                     new SelectGroupCommand( _explorer.FileList),    
                     new ViewModeCommand( _explorer.FileList),
                     new SeparatorCommandModel(),
-                    new CommandModel(FileListCommands.Refresh) { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-                    new CommandModel(FileListCommands.Rename)  { IsVisibleOnToolbar = false }
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }
                     
                     )
             };
 
+            _explorer.DirectoryTree.ToolbarCommands.ExtraCommandProviders = new[] { 
+                new StaticCommandProvider(
+                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
+                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }                    
+                    )
+              };
+
+            _explorer.DirectoryTree.ScriptCommands.Delete =
+                   new IfOkCancel(_windowManager, pd => "Delete",
+                       pd => String.Format("Delete {0}?",  ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
+                            DirectoryTree.AssignSelectionToParameter(DeleteFileBasedEntryCommand.FromParameter),
+                       ResultCommand.NoError);                   
 
             updateExplorerModel(initExplorerModel(_explorer));
             _windowManager.ShowWindow(_explorer);

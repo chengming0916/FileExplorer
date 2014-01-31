@@ -20,36 +20,9 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Views.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ItemTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Toolbar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ContextMenu.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-
-            <Style x:Key="ContextMenuMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                <Setter Property="Visibility" Value="{Binding IsVisibleOnMenu, Converter={StaticResource btvc}}" />
-                <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
-                <Setter Property="Command" Value="{Binding  CommandBinding.Command, Mode=OneWay}" />
-                <Setter Property="CommandParameter" Value="{Binding DataContext.ToolbarCommands.AppliedModels, 
-                                    RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
-                <Setter Property="IsCheckable" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
-                <Setter Property="IsChecked" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
-                <Setter Property="ItemsSource" Value="{Binding SubCommands.All}" />
-                <Style.Triggers>
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                    </Trigger>
-                        <DataTrigger Binding="{Binding CommandType}" Value="Separator">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate>
-                                    <Separator HorizontalAlignment="Stretch" Height="1" />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
         </ResourceDictionary>
-
 
     </UserControl.Resources>
     <Grid>
@@ -76,7 +49,7 @@
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding ToolbarCommands.CommandModels.All}" 
-                                     ItemContainerStyle="{StaticResource ContextMenuMenuItemStyle}" />
+                                     ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
                 </bc:ContextMenuEventProcessor>
                 <bc:InputBindingsEventProcessor >
@@ -84,9 +57,9 @@
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
-                        <KeyBinding Key="A" Command="def:FileListCommands.UnselectAll" /> <!-- Testing -->
-                        <KeyBinding Key="C" Command="def:FileListCommands.ToggleCheckBox" />
-                        <KeyBinding Key="V" Command="def:FileListCommands.ToggleViewMode" />
+                        <KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> <!-- Testing -->
+                        <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
+                        <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
             </bc:UIEventAdapter.Processors>

@@ -24,8 +24,8 @@ namespace FileExplorer.ViewModels.Helpers
                         
             ExportedCommandBindings = new List<IScriptCommandBinding>()
             {
-                new ScriptCommandBinding(FileListCommands.InvertSelect, p => true, p => InvertSelect(), null, ScriptBindingScope.Explorer), 
-                new ScriptCommandBinding(FileListCommands.UnselectAll, p => true, p => UnselectAll(), null, ScriptBindingScope.Explorer), 
+                new ScriptCommandBinding(ExplorerCommands.InvertSelect, p => true, p => InvertSelect(), null, ScriptBindingScope.Explorer), 
+                new ScriptCommandBinding(ExplorerCommands.UnselectAll, p => true, p => UnselectAll(), null, ScriptBindingScope.Explorer), 
                 new ScriptCommandBinding(ApplicationCommands.SelectAll, p => true, p => SelectAll(), null, ScriptBindingScope.Explorer)
             };
         }

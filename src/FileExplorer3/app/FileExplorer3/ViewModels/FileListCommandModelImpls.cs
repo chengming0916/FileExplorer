@@ -101,7 +101,7 @@ namespace FileExplorer.ViewModels
 
         private IFileListViewModel _flvm;
         public ViewModeCommand(IFileListViewModel flvm)
-            : base(FileListCommands.ToggleViewMode,
+            : base(ExplorerCommands.ToggleViewMode,
                  generateCommandModel().ToArray()
             )
         {
@@ -160,7 +160,7 @@ namespace FileExplorer.ViewModels
         public SelectGroupCommand(IFileListViewModel flvm)
             : base(ApplicationCommands.SelectAll,
             new CommandModel(ApplicationCommands.SelectAll) { Symbol = Convert.ToChar(0xE14E) },
-            new CommandModel(FileListCommands.ToggleCheckBox) { Symbol = Convert.ToChar(0xe1ef) })
+            new CommandModel(ExplorerCommands.ToggleCheckBox) { Symbol = Convert.ToChar(0xe1ef) })
         {
             Symbol = Convert.ToChar(0xE10B);
             Header = Strings.txtSelection;

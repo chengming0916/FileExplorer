@@ -84,7 +84,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            ToolbarCommands = new FileListCommandsHelper(this, events);
+            ToolbarCommands = new FileListToolbarCommandsHelper(this, events);
             ScriptCommands = new FileListScriptCommandContainer(this, events);
 
             #region Unused
