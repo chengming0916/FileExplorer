@@ -119,7 +119,7 @@ namespace TestApp.WPF
                     )
             };
 
-            _explorer.DirectoryTree.ToolbarCommands.ExtraCommandProviders = new[] { 
+            _explorer.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
@@ -127,7 +127,7 @@ namespace TestApp.WPF
                     )
               };
 
-            _explorer.DirectoryTree.ScriptCommands.Delete =
+            _explorer.DirectoryTree.Commands.ScriptCommands.Delete =
                    new IfOkCancel(_windowManager, pd => "Delete",
                        pd => String.Format("Delete {0}?",  ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
                             DirectoryTree.AssignSelectionToParameter(DeleteFileBasedEntryCommand.FromParameter),

@@ -21,7 +21,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            ScriptCommands = new NavigationScriptCommandContainer(this, events);
+            Commands = new NavigationCommandManager(this, events);            
         }
 
         #endregion
@@ -32,7 +32,7 @@ namespace FileExplorer.ViewModels
         {
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
-            this.RegisterCommand(uiEle, ScriptBindingScope.Local);
+            this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
         }
 
         public void Handle(SelectionChangedEvent message)
@@ -139,12 +139,6 @@ namespace FileExplorer.ViewModels
             ChangeNavigationPosition(NavigationPosition - 1);
         }
 
-        private IEnumerable<IScriptCommandBinding> getExportedCommands()
-        {
-            return ScriptCommands.ExportedCommandBindings;
-        }
-
-
         #endregion
 
         #region Data
@@ -161,18 +155,13 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public INavigationScriptCommandContainer ScriptCommands { get; private set; }
+        public ICommandManager Commands { get; protected set; }
         public IEventAggregator Events { get; set; }
         public int NavigationPosition { get { return _position; } set {  ChangeNavigationPosition(value); } }
         public IObservableCollection<IEntryViewModel> NavigationHistory { get { return _navigationHistory; } }
         public bool CanGoBack { get { return _canGoBack; } private set { _canGoBack = value; NotifyOfPropertyChange(() => CanGoBack); } }
         public bool CanGoNext { get { return _canGoNext; } private set { _canGoNext = value; NotifyOfPropertyChange(() => CanGoNext); } }
         public bool CanGoUp { get { return _canGoUp; } private set { _canGoUp = value; NotifyOfPropertyChange(() => CanGoUp); } }
-
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings
-        {
-            get { return getExportedCommands(); }
-        }
 
         #endregion
 

@@ -24,7 +24,7 @@ namespace FileExplorer.ViewModels
         ///// </summary>
         //IFileListScriptCommandContainer ScriptCommands { get; }
 
-        IScriptCommandManager Commands { get; }
+        ICommandManager Commands { get; }
 
         /// <summary>
         /// Load entries and apply filters.

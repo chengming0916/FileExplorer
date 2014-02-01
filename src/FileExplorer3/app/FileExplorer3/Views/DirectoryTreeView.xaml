@@ -51,7 +51,7 @@
 
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
-                        <ContextMenu ItemsSource="{Binding ToolbarCommands.CommandModels.All}" 
+                        <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                      ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
                 </bc:ContextMenuEventProcessor>

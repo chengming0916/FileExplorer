@@ -98,13 +98,21 @@ namespace FileExplorer.ViewModels.Helpers
         public void Handle(SelectionChangedEvent message)
         {
             if (_whenSelectionChanged != null)
-                AppliedModels = _whenSelectionChanged(message);
+            {
+                var val = _whenSelectionChanged(message);
+                if (val != null)
+                    AppliedModels = val;
+            }
         }
 
         public void Handle(DirectoryChangedEvent message)
         {
             if (_whenDirectoryChanged != null)
-                AppliedModels = _whenDirectoryChanged(message);
+            {
+                var val = _whenDirectoryChanged(message);
+                if (val != null)
+                    AppliedModels = val;
+            }      
         }
 
 
