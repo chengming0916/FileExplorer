@@ -1,0 +1,174 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+#if WINRT
+using Windows.UI.Xaml.Media;
+#else
+using System.Windows.Media;
+#endif
+using Caliburn.Micro;
+using FileExplorer.Models;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Media.Imaging;
+using System.Threading;
+using Cofe.Core.Utils;
+
+namespace FileExplorer.ViewModels
+{
+
+    public class EntryViewModel : ViewAware, IEntryViewModel
+    {
+        #region Cosntructor
+
+        public static IEntryViewModel DummyNode = new EntryViewModel() { EntryModel = EntryModelBase.DummyModel };
+
+        protected EntryViewModel()
+        {
+
+        }
+
+        protected EntryViewModel(IEntryModel model)
+        {
+            EntryModel = model;
+            _iconExtractSequences = model.Profile.GetIconExtractSequence(model);
+            IsRenamable = model.IsRenamable;
+        }
+
+        public static EntryViewModel FromEntryModel(IEntryModel model)
+        {
+            return new EntryViewModel(model);
+
+        }
+
+        public IEntryViewModel Clone()
+        {
+            return EntryViewModel.FromEntryModel(this.EntryModel);
+        }
+
+        #endregion
+
+
+
+        #region Methods
+
+        private void loadIcon()
+        {            
+            var sequence = _iconExtractSequences.ToList();
+
+            Task loadIconTask = Task.Run(async () => await _iconExtractSequences.Last().GetIconForModelAsync(EntryModel))
+                .ContinueWith((tsk) =>
+                    {
+                        if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
+                            Icon = tsk.Result;
+                    }, TaskScheduler.FromCurrentSynchronizationContext()
+                    );
+
+            //for (int i = 1; i < sequence.Count - 1; i++)
+            //{
+            //    loadIconTask = loadIconTask.ContinueWith<ImageSource>(
+            //        (tsk) => AsyncUtils.RunSync(() => sequence[i].GetIconForModelAsync(EntryModel)))
+            //        .ContinueWith((tsk) =>
+            //        {
+            //            if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
+            //                Icon = tsk.Result;
+            //        }, TaskScheduler.FromCurrentSynchronizationContext()
+            //        );
+            //}
+
+        } 
+
+        //private async Task loadIcon()
+        //{
+
+
+
+
+        //    Action<Task<ImageSource>> updateIcon = (tsk) =>
+        //        {
+        //            if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
+        //                Icon = tsk.Result;
+        //        };
+
+        //    foreach (var ext in _iconExtractSequences)
+        //    {
+        //        await ext.GetIconForModelAsync(EntryModel).ContinueWith(updateIcon);                
+        //    }
+        //}
+
+        public override bool Equals(object obj)
+        {
+            return
+                obj is EntryViewModel &&
+                this.EntryModel.Profile.HierarchyComparer
+                .CompareHierarchy(this.EntryModel, (obj as EntryViewModel).EntryModel)
+                == Defines.HierarchicalResult.Current;
+        }
+
+        public override object GetView(object context = null)
+        {
+            return base.GetView(context);
+        }
+
+        public override string ToString()
+        {
+            return "evm-" + this.EntryModel.ToString();
+        }
+
+        #endregion
+
+        #region Data
+
+        bool _isSelected = false, _isRenaming = false, _isRenamable = false, _isIconLoaded = false;
+        private ImageSource _icon = null;
+        private IEnumerable<IEntryModelIconExtractor> _iconExtractSequences;
+
+        #endregion
+
+        #region Public Properties
+
+        public bool IsRenaming
+        {
+            get { return _isRenaming; }
+            set
+            {
+                _isRenaming = value;
+                NotifyOfPropertyChange(() => EntryModel);
+                NotifyOfPropertyChange(() => IsRenaming);
+            }
+        }
+        public bool IsRenamable
+        {
+            get { return _isRenamable; }
+            set
+            {
+                _isRenamable = value;
+                NotifyOfPropertyChange(() => IsRenamable);
+
+            }
+        }
+
+        public IEntryModel EntryModel { get; private set; }
+
+        public ImageSource Icon
+        {
+            get
+            {
+                if (!_isIconLoaded)
+                {
+                    _isIconLoaded = true;
+                    loadIcon();
+                }
+                return _icon;
+            }
+            set { _icon = value; NotifyOfPropertyChange(() => Icon); }
+        }
+
+        public bool IsSelected { get { return _isSelected; } set { if (_isSelected != value) { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); } } }
+
+        #endregion
+    }
+
+}
