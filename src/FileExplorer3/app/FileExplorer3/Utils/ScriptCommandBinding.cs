@@ -106,6 +106,11 @@ namespace FileExplorer.Utils
             };
         }
 
+        public override string ToString()
+        {
+            return "ScriptCommandBinding" +  UICommandKey.ToString();
+        }
+
         protected void setCommand(ICommand value)
         {
             _command = value;

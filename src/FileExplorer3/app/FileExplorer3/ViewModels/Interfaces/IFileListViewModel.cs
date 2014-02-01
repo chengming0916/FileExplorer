@@ -12,20 +12,8 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IFileListViewModel 
-    {
-        ///// <summary>
-        ///// Return available commands for current filelist, for toolbar and context menu.
-        ///// </summary>
-        //IToolbarCommandsHelper ToolbarCommands { get; }
-
-        ///// <summary>
-        ///// All changable script commands for the current file list, allow customize what to execute when certain action.
-        ///// </summary>
-        //IFileListScriptCommandContainer ScriptCommands { get; }
-
-        ICommandManager Commands { get; }
-
+    public interface IFileListViewModel : ISupportCommandManager
+    {        
         /// <summary>
         /// Load entries and apply filters.
         /// </summary>

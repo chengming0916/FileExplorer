@@ -36,8 +36,7 @@ namespace FileExplorer.ViewModels
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
 
-
-
+            Commands = new ExplorerCommandManager(this, events, FileList, DirectoryTree, Navigation);
             setRootModels(_rootModels);
 
             _events.Subscribe(this);
@@ -47,20 +46,13 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        #region Methods
-
-        private IEnumerable<IScriptCommandBinding> getExportedCommands()
-        {
-            return FileList.Commands.ExportedCommandBindings
-                .Union(Navigation.Commands.ExportedCommandBindings)
-                .Union(DirectoryTree.Commands.ExportedCommandBindings);
-        }
+        #region Methods 
 
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
-            this.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
+            this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
         }
 
         public void Go(string gotoPath)
@@ -160,14 +152,14 @@ namespace FileExplorer.ViewModels
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 
+        public ICommandManager Commands { get; private set; }
+
         public IBreadcrumbViewModel Breadcrumb { get; private set; }
         public IDirectoryTreeViewModel DirectoryTree { get; private set; }
         public IFileListViewModel FileList { get; private set; }
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
-
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }
 
         #endregion
 

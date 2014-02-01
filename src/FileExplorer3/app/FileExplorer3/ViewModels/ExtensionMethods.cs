@@ -51,6 +51,17 @@ namespace FileExplorer
                 .ToArray()
                 : new IEntryViewModel[] { };
 
+        public static VMParameterDic AsVMParameterDic(this ParameterDic dic)
+        {
+            if (dic is VMParameterDic)
+                return (VMParameterDic)dic;
+
+            var retVal = new VMParameterDic();
+            foreach (var pp in dic)
+                retVal.Add(pp.Key, pp.Value);
+            return retVal;
+        }
+
         //public static IEnumerable<IDirectoryNodeViewModel> GetHierarchy(
         //    this IDirectoryNodeViewModel node, bool includeCurrent)
         //{

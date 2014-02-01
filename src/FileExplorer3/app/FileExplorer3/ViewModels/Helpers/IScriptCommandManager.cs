@@ -73,4 +73,9 @@ namespace FileExplorer.ViewModels
 
 
     }
+
+    public interface ISupportCommandManager 
+    {
+        ICommandManager Commands { get; }
+    }
 }
