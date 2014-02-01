@@ -16,5 +16,18 @@ namespace FileExplorer.ViewModels
         IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get; }
     }
 
-    
+    public class ExportCommandBindings : IExportCommandBindings
+    {
+        public ExportCommandBindings(params IScriptCommandBinding[] exports)
+        {
+            ExportedCommandBindings = exports;
+        }
+
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings
+        {
+            get;
+            private set;
+        }
+    }
+
 }

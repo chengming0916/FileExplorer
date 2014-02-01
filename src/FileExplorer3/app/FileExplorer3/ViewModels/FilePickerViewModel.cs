@@ -50,7 +50,7 @@ namespace FileExplorer.ViewModels
             };
 
 
-            FileList.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
+            FileList.Commands.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
                    vms.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        OpenSelectedDirectory.FromFileList,  //Selected directory
                        new SimpleScriptCommand("", (pd) =>
@@ -132,7 +132,7 @@ namespace FileExplorer.ViewModels
 
         public void Save()
         {
-            var pm = FileList.ScriptCommands.ParameterDicConverter.Convert(new ParameterDic());
+            var pm = FileList.Commands.ParameterDicConverter.Convert(new ParameterDic());
             var profile = FileList.CurrentDirectory.Profile;
 
             //Update FileName in case user does not enter full path name.
@@ -170,7 +170,7 @@ namespace FileExplorer.ViewModels
             List<IEntryModel> selectedFiles = new List<IEntryModel>();
             Func<IEntryModel, IScriptCommand> addToSelectedFiles =
                 m => new SimpleScriptCommand("AddToSelectedFiles", pd => { selectedFiles.Add(m); return ResultCommand.NoError; });
-            var pm = FileList.ScriptCommands.ParameterDicConverter.Convert(new ParameterDic());
+            var pm = FileList.Commands.ParameterDicConverter.Convert(new ParameterDic());
             new ScriptRunner().Run(pm,
             ScriptCommands.RunInSequence(
                 ScriptCommands.ForEach(

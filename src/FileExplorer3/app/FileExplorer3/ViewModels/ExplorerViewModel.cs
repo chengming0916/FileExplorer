@@ -51,7 +51,7 @@ namespace FileExplorer.ViewModels
 
         private IEnumerable<IScriptCommandBinding> getExportedCommands()
         {
-            return FileList.ExportedCommandBindings
+            return FileList.Commands.ExportedCommandBindings
                 .Union(Navigation.ExportedCommandBindings)
                 .Union(DirectoryTree.ExportedCommandBindings);
         }

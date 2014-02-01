@@ -84,7 +84,7 @@ namespace TestApp.WPF
         {
             _explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
 
-            _explorer.FileList.ScriptCommands.Open =
+            _explorer.FileList.Commands.ScriptCommands.Open =
               FileList.IfSelection(evm => evm.Count() == 1,
                   FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                       FileList.OpenSelectedDirectory, //Selected directory                        
@@ -93,7 +93,7 @@ namespace TestApp.WPF
                   ResultCommand.NoError //Selected more than one item, ignore.
                   );
 
-            _explorer.FileList.ScriptCommands.Delete =
+            _explorer.FileList.Commands.ScriptCommands.Delete =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     new IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
@@ -105,7 +105,7 @@ namespace TestApp.WPF
 
             //new ShowMessageBox(_windowManager, "Delete", "Pending to implement.");
 
-            _explorer.FileList.ToolbarCommands.ExtraCommandProviders = new[] { 
+            _explorer.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
                     new CommandModel(ApplicationCommands.Open) { IsVisibleOnToolbar = false },
                     new SeparatorCommandModel(),
