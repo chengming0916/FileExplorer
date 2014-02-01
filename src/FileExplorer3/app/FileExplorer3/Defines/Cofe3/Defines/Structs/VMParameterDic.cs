@@ -9,9 +9,9 @@ using System.Windows;
 using System.Windows.Controls;
 using Caliburn.Micro;
 using Cofe.Core;
-using FileExplorer.ViewModels;
+using FileExplorer.BaseControls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.ViewModels
 {
     /// <summary>
     /// Specialized for ICommand related (IScriptCommandContainer, ICommandHelper)
@@ -22,6 +22,13 @@ namespace FileExplorer.BaseControls
         {
             get { return this.ContainsKey("Events") && this["Events"] is IEventAggregator ? this["Events"] as IEventAggregator : null; }
             set { if (this.ContainsKey("Events")) this["Events"] = value; else this.Add("Events", value); }
+        }
+
+
+        public IExplorerViewModel Explorer
+        {
+            get { return this.ContainsKey("Explorer") && this["Explorer"] is IExplorerViewModel ? this["Explorer"] as IExplorerViewModel : null; }
+            set { if (this.ContainsKey("Explorer")) this["Explorer"] = value; else this.Add("Explorer", value); }
         }
 
         public IFileListViewModel FileList
@@ -45,17 +52,5 @@ namespace FileExplorer.BaseControls
 
     }    
 
-    public static partial class ExtensionMethods
-    {
-        public static VMParameterDic AsVMParameterDic(this ParameterDic dic)
-        {
-            if (dic is VMParameterDic) 
-                return (VMParameterDic)dic;
 
-            var retVal = new VMParameterDic();
-            foreach (var pp in dic)
-                retVal.Add(pp.Key, pp.Value);
-            return retVal;                    
-        }
-    }
 }

@@ -134,6 +134,7 @@
     <Compile Include="ViewModels\AddDirectoryViewModel.cs" />
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeCommandManager.cs" />
+    <Compile Include="ViewModels\ExplorerCommandManager.cs" />
     <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
     <Compile Include="ViewModels\FileListCommandManager.cs" />
     <Compile Include="ViewModels\Helpers\IScriptCommandManager.cs" />
@@ -143,7 +144,6 @@
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NavigationCommandManager.cs" />
-    <Compile Include="ViewModels\NavigationScriptCommandContainer.cs" />
     <Compile Include="ViewModels\ScriptCommands.cs" />
     <Compile Include="ViewModels\Helpers\ToolbarCommandsHelper.cs" />
     <Compile Include="ViewModels\Interfaces\ICommandViewModel.cs" />

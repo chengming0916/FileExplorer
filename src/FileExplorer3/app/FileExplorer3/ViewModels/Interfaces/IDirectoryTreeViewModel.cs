@@ -9,7 +9,7 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IDirectoryTreeViewModel : ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>
+    public interface IDirectoryTreeViewModel : ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>,  ISupportCommandManager
     {
         IEntryModel[] RootModels { set; }
         IProfile[] Profiles { set; }
@@ -19,8 +19,6 @@ namespace FileExplorer.ViewModels
 
         Task SelectAsync(IEntryModel value);
         void ExpandRootEntryModels();
-
-        ICommandManager Commands { get; }
     }
 
     public interface IDirectoryNodeViewModel : IEntryViewModel, ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>, IDraggable

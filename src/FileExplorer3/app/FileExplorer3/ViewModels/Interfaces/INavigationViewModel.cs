@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels
 {
-    public interface INavigationViewModel 
+    public interface INavigationViewModel : ISupportCommandManager
     {
         void GoUp();        
         void GoBack();
@@ -16,6 +16,5 @@ namespace FileExplorer.ViewModels
         bool CanGoBack { get; }
         bool CanGoNext { get; }
 
-        ICommandManager Commands { get; }
     }
 }

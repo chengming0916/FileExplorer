@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using FileExplorer.BaseControls;
+using FileExplorer.ViewModels;
 
 namespace Cofe.Core.Script
 {
@@ -25,7 +25,7 @@ namespace Cofe.Core.Script
                     object sender = p2[1];
                     RoutedEventArgs eventArgs = p2[2] as RoutedEventArgs;                    
 
-                    return new UIParameterDic() { Sender = sender, 
+                    return new FileExplorer.BaseControls.UIParameterDic() { Sender = sender, 
                         EventName = eventName, 
                         EventArgs = eventArgs };
                 }, null, ParameterDicConverters.ConvertParameterOnly);

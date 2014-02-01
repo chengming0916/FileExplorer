@@ -7,7 +7,7 @@ using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IExplorerViewModel : IExportCommandBindings
+    public interface IExplorerViewModel  : ISupportCommandManager
     {
         IEntryModel[] RootModels { get; set; }
 
