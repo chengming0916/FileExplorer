@@ -14,12 +14,12 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels
 {
-    public class FileListScriptCommandManager : IScriptCommandManager, IExportCommandBindings
+    public class FileListCommandManager : CommandManagerBase, IExportCommandBindings
     {
         #region Constructor
 
-        public FileListScriptCommandManager(IFileListViewModel flvm, IEventAggregator events,  
-            params IExportCommandBindings[] additionalBindingExportSource)
+        public FileListCommandManager(IFileListViewModel flvm, IEventAggregator events,  
+            params IExportCommandBindings[] additionalBindingExportSource)            
         {
             _flvm = flvm;
 
@@ -82,11 +82,6 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        private IEnumerable<IScriptCommandBinding> getCommandBindings()
-        {
-            return _exportBindingSource.SelectMany(eb => eb.ExportedCommandBindings);
-        }
-
         public void ToggleViewMode()
         {
             var viewModeWoSeparator = ViewModeCommand.ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
@@ -110,19 +105,13 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Data
-        
-        private IExportCommandBindings[] _exportBindingSource;
+                
         private IFileListViewModel _flvm;
 
         #endregion
 
         #region Public Properties
 
-        public IParameterDicConverter ParameterDicConverter { get; private set; }
-        public dynamic ScriptCommands { get; private set; }
-
-        public IToolbarCommandsHelper ToolbarCommands { get; private set; }
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getCommandBindings(); } }
 
         #endregion
 

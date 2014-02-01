@@ -13,7 +13,7 @@ namespace FileExplorer.ViewModels
     /// <summary>
     /// Manage script commands for ViewModels
     /// </summary>
-    public interface IScriptCommandManager : IExportCommandBindings
+    public interface ICommandManager : IExportCommandBindings
     {
         /// <summary>
         /// A number of parameter have to be added to ParameterDic to run commands in ScriptCommands (e.g. FileList), 
@@ -32,35 +32,45 @@ namespace FileExplorer.ViewModels
         IToolbarCommandsHelper ToolbarCommands { get; }
     }
 
-    //public class ScriptCommandManager : IScriptCommandManager
-    //{
-    //    #region Constructor
+    public class CommandManagerBase : ICommandManager
+    {
+        #region Constructor
 
-    //    public ScriptCommandManager()
-    //    {
-    //        Commands = new DynamicDictionary<IScriptCommand>();
-    //        Toolbar = null;
-    //    }
+        public CommandManagerBase()
+        {
+        }
 
-    //    #endregion
+        #endregion
 
-    //    #region Methods
+        #region Methods
 
-    //    #endregion
+        private IEnumerable<IScriptCommandBinding> getCommandBindings()
+        {
+            return _exportBindingSource.SelectMany(eb => eb.ExportedCommandBindings);
+        }
 
-    //    #region Data
+        #endregion
 
-    //    #endregion
+        #region Data
 
-    //    #region Public Properties
+        protected IExportCommandBindings[] _exportBindingSource = new IExportCommandBindings[] { };
 
-    //    public dynamic Commands { get; private set; }        
-    //    public IToolbarCommandsHelper Toolbar { get; private set; }
+        #endregion
+
+        #region Public Properties
+
+        public IParameterDicConverter ParameterDicConverter { get; protected set; }
+        public dynamic ScriptCommands { get; protected set; }
+
+        public IToolbarCommandsHelper ToolbarCommands { get; protected set; }
+        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getCommandBindings(); } }
 
         
-    //    #endregion
 
 
-        
-    //}
+        #endregion
+
+
+
+    }
 }

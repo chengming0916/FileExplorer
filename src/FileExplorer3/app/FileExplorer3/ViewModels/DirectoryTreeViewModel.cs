@@ -56,8 +56,7 @@ namespace FileExplorer.ViewModels
             };
             Selection = selection;
 
-            ToolbarCommands = new DirectoryTreeToolbarCommandsHelper(this, events);
-            ScriptCommands = new DirectoryTreeScriptCommandContainer(this, events);
+            Commands = new DirectoryTreeCommandManager(this, events);
 
             DragHelper = new DirectoryTreeDragHelper(Entries, Selection);
         }
@@ -70,7 +69,7 @@ namespace FileExplorer.ViewModels
         {
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
-            this.RegisterCommand(uiEle, ScriptBindingScope.Local);
+            this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
         }
 
         protected void BroadcastDirectoryChanged(IEntryViewModel viewModel)
@@ -116,13 +115,7 @@ namespace FileExplorer.ViewModels
                 (Selection as ITreeRootSelector<IDirectoryNodeViewModel, IEntryModel>)
                     .Comparers = profiles.Select(p => p.HierarchyComparer);
             }
-        }
-
-        private IEnumerable<IScriptCommandBinding> getExportedCommands()
-        {
-            return ToolbarCommands.ExportedCommandBindings                
-                .Union(ScriptCommands.ExportedCommandBindings);
-        }
+        }     
 
         #endregion
 
@@ -137,9 +130,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IToolbarCommandsHelper ToolbarCommands { get; private set; }
-        public IDirectoryTreeScriptCommandContainer ScriptCommands { get; private set; }
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getExportedCommands(); } }        
+        public ICommandManager Commands { get; private set; }
 
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }

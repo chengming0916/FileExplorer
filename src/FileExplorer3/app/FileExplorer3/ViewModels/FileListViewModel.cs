@@ -85,7 +85,7 @@ namespace FileExplorer.ViewModels
                 events.Subscribe(this);
 
 
-            Commands = new FileListScriptCommandManager(this, events, Selection);        
+            Commands = new FileListCommandManager(this, events, Selection);        
         }
 
         #endregion
@@ -180,7 +180,7 @@ namespace FileExplorer.ViewModels
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
 
-        public IScriptCommandManager Commands { get; private set; }        
+        public ICommandManager Commands { get; private set; }        
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
         public IEventAggregator Events { get; private set; }
