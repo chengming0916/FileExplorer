@@ -104,7 +104,12 @@ namespace FileExplorer.Defines
     }
     #endregion
 
-
+    public class TransferProgress
+    {
+        public Int32? TotalEntries { get; private set; }
+        public Int32? ProcessedEntries { get; private set; }
+        public short? CurrentProgressPercent { get; private set; }
+    }
 
     public class EntryChangedEvent
     {

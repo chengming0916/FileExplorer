@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Models
@@ -12,10 +13,10 @@ namespace FileExplorer.Models
         IDiskPathMapper Mapper { get; }
         IDiskProfile Profile { get; }
 
-        Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access);
-        Task DeleteAsync(params IEntryModel[] entryModels);
-        Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName);
-        Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory);
+        Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct);
+        Task DeleteAsync(IEntryModel entryModel, CancellationToken ct);
+        Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName, CancellationToken ct);
+        Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct);
 
     }
 
@@ -31,22 +32,22 @@ namespace FileExplorer.Models
         public IDiskProfile Profile { get; protected set; }
         public IDiskPathMapper Mapper { get; protected set; }
 
-        public virtual Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access)
+        public virtual Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task DeleteAsync(IEntryModel[] entryModels)
+        public virtual Task DeleteAsync(IEntryModel entryModel, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName)
+        public virtual Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory)
+        public virtual Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
@@ -61,9 +62,9 @@ namespace FileExplorer.Models
 
         }
 
-        public override async Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName)
+        public override async Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName, CancellationToken ct)
         {
-            string destPath = Path.Combine( Path.GetDirectoryName(entryModel.FullPath), newName);
+            string destPath = Path.Combine(Path.GetDirectoryName(entryModel.FullPath), newName);
             if (!entryModel.IsDirectory)
                 File.Move(entryModel.FullPath, destPath);
             else if (Directory.Exists(entryModel.FullPath))
@@ -71,17 +72,14 @@ namespace FileExplorer.Models
             return await Profile.ParseAsync(destPath);
         }
 
-        public override async Task DeleteAsync(IEntryModel[] entryModels)
+        public override async Task DeleteAsync(IEntryModel entryModel, CancellationToken ct)
         {
-            foreach (var entryModel in entryModels)
-            {
-                if (entryModel.IsDirectory)
-                    Directory.Delete(entryModel.FullPath, true);
-                else File.Delete(entryModel.FullPath);
-            }
+            if (entryModel.IsDirectory)
+                Directory.Delete(entryModel.FullPath, true);
+            else File.Delete(entryModel.FullPath);
         }
 
-        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access)
+        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct)
         {
             switch (access)
             {
@@ -92,7 +90,7 @@ namespace FileExplorer.Models
             throw new NotImplementedException();
         }
 
-        public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory)
+        public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)
         {
             if (isDirectory)
                 Directory.CreateDirectory(fullPath);

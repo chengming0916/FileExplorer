@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
@@ -64,28 +65,36 @@ namespace FileExplorer.Models
             return model.Profile.Path.Combine(model.FullPath, paths);
         }
 
-        public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath, FileAccess access)
+        public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath, FileAccess access, CancellationToken ct)
         {
             IEntryModel entryModel = await ioHelper.Profile.ParseAsync(fullPath);
+            ct.ThrowIfCancellationRequested();
             if (entryModel == null)
                 if (access == FileAccess.Write)
-                    entryModel = await ioHelper.CreateAsync(fullPath, false);
+                    entryModel = await ioHelper.CreateAsync(fullPath, false, ct);
                 else throw new IOException("File not found.");
-            return await ioHelper.OpenStreamAsync(entryModel, access);
+            ct.ThrowIfCancellationRequested();
+            return await ioHelper.OpenStreamAsync(entryModel, access, ct);
         }
 
 
 
-        public static async Task<string> WriteToCacheAsync(this IDiskIOHelper ioHelper, IEntryModel entry, bool force = false)
+        public static async Task<string> WriteToCacheAsync(this IDiskIOHelper ioHelper, IEntryModel entry, CancellationToken ct, bool force = false)
         {
             var mapping = ioHelper.Mapper[entry];
 
             if (!mapping.IsCached || force)
-                using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read))
+                using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read, ct))
                 using (var outputStream = System.IO.File.OpenWrite(mapping.IOPath))
                     await StreamUtils.CopyStreamAsync(srcStream, outputStream);
 
             return mapping.IOPath;
+        }
+
+        public static async Task DeleteAsync(this IDiskIOHelper ioHelper, IEntryModel[] entryModels, CancellationToken ct)
+        {
+            foreach (var em in entryModels)
+                await ioHelper.DeleteAsync(em, ct);
         }
 
         public static async Task<IEntryModel> GetParentAsync(this IProfile profile, IEntryModel entry)

@@ -14,7 +14,8 @@ namespace TestApp.WPF
         {
             Window window = base.EnsureWindow(model, view, isDialog);
 
-            if (model is FileExplorer.ViewModels.MessageDialogViewModel)
+            if (model is FileExplorer.ViewModels.MessageDialogViewModel || 
+                model is FileExplorer.ViewModels.ProgressDialogViewModel)
             {
                 window.SizeToContent = SizeToContent.Height;
                 window.Width = 300;

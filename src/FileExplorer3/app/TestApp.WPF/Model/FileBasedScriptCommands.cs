@@ -73,7 +73,7 @@ namespace FileExplorer.Models
                 if (profile.DiskIO.Mapper is NullDiskPatheMapper)
                     return ResultCommand.Error(new NotSupportedException());
 
-                string appliedFileName = AsyncUtils.RunSync(() => profile.DiskIO.WriteToCacheAsync(parameter[0]));
+                string appliedFileName = AsyncUtils.RunSync(() => profile.DiskIO.WriteToCacheAsync(parameter[0], pm.CancellationToken));
 
                 if (_isFolder || appliedFileName.StartsWith("::{"))
                 {
@@ -128,12 +128,14 @@ namespace FileExplorer.Models
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
+            CancellationToken ct = pm.CancellationToken;
+            
             var _srcModels = _srcModelFunc(pm);
 
             if (_srcModels != null)
             {
                 Task[] tasks = _srcModels.Select(m => 
-                    (m.Profile as IDiskProfile).DiskIO.DeleteAsync(m)                    
+                    (m.Profile as IDiskProfile).DiskIO.DeleteAsync(m, ct)                    
                     ).ToArray();
                 await Task.WhenAll(tasks);
 
@@ -183,12 +185,12 @@ namespace FileExplorer.Models
                 ct = ChangeType.Changed;
             }
 
-            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read))
-            using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write))
+            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read, pm.CancellationToken))
+            using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write, pm.CancellationToken))
                 await StreamUtils.CopyStreamAsync(srcStream, destStream);
 
             if (_removeOriginal)
-                await srcProfile.DiskIO.DeleteAsync(_srcModel);
+                await srcProfile.DiskIO.DeleteAsync(_srcModel, pm.CancellationToken);
 
             return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
         }
@@ -225,7 +227,7 @@ namespace FileExplorer.Models
 
             if (destModel == null)
             {
-                destModel = await destProfile.DiskIO.CreateAsync(destFullName, true);
+                destModel = await destProfile.DiskIO.CreateAsync(destFullName, true, pm.CancellationToken);
 
                 destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, CancellationToken.None, em =>
                         em.FullPath.Equals(destFullName,

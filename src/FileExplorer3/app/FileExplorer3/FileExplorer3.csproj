@@ -144,6 +144,7 @@
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NavigationCommandManager.cs" />
+    <Compile Include="ViewModels\ProgressDialogViewModel.cs" />
     <Compile Include="ViewModels\ScriptCommands.cs" />
     <Compile Include="ViewModels\Helpers\ToolbarCommandsHelper.cs" />
     <Compile Include="ViewModels\Interfaces\ICommandViewModel.cs" />
@@ -162,6 +163,9 @@
     </Compile>
     <Compile Include="Views\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgressDialogView.xaml.cs">
+      <DependentUpon>ProgressDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
@@ -615,6 +619,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProgressDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

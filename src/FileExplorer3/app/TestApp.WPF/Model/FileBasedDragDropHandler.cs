@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core;
@@ -35,7 +36,7 @@ namespace FileExplorer.Models
                           {
                               var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];
                               if (mapping != null && !mapping.IsCached)
-                                  await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m);
+                                  await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m, CancellationToken.None);
                           }
                   }));
         }
