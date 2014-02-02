@@ -24,10 +24,10 @@ namespace FileExplorer.Models
             _entryModel = entryModel;
         }
 
-        public static async Task<SkyDriveFileStream> OpenReadAsync(IEntryModel entryModel)
+        public static async Task<SkyDriveFileStream> OpenReadAsync(IEntryModel entryModel, CancellationToken ct)
         {
             string sourceUrl = (entryModel as SkyDriveItemModel).SourceUrl;
-            byte[] bytes = await WebUtils.DownloadAsync(new Uri(sourceUrl));
+            byte[] bytes = await WebUtils.DownloadAsync(new Uri(sourceUrl), ct);
             SkyDriveFileStream stream = new SkyDriveFileStream(entryModel);
             await stream.WriteAsync(bytes, 0, bytes.Length);
             stream.Seek(0, SeekOrigin.Begin);
@@ -35,9 +35,9 @@ namespace FileExplorer.Models
             return stream;
         }
 
-        public static async Task<SkyDriveFileStream> OpenReadWriteAsync(IEntryModel entryModel)
+        public static async Task<SkyDriveFileStream> OpenReadWriteAsync(IEntryModel entryModel, CancellationToken ct)
         {
-            SkyDriveFileStream stream = await OpenReadAsync(entryModel);
+            SkyDriveFileStream stream = await OpenReadAsync(entryModel, ct);
             stream._udateSrcFunc = (s) =>
             {
                 AsyncUtils.RunSync(() => updateSourceAsync(s));

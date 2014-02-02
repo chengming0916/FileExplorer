@@ -12,9 +12,15 @@ namespace FileExplorer.Utils
     {
         private Dictionary<string, TValue> _dictionary;
 
-        public DynamicDictionary()
+        public DynamicDictionary(IEqualityComparer<string> comparer)
         {
-            _dictionary = new Dictionary<string, TValue>();
+            _dictionary = new Dictionary<string, TValue>(comparer);
+        }
+
+        public DynamicDictionary()
+            : this(StringComparer.CurrentCulture)
+        {
+
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)

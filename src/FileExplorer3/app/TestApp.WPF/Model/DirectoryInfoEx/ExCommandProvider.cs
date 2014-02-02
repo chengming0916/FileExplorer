@@ -64,7 +64,7 @@ namespace FileExplorer.Models
                 Header = appliedModels[0].IsDirectory ? "Explore" : "Open";
                 var appliedModel = appliedModels[0];
                 HeaderImageFunc = (cm) =>
-                    AsyncUtils.RunSync(() => GetFromSystemImageList.Instance.GetIconForModelAsync(appliedModel));
+                    AsyncUtils.RunSync(() => GetFromSystemImageList.Instance.GetIconForModelAsync(appliedModel, CancellationToken.None));
 
                 Task.Run(() =>
                     {
@@ -100,7 +100,7 @@ namespace FileExplorer.Models
                                         Header = String.Format("{0} ({1})", exeName, info.KeyName),
                                         ToolTip = info.Description,
                                         HeaderImageFunc = (cm) => AsyncUtils.RunSync(() =>
-                                            _profile.GetIconExtractSequence(exeModel).Last().GetIconForModelAsync(exeModel)),
+                                            _profile.GetIconExtractSequence(exeModel).Last().GetIconForModelAsync(exeModel, CancellationToken.None)),
                                         IsEnabled = true
                                     };
 

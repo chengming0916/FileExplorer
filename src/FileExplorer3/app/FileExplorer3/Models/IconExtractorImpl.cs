@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -33,7 +34,7 @@ namespace FileExplorer.Models
             FolderIcon = folderIcon;
         }
 
-        public Task<ImageSource> GetIconForModelAsync(IEntryModel model)
+        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
         {
             if (model.IsDirectory)
                 return Task<ImageSource>.FromResult(FolderIcon);
@@ -44,23 +45,27 @@ namespace FileExplorer.Models
     public class GetUriIcon : IEntryModelIconExtractor
     {
         private Func<IEntryModel, Uri> _uriFunc;
+        private System.Threading.CancellationToken CancellationToken;
         public GetUriIcon(Func<IEntryModel, Uri> uriFunc)
         {
             _uriFunc = uriFunc;
         }
 
 
-        
 
-        public async Task<ImageSource> GetIconForModelAsync(IEntryModel model)
+
+        public async Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
         {
-            var output = await WebUtils.DownloadAsync(_uriFunc(model));
+            var output = await WebUtils.DownloadAsync(_uriFunc(model), ct);            
 
             BitmapImage retIcon = new BitmapImage();
-            retIcon.BeginInit();
-            retIcon.StreamSource = new MemoryStream(output);
-            retIcon.EndInit();
-            retIcon.Freeze();
+            if (!ct.IsCancellationRequested)
+            {
+                retIcon.BeginInit();
+                retIcon.StreamSource = new MemoryStream(output);
+                retIcon.EndInit();
+                retIcon.Freeze();
+            }
             return retIcon;
         }
     }

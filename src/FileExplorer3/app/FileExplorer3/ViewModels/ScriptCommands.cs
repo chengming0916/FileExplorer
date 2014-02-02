@@ -75,6 +75,27 @@ namespace FileExplorer.ViewModels
         }
     }
 
+    public class ShowProgress : ScriptCommandBase
+    {
+        private IWindowManager _wm;
+        public ShowProgress(IWindowManager wm, IScriptCommand nextCommand)
+            : base("ShowProgress", nextCommand)
+        {
+            _wm = wm;            
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pdv = new ProgressDialogViewModel();
+            
+            pm["Progress"] = pdv;
+            pm["CancellationToken"] = pdv.CancellationToken;
+
+            _wm.ShowDialog(pdv);
+            return _nextCommand;
+        }
+    }
+
     #endregion
 
     #region DirectoryTreeBased
@@ -286,7 +307,7 @@ namespace FileExplorer.ViewModels
             if (profile == null)
                 return ResultCommand.Error(new ArgumentException());
 
-            IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel, newName);
+            IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel, newName, pm.CancellationToken);
             return new NotifyChangedCommand(destModel.Profile, destModel.FullPath, ChangeType.Moved, srcModel.FullPath);
         }
     }

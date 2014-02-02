@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cofe.Core
 {
-    public class ParameterPair 
+    public class ParameterPair
     {
         public string Key { get; set; }
         public object Value { get; set; }
@@ -48,7 +48,7 @@ namespace Cofe.Core
             return retVal;
         }
 
-   
+
         public void AddOrUpdate(string key, object value)
         {
             if (this.ContainsKey(key))
@@ -80,7 +80,14 @@ namespace Cofe.Core
         {
             get { return this.ContainsKey("Parameter") && this["Parameter"] is object ? this["Parameter"] as object : null; }
             set { if (this.ContainsKey("Parameter")) this["Parameter"] = value; else this.Add("Parameter", value); }
-        }             
+        }
+
+        public CancellationToken CancellationToken
+        {
+            get { return this.ContainsKey("CancellationToken") && this["CancellationToken"] is CancellationToken ? 
+                (CancellationToken)this["CancellationToken"] : CancellationToken.None; }
+            set { if (this.ContainsKey("CancellationToken")) this["CancellationToken"] = value; else this.Add("CancellationToken", value); }
+        }
 
         /// <summary>
         /// Most exception is throw directly, if not, it will set the Error property, which will be thrown 
