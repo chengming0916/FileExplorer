@@ -15,6 +15,7 @@ using System.Windows.Markup;
 using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
+using Cofe.Core.Utils;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
@@ -89,7 +90,7 @@ namespace FileExplorer.BaseControls
                                         break;
                                     default:
                                         RoutedEventHandler handler = (RoutedEventHandler)(
-                                            (o, re) => { execute(_eventProcessors, e, o, re); });
+                                            (o, re) => { executeAsync(_eventProcessors, e, o, re); });
                                         _registeredHandler.Add(e, handler);
                                         Control.AddHandler(e, handler);
                                         break;
@@ -117,7 +118,7 @@ namespace FileExplorer.BaseControls
                 }));
         }
 
-        private bool execute(IList<UIEventProcessorBase> processors, RoutedEvent eventId, object sender, RoutedEventArgs e)
+        private async Task<bool> executeAsync(IList<UIEventProcessorBase> processors, RoutedEvent eventId, object sender, RoutedEventArgs e)
         {
             //if (eventName != "OnMouseMove")
             //    Debug.WriteLine(eventName);
@@ -128,7 +129,7 @@ namespace FileExplorer.BaseControls
                 .Where(p => p.ProcessEvents.Contains(eventId))
                 .Select(p => p.OnEvent(eventId))
                 .Where(c => c.CanExecute(pd)));
-            _scriptRunner.Run(commands, pd);
+            await _scriptRunner.RunAsync(commands, pd);
             return pd.IsHandled;
         }
 
@@ -165,7 +166,7 @@ namespace FileExplorer.BaseControls
             }
             //if (!control.IsFocused)
             //    return;
-            execute(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e);
+            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e);
 
             if (e.ClickCount == 1)
             {
@@ -186,7 +187,7 @@ namespace FileExplorer.BaseControls
             Point startPosition = AttachedProperties.GetStartPosition(control);
             if (startPosition.IsValidPosition())
             {
-                execute(_eventProcessors, FrameworkElement.MouseMoveEvent, sender, e);
+                executeAsync(_eventProcessors, FrameworkElement.MouseMoveEvent, sender, e);
 
                 if (!AttachedProperties.GetIsMouseDragging(control))
                     if ((e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed))
@@ -205,7 +206,7 @@ namespace FileExplorer.BaseControls
         {
             FrameworkElement control = sender as FrameworkElement;
             AttachedProperties.SetIsMouseDragging(control, true);
-            if (execute(_eventProcessors, UIEventHub.MouseDragEvent, sender, e))
+            if (AsyncUtils.RunSync(() => executeAsync(_eventProcessors, UIEventHub.MouseDragEvent, sender, e)))
             //DragDropEventProcessor set e.IsHandled to true
             {
                 //DragDrop does not raise MouseUp, so have to raise manually.
@@ -221,7 +222,7 @@ namespace FileExplorer.BaseControls
 
             FrameworkElement control = sender as FrameworkElement;
 
-            execute(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);
+            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);
 
             AttachedProperties.SetIsMouseDragging(control, false);
             AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);

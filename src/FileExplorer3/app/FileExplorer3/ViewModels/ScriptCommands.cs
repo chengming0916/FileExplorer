@@ -91,7 +91,7 @@ namespace FileExplorer.ViewModels
             pm["Progress"] = pdv;
             pm["CancellationToken"] = pdv.CancellationToken;
 
-            _wm.ShowDialog(pdv);
+            _wm.ShowWindow(pdv);
             return _nextCommand;
         }
     }
@@ -108,7 +108,7 @@ namespace FileExplorer.ViewModels
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pdv = pm["Progress"] as ProgressDialogViewModel;
-            pdv.TryClose(true);
+            pdv.TryClose();
             return _nextCommand;
         }
     }
@@ -392,7 +392,8 @@ namespace FileExplorer.ViewModels
                 return false;
 
             var transferCommands = source.Select(s => _transferOneFunc(effects, s, dest)).ToArray();
-            return transferCommands.Any(c => c == null || !c.CanExecute(pm));                
+            var cannotTransfer = transferCommands.FirstOrDefault(c => c == null || !c.CanExecute(pm));
+            return cannotTransfer == null;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)

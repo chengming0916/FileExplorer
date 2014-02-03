@@ -129,10 +129,14 @@ namespace FileExplorer.Models
                 if (effect == DragDropEffects.None)
                     return DragDropEffects.None;
 
-                var sr = new ScriptRunner();                
-                sr.RunAsync(new ParameterDic(),
-                    entries.Select(e => 
-                        new FileTransferScriptCommand(e, destDir, effect == DragDropEffects.Move)).ToArray());
+                var sr = new ScriptRunner();
+                sr.RunAsync(
+                    new ParameterDic()
+                    {
+                        { "Source" , entries.ToArray() },
+                        { "Dest" , destDir },
+                        {"DragDropEffects", effect }
+                    }, TestApp.WPF.AppViewModel.TransferCommand);
                 return effect;                
             };
             return DragDropEffects.None;

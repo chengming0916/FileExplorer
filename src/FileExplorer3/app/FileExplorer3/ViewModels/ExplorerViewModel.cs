@@ -133,7 +133,7 @@ namespace FileExplorer.ViewModels
 
         public void Handle(EntryChangedEvent message)
         {
-            BroascastAsync(message);
+            //BroascastAsync(message);
         }
 
         #endregion

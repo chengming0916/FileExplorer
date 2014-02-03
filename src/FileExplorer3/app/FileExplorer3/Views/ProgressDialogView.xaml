@@ -7,9 +7,23 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <TextBlock x:Name="ProcessedEntries" />
-            <TextBlock x:Name="TotalEntries" />
-            <ProgressBar x:Name="OverallProgress" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Total entries" />
+                <TextBlock x:Name="TotalEntries" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Processed entries" />
+                <TextBlock x:Name="ProcessedEntries" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Overall Progress" />
+                <ProgressBar x:Name="OverallProgress" Width="100" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Current Progress" />
+                <ProgressBar x:Name="CurrentEntryProgress"  Width="100" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>
