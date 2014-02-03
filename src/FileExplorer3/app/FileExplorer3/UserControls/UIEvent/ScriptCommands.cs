@@ -143,7 +143,11 @@ namespace FileExplorer.BaseControls
 
         public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            return Execute(pm);
+            var sr = new ScriptRunner();
+            await sr.RunAsync(new Queue<IScriptCommand>(ScriptCommands), pm);
+            if (pm.Error != null)
+                return ResultCommand.Error(pm.Error);
+            else return _nextCommand;
         }
     }
 

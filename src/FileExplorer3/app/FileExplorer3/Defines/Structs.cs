@@ -109,6 +109,23 @@ namespace FileExplorer.Defines
         public Int32? TotalEntriesIncrement { get; set; }
         public Int32? ProcessedEntriesIncrement { get; set; }
         public short? CurrentProgressPercent { get; set; }
+
+        public static TransferProgress IncrementTotalEntries(int count = 1) 
+        {
+            return new TransferProgress() { TotalEntriesIncrement = count };
+        }
+        public static TransferProgress IncrementProcessedEntries(int count = 1)
+        {
+            return new TransferProgress() { ProcessedEntriesIncrement = count };
+        }
+    }
+
+    public class NullTransferProgress : IProgress<TransferProgress>
+    {
+        public static NullTransferProgress Instance = new NullTransferProgress();
+        public void Report(TransferProgress value)
+        {            
+        }
     }
 
     public class EntryChangedEvent

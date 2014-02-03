@@ -135,6 +135,7 @@ namespace TestApp.WPF
             
 
             _explorer.Commands.ScriptCommands.Transfer = 
+                TransferCommand = 
                 new TransferCommand((effect, source, destDir) => 
                     source.Profile is IDiskProfile ? 
                         (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
@@ -280,6 +281,7 @@ namespace TestApp.WPF
         #endregion
 
         #region Public Properties
+        public static IScriptCommand TransferCommand { get; private set; }
 
         public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
         public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }

@@ -158,12 +158,14 @@ namespace FileExplorer.Models
         private IEntryModel _srcModel;
         private IEntryModel _destDirModel;
         private bool _removeOriginal;
+        private IProgress<TransferProgress> _progress;
 
-        public StreamFileTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
+        public StreamFileTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal, IProgress<TransferProgress> progress)
             : base("StreamFileTransfer")
-        {
+        {            
             if (srcModel.Profile is IDiskProfile && destDirModel.Profile is IDiskProfile)
             {
+                _progress = progress;
                 _srcModel = srcModel;
                 _destDirModel = destDirModel;
                 _removeOriginal = removeOriginal;
@@ -187,10 +189,13 @@ namespace FileExplorer.Models
 
             using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read, pm.CancellationToken))
             using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write, pm.CancellationToken))
-                await StreamUtils.CopyStreamAsync(srcStream, destStream);
+                await StreamUtils.CopyStreamAsync(srcStream, destStream, false, false, false, 
+                    p => _progress.Report(new TransferProgress() { CurrentProgressPercent = p }) );
 
             if (_removeOriginal)
                 await srcProfile.DiskIO.DeleteAsync(_srcModel, pm.CancellationToken);
+
+            _progress.Report(TransferProgress.IncrementProcessedEntries());
 
             return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
         }
@@ -202,11 +207,13 @@ namespace FileExplorer.Models
         private IEntryModel _srcModel;
         private IEntryModel _destDirModel;
         private bool _removeOriginal;
-        public CopyDirectoryTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
+        private IProgress<TransferProgress> _progress;
+        public CopyDirectoryTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal, IProgress<TransferProgress> progress)
             : base("CopyDirectoryTransfer")
-        {
+        {            
             if (srcModel.Profile is IDiskProfile && destDirModel.Profile is IDiskProfile)
             {
+                _progress = progress;
                 _srcModel = srcModel;
                 _destDirModel = destDirModel;
                 _removeOriginal = removeOriginal;
@@ -231,16 +238,17 @@ namespace FileExplorer.Models
 
                 destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, CancellationToken.None, em =>
                         em.FullPath.Equals(destFullName,
-                        StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
+                        StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();                
                 _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
-
-
-            }
+            }            
 
             if (destModel == null)
                 return ResultCommand.Error(new Exception("Cannot construct destination " + destFullName));
+            else _progress.Report(TransferProgress.IncrementProcessedEntries()); //dest directory created
 
             var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel, CancellationToken.None)).ToList();
+            
+            _progress.Report(TransferProgress.IncrementTotalEntries(srcSubModels.Count())); //source entries
 
             var resultCommands = srcSubModels.Select(m =>
                 (IScriptCommand)new FileTransferScriptCommand(m, destModel, _removeOriginal)).ToList();
@@ -280,6 +288,7 @@ namespace FileExplorer.Models
             {
                 var srcProfile = _srcModel.Profile as IDiskProfile;
                 var destProfile = _destDirModel.Profile as IDiskProfile;
+                var progress = pm.ContainsKey("Progress") ? pm["Progress"] as IProgress<TransferProgress> : NullTransferProgress.Instance;
 
                 var destMapping = (_destDirModel.Profile as IDiskProfile).DiskIO.Mapper[_destDirModel];
                 var srcMapping = (_srcModel.Profile as IDiskProfile).DiskIO.Mapper[_srcModel];
@@ -288,27 +297,29 @@ namespace FileExplorer.Models
 
 
                 if (!srcMapping.IsVirtual && !destMapping.IsVirtual && _removeOriginal)
-                {
+                {                    
                     if (_srcModel.IsDirectory)
                     {
                         if (Directory.Exists(destFullName))
                             Directory.Delete(destFullName, true);
                         Directory.Move(srcMapping.IOPath, destFullName); //Move directly.
+                        progress.Report(TransferProgress.IncrementProcessedEntries());
                     }
                     else
                     {
                         if (File.Exists(destFullName))
                             File.Delete(destFullName);
-                        File.Move(srcMapping.IOPath, destFullName);
+                        File.Move(srcMapping.IOPath, destFullName);                        
                     }
+                    progress.Report(TransferProgress.IncrementProcessedEntries());
                     return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
                 }
                 else
                 {
                     if (_srcModel.IsDirectory)
-                        return new CopyDirectoryTransferCommand(_srcModel, _destDirModel, _removeOriginal);
+                        return new CopyDirectoryTransferCommand(_srcModel, _destDirModel, _removeOriginal, progress);
                     else
-                        return new StreamFileTransferCommand(_srcModel, _destDirModel, _removeOriginal);
+                        return new StreamFileTransferCommand(_srcModel, _destDirModel, _removeOriginal, progress);
                 }
 
 

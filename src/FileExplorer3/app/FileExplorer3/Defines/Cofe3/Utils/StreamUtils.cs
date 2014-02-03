@@ -51,8 +51,12 @@ namespace Cofe.Core.Utils
 #endif
         }
 
-        public static async Task CopyStreamAsync(Stream input, Stream output, bool resetInputStream = false, bool resetOutputStream = false, bool closeOutputStream = false)
+        public static async Task CopyStreamAsync(Stream input, Stream output, bool resetInputStream = false, 
+            bool resetOutputStream = false, bool closeOutputStream = false, Action<short> progress = null)
         {
+            if (progress == null)
+                progress = p => { };
+
             if (resetInputStream)
                 input.Seek(0, SeekOrigin.Begin);
             if (resetOutputStream)
@@ -62,6 +66,7 @@ namespace Cofe.Core.Utils
             int read;
             while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
+                progress((short)Math.Truncate((read / input.Length * 100.0)));
                 await output.WriteAsync(buffer, 0, read);
             }
 
