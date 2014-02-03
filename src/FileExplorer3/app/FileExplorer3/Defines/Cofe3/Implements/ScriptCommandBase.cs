@@ -19,6 +19,7 @@ namespace Cofe.Core.Script
         {
             CommandKey = commandKey;
             CommandParameters = parameters;
+            _nextCommand = ResultCommand.NoError;
         }
 
         protected ScriptCommandBase(string commandKey, IScriptCommand nextCommand, params string[] parameters)
@@ -26,7 +27,7 @@ namespace Cofe.Core.Script
             CommandKey = commandKey;
             CommandParameters = parameters;
 
-            _nextCommand = nextCommand;
+            _nextCommand = nextCommand ?? ResultCommand.NoError;
         }
 
         #endregion

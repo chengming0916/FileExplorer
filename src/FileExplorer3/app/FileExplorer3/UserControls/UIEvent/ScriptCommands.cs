@@ -109,9 +109,18 @@ namespace FileExplorer.BaseControls
     public class RunInSequenceScriptCommand : IScriptCommand
     {
         private IScriptCommand[] _scriptCommands;
+        private IScriptCommand _nextCommand = ResultCommand.NoError;
         public IScriptCommand[] ScriptCommands { get { return _scriptCommands; } }
         public RunInSequenceScriptCommand(params IScriptCommand[] scriptCommands)
-        { if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands; }
+        { 
+            if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands; 
+        }
+
+        public RunInSequenceScriptCommand(IScriptCommand[] scriptCommands, IScriptCommand nextCommand)
+        {
+            if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands;
+            _nextCommand = nextCommand;
+        }
 
         public string CommandKey
         {
@@ -124,7 +133,7 @@ namespace FileExplorer.BaseControls
             sr.Run(new Queue<IScriptCommand>(ScriptCommands), pm);
             if (pm.Error != null)
                 return ResultCommand.Error(pm.Error);
-            else return ResultCommand.NoError;
+            else return _nextCommand;
         }
 
         public virtual bool CanExecute(ParameterDic pm)

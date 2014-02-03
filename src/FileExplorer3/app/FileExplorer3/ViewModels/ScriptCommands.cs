@@ -20,13 +20,13 @@ namespace FileExplorer.ViewModels
 
     #region MessageBox
 
-    
+
 
     /// <summary>
     /// If user clicked Ok, do first command, otherwise do second command.
     /// </summary>
     public class IfOkCancel : IfScriptCommand
-    {        
+    {
         private IScriptCommand _okCommand;
         private IScriptCommand _cancelCommand;
         public IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
@@ -81,17 +81,34 @@ namespace FileExplorer.ViewModels
         public ShowProgress(IWindowManager wm, IScriptCommand nextCommand)
             : base("ShowProgress", nextCommand)
         {
-            _wm = wm;            
+            _wm = wm;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            var pdv = new ProgressDialogViewModel();
-            
+            var pdv = new ProgressDialogViewModel(pm);
+
             pm["Progress"] = pdv;
             pm["CancellationToken"] = pdv.CancellationToken;
 
             _wm.ShowDialog(pdv);
+            return _nextCommand;
+        }
+    }
+
+
+    public class HideProgress : ScriptCommandBase
+    {        
+        public HideProgress(IScriptCommand nextCommand = null)
+            : base("HideProgress", nextCommand)
+        {
+            
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pdv = pm["Progress"] as ProgressDialogViewModel;
+            pdv.TryClose(true);
             return _nextCommand;
         }
     }
@@ -340,6 +357,73 @@ namespace FileExplorer.ViewModels
                 return _foundCommandFunc(foundItem);
             else return _notFoundCommand;
         }
+    }
+
+    #endregion
+
+    #region Explorer Based
+
+    /// <summary>
+    /// Transfer Source entries (IEntryModel[]) to Dest directory (IEntryModel)
+    /// </summary>
+    public class TransferCommand : ScriptCommandBase
+    {        
+        #region Constructor
+
+        public TransferCommand(Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> transferOneFunc, IWindowManager windowManager = null)
+            : base("Transfer", "Source", "Dest", "DragDropEffects")
+        {
+            _windowManager = windowManager;            
+            _transferOneFunc = transferOneFunc;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            var source = pm["Source"] as IEntryModel[];
+            var dest = pm["Dest"] as IEntryModel;
+            DragDropEffects effects = pm.ContainsKey("DragDropEffects") && pm["DragDropEffects"] is DragDropEffects ?
+                (DragDropEffects)pm["DragDropEffects"] : DragDropEffects.Copy;
+
+            if (source == null || source.Length == 0 || dest == null)
+                return false;
+
+            var transferCommands = source.Select(s => _transferOneFunc(effects, s, dest)).ToArray();
+            return transferCommands.Any(c => c == null || !c.CanExecute(pm));                
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var source = pm["Source"] as IEntryModel[];
+            var dest = pm["Dest"] as IEntryModel;
+            DragDropEffects effects = pm.ContainsKey("DragDropEffects") && pm["DragDropEffects"] is DragDropEffects ?
+              (DragDropEffects)pm["DragDropEffects"] : DragDropEffects.Copy;
+
+            var transferCommands = source.Select(s => _transferOneFunc(effects, s, dest)).ToArray();
+            if (transferCommands.Any(c => c == null || !c.CanExecute(pm)))
+                return ResultCommand.Error(new ArgumentException("Not all items are transferrable."));
+
+            if (_windowManager != null)
+                return new ShowProgress(_windowManager,
+                    new RunInSequenceScriptCommand(transferCommands, new HideProgress()));
+            else return new RunInSequenceScriptCommand(transferCommands);
+        }
+
+        #endregion
+
+        #region Data
+
+        private Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> _transferOneFunc;
+        private IWindowManager _windowManager;        
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
     }
 
     #endregion
