@@ -102,13 +102,13 @@ namespace FileExplorer.Defines
             return null;
         }
     }
-    #endregion
+    #endregion    
 
-    public class TransferProgress
+    public class TransferProgress 
     {
-        public Int32? TotalEntries { get; private set; }
-        public Int32? ProcessedEntries { get; private set; }
-        public short? CurrentProgressPercent { get; private set; }
+        public Int32? TotalEntriesIncrement { get; set; }
+        public Int32? ProcessedEntriesIncrement { get; set; }
+        public short? CurrentProgressPercent { get; set; }
     }
 
     public class EntryChangedEvent

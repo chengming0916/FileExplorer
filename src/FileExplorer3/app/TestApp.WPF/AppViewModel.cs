@@ -132,7 +132,16 @@ namespace TestApp.WPF
                        pd => String.Format("Delete {0}?",  ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
                             DirectoryTree.AssignSelectionToParameter(DeleteFileBasedEntryCommand.FromParameter),
                        ResultCommand.NoError);                   
+            
 
+            _explorer.Commands.ScriptCommands.Transfer = 
+                new TransferCommand((effect, source, destDir) => 
+                    source.Profile is IDiskProfile ? 
+                        (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
+                        : ResultCommand.Error(new NotSupportedException())
+                    , _windowManager);
+
+                
             updateExplorerModel(initExplorerModel(_explorer));
             _windowManager.ShowWindow(_explorer);
         }

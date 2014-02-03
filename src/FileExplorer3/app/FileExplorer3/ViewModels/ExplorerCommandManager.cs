@@ -42,6 +42,8 @@ namespace FileExplorer.ViewModels
                 elvm.DirectoryTree.Selection.RootSelector.SelectedViewModel.Entries.LoadAsync(true);
                 return ResultCommand.NoError;
             });
+            
+            ScriptCommands.Transfer = NullScriptCommand.Instance;
 
             #endregion
 

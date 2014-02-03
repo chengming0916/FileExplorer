@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Cofe.Core;
 using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels
@@ -13,8 +14,9 @@ namespace FileExplorer.ViewModels
     {
         #region Constructor
 
-        public ProgressDialogViewModel(CancellationTokenSource cts = null)
+        public ProgressDialogViewModel(ParameterDic pd, CancellationTokenSource cts = null)
         {
+            _pd = pd;
             _cts = cts ?? new CancellationTokenSource();
         }
 
@@ -24,12 +26,12 @@ namespace FileExplorer.ViewModels
 
         public void Report(TransferProgress value)
         {
-            if (value.TotalEntries.HasValue)
-                TotalEntries = value.TotalEntries.Value;
-            if (value.ProcessedEntries.HasValue)
-                ProcessedEntries = value.ProcessedEntries.Value;
+            if (value.TotalEntriesIncrement.HasValue)
+                TotalEntries += value.TotalEntriesIncrement.Value;
+            if (value.ProcessedEntriesIncrement.HasValue)
+                ProcessedEntries += value.ProcessedEntriesIncrement.Value;
             if (value.CurrentProgressPercent.HasValue)
-                CurrentEntryProgress = value.CurrentProgressPercent.Value;
+                CurrentEntryProgress = value.CurrentProgressPercent.Value;         
         }
 
         private short getOverallProgress()
@@ -44,6 +46,7 @@ namespace FileExplorer.ViewModels
         private Int32 _totalEntries = 0, _processedEntries = 0;
         private short _currentEntryProgress = 0;
         private CancellationTokenSource _cts;
+        private ParameterDic _pd;
 
         #endregion
 
