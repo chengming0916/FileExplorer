@@ -51,6 +51,11 @@ namespace FileExplorer
                 .ToArray()
                 : new IEntryViewModel[] { };
 
+        public static Func<ParameterDic, IEntryModel> GetFileListCurrentDirectoryFunc =
+            pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
+                (pd["FileList"] as IFileListViewModel).CurrentDirectory                
+                : null;
+
         public static VMParameterDic AsVMParameterDic(this ParameterDic dic)
         {
             if (dic is VMParameterDic)

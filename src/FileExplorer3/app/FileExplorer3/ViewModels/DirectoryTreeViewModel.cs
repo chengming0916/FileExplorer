@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
+using Cofe.Core.Utils;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
@@ -30,7 +31,7 @@ namespace FileExplorer.ViewModels
                 : base(
                 () => new[] { selection.RootSelector.SelectedViewModel },
                 ems => ems.First().Profile.DragDrop.QueryDrag(ems),
-                ems => ems.First().Profile.DragDrop.GetDataObject(ems),
+                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop.GetDataObject(ems)),
                 (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }

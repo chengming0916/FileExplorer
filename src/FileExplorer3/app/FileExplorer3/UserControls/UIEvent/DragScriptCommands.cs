@@ -16,6 +16,7 @@ using Cofe.Core.Script;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
+using FileExplorer.ViewModels;
 using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.BaseControls.DragnDrop

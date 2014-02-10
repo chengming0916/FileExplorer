@@ -19,6 +19,7 @@ using System.Configuration;
 using System.IO;
 using System.Windows.Input;
 using FileExplorer.ViewModels.Helpers;
+using FileExplorer.BaseControls;
 
 namespace TestApp.WPF
 {
@@ -97,13 +98,29 @@ namespace TestApp.WPF
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     new IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                         FileList.AssignSelectionToParameter(
-                             DeleteFileBasedEntryCommand.FromParameter
-                             ),
+                        new ShowProgress(_windowManager,
+                                    ScriptCommands.RunInSequence(
+                                        FileList.AssignSelectionToParameter(
+                                            DeleteFileBasedEntryCommand.FromParameter),
+                                        new HideProgress())),                         
                         ResultCommand.NoError),
                     NullScriptCommand.Instance);
 
-            //new ShowMessageBox(_windowManager, "Delete", "Pending to implement.");
+            _explorer.FileList.Commands.ScriptCommands.Copy =
+                 FileList.IfSelection(evm => evm.Count() >= 1,
+                   new IfOkCancel(_windowManager, pd => "Copy",
+                        pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+                            ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
+                            ResultCommand.NoError),
+                    NullScriptCommand.Instance);
+
+            _explorer.FileList.Commands.ScriptCommands.Cut =
+                  FileList.IfSelection(evm => evm.Count() >= 1,
+                   new IfOkCancel(_windowManager, pd => "Cut",
+                        pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+                            ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
+                            ResultCommand.NoError),
+                    NullScriptCommand.Instance);
 
             _explorer.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
@@ -114,8 +131,11 @@ namespace TestApp.WPF
                     new SeparatorCommandModel(),
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }
-                    
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false },
+                    new SeparatorCommandModel(),
+                    new CommandModel(ApplicationCommands.Cut) { IsVisibleOnToolbar = false },
+                    new CommandModel(ApplicationCommands.Copy) { IsVisibleOnToolbar = false },
+                    new CommandModel(ApplicationCommands.Paste) { IsVisibleOnToolbar = false }
                     )
             };
 
@@ -130,7 +150,11 @@ namespace TestApp.WPF
             _explorer.DirectoryTree.Commands.ScriptCommands.Delete =
                    new IfOkCancel(_windowManager, pd => "Delete",
                        pd => String.Format("Delete {0}?",  ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
-                            DirectoryTree.AssignSelectionToParameter(DeleteFileBasedEntryCommand.FromParameter),
+                             new ShowProgress(_windowManager,
+                                    ScriptCommands.RunInSequence(
+                                        DirectoryTree.AssignSelectionToParameter(
+                                            DeleteFileBasedEntryCommand.FromParameter), 
+                                        new HideProgress())),
                        ResultCommand.NoError);                   
             
 

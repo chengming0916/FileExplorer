@@ -13,7 +13,7 @@ namespace FileExplorer.Models
     /// </summary>
     public interface IDragDropHandler
     {
-        IDataObject GetDataObject(IEnumerable<IEntryModel> entries);
+        Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries);
 
         DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries);
 
