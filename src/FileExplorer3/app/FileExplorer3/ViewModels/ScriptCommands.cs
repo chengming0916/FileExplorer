@@ -484,6 +484,18 @@ namespace FileExplorer.ViewModels
 
             return ResultCommand.NoError;
         }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+             var currentDirectory = _currentDirectoryModelFunc(pm);
+             if (currentDirectory != null)
+             {
+                 IDataObject da = Clipboard.GetDataObject();
+                 var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
+                 return srcModels != null && srcModels.Count() > 0;
+             }
+             return false;
+        }
     }
 
     #endregion

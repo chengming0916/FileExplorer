@@ -169,6 +169,8 @@ namespace FileExplorer.Models
             string destFullName = _destDirModel.Combine(destName);
 
             ChangeType ct = ChangeType.Created;
+            if (destFullName.StartsWith("::"))
+                return ResultCommand.Error(new ArgumentException("Transfer does not work with shell folders."));
             if (File.Exists(destFullName))
             {
                 File.Delete(destFullName);
