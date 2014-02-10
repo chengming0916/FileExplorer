@@ -45,22 +45,27 @@ namespace FileExplorer.ViewModels.Helpers
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
             if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
-                    using (var releaser = await loadingLock.LockAsync())
+            {
+                _lastCancellationToken.Cancel(); //Cancel previous load.                
+                using (var releaser = await loadingLock.LockAsync())
+                {
+                    _lastCancellationToken = new CancellationTokenSource();
+                    if (!_isLoaded || force)
                     {
-                        if (!_isLoaded || force)
-                        {
-                            if (_clearBeforeLoad)
-                                All.Clear();
-                            await _loadSubEntryFunc(_isLoaded).ContinueWith(prevTask =>
+                        if (_clearBeforeLoad)
+                            All.Clear();
+                        await _loadSubEntryFunc(_isLoaded).ContinueWith((prevTask, _) =>
+                            {
+                                if (!prevTask.IsCanceled && !prevTask.IsFaulted)
                                 {
-                                    if (!prevTask.IsFaulted)
-                                    {
-                                        SetEntries(prevTask.Result.ToArray());
-                                        _isLoaded = true;
-                                    }
-                                }, TaskScheduler.FromCurrentSynchronizationContext());
-                        }
+                                    SetEntries(prevTask.Result.ToArray());
+                                    _isLoaded = true;
+                                    _lastRefreshTimeUtc = DateTime.UtcNow;
+                                }
+                            }, _lastCancellationToken, TaskScheduler.FromCurrentSynchronizationContext());
                     }
+                }                
+            }
             return _subItemList;
         }
 
@@ -85,15 +90,16 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Data
 
-        private CancellationTokenSource _cts = new CancellationTokenSource();
+        private CancellationTokenSource _lastCancellationToken = new CancellationTokenSource();
         private bool _clearBeforeLoad = false;
         private readonly AsyncLock loadingLock = new AsyncLock();
         //private bool _isLoading = false;
         private bool _isLoaded = false;
         private bool _isExpanded = false;
-        private IEnumerable<VM> _subItemList;
+        private IEnumerable<VM> _subItemList = new List<VM>();
         private Func<bool, Task<IEnumerable<VM>>> _loadSubEntryFunc;
         private ObservableCollection<VM> _subItems;
+        private DateTime _lastRefreshTimeUtc = DateTime.MinValue;
 
         #endregion
 
@@ -121,6 +127,8 @@ namespace FileExplorer.ViewModels.Helpers
             get { return _isLoaded; }
             set { _isLoaded = value; NotifyOfPropertyChanged(() => IsLoaded); }
         }
+
+        public DateTime LastRefreshTimeUtc { get { return _lastRefreshTimeUtc; } }
 
         public event EventHandler EntriesChanged;
 
