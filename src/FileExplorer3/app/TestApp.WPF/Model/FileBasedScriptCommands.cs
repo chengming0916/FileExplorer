@@ -238,8 +238,8 @@ namespace FileExplorer.Models
 
                 destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, CancellationToken.None, em =>
                         em.FullPath.Equals(destFullName,
-                        StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();                
-                _destDirModel.Profile.Events.Publish(new EntryChangedEvent(destFullName, ChangeType.Created));
+                        StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
+                _destDirModel.Profile.Events.Publish(new EntryChangedEvent(ChangeType.Created, destFullName));
             }            
 
             if (destModel == null)

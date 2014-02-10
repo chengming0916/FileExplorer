@@ -128,25 +128,55 @@ namespace FileExplorer.Defines
         }
     }
 
+    //public class EntryChangedEvent
+    //{
+    //    public EntryChangedEvent(string parseName, ChangeType changeType)
+    //    {
+    //        ChangeType = changeType;
+    //        ParseName = parseName;
+    //    }
+
+    //    public EntryChangedEvent(string parseName, string orgParseName)
+    //        : this(parseName, ChangeType.Moved)
+    //    {
+    //        OrgParseName = orgParseName;
+    //    }
+
+    //    public ChangeType ChangeType { get; private set; }
+    //    public string ParseName { get; private set; }
+    //    public string OrgParseName { get; private set; }
+    //}
+
+
     public class EntryChangedEvent
     {
-        public EntryChangedEvent(string parseName, ChangeType changeType)
+         public EntryChangedEvent(ChangeType changeType, params string[] parseNames)
         {
             ChangeType = changeType;
-            ParseName = parseName;
+            ParseNames = parseNames;
         }
 
-        public EntryChangedEvent(string parseName, string orgParseName)
-            : this(parseName, ChangeType.Moved)
+         public EntryChangedEvent(Dictionary<string, string> renamedParseNames)
+             : this(ChangeType.Moved, renamedParseNames.Keys.ToArray())
         {
-            OrgParseName = orgParseName;
+            _renamedParseNames = renamedParseNames ?? _renamedParseNames;
         }
+
+         public EntryChangedEvent(string parseName, string orgParseName)
+            : this(new Dictionary<string, string>() { { parseName, orgParseName } })
+        {            
+        }
+
+         public string GetOrgParseName(string parseName)
+         {
+             return _renamedParseNames[parseName];
+         }
+
+        private Dictionary<string, string> _renamedParseNames = new Dictionary<string,string>();
 
         public ChangeType ChangeType { get; private set; }
-        public string ParseName { get; private set; }
-        public string OrgParseName { get; private set; }
+        public string[] ParseNames { get; private set; }        
     }
-  
 
     public class ColumnInfo
     {
