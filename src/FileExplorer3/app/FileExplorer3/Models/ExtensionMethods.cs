@@ -52,8 +52,9 @@ namespace FileExplorer.Models
         {
             if (changeType == ChangeType.Moved)
                 profile.Events.Publish(new EntryChangedEvent(fullPath, orgParseName));
-            else profile.Events.Publish(new EntryChangedEvent(fullPath, changeType));
+            else profile.Events.Publish(new EntryChangedEvent(changeType, fullPath));
         }
+
 
         public static string GetName(this IEntryModel model)
         {
