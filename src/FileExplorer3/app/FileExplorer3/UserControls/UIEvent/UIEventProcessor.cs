@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core.Script;
+using FileExplorer.ViewModels;
 
 namespace FileExplorer.BaseControls
 {

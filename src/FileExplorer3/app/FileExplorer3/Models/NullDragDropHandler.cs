@@ -10,7 +10,7 @@ namespace FileExplorer.Models
 {
     public class NullDragDropHandler : IDragDropHandler
     {
-        public virtual IDataObject GetDataObject(IEnumerable<IEntryModel> entries)
+        public virtual async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
         {
             return null;
         }

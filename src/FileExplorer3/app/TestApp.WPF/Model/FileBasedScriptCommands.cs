@@ -17,23 +17,7 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer.Models
 {
-    public static class FileBasedScriptCommandsHelper
-    {
-        /// <summary>
-        /// Return pd["Parameter"] as IEntryModel[]
-        /// </summary>
-        /// <param name="pd"></param>
-        /// <returns></returns>
-        public static IEntryModel[] GetEntryModelFromParameter(ParameterDic pd)
-        {
-            return pd["Parameter"] as IEntryModel[];
-        }
-
-        public static IEntryModel GetFirstEntryModelFromParameter(ParameterDic pd)
-        {
-            return (pd["Parameter"] as IEntryModel[]).FirstOrDefault();
-        }
-    }
+    
 
 
     /// <summary>
@@ -52,7 +36,7 @@ namespace FileExplorer.Models
             : base("OpenWith")
         {
             _info = info;
-            _srcModelFunc = srcModelFunc ?? FileBasedScriptCommandsHelper.GetEntryModelFromParameter;
+            _srcModelFunc = srcModelFunc ?? ScriptCommands.GetEntryModelFromParameter;
         }
 
         public override bool CanExecute(ParameterDic pm)
@@ -114,28 +98,32 @@ namespace FileExplorer.Models
     
 
     public class DeleteFileBasedEntryCommand : ScriptCommandBase
-    {
-        public static DeleteFileBasedEntryCommand FromParameter = new DeleteFileBasedEntryCommand(FileBasedScriptCommandsHelper.GetEntryModelFromParameter);
+    {        
+        public static DeleteFileBasedEntryCommand FromParameter = 
+            new DeleteFileBasedEntryCommand(ScriptCommands.GetEntryModelFromParameter);
 
-        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;        
-        private string _path;
+        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;                
+
         public DeleteFileBasedEntryCommand(Func<ParameterDic, IEntryModel[]> srcModelFunc)
             : base("Delete")
         {
-            _srcModelFunc = srcModelFunc;
+            _srcModelFunc = srcModelFunc;            
         }
-        
+
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             CancellationToken ct = pm.CancellationToken;
-            
+            var progress = pm.ContainsKey("Progress") ? pm["Progress"] as IProgress<TransferProgress> : NullTransferProgress.Instance;
             var _srcModels = _srcModelFunc(pm);
 
             if (_srcModels != null)
             {
+                progress.Report(TransferProgress.IncrementTotalEntries(_srcModels.Count()));
                 Task[] tasks = _srcModels.Select(m => 
-                    (m.Profile as IDiskProfile).DiskIO.DeleteAsync(m, ct)                    
+                    (m.Profile as IDiskProfile).DiskIO.DeleteAsync(m, ct)
+                    .ContinueWith(
+                        tsk => progress.Report(TransferProgress.IncrementProcessedEntries()))
                     ).ToArray();
                 await Task.WhenAll(tasks);
 
@@ -149,7 +137,7 @@ namespace FileExplorer.Models
     }
 
 
-
+    
 
     #region FileTransferScriptCommand and it's subcommands
 

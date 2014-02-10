@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,24 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer.ViewModels
 {
+
+    public static partial class ScriptCommands
+    {
+        /// <summary>
+        /// Return pd["Parameter"] as IEntryModel[]
+        /// </summary>
+        /// <param name="pd"></param>
+        /// <returns></returns>
+        public static IEntryModel[] GetEntryModelFromParameter(ParameterDic pd)
+        {
+            return pd["Parameter"] as IEntryModel[];
+        }
+
+        public static IEntryModel GetFirstEntryModelFromParameter(ParameterDic pd)
+        {
+            return (pd["Parameter"] as IEntryModel[]).FirstOrDefault();
+        }
+    }
 
     #region MessageBox
 
@@ -98,11 +117,11 @@ namespace FileExplorer.ViewModels
 
 
     public class HideProgress : ScriptCommandBase
-    {        
+    {
         public HideProgress(IScriptCommand nextCommand = null)
             : base("HideProgress", nextCommand)
         {
-            
+
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
@@ -124,7 +143,8 @@ namespace FileExplorer.ViewModels
 
         public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand)
         {
-            return new AssignSelectionToParameterAsEntryModelArray(ExtensionMethods.GetCurrentDirectoryFunc, thenCommand);
+            return new AssignSelectionToVariable(
+                ExtensionMethods.GetCurrentDirectoryFunc, "Parameter", thenCommand);
         }
     }
 
@@ -153,9 +173,16 @@ namespace FileExplorer.ViewModels
                 ifTrueCommand, otherwiseCommand);
         }
 
-        public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand)
+        public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand, string variableName = "Parameter")
         {
-            return new AssignSelectionToParameterAsEntryModelArray(ExtensionMethods.GetFileListSelectionFunc, thenCommand);
+            return new AssignSelectionToVariable(ExtensionMethods.GetFileListSelectionFunc,
+                variableName, thenCommand);
+        }
+
+        public static IScriptCommand AssignCurrentDirectoryToDestination(IScriptCommand thenCommand, string variableName = "Destination")
+        {
+            return new AssignSelectionToVariable(ExtensionMethods.GetFileListCurrentDirectoryFunc,
+                variableName, thenCommand);
         }
 
         public static IScriptCommand OpenSelectedDirectory =
@@ -206,18 +233,33 @@ namespace FileExplorer.ViewModels
     /// Set Selected item to parameter, so it can be used in Toolbar based command.
     /// required FileList (IFileListViewModel)
     /// </summary>
-    internal class AssignSelectionToParameterAsEntryModelArray : RunInSequenceScriptCommand
+    internal class AssignSelectionToVariable : RunInSequenceScriptCommand
     {
         /// <summary>
         /// FileList.Selection.SelectedItems as IEntryModel[] -> Parameter, required FileList (IFileListViewModel)
         /// </summary>
         /// <param name="thenCommand"></param>
-        public AssignSelectionToParameterAsEntryModelArray(Func<ParameterDic, IEntryModel[]> getSelectionFunc, IScriptCommand thenCommand)
+        public AssignSelectionToVariable(Func<ParameterDic, IEntryModel[]> getSelectionFunc,
+            string variableName, IScriptCommand thenCommand)
             : base(
-            new SimpleScriptCommand("AssignSelectionToParameterAsEntryModelArray",
+            new SimpleScriptCommand("AssignSelectionToVariableAsEntryModelArray",
                 pd =>
                 {
-                    pd["Parameter"] = getSelectionFunc(pd);
+                    pd[variableName] = getSelectionFunc(pd);
+                    return ResultCommand.NoError;
+                }),
+            thenCommand)
+        {
+
+        }
+
+        public AssignSelectionToVariable(Func<ParameterDic, IEntryModel> getSelectionFunc,
+           string variableName, IScriptCommand thenCommand)
+            : base(
+            new SimpleScriptCommand("AssignSelectionToVariableAsEntryModel",
+                pd =>
+                {
+                    pd[variableName] = getSelectionFunc(pd);
                     return ResultCommand.NoError;
                 }),
             thenCommand)
@@ -361,19 +403,107 @@ namespace FileExplorer.ViewModels
 
     #endregion
 
+    #region Clipboard
+
+    public static class ClipboardCommands
+    {
+        public static CopyToClipboardCommand Copy =
+         new CopyToClipboardCommand(ScriptCommands.GetEntryModelFromParameter, false);
+        public static CopyToClipboardCommand Cut =
+            new CopyToClipboardCommand(ScriptCommands.GetEntryModelFromParameter, true);
+
+        public static PasteFromClipboardCommand Paste(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc,
+            Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
+        {
+            return new PasteFromClipboardCommand(currentDirectoryModelFunc, transferCommandFunc);
+        }
+    }
+
+    public class CopyToClipboardCommand : ScriptCommandBase
+    {
+
+        private static byte[] preferCopy = new byte[] { 5, 0, 0, 0 };
+        private static byte[] preferCut = new byte[] { 5, 0, 0, 0 };
+
+        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
+        private bool _removeOrginal;
+
+        public CopyToClipboardCommand(Func<ParameterDic, IEntryModel[]> srcModelFunc, bool removeOrginal)
+            : base(removeOrginal ? "Cut" : "Copy")
+        {
+            _removeOrginal = removeOrginal;
+            _srcModelFunc = srcModelFunc;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            var _srcModels = _srcModelFunc(pm);
+            var da = await _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
+
+            byte[] moveEffect = _removeOrginal ? preferCut : preferCopy;
+            MemoryStream dropEffect = new MemoryStream();
+            dropEffect.Write(moveEffect, 0, moveEffect.Length);
+            da.SetData("Preferred DropEffect", dropEffect);
+
+            Clipboard.Clear();
+            Clipboard.SetDataObject(da, true);
+
+            return ResultCommand.NoError;
+        }
+    }
+
+    public class PasteFromClipboardCommand : ScriptCommandBase
+    {
+
+        private Func<ParameterDic, IEntryModel> _currentDirectoryModelFunc;
+        private Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> _transferCommandFunc;        
+
+        public PasteFromClipboardCommand(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc, 
+            Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
+            : base("Paste")
+        {
+            _currentDirectoryModelFunc = currentDirectoryModelFunc;
+            _transferCommandFunc = transferCommandFunc;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            var currentDirectory = _currentDirectoryModelFunc(pm);
+            if (currentDirectory != null)
+            {
+                IDataObject da = Clipboard.GetDataObject();
+                if (da != null)
+                {
+                    var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
+                    if (srcModels != null && srcModels.Count() > 0)
+                    {
+                        return _transferCommandFunc(DragDropEffects.Copy, srcModels.ToArray(), currentDirectory);
+                    }
+                }
+            }           
+
+            return ResultCommand.NoError;
+        }
+    }
+
+    #endregion
+
+
     #region Explorer Based
+
+
 
     /// <summary>
     /// Transfer Source entries (IEntryModel[]) to Dest directory (IEntryModel)
     /// </summary>
     public class TransferCommand : ScriptCommandBase
-    {        
+    {
         #region Constructor
 
         public TransferCommand(Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> transferOneFunc, IWindowManager windowManager = null)
             : base("Transfer", "Source", "Dest", "DragDropEffects")
         {
-            _windowManager = windowManager;            
+            _windowManager = windowManager;
             _transferOneFunc = transferOneFunc;
         }
 
@@ -418,7 +548,7 @@ namespace FileExplorer.ViewModels
         #region Data
 
         private Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> _transferOneFunc;
-        private IWindowManager _windowManager;        
+        private IWindowManager _windowManager;
 
         #endregion
 

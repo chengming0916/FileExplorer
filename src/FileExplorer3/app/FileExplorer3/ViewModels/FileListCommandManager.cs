@@ -11,6 +11,7 @@ using FileExplorer.ViewModels.Helpers;
 using FileExplorer.BaseControls;
 using System.Windows.Input;
 using FileExplorer.Defines;
+using vm = FileExplorer.ViewModels;
 
 namespace FileExplorer.ViewModels
 {
@@ -18,8 +19,8 @@ namespace FileExplorer.ViewModels
     {
         #region Constructor
 
-        public FileListCommandManager(IFileListViewModel flvm, IEventAggregator events,  
-            params IExportCommandBindings[] additionalBindingExportSource)            
+        public FileListCommandManager(IFileListViewModel flvm, IEventAggregator events,
+            params IExportCommandBindings[] additionalBindingExportSource)
         {
             _flvm = flvm;
 
@@ -49,6 +50,26 @@ namespace FileExplorer.ViewModels
             ScriptCommands.ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
                 FileList.ToggleRename, NullScriptCommand.Instance);
 
+            ScriptCommands.Copy =
+                 FileList.IfSelection(evm => evm.Count() >= 1,
+                    vm.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
+                    NullScriptCommand.Instance);
+
+            ScriptCommands.Cut =
+                 FileList.IfSelection(evm => evm.Count() >= 1,
+                    vm.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
+                    NullScriptCommand.Instance);
+
+            ScriptCommands.Paste = vm.ScriptCommands.RunInSequence(
+                FileList.AssignCurrentDirectoryToDestination(
+                    FileList.AssignSelectionToParameter(ClipboardCommands.Paste(ExtensionMethods.GetFileListCurrentDirectoryFunc,
+                    (dragDropEffects, src, dest) => new SimpleScriptCommand("Paste", (pm) =>
+                        {
+                            dest.Profile.DragDrop.OnDropCompleted(src.ToList(), null, dest, dragDropEffects);
+                            return ResultCommand.NoError;
+                        })))
+                    )
+            );
 
             #endregion
 
@@ -60,13 +81,16 @@ namespace FileExplorer.ViewModels
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.ScriptCommands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Cut, this, (ch) => ch.ScriptCommands.Cut, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Copy, this, (ch) => ch.ScriptCommands.Copy, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Paste, this, (ch) => ch.ScriptCommands.Paste, ParameterDicConverter, ScriptBindingScope.Local),
 
                 new ScriptCommandBinding(ExplorerCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), ParameterDicConverter, ScriptBindingScope.Explorer),
                 new ScriptCommandBinding(ExplorerCommands.ToggleViewMode, p => true, p => ToggleViewMode(), ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();
-            
+
             IEntryModel _currentDirectoryModel = null;
             ToolbarCommands = new ToolbarCommandsHelper(events,
                 message => { _currentDirectoryModel = message.NewModel; return new IEntryModel[] { _currentDirectoryModel }; },
@@ -105,7 +129,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Data
-                
+
         private IFileListViewModel _flvm;
 
         #endregion

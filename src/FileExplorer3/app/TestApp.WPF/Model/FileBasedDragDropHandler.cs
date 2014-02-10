@@ -51,7 +51,7 @@ namespace FileExplorer.Models
             _profile = profile;
         }
 
-        public IDataObject GetDataObject(IEnumerable<IEntryModel> entries)
+        public async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
         {
             var retVal = new FileDropDataObject(new HandleFileDropped(entries.ToArray()));
             retVal.SetFileDropData(entries

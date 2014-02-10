@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core;
 using Cofe.Core.Script;
+using FileExplorer.BaseControls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.ViewModels
 {
-    public static class ScriptCommands
+    public static partial class ScriptCommands
     {
         public static DebugScriptCommand PrintSourceDC = new DebugScriptCommand(DebugScriptCommand.HandleType.printOrgSource);
         public static DebugScriptCommand PrintSelectedDC = new DebugScriptCommand(DebugScriptCommand.HandleType.printSelector);
@@ -27,6 +28,13 @@ namespace FileExplorer.BaseControls
         {
             return new RunInSequenceScriptCommand(scriptCommands);
         }
+
+
+        public static IScriptCommand RunInSequence(IScriptCommand[] scriptCommands, IScriptCommand nextCommand)
+        {
+            return new RunInSequenceScriptCommand(scriptCommands, nextCommand);
+        }
+
 
         public static IScriptCommand ForEach<T>(T[] source, Func<T, IScriptCommand> commandFunc)
         {
