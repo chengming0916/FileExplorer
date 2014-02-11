@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FileExplorer3.IO</RootNamespace>
+    <AssemblyName>FileExplorer3.IO</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="DirectoryInfoEx">
+      <HintPath>..\..\..\..\lib\DirectoryInfoEx.dll</HintPath>
+    </Reference>
+    <Reference Include="ExifLib">
+      <HintPath>..\..\..\..\..\COFE\lib\ExifLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Live, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\DirectoryInfoEx\ExCommandProvider.cs" />
+    <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
+    <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
+    <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
+    <Compile Include="Model\FileBasedDragDropHandler.cs" />
+    <Compile Include="Model\FileBasedIconExtractors.cs" />
+    <Compile Include="Model\FileBasedScriptCommands.cs" />
+    <Compile Include="Model\FileSystemInfo\FileSystemInfoMetadataProvider.cs" />
+    <Compile Include="Model\FileSystemInfo\FileSystemInfoModel.cs" />
+    <Compile Include="Model\FileSystemInfo\FileSystemInfoProfile.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveDiskIOHelper.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveDiskPathMapper.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveFileStream.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveModel.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveModelCache.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveProfile.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ExIconExtractor.cs" />
+    <Compile Include="Utils\IconExtractor.cs" />
+    <Compile Include="Utils\ImageTools.cs" />
+    <Compile Include="Utils\SystemImageList.cs" />
+    <Compile Include="Utils\Win32API.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model\folder.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model\mail.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
+      <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
+      <Name>FileExplorer3</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

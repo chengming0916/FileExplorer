@@ -19,14 +19,14 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public FileSystemInfoProfile(IEventAggregator events)
+        public FileSystemInfoProfile(IEventAggregator events, IWindowManager windowsManager)
             : base(events)
         {
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new FileSystemInfoExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = IODiskPatheMapper.Instance;
-            DragDrop = new FileBasedDragDropHandler(this);
+            DragDrop = new FileBasedDragDropHandler(this, windowsManager);
         }
 
         #endregion

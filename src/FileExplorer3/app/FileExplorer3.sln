@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTemplate.WPF", "TestTem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSkyDrive", "TestSkyDrive\TestSkyDrive.csproj", "{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3.IO", "FileExplorer3.IO\FileExplorer3.IO.csproj", "{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,16 @@ Global
 		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|ARM.ActiveCfg = Release|Any CPU
 		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|x64.ActiveCfg = Release|Any CPU
 		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|x86.ActiveCfg = Release|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|ARM.ActiveCfg = Release|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|x64.ActiveCfg = Release|Any CPU
+		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
