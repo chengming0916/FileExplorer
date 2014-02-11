@@ -10,3 +10,4 @@ src/FileExplorer3/app/TestSkyDrive/*
 Thumbs.db
 */_UpgradeReport_Files/*
 */UpgradeLog.*
+src/FileExplorer3/app/TestApp.WPF/AuthorizationKeys.cs
