@@ -22,29 +22,5 @@ namespace TestApp.WPF.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0000000040112888")]
-        public string skydrive_client_id {
-            get {
-                return ((string)(this["skydrive_client_id"]));
-            }
-            set {
-                this["skydrive_client_id"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string skydrive_auth_code {
-            get {
-                return ((string)(this["skydrive_auth_code"]));
-            }
-            set {
-                this["skydrive_auth_code"] = value;
-            }
-        }
     }
 }
