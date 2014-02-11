@@ -92,7 +92,7 @@ namespace FileExplorer.Models
             }
         }
 
-        public FileSystemInfoExProfile(IEventAggregator events)
+        public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager)
             : base(events)
         {
             HierarchyComparer = new ExHierarchyComparer();
@@ -102,7 +102,7 @@ namespace FileExplorer.Models
                 new ExCommandProvider(this)
             };
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
-            DragDrop = new FileBasedDragDropHandler(this);
+            DragDrop = new FileBasedDragDropHandler(this, windowManager);
             //PathMapper = IODiskPatheMapper.Instance;
         }
 

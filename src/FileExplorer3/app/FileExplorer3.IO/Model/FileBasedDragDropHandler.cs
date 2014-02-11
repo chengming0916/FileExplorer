@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
@@ -44,11 +45,19 @@ namespace FileExplorer.Models
 
     public class FileBasedDragDropHandler : IDragDropHandler
     {
-        private static IProfile _fsiProfile = new FileSystemInfoProfile(null); //For loading drag items.
+        private static IProfile _fsiProfile = new FileSystemInfoProfile(null, null); //For loading drag items.        
+        public IScriptCommand TransferCommand { get; set; }
+
         private IProfile _profile;
-        public FileBasedDragDropHandler(IProfile profile)
+        public FileBasedDragDropHandler(IProfile profile, IWindowManager windowManager)
         {
             _profile = profile;
+             TransferCommand = 
+                new FileExplorer.ViewModels.TransferCommand((effect, source, destDir) =>
+                    source.Profile is IDiskProfile ?
+                        (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
+                        : ResultCommand.Error(new NotSupportedException())
+                    , windowManager);
         }
 
         public async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
@@ -136,7 +145,7 @@ namespace FileExplorer.Models
                         { "Source" , entries.ToArray() },
                         { "Dest" , destDir },
                         {"DragDropEffects", effect }
-                    }, TestApp.WPF.AppViewModel.TransferCommand);
+                    }, TransferCommand);
                 return effect;                
             };
             return DragDropEffects.None;

@@ -34,8 +34,8 @@ namespace TestApp.WPF
             _windowManager = windowManager;
             _events = events;
 
-            _profile = new FileSystemInfoProfile(_events);
-            _profileEx = new FileSystemInfoExProfile(events);
+            _profile = new FileSystemInfoProfile(_events, windowManager);
+            _profileEx = new FileSystemInfoExProfile(events, windowManager);
 
             RootModels.Add(_profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result);
         }
@@ -252,7 +252,7 @@ namespace TestApp.WPF
         {
             
             if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, skyDriveAliasMask);
+                _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, skyDriveAliasMask);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
@@ -262,7 +262,7 @@ namespace TestApp.WPF
         public async Task TestUpload()
         {
             if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(_events, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, skyDriveAliasMask);
+                _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, Properties.Settings.Default.skydrive_client_id, loginSkyDrive, skyDriveAliasMask);
             //var photos = await _profileSkyDrive.ParseAsync("/photos");
             var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/upload1.txt", false);
             //string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;

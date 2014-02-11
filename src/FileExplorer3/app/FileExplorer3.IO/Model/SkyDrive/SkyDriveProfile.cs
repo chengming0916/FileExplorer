@@ -14,7 +14,7 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
-        public SkyDriveProfile(IEventAggregator events, string clientId, Func<string> authCodeFunc,
+        public SkyDriveProfile(IEventAggregator events, IWindowManager windowManager, string clientId, Func<string> authCodeFunc,
             string aliasMask = "{0}'s SkyDrive",
             string rootAccessPath = "/me/skydrive")
             : base(events)
@@ -30,7 +30,7 @@ namespace FileExplorer.Models
             SuggestSource = new NullSuggestSource();
 
             //PathMapper = new SkyDriveDiskPathMapper(this, null);
-            DragDrop = new FileBasedDragDropHandler(this);
+            DragDrop = new FileBasedDragDropHandler(this, windowManager);
             _authClient = new LiveAuthClient(clientId);
             _authCodeFunc = authCodeFunc;
             _rootAccessPath = rootAccessPath;
