@@ -235,13 +235,31 @@ namespace TestApp.WPF
                 RootModels.Add(selectedModel);
         }
 
+        //private string loginSkyDrive()
+        //{
+        //    var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
+        //    if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+        //    {
+        //        return login.AuthCode;
+        //    }
+        //    return null;
+        //}
+
+
+        public void loginGoogleDrive()
+        {
+            //var login = new GoogleDriveLogin(AuthorizationKeys.GoogleDrive_Client_Id);
+            //if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+            //{
+     
+            //}            
+        }
+
         private string loginSkyDrive()
         {
-            var login = new SkyDriveLogin(Properties.Settings.Default.skydrive_client_id);
+            var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
             if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
             {
-                Properties.Settings.Default.skydrive_auth_code = login.AuthCode;
-                Properties.Settings.Default.Save();
                 return login.AuthCode;
             }
             return null;

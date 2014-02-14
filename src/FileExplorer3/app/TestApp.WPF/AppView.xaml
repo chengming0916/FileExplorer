@@ -56,6 +56,7 @@
         </StackPanel>
         <!--<Button x:Name="TestUpload" Content="TestUpload" />-->
         <Button x:Name="ShowDialog" Content="ShowDialog" />
+        <Button x:Name="loginGoogleDrive" Content="loginGoogleDrive" />
         
     </StackPanel>
 

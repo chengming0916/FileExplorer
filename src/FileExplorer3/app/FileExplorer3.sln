@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSkyDrive", "TestSkyDriv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3.IO", "FileExplorer3.IO\FileExplorer3.IO.csproj", "{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSkyDrive2", "TestSkyDrive2\TestSkyDrive2.csproj", "{26065FDC-2833-447C-B109-44CF2F7DCCB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,16 @@ Global
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|ARM.ActiveCfg = Release|Any CPU
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|x64.ActiveCfg = Release|Any CPU
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|x86.ActiveCfg = Release|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|ARM.ActiveCfg = Release|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|x64.ActiveCfg = Release|Any CPU
+		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

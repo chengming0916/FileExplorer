@@ -39,7 +39,11 @@ namespace FileExplorer.ViewModels
         {
             CurrentUri = e.Uri;
             if (LoginInfo != null)
-                if (LoginInfo.CheckLogin(CurrentUri))
+                if (LoginInfo.CheckLogin(new BrowserStatus()
+                    {
+                        Url = CurrentUri, 
+                        Title = ((dynamic)_webBrowser.Document).Title
+                    }))
                     TryClose(true);
         }
 

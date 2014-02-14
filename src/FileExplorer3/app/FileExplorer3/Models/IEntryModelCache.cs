@@ -3,42 +3,44 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
-    public interface ISkyDriveModelCache
+    public interface IEntryModelCache<M> where M : IEntryModel
     {
-        SkyDriveItemModel RegisterModel(SkyDriveItemModel model);
-        void RegisterChildModels(SkyDriveItemModel parentModel, SkyDriveItemModel[] childModels);
-        SkyDriveItemModel[] GetChildModel(SkyDriveItemModel parentModel);
+        M RegisterModel(M model);
+        void RegisterChildModels(M parentModel, M[] childModels);
+        M[] GetChildModel(M parentModel);
 
         string GetUniqueId(string path);
         string GetPath(string uniqueId);
-        SkyDriveItemModel GetModel(string uniqueId);
+        M GetModel(string uniqueId);
 
     }
 
-    public class SkyDriveModelCache : ISkyDriveModelCache
+    public class EntryModelCache<M> : IEntryModelCache<M> where M : IEntryModel
     {
+        
         #region Constructor
 
-        public SkyDriveModelCache()
+        public EntryModelCache(Func<M, string> uniqueIdFunc, bool ignoreCase = true)
         {
-            UniqueIdLookup = new ConcurrentDictionary<string, string>(2, 5, StringComparer.CurrentCultureIgnoreCase);
-            ChildLookup = new ConcurrentDictionary<string, IList<string>>(2, 5, StringComparer.CurrentCultureIgnoreCase);
-            ModelCache = new ConcurrentDictionary<string, SkyDriveItemModel>(2, 5, StringComparer.CurrentCultureIgnoreCase);            
+            _uniqueIdFunc = uniqueIdFunc;
+            StringComparer stringComparer = ignoreCase ? StringComparer.CurrentCultureIgnoreCase : StringComparer.CurrentCulture;
+            UniqueIdLookup = new ConcurrentDictionary<string, string>(2, 5, stringComparer);
+            ChildLookup = new ConcurrentDictionary<string, IList<string>>(2, 5, stringComparer);
+            ModelCache = new ConcurrentDictionary<string, M>(2, 5, stringComparer);
         }
 
         #endregion
 
-        #region Methods        
+        #region Methods
 
-        public SkyDriveItemModel RegisterModel(SkyDriveItemModel model)
+        public M RegisterModel(M model)
         {
-            UniqueIdLookup[model.FullPath] = model.UniqueId;
-            ModelCache[model.UniqueId] = model;
+            UniqueIdLookup[model.FullPath] = _uniqueIdFunc(model);
+            ModelCache[_uniqueIdFunc(model)] = model;
             return model;
         }
 
@@ -57,23 +59,23 @@ namespace FileExplorer.Models
             else return ppair.Key;
         }
 
-        public SkyDriveItemModel GetModel(string uniqueId)
+        public M GetModel(string uniqueId)
         {
             return ModelCache[uniqueId];
         }
 
-        public void RegisterChildModels(SkyDriveItemModel parentModel, SkyDriveItemModel[] childModels)
+        public void RegisterChildModels(M parentModel, M[] childModels)
         {
             foreach (var cm in childModels)
                 RegisterModel(cm);
-            ChildLookup[parentModel.UniqueId] = (from cm in childModels select cm.UniqueId).ToList();
+            ChildLookup[_uniqueIdFunc(parentModel)] = (from cm in childModels select _uniqueIdFunc(cm)).ToList();
         }
 
-        public SkyDriveItemModel[] GetChildModel(SkyDriveItemModel parentModel)
+        public M[] GetChildModel(M parentModel)
         {
-            if (ChildLookup.ContainsKey(parentModel.UniqueId))
+            if (ChildLookup.ContainsKey(_uniqueIdFunc(parentModel)))
             {
-                return (from uid in ChildLookup[parentModel.UniqueId] select GetModel(uid)).ToArray();
+                return (from uid in ChildLookup[_uniqueIdFunc(parentModel)] select GetModel(uid)).ToArray();
             }
             else return null;
         }
@@ -81,6 +83,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Data
+
+        private Func<M, string> _uniqueIdFunc;
 
         #endregion
 
@@ -97,10 +101,10 @@ namespace FileExplorer.Models
         public ConcurrentDictionary<string, IList<string>> ChildLookup { get; private set; }
 
         /// <summary>
-        /// DIctionary for uniqueId -> SkyDriveInfoModel
+        /// DIctionary for uniqueId -> IEntryModel
         /// </summary>
-        public ConcurrentDictionary<string, SkyDriveItemModel> ModelCache { get; private set; }
-      
+        public ConcurrentDictionary<string, M> ModelCache { get; private set; }
+
 
         #endregion
 
