@@ -87,58 +87,5 @@ namespace FileExplorer.Models
         #endregion
     }
 
-    //public class SkyDriveItemModel : SkyDriveInfoModel
-    //{
-    //    #region Constructor
-
-    //    public SkyDriveItemModel(SkyDriveProfile profile, string path, object data, string parentUniqueId = null)
-    //        : base(profile, path, data, parentUniqueId)
-    //    {
-    //        dynamic d = data as dynamic;
-
-
-    //    }
-
-    //    #endregion
-
-    //    #region Methods
-
-    //    #endregion
-
-    //    #region Data
-
-    //    #endregion
-
-    //    #region Public Properties
-
-    //    #endregion
-
-    //}
-
-    //public class SkyDriveDirectoryModel : SkyDriveInfoModel
-    //{
-    //    #region Constructor
-
-    //    public SkyDriveDirectoryModel(SkyDriveProfile profile, string path, object data, string parentUniqueId = null)
-    //        : base(profile, path, data, parentUniqueId)
-    //    {
-    //        dynamic d = data as dynamic;            
-
-    //    }
-
-    //    #endregion
-
-    //    #region Methods
-
-    //    #endregion
-
-    //    #region Data
-
-    //    #endregion
-
-    //    #region Public Properties
-
-    //    #endregion
-
-    //}
+   
 }

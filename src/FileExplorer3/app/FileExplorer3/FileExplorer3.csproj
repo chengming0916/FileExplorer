@@ -63,6 +63,8 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -127,6 +129,7 @@
     <Compile Include="Utils\ICommandScriptCommand.cs" />
     <Compile Include="Utils\MouseWheelGesture.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Utils\ShellUtils.cs" />
     <Compile Include="Utils\SimpleCommandBinding.cs" />
     <Compile Include="Utils\SimpleRoutedCommand.cs" />
     <Compile Include="Utils\ScriptCommandBinding.cs" />

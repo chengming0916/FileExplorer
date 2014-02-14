@@ -19,7 +19,7 @@ namespace FileExplorer.Models
             string rootAccessPath = "/me/skydrive")
             : base(events)
         {
-            ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, true);
+            ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, () => Alias, true);
             Alias = "SkyDrive";
             _aliasMask = aliasMask;
             Path = PathHelper.Web;
@@ -28,12 +28,6 @@ namespace FileExplorer.Models
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
-
-
-            //var tokenManager = new InMemoryTokenManager();
-            //tokenManager.ConsumerKey = clientId;
-            //this.google = new DesktopConsumer(WindowsLiveClient.Scopes..ServiceDescription, this.googleTokenManager);
-
             //PathMapper = new SkyDriveDiskPathMapper(this, null);
             DragDrop = new FileBasedDragDropHandler(this, windowManager);
             _authClient = new LiveAuthClient(clientId);
@@ -107,25 +101,6 @@ namespace FileExplorer.Models
             else return currentModel;
         }
 
-        /// <summary>
-        /// Make sure input path is recognizable by ModelCache
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private string checkPath(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-                return Alias;
-
-            path = path.TrimStart('/');
-
-            if (path.StartsWith(Alias, StringComparison.CurrentCultureIgnoreCase))
-                if (path.Equals(Alias, StringComparison.CurrentCultureIgnoreCase))
-                    path = "";
-                else path = path.Substring((Alias).Length + 1);
-
-            return String.IsNullOrEmpty(path) ? Alias : Alias + '/' + path;
-        }        
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
@@ -134,7 +109,7 @@ namespace FileExplorer.Models
             if (Session == null)
                 return null;
 
-            string uid = ModelCache.GetUniqueId(checkPath(path));
+            string uid = ModelCache.GetUniqueId(ModelCache.CheckPath(path));
             if (uid != null)
                 return ModelCache.GetModel(uid);
 

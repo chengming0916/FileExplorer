@@ -20,6 +20,7 @@ using System.IO;
 using System.Windows.Input;
 using FileExplorer.ViewModels.Helpers;
 using FileExplorer.BaseControls;
+using System.Threading;
 
 namespace TestApp.WPF
 {
@@ -246,8 +247,14 @@ namespace TestApp.WPF
         //}
 
 
-        public void loginGoogleDrive()
-        {
+        public async Task loginGoogleDrive()
+        {            
+            var profile = new GoogleDriveProfile(_events, _windowManager, AuthorizationKeys.GoogleDrive_Client_Id,
+                "gapi_client_secret.json");
+
+            var root = await profile.ParseAsync("");
+            var list = await profile.ListAsync(root, CancellationToken.None);
+
             //var login = new GoogleDriveLogin(AuthorizationKeys.GoogleDrive_Client_Id);
             //if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
             //{
@@ -272,6 +279,18 @@ namespace TestApp.WPF
             if (_profileSkyDrive == null)
                 _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
+            IEntryModel selectedModel = showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                RootModels.Add(selectedModel);
+        }
+
+        public async Task AddGoogleDrive()
+        {
+
+            if (_profileGoogleDrive == null)
+                _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, AuthorizationKeys.GoogleDrive_Client_Id,
+                "gapi_client_secret.json");
+            var rootModel = new[] { await _profileGoogleDrive.ParseAsync("") };
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
                 RootModels.Add(selectedModel);
@@ -309,6 +328,7 @@ namespace TestApp.WPF
         IProfile _profile;
         IProfile _profileEx;
         IProfile _profileSkyDrive;
+        IProfile _profileGoogleDrive;
 
         //private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
         //private string _addPath = lookupPath;

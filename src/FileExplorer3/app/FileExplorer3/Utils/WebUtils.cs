@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,9 +25,13 @@ namespace FileExplorer.Utils
                     ct.Register(webClient.CancelAsync);
                     bytes = await webClient.DownloadDataTaskAsync(uri);
                 }
-                catch { }
+                catch(Exception ex) 
+                {
+                    Debug.WriteLine(ex);
+                }
             }
             return bytes;
         }
+
     }
 }

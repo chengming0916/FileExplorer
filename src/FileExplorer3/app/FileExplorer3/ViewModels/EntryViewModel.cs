@@ -58,6 +58,9 @@ namespace FileExplorer.ViewModels
         {            
             var sequence = _iconExtractSequences.ToList();
 
+            //var icon = AsyncUtils.RunSync(() => _iconExtractSequences.Last().GetIconForModelAsync(EntryModel, CancellationToken.None));
+            //Icon = icon;
+
             Task loadIconTask = Task.Run(async () => await _iconExtractSequences.Last().GetIconForModelAsync(EntryModel, CancellationToken.None))
                 .ContinueWith((tsk) =>
                     {

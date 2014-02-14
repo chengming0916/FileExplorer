@@ -130,11 +130,13 @@
     <Compile Include="Model\FileSystemInfo\FileSystemInfoProfile.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveProfile.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveLogin.cs" />
+    <Compile Include="Model\GoogleDrive\GoogleDriveItemModel.cs" />
+    <Compile Include="Model\GoogleDrive\GoogleMimeTypeManager.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveLogin.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveDiskIOHelper.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveDiskPathMapper.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveFileStream.cs" />
-    <Compile Include="Model\SkyDrive\SkyDriveModel.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveItemModel.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />
