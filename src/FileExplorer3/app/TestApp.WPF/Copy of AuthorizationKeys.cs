@@ -8,8 +8,11 @@ namespace TestApp.WPF
 {
     public static class AuthorizationKeys
     {
-        public static string SkyDrive_Client_Id = "Replace your SkyDrive_Client_Id";
-        public static string GoogleDrive_Client_Id = "Replace your GoogleDrive_Client_Id";
-        public static string GoogleDrive_Client_Secret = "Replace your GoogleDrive_Client_Secret";
+        //https://account.live.com/developers/applications
+        public static string SkyDrive_Client_Id = "Replace_your_SkyDrive_Client_Id";
+        public static string SkyDrive_Client_Secret = "Replace_your_SkyDrive_Client_Secret";
+        //https://cloud.google.com/console/project
+        public static string GoogleDrive_Client_Id = "Replace_your_GoogleDrive_Client_Id";
+        public static string GoogleDrive_Client_Secret = "Replace_your_GoogleDrive_Client_Secret";
     }
 }

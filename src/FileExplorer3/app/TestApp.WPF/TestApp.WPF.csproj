@@ -83,6 +83,10 @@
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="AuthorizationKeys.cs" />
+    <None Include="gapi_client_secret.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Copy of AuthorizationKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

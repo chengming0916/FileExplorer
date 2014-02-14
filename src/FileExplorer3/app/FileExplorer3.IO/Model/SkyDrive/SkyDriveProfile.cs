@@ -19,7 +19,7 @@ namespace FileExplorer.Models
             string rootAccessPath = "/me/skydrive")
             : base(events)
         {
-            ModelCache = new SkyDriveModelCache();
+            ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, true);
             Alias = "SkyDrive";
             _aliasMask = aliasMask;
             Path = PathHelper.Web;
@@ -28,6 +28,11 @@ namespace FileExplorer.Models
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
+
+
+            //var tokenManager = new InMemoryTokenManager();
+            //tokenManager.ConsumerKey = clientId;
+            //this.google = new DesktopConsumer(WindowsLiveClient.Scopes..ServiceDescription, this.googleTokenManager);
 
             //PathMapper = new SkyDriveDiskPathMapper(this, null);
             DragDrop = new FileBasedDragDropHandler(this, windowManager);
@@ -230,7 +235,7 @@ namespace FileExplorer.Models
         public string Alias { get; protected set; }
         public string RootAccessPath { get { return _rootAccessPath; } }
         public LiveConnectSession Session { get; private set; }
-        public ISkyDriveModelCache ModelCache { get; private set; }
+        public IEntryModelCache<SkyDriveItemModel> ModelCache { get; private set; }
 
 
         #endregion

@@ -108,10 +108,10 @@
     <Compile Include="Models\IDiskIOHelper.cs" />
     <Compile Include="Models\IDiskPathMapper.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
+    <Compile Include="Models\IEntryModelCache.cs" />
     <Compile Include="Models\ILoginInfo.cs" />
     <Compile Include="Models\IPathHelper.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
-    <Compile Include="Models\LoginInfoImpl.cs" />
     <Compile Include="Models\NullDragDropHandler.cs" />
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ScriptCommands.cs" />
