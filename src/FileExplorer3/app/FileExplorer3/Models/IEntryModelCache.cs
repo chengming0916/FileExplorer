@@ -13,6 +13,13 @@ namespace FileExplorer.Models
         void RegisterChildModels(M parentModel, M[] childModels);
         M[] GetChildModel(M parentModel);
 
+        /// <summary>
+        /// Make sure input path is recognizable by ModelCache
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        string CheckPath(string path);
+
         string GetUniqueId(string path);
         string GetPath(string uniqueId);
         M GetModel(string uniqueId);
@@ -24,10 +31,12 @@ namespace FileExplorer.Models
         
         #region Constructor
 
-        public EntryModelCache(Func<M, string> uniqueIdFunc, bool ignoreCase = true)
+        public EntryModelCache(Func<M, string> uniqueIdFunc, Func<string> aliasFunc, bool ignoreCase = true)
         {
             _uniqueIdFunc = uniqueIdFunc;
-            StringComparer stringComparer = ignoreCase ? StringComparer.CurrentCultureIgnoreCase : StringComparer.CurrentCulture;
+            _aliasFunc = aliasFunc;
+            _stringComparison = ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            var stringComparer = ignoreCase ? StringComparer.CurrentCultureIgnoreCase : StringComparer.CurrentCulture;
             UniqueIdLookup = new ConcurrentDictionary<string, string>(2, 5, stringComparer);
             ChildLookup = new ConcurrentDictionary<string, IList<string>>(2, 5, stringComparer);
             ModelCache = new ConcurrentDictionary<string, M>(2, 5, stringComparer);
@@ -36,6 +45,24 @@ namespace FileExplorer.Models
         #endregion
 
         #region Methods
+
+
+       
+        public string CheckPath(string path)
+        {
+            string alias = _aliasFunc();
+            if (string.IsNullOrEmpty(path))
+                return alias;
+
+            path = path.TrimStart('/');
+
+            if (path.StartsWith(alias, _stringComparison))
+                if (path.Equals(alias, _stringComparison))
+                    path = "";
+                else path = path.Substring((alias).Length + 1);
+
+            return String.IsNullOrEmpty(path) ? alias : alias + '/' + path;
+        }        
 
         public M RegisterModel(M model)
         {
@@ -52,7 +79,7 @@ namespace FileExplorer.Models
         }
 
         public string GetPath(string uniqueId)
-        {
+        {            
             var ppair = UniqueIdLookup.FirstOrDefault(pp => pp.Value == uniqueId);
             if (ppair.Equals(default(KeyValuePair<string, string>)))
                 return null;
@@ -85,6 +112,8 @@ namespace FileExplorer.Models
         #region Data
 
         private Func<M, string> _uniqueIdFunc;
+        private StringComparison _stringComparison;
+        private Func<string> _aliasFunc;
 
         #endregion
 

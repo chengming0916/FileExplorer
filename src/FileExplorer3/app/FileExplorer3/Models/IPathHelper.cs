@@ -11,6 +11,7 @@ namespace FileExplorer.Models
         string Combine(string path1, params string[] paths);
         string GetDirectoryName(string path);
         string GetFileName(string path);
+        string GetExtension(string path);
     }
 
     public class PathHelper : IPathHelper
@@ -58,6 +59,10 @@ namespace FileExplorer.Models
             return path.Substring(idx + 1);
         }
 
+        public string GetExtension(string path)
+        {
+            return System.IO.Path.GetExtension(GetFileName(path));
+        }
 
         #endregion
 

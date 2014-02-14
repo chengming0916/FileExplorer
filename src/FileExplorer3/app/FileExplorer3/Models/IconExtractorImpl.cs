@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,9 +47,11 @@ namespace FileExplorer.Models
     {
         private Func<IEntryModel, Uri> _uriFunc;
         private System.Threading.CancellationToken CancellationToken;
-        public GetUriIcon(Func<IEntryModel, Uri> uriFunc)
+        private Func<HttpClient> _clientFunc;
+        public GetUriIcon(Func<IEntryModel, Uri> uriFunc, Func<HttpClient> clientFunc = null)
         {
             _uriFunc = uriFunc;
+            _clientFunc = clientFunc ?? (() => new HttpClient());
         }
 
 
@@ -56,17 +59,21 @@ namespace FileExplorer.Models
 
         public async Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
         {
-            var output = await WebUtils.DownloadAsync(_uriFunc(model), ct);            
-
-            BitmapImage retIcon = new BitmapImage();
-            if (!ct.IsCancellationRequested)
+            var response = await _clientFunc().GetAsync(_uriFunc(model).AbsoluteUri, ct);
+            if (response.StatusCode == HttpStatusCode.OK)
             {
+                var output = await response.Content.ReadAsByteArrayAsync();
+
+                BitmapImage retIcon = new BitmapImage();
+
                 retIcon.BeginInit();
                 retIcon.StreamSource = new MemoryStream(output);
+
                 retIcon.EndInit();
                 retIcon.Freeze();
+                return retIcon;
             }
-            return retIcon;
+            return await new GetDefaultIcon().GetIconForModelAsync(model, ct);
         }
     }
 }
