@@ -12,7 +12,7 @@ namespace FileExplorer.Models
 {
     public class GoogleDriveItemModel : DiskEntryModelBase
     {
-       
+
         #region Constants
 
 
@@ -46,7 +46,7 @@ namespace FileExplorer.Models
             this.Name = f.OriginalFilename ?? f.Title;
 
             this.Size = f.FileSize.HasValue ? f.FileSize.Value : 0;
-            this.IsRenamable = true;
+            this._isRenamable = true;
 
             this.Description = f.Description;
             this.ImageUrl = f.ThumbnailLink;
@@ -64,7 +64,7 @@ namespace FileExplorer.Models
                     this.SourceUrl = f.ExportLinks[this.Type];
                 }
             }
-            
+
             if (!this.IsDirectory && System.IO.Path.GetExtension(this.Name) == "" && this.Type != null)
             {
                 string extension = ShellUtils.MIMEType2Extension(this.Type);
@@ -74,11 +74,11 @@ namespace FileExplorer.Models
                 }
             }
 
-            
+
 
         }
 
-         /// <summary>
+        /// <summary>
         /// Generate a temporary model for uploading.
         /// </summary>
         /// <param name="profile"></param>

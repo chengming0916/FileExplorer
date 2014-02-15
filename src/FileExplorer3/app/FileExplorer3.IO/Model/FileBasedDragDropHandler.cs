@@ -30,16 +30,27 @@ namespace FileExplorer.Models
         public void NotifyPrepareDrop(VirtualDataObject sender, string format)
         {
               FileDropDataObject dataObject = sender as FileDropDataObject;
-              AsyncUtils.RunSync(() => Task.Run(async () =>
+
+              foreach (var m in _models)
+                  if (m.Profile is IDiskProfile)
                   {
-                      foreach (var m in _models)
-                          if (m.Profile is IDiskProfile)
-                          {
-                              var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];
-                              if (mapping != null && !mapping.IsCached)
-                                  await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m, CancellationToken.None);
-                          }
-                  }));
+                      var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];                      
+                      if (mapping != null && !mapping.IsCached)
+                          AsyncUtils.RunSync(() => (m.Profile as IDiskProfile).DiskIO
+                              .WriteToCacheAsync(m, CancellationToken.None)
+                              );
+                  }
+
+              //AsyncUtils.RunSync(() => Task.Run(async () =>
+              //    {
+              //        foreach (var m in _models)
+              //            if (m.Profile is IDiskProfile)
+              //            {
+              //                var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];                              
+              //                if (mapping != null && !mapping.IsCached)
+              //                    await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m, CancellationToken.None);
+              //            }
+              //    }));
         }
     }
 

@@ -19,7 +19,7 @@ namespace FileExplorer.Models
         protected EntryModelBase(IProfile profile)
         {
             Profile = profile;
-            IsRenamable = false;
+            _isRenamable = false;
             _parentFunc = () => AsyncUtils.RunSync(() => Profile.ParseAsync(Profile.Path.GetDirectoryName(FullPath)));
 
         }
@@ -50,7 +50,7 @@ namespace FileExplorer.Models
         #region Data
 
         protected string _name;
-        private bool _isRenamable = false;
+        protected bool _isRenamable = false;
         private IEntryModel _parent = null;
         protected Func<IEntryModel> _parentFunc;
 

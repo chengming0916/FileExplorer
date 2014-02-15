@@ -95,11 +95,12 @@ namespace FileExplorer.Models
 
                 var listRequest = _driveService.Files.List();
                 listRequest.Q = String.Format("'{0}' in parents", dirModel.UniqueId);
-                var listResult = (listRequest.Execute())
-                    .Items.Select(f =>  ModelCache.RegisterModel(new GoogleDriveItemModel(this, f, dirModel.FullPath)));
-                ModelCache.RegisterChildModels(dirModel, listResult.ToArray());
-                
-                return listResult.Where(m => filter(m)).Cast<IEntryModel>().ToList();
+                var listResult = (await listRequest.ExecuteAsync().ConfigureAwait(false));
+                var listResultItems = listResult.Items.ToList();
+                var outputModels = listResultItems.Select(f =>  new GoogleDriveItemModel(this, f, dirModel.FullPath)).ToArray();
+                ModelCache.RegisterChildModels(dirModel, outputModels);
+
+                return outputModels.Where(m => filter(m)).Cast<IEntryModel>().ToList();
 
                 //var listedItemIds = (await _driveService.Children.List(dirModel.UniqueId).ExecuteAsync(ct)).Items;
                 //var listedItemGetFileTasks = listedItemIds.Select(fr => _driveService.Files.Get(fr.Id).ExecuteAsync()

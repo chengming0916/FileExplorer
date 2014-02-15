@@ -40,7 +40,7 @@ namespace FileExplorer.Utils
             var response = await client.GetAsync(url, ct);
             if (response.IsSuccessStatusCode)
             {
-                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+                byte[] bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                 return bytes;
             }
             else throw new Exception(String.Format("{0} when downloading {1}", response.StatusCode, url));
@@ -52,7 +52,7 @@ namespace FileExplorer.Utils
             var response = await client.GetAsync(url, ct);
             if (response.IsSuccessStatusCode)
             {
-                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+                byte[] bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
                 await stream.WriteAsync(bytes, 0, bytes.Length);
             }
             else throw new Exception(String.Format("{0} when downloading {1}", response.StatusCode, url));
