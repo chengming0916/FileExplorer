@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace FileExplorer.Models
             {
                 var credential = await Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.AuthorizeAsync(
                        Google.Apis.Auth.OAuth2.GoogleClientSecrets.Load(stream).Secrets,
-                       new[] { DriveService.Scope.Drive },
+                       new[] { DriveService.Scope.Drive},
                        "user", CancellationToken.None);
 
                 return credential;
@@ -61,7 +62,7 @@ namespace FileExplorer.Models
 
             _aliasMask = aliasMask;
             Path = PathHelper.Web;
-            //DiskIO = new SkyDriveDiskIOHelper(this);
+            DiskIO = new GoogleDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
@@ -92,12 +93,12 @@ namespace FileExplorer.Models
                         return cachedChild.Where(m => filter(m)).Cast<IEntryModel>().ToList();
                 }
 
-
                 var listRequest = _driveService.Files.List();
                 listRequest.Q = String.Format("'{0}' in parents", dirModel.UniqueId);
-                var listResult = (await listRequest.ExecuteAsync())
-                    .Items.Select(f =>  ModelCache.RegisterModel(new GoogleDriveItemModel(this, f, dirModel.FullPath)));                
+                var listResult = (listRequest.Execute())
+                    .Items.Select(f =>  ModelCache.RegisterModel(new GoogleDriveItemModel(this, f, dirModel.FullPath)));
                 ModelCache.RegisterChildModels(dirModel, listResult.ToArray());
+                
                 return listResult.Where(m => filter(m)).Cast<IEntryModel>().ToList();
 
                 //var listedItemIds = (await _driveService.Children.List(dirModel.UniqueId).ExecuteAsync(ct)).Items;
@@ -138,7 +139,7 @@ namespace FileExplorer.Models
             GoogleDriveItemModel model = entry as GoogleDriveItemModel;
             string ext = Path.GetExtension(model.Name);
             if (model.ImageUrl != null && isImage(ext))
-                yield return new GetUriIcon(e => new Uri((e as GoogleDriveItemModel).ImageUrl), () => _driveService.HttpClient);
+                yield return new GetUriIcon(e => new Uri((e as GoogleDriveItemModel).ImageUrl), HttpClientFunc);
             else if (model.Name.IndexOf('.') != -1)
                 yield return GetFromSystemImageListUsingExtension.Instance;
         }
@@ -163,7 +164,8 @@ namespace FileExplorer.Models
         public string RootAccessPath { get { return _rootAccessPath; } }
         public IEntryModelCache<GoogleDriveItemModel> ModelCache { get; private set; }
         public IMimeTypeManager MimeTypeManager { get; private set; }
-
+        public DriveService DriveService { get { return _driveService; } }
+        public Func<HttpClient> HttpClientFunc { get { return () => _driveService.HttpClient; } }
 
         #endregion
 

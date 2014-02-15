@@ -85,9 +85,21 @@ namespace FileExplorer.Models
             var mapping = ioHelper.Mapper[entry];
 
             if (!mapping.IsCached || force)
-                using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read, ct))
-                using (var outputStream = System.IO.File.OpenWrite(mapping.IOPath))
-                    await StreamUtils.CopyStreamAsync(srcStream, outputStream);
+            {
+                if (entry.IsDirectory)
+                {
+                    System.IO.Directory.CreateDirectory(mapping.IOPath);
+                    var listing =  await entry.Profile.ListAsync(entry, ct);
+                    foreach (var subEntry in listing)
+                        await WriteToCacheAsync(ioHelper, subEntry, ct, force);
+                }
+                else
+                {
+                    using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read, ct))
+                    using (var outputStream = System.IO.File.OpenWrite(mapping.IOPath))
+                        await StreamUtils.CopyStreamAsync(srcStream, outputStream);
+                }
+            }
 
             return mapping.IOPath;
         }

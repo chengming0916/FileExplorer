@@ -17,11 +17,14 @@ namespace FileExplorer.Models
 
     public class GoogleMimeTypeManager : IMimeTypeManager
     {
+        public static string FolderMimeType = "application/vnd.google-apps.folder";
+
+
         private static Dictionary<string, string> DefaultMimeTypes = new Dictionary<string, string>()
-        {            
+        {   
+            { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx" },
             { "application/vnd.openxmlformats-officedocument.presentationml.presentation",".pptx" },
-            { "application/vnd.openxmlformats-officedocument.wordprocessingml.document",".docx" },            
-            { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx" }
+            { "application/vnd.openxmlformats-officedocument.wordprocessingml.document",".docx" },
         };
 
         #region Constructor

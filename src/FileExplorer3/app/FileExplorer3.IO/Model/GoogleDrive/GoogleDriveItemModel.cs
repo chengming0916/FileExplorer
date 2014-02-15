@@ -12,8 +12,7 @@ namespace FileExplorer.Models
 {
     public class GoogleDriveItemModel : DiskEntryModelBase
     {
-        public static string FolderMimeType = "application/vnd.google-apps.folder";
-
+       
         #region Constants
 
 
@@ -42,7 +41,8 @@ namespace FileExplorer.Models
         {
             init(profile, path);
             UniqueId = f.Id;
-            this.IsDirectory = f.MimeType.Equals(FolderMimeType);
+            this.Metadata = f;
+            this.IsDirectory = f.MimeType.Equals(GoogleMimeTypeManager.FolderMimeType);
             this.Name = f.OriginalFilename ?? f.Title;
 
             this.Size = f.FileSize.HasValue ? f.FileSize.Value : 0;
@@ -59,6 +59,7 @@ namespace FileExplorer.Models
                 string extension = profile.MimeTypeManager.GetExtension(this.Type);
                 if (!String.IsNullOrEmpty(extension))
                 {
+                    this.FullPath += extension;
                     this.Label = this.Name += extension;
                     this.SourceUrl = f.ExportLinks[this.Type];
                 }
@@ -75,6 +76,20 @@ namespace FileExplorer.Models
 
             
 
+        }
+
+         /// <summary>
+        /// Generate a temporary model for uploading.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="path"></param>
+        /// <param name="isDirectory"></param>
+        public GoogleDriveItemModel(GoogleDriveProfile profile, string path, bool isDirectory)
+            : base(profile)
+        {
+            init(profile, path);
+            this.IsDirectory = isDirectory;
+            //SourceUrl = "Unknown";
         }
 
         public GoogleDriveItemModel(GoogleDriveProfile profile, Google.Apis.Drive.v2.Data.File file, string parentFullPath = null)
@@ -103,6 +118,8 @@ namespace FileExplorer.Models
         public string Type { get; private set; }
         public string ImageUrl { get; protected set; }
         public long Size { get; protected set; }
+
+        public Google.Apis.Drive.v2.Data.File Metadata { get; protected set; }
 
         /// <summary>
         /// Url for downloading a file.
