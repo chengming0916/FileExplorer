@@ -44,7 +44,7 @@ namespace FileExplorer.Models
             return base.CanExecute(pm);
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var parameter = _srcModelFunc(pm);
             if (parameter != null && parameter.Count() == 1)
@@ -57,7 +57,7 @@ namespace FileExplorer.Models
                 if (profile.DiskIO.Mapper is NullDiskPatheMapper)
                     return ResultCommand.Error(new NotSupportedException());
 
-                string appliedFileName = AsyncUtils.RunSync(() => profile.DiskIO.WriteToCacheAsync(parameter[0], pm.CancellationToken));
+                string appliedFileName = await profile.DiskIO.WriteToCacheAsync(parameter[0], pm.CancellationToken);
 
                 if (_isFolder || appliedFileName.StartsWith("::{"))
                 {
@@ -93,6 +93,7 @@ namespace FileExplorer.Models
             }
             else return ResultCommand.Error(new Exception("Wrong Parameter type or more than one item."));
         }
+       
     }
 
     
