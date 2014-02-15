@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
@@ -31,6 +32,30 @@ namespace FileExplorer.Utils
                 }
             }
             return bytes;
+        }
+
+        public static async Task<byte[]> DownloadToBytesAsync(string url, Func<HttpClient> clientFunc, CancellationToken ct)
+        {
+            var client = clientFunc();
+            var response = await client.GetAsync(url, ct);
+            if (response.IsSuccessStatusCode)
+            {
+                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+                return bytes;
+            }
+            else throw new Exception(String.Format("{0} when downloading {1}", response.StatusCode, url));
+        }
+
+        public static async Task DownloadToStreamAsync(string url, Stream stream, Func<HttpClient> clientFunc, CancellationToken ct)
+        {
+            var client = clientFunc();
+            var response = await client.GetAsync(url, ct);
+            if (response.IsSuccessStatusCode)
+            {
+                byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+                await stream.WriteAsync(bytes, 0, bytes.Length);
+            }
+            else throw new Exception(String.Format("{0} when downloading {1}", response.StatusCode, url));
         }
 
     }
