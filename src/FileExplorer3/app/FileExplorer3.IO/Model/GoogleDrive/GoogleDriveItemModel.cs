@@ -27,7 +27,7 @@ namespace FileExplorer.Models
         {
             init(profile, alias);
             this.UniqueId = "root";
-            this.IsDirectory = true;            
+            this.IsDirectory = true;
         }
 
 
@@ -42,14 +42,14 @@ namespace FileExplorer.Models
         {
             init(profile, path);
             UniqueId = f.Id;
-            this.IsDirectory = f.MimeType.Equals(FolderMimeType);            
+            this.IsDirectory = f.MimeType.Equals(FolderMimeType);
             this.Name = f.OriginalFilename ?? f.Title;
 
             this.Type = profile.MimeTypeManager.GetExportableMimeTypes(f.MimeType).FirstOrDefault();
             if (!this.IsDirectory && String.IsNullOrEmpty(Profile.Path.GetExtension(this.Name)))
             {
                 string extension = profile.MimeTypeManager.GetExtension(this.Type);
-                if (!String.IsNullOrEmpty(extension))                
+                if (!String.IsNullOrEmpty(extension))
                     this.Label = this.Name += extension;
             }
             this.Size = f.FileSize.HasValue ? f.FileSize.Value : 0;
@@ -64,20 +64,20 @@ namespace FileExplorer.Models
                 string extension = ShellUtils.MIMEType2Extension(this.Type);
                 if (!String.IsNullOrEmpty(extension))
                 {
-                    this.Name += extension;                    
+                    this.Name += extension;
                 }
             }
-          
+
         }
 
         public GoogleDriveItemModel(GoogleDriveProfile profile, Google.Apis.Drive.v2.Data.File file, string parentFullPath = null)
             : base(profile)
         {
-
-                string name = file.OriginalFilename ?? file.Title;
-                string path = parentFullPath == null ? profile.Alias : parentFullPath + "/" + name;
-                init(profile, path, file);
+            string name = file.OriginalFilename ?? file.Title;
+            string path = parentFullPath == null ? profile.Alias : parentFullPath + "/" + name;
+            init(profile, path, file);
         }
+
 
         #endregion
 
