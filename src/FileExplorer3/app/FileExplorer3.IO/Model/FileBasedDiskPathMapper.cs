@@ -12,13 +12,14 @@ using Microsoft.Live;
 
 namespace FileExplorer.Models
 {
-    public class SkyDriveDiskPathMapper : IDiskPathMapper
+    public class FileBasedDiskPathMapper : IDiskPathMapper
     {
         #region Constructor        
 
-        public SkyDriveDiskPathMapper(string tempPath = null)
+        public FileBasedDiskPathMapper(Func<IEntryModel, string> urlFunc, string tempPath = null)
         {            
             _tempPath = tempPath != null ? tempPath : Path.Combine(Path.GetTempPath(), "FileExplorer");
+            _urlFunc = urlFunc;
             Directory.CreateDirectory(_tempPath);
         }
 
@@ -33,8 +34,7 @@ namespace FileExplorer.Models
 
         private string _tempPath;
         private ConcurrentDictionary<string, bool> _isCachedDictionary = new ConcurrentDictionary<string, bool>();
-        private SkyDriveProfile _profile;
-
+        private Func<IEntryModel, string> _urlFunc;        
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace FileExplorer.Models
                 string path = Path.Combine(_tempPath, model.FullPath.Replace('/', '\\').TrimStart('\\'));
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 bool isCached = _isCachedDictionary.ContainsKey(model.FullPath) && _isCachedDictionary[model.FullPath];
-                string sourceUrl = (model as SkyDriveItemModel).SourceUrl;
+                string sourceUrl = _urlFunc(model);
                 if (sourceUrl == null)
                 {
                     if (model.IsDirectory)
