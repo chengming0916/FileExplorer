@@ -92,13 +92,22 @@ namespace FileExplorer.Models
                         return cachedChild.Where(m => filter(m)).Cast<IEntryModel>().ToList();
                 }
 
-                var listedItemIds = (await _driveService.Children.List(dirModel.UniqueId).ExecuteAsync(ct)).Items;
-                var listedItemGetFileTasks = listedItemIds.Select(fr => _driveService.Files.Get(fr.Id).ExecuteAsync());
-                var listedItemsFiles = (await Task.WhenAll<Google.Apis.Drive.v2.Data.File>(listedItemGetFileTasks)).ToList();
-                var listedItems = listedItemsFiles.Select(f =>
-                    ModelCache.RegisterModel(new GoogleDriveItemModel(this, f, dirModel.FullPath))).ToList();
-                ModelCache.RegisterChildModels(dirModel, listedItems.ToArray());
-                return listedItems.Cast<IEntryModel>().Where(m => filter(m)).ToList();
+
+                var listRequest = _driveService.Files.List();
+                listRequest.Q = String.Format("'{0}' in parents", dirModel.UniqueId);
+                var listResult = (await listRequest.ExecuteAsync())
+                    .Items.Select(f =>  ModelCache.RegisterModel(new GoogleDriveItemModel(this, f, dirModel.FullPath)));                
+                ModelCache.RegisterChildModels(dirModel, listResult.ToArray());
+                return listResult.Where(m => filter(m)).Cast<IEntryModel>().ToList();
+
+                //var listedItemIds = (await _driveService.Children.List(dirModel.UniqueId).ExecuteAsync(ct)).Items;
+                //var listedItemGetFileTasks = listedItemIds.Select(fr => _driveService.Files.Get(fr.Id).ExecuteAsync()
+                //    .ContinueWith<GoogleDriveItemModel>(f => ModelCache.RegisterModel(
+                //        new GoogleDriveItemModel(this, f.Result, dirModel.FullPath))));
+                //var listedItems = (await Task.WhenAll<GoogleDriveItemModel>(listedItemGetFileTasks)).ToList();
+
+                //ModelCache.RegisterChildModels(dirModel, listedItems.ToArray());
+                //return listedItems.Cast<IEntryModel>().Where(m => filter(m)).ToList();
             }
             return new List<IEntryModel>();
         }
