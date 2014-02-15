@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,69 +13,46 @@ using Microsoft.Live;
 
 namespace FileExplorer.Models
 {
-    public class SkyDriveFileStream : MemoryStream
+    public static class SkyDriveFileStream
     {
-        #region Constructor
-
-        private SkyDriveFileStream(IEntryModel entryModel)
+        public static async Task<WebFileStream> OpenReadAsync(IEntryModel entryModel, CancellationToken ct)
         {
-            _profile = entryModel.Profile as SkyDriveProfile;
-            if (_profile == null)
-                throw new ArgumentException();
-            _entryModel = entryModel;
+            var contents = await WebUtils.DownloadToBytesAsync((entryModel as SkyDriveItemModel).SourceUrl, () => new HttpClient(), ct);
+            return new WebFileStream(entryModel, contents, null);
         }
 
-        public static async Task<SkyDriveFileStream> OpenReadAsync(IEntryModel entryModel, CancellationToken ct)
-        {
-            string sourceUrl = (entryModel as SkyDriveItemModel).SourceUrl;
-            byte[] bytes = await WebUtils.DownloadAsync(new Uri(sourceUrl), ct);
-            SkyDriveFileStream stream = new SkyDriveFileStream(entryModel);
-            await stream.WriteAsync(bytes, 0, bytes.Length);
-            stream.Seek(0, SeekOrigin.Begin);
 
-            return stream;
-        }
-
-        public static async Task<SkyDriveFileStream> OpenReadWriteAsync(IEntryModel entryModel, CancellationToken ct)
+        public static async Task<WebFileStream> OpenReadWriteAsync(IEntryModel entryModel, CancellationToken ct)
         {
-            SkyDriveFileStream stream = await OpenReadAsync(entryModel, ct);
-            stream._udateSrcFunc = (s) =>
+            var contents = await WebUtils.DownloadToBytesAsync((entryModel as SkyDriveItemModel).SourceUrl, () => new HttpClient(), ct);
+            return new WebFileStream(entryModel, contents, (m, s) =>
             {
                 AsyncUtils.RunSync(() => updateSourceAsync(s));
-            };
-            return stream;
+            });        
         }
 
-        public static SkyDriveFileStream OpenWrite(IEntryModel entryModel)
+        public static WebFileStream OpenWrite(IEntryModel entryModel)
         {
-            SkyDriveFileStream stream =
-                new SkyDriveFileStream(entryModel)
-                {
-                    _udateSrcFunc = (s) =>
-                    {
-                        AsyncUtils.RunSync(() => updateSourceAsync(s));
-                    }
-                };
-
-
-            return stream;
+            return new WebFileStream(entryModel, null, (m, s) =>
+            {
+                AsyncUtils.RunSync(() => updateSourceAsync(s));
+            });        
         }
 
-        #endregion
 
-        #region Methods
-
-        private static async Task updateSourceAsync(SkyDriveFileStream stream)
+        private static async Task updateSourceAsync(WebFileStream stream)
         {
-            await stream._profile.checkLoginAsync();
+            var skyProfile = stream.Profile as SkyDriveProfile;
+            var skyModel = stream.EntryModel as SkyDriveItemModel;
 
-            CancellationTokenSource cts = new CancellationTokenSource();
-            var skyModel = stream._entryModel as SkyDriveItemModel;
+            await skyProfile.checkLoginAsync();
+
+            CancellationTokenSource cts = new CancellationTokenSource();            
             var progressHandler = new Progress<LiveOperationProgress>(
                 (progress) => { });
 
 
-            LiveConnectClient liveClient = new LiveConnectClient(stream._profile.Session);
+            LiveConnectClient liveClient = new LiveConnectClient(skyProfile.Session);
             LiveOperationResult result;
 
             stream.Seek(0, SeekOrigin.Begin);
@@ -82,39 +60,9 @@ namespace FileExplorer.Models
 
             result = await liveClient.UploadAsync(uid,
                 skyModel.Name, stream, OverwriteOption.Overwrite, cts.Token, progressHandler);
-
-            //stream._profile.NotifyEntryChanges(skyModel.FullPath,
-            //skyModel.SourceUrl == null ? Defines.ChangeType.Created : Defines.ChangeType.Changed);
-            skyModel.init(stream._profile, skyModel.FullPath, result.Result);
-
-
+            skyModel.init(skyProfile, skyModel.FullPath, result.Result);
         }
 
-
-        public override void Close()
-        {
-            if (!_closed)
-            {
-                _closed = true;
-                if (_udateSrcFunc != null)
-                    _udateSrcFunc(this);
-            }
-            //base.Close();
-        }
-
-        #endregion
-
-        #region Data
-
-        private bool _closed = false;
-        private SkyDriveProfile _profile;
-        private IEntryModel _entryModel;
-        private Action<SkyDriveFileStream> _udateSrcFunc = null;
-
-        #endregion
-
-        #region Public Properties
-
-        #endregion
     }
+
 }

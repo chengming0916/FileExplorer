@@ -131,6 +131,7 @@
     <Compile Include="Model\GoogleDrive\GoogleDriveProfile.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveLogin.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveItemModel.cs" />
+    <Compile Include="Model\GoogleDrive\GoogleFileStream.cs" />
     <Compile Include="Model\GoogleDrive\GoogleMimeTypeManager.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveLogin.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveDiskIOHelper.cs" />

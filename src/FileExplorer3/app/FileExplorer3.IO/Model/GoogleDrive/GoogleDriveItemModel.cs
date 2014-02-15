@@ -45,20 +45,25 @@ namespace FileExplorer.Models
             this.IsDirectory = f.MimeType.Equals(FolderMimeType);
             this.Name = f.OriginalFilename ?? f.Title;
 
-            this.Type = profile.MimeTypeManager.GetExportableMimeTypes(f.MimeType).FirstOrDefault();
-            if (!this.IsDirectory && String.IsNullOrEmpty(Profile.Path.GetExtension(this.Name)))
-            {
-                string extension = profile.MimeTypeManager.GetExtension(this.Type);
-                if (!String.IsNullOrEmpty(extension))
-                    this.Label = this.Name += extension;
-            }
             this.Size = f.FileSize.HasValue ? f.FileSize.Value : 0;
             this.IsRenamable = true;
 
             this.Description = f.Description;
             this.ImageUrl = f.ThumbnailLink;
             this.SourceUrl = f.DownloadUrl;
+            this.SourceExportUrls = f.ExportLinks;
 
+            this.Type = profile.MimeTypeManager.GetExportableMimeTypes(f.MimeType).FirstOrDefault();
+            if (!this.IsDirectory && String.IsNullOrEmpty(Profile.Path.GetExtension(this.Name)))
+            {
+                string extension = profile.MimeTypeManager.GetExtension(this.Type);
+                if (!String.IsNullOrEmpty(extension))
+                {
+                    this.Label = this.Name += extension;
+                    this.SourceUrl = f.ExportLinks[this.Type];
+                }
+            }
+            
             if (!this.IsDirectory && System.IO.Path.GetExtension(this.Name) == "" && this.Type != null)
             {
                 string extension = ShellUtils.MIMEType2Extension(this.Type);
@@ -67,6 +72,8 @@ namespace FileExplorer.Models
                     this.Name += extension;
                 }
             }
+
+            
 
         }
 
@@ -101,6 +108,8 @@ namespace FileExplorer.Models
         /// Url for downloading a file.
         /// </summary>
         public string SourceUrl { get; protected set; }
+
+        public IDictionary<string, string> SourceExportUrls { get; protected set; }
 
         #endregion
     }
