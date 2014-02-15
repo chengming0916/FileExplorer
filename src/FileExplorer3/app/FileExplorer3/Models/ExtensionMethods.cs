@@ -89,15 +89,15 @@ namespace FileExplorer.Models
                 if (entry.IsDirectory)
                 {
                     System.IO.Directory.CreateDirectory(mapping.IOPath);
-                    var listing =  await entry.Profile.ListAsync(entry, ct);
+                    var listing =  await entry.Profile.ListAsync(entry, ct).ConfigureAwait(false);
                     foreach (var subEntry in listing)
-                        await WriteToCacheAsync(ioHelper, subEntry, ct, force);
+                        await WriteToCacheAsync(ioHelper, subEntry, ct, force).ConfigureAwait(false);
                 }
                 else
                 {
                     using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read, ct))
                     using (var outputStream = System.IO.File.OpenWrite(mapping.IOPath))
-                        await StreamUtils.CopyStreamAsync(srcStream, outputStream);
+                        await StreamUtils.CopyStreamAsync(srcStream, outputStream).ConfigureAwait(false);
                 }
             }
 
