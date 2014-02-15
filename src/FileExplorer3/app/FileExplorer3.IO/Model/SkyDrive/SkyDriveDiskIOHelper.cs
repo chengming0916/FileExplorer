@@ -20,7 +20,7 @@ namespace FileExplorer.Models
             : base(profile)
         {
             _profile = profile;
-            this.Mapper = new SkyDriveDiskPathMapper();
+            this.Mapper = new FileBasedDiskPathMapper(m => (m as SkyDriveItemModel).SourceUrl);
         }
 
         #endregion
