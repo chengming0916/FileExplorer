@@ -49,7 +49,7 @@ namespace Cofe.Core.Script
                 var current = cmds.Dequeue();
                 if (current.CanExecute(pd))
                 {
-                    var retCmd = await current.ExecuteAsync(pd);
+                    var retCmd = await current.ExecuteAsync(pd).ConfigureAwait(false);
                     if (retCmd != null)
                     {
                         if (pd.Error != null)

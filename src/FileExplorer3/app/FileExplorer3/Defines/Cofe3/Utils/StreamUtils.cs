@@ -64,13 +64,15 @@ namespace Cofe.Core.Utils
 
             byte[] buffer = new byte[32768];
             int read;
+            float totalRead = 0;
             while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
-                progress((short)Math.Truncate((read / input.Length * 100.0)));
-                await output.WriteAsync(buffer, 0, read);
+                totalRead += read;
+                progress((short)Math.Truncate(( totalRead / input.Length * 100.0)));
+                await output.WriteAsync(buffer, 0, read).ConfigureAwait(false);
             }
 
-            await output.FlushAsync();
+            await output.FlushAsync().ConfigureAwait(false);
 #if !NETFX_CORE
             if (closeOutputStream)
                 output.Close();
