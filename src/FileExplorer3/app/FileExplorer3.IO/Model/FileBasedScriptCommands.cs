@@ -181,10 +181,10 @@ namespace FileExplorer.Models
             using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read, pm.CancellationToken))
             using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write, pm.CancellationToken))
                 await StreamUtils.CopyStreamAsync(srcStream, destStream, false, false, false, 
-                    p => _progress.Report(new TransferProgress() { CurrentProgressPercent = p }) );
+                    p => _progress.Report(new TransferProgress() { CurrentProgressPercent = p }) ).ConfigureAwait(false);
 
             if (_removeOriginal)
-                await srcProfile.DiskIO.DeleteAsync(_srcModel, pm.CancellationToken);
+                await srcProfile.DiskIO.DeleteAsync(_srcModel, pm.CancellationToken).ConfigureAwait(false);
 
             _progress.Report(TransferProgress.IncrementProcessedEntries());
 

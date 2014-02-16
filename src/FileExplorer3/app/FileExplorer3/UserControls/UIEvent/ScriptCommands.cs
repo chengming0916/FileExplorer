@@ -152,7 +152,7 @@ namespace FileExplorer.ViewModels
         public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var sr = new ScriptRunner();
-            await sr.RunAsync(new Queue<IScriptCommand>(ScriptCommands), pm);
+            await sr.RunAsync(new Queue<IScriptCommand>(ScriptCommands), pm).ConfigureAwait(false);
             if (pm.Error != null)
                 return ResultCommand.Error(pm.Error);
             else return _nextCommand;
