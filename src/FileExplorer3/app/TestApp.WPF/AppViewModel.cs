@@ -236,46 +236,21 @@ namespace TestApp.WPF
                 RootModels.Add(selectedModel);
         }
 
-        //private string loginSkyDrive()
-        //{
-        //    var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
-        //    if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
-        //    {
-        //        return login.AuthCode;
-        //    }
-        //    return null;
-        //}
-
-
-        public async Task loginGoogleDrive()
-        {            
-            var profile = new GoogleDriveProfile(_events, _windowManager, AuthorizationKeys.GoogleDrive_Client_Id,
-                "gapi_client_secret.json");
-
-            var root = await profile.ParseAsync("");
-            var list = await profile.ListAsync(root, CancellationToken.None);
-
-            //var login = new GoogleDriveLogin(AuthorizationKeys.GoogleDrive_Client_Id);
-            //if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
-            //{
-     
-            //}            
-        }
-
-        private string loginSkyDrive()
-        {
-            var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
-            if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
-            {
-                return login.AuthCode;
-            }
-            return null;
-        }
 
         public static string skyDriveAliasMask = "{0}'s OneDrive"; 
         public async Task AddSkyDrive()
         {
-            
+
+            Func<string> loginSkyDrive = () =>
+                {
+                    var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
+                    if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+                    {
+                        return login.AuthCode;
+                    }
+                    return null;
+                };
+
             if (_profileSkyDrive == null)
                 _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
@@ -288,33 +263,16 @@ namespace TestApp.WPF
         {
 
             if (_profileGoogleDrive == null)
-                _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, AuthorizationKeys.GoogleDrive_Client_Id,
-                "gapi_client_secret.json");
+                using (var gapi_secret_stream = System.IO.File.OpenRead("gapi_client_secret.json")) //For demo only.
+                {
+                    _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, gapi_secret_stream);
+                }
             var rootModel = new[] { await _profileGoogleDrive.ParseAsync("") };
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
                 RootModels.Add(selectedModel);
         }
-
-        public async Task TestUpload()
-        {
-            if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
-            //var photos = await _profileSkyDrive.ParseAsync("/photos");
-            var uploadtxt = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile, "/upload1.txt", false);
-            //string ioPath = _profileSkyDrive.PathMapper[uploadtxt].IOPath;
-            //Directory.CreateDirectory(Path.GetDirectoryName(ioPath));
-            //var rootModel = new[] { await _profileSkyDrive.ParseAsync("/photos") };
-            //var newFile = new SkyDriveItemModel(_profileSkyDrive as SkyDriveProfile,
-            //    "/me/skydrive/upload.txt", "/SkyDrive/upload.txt", "/me/skydrive", 1);
-            //string ioPath = _profileSkyDrive.PathMapper[newFile].IOPath;
-            //using (var sw = new StreamWriter(File.Create(ioPath)))
-            //    sw.WriteLine("upload");
-            using (var sw = new StreamWriter(SkyDriveFileStream.OpenWrite(uploadtxt)))
-                sw.WriteLine("upload123");
-            //await _profileSkyDrive.PathMapper.UpdateSourceAsync(uploadtxt);           
-        }
-
+     
         public void ShowDialog()
         {
             _windowManager.ShowDialog(new MessageDialogViewModel("Caption", "Message 1 2 3 4 5 6 7 8 9 10",

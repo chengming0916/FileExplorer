@@ -43,6 +43,26 @@ namespace FileExplorer.Models
         }
     }
 
+    public class GetResourceIcon : IEntryModelIconExtractor
+    {
+        private ImageSource IconResource { get; set; }
+
+        public GetResourceIcon(string library, string path2Resource)
+        {
+            BitmapImage iconResource = new BitmapImage();
+            iconResource.BeginInit();
+            iconResource.UriSource = new Uri(String.Format("pack://application:,,,/{0};component{1}", library, path2Resource));
+            iconResource.EndInit();
+            IconResource = iconResource;
+            
+        }
+
+        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        {            
+            return Task<ImageSource>.FromResult(IconResource);
+        }
+    }
+
     public class GetUriIcon : IEntryModelIconExtractor
     {
         private Func<IEntryModel, Uri> _uriFunc;

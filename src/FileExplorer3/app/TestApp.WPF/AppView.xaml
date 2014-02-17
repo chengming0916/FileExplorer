@@ -31,12 +31,12 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <Button x:Name="Clear" Content="Clear" />
-        <StackPanel Orientation="Horizontal">
+        <WrapPanel Orientation="Horizontal">
             <Button x:Name="AddDirectoryInfo" Content="Add (using DirectoryInfo)" ToolTip="Drag n Drop is not coded in DirectoryInfo" />
             <Button x:Name="AddDirectoryInfoEx" Content="Add (using DirectoryInfoEx)" />
             <Button x:Name="AddSkyDrive" Content="Add (using SkyDrive)" />
             <Button x:Name="AddGoogleDrive" Content="Add (using GoogleDrive)" ToolTip="Not working yet" />
-        </StackPanel>
+        </WrapPanel>
                        
         <Rectangle Height="50" />
         <StackPanel Orientation="Horizontal">
@@ -54,10 +54,8 @@
             <Button x:Name="PickFiles"  Content="FilePicker" />
             <Button x:Name="SaveFile"  Content="FilePicker(Save)" />
             <TextBox x:Name="FileFilter" />
-        </StackPanel>
-        <!--<Button x:Name="TestUpload" Content="TestUpload" />-->
-        <Button x:Name="ShowDialog" Content="ShowDialog" />
-        <Button x:Name="loginGoogleDrive" Content="loginGoogleDrive" />
+        </StackPanel>        
+        <Button x:Name="ShowDialog" Content="ShowDialog" />        
         
     </StackPanel>
 
