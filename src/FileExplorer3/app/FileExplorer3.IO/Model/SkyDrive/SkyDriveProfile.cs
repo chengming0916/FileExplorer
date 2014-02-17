@@ -191,12 +191,16 @@ namespace FileExplorer.Models
             else
                 if (model.Name.IndexOf('.') != -1)
                     yield return GetFromSystemImageListUsingExtension.Instance;
+
+            if (model.FullPath == Alias)
+                yield return OneDriveLogo;
         }
 
         #endregion
 
         #region Data
 
+        private static GetResourceIcon OneDriveLogo = new GetResourceIcon("FileExplorer3.IO", "/Model/SkyDrive/OneDrive_Logo.png");
         private LiveAuthClient _authClient;
         private string _authCode = null;
         private string _rootAccessPath;

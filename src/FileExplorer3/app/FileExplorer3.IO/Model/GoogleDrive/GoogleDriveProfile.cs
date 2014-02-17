@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -22,38 +23,53 @@ namespace FileExplorer.Models
         {
             using (var stream = System.IO.File.OpenRead(clientSecretFile))
             {
-                var credential = await Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.AuthorizeAsync(
-                       Google.Apis.Auth.OAuth2.GoogleClientSecrets.Load(stream).Secrets,
-                       new[] { DriveService.Scope.Drive},
-                       "user", CancellationToken.None);
-
-                return credential;
+                return await GetCredentialAsync(stream);
             }
 
         }
 
-        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, string clientId,
+        private static async Task<IConfigurableHttpClientInitializer> GetCredentialAsync(Stream clientSecretStream)
+        {
+                var credential = await Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.AuthorizeAsync(
+                       Google.Apis.Auth.OAuth2.GoogleClientSecrets.Load(clientSecretStream).Secrets,
+                       new[] { DriveService.Scope.Drive },
+                       "user", CancellationToken.None);
+
+                return credential;
+        }
+
+        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, 
                  string clientSecretFile,
                  string aliasMask = "{0}'s GoogleDrive",
                  string rootAccessPath = "/gdrive")
-            : this(events, windowManager, clientId, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretFile)),
+            : this(events, windowManager, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretFile)),
                     aliasMask, rootAccessPath)
         {
 
         }
 
-        internal GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, string clientId,
+        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, 
+                 Stream clientSecretStream,
+                 string aliasMask = "{0}'s GoogleDrive",
+                 string rootAccessPath = "/gdrive")
+            : this(events, windowManager, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretStream)),
+                    aliasMask, rootAccessPath)
+        {
+
+        }
+
+        internal GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, 
                    IConfigurableHttpClientInitializer credential,
                    string aliasMask = "{0}'s GoogleDrive",
                    string rootAccessPath = "/gdrive")
             : base(events)
-        {
+        {            
             _driveService = new Google.Apis.Drive.v2.DriveService(
                 new BaseClientService.Initializer()
                 {
                     HttpClientInitializer = credential,
                     ApplicationName = "FileExplorer",
-                    ApiKey = clientId
+                    //ApiKey = clientId
                 });
             _aboutInfo = AsyncUtils.RunSync(() => _driveService.About.Get().ExecuteAsync());
 
@@ -143,6 +159,9 @@ namespace FileExplorer.Models
                 yield return new GetUriIcon(e => new Uri((e as GoogleDriveItemModel).ImageUrl), HttpClientFunc);
             else if (model.Name.IndexOf('.') != -1)
                 yield return GetFromSystemImageListUsingExtension.Instance;
+
+            if (entry.FullPath.Equals(Alias))
+                yield return GoogleDriveLogo;
         }
 
         #endregion
@@ -161,6 +180,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        private static GetResourceIcon GoogleDriveLogo = new GetResourceIcon("FileExplorer3.IO", "/Model/GoogleDrive/GoogleDrive_Logo.png");
         public string Alias { get; protected set; }
         public string RootAccessPath { get { return _rootAccessPath; } }
         public IEntryModelCache<GoogleDriveItemModel> ModelCache { get; private set; }
