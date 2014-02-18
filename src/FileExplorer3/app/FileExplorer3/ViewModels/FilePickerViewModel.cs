@@ -58,7 +58,15 @@ namespace FileExplorer.ViewModels
                    ResultCommand.NoError //Selected more than one item.                   
                    );
 
+            FileList.Selection.SelectionChanged += (o1, e1) =>
+            {
+                string newFileName = String.Join(",",
+                    FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
+                    .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
 
+                if (!String.IsNullOrEmpty(newFileName))
+                    FileName = newFileName;
+            };
 
             _filterStr = filterStr;
             Filters = new EntriesHelper<FileNameFilter>(loadFiltersTask);
@@ -105,14 +113,6 @@ namespace FileExplorer.ViewModels
             uc.Loaded += (o, e) =>
                 {
                     SelectedFilter = Filters.AllNonBindable.First().Filter;
-
-                    FileList.Selection.SelectionChanged += (o1, e1) =>
-                    {
-                        FileName =
-                            String.Join(",",
-                            FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
-                            .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
-                    };
                 };
         }
 
