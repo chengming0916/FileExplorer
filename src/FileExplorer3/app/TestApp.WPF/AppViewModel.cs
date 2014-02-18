@@ -21,6 +21,7 @@ using System.Windows.Input;
 using FileExplorer.ViewModels.Helpers;
 using FileExplorer.BaseControls;
 using System.Threading;
+using Cofe.Core;
 
 namespace TestApp.WPF
 {
@@ -97,7 +98,7 @@ namespace TestApp.WPF
 
             _explorer.FileList.Commands.ScriptCommands.Delete =
                  FileList.IfSelection(evm => evm.Count() >= 1,
-                    new IfOkCancel(_windowManager, pd => "Delete",
+                    ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                         new ShowProgress(_windowManager,
                                     ScriptCommands.RunInSequence(
@@ -109,7 +110,7 @@ namespace TestApp.WPF
 
             _explorer.FileList.Commands.ScriptCommands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,
-                   new IfOkCancel(_windowManager, pd => "Copy",
+                   ScriptCommands.IfOkCancel(_windowManager, pd => "Copy",
                         pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                             ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
                             ResultCommand.NoError),
@@ -117,7 +118,7 @@ namespace TestApp.WPF
 
             _explorer.FileList.Commands.ScriptCommands.Cut =
                   FileList.IfSelection(evm => evm.Count() >= 1,
-                   new IfOkCancel(_windowManager, pd => "Cut",
+                   ScriptCommands.IfOkCancel(_windowManager, pd => "Cut",
                         pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                             ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
                             ResultCommand.NoError),
@@ -137,6 +138,7 @@ namespace TestApp.WPF
                     new CommandModel(ApplicationCommands.Cut) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Copy) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Paste) { IsVisibleOnToolbar = false }
+                    //new GoogleExportDirectoryCommandModel()
                     )
             };
 
@@ -149,7 +151,7 @@ namespace TestApp.WPF
               };
 
             _explorer.DirectoryTree.Commands.ScriptCommands.Delete =
-                   new IfOkCancel(_windowManager, pd => "Delete",
+                   ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                        pd => String.Format("Delete {0}?",  ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
                              new ShowProgress(_windowManager,
                                     ScriptCommands.RunInSequence(
@@ -183,22 +185,29 @@ namespace TestApp.WPF
 
         public void PickFiles()
         {
-            var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
-            updateExplorerModel(initExplorerModel(filePicker));
-            if (_windowManager.ShowDialog(filePicker).Value)
-            {
-                MessageBox.Show(String.Join(",", filePicker.SelectedFiles.Select(em => em.FullPath)));
-            }
+            new ScriptRunner().Run(new ParameterDic(),
+                ScriptCommands.OpenFile(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
+                    (fileName) => ScriptCommands.MessageBox(_windowManager, "Open", fileName), ResultCommand.OK));
+            //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
+            //updateExplorerModel(initExplorerModel(filePicker));
+            //if (_windowManager.ShowDialog(filePicker).Value)
+            //{
+            //    MessageBox.Show(String.Join(",", filePicker.SelectedFiles.Select(em => em.FullPath)));
+            //}
         }
 
         public void SaveFile()
         {
-            var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Save, RootModels.ToArray());
-            updateExplorerModel(initExplorerModel(filePicker));
-            if (_windowManager.ShowDialog(filePicker).Value)
-            {
-                MessageBox.Show(filePicker.FileName);
-            }
+            new ScriptRunner().Run(new ParameterDic(),
+               ScriptCommands.SaveFile(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
+                   (fileName) => ScriptCommands.MessageBox(_windowManager, "Save", fileName), ResultCommand.OK));
+
+            //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Save, RootModels.ToArray());
+            //updateExplorerModel(initExplorerModel(filePicker));
+            //if (_windowManager.ShowDialog(filePicker).Value)
+            //{
+            //    MessageBox.Show(filePicker.FileName);
+            //}
         }
 
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)

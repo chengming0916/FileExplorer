@@ -39,6 +39,33 @@ namespace FileExplorer.ViewModels
 
     #region MessageBox
 
+    public static partial class ScriptCommands
+    {
+        public static IfOkCancel IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
+            Func<ParameterDic, string> messageFunc, IScriptCommand okCommand,
+            IScriptCommand cancelCommand)
+        { return new IfOkCancel(wm, captionFunc, messageFunc, okCommand, cancelCommand); }
+
+        public static ShowFilePicker SaveFile(IWindowManager wm, IEventAggregator events,
+            IEntryModel[] rootDirModels, string filter, string defaultFileName,
+            Func<string, IScriptCommand> successCommandFunc, IScriptCommand cancelFunc)
+        {
+            return new ShowFilePicker(wm, events, rootDirModels, FilePickerMode.Save, filter, defaultFileName, successCommandFunc, cancelFunc);
+        }
+
+        public static ShowFilePicker OpenFile(IWindowManager wm, IEventAggregator events,
+            IEntryModel[] rootDirModels, string filter, string defaultFileName,
+            Func<string, IScriptCommand> successCommandFunc, IScriptCommand cancelFunc)
+        {
+            return new ShowFilePicker(wm, events, rootDirModels, FilePickerMode.Open, filter, defaultFileName, successCommandFunc, cancelFunc);
+        }
+
+        public static ShowMessageBox MessageBox(IWindowManager wm, string caption, string message)
+        {
+            return new ShowMessageBox(wm, caption, message);
+        }
+
+    }
 
 
     /// <summary>
@@ -48,7 +75,7 @@ namespace FileExplorer.ViewModels
     {
         private IScriptCommand _okCommand;
         private IScriptCommand _cancelCommand;
-        public IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
+        internal IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
             Func<ParameterDic, string> messageFunc, IScriptCommand okCommand,
             IScriptCommand cancelCommand)
             : base(
@@ -72,12 +99,48 @@ namespace FileExplorer.ViewModels
         }
     }
 
+    public class ShowFilePicker : ScriptCommandBase
+    {
+        private IWindowManager _wm;
+        private string _filter;
+        private string _defaultFileName;
+        private Func<string, IScriptCommand> _successCommandFunc;
+        private IEventAggregator _events;
+        private IEntryModel[] _rootDirModels;
+        private IScriptCommand _cancelFunc;
+        private FilePickerMode _mode;
+        internal ShowFilePicker(IWindowManager wm, IEventAggregator events,
+            IEntryModel[] rootDirModels, FilePickerMode mode,  string filter, string defaultFileName,
+            Func<string, IScriptCommand> successCommandFunc, IScriptCommand cancelFunc)
+            : base( mode.ToString() +  "File")
+        {
+            _wm = wm;
+            _events = events;
+            _filter = filter;
+            _mode = mode;
+            _defaultFileName = defaultFileName;
+            _successCommandFunc = successCommandFunc;
+            _cancelFunc = cancelFunc;
+            _rootDirModels = rootDirModels;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var filePicker = new FilePickerViewModel(_events, _wm, _filter, _mode, _rootDirModels);
+            if (!String.IsNullOrEmpty(_defaultFileName))
+                filePicker.FileName = _defaultFileName;
+            if (_wm.ShowDialog(filePicker).Value)
+                return _successCommandFunc(filePicker.FileName);
+            else return _cancelFunc;
+        }
+    }
+
     public class ShowMessageBox : ScriptCommandBase
     {
         private IWindowManager _wm;
         private string _caption;
         private string _message;
-        public ShowMessageBox(IWindowManager wm, string caption, string message)
+        internal ShowMessageBox(IWindowManager wm, string caption, string message)
             : base("ShowMessageBox")
         {
             _wm = wm;

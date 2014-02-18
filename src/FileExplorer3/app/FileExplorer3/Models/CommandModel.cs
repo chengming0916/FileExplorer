@@ -78,8 +78,10 @@ namespace FileExplorer.Models
         #region Public Properties
         public string CommandType { get { return _commandType; } set { _commandType = value; NotifyOfPropertyChange(() => CommandType); } }
         public IScriptCommand Command { get { return _command; } set { _command = value; NotifyOfPropertyChange(() => Command); } }
-        public RoutedUICommand RoutedCommand { get { return _routedCommand; } set { _routedCommand = value; NotifyOfPropertyChange(() => RoutedCommand); } }
-        //Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
+        public RoutedUICommand RoutedCommand { get { return _routedCommand; } set { _routedCommand = value; NotifyOfPropertyChange(() => RoutedCommand); } }        
+        /// <summary>
+        /// Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
+        /// </summary>
         public char? Symbol { get { return _symbol; } set { _symbol = value; NotifyOfPropertyChange(() => Symbol); } }
         public System.Drawing.Bitmap HeaderIcon { get { return _headerIcon; } set { _headerIcon = value; NotifyOfPropertyChange(() => HeaderIcon); } }
         public Func<ICommandModel, System.Windows.Media.ImageSource> HeaderImageFunc
