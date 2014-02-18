@@ -128,6 +128,7 @@
     <Compile Include="Model\FileSystemInfo\FileSystemInfoMetadataProvider.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoModel.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoProfile.cs" />
+    <Compile Include="Model\GoogleDrive\GoogleDriveCommandModels.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveDiskIOHelper.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveProfile.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveLogin.cs" />

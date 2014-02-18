@@ -38,17 +38,9 @@ namespace FileExplorer.ViewModels
             FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
             : base(events, windowManager, rootModels)
         {
+            WindowTitleMask = Enum.GetName(typeof(FilePickerMode), mode);
             _mode = mode;
             _tryCloseCommand = new SimpleScriptCommand("TryClose", pd => { TryClose(true); return ResultCommand.NoError; });
-
-            FileList.Selection.SelectionChanged += (o, e) =>
-            {
-                FileName =
-                    String.Join(",",
-                    FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
-                    .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
-            };
-
 
             FileList.Commands.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
                    vms.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
@@ -113,6 +105,14 @@ namespace FileExplorer.ViewModels
             uc.Loaded += (o, e) =>
                 {
                     SelectedFilter = Filters.AllNonBindable.First().Filter;
+
+                    FileList.Selection.SelectionChanged += (o1, e1) =>
+                    {
+                        FileName =
+                            String.Join(",",
+                            FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
+                            .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
+                    };
                 };
         }
 

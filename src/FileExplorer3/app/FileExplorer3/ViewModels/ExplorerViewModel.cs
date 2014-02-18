@@ -28,7 +28,7 @@ namespace FileExplorer.ViewModels
             _rootModels = rootModels;
             _windowManager = windowManager;
 
-
+            WindowTitleMask = "{0}";
             //Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents);
             FileList = new FileListViewModel(_internalEvents);
@@ -116,7 +116,7 @@ namespace FileExplorer.ViewModels
 
         public void Handle(DirectoryChangedEvent message)
         {
-            this.DisplayName = message.NewModel.Label;
+            this.DisplayName = String.Format(WindowTitleMask, message.NewModel.Label);
         }
 
         public void Handle(EntryChangedEvent message)
@@ -127,7 +127,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Data
-
+        
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();
@@ -137,6 +137,8 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
+
+        public string WindowTitleMask { get; set; }
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 
