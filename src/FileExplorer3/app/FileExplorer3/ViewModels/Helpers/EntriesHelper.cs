@@ -47,7 +47,7 @@ namespace FileExplorer.ViewModels.Helpers
             if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
             {
                 _lastCancellationToken.Cancel(); //Cancel previous load.                
-                using (var releaser = await loadingLock.LockAsync())
+                using (var releaser = await _loadingLock.LockAsync())
                 {
                     _lastCancellationToken = new CancellationTokenSource();
                     if (!_isLoaded || force)
@@ -92,7 +92,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         private CancellationTokenSource _lastCancellationToken = new CancellationTokenSource();
         private bool _clearBeforeLoad = false;
-        private readonly AsyncLock loadingLock = new AsyncLock();
+        private readonly AsyncLock _loadingLock = new AsyncLock();
         //private bool _isLoading = false;
         private bool _isLoaded = false;
         private bool _isExpanded = false;
@@ -135,6 +135,8 @@ namespace FileExplorer.ViewModels.Helpers
         public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }
 
         public ObservableCollection<VM> All { get { return _subItems; } private set { _subItems = value; } }
+
+        public AsyncLock LoadingLock { get { return _loadingLock; } }
 
         #endregion
 

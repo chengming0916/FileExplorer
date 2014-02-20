@@ -372,6 +372,37 @@ namespace FileExplorer.ViewModels
             return new LookupEntryCommand(lookupFunc, foundCommandFunc, notFoundCommand, ExtensionMethods.GetFileListItemsFunc);
         }
 
+        /// <summary>
+        /// Select or Deselect items in FileList based on querySelectionFunc.
+        /// </summary>
+        /// <param name="querySelectionProv"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand Select(Func<IEntryModel, bool> querySelectionFunc, IScriptCommand nextCommand)
+        {
+            return new SelectFileList(querySelectionFunc, nextCommand);
+        }
+
+        /// <summary>
+        /// Wait until filelist finished loading.
+        /// </summary>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand WaitLoad(IScriptCommand nextCommand)
+        {
+            return new WaitFileList(nextCommand);
+        }
+
+        /// <summary>
+        /// Refresh the filelist.
+        /// </summary>
+        /// <param name="nextCommand"></param>
+        /// <param name="force"></param>
+        /// <returns></returns>
+        public static IScriptCommand Refresh(IScriptCommand nextCommand, bool force = false)
+        {
+            return new RefreshFileList(nextCommand, force);
+        }
     }
 
     /// <summary>
@@ -443,6 +474,92 @@ namespace FileExplorer.ViewModels
         }
     }
 
+
+    /// <summary>
+    /// Refresh the file list.
+    /// </summary>
+    internal class RefreshFileList : ScriptCommandBase
+    {
+        private bool _force;
+        /// <summary>
+        ///  Refresh the filelist.
+        /// required FileList (IFileListViewModel)
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="ifTrueCommand"></param>
+        /// <param name="otherwiseCommand"></param>
+        internal RefreshFileList(IScriptCommand nextCommand, bool force)
+            : base("Refresh", "FileList")
+        {
+            _nextCommand = nextCommand;
+            _force = force;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            if (!pm.ContainsKey("FileList"))
+                return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
+            IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
+            await flvm.ProcessedEntries.EntriesHelper.LoadAsync(_force);
+            return _nextCommand;
+        }
+
+
+    }
+
+    /// <summary>
+    /// Run next command when filelist finished loading
+    /// </summary>
+    internal class WaitFileList : ScriptCommandBase
+    {
+        /// <summary>
+        ///  Run next command when filelist finished loading,
+        /// required FileList (IFileListViewModel)
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="ifTrueCommand"></param>
+        /// <param name="otherwiseCommand"></param>
+        internal WaitFileList(IScriptCommand nextCommand)
+           : base("Waiting", "FileList")
+        {
+            _nextCommand = nextCommand;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            if (!pm.ContainsKey("FileList"))
+                return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
+            IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
+            using (var releaser = await flvm.ProcessedEntries.EntriesHelper.LoadingLock.LockAsync())
+                return _nextCommand;
+        }
+
+
+    }
+
+    /// <summary>
+    /// Select/Deselect item based on queryselection.
+    /// </summary>
+    internal class SelectFileList : ScriptCommandBase
+    {
+        private Func<IEntryModel, bool> _querySelectionFunc;
+        internal SelectFileList(Func<IEntryModel, bool> querySelectionFunc, IScriptCommand nextCommand)
+           : base("Select", "FileList")
+        {
+            _querySelectionFunc = querySelectionFunc;
+            _nextCommand = nextCommand;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            if (!pm.ContainsKey("FileList"))
+                return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
+            IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
+            flvm.Selection.Select(evm => evm != null && _querySelectionFunc(evm.EntryModel));
+
+            return _nextCommand;
+        }
+    }
 
     /// <summary>
     /// Broadcast change directory to current selected directory

@@ -34,6 +34,8 @@ namespace FileExplorer.ViewModels.Helpers
         void SelectAll();
         void UnselectAll();
 
+        void Select(Func<VM, bool> querySelectFunc);
+
 
         #endregion
 
