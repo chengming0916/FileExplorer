@@ -30,7 +30,13 @@ namespace FileExplorer.ViewModels
 
     public enum FilePickerMode { Open, Save }
 
-    public class FilePickerViewModel : ExplorerViewModel
+    public interface IEntryModelInfo
+    {
+        string FileName { get;   }
+        IProfile Profile { get; }
+    }
+
+    public class FilePickerViewModel : ExplorerViewModel, IEntryModelInfo
     {
         #region Constructor
 
@@ -133,12 +139,15 @@ namespace FileExplorer.ViewModels
         public void Save()
         {
             var pm = FileList.Commands.ParameterDicConverter.Convert(new ParameterDic());
-            var profile = FileList.CurrentDirectory.Profile;
+            Profile = FileList.CurrentDirectory.Profile;
 
             //Update FileName in case user does not enter full path name.
             IScriptCommand updateFileName =
                 new SimpleScriptCommand("updateFileName", pd =>
-                { FileName = profile.Path.Combine(FileList.CurrentDirectory.FullPath, FileName); return ResultCommand.NoError; });
+                { 
+                    FileName = Profile.Path.Combine(FileList.CurrentDirectory.FullPath, FileName);
+                    return ResultCommand.NoError; 
+                });
 
             //Update SelectedFiles property (if it's exists.")
             Func<IEntryModel, IScriptCommand> setSelectedFiles =
@@ -151,7 +160,7 @@ namespace FileExplorer.ViewModels
             Func<IEntryModel, IScriptCommand> queryOverwrite =
                 m => new IfOkCancel(_windowManager,
                         pd => "Overwrite",
-                        pd => "Overwrite " + profile.Path.GetFileName(FileName),
+                        pd => "Overwrite " + Profile.Path.GetFileName(FileName),
                         setSelectedFiles(m), ResultCommand.Error(new Exception("User cancel")) /* Cancel if user press cancel. */);
 
             new ScriptRunner().Run(pm,
@@ -168,6 +177,7 @@ namespace FileExplorer.ViewModels
         public void Open()
         {
             List<IEntryModel> selectedFiles = new List<IEntryModel>();
+            Profile = FileList.CurrentDirectory.Profile;
             Func<IEntryModel, IScriptCommand> addToSelectedFiles =
                 m => new SimpleScriptCommand("AddToSelectedFiles", pd => { selectedFiles.Add(m); return ResultCommand.NoError; });
             var pm = FileList.Commands.ParameterDicConverter.Convert(new ParameterDic());
@@ -228,6 +238,7 @@ namespace FileExplorer.ViewModels
         public IEntriesHelper<FileNameFilter> Filters { get; set; }
         public string SelectedFilter { get { return _selectedFilter; } set { setFilter(value); } }
         public string FileName { get { return _selectedFileName; } set { setFileName(value); } }
+        public IProfile Profile { get; private set; }
 
         public bool IsOpenEnabled { get { return _mode == FilePickerMode.Open; } }
         public bool IsSaveEnabled { get { return _mode == FilePickerMode.Save; } }

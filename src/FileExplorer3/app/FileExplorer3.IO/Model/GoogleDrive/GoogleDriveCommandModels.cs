@@ -8,69 +8,24 @@ using Caliburn.Micro;
 using Cofe.Core.Script;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels;
+using System.Threading;
 
 namespace FileExplorer.Models
 {
-    public class GoogleExportDirectoryCommandModel : DirectoryCommandModel
+    public class GoogleExportCommandModel : DirectoryCommandModel
     {
-
-
-        #region GoogleExportModel
-
-        public class GoogleExportModel : CommandModel
-        {
-            private string _url;
-            private string _ext;
-            private IEntryModel[] _rootModels;
-            private IWindowManager _windowManager;
-            private IEventAggregator _events;
-            public GoogleExportModel(string mimeType, string ext, string url,
-                IWindowManager windowManager, IEventAggregator events, IEntryModel[] rootModels)                
-            {
-                Header = String.Format("{0} ({1})", mimeType, ext);
-                _rootModels = rootModels;
-                _windowManager = windowManager;
-                _events = events;
-                _ext = ext;
-                _url = url;
-
-                IsEnabled = true;
-                this.IsVisibleOnMenu = true;
-                this.IsHeaderVisible = true;
-
-                //Command = new SimpleScriptCommand("GoogleExport", (pd) =>
-                //    {
-                //        string filter = String.Format("{0} ({1})|*{1}", mimeType, ext);
-                //        var filePicker = new FilePickerViewModel(_events, _windowManager, filter, FilePickerMode.Save, _rootModels);
-                //        if (_windowManager.ShowDialog(filePicker).Value)
-                //        {
-                //            MessageBox.Show(filePicker.FileName);
-                //        }                        
-                //        return ResultCommand.NoError;
-                //    });
-            }
-
-            
-        }
-
-        #endregion
-
 
         #region Constructor
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="rootModels">Root directory used when saving.</param>
-        public GoogleExportDirectoryCommandModel(Func<string, string, string> getDestinationFunc, IEntryModel[] rootModels)
+        /// <param name="rootModelFunc">Root directory used when saving.</param>
+        public GoogleExportCommandModel(Func<IEntryModel[]> rootModelFunc)
         {
-            _rootModels = rootModels;
-            //_events = events;
-            //_windowManager = windowManager;
+            _rootModelFunc = rootModelFunc;
             this.Symbol = Convert.ToChar(0xE118);
             this.Header = "Export";
-            this.IsVisibleOnToolbar = false;
-            this.IsVisibleOnMenu = true;
             this.IsEnabled = false;
         }
 
@@ -95,8 +50,30 @@ namespace FileExplorer.Models
                             ext = "." + match.Groups["ext"].Value;
                         else ext = ShellUtils.MIMEType2Extension(mimeType);
 
+                        string filter = String.Format("{0} ({1})|*{1}", mimeType, ext);
+                        string defaultName = System.IO.Path.ChangeExtension(appliedModels[0].Name, ext);
+
                         if (ext != null)
-                            subItemList.Add(new GoogleExportModel(mimeType, ext, url, _windowManager, _events,_rootModels));
+                            subItemList.Add(
+                                new CommandModel(
+                                    //SaveFile --> ParseOrCreatePath -> ShowProgress -> Download -> HideProgress
+                                    //         --> OK (If cancel)
+                                    ScriptCommands.SaveFile(WindowManager, Events, 
+                                     _rootModelFunc(), filter, defaultName,
+                                     (fi) => ScriptCommands.ParseOrCreatePath(fi.Profile as IDiskProfile, 
+                                         fi.FileName, false, 
+                                         (m) => new ShowProgress(WindowManager, 
+                                                    ScriptCommands.Download(url, m, 
+                                                    (appliedModels[0].Profile as GoogleDriveProfile)
+                                                    .HttpClientFunc(), 
+                                                    new HideProgress()))), 
+                                         ResultCommand.OK)
+                                )
+                                    {
+                                        Header = String.Format("{0} ({1})", mimeType, ext),
+                                        IsEnabled = true,
+                                        IsVisibleOnMenu = true
+                                    });
                     }
             }
             
@@ -108,15 +85,18 @@ namespace FileExplorer.Models
 
         #region Data
 
-        private IEntryModel[] _rootModels;
-        private IWindowManager _windowManager;
-        private IEventAggregator _events;
+        private Func<IEntryModel[]> _rootModelFunc;
 
         #endregion
 
         #region Public Properties
 
+        public IWindowManager WindowManager { get; set; }
+        public IEventAggregator Events { get; set; }
+
         #endregion
 
+
+        
     }
 }

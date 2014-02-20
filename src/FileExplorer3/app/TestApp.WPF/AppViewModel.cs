@@ -137,8 +137,9 @@ namespace TestApp.WPF
                     new SeparatorCommandModel(),
                     new CommandModel(ApplicationCommands.Cut) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Copy) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Paste) { IsVisibleOnToolbar = false }
-                    //new GoogleExportDirectoryCommandModel()
+                    new CommandModel(ApplicationCommands.Paste) { IsVisibleOnToolbar = false },
+                    new GoogleExportCommandModel(() => _rootModels.ToArray())
+                    { IsVisibleOnToolbar = false, WindowManager = _windowManager }
                     )
             };
 
@@ -187,7 +188,7 @@ namespace TestApp.WPF
         {
             new ScriptRunner().Run(new ParameterDic(),
                 ScriptCommands.OpenFile(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
-                    (fileName) => ScriptCommands.MessageBox(_windowManager, "Open", fileName), ResultCommand.OK));
+                    (fpvm) => ScriptCommands.MessageBox(_windowManager, "Open", fpvm.FileName), ResultCommand.OK));
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
             //updateExplorerModel(initExplorerModel(filePicker));
             //if (_windowManager.ShowDialog(filePicker).Value)
@@ -199,8 +200,8 @@ namespace TestApp.WPF
         public void SaveFile()
         {
             new ScriptRunner().Run(new ParameterDic(),
-               ScriptCommands.SaveFile(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
-                   (fileName) => ScriptCommands.MessageBox(_windowManager, "Save", fileName), ResultCommand.OK));
+               ScriptCommands.SaveFile(_windowManager, null, RootModels.ToArray(), FileFilter, "demo.txt",
+                   (fpvm) => ScriptCommands.MessageBox(_windowManager, "Save", fpvm.FileName), ResultCommand.OK));
 
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Save, RootModels.ToArray());
             //updateExplorerModel(initExplorerModel(filePicker));

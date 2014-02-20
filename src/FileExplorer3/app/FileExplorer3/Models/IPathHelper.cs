@@ -16,14 +16,20 @@ namespace FileExplorer.Models
 
     public class PathHelper : IPathHelper
     {
-        public static PathHelper Disk = new PathHelper('\\');
-        public static PathHelper Web = new PathHelper('/');
+        public static PathHelper Disk = new PathHelper('\\', p => p.Contains(":\\"));
+        public static PathHelper Web = new PathHelper('/', p => p.Contains("://"));
 
         #region Constructor
 
-        public PathHelper(char separator)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="separator"></param>
+        /// <param name="isFullPathFunc">If a path segement is a full path, all path before the path segement is discarded.</param>
+        public PathHelper(char separator, Func<string, bool> isFullPathFunc)
         {
             _separator = separator;
+            _isfullPathFunc = isFullPathFunc;
         }
 
         #endregion
@@ -35,7 +41,10 @@ namespace FileExplorer.Models
 
             foreach (var p in paths)
             {
-                retVal = retVal.TrimEnd(_separator) + _separator + p.TrimStart(_separator);
+                if (_isfullPathFunc(p))
+                    retVal = p;
+                else
+                    retVal = retVal.TrimEnd(_separator) + _separator + p.TrimStart(_separator);
             }
             return retVal.TrimStart(_separator);
         }
@@ -69,6 +78,7 @@ namespace FileExplorer.Models
         #region Data
 
         private char _separator;
+        private Func<string, bool> _isfullPathFunc;
 
         #endregion
 

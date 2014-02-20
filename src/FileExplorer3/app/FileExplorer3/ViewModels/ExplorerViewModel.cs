@@ -39,7 +39,8 @@ namespace FileExplorer.ViewModels
             Commands = new ExplorerCommandManager(this, events, FileList, DirectoryTree, Navigation);
             setRootModels(_rootModels);
 
-            _events.Subscribe(this);
+            if (_events != null)
+                _events.Subscribe(this);
             _internalEvents.Subscribe(this);
         }
 
@@ -127,7 +128,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Data
-        
+
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();

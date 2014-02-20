@@ -37,8 +37,8 @@ namespace FileExplorer.UserControls.DragDrop
         /// <returns></returns>
         public override object GetData(String format, bool autoConvert)
         {            
-            Object obj = base.GetData(format, autoConvert);
-            if (!inDragLoop() && !_notifyDropCalled)
+            Object obj = base.GetData(format, autoConvert);            
+            if (!inDragLoop() && !_notifyDropCalled && format.Equals(DataFormats.FileDrop))
             {
                 string s;
                 try
