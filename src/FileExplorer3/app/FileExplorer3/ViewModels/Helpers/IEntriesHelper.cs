@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -50,5 +51,7 @@ namespace FileExplorer.ViewModels.Helpers
         /// A list of sub-entries, after loaded.
         /// </summary>
         ObservableCollection<VM> All { get; }
+
+        AsyncLock LoadingLock { get; }
     }
 }

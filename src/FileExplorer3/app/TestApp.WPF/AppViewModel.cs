@@ -96,6 +96,8 @@ namespace TestApp.WPF
                   ResultCommand.NoError //Selected more than one item, ignore.
                   );
 
+           
+
             _explorer.FileList.Commands.ScriptCommands.Delete =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
@@ -107,6 +109,9 @@ namespace TestApp.WPF
                                         new HideProgress())),                         
                         ResultCommand.NoError),
                     NullScriptCommand.Instance);
+
+            _explorer.FileList.Commands.ScriptCommands.Delete =
+               FileList.Select(m => true, ResultCommand.NoError);
 
             _explorer.FileList.Commands.ScriptCommands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,

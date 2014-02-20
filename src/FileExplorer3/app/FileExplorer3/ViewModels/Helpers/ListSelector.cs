@@ -13,7 +13,7 @@ using FileExplorer.Utils;
 namespace FileExplorer.ViewModels.Helpers
 {
     public class ListSelector<VM, T> : NotifyPropertyChanged, IListSelector<VM, T>
-        where VM : IEntryViewModel
+        where VM : ISelectable
     {
         #region Constructor
 
@@ -65,6 +65,13 @@ namespace FileExplorer.ViewModels.Helpers
                     e.IsSelected = true;
                 notifySelectionChanged();
             }
+        }
+
+        public void Select(Func<VM, bool> querySelectFunc)
+        {
+            foreach (var item in EntryHelper.AllNonBindable.ToArray())
+                item.IsSelected = querySelectFunc(item);
+            notifySelectionChanged();
         }
 
         public void ReportChildSelected(VM viewModel)
