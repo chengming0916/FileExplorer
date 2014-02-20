@@ -15,6 +15,9 @@ using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels;
+using System.Net.Http;
+using System.Net;
+using System.Threading;
 
 namespace FileExplorer.ViewModels
 {
@@ -48,21 +51,44 @@ namespace FileExplorer.ViewModels
 
         public static ShowFilePicker SaveFile(IWindowManager wm, IEventAggregator events,
             IEntryModel[] rootDirModels, string filter, string defaultFileName,
-            Func<string, IScriptCommand> successCommandFunc, IScriptCommand cancelFunc)
+            Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
-            return new ShowFilePicker(wm, events, rootDirModels, FilePickerMode.Save, filter, defaultFileName, successCommandFunc, cancelFunc);
+            if (wm == null) wm = new WindowManager();
+            return new ShowFilePicker(wm, events, rootDirModels, FilePickerMode.Save, filter, defaultFileName, 
+                successCommand, cancelCommand);
+        }
+
+        public static ShowFilePicker SaveFile(IEntryModel[] rootDirModels, string filter, string defaultFileName,
+           Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
+        {
+            return SaveFile(null, null, rootDirModels, filter, defaultFileName,
+                successCommand, cancelCommand);
         }
 
         public static ShowFilePicker OpenFile(IWindowManager wm, IEventAggregator events,
             IEntryModel[] rootDirModels, string filter, string defaultFileName,
-            Func<string, IScriptCommand> successCommandFunc, IScriptCommand cancelFunc)
+            Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
-            return new ShowFilePicker(wm, events, rootDirModels, FilePickerMode.Open, filter, defaultFileName, successCommandFunc, cancelFunc);
+            return new ShowFilePicker(wm, events, rootDirModels, FilePickerMode.Open, filter, 
+                defaultFileName, successCommand, cancelCommand);
+        }
+
+        public static ShowFilePicker OpenFile(IEntryModel[] rootDirModels, string filter, string defaultFileName,
+         Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
+        {
+            return OpenFile(new WindowManager(), null, rootDirModels, filter, defaultFileName, successCommand, cancelCommand);
         }
 
         public static ShowMessageBox MessageBox(IWindowManager wm, string caption, string message)
         {
             return new ShowMessageBox(wm, caption, message);
+        }
+
+
+        public static DownloadFile Download(string sourceUrl, IEntryModel entry,
+           HttpClient httpClient, IScriptCommand nextCommand = null)
+        {
+            return new DownloadFile(sourceUrl, entry, httpClient, nextCommand);
         }
 
     }
@@ -104,15 +130,15 @@ namespace FileExplorer.ViewModels
         private IWindowManager _wm;
         private string _filter;
         private string _defaultFileName;
-        private Func<string, IScriptCommand> _successCommandFunc;
+        private Func<IEntryModelInfo, IScriptCommand> _successCommandFunc;
         private IEventAggregator _events;
         private IEntryModel[] _rootDirModels;
         private IScriptCommand _cancelFunc;
         private FilePickerMode _mode;
         internal ShowFilePicker(IWindowManager wm, IEventAggregator events,
-            IEntryModel[] rootDirModels, FilePickerMode mode,  string filter, string defaultFileName,
-            Func<string, IScriptCommand> successCommandFunc, IScriptCommand cancelFunc)
-            : base( mode.ToString() +  "File")
+            IEntryModel[] rootDirModels, FilePickerMode mode, string filter, string defaultFileName,
+            Func<IEntryModelInfo, IScriptCommand> successCommandFunc, IScriptCommand cancelCommand)
+            : base(mode.ToString() + "File")
         {
             _wm = wm;
             _events = events;
@@ -120,7 +146,7 @@ namespace FileExplorer.ViewModels
             _mode = mode;
             _defaultFileName = defaultFileName;
             _successCommandFunc = successCommandFunc;
-            _cancelFunc = cancelFunc;
+            _cancelFunc = cancelCommand;
             _rootDirModels = rootDirModels;
         }
 
@@ -130,7 +156,14 @@ namespace FileExplorer.ViewModels
             if (!String.IsNullOrEmpty(_defaultFileName))
                 filePicker.FileName = _defaultFileName;
             if (_wm.ShowDialog(filePicker).Value)
-                return _successCommandFunc(filePicker.FileName);
+            {
+                string mode = _mode == FilePickerMode.Open ? "Open" : "Save";
+
+                pm[mode + "FileName"] = filePicker.FileName; //OpenFileName or SaveFileName
+                pm[mode + "Profile"] = filePicker.Profile;  //OpenProfile or SaveProfile
+
+                return _successCommandFunc(filePicker);
+            }
             else return _cancelFunc;
         }
     }
@@ -191,6 +224,85 @@ namespace FileExplorer.ViewModels
         {
             var pdv = pm["Progress"] as ProgressDialogViewModel;
             pdv.TryClose();
+            return _nextCommand;
+        }
+    }
+
+    public class DownloadFile : ScriptCommandBase
+    {
+        private string _sourceUrl;
+        private bool _disposeHttpClient;
+        private Func<HttpClient> _httpClientFunc;
+        private Func<CancellationToken, Task<Stream>> _destStreamFunc;
+        private IEntryModel _entry;
+        public DownloadFile(string sourceUrl, Func<CancellationToken, Task<Stream>> destStreamFunc,
+            Func<HttpClient> httpClientFunc, IScriptCommand nextCommand = null)
+            : base("Download", nextCommand)
+        {
+            _sourceUrl = sourceUrl;
+            _destStreamFunc = destStreamFunc;
+            _httpClientFunc = httpClientFunc;
+            _disposeHttpClient = true;
+        }
+
+        public DownloadFile(string sourceUrl, Func<CancellationToken, Task<Stream>> destStreamFunc,
+            HttpClient httpClient, IScriptCommand nextCommand = null)
+            : base("Download", nextCommand)
+        {
+            _sourceUrl = sourceUrl;
+            _destStreamFunc = destStreamFunc;
+            _httpClientFunc = () => httpClient;
+            _disposeHttpClient = false;
+        }
+
+        public DownloadFile(string sourceUrl, IEntryModel entry,
+           HttpClient httpClient, IScriptCommand nextCommand = null)
+            : this(sourceUrl, (ct) => 
+                (entry.Profile as IDiskProfile).DiskIO.OpenStreamAsync(entry, 
+                FileAccess.Write, ct), httpClient, nextCommand )
+        {
+        }
+
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            var httpClient = _httpClientFunc();
+            var pdv = pm.ContainsKey("Progress") && pm["Progress"] is IProgress<TransferProgress>
+                ? pm["Progress"] as IProgress<TransferProgress> :
+                NullProgresViewModel.Instance;
+
+            if (httpClient != null)
+                try
+                {
+                    var response = await httpClient.GetAsync(_sourceUrl, HttpCompletionOption.ResponseHeadersRead, pm.CancellationToken);
+                    if (!response.IsSuccessStatusCode)
+                        throw new WebException(String.Format("{0} when downloading {1}", response.StatusCode, _sourceUrl));
+
+                    using (Stream srcStream = await response.Content.ReadAsStreamAsync())
+                    using (Stream destStream = await _destStreamFunc(pm.CancellationToken))
+                    {
+                        byte[] buffer = new byte[1024];
+                        ulong totalBytesRead = 0;
+                        int byteRead = await srcStream.ReadAsync(buffer, 0, buffer.Length, pm.CancellationToken);
+                        while (byteRead > 0)
+                        {
+                            await destStream.WriteAsync(buffer, 0, byteRead, pm.CancellationToken);
+                            totalBytesRead = totalBytesRead + (uint)byteRead;
+                            pdv.Report(TransferProgress.UpdateCurrentProgress(1));
+
+                            byteRead = await srcStream.ReadAsync(buffer, 0, buffer.Length, pm.CancellationToken);
+
+                        }
+                        await destStream.FlushAsync();
+                    }
+                }
+                finally
+                {
+                    if (_disposeHttpClient && httpClient != null)
+                        httpClient.Dispose();
+
+                }
+
             return _nextCommand;
         }
     }
@@ -519,9 +631,9 @@ namespace FileExplorer.ViewModels
     {
 
         private Func<ParameterDic, IEntryModel> _currentDirectoryModelFunc;
-        private Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> _transferCommandFunc;        
+        private Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> _transferCommandFunc;
 
-        public PasteFromClipboardCommand(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc, 
+        public PasteFromClipboardCommand(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc,
             Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
             : base("Paste")
         {
@@ -543,21 +655,21 @@ namespace FileExplorer.ViewModels
                         return _transferCommandFunc(DragDropEffects.Copy, srcModels.ToArray(), currentDirectory);
                     }
                 }
-            }           
+            }
 
             return ResultCommand.NoError;
         }
 
         public override bool CanExecute(ParameterDic pm)
         {
-             var currentDirectory = _currentDirectoryModelFunc(pm);
-             if (currentDirectory != null)
-             {
-                 IDataObject da = Clipboard.GetDataObject();
-                 var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
-                 return srcModels != null && srcModels.Count() > 0;
-             }
-             return false;
+            var currentDirectory = _currentDirectoryModelFunc(pm);
+            if (currentDirectory != null)
+            {
+                IDataObject da = Clipboard.GetDataObject();
+                var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
+                return srcModels != null && srcModels.Count() > 0;
+            }
+            return false;
         }
     }
 

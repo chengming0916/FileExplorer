@@ -118,6 +118,10 @@ namespace FileExplorer.Defines
         {
             return new TransferProgress() { ProcessedEntriesIncrement = count };
         }
+        public static TransferProgress UpdateCurrentProgress(short percent = 1)
+        {
+            return new TransferProgress() { CurrentProgressPercent = percent };
+        }
     }
 
     public class NullTransferProgress : IProgress<TransferProgress>

@@ -40,10 +40,10 @@
                        
         <Rectangle Height="50" />
         <StackPanel Orientation="Horizontal">
-            <CheckBox x:Name="ExpandRootDirectories" Content="Expand" ToolTip="Expand Root directory when start" />
-            <CheckBox x:Name="EnableDrag" Content="Drag" ToolTip="Enable Drag support" />
-            <CheckBox x:Name="EnableDrop" Content="Drop" ToolTip="Enable Drop support"  />
-            <CheckBox x:Name="EnableMultiSelect" Content="MultiSelect" ToolTip="Enable Multiselect using drag" />
+            <CheckBox x:Name="ExpandRootDirectories" Content="Expand" ToolTip="Expand Root directory when start" IsChecked="True" />
+            <CheckBox x:Name="EnableDrag" Content="Drag" ToolTip="Enable Drag support" IsChecked="True" />
+            <CheckBox x:Name="EnableDrop" Content="Drop" ToolTip="Enable Drop support" IsChecked="True"  />
+            <CheckBox x:Name="EnableMultiSelect" Content="MultiSelect" ToolTip="Enable Multiselect using drag" IsChecked="True" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button x:Name="OpenWindow"  Content="Open new Explorer Window" />

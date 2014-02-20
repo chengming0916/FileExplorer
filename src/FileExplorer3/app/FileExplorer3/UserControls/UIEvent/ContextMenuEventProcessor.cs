@@ -15,7 +15,7 @@ namespace FileExplorer.BaseControls
         {
             _processEvents.AddRange(
                 new[] {
-                 FrameworkElement.MouseUpEvent
+                 FrameworkElement.MouseRightButtonUpEvent
                 }
              );
         }
@@ -24,7 +24,7 @@ namespace FileExplorer.BaseControls
         {
             switch (eventId.Name)
             {
-                case "MouseUp": return new ShowContextMenu(ContextMenu);
+                case "MouseRightButtonUp": return new ShowContextMenu(ContextMenu);
             }
 
             return base.OnEvent(eventId);

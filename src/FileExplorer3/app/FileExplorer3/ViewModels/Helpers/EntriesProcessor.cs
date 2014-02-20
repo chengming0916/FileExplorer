@@ -40,7 +40,7 @@ namespace FileExplorer.ViewModels.Helpers
         public void AppendFilters(params ColumnFilter[] filters)
         {
             if (All.Filter == null)
-                All.Filter = (e) => ColumnFilter.Match(filters, (e as IEntryViewModel).EntryModel);
+                All.Filter = (e) => e != null && ColumnFilter.Match(filters, (e as IEntryViewModel).EntryModel);
             else
                 All.Filter = (e) =>
                     All.Filter(e) &&

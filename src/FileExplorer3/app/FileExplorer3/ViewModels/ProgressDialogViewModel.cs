@@ -10,6 +10,14 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels
 {
+    public class NullProgresViewModel : IProgress<TransferProgress>
+    {
+        public static NullProgresViewModel Instance = new NullProgresViewModel();
+        public void Report(TransferProgress value)
+        {
+        }
+    }
+
     public class ProgressDialogViewModel : Screen, IProgress<TransferProgress>
     {
         #region Constructor
