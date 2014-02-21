@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels
 {
@@ -17,16 +18,35 @@ namespace FileExplorer.ViewModels
             return new ParsePathCommand(profiles, path, ifFoundFunc, ifNotFound);
         }
 
-        public static IScriptCommand CreatePath(IDiskProfile profile, string path, bool isFolder, Func<IEntryModel, IScriptCommand> thenFunc)
+        public static IScriptCommand CreatePath(IProfile profile, string path, bool isFolder, bool renameIfExists,
+            Func<IEntryModel, IScriptCommand> thenFunc)
         {
-            return new DiskCreateCommand(profile, path, isFolder, thenFunc);
+            if (profile is IDiskProfile)
+            {
+                string parentPath = profile.Path.GetDirectoryName(path);
+                string name = profile.Path.GetFileName(path);
+
+                return new DiskCreateCommand(profile as IDiskProfile, 
+                    parentPath,
+                    renameIfExists ? FileNameGenerator.Rename(name) : FileNameGenerator.NoRename(name), 
+                    isFolder, thenFunc);
+            }
+            return ResultCommand.Error(new NotSupportedException("Profile is not IDiskProfile."));
+        }
+
+        public static IScriptCommand CreatePath(IEntryModel parentModel, string name, bool isFolder, 
+            bool renameIfExists,
+            Func<IEntryModel, IScriptCommand> thenFunc)
+        {
+            IProfile profile = parentModel.Profile;
+            return CreatePath(profile, profile.Path.Combine(parentModel.FullPath, name), isFolder, renameIfExists, thenFunc);
         }
 
         public static IScriptCommand ParseOrCreatePath(IDiskProfile profile, string path,
             bool isFolder, Func<IEntryModel, IScriptCommand> thenFunc)
         {
             return ScriptCommands.ParsePath(new[] { profile }, path, thenFunc,
-                ScriptCommands.CreatePath(profile, path, isFolder, thenFunc));
+                ScriptCommands.CreatePath(profile, path, isFolder, false, thenFunc));
         }
     }
 }
@@ -40,7 +60,7 @@ namespace FileExplorer.Models
         private Func<IEntryModel, IScriptCommand> _ifFoundFunc;
         private IScriptCommand _ifNotFound;
 
-        public ParsePathCommand(IProfile[] profiles, string path, Func<IEntryModel, IScriptCommand> ifFoundFunc, 
+        public ParsePathCommand(IProfile[] profiles, string path, Func<IEntryModel, IScriptCommand> ifFoundFunc,
                 IScriptCommand ifNotFound)
             : base("ParsePath")
         {
@@ -66,15 +86,18 @@ namespace FileExplorer.Models
     public class DiskCreateCommand : ScriptCommandBase
     {
         private IDiskProfile _profile;
-        private string _path;
         private Func<IEntryModel, IScriptCommand> _thenFunc;
         private bool _isFolder;
+        private string _parentPath;
+        private IFileNameGenerator _fileNameGenerator;
 
-        public DiskCreateCommand(IDiskProfile profile, string path, bool isFolder, Func<IEntryModel, IScriptCommand> thenFunc)
+        public DiskCreateCommand(IDiskProfile profile, string parentPath, IFileNameGenerator fileNameGenerator, bool isFolder, 
+            Func<IEntryModel, IScriptCommand> thenFunc)
             : base("ParsePath")
         {
             _profile = profile;
-            _path = path;
+            _parentPath = parentPath;
+            _fileNameGenerator = fileNameGenerator;
             _thenFunc = thenFunc;
             _isFolder = isFolder;
         }
@@ -82,7 +105,15 @@ namespace FileExplorer.Models
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            var createddModel = await _profile.DiskIO.CreateAsync(_path, _isFolder, pm.CancellationToken);
+            string fileName = _fileNameGenerator.Generate(); 
+            while (fileName != null && 
+                await _profile.ParseAsync(_profile.Path.Combine(_parentPath, fileName)) != null)
+                fileName = _fileNameGenerator.Generate();
+            if (fileName == null)
+                return ResultCommand.Error(new ArgumentException("Already exists."));
+
+            var createddModel = await _profile.DiskIO.CreateAsync(
+                _profile.Path.Combine(_parentPath, fileName), _isFolder, pm.CancellationToken);
             return _thenFunc(createddModel);
         }
     }

@@ -329,6 +329,11 @@ namespace FileExplorer.ViewModels
 
     public static class FileList
     {
+        public static IScriptCommand Do(Func<IFileListViewModel, IScriptCommand> commandFunc)
+        {
+            return new DoFileList(commandFunc);
+        }
+
         public static IScriptCommand If(Func<IFileListViewModel, bool> condition, IScriptCommand ifTrueCommand,
             IScriptCommand otherwiseCommand)
         {
@@ -403,6 +408,36 @@ namespace FileExplorer.ViewModels
         {
             return new RefreshFileList(nextCommand, force);
         }
+    }
+
+    /// <summary>
+    /// Do certain action using the filelist.
+    /// required FileList (IFileListViewModel)
+    /// </summary>
+    internal class DoFileList : ScriptCommandBase
+    {
+        private Func<IFileListViewModel, IScriptCommand> _commandFunc;
+        /// <summary>
+        /// Do certain action using the filelist,
+        /// required FileList (IFileListViewModel)
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="ifTrueCommand"></param>
+        /// <param name="otherwiseCommand"></param>
+        internal DoFileList(Func<IFileListViewModel, IScriptCommand> commandFunc)
+           : base("FileList", "FileList")
+        {
+            _commandFunc = commandFunc;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
+            if (flvm == null)
+                return ResultCommand.Error(new ArgumentException("FileList"));
+            return _commandFunc(flvm);
+        }
+
     }
 
     /// <summary>

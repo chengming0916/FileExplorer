@@ -32,10 +32,10 @@ namespace FileExplorer.Models
             SubCommands = new List<ICommandModel>(commandModels);
         }
 
-        protected DirectoryCommandModel()
+        public DirectoryCommandModel(params ICommandModel[] commandModels)
             : base()
         {
-            SubCommands = new List<ICommandModel>();            
+            SubCommands = new List<ICommandModel>(commandModels);            
         }
 
         #endregion

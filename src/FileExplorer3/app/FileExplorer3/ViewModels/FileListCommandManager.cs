@@ -41,6 +41,8 @@ namespace FileExplorer.ViewModels
 
             ScriptCommands.Delete = NullScriptCommand.Instance;
 
+            ScriptCommands.NewFolder = NullScriptCommand.Instance;
+
             ScriptCommands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
                 pd.AsVMParameterDic().FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
@@ -78,6 +80,7 @@ namespace FileExplorer.ViewModels
             exportBindingSource.Add(
                 new ExportCommandBindings(
                     ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.ScriptCommands.Open, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewFolder, this, (ch) => ch.ScriptCommands.NewFolder, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.ScriptCommands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),

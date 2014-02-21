@@ -55,8 +55,8 @@ namespace TestApp.WPF
             {
                 ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
                 ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
-                ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoExModel).Size), 200),  
-                ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
+                //ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoExModel).Size), 200),  
+                //ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
             };
 
             explorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
@@ -96,7 +96,10 @@ namespace TestApp.WPF
                   ResultCommand.NoError //Selected more than one item, ignore.
                   );
 
-           
+            _explorer.FileList.Commands.ScriptCommands.NewFolder =
+                FileList.Do(flvm => ScriptCommands.CreatePath(
+                        flvm.CurrentDirectory, "NewFolder", true, true,
+                        m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
 
             _explorer.FileList.Commands.ScriptCommands.Delete =
                  FileList.IfSelection(evm => evm.Count() >= 1,
@@ -106,12 +109,9 @@ namespace TestApp.WPF
                                     ScriptCommands.RunInSequence(
                                         FileList.AssignSelectionToParameter(
                                             DeleteFileBasedEntryCommand.FromParameter),
-                                        new HideProgress())),                         
+                                        new HideProgress())),
                         ResultCommand.NoError),
                     NullScriptCommand.Instance);
-
-            _explorer.FileList.Commands.ScriptCommands.Delete =
-               FileList.Select(m => true, ResultCommand.NoError);
 
             _explorer.FileList.Commands.ScriptCommands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,
@@ -131,6 +131,7 @@ namespace TestApp.WPF
 
             _explorer.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
+                   
                     new CommandModel(ApplicationCommands.Open) { IsVisibleOnToolbar = false },
                     new SeparatorCommandModel(),
                     new SelectGroupCommand( _explorer.FileList),    
@@ -144,7 +145,10 @@ namespace TestApp.WPF
                     new CommandModel(ApplicationCommands.Copy) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Paste) { IsVisibleOnToolbar = false },
                     new GoogleExportCommandModel(() => _rootModels.ToArray())
-                    { IsVisibleOnToolbar = false, WindowManager = _windowManager }
+                    { IsVisibleOnToolbar = false, WindowManager = _windowManager },
+                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnMenu = false },
+                    new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder))
+                    { IsVisibleOnToolbar = false, Header = "New", IsEnabled = true}
                     )
             };
 
@@ -158,24 +162,24 @@ namespace TestApp.WPF
 
             _explorer.DirectoryTree.Commands.ScriptCommands.Delete =
                    ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
-                       pd => String.Format("Delete {0}?",  ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
+                       pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
                              new ShowProgress(_windowManager,
                                     ScriptCommands.RunInSequence(
                                         DirectoryTree.AssignSelectionToParameter(
-                                            DeleteFileBasedEntryCommand.FromParameter), 
+                                            DeleteFileBasedEntryCommand.FromParameter),
                                         new HideProgress())),
-                       ResultCommand.NoError);                   
-            
+                       ResultCommand.NoError);
 
-            _explorer.Commands.ScriptCommands.Transfer = 
-                TransferCommand = 
-                new TransferCommand((effect, source, destDir) => 
-                    source.Profile is IDiskProfile ? 
+
+            _explorer.Commands.ScriptCommands.Transfer =
+                TransferCommand =
+                new TransferCommand((effect, source, destDir) =>
+                    source.Profile is IDiskProfile ?
                         (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
                         : ResultCommand.Error(new NotSupportedException())
                     , _windowManager);
 
-                
+
             updateExplorerModel(initExplorerModel(_explorer));
             _windowManager.ShowWindow(_explorer);
         }
@@ -252,7 +256,7 @@ namespace TestApp.WPF
         }
 
 
-        public static string skyDriveAliasMask = "{0}'s OneDrive"; 
+        public static string skyDriveAliasMask = "{0}'s OneDrive";
         public async Task AddSkyDrive()
         {
 
@@ -287,7 +291,7 @@ namespace TestApp.WPF
             if (selectedModel != null)
                 RootModels.Add(selectedModel);
         }
-     
+
         public void ShowDialog()
         {
             _windowManager.ShowDialog(new MessageDialogViewModel("Caption", "Message 1 2 3 4 5 6 7 8 9 10",
