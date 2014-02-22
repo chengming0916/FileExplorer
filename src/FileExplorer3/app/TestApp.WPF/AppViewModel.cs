@@ -55,8 +55,8 @@ namespace TestApp.WPF
             {
                 ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
                 ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
-                //ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoExModel).Size), 200),  
-                //ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
+                ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoExModel).Size), 200),  
+                ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
             };
 
             explorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
@@ -130,25 +130,18 @@ namespace TestApp.WPF
                     NullScriptCommand.Instance);
 
             _explorer.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
+                new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
                 new StaticCommandProvider(
-                   
-                    new CommandModel(ApplicationCommands.Open) { IsVisibleOnToolbar = false },
                     new SeparatorCommandModel(),
                     new SelectGroupCommand( _explorer.FileList),    
                     new ViewModeCommand( _explorer.FileList),
-                    new SeparatorCommandModel(),
-                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false },
-                    new SeparatorCommandModel(),
-                    new CommandModel(ApplicationCommands.Cut) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Copy) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Paste) { IsVisibleOnToolbar = false },
                     new GoogleExportCommandModel(() => _rootModels.ToArray())
                     { IsVisibleOnToolbar = false, WindowManager = _windowManager },
-                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnMenu = false },
-                    new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder))
-                    { IsVisibleOnToolbar = false, Header = "New", IsEnabled = true}
+                    
+                    new SeparatorCommandModel(),
+                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnMenu = false, Symbol = Convert.ToChar(0xE188) },
+                    new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder })
+                        { IsVisibleOnToolbar = false, Header = Strings.strNew, IsEnabled = true}
                     )
             };
 

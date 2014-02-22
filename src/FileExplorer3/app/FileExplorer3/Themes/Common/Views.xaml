@@ -13,7 +13,7 @@
 
     <!--Grid View-->
     
-    <GridView x:Key="GridView"
+    <GridView x:Key="GridView" 
         ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}" >        
     </GridView>
 

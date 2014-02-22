@@ -438,6 +438,12 @@ namespace FileExplorer.ViewModels
             return _commandFunc(flvm);
         }
 
+        public override bool CanExecute(ParameterDic pm)
+        {
+            IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
+            return flvm != null && _commandFunc(flvm).CanExecute(pm);
+        }
+
     }
 
     /// <summary>

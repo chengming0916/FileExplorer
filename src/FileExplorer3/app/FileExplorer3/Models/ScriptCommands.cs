@@ -102,6 +102,10 @@ namespace FileExplorer.Models
             _isFolder = isFolder;
         }
 
+        public override bool CanExecute(ParameterDic pm)
+        {
+            return !_parentPath.StartsWith("::{"); //Cannot execute if GuidPath
+        }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
@@ -112,9 +116,11 @@ namespace FileExplorer.Models
             if (fileName == null)
                 return ResultCommand.Error(new ArgumentException("Already exists."));
 
-            var createddModel = await _profile.DiskIO.CreateAsync(
-                _profile.Path.Combine(_parentPath, fileName), _isFolder, pm.CancellationToken);
-            return _thenFunc(createddModel);
+            string newEntryPath = _profile.Path.Combine(_parentPath, fileName);
+            var createddModel = await _profile.DiskIO.CreateAsync(newEntryPath, _isFolder, pm.CancellationToken);
+
+            return new NotifyChangedCommand(_profile, newEntryPath, Defines.ChangeType.Created, null,
+                _thenFunc(createddModel));
         }
     }
 }

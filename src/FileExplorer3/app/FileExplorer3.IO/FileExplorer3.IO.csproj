@@ -122,6 +122,7 @@
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
+    <Compile Include="Model\FileBasedCommandProvider.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
     <Compile Include="Model\FileBasedIconExtractors.cs" />
     <Compile Include="Model\FileBasedScriptCommands.cs" />
