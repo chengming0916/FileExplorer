@@ -23,7 +23,7 @@ using FileExplorer.BaseControls;
 using System.Threading;
 using Cofe.Core;
 
-namespace TestApp.WPF
+namespace TestApp
 {
     [Export(typeof(IScreen))]
     public class AppViewModel : Screen//, IHandle<SelectionChangedEvent>
@@ -289,6 +289,15 @@ namespace TestApp.WPF
         {
             _windowManager.ShowDialog(new MessageDialogViewModel("Caption", "Message 1 2 3 4 5 6 7 8 9 10",
                 MessageDialogViewModel.DialogButtons.OK | MessageDialogViewModel.DialogButtons.Cancel));
+        }
+
+        public void MdiWindow()
+        {
+            new MdiWindow() { 
+                _profileEx = _profileEx, 
+                _events = _events, 
+                _windowManager = _windowManager }
+                .Show();
         }
 
         #endregion

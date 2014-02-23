@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
 
-namespace TestApp.WPF
+namespace TestApp
 {
     public class AppBootstrapper : Bootstrapper<IScreen>
     {
