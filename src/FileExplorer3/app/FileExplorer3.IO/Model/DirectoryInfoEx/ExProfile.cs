@@ -16,6 +16,7 @@ using FileExplorer.ViewModels.Helpers;
 //using FileExplorer.UserControls.DragDrop;
 using QuickZip.Converters;
 using QuickZip.UserControls.Logic.Tools.IconExtractor;
+using System.Collections.Concurrent;
 
 namespace FileExplorer.Models
 {
@@ -25,9 +26,11 @@ namespace FileExplorer.Models
 
         private class ExHierarchyComparer : IEntryHierarchyComparer
         {
+            //Store special directories (start with ::{) only.
+            private ConcurrentDictionary<string, HierarchicalResult> _hierarchyResultCache
+                = new ConcurrentDictionary<string, HierarchicalResult>();
             private bool HasParent(FileSystemInfoEx child, DirectoryInfoEx parent)
             {
-
                 DirectoryInfoEx current = child.Parent;
                 while (current != null)
                 {
@@ -46,12 +49,29 @@ namespace FileExplorer.Models
                 if (!(a is FileSystemInfoExModel) || !(b is FileSystemInfoExModel))
                     return HierarchicalResult.Unrelated;
 
-                if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
+                if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))                    
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);
-                FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);
-                FileSystemInfoEx fsib = FileSystemInfoEx.FromString(b.FullPath);
-                if (a.FullPath == b.FullPath)
-                    return HierarchicalResult.Current;
+
+               // if (a.FullPath.StartsWith("::") && b.FullPath.StartsWith("::"))
+                {
+                    string key = String.Format("{0}-compare-{1}", a.FullPath, b.FullPath);
+                    if (_hierarchyResultCache.ContainsKey(key))
+                        return _hierarchyResultCache[key];
+
+                    FileSystemInfoEx fsia = FileSystemInfoEx.FromString(a.FullPath);
+                    FileSystemInfoEx fsib = FileSystemInfoEx.FromString(b.FullPath);
+                    if (a.FullPath == b.FullPath)
+                        _hierarchyResultCache[key] = HierarchicalResult.Current;
+                    else if (IOTools.HasParent(fsib, fsia.FullName))
+                        _hierarchyResultCache[key] = HierarchicalResult.Child;
+                    else if (IOTools.HasParent(fsia, fsib.FullName))
+                        _hierarchyResultCache[key] = HierarchicalResult.Parent;
+                    else _hierarchyResultCache[key] = HierarchicalResult.Unrelated;
+                    
+                    return _hierarchyResultCache[key];
+                }
+
+                
 
                 //if (fsia is DirectoryInfoEx && HasParent(fsib, fsia as DirectoryInfoEx))
                 //    return HierarchicalResult.Child;
@@ -77,11 +97,7 @@ namespace FileExplorer.Models
                 //    (!(a as FileSystemInfoExModel).ParentFullPath.Equals(b.FullPath)))
                 //    return HierarchicalResult.Unrelated;
 
-                if (IOTools.HasParent(fsib, fsia.FullName))
-                    return HierarchicalResult.Child;
-                if (IOTools.HasParent(fsia, fsib.FullName))
-                    return HierarchicalResult.Parent;
-                return HierarchicalResult.Unrelated;
+                
             }
 
             public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
