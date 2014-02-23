@@ -9,6 +9,7 @@ using FileExplorer.BaseControls.MultiSelect;
 
 namespace FileExplorer.BaseControls
 {
+
     public class MultiSelectEventProcessor : UIEventProcessorBase
     {
         public MultiSelectEventProcessor()
@@ -32,7 +33,8 @@ namespace FileExplorer.BaseControls
                 case "MouseDrag": if (EnableMultiSelect)
                         return new BeginSelect() { UnselectCommand = UnselectAllCommand }; break;
                 case "MouseMove": return new ContinueSelect();
-                case "PreviewMouseUp": return new EndSelect() { UnselectCommand = UnselectAllCommand };
+                case "PreviewMouseUp": return new EndSelect() 
+                    { UnselectCommand = UnselectAllCommand, IsCheckBoxEnabled = IsCheckboxEnabled };
             }
 
             return base.OnEvent(eventId);
@@ -56,6 +58,16 @@ namespace FileExplorer.BaseControls
         {
             get { return (bool)GetValue(EnableMultiSelectProperty); }
             set { SetValue(EnableMultiSelectProperty, value); }
+        }
+
+        public static DependencyProperty IsCheckboxEnabledProperty =
+        DependencyProperty.Register("IsCheckboxEnabled", typeof(bool),
+        typeof(MultiSelectEventProcessor), new PropertyMetadata(true));
+
+        public bool IsCheckboxEnabled
+        {
+            get { return (bool)GetValue(IsCheckboxEnabledProperty); }
+            set { SetValue(IsCheckboxEnabledProperty, value); }
         }
 
     }

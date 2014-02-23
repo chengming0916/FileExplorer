@@ -169,7 +169,10 @@ namespace FileExplorer.ViewModels
             set { _icon = value; NotifyOfPropertyChange(() => Icon); }
         }
 
-        public bool IsSelected { get { return _isSelected; } set { if (_isSelected != value) { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); } } }
+        public bool IsSelected {
+            get { return _isSelected; } 
+            set { if (_isSelected != value) { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); } 
+            } }
 
         #endregion
     }

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
+using FileExplorer;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.UserControls;
@@ -115,8 +116,13 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (eventArgs.RightButton == MouseButtonState.Pressed)
                 return ResultCommand.NoError;
 
+            if (Keyboard.Modifiers != ModifierKeys.None)
+                return ResultCommand.NoError;
+
             if (eventArgs.Handled)
                 return ResultCommand.NoError;
+
+            eventArgs.Handled = true;
 
             pm["UnselectCommand"] = UnselectCommand;
 
@@ -144,9 +150,10 @@ namespace FileExplorer.BaseControls.MultiSelect
 
     public class EndSelect : ScriptCommandBase
     {
-        public EndSelect() : base("EndSelect", "EventArgs") { UnselectCommand = null; }
+        public EndSelect() : base("EndSelect", "EventArgs") { UnselectCommand = null; IsCheckBoxEnabled = false; }
 
         public ICommand UnselectCommand { get; set; }
+        public bool IsCheckBoxEnabled { get; set; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -154,12 +161,15 @@ namespace FileExplorer.BaseControls.MultiSelect
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             var eventArgs = pd.EventArgs as MouseEventArgs;
+            if (eventArgs.OriginalSource is CheckBox)
+                return ResultCommand.NoError;
+
             pm["UnselectCommand"] = UnselectCommand;
 
             if (eventArgs.Handled)
                 return ResultCommand.NoError;
 
-            Mouse.Capture(null);                       
+            Mouse.Capture(null);
 
             if (AttachedProperties.GetIsSelecting(ic))
                 return new UpdateIsSelecting(false);
@@ -167,6 +177,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             {
                 var startInput = AttachedProperties.GetStartInput(ic);
                 if (startInput != null && startInput.Equals(MouseButton.Left))
+                    if (Keyboard.Modifiers == ModifierKeys.None)
                 {
                     //Select the mouse over item.
                     //(If not mouse over item and is selecting (dragging), this will unselect all)
@@ -175,7 +186,8 @@ namespace FileExplorer.BaseControls.MultiSelect
                     if (itemUnderMouse != null)
                         selectedList.Add(itemUnderMouse);
                     pd["SelectedList"] = selectedList;
-                    return new SelectItems();
+                    return new SelectItems(
+                        ItemSelectProcessor.SelectItemInSelectedList);
                 }
                 return ResultCommand.NoError;
             }
@@ -329,7 +341,7 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             if (AttachedProperties.GetIsSelecting(_ic))
                 return new HighlightItems();
-            else return new SelectItems();
+            else return new SelectItems(ItemSelectProcessor.SelectItemInSelectedList);
         }
 
     }
@@ -379,7 +391,8 @@ namespace FileExplorer.BaseControls.MultiSelect
                 AttachedProperties.SetStartSelectedItem(_ic, null);
 
             IScriptCommand nextCommand =
-                (AttachedProperties.GetIsSelecting(_ic)) ? (IScriptCommand)new HighlightItems() : new SelectItems();
+                (AttachedProperties.GetIsSelecting(_ic)) ? (IScriptCommand)new HighlightItems() :
+                new SelectItems(ItemSelectProcessor.SelectItemInSelectedList);
 
 
             if (AttachedProperties.GetIsSelecting(_ic))
@@ -596,13 +609,42 @@ namespace FileExplorer.BaseControls.MultiSelect
         }
     }
 
+    public interface IItemSelectProcessor
+    {
+        void Select(ISelectable item, bool inSelectedList);
+    }
+    public class ItemSelectProcessor : IItemSelectProcessor
+    {
+        public static IItemSelectProcessor SelectItemInSelectedList =
+            new ItemSelectProcessor((vm, inList) => { vm.IsSelected = inList; });
+        public static IItemSelectProcessor AppendItemInSelectedList =
+            new ItemSelectProcessor((vm, inList) => { vm.IsSelected = vm.IsSelected || inList; });
+        public static IItemSelectProcessor ToggleItemInSelectedList =
+            new ItemSelectProcessor((vm, inList) => { 
+                if (inList) 
+                    vm.IsSelected = !vm.IsSelected; });
+
+        private Action<ISelectable, bool> _selectFunc;
+        protected ItemSelectProcessor(Action<ISelectable, bool> selectFunc)
+        {
+            _selectFunc = selectFunc;
+        }
+        public void Select(ISelectable item, bool inSelectedList)
+        {
+            _selectFunc(item, inSelectedList);
+        }
+    }
+
 
     /// <summary>
     /// Update actual selection of items (ListBoxItem.IsSelected) using SelectedIdList.
     /// </summary>
     public class SelectItems : ScriptCommandBase
     {
-        public SelectItems() : base("SelectItems", "EventArgs", "SelectedList", "SelectedIdList") { }
+        private IItemSelectProcessor _processor;
+        public SelectItems(IItemSelectProcessor processor)
+            : base("SelectItems", "EventArgs", "SelectedList", "SelectedIdList")
+        { _processor = processor; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -624,22 +666,19 @@ namespace FileExplorer.BaseControls.MultiSelect
             bool isISelectable = ic.Items.Count > 0 && ic.Items[0] is ISelectable;
 
 
-            Action<int, object, DependencyObject> updateSelected = null;
-            Func<int, DependencyObject, bool> returnSelected = (idx, item) => false;
+            Action<int, object, ListBoxItem> updateSelected = null;
+            Func<int, ListBoxItem, bool> returnSelected = (idx, item) => false;
             if (selectedIdList != null)
                 returnSelected = (idx, item) => selectedIdList.Contains(idx);
             else if (selectedList != null)
                 returnSelected = (idx, item) => selectedList.Contains(item);
 
 
-            if (isISelectable)            
-                updateSelected = (idx, vm, item) => (vm as ISelectable).IsSelected = returnSelected(idx, item);            
-            else            
-                updateSelected = (idx, vm, item) => returnSelected(idx, item);            
+            updateSelected = (idx, vm, item) => _processor.Select(item.ToISelectable(), returnSelected(idx, item));
 
             for (int i = 0; i < ic.Items.Count; i++)
             {
-                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                ListBoxItem item = ic.ItemContainerGenerator.ContainerFromIndex(i) as ListBoxItem;
                 if (isISelectable || item != null)
                 {
                     if (item != null)

@@ -121,6 +121,7 @@
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
+    <Compile Include="UserControls\UIEvent\ExtensionMethods.cs" />
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />

@@ -45,6 +45,7 @@
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
+                                              IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
                     UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />             
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
