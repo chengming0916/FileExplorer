@@ -1,4 +1,4 @@
-<Window x:Class="TestApp.WPF.AppView"
+<Window x:Class="TestApp.AppView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
@@ -56,7 +56,7 @@
             <TextBox x:Name="FileFilter" />
         </StackPanel>        
         <Button x:Name="ShowDialog" Content="ShowDialog" />        
-        
+        <Button x:Name="MdiWindow" Content="MdiWindow" />
     </StackPanel>
 
     <!--<Grid>

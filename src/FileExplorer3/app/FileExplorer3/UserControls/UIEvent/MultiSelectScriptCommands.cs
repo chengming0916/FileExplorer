@@ -679,7 +679,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             for (int i = 0; i < ic.Items.Count; i++)
             {
                 ListBoxItem item = ic.ItemContainerGenerator.ContainerFromIndex(i) as ListBoxItem;
-                if (isISelectable || item != null)
+                if (item != null)
                 {
                     if (item != null)
                         AttachedProperties.SetIsSelecting(item, false);

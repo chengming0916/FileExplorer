@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 
-namespace TestApp.WPF
+namespace TestApp
 {
     public class AppWindowManager : WindowManager
     {
