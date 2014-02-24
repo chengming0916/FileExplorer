@@ -27,6 +27,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// <returns></returns>
         Task<IEnumerable<VM>> LoadAsync(bool force = false);
 
+        Task UnloadAsync();
+
         /// <summary>
         /// Used to preload sub-entries.
         /// </summary>

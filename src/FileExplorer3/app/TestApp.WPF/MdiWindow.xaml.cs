@@ -38,7 +38,8 @@ namespace TestApp
             if (_profileEx == null)
                 _profileEx = new FileSystemInfoExProfile(_events, _windowManager);
             var root = _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result;
-            var viewModel =  new ExplorerViewModel(_events, _windowManager, root) ;
+            var viewModel = AppViewModel.initExplorerModel(new ExplorerViewModel(_events, _windowManager, root),
+                true, true, new[] { root }, _windowManager);
             var view = new ExplorerView();
             Caliburn.Micro.Bind.SetModel(view, viewModel); //Set the ViewModel using this command.
             Container.Children.Add(new MdiChild
