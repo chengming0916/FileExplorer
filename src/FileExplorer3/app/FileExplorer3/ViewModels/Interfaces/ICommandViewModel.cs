@@ -18,7 +18,5 @@ namespace FileExplorer.ViewModels
         IScriptCommandBinding CommandBinding { get; }
         ToolbarItemType CommandType { get; }
         IEntriesHelper<ICommandViewModel> SubCommands { get; }
-
-        object CommandParameter { get; }
     }
 }
