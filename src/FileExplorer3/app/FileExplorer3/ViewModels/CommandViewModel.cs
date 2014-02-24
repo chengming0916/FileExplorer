@@ -183,11 +183,5 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-
-        public object CommandParameter
-        {
-            get { throw new NotImplementedException(); }
-        }
-
     }
 }
