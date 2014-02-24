@@ -46,29 +46,120 @@ namespace TestApp
 
         #region Methods
 
-        private IExplorerViewModel initExplorerModel(IExplorerViewModel explorerModel)
+        public static IExplorerViewModel initExplorerModel(IExplorerViewModel explorerModel,
+            bool updateColumns, bool updateScriptCommands,
+            IEntryModel[] rootModels, IWindowManager windowManager)
         {
-
-
-
-            explorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
+            if (updateColumns)
             {
-                ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
-                ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
-                ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoExModel).Size), 200),  
-                ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
+                explorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
+                {
+                    ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
+                    ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
+                    ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoExModel).Size), 200),  
+                    ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
+                };
+
+                explorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
+                {
+                    ColumnFilter.CreateNew("0 - 9", "EntryModel.Label", e => Regex.Match(e.Label, "^[0-9]").Success),
+                    ColumnFilter.CreateNew("A - H", "EntryModel.Label", e => Regex.Match(e.Label, "^[A-Ha-h]").Success),
+                    ColumnFilter.CreateNew("I - P", "EntryModel.Label", e => Regex.Match(e.Label, "^[I-Pi-i]").Success),
+                    ColumnFilter.CreateNew("Q - Z", "EntryModel.Label", e => Regex.Match(e.Label, "^[Q-Zq-z]").Success),
+                    ColumnFilter.CreateNew("The rest", "EntryModel.Label", e => Regex.Match(e.Label, "^[^A-Za-z0-9]").Success),
+                    ColumnFilter.CreateNew("Directories", "EntryModel.Description", e => e.IsDirectory),
+                    ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory)
+                };
+            }
+
+            if (updateScriptCommands)
+            {
+                explorerModel.FileList.Commands.ScriptCommands.Open =
+              FileList.IfSelection(evm => evm.Count() == 1,
+                  FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
+                      FileList.OpenSelectedDirectory, //Selected directory                        
+                      FileList.AssignSelectionToParameter(
+                          new OpenWithScriptCommand(null))),  //Selected non-directory
+                  ResultCommand.NoError //Selected more than one item, ignore.
+                  );
+
+                explorerModel.FileList.Commands.ScriptCommands.NewFolder =
+                    FileList.Do(flvm => ScriptCommands.CreatePath(
+                            flvm.CurrentDirectory, "NewFolder", true, true,
+                            m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
+
+                explorerModel.FileList.Commands.ScriptCommands.Delete =
+                     FileList.IfSelection(evm => evm.Count() >= 1,
+                        ScriptCommands.IfOkCancel(windowManager, pd => "Delete",
+                            pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+                            new ShowProgress(windowManager,
+                                        ScriptCommands.RunInSequence(
+                                            FileList.AssignSelectionToParameter(
+                                                DeleteFileBasedEntryCommand.FromParameter),
+                                            new HideProgress())),
+                            ResultCommand.NoError),
+                        NullScriptCommand.Instance);
+
+                explorerModel.FileList.Commands.ScriptCommands.Copy =
+                     FileList.IfSelection(evm => evm.Count() >= 1,
+                       ScriptCommands.IfOkCancel(windowManager, pd => "Copy",
+                            pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+                                ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
+                                ResultCommand.NoError),
+                        NullScriptCommand.Instance);
+
+                explorerModel.FileList.Commands.ScriptCommands.Cut =
+                      FileList.IfSelection(evm => evm.Count() >= 1,
+                       ScriptCommands.IfOkCancel(windowManager, pd => "Cut",
+                            pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+                                ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
+                                ResultCommand.NoError),
+                        NullScriptCommand.Instance);
+
+                explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
+                new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
+                new StaticCommandProvider(
+                    new SeparatorCommandModel(),
+                    new SelectGroupCommand( explorerModel.FileList),    
+                    new ViewModeCommand( explorerModel.FileList),
+                    new GoogleExportCommandModel(() => rootModels)
+                    { IsVisibleOnToolbar = false, WindowManager = windowManager },
+                    
+                    new SeparatorCommandModel(),
+                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnMenu = false, Symbol = Convert.ToChar(0xE188) },
+                    new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder })
+                        { IsVisibleOnToolbar = false, Header = Strings.strNew, IsEnabled = true}
+                    )
             };
 
-            explorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
-            {
-                ColumnFilter.CreateNew("0 - 9", "EntryModel.Label", e => Regex.Match(e.Label, "^[0-9]").Success),
-                ColumnFilter.CreateNew("A - H", "EntryModel.Label", e => Regex.Match(e.Label, "^[A-Ha-h]").Success),
-                ColumnFilter.CreateNew("I - P", "EntryModel.Label", e => Regex.Match(e.Label, "^[I-Pi-i]").Success),
-                ColumnFilter.CreateNew("Q - Z", "EntryModel.Label", e => Regex.Match(e.Label, "^[Q-Zq-z]").Success),
-                ColumnFilter.CreateNew("The rest", "EntryModel.Label", e => Regex.Match(e.Label, "^[^A-Za-z0-9]").Success),
-                ColumnFilter.CreateNew("Directories", "EntryModel.Description", e => e.IsDirectory),
-                ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory),
-            };
+                explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
+                new StaticCommandProvider(
+                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
+                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }                    
+                    )
+              };
+
+                explorerModel.DirectoryTree.Commands.ScriptCommands.Delete =
+                       ScriptCommands.IfOkCancel(windowManager, pd => "Delete",
+                           pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
+                                 new ShowProgress(windowManager,
+                                        ScriptCommands.RunInSequence(
+                                            DirectoryTree.AssignSelectionToParameter(
+                                                DeleteFileBasedEntryCommand.FromParameter),
+                                            new HideProgress())),
+                           ResultCommand.NoError);
+
+
+                explorerModel.Commands.ScriptCommands.Transfer =
+                    TransferCommand =
+                    new TransferCommand((effect, source, destDir) =>
+                        source.Profile is IDiskProfile ?
+                            (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
+                            : ResultCommand.Error(new NotSupportedException())
+                        , windowManager);
+            }
+
             return explorerModel;
         }
 
@@ -87,93 +178,10 @@ namespace TestApp
         {
             _explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
 
-            _explorer.FileList.Commands.ScriptCommands.Open =
-              FileList.IfSelection(evm => evm.Count() == 1,
-                  FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
-                      FileList.OpenSelectedDirectory, //Selected directory                        
-                      FileList.AssignSelectionToParameter(
-                          new OpenWithScriptCommand(null))),  //Selected non-directory
-                  ResultCommand.NoError //Selected more than one item, ignore.
-                  );
-
-            _explorer.FileList.Commands.ScriptCommands.NewFolder =
-                FileList.Do(flvm => ScriptCommands.CreatePath(
-                        flvm.CurrentDirectory, "NewFolder", true, true,
-                        m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
-
-            _explorer.FileList.Commands.ScriptCommands.Delete =
-                 FileList.IfSelection(evm => evm.Count() >= 1,
-                    ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
-                        pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                        new ShowProgress(_windowManager,
-                                    ScriptCommands.RunInSequence(
-                                        FileList.AssignSelectionToParameter(
-                                            DeleteFileBasedEntryCommand.FromParameter),
-                                        new HideProgress())),
-                        ResultCommand.NoError),
-                    NullScriptCommand.Instance);
-
-            _explorer.FileList.Commands.ScriptCommands.Copy =
-                 FileList.IfSelection(evm => evm.Count() >= 1,
-                   ScriptCommands.IfOkCancel(_windowManager, pd => "Copy",
-                        pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                            ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
-                            ResultCommand.NoError),
-                    NullScriptCommand.Instance);
-
-            _explorer.FileList.Commands.ScriptCommands.Cut =
-                  FileList.IfSelection(evm => evm.Count() >= 1,
-                   ScriptCommands.IfOkCancel(_windowManager, pd => "Cut",
-                        pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                            ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
-                            ResultCommand.NoError),
-                    NullScriptCommand.Instance);
-
-            _explorer.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
-                new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
-                new StaticCommandProvider(
-                    new SeparatorCommandModel(),
-                    new SelectGroupCommand( _explorer.FileList),    
-                    new ViewModeCommand( _explorer.FileList),
-                    new GoogleExportCommandModel(() => _rootModels.ToArray())
-                    { IsVisibleOnToolbar = false, WindowManager = _windowManager },
-                    
-                    new SeparatorCommandModel(),
-                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnMenu = false, Symbol = Convert.ToChar(0xE188) },
-                    new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder })
-                        { IsVisibleOnToolbar = false, Header = Strings.strNew, IsEnabled = true}
-                    )
-            };
-
-            _explorer.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
-                new StaticCommandProvider(
-                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }                    
-                    )
-              };
-
-            _explorer.DirectoryTree.Commands.ScriptCommands.Delete =
-                   ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
-                       pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
-                             new ShowProgress(_windowManager,
-                                    ScriptCommands.RunInSequence(
-                                        DirectoryTree.AssignSelectionToParameter(
-                                            DeleteFileBasedEntryCommand.FromParameter),
-                                        new HideProgress())),
-                       ResultCommand.NoError);
 
 
-            _explorer.Commands.ScriptCommands.Transfer =
-                TransferCommand =
-                new TransferCommand((effect, source, destDir) =>
-                    source.Profile is IDiskProfile ?
-                        (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
-                        : ResultCommand.Error(new NotSupportedException())
-                    , _windowManager);
 
-
-            updateExplorerModel(initExplorerModel(_explorer));
+            updateExplorerModel(initExplorerModel(_explorer, true, true, RootModels.ToArray(), _windowManager));
             _windowManager.ShowWindow(_explorer);
         }
 
@@ -222,7 +230,7 @@ namespace TestApp
             directoryPicker.FileList.EnableMultiSelect = false;
             directoryPicker.DirectoryTree.EnableDrag = false;
             directoryPicker.DirectoryTree.EnableDrop = false;
-            if (_windowManager.ShowDialog(initExplorerModel(directoryPicker)).Value)
+            if (_windowManager.ShowDialog(initExplorerModel(directoryPicker, true, false, RootModels.ToArray(), _windowManager)).Value)
                 return directoryPicker.SelectedDirectory;
             return null;
         }
@@ -293,10 +301,12 @@ namespace TestApp
 
         public void MdiWindow()
         {
-            new MdiWindow() { 
-                _profileEx = _profileEx, 
-                _events = _events, 
-                _windowManager = _windowManager }
+            new MdiWindow()
+            {
+                _profileEx = _profileEx,
+                _events = _events,
+                _windowManager = _windowManager
+            }
                 .Show();
         }
 

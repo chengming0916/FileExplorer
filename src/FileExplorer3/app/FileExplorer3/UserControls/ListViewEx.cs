@@ -133,7 +133,10 @@ namespace FileExplorer.UserControls
                 string viewResourceName = viewMode + "View";
                 view = (ViewBase)(fl.TryFindResource(viewResourceName));
                 if (view != null)
+                {
+                    VirtualizingPanel.SetIsVirtualizing(fl, false);
                     fl.View = view;
+                }
                 else Debug.WriteLine(String.Format("ListViewEx - {0} not found.", viewResourceName));
             }
 
@@ -144,7 +147,10 @@ namespace FileExplorer.UserControls
                 {
                     ListViewColumnUtils.UpdateColumn(fl, fl.Columns);
                     fl.Dispatcher.Invoke(() =>
-                         ListViewColumnUtils.UpdateFilterPanel(fl, fl.Columns, fl.ColumnFilters),
+                        {
+                            VirtualizingPanel.SetIsVirtualizing(fl, true);
+                            ListViewColumnUtils.UpdateFilterPanel(fl, fl.Columns, fl.ColumnFilters);
+                        },
                          System.Windows.Threading.DispatcherPriority.Input);
                 }
 

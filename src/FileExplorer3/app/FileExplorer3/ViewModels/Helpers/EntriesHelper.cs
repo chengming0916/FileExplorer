@@ -42,6 +42,17 @@ namespace FileExplorer.ViewModels.Helpers
 
         #region Methods
    
+        public async Task UnloadAsync()
+        {
+            _lastCancellationToken.Cancel(); //Cancel previous load.                
+            using (var releaser = await _loadingLock.LockAsync())
+            {
+                _subItemList = new List<VM>();
+                All.Clear();
+                _isLoaded = false;
+            }
+        }
+
         public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
         {
             if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using Cofe.Core.Utils;
 
 namespace FileExplorer.ViewModels
 {
@@ -119,6 +120,10 @@ namespace FileExplorer.ViewModels
                 case "LargeIcon":
                     flvm.ViewMode = "Icon";
                     break;
+                //case "Grid":
+                //    AsyncUtils.RunSync(() => flvm.ProcessedEntries.EntriesHelper.UnloadAsync());
+                //    flvm.ViewMode = viewMode;
+                //    break;
                 default:
                     flvm.ViewMode = viewMode;
                     break;
