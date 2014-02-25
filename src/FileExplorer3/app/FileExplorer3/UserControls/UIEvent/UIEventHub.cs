@@ -84,9 +84,11 @@ namespace FileExplorer.BaseControls
                                 switch (e.Name)
                                 {
                                     case "PreviewMouseDown":
+                                    case "PreviewTouchDown":
                                     case "MouseMove":
                                     case "MouseDrag":
                                     case "PreviewMouseUp":
+                                    case "PreviewTouchUp":
                                         break;
                                     default:
                                         RoutedEventHandler handler = (RoutedEventHandler)(
@@ -101,7 +103,11 @@ namespace FileExplorer.BaseControls
                             //These has to be handled for detecting drag.
                             Control.PreviewMouseDown += Control_PreviewMouseDown;
                             Control.MouseMove += Control_MouseMove;
-                            Control.PreviewMouseUp += Control_PreviewMouseUp;                            
+                            Control.PreviewMouseUp += Control_PreviewMouseUp;
+
+                            Control.PreviewTouchDown += Control_PreviewTouchDown;
+                            Control.TouchMove += Control_TouchMove;
+                            Control.PreviewTouchUp += Control_PreviewTouchUp;
                         }
                         else
                         {
@@ -113,6 +119,10 @@ namespace FileExplorer.BaseControls
                             Control.PreviewMouseDown -= Control_PreviewMouseDown;
                             Control.MouseMove -= Control_MouseMove;
                             Control.PreviewMouseUp -= Control_PreviewMouseUp;
+
+                            Control.PreviewTouchDown -= Control_PreviewTouchDown;
+                            Control.TouchMove -= Control_TouchMove;
+                            Control.PreviewTouchUp -= Control_PreviewTouchUp;
                         }
                     }
                 }));
@@ -199,10 +209,27 @@ namespace FileExplorer.BaseControls
             }
         }
 
+
+        void Control_PreviewTouchDown(object sender, TouchEventArgs e)
+        {
+          
+        }
+
+        void Control_TouchMove(object sender, TouchEventArgs e)
+        {
+
+        }
+
+        void Control_PreviewTouchUp(object sender, TouchEventArgs e)
+        {
+
+        }
+
+
         public static RoutedEvent MouseDragEvent = EventManager.RegisterRoutedEvent(
                 "MouseDrag", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UIEventHub));
 
-        public void Control_MouseDrag(object sender, MouseEventArgs e)
+        public void Control_MouseDrag(object sender, InputEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
             AttachedProperties.SetIsMouseDragging(control, true);
@@ -210,8 +237,7 @@ namespace FileExplorer.BaseControls
             //DragDropEventProcessor set e.IsHandled to true
             {
                 //DragDrop does not raise MouseUp, so have to raise manually.
-                Control_PreviewMouseUp(sender,
-                    _mouseDownEvent ?? new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left));
+                Control_PreviewMouseUp(sender, _mouseDownEvent);
             }
         }
 
