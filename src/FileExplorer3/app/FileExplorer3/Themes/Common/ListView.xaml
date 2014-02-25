@@ -10,6 +10,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListViewItem.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--Stock from http://msdn.microsoft.com/en-us/library/ms788747.aspx-->
@@ -193,6 +194,7 @@
 
 
     <Style TargetType="{x:Type uc:ListViewEx}">
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="False" />
         <!--<Setter Property="TextRootItem.TextPath" Value="EmbeddedModel.Label" />-->
         <Setter Property="Template">
             <Setter.Value>
@@ -221,6 +223,12 @@
             </Setter.Value>
         </Setter>
         <!--<Setter Property="SelectionMode" Value="Extended" />-->
+        <Style.Triggers>
+            <!-- Cannot set in GridView style, so set here. -->
+            <Trigger Property="ViewMode" Value="Grid">
+                <Setter Property="ItemContainerStyle" Value="{StaticResource FileListItemStyle_Grid}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 

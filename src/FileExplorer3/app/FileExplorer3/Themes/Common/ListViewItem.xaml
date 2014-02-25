@@ -55,7 +55,7 @@
     </ControlTemplate>
 
 
-    <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type uc:ListViewItemEx}" >
+    <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type uc:ListViewItemEx}"  >
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         
@@ -65,7 +65,17 @@
     </Style>
 
     <!--BasedOn="{StaticResource AeroGridViewItemContainerStyleKey}"-->
-    <Style x:Key="FileListItemStyle_Grid" TargetType="{x:Type uc:ListViewItemEx}" BasedOn="{StaticResource ItemContainerStyleBase}" >
+    <Style x:Key="FileListItemStyle_Grid" TargetType="{x:Type ListViewItem}" 
+           >
+        <!-- Bind to ViewModel -->
+        <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
+        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Style.Triggers>
+            <Trigger Property="def:AttachedProperties.IsSelecting" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 
