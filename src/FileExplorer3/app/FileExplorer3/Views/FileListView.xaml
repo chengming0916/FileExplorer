@@ -39,7 +39,6 @@
                      SortDirection="{Binding Columns.SortDirection}"
                      SortBy="{Binding Columns.SortBy}"
                      AllowDrop="True"
-                     
                      cal:View.ApplyConventions="False"                                            
                      def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
                        >            
