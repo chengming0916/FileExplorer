@@ -118,10 +118,15 @@
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
+    <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
+    <Compile Include="UserControls\InputProcesor\IInput.cs" />
+    <Compile Include="UserControls\InputProcesor\IInputProcessor.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
+    <Compile Include="UserControls\UIEvent\InputInfo.cs" />
     <Compile Include="UserControls\UIEvent\ExtensionMethods.cs" />
+    <Compile Include="UserControls\UIEvent\IInputEventFilter.cs" />
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />

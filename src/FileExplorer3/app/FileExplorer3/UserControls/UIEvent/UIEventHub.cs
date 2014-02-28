@@ -128,10 +128,12 @@ namespace FileExplorer.BaseControls
                 }));
         }
 
-        private async Task<bool> executeAsync(IList<UIEventProcessorBase> processors, RoutedEvent eventId, object sender, RoutedEventArgs e)
+        private async Task<bool> executeAsync(IList<UIEventProcessorBase> processors, RoutedEvent eventId,
+            object sender, RoutedEventArgs e, Action<ParameterDic> thenFunc = null)
         {
-            //if (eventName != "OnMouseMove")
-            //    Debug.WriteLine(eventName);
+
+            if (eventId != Mouse.MouseMoveEvent)
+                Debug.WriteLine(eventId);
 
             ParameterDic pd = ParameterDicConverters.ConvertUIParameter.Convert(null, eventId.Name, sender, e);                                
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
@@ -140,11 +142,13 @@ namespace FileExplorer.BaseControls
                 .Select(p => p.OnEvent(eventId))
                 .Where(c => c.CanExecute(pd)));
             await _scriptRunner.RunAsync(commands, pd);
+            if (thenFunc != null)
+                thenFunc(pd);
             return pd.IsHandled;
         }
 
 
-        private bool isValidPosition(object sender, MouseButtonEventArgs e)
+        private bool isValidPosition(object sender, InputEventArgs e)
         {
             var scp = ControlUtils.GetScrollContentPresenter(sender as Control);
             if (scp == null ||
@@ -162,6 +166,24 @@ namespace FileExplorer.BaseControls
 
             return true;
         }
+        //private void handleInputDown(object sender, InputEventArgs e, bool )
+        //{
+        //    if (!isValidPosition(sender, e))
+        //        return;
+
+        //    executeAsync(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e, pd =>
+        //    {
+        //        if (e.ClickCount == 1)
+        //        {
+        //            Control control = sender as Control;
+        //            AttachedProperties.SetIsMouseDragging(control, false);
+        //            AttachedProperties.SetStartPosition(control, e.GetPosition(control));
+        //            AttachedProperties.SetStartInput(control, e.ChangedButton);
+        //            AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
+        //        }
+        //    });
+        //}
+
 
         MouseButtonEventArgs _mouseDownEvent = null;
         void Control_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -176,17 +198,17 @@ namespace FileExplorer.BaseControls
             }
             //if (!control.IsFocused)
             //    return;
-            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e);
-
-            if (e.ClickCount == 1)
-            {
-                Control control = sender as Control;
-                AttachedProperties.SetIsMouseDragging(control, false);
-                AttachedProperties.SetStartPosition(control, e.GetPosition(control));
-                AttachedProperties.SetStartInput(control, e.ChangedButton);                
-                AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
-            }
-
+            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e, pd =>
+                {
+                    if (e.ClickCount == 1)
+                    {
+                        Control control = sender as Control;
+                        AttachedProperties.SetIsMouseDragging(control, false);
+                        AttachedProperties.SetStartPosition(control, e.GetPosition(control));
+                        AttachedProperties.SetStartInput(control, e.ChangedButton);
+                        AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
+                    }
+                });
         }
 
         void Control_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

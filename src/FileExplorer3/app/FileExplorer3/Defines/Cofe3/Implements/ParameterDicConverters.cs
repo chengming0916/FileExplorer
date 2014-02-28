@@ -15,6 +15,9 @@ namespace Cofe.Core.Script
             new ParameterDicConverterBase( (p,p2) => new ParameterDic() { { "Parameter", p } },
                 (pd,p2) => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
 
+        /// <summary>
+        /// Convert Sender, EventName, EventArgs to ParameterDic
+        /// </summary>
         public static IParameterDicConverter ConvertUIParameter = 
             new ParameterDicConverterBase( (p,p2) =>
                 {
@@ -24,14 +27,13 @@ namespace Cofe.Core.Script
                     string eventName = p2[0] as string;
                     object sender = p2[1];
                     RoutedEventArgs eventArgs = p2[2] as RoutedEventArgs;                    
-
+                    
                     return new FileExplorer.BaseControls.UIParameterDic() { Sender = sender, 
                         EventName = eventName, 
                         EventArgs = eventArgs };
                 }, null, ParameterDicConverters.ConvertParameterOnly);
 
-
-
+        
         public static IParameterDicConverter ConvertVMParameter(params Tuple<string, object>[] viewModelProperties)
         {
             return new ParameterDicConverterBase((p, p2) =>
