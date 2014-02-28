@@ -29,7 +29,7 @@ namespace FileExplorer.BaseControls
 
             switch (eventId.Name)
             {
-                case "PreviewMouseDown": return new SetHandledIfNotFocused();
+                case "PreviewMouseDown": return new ObtainPointerPosition(new SetHandledIfNotFocused());
                 case "MouseDrag": if (EnableMultiSelect)
                         return new BeginSelect() { UnselectCommand = UnselectAllCommand }; break;
                 case "MouseMove": return new ContinueSelect();

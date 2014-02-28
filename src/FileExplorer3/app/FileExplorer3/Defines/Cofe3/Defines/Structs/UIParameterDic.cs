@@ -25,7 +25,13 @@ namespace FileExplorer.BaseControls
         {
             get { return this.ContainsKey("EventArgs") && this["EventArgs"] is RoutedEventArgs ? this["EventArgs"] as RoutedEventArgs : null; }
             set { if (this.ContainsKey("EventArgs")) this["EventArgs"] = value; else this.Add("EventArgs", value); }
-        }        
+        }
+
+        public Object OriginalSource
+        {
+            get { return this.ContainsKey("OriginalSource") ? this["OriginalSource"] : null; }
+            set { if (this.ContainsKey("OriginalSource")) this["OriginalSource"] = value; else this.Add("OriginalSource", value); }
+        }      
 
         public Object Sender
         {

@@ -23,6 +23,7 @@ using Cofe.Core.Script;
 using FileExplorer.BaseControls.DragnDrop;
 using FileExplorer.BaseControls.MultiSelect;
 using System.Windows.Media.Animation;
+using FileExplorer.UserControls.InputProcesor;
 
 namespace TestTemplate.WPF
 {
@@ -69,6 +70,40 @@ namespace TestTemplate.WPF
             setupBreadcrumbTree();
             setupDragAndDrop();
             setupToolbarItem();
+            setupInputProcessor();
+        }
+
+
+        private static IInputProcessor _inputProcessor;
+        private void setupInputProcessor()
+        {
+            _inputProcessor = new DragInputProcessor()
+                {
+                    DragStartedFunc = inp => inputProcessorOutput.Items.Add("DragStarted" + inp.ToString()),
+                    DragStoppedFunc = inp => inputProcessorOutput.Items.Add("DragStopped" + inp.ToString())
+                };
+            RoutedEventHandler handler = (o, e) =>
+                {
+                    IInput input = InputBase.FromEventArgs(o, e as InputEventArgs);
+                   // e.Handled = true;
+                    _inputProcessor.Update(input);
+                    if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)
+                        inputProcessorOutput.Items.Add(input.ToString());
+                    while (inputProcessorOutput.Items.Count > 10)
+                        inputProcessorOutput.Items.RemoveAt(0);
+                };
+
+            inputProcessorOutput.MouseDoubleClick += (o, e) =>
+                inputProcessorOutput.Items.Clear();
+            inputProcessorCanvas.AddHandler(UIElement.MouseDownEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.MouseMoveEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.MouseUpEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.TouchDownEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.TouchMoveEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.TouchUpEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.StylusDownEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.StylusMoveEvent, handler);
+            inputProcessorCanvas.AddHandler(UIElement.StylusUpEvent, handler);
         }
 
         private void setupDropDownList()
@@ -95,7 +130,7 @@ namespace TestTemplate.WPF
             //lvDnd2.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm2.UnselectAllCommand));
             //lvDnd3.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm3.UnselectAllCommand));
             //lvDnd4.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm4.UnselectAllCommand));        
-            
+
             //lvDnd1.Loaded += (o, e) =>
             //    {
             //        var pd = new UIParameterDic() { Sender = lvDnd1 };
@@ -112,7 +147,7 @@ namespace TestTemplate.WPF
             //            {
             //                MultiSelectScriptCommands.UpdateAdorner.Execute(pd);
             //            }));
-                   
+
             //        //MultiSelectScriptCommands.DetachAdorner.Execute(pd);
             //    };
             #endregion
@@ -187,13 +222,14 @@ namespace TestTemplate.WPF
             tbiMenu1.SetValue(ItemsControl.ItemsSourceProperty, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
             tbiMenu2.SetValue(ItemsControl.ItemsSourceProperty,
                  (new int[] { 200, 100, 50, 20, 0 }).Select(num => new ToolbarSubItemEx()
-                 {                                      
-                    Value = num,
-                    Height = num + 20,
-                    VerticalContentAlignment= num == 200 ? VerticalAlignment.Top : num == 0 ? 
-                        VerticalAlignment.Bottom : VerticalAlignment.Top,
-                    IsStepStop = true,
-                    Header = num.ToString()  }));
+                 {
+                     Value = num,
+                     Height = num + 20,
+                     VerticalContentAlignment = num == 200 ? VerticalAlignment.Top : num == 0 ?
+                         VerticalAlignment.Bottom : VerticalAlignment.Top,
+                     IsStepStop = true,
+                     Header = num.ToString()
+                 }));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -206,6 +242,6 @@ namespace TestTemplate.WPF
             this.Close();
         }
 
-        
+
     }
 }

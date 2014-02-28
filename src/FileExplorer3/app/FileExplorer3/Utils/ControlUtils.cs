@@ -22,11 +22,12 @@ namespace FileExplorer.Utils
 
         public static Point GetScrollbarPosition(Control c)
         {
-            return GetScrollbarPosition(GetScrollContentPresenter(c));
+            var scp = c == null ? null : GetScrollContentPresenter(c);
+            return scp == null ? AttachedProperties.InvalidPoint : GetScrollbarPosition(scp);
         }
 
         public static ScrollContentPresenter GetScrollContentPresenter(ItemsPresenter ip)
-        {            
+        {
             return UITools.FindAncestor<ScrollContentPresenter>(ip);
         }
 
@@ -44,9 +45,9 @@ namespace FileExplorer.Utils
 
         public static ItemsPresenter GetItemsPresenter(Control c)
         {
-            return  UITools.FindVisualChild<ItemsPresenter>(c, null, 8);            
+            return UITools.FindVisualChild<ItemsPresenter>(c, null, 8);
         }
-       
+
         public static AdornerLayer GetAdornerLayer(Control c)
         {
             ItemsPresenter ip = GetItemsPresenter(c);
@@ -55,7 +56,7 @@ namespace FileExplorer.Utils
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(p);
             if (adornerLayer != null)
                 return adornerLayer;
-            
+
             AdornerDecorator ad = UITools.FindAncestor<AdornerDecorator>(ip);
             try
             {

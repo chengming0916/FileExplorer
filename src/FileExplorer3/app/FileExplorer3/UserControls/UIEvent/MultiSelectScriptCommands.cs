@@ -22,13 +22,14 @@ using FileExplorer.ViewModels;
 
 namespace FileExplorer.BaseControls.MultiSelect
 {
-    /*
-     *         (PreviewMouseDown)            (MouseMove)                        (MouseUp)
+    /*           (PreviewMouseDown) --> ObtainPointerPosition --> SetHandledIfNotFocused --> NoError
+     * 
+     *           (MouseDrag)                (MouseMove)                         (MouseUp)
      *            BeginSelect               ContinueSelect                      EndSelect
-     *               |                               |                            |
-     *               |-False--->UpdateIsSelecting<---|---------True--------------|
-     *                            |-(ToValue)        |         
-     *                      OK-----    |       CheckIsSelecting------OK
+     *               |                               |                           |    |
+     *               |-False--->UpdateIsSelecting<---|---------True--------------| ObtainPointerPosition
+     *                            |-(ToValue)        |                                |
+     *                      OK-----    |       CheckIsSelecting------OK       ClearSelectionIfNoItemUnderCurrentPosition
      *             [If already value]  |             |          [If not selecting]
      *                                 V             V
      *                              ObtainPointerPosition
@@ -108,14 +109,12 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(c);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
+            var eventArgs = pd.EventArgs;
 
             if (scp == null)
                 return ResultCommand.NoError;
 
-            if (eventArgs.RightButton == MouseButtonState.Pressed)
-                return ResultCommand.NoError;
-
+          
             if (Keyboard.Modifiers != ModifierKeys.None)
                 return ResultCommand.NoError;
 
@@ -160,7 +159,11 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
+            var eventArgs = pd.EventArgs as InputEventArgs;
+
+            if (eventArgs == null)
+                return ResultCommand.Error(new ArgumentException("EventArgs not InputEventArgs"));
+
             if (eventArgs.OriginalSource is CheckBox)
                 return ResultCommand.NoError;
 
@@ -175,19 +178,26 @@ namespace FileExplorer.BaseControls.MultiSelect
                 return new UpdateIsSelecting(false);
             else
             {
+                
                 var startInput = AttachedProperties.GetStartInput(ic);
-                if (startInput != null && startInput.Equals(MouseButton.Left))
-                    if (Keyboard.Modifiers == ModifierKeys.None)
+                if ((MouseButton.Left.Equals(startInput) 
+                    || AttachedProperties.TouchInput.Equals(startInput)
+                    || AttachedProperties.StylusInput.Equals(startInput)
+                    ) && Keyboard.Modifiers == ModifierKeys.None)
                 {
-                    //Select the mouse over item.
-                    //(If not mouse over item and is selecting (dragging), this will unselect all)
-                    object itemUnderMouse = UITools.GetItemUnderMouse(ic, eventArgs.GetPosition(scp));
-                    List<object> selectedList = new List<object>();
-                    if (itemUnderMouse != null)
-                        selectedList.Add(itemUnderMouse);
-                    pd["SelectedList"] = selectedList;
-                    return new SelectItems(
-                        ItemSelectProcessor.SelectItemInSelectedList);
+                    return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
+                        pd2 =>
+                        {
+                            //(If not mouse over item and is selecting (dragging), this will unselect all)
+                            object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
+                            if (itemUnderMouse == null)
+                            {
+                                pd2["SelectedList"] = new List<object>();
+                                return new SelectItems(ItemSelectProcessor.SelectItemInSelectedList);
+                            }
+                            else return ResultCommand.NoError;
+                        }));
+                  
                 }
                 return ResultCommand.NoError;
             }
@@ -210,7 +220,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (AttachedProperties.GetIsSelecting(c) != _toValue)
             {
                 AttachedProperties.SetIsSelecting(c, _toValue);
-                return new ObtainPointerPosition();
+                return new ObtainPointerPosition(new FindSelectedItems());
             }
             return ResultCommand.NoError;
         }
@@ -225,7 +235,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
             if (AttachedProperties.GetIsSelecting(c))
-                return new ObtainPointerPosition();
+                return new ObtainPointerPosition(new FindSelectedItems());
             else return ResultCommand.NoError;
         }
     }
@@ -246,8 +256,8 @@ namespace FileExplorer.BaseControls.MultiSelect
     /// </summary>
     public class ObtainPointerPosition : ScriptCommandBase
     {
-        public ObtainPointerPosition()
-            : base("ObtainPointerPosition")
+        public ObtainPointerPosition(IScriptCommand nextCommand)
+            : base("ObtainPointerPosition", nextCommand)
         { }
 
         private Point add(params Point[] pts)
@@ -264,30 +274,36 @@ namespace FileExplorer.BaseControls.MultiSelect
                 pt.Y - currentScrollbarPosition.Y + startScrollbarPosition.Y);
         }
 
+        public static Point AdjustHeaderPosition(Point point, ParameterDic pd, int offset = -1)
+        {
+            Point pt = new Point(point.X, point.Y);
+            pt.Offset(0, offset * ((Size)pd["ContentBelowHeaderSize"]).Height);
+            //Deduct Grid View Header from the position.
+            pt.Offset(0, offset * ((Size)pd["GridViewHeaderSize"]).Height);
+            return pt;
+        }
+        
+
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
 
-            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
-            Func<Point, Point> adjustGridHeaderPosition = (pt) =>
-                {
-                    if (c is ListViewEx)
-                    {
-                        var contentBelowHeader = (c as ListViewEx).ContentBelowHeader as FrameworkElement;
-                        if (contentBelowHeader != null)
-                            pt.Offset(0, -contentBelowHeader.ActualHeight);
-                    }
+             var contentBelowHeader =  (c is ListViewEx) ? (c as ListViewEx).ContentBelowHeader as FrameworkElement :null;
+             pd["ContentBelowHeaderSize"] = 
+                contentBelowHeader == null ? new Size(0,0) : 
+                    new Size(contentBelowHeader.ActualWidth, contentBelowHeader.ActualHeight);
 
-                    //Deduct Grid View Header from the position.
-                    if (gvhrp != null)
-                        pt.Offset(0, -gvhrp.ActualHeight);
-                    return pt;
-                };
+             var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c); 
+             pd["GridViewHeaderSize"] =
+                              gvhrp == null ? new Size(0, 0) :
+                     new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
 
+            
+            
             if (!(pd.ContainsKey("StartPosition")))
-                pd["StartPosition"] = adjustGridHeaderPosition(AttachedProperties.GetStartPosition(c));
+                pd["StartPosition"] = AdjustHeaderPosition(AttachedProperties.GetStartPosition(c), pd);
 
             if (!(pd.ContainsKey("StartScrollbarPosition")))
                 pd["StartScrollbarPosition"] = AttachedProperties.GetStartScrollbarPosition(c);
@@ -296,7 +312,18 @@ namespace FileExplorer.BaseControls.MultiSelect
                 pd["CurrentScrollbarPosition"] = ControlUtils.GetScrollbarPosition(scp);
 
             if (!(pd.ContainsKey("CurrentPosition")))
-                pd["CurrentPosition"] = adjustGridHeaderPosition(Mouse.GetPosition(c));
+                pd["CurrentPosition"] =
+                    AdjustHeaderPosition(
+                    pd.EventArgs is MouseEventArgs ? (pd.EventArgs as MouseEventArgs).GetPosition(c) :
+                    pd.EventArgs is TouchEventArgs ? (pd.EventArgs as TouchEventArgs).GetTouchPoint(c).Position : 
+                    Mouse.GetPosition(c), pd);
+
+
+            if (!(pd.ContainsKey("CurrentRelativePosition"))) //To scp ScrollContentPresenter
+                pd["CurrentRelativePosition"] =
+                    pd.EventArgs is MouseEventArgs ? (pd.EventArgs as MouseEventArgs).GetPosition(scp) :
+                    pd.EventArgs is TouchEventArgs ? (pd.EventArgs as TouchEventArgs).GetTouchPoint(scp).Position :
+                    Mouse.GetPosition(scp);
 
             //These adjusted position for used in visual only.
             if (!(pd.ContainsKey("StartAdjustedPosition")))
@@ -312,7 +339,9 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (!pm.ContainsKey("SelectionBounds") || !(pm["SelectionBounds"] is Rect))
                 pd["SelectionBounds"] = new Rect((Point)pd["StartPosition"], (Point)pd["CurrentPosition"]);
 
-            return new FindSelectedItems();
+           
+
+            return _nextCommand;
         }
     }
 
@@ -364,17 +393,19 @@ namespace FileExplorer.BaseControls.MultiSelect
             List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
             List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
 
+            Point posRelToScp = (Point)pm["CurrentRelativePosition"];
             var startSelected = AttachedProperties.GetStartSelectedItem(_ic);
-            var currentSelected = UITools.GetSelectedListBoxItem(_scp, _eventArgs.GetPosition(_scp));
+
+            var currentSelected = UITools.GetSelectedListBoxItem(_scp, posRelToScp);
             if (startSelected != null && currentSelected != null)
             {
                 int startIdx = _ic.ItemContainerGenerator.IndexFromContainer(startSelected);
                 int endIdx = _ic.ItemContainerGenerator.IndexFromContainer(currentSelected);
-
+               
                 for (int i = Math.Min(startIdx, endIdx); i <= Math.Max(startIdx, endIdx); i++)
                 {
                     selectedList.Add(_ic.Items[i]);
-                    selectedIdList.Add(i);
+                    selectedIdList.Add(i);  
                 }
             }
 
@@ -383,7 +414,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             {
                 if (AttachedProperties.GetStartSelectedItem(_ic) == null)
                 {
-                    var itemUnderMouse = UITools.GetSelectedListBoxItem(_scp, _eventArgs.GetPosition(_scp));
+                    var itemUnderMouse = UITools.GetSelectedListBoxItem(_scp, posRelToScp);
                     AttachedProperties.SetStartSelectedItem(_ic, itemUnderMouse);
                 }
             }
@@ -398,7 +429,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (AttachedProperties.GetIsSelecting(_ic))
             {
                 if (AttachedProperties.GetStartSelectedItem(_ic) == null)
-                    UITools.SetItemUnderMouseToAttachedProperty(_ic, _eventArgs.GetPosition(_scp),
+                    UITools.SetItemUnderMouseToAttachedProperty(_ic, posRelToScp,
                         AttachedProperties.StartSelectedItemProperty);
             }
 
@@ -526,7 +557,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
+            //var eventArgs = pd.EventArgs as MouseEventArgs;
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
                 : new List<int>();
 
@@ -651,7 +682,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
+            //var eventArgs = pd.EventArgs as MouseEventArgs;
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int> : null;
             var selectedList = pm.ContainsKey("SelectedList") ? pm["SelectedList"] as List<object> : null;
 
@@ -828,22 +859,21 @@ namespace FileExplorer.BaseControls.MultiSelect
             var e = pd.EventArgs as MouseEventArgs;
             var scp = ControlUtils.GetScrollContentPresenter(c);
 
-            if (e != null && e.LeftButton == MouseButtonState.Pressed)
+            if (e != null)
             {
-                Point mousePos = e.GetPosition(scp);
-
+                Point posRelToScp = (Point)pm["CurrentRelativePosition"];
                 IScrollInfo isInfo = UITools.FindVisualChild<Panel>(scp) as IScrollInfo;
                 if (isInfo != null)
                 {
                     if (isInfo.CanHorizontallyScroll)
-                        if (mousePos.X < 0)
+                        if (posRelToScp.X < 0)
                             isInfo.LineLeft();
-                        else if (mousePos.X > (isInfo as Panel).ActualWidth)
+                        else if (posRelToScp.X > (isInfo as Panel).ActualWidth)
                             isInfo.LineRight();
                     if (isInfo.CanVerticallyScroll)
-                        if (mousePos.Y < 0)
+                        if (posRelToScp.Y < 0)
                             isInfo.LineUp();
-                        else if (mousePos.Y > (isInfo as Panel).ActualHeight) //isInfo.ViewportHeight is bugged.
+                        else if (posRelToScp.Y > (isInfo as Panel).ActualHeight) //isInfo.ViewportHeight is bugged.
                             isInfo.LineDown();
                 }
             }

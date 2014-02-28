@@ -27,7 +27,7 @@
     </UserControl.Resources>
     <Grid>
 
-        <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"  IsManipulationEnabled="True"                    
+        <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"                
                      ItemsSource="{Binding ProcessedEntries.All}"   BorderBrush="Transparent"
                      ViewMode="{Binding ViewMode}"  
                      Columns="{Binding Columns.ColumnList}"

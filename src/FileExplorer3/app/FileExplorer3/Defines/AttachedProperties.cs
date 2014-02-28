@@ -92,6 +92,13 @@ namespace FileExplorer.Defines
             return point.X != double.NaN && point.Y != double.NaN;
         }
 
+        public static bool HitDragThreshold(this Point position, Point startPosition)
+        {
+            return 
+                startPosition.IsValidPosition() &&
+                Math.Abs(position.X - startPosition.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                     Math.Abs(position.Y - startPosition.Y) > SystemParameters.MinimumVerticalDragDistance;
+        }
 
 
 
