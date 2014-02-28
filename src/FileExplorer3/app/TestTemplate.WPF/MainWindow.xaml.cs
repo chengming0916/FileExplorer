@@ -74,19 +74,21 @@ namespace TestTemplate.WPF
         }
 
 
-        private static IInputProcessor _inputProcessor;
+        private static IInputProcessorManager _inputProcessors;
         private void setupInputProcessor()
         {
-            _inputProcessor = new DragInputProcessor()
+            _inputProcessors =
+                new InputProcessorManager(
+                new DragInputProcessor()
                 {
-                    DragStartedFunc = inp => inputProcessorOutput.Items.Add("DragStarted" + inp.ToString()),
-                    DragStoppedFunc = inp => inputProcessorOutput.Items.Add("DragStopped" + inp.ToString())
-                };
+                    DragStartedFunc = inp => inputProcessorOutput.Items.Add("*DragStarted* " + inp.ToString()),
+                    DragStoppedFunc = inp => inputProcessorOutput.Items.Add("*DragStopped* " + inp.ToString())
+                });
             RoutedEventHandler handler = (o, e) =>
                 {
                     IInput input = InputBase.FromEventArgs(o, e as InputEventArgs);
-                   // e.Handled = true;
-                    _inputProcessor.Update(input);
+                    // e.Handled = true;
+                    _inputProcessors.Update(input);
                     if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)
                         inputProcessorOutput.Items.Add(input.ToString());
                     while (inputProcessorOutput.Items.Count > 10)

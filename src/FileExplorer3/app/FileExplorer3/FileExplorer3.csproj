@@ -121,6 +121,7 @@
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
     <Compile Include="UserControls\InputProcesor\IInput.cs" />
     <Compile Include="UserControls\InputProcesor\IInputProcessor.cs" />
+    <Compile Include="UserControls\InputProcesor\IInputProcessorManager.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
