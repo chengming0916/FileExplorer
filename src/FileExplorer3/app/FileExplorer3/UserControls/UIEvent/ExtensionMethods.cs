@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace FileExplorer
 {
-    
+
 
     public static partial class ExtensionMethods
     {
@@ -31,11 +31,14 @@ namespace FileExplorer
                 }
             }
         }
-        public static ISelectable ToISelectable(this ListBoxItem lbm)
+        public static ISelectable ToISelectable(object viewModel, ListBoxItem lbm)
         {
-            if (lbm.DataContext is ISelectable)
-                return lbm.DataContext as ISelectable;
-            else return new LBSelectable(lbm);
+            if (viewModel is ISelectable)
+                return viewModel as ISelectable;
+            else
+                if (lbm.DataContext is ISelectable)
+                    return lbm.DataContext as ISelectable;
+                else return new LBSelectable(lbm);
         }
     }
 }

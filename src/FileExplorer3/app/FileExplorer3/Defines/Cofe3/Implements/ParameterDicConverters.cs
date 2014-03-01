@@ -56,6 +56,7 @@ namespace Cofe.Core.Script
                     Sender = input.Sender,
                     EventName = eventName,
                     EventArgs = input.EventArgs,
+                    Input = input,
                     InputProcessors = inputProcManager.Processors.ToList()
                 };
             }, null, ParameterDicConverters.ConvertParameterOnly);

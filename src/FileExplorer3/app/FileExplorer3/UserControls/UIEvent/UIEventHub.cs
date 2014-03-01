@@ -21,6 +21,17 @@ using FileExplorer.Defines;
 using FileExplorer.Utils;
 using FileExplorer.UserControls.InputProcesor;
 
+namespace FileExplorer
+{
+    public static partial class ExtensionMethods
+    {
+        public static IUIEventHub RegisterEventProcessors(this UIElement control, params UIEventProcessorBase[] processors)
+        {
+            return new UIEventHub(new ScriptRunner(), control, true, processors);
+        }
+    }
+}
+
 namespace FileExplorer.BaseControls
 {
 
@@ -31,13 +42,7 @@ namespace FileExplorer.BaseControls
         bool IsEnabled { get; set; }
     }
 
-    public static partial class ExtensionMethods
-    {
-        public static IUIEventHub RegisterEventProcessors(this UIElement control, params UIEventProcessorBase[] processors)
-        {
-            return new UIEventHub(new ScriptRunner(), control, true, processors);
-        }
-    }
+  
 
     public class UIEventHub : IUIEventHub
     {
@@ -283,6 +288,18 @@ namespace FileExplorer.BaseControls
         public void Control_MouseDrag(object sender, MouseEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
+            var input =
+              InputBase.FromEventArgs(sender, e);
+            AttachedProperties.SetIsMouseDragging(control, true);
+            if (AsyncUtils.RunSync(() => executeAsync(_eventProcessors, UIEventHub.MouseDragEvent, input)))
+            {
+                (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
+                AttachedProperties.SetIsMouseDragging(control, false);
+                AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
+                AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
+            }
+
+            return;
             AttachedProperties.SetIsMouseDragging(control, true);
             if (AsyncUtils.RunSync(() => executeAsync(_eventProcessors, UIEventHub.MouseDragEvent, sender, e)))
             //DragDropEventProcessor set e.IsHandled to true
