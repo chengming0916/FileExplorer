@@ -74,11 +74,11 @@ namespace TestTemplate.WPF
         }
 
 
-        private static IInputProcessorManager _inputProcessors;
+        private static IUIInputManager _inputProcessors;
         private void setupInputProcessor()
         {
             _inputProcessors =
-                new InputProcessorManager(
+                new UIInputManager(
                 new DragInputProcessor()
                 {
                     DragStartedFunc = inp => inputProcessorOutput.Items.Add("*DragStarted* " + inp.ToString()),
@@ -86,7 +86,7 @@ namespace TestTemplate.WPF
                 });
             RoutedEventHandler handler = (o, e) =>
                 {
-                    IInput input = InputBase.FromEventArgs(o, e as InputEventArgs);
+                    IUIInput input = InputBase.FromEventArgs(o, e as InputEventArgs);
                     // e.Handled = true;
                     _inputProcessors.Update(input);
                     if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)

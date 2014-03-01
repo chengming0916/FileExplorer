@@ -184,6 +184,9 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
 
+            if (AttachedProperties.GetStartDraggingItem(ic) != null)
+                pd.IsHandled = true;
+
             AttachedProperties.SetStartDraggingItem(ic, null);
             AttachedProperties.SetIsDragging(ic, false);
 

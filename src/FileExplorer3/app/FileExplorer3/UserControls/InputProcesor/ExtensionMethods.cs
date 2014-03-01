@@ -20,19 +20,19 @@ namespace FileExplorer
         /// </summary>
         /// <param name="inputElement"></param>
         /// <returns></returns>
-        public static Point PositionRelativeTo(this IInput input, IInputElement inputElement,
+        public static Point PositionRelativeTo(this IUIInput input, IInputElement inputElement,
             Func<Point, Point> adjustFunc)
         {
             return adjustFunc(input.PositionRelativeTo(inputElement));
         }
 
-        public static bool IsSameSource(this IInput input, IInput input2)
+        public static bool IsSameSource(this IUIInput input, IUIInput input2)
         {
             return input != null && input2 != null &&
-                 input.EventArgs.Source.Equals(input2.EventArgs.Source);
+                 input.Sender.Equals(input2.Sender);
         }
 
-        public static bool IsDragThresholdReached(this IInput input, IInput input2)
+        public static bool IsDragThresholdReached(this IUIInput input, IUIInput input2)
         {
             return
                 input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
@@ -42,7 +42,13 @@ namespace FileExplorer
                 );
         }
 
-        public static bool IsValidPositionForLisView(this IInput input, bool validIfNotListView = false)
+        public static void Update(this IEnumerable<IInputProcessor> processors, IUIInput input)
+        {
+            foreach (var p in processors)
+                p.Update(input);
+        }
+
+        public static bool IsValidPositionForLisView(this IUIInput input, bool validIfNotListView = false)
         {
             var sender = input.Sender as ListView;
             if (sender == null)

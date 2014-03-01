@@ -114,7 +114,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (scp == null)
                 return ResultCommand.NoError;
 
-          
+
             if (Keyboard.Modifiers != ModifierKeys.None)
                 return ResultCommand.NoError;
 
@@ -178,26 +178,24 @@ namespace FileExplorer.BaseControls.MultiSelect
                 return new UpdateIsSelecting(false);
             else
             {
-                
+
                 var startInput = AttachedProperties.GetStartInput(ic);
-                if ((MouseButton.Left.Equals(startInput) 
-                    || AttachedProperties.TouchInput.Equals(startInput)
-                    || AttachedProperties.StylusInput.Equals(startInput)
-                    ) && Keyboard.Modifiers == ModifierKeys.None)
+                if (MouseButton.Left.Equals(startInput) && Keyboard.Modifiers == ModifierKeys.None)
                 {
-                    return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
-                        pd2 =>
-                        {
-                            //(If not mouse over item and is selecting (dragging), this will unselect all)
-                            object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
-                            if (itemUnderMouse == null)
+                    if (!pd.IsHandled)
+                        return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
+                            pd2 =>
                             {
-                                pd2["SelectedList"] = new List<object>();
-                                return new SelectItems(ItemSelectProcessor.SelectItemInSelectedList);
-                            }
-                            else return ResultCommand.NoError;
-                        }));
-                  
+                                //(If not mouse over item and is selecting (dragging), this will unselect all)
+                                object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
+                                if (itemUnderMouse == null)
+                                {
+                                    pd2["SelectedList"] = new List<object>();
+                                    return new SelectItems(ItemSelectProcessor.SelectItemInSelectedList);
+                                }
+                                else return ResultCommand.NoError;
+                            }));
+
                 }
                 return ResultCommand.NoError;
             }
@@ -282,7 +280,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             pt.Offset(0, offset * ((Size)pd["GridViewHeaderSize"]).Height);
             return pt;
         }
-        
+
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -290,18 +288,18 @@ namespace FileExplorer.BaseControls.MultiSelect
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
 
-             var contentBelowHeader =  (c is ListViewEx) ? (c as ListViewEx).ContentBelowHeader as FrameworkElement :null;
-             pd["ContentBelowHeaderSize"] = 
-                contentBelowHeader == null ? new Size(0,0) : 
-                    new Size(contentBelowHeader.ActualWidth, contentBelowHeader.ActualHeight);
+            var contentBelowHeader = (c is ListViewEx) ? (c as ListViewEx).ContentBelowHeader as FrameworkElement : null;
+            pd["ContentBelowHeaderSize"] =
+               contentBelowHeader == null ? new Size(0, 0) :
+                   new Size(contentBelowHeader.ActualWidth, contentBelowHeader.ActualHeight);
 
-             var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c); 
-             pd["GridViewHeaderSize"] =
-                              gvhrp == null ? new Size(0, 0) :
-                     new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
+            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
+            pd["GridViewHeaderSize"] =
+                             gvhrp == null ? new Size(0, 0) :
+                    new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
 
-            
-            
+
+
             if (!(pd.ContainsKey("StartPosition")))
                 pd["StartPosition"] = AdjustHeaderPosition(AttachedProperties.GetStartPosition(c), pd);
 
@@ -315,7 +313,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                 pd["CurrentPosition"] =
                     AdjustHeaderPosition(
                     pd.EventArgs is MouseEventArgs ? (pd.EventArgs as MouseEventArgs).GetPosition(c) :
-                    pd.EventArgs is TouchEventArgs ? (pd.EventArgs as TouchEventArgs).GetTouchPoint(c).Position : 
+                    pd.EventArgs is TouchEventArgs ? (pd.EventArgs as TouchEventArgs).GetTouchPoint(c).Position :
                     Mouse.GetPosition(c), pd);
 
 
@@ -339,7 +337,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             if (!pm.ContainsKey("SelectionBounds") || !(pm["SelectionBounds"] is Rect))
                 pd["SelectionBounds"] = new Rect((Point)pd["StartPosition"], (Point)pd["CurrentPosition"]);
 
-           
+
 
             return _nextCommand;
         }
@@ -401,11 +399,11 @@ namespace FileExplorer.BaseControls.MultiSelect
             {
                 int startIdx = _ic.ItemContainerGenerator.IndexFromContainer(startSelected);
                 int endIdx = _ic.ItemContainerGenerator.IndexFromContainer(currentSelected);
-               
+
                 for (int i = Math.Min(startIdx, endIdx); i <= Math.Max(startIdx, endIdx); i++)
                 {
                     selectedList.Add(_ic.Items[i]);
-                    selectedIdList.Add(i);  
+                    selectedIdList.Add(i);
                 }
             }
 
@@ -651,9 +649,11 @@ namespace FileExplorer.BaseControls.MultiSelect
         public static IItemSelectProcessor AppendItemInSelectedList =
             new ItemSelectProcessor((vm, inList) => { vm.IsSelected = vm.IsSelected || inList; });
         public static IItemSelectProcessor ToggleItemInSelectedList =
-            new ItemSelectProcessor((vm, inList) => { 
-                if (inList) 
-                    vm.IsSelected = !vm.IsSelected; });
+            new ItemSelectProcessor((vm, inList) =>
+            {
+                if (inList)
+                    vm.IsSelected = !vm.IsSelected;
+            });
 
         private Action<ISelectable, bool> _selectFunc;
         protected ItemSelectProcessor(Action<ISelectable, bool> selectFunc)

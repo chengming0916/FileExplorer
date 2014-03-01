@@ -19,6 +19,7 @@ using Cofe.Core.Utils;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
+using FileExplorer.UserControls.InputProcesor;
 
 namespace FileExplorer.BaseControls
 {
@@ -46,6 +47,11 @@ namespace FileExplorer.BaseControls
         {
             Control = control;
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
+            _inputProcessors = new UIInputManager(                 
+                    new DragInputProcessor() 
+                        { DragStartedFunc = inp => 
+                            Control_MouseDrag(inp.Sender, inp.EventArgs as MouseEventArgs) }
+                );
             _scriptRunner = runner;
             IsEnabled = startIsEnabled;
         }
@@ -129,11 +135,29 @@ namespace FileExplorer.BaseControls
         }
 
         private async Task<bool> executeAsync(IList<UIEventProcessorBase> processors, RoutedEvent eventId,
+            IUIInput input, Action<ParameterDic> thenFunc = null)
+        {
+            ParameterDic pd = ParameterDicConverters.ConvertUIInputParameter.Convert(null, 
+                eventId.Name, input, _inputProcessors);
+
+            Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
+               processors
+               .Where(p => p.ProcessEvents.Contains(eventId))
+               .Select(p => p.OnEvent(eventId))
+               .Where(c => c.CanExecute(pd)));
+
+            await _scriptRunner.RunAsync(commands, pd);
+            if (thenFunc != null)
+                thenFunc(pd);
+            return pd.IsHandled;
+        }
+
+        private async Task<bool> executeAsync(IList<UIEventProcessorBase> processors, RoutedEvent eventId,
             object sender, RoutedEventArgs e, Action<ParameterDic> thenFunc = null)
         {
 
-            if (eventId != Mouse.MouseMoveEvent)
-                Debug.WriteLine(eventId);
+            //if (eventId != Mouse.MouseMoveEvent)
+            //    Debug.WriteLine(eventId);
 
             ParameterDic pd = ParameterDicConverters.ConvertUIParameter.Convert(null, eventId.Name, sender, e);                                
             Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
@@ -188,31 +212,36 @@ namespace FileExplorer.BaseControls
         MouseButtonEventArgs _mouseDownEvent = null;
         void Control_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!isValidPosition(sender, e))
-                return;
+            var input = InputBase.FromEventArgs(sender, e);
+            _inputProcessors.Update(input);
 
+            if (input.IsValidPositionForLisView(true) && input.ClickCount <= 1)
+                executeAsync(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, input);
+
+
+            //Pending to removal, replaced by _inputProcessor
             if (e.ClickCount == 1)
             {
-                _mouseDownEvent = e;
-                
+                Control control = sender as Control;
+                AttachedProperties.SetIsMouseDragging(control, false);
+                AttachedProperties.SetStartPosition(control, input.PositionRelativeTo(control));
+                AttachedProperties.SetStartInput(control, e.ChangedButton);
+                AttachedProperties.SetStartScrollbarPosition(control, input.ScrollBarPosition);
             }
-            //if (!control.IsFocused)
-            //    return;
-            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, sender, e, pd =>
-                {
-                    if (e.ClickCount == 1)
-                    {
-                        Control control = sender as Control;
-                        AttachedProperties.SetIsMouseDragging(control, false);
-                        AttachedProperties.SetStartPosition(control, e.GetPosition(control));
-                        AttachedProperties.SetStartInput(control, e.ChangedButton);
-                        AttachedProperties.SetStartScrollbarPosition(control, ControlUtils.GetScrollbarPosition(control));
-                    }
-                });
         }
+
+
 
         void Control_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            var input = InputBase.FromEventArgs(sender, e);
+                            _inputProcessors.Update(input);
+
+            executeAsync(_eventProcessors, FrameworkElement.MouseMoveEvent, input);
+            //if ((_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging)
+            //    Control_MouseDrag(sender, e);
+            return;
+
             FrameworkElement control = sender as FrameworkElement;
 
             Point position = e.GetPosition(control);
@@ -251,7 +280,7 @@ namespace FileExplorer.BaseControls
         public static RoutedEvent MouseDragEvent = EventManager.RegisterRoutedEvent(
                 "MouseDrag", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UIEventHub));
 
-        public void Control_MouseDrag(object sender, InputEventArgs e)
+        public void Control_MouseDrag(object sender, MouseEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
             AttachedProperties.SetIsMouseDragging(control, true);
@@ -259,19 +288,32 @@ namespace FileExplorer.BaseControls
             //DragDropEventProcessor set e.IsHandled to true
             {
                 //DragDrop does not raise MouseUp, so have to raise manually.
-                Control_PreviewMouseUp(sender, _mouseDownEvent);
+
+                (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
+                AttachedProperties.SetIsMouseDragging(control, false);
+                AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
+                AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
+                //Control_PreviewMouseUp(sender, e);
             }
         }
 
-        void Control_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        void Control_PreviewMouseUp(object sender, MouseEventArgs e)
         {
-            if (!isValidPosition(sender, e))
-                return;
+            var input =
+                InputBase.FromEventArgs(sender, e);
+            _inputProcessors.Update(input);
+
+            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, input);
+
+
+            //if (!isValidPosition(sender, e))
+            //    return;
 
             FrameworkElement control = sender as FrameworkElement;
 
-            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);
+            //executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);
 
+            //Pending to remove
             AttachedProperties.SetIsMouseDragging(control, false);
             AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
             AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
@@ -285,7 +327,8 @@ namespace FileExplorer.BaseControls
         private Dictionary<RoutedEvent, RoutedEventHandler> _registeredHandler = new Dictionary<RoutedEvent, RoutedEventHandler>();
         private IScriptRunner _scriptRunner;
         private bool _isEnabled = false;
-
+        private IUIInputManager _inputProcessors;
+        
         #endregion
 
         #region Public Properties
