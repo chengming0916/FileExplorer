@@ -8,6 +8,29 @@ using System.Windows;
 using System.Windows.Controls;
 using Cofe.Core;
 using FileExplorer.UserControls.InputProcesor;
+using FileExplorer.BaseControls;
+
+namespace FileExplorer
+{
+    public static partial class ExtensionMethods
+    {
+        public static DragInputProcessor GetDragInputProcessor(this UIParameterDic dic)
+        {
+            return dic.InputProcessors.First(p => p is DragInputProcessor) as DragInputProcessor;
+        }
+
+        public static UIParameterDic AsUIParameterDic(this ParameterDic dic)
+        {
+            if (dic is UIParameterDic)
+                return (UIParameterDic)dic;
+
+            var retVal = new UIParameterDic();
+            foreach (var pp in dic)
+                retVal.Add(pp.Key, pp.Value);
+            return retVal;
+        }
+    }
+}
 
 namespace FileExplorer.BaseControls
 {
@@ -40,6 +63,12 @@ namespace FileExplorer.BaseControls
             set { if (this.ContainsKey("Sender")) this["Sender"] = value; else this.Add("Sender", value); }
         }
 
+        public IUIInput Input
+        {
+            get { return this.ContainsKey("Input") ? this["Input"] as IUIInput : null; }
+            set { if (this.ContainsKey("Input")) this["Input"] = value; else this.Add("Input", value); }
+        }
+
         public IList<IInputProcessor> InputProcessors
         {
             get { return this.ContainsKey("InputProcessors") ? this["InputProcessors"] as IList<IInputProcessor> : null; }
@@ -47,22 +76,5 @@ namespace FileExplorer.BaseControls
         }
     }    
 
-    public static partial class ExtensionMethods
-    {
-        public static DragInputProcessor GetDragInputProcessor(this UIParameterDic dic)
-        {
-            return dic.InputProcessors.First(p => p is DragInputProcessor) as DragInputProcessor;
-        }
-
-        public static UIParameterDic AsUIParameterDic(this ParameterDic dic)
-        {
-            if (dic is UIParameterDic)
-                return (UIParameterDic)dic;
-
-            var retVal = new UIParameterDic();
-            foreach (var pp in dic)
-                retVal.Add(pp.Key, pp.Value);
-            return retVal;
-        }
-    }
+ 
 }

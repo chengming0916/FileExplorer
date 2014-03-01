@@ -307,7 +307,8 @@ namespace FileExplorer.BaseControls.MultiSelect
                 pd["StartScrollbarPosition"] = AttachedProperties.GetStartScrollbarPosition(c);
 
             if (!(pd.ContainsKey("CurrentScrollbarPosition")))
-                pd["CurrentScrollbarPosition"] = ControlUtils.GetScrollbarPosition(scp);
+                pd["CurrentScrollbarPosition"] = pd.Input.ScrollBarPosition;
+            //ControlUtils.GetScrollbarPosition(scp);
 
             if (!(pd.ContainsKey("CurrentPosition")))
                 pd["CurrentPosition"] =
@@ -705,17 +706,17 @@ namespace FileExplorer.BaseControls.MultiSelect
                 returnSelected = (idx, item) => selectedList.Contains(item);
 
 
-            updateSelected = (idx, vm, item) => _processor.Select(item.ToISelectable(), returnSelected(idx, item));
+            updateSelected = (idx, vm, item) => _processor.Select(
+                ExtensionMethods.ToISelectable(vm, item), returnSelected(idx, item));
 
             for (int i = 0; i < ic.Items.Count; i++)
             {
                 ListBoxItem item = ic.ItemContainerGenerator.ContainerFromIndex(i) as ListBoxItem;
+
                 if (item != null)
-                {
-                    if (item != null)
-                        AttachedProperties.SetIsSelecting(item, false);
-                    updateSelected(i, ic.Items[i], item);
-                }
+                    AttachedProperties.SetIsSelecting(item, false);
+                updateSelected(i, ic.Items[i], item);
+
             }
 
 
