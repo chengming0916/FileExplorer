@@ -249,22 +249,6 @@ namespace FileExplorer.BaseControls
             //    Control_MouseDrag(sender, e);
             return;
 
-            FrameworkElement control = sender as FrameworkElement;
-
-            Point position = e.GetPosition(control);
-            Point startPosition = AttachedProperties.GetStartPosition(control);
-            if (startPosition.IsValidPosition())
-            {
-                executeAsync(_eventProcessors, FrameworkElement.MouseMoveEvent, sender, e);
-
-                if (!AttachedProperties.GetIsMouseDragging(control))
-                    if ((e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed))
-                        if (Math.Abs(position.X - startPosition.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                            Math.Abs(position.Y - startPosition.Y) > SystemParameters.MinimumVerticalDragDistance)
-                        {
-                            Control_MouseDrag(sender, e);
-                        }
-            }
         }
 
 
@@ -335,15 +319,6 @@ namespace FileExplorer.BaseControls
                     AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
                 }
             }
-
-            //if (!isValidPosition(sender, e))
-            //    return;
-
-            
-
-            //executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);
-
-        
         }
 
         #endregion

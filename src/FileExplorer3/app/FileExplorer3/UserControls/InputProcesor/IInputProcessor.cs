@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace FileExplorer.UserControls.InputProcesor
     public class DragInputProcessor : IInputProcessor
     {
         #region Constructors
+
+        public enum DragState {  Normal, Pressed, Dragging, Released }
 
         public DragInputProcessor()
         {
@@ -43,8 +46,9 @@ namespace FileExplorer.UserControls.InputProcesor
 
         private void UpdateInputPosition(IUIInput input)
         {
-            if (!_isDragging && input.IsDragThresholdReached(_startInput))
+            if (_dragState == DragState.Pressed && input.IsDragThresholdReached(_startInput))
             {
+                _dragState = DragState.Dragging;
                 _isDragging = true;
                 DragStartedFunc(input);
             }
@@ -54,10 +58,11 @@ namespace FileExplorer.UserControls.InputProcesor
         {
             if (input.IsSameSource(_startInput))
             {
-                if (_isDragging)
+                if (_isDragging && _dragState == DragState.Dragging)
                     DragStoppedFunc(input);
                 _isDragging = false;
-                _startInput = null;
+                _dragState = DragState.Released;
+                //_startInput = InvalidInput.Instance;
             }
         }
 
@@ -66,8 +71,9 @@ namespace FileExplorer.UserControls.InputProcesor
             if (!_isDragging && input.IsValidPositionForLisView(true))
                 if (input.ClickCount <= 1) //Touch/Stylus input 's ClickCount = 0
                 {
-                    _startInput = input;
+                    StartInput = input;
                     _isDragging = false;
+                    _dragState = DragState.Pressed;
                 }
         }
 
@@ -75,6 +81,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Data
 
+        private DragState _dragState = DragState.Normal;
         private bool _isDragging = false;
         private IUIInput _startInput = null;
         //private Func<Point, Point> _positionAdjustFunc = pt => pt;
@@ -84,14 +91,18 @@ namespace FileExplorer.UserControls.InputProcesor
         #region Public Properties
 
         //public Func<Point, Point> PositionAdjustFunc { get { return _positionAdjustFunc; } set { _positionAdjustFunc = value; } }
+
+        public IUIInput StartInput { get { return _startInput; } 
+            private set { _startInput = value; } }
         public bool IsDragging
         {
             get { return _isDragging; }
             set
             {
                 _isDragging = value;
-                if (!value)
-                    _startInput = null;
+                if (!value && _dragState == DragState.Dragging)
+                    StartInput = InvalidInput.Instance;
+                _dragState = DragState.Normal;
             }
         }
         public Action<IUIInput> DragStartedFunc = (currentInput) => { };
