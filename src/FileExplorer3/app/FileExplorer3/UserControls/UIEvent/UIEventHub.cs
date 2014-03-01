@@ -116,9 +116,9 @@ namespace FileExplorer.BaseControls
                             Control.MouseMove += Control_MouseMove;
                             Control.PreviewMouseUp += Control_PreviewMouseUp;
 
-                            Control.PreviewTouchDown += Control_PreviewTouchDown;
-                            Control.TouchMove += Control_TouchMove;
-                            Control.PreviewTouchUp += Control_PreviewTouchUp;
+                            //Control.PreviewTouchDown += Control_PreviewTouchDown;
+                            //Control.TouchMove += Control_TouchMove;
+                            //Control.PreviewTouchUp += Control_PreviewTouchUp;
                         }
                         else
                         {
@@ -218,20 +218,22 @@ namespace FileExplorer.BaseControls
         void Control_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             var input = InputBase.FromEventArgs(sender, e);
-            _inputProcessors.Update(input);
 
-            if (input.IsValidPositionForLisView(true) && input.ClickCount <= 1)
+            if (input.IsValidPositionForLisView(true) )
+            {
+                _inputProcessors.Update(input);
                 executeAsync(_eventProcessors, FrameworkElement.PreviewMouseDownEvent, input);
 
 
-            //Pending to removal, replaced by _inputProcessor
-            if (e.ClickCount == 1)
-            {
-                Control control = sender as Control;
-                AttachedProperties.SetIsMouseDragging(control, false);
-                AttachedProperties.SetStartPosition(control, input.PositionRelativeTo(control));
-                AttachedProperties.SetStartInput(control, e.ChangedButton);
-                AttachedProperties.SetStartScrollbarPosition(control, input.ScrollBarPosition);
+                //Pending to removal, replaced by _inputProcessor
+                if (e.ClickCount == 1)
+                {
+                    Control control = sender as Control;
+                    AttachedProperties.SetIsMouseDragging(control, false);
+                    AttachedProperties.SetStartPosition(control, input.PositionRelativeTo(control));
+                    AttachedProperties.SetStartInput(control, e.ChangedButton);
+                    AttachedProperties.SetStartScrollbarPosition(control, input.ScrollBarPosition);
+                }
             }
         }
 
@@ -316,24 +318,32 @@ namespace FileExplorer.BaseControls
 
         void Control_PreviewMouseUp(object sender, MouseEventArgs e)
         {
-            var input =
-                InputBase.FromEventArgs(sender, e);
-            _inputProcessors.Update(input);
+            var input = InputBase.FromEventArgs(sender, e);
 
-            executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, input);
+            if (input.IsValidPositionForLisView(true))
+            {
+                _inputProcessors.Update(input);
 
+                executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, input);
+
+                if (input.ClickCount <= 1)
+                {
+                    FrameworkElement control = sender as FrameworkElement;
+                    //Pending to remove
+                    AttachedProperties.SetIsMouseDragging(control, false);
+                    AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
+                    AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
+                }
+            }
 
             //if (!isValidPosition(sender, e))
             //    return;
 
-            FrameworkElement control = sender as FrameworkElement;
+            
 
             //executeAsync(_eventProcessors, FrameworkElement.PreviewMouseUpEvent, sender, e);
 
-            //Pending to remove
-            AttachedProperties.SetIsMouseDragging(control, false);
-            AttachedProperties.SetStartPosition(control, AttachedProperties.InvalidPoint);
-            AttachedProperties.SetStartScrollbarPosition(control, AttachedProperties.InvalidPoint);
+        
         }
 
         #endregion
