@@ -72,17 +72,16 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
 
             if (!ic.IsKeyboardFocusWithin)
             {
-                var itemUnderMouse = UITools.GetItemUnderMouse(ic, eventArgs.GetPosition(scp));
+                var itemUnderMouse = UITools.GetItemUnderMouse(ic, pd.Input.PositionRelativeTo(scp));
 
                 if ((itemUnderMouse is ListBoxItem && (itemUnderMouse as ListBoxItem).IsSelected) ||
                     (itemUnderMouse is TreeViewItem && (itemUnderMouse as TreeViewItem).IsSelected))
                 {
                     ic.Focus();
-                    eventArgs.Handled = true;
+                    pd.EventArgs.Handled = true;
                 }
             }
 
@@ -138,9 +137,8 @@ namespace FileExplorer.BaseControls.MultiSelect
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
-            var eventArgs = pd.EventArgs as MouseEventArgs;
-
-            if (eventArgs.Handled)
+  
+            if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
 
             return new CheckIsSelecting();
@@ -301,28 +299,21 @@ namespace FileExplorer.BaseControls.MultiSelect
 
 
             if (!(pd.ContainsKey("StartPosition")))
-                pd["StartPosition"] = AdjustHeaderPosition(AttachedProperties.GetStartPosition(c), pd);
+                pd["StartPosition"] = AdjustHeaderPosition(pd.GetDragInputProcessor().StartInput.Position, pd);
 
             if (!(pd.ContainsKey("StartScrollbarPosition")))
-                pd["StartScrollbarPosition"] = AttachedProperties.GetStartScrollbarPosition(c);
-
+                pd["StartScrollbarPosition"] = pd.GetDragInputProcessor().StartInput.ScrollBarPosition;
+                    
             if (!(pd.ContainsKey("CurrentScrollbarPosition")))
                 pd["CurrentScrollbarPosition"] = pd.Input.ScrollBarPosition;
-            //ControlUtils.GetScrollbarPosition(scp);
+            
 
             if (!(pd.ContainsKey("CurrentPosition")))
-                pd["CurrentPosition"] =
-                    AdjustHeaderPosition(
-                    pd.EventArgs is MouseEventArgs ? (pd.EventArgs as MouseEventArgs).GetPosition(c) :
-                    pd.EventArgs is TouchEventArgs ? (pd.EventArgs as TouchEventArgs).GetTouchPoint(c).Position :
-                    Mouse.GetPosition(c), pd);
+                pd["CurrentPosition"] = AdjustHeaderPosition(pd.Input.Position, pd);
 
 
             if (!(pd.ContainsKey("CurrentRelativePosition"))) //To scp ScrollContentPresenter
-                pd["CurrentRelativePosition"] =
-                    pd.EventArgs is MouseEventArgs ? (pd.EventArgs as MouseEventArgs).GetPosition(scp) :
-                    pd.EventArgs is TouchEventArgs ? (pd.EventArgs as TouchEventArgs).GetTouchPoint(scp).Position :
-                    Mouse.GetPosition(scp);
+                pd["CurrentRelativePosition"] = pd.Input.PositionRelativeTo(scp);
 
             //These adjusted position for used in visual only.
             if (!(pd.ContainsKey("StartAdjustedPosition")))
@@ -378,13 +369,12 @@ namespace FileExplorer.BaseControls.MultiSelect
     public class FindSelectedItemsUsingGridView : ScriptCommandBase
     {
         public FindSelectedItemsUsingGridView(ItemsControl ic, GridView gview,
-            ScrollContentPresenter scp, MouseEventArgs eventArgs) :
+            ScrollContentPresenter scp) :
             base("FindSelectedItemsUsingGridView", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
-        { _ic = ic; _gview = gview; _scp = scp; _eventArgs = eventArgs; }
+        { _ic = ic; _gview = gview; _scp = scp;  }
 
         private GridView _gview;
         private ItemsControl _ic;
-        private MouseEventArgs _eventArgs;
         private ScrollContentPresenter _scp;
 
         public override IScriptCommand Execute(ParameterDic pm)
@@ -518,8 +508,6 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
-
 
             IChildInfo icInfo = UITools.FindVisualChild<Panel>(scp) as IChildInfo;
             if (icInfo != null)
@@ -528,7 +516,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                 if (ic is ListView && (ic as ListView).View is GridView)
                 {
                     var gview = (ic as ListView).View as GridView;
-                    return new FindSelectedItemsUsingGridView(ic, gview, scp, eventArgs);
+                    return new FindSelectedItemsUsingGridView(ic, gview, scp);
                 }
                 else return new FindSelectedItemsUsingHitTest(ic);
         }
@@ -556,7 +544,6 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            //var eventArgs = pd.EventArgs as MouseEventArgs;
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
                 : new List<int>();
 
@@ -683,7 +670,6 @@ namespace FileExplorer.BaseControls.MultiSelect
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            //var eventArgs = pd.EventArgs as MouseEventArgs;
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int> : null;
             var selectedList = pm.ContainsKey("SelectedList") ? pm["SelectedList"] as List<object> : null;
 
@@ -857,10 +843,9 @@ namespace FileExplorer.BaseControls.MultiSelect
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
-            var e = pd.EventArgs as MouseEventArgs;
             var scp = ControlUtils.GetScrollContentPresenter(c);
 
-            if (e != null)
+            if (pd.Input != null)
             {
                 Point posRelToScp = (Point)pm["CurrentRelativePosition"];
                 IScrollInfo isInfo = UITools.FindVisualChild<Panel>(scp) as IScrollInfo;

@@ -104,7 +104,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
-            var eventArgs = pd.EventArgs as MouseEventArgs;
+            var eventArgs = pd.Input.EventArgs as InputEventArgs;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
 
             if (UITools.FindAncestor<ToggleButton>(eventArgs.OriginalSource as DependencyObject) != null)
@@ -112,7 +112,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
             if (isd != null)
             {
-                UITools.SetItemUnderMouseToAttachedProperty(ic, eventArgs.GetPosition(scp),
+                UITools.SetItemUnderMouseToAttachedProperty(ic, pd.Input.PositionRelativeTo(scp),
                     AttachedProperties.StartDraggingItemProperty);
 
                 return new IfItemUnderMouseSelected(new SetSelectedDraggables(), ResultCommand.NoError);

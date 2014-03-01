@@ -57,6 +57,7 @@ namespace FileExplorer.UserControls.InputProcesor
             _sender = sender;
             _args = args;
             ScrollBarPosition = ControlUtils.GetScrollbarPosition(sender as Control);
+
         }
 
         public static IUIInput FromEventArgs(object sender, InputEventArgs args)
@@ -95,6 +96,7 @@ namespace FileExplorer.UserControls.InputProcesor
         protected UIInputType _inputType = UIInputType.None;
         protected UIInputState _inputState = UIInputState.NotApplied;
         private object _sender;
+        //private Point _positionScp = AttachedProperties.InvalidPoint;
 
         #endregion
 
@@ -105,11 +107,24 @@ namespace FileExplorer.UserControls.InputProcesor
         public int ClickCount { get { return _clickCount; } }
         public Point ScrollBarPosition { get { return _sbPosition; } set { _sbPosition = value; } }
         public Point Position { get { return _position; } set { _position = value; } }
+        //public Point PositionRelativeToScp { get { return _positionScp; } set { _positionScp = value; } }
         public UIInputType InputType { get { return _inputType; } set { _inputType = value; } }
         public UIInputState InputState { get { return _inputState; } set { _inputState = value; } }
   
         #endregion
 
+    }
+
+    public class InvalidInput : InputBase
+    {
+        public static InvalidInput Instance = new InvalidInput();
+        public InvalidInput()
+            : base(null, null)
+        { }
+        public override Point PositionRelativeTo(IInputElement inputElement)
+        {
+            return AttachedProperties.InvalidPoint;
+        }
     }
 
     public class MouseInput : InputBase
