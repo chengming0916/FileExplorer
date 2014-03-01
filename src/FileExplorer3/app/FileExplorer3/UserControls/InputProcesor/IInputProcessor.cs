@@ -9,7 +9,7 @@ namespace FileExplorer.UserControls.InputProcesor
 {
     public interface IInputProcessor
     {
-        void Update(IInput input);
+        void Update(IUIInput input);
     }
 
     public class DragInputProcessor : IInputProcessor
@@ -25,7 +25,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Methods
 
-        public void Update(IInput input)
+        public void Update(IUIInput input)
         {
             switch (input.InputState)
             {
@@ -41,7 +41,7 @@ namespace FileExplorer.UserControls.InputProcesor
             }
         }
 
-        private void UpdateInputPosition(IInput input)
+        private void UpdateInputPosition(IUIInput input)
         {
             if (!_isDragging && input.IsDragThresholdReached(_startInput))
             {
@@ -50,7 +50,7 @@ namespace FileExplorer.UserControls.InputProcesor
             }
         }
 
-        private void UpdatInputReleased(IInput input)
+        private void UpdatInputReleased(IUIInput input)
         {
             if (input.IsSameSource(_startInput))
             {
@@ -61,7 +61,7 @@ namespace FileExplorer.UserControls.InputProcesor
             }
         }
 
-        private void UpdateInputPressed(IInput input)
+        private void UpdateInputPressed(IUIInput input)
         {
             if (!_isDragging && input.IsValidPositionForLisView(true))
                 if (input.ClickCount <= 1) //Touch/Stylus input 's ClickCount = 0
@@ -76,7 +76,7 @@ namespace FileExplorer.UserControls.InputProcesor
         #region Data
 
         private bool _isDragging = false;
-        private IInput _startInput = null;
+        private IUIInput _startInput = null;
         //private Func<Point, Point> _positionAdjustFunc = pt => pt;
 
         #endregion
@@ -84,9 +84,18 @@ namespace FileExplorer.UserControls.InputProcesor
         #region Public Properties
 
         //public Func<Point, Point> PositionAdjustFunc { get { return _positionAdjustFunc; } set { _positionAdjustFunc = value; } }
-        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; } }
-        public Action<IInput> DragStartedFunc = (currentInput) => { };
-        public Action<IInput> DragStoppedFunc = (currentInput) => { };
+        public bool IsDragging
+        {
+            get { return _isDragging; }
+            set
+            {
+                _isDragging = value;
+                if (!value)
+                    _startInput = null;
+            }
+        }
+        public Action<IUIInput> DragStartedFunc = (currentInput) => { };
+        public Action<IUIInput> DragStoppedFunc = (currentInput) => { };
 
         #endregion
     }

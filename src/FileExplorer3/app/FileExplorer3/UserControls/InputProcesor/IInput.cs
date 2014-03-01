@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace FileExplorer.UserControls.InputProcesor
 {
-    public interface IInput
+    public interface IUIInput
     {
         /// <summary>
         /// The event this input based on.
@@ -48,7 +48,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
-    public abstract class InputBase : IInput
+    public abstract class InputBase : IUIInput
     {
         #region Constructors
 
@@ -59,7 +59,7 @@ namespace FileExplorer.UserControls.InputProcesor
             ScrollBarPosition = ControlUtils.GetScrollbarPosition(sender as Control);
         }
 
-        public static IInput FromEventArgs(object sender, InputEventArgs args)
+        public static IUIInput FromEventArgs(object sender, InputEventArgs args)
         {
             if (args is MouseButtonEventArgs)
                 return new MouseInput(sender, args as MouseButtonEventArgs);
@@ -69,7 +69,7 @@ namespace FileExplorer.UserControls.InputProcesor
                 return new TouchInput(sender, args as TouchEventArgs);
             if (args is StylusEventArgs)
                 return new StylusInput(sender, args as StylusEventArgs);
-            throw new NotSupportedException("Args");
+            throw new NotSupportedException();
         }
 
         #endregion
@@ -105,8 +105,8 @@ namespace FileExplorer.UserControls.InputProcesor
         public int ClickCount { get { return _clickCount; } }
         public Point ScrollBarPosition { get { return _sbPosition; } set { _sbPosition = value; } }
         public Point Position { get { return _position; } set { _position = value; } }
-        public UIInputType InputType { get { return _inputType; } }
-        public UIInputState InputState { get { return _inputState; } }
+        public UIInputType InputType { get { return _inputType; } set { _inputType = value; } }
+        public UIInputState InputState { get { return _inputState; } set { _inputState = value; } }
   
         #endregion
 
