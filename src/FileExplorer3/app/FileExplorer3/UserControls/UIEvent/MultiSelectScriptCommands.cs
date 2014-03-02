@@ -177,8 +177,8 @@ namespace FileExplorer.BaseControls.MultiSelect
             else
             {
 
-                var startInput = AttachedProperties.GetStartInput(ic);
-                if (MouseButton.Left.Equals(startInput) && Keyboard.Modifiers == ModifierKeys.None)
+                //var startInput = AttachedProperties.GetStartInput(ic);
+                //if (MouseButton.Left.Equals(startInput) && Keyboard.Modifiers == ModifierKeys.None)
                 {
                     if (!pd.IsHandled)
                         return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
@@ -759,13 +759,13 @@ namespace FileExplorer.BaseControls.MultiSelect
             "IsSelecting", "StartPostion", "EndPosition")
         { }
 
-        private Point adjustScrollBarPosition(Control c, ScrollContentPresenter scp, Point pt)
-        {
-            var currentScrollbarPosition = ControlUtils.GetScrollbarPosition(scp);
-            var startScrollbarPosition = AttachedProperties.GetStartScrollbarPosition(c);
-            return new Point(pt.X + startScrollbarPosition.X - currentScrollbarPosition.X,
-                pt.Y + startScrollbarPosition.Y - currentScrollbarPosition.Y);
-        }
+        //private Point adjustScrollBarPosition(Control c, ScrollContentPresenter scp, Point pt)
+        //{
+        //    var currentScrollbarPosition = ControlUtils.GetScrollbarPosition(scp);
+        //    var startScrollbarPosition = AttachedProperties.GetStartScrollbarPosition(c);
+        //    return new Point(pt.X + startScrollbarPosition.X - currentScrollbarPosition.X,
+        //        pt.Y + startScrollbarPosition.Y - currentScrollbarPosition.Y);
+        //}
 
         public override IScriptCommand Execute(ParameterDic pm)
         {

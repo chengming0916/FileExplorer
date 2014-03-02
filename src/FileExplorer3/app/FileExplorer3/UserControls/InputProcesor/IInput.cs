@@ -52,7 +52,7 @@ namespace FileExplorer.UserControls.InputProcesor
     {
         #region Constructors
 
-        protected InputBase(object sender, InputEventArgs args)
+        protected InputBase(object sender, RoutedEventArgs args)
         {
             _sender = sender;
             _args = args;
@@ -60,7 +60,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         }
 
-        public static IUIInput FromEventArgs(object sender, InputEventArgs args)
+        public static IUIInput FromEventArgs(object sender, RoutedEventArgs args)
         {
             if (args is MouseButtonEventArgs)
                 return new MouseInput(sender, args as MouseButtonEventArgs);
@@ -70,7 +70,7 @@ namespace FileExplorer.UserControls.InputProcesor
                 return new TouchInput(sender, args as TouchEventArgs);
             if (args is StylusEventArgs)
                 return new StylusInput(sender, args as StylusEventArgs);
-            throw new NotSupportedException();
+            return new OtherInput(sender, args);
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Data
 
-        protected InputEventArgs _args;
+        protected RoutedEventArgs _args;
         protected int _clickCount = 0;
         protected Point _position = AttachedProperties.InvalidPoint;
         protected Point _sbPosition = AttachedProperties.InvalidPoint;
@@ -113,6 +113,20 @@ namespace FileExplorer.UserControls.InputProcesor
   
         #endregion
 
+    }
+
+    public class OtherInput : InputBase
+    {
+        public OtherInput(object sender, RoutedEventArgs args)
+            : base(sender, args)
+        {
+         
+        }
+
+        public override Point PositionRelativeTo(IInputElement inputElement)
+        {
+            return AttachedProperties.InvalidPoint;
+        }
     }
 
     public class InvalidInput : InputBase

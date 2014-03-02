@@ -19,7 +19,11 @@ namespace FileExplorer.BaseControls
                     FrameworkElement.PreviewMouseDownEvent,
                     UIEventHub.MouseDragEvent,
                     FrameworkElement.PreviewMouseUpEvent,
-                    FrameworkElement.MouseMoveEvent
+                    FrameworkElement.MouseMoveEvent,
+
+                    FrameworkElement.PreviewTouchDownEvent,
+                     FrameworkElement.TouchMoveEvent,
+                      FrameworkElement.PreviewTouchUpEvent
                 }
             );
         }
@@ -29,10 +33,15 @@ namespace FileExplorer.BaseControls
 
             switch (eventId.Name)
             {
-                case "PreviewMouseDown": return new ObtainPointerPosition(new SetHandledIfNotFocused());
+                case "PreviewTouchDown": 
+                case "PreviewMouseDown": 
+                    return new ObtainPointerPosition(new SetHandledIfNotFocused());
                 case "MouseDrag": if (EnableMultiSelect)
                         return new BeginSelect() { UnselectCommand = UnselectAllCommand }; break;
-                case "MouseMove": return new ContinueSelect();
+                case "TouchMove": 
+                case "MouseMove": 
+                    return new ContinueSelect();
+                case "PreviewTouchUp": 
                 case "PreviewMouseUp": return new EndSelect() 
                     { UnselectCommand = UnselectAllCommand, IsCheckBoxEnabled = IsCheckboxEnabled };
             }

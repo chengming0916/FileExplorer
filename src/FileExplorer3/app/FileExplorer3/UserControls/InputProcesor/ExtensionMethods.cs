@@ -48,6 +48,11 @@ namespace FileExplorer
                 p.Update(input);
         }
 
+        public static bool IsValid(this IUIInput input)
+        {
+            return IsValidPositionForLisView(input, true);
+        }
+
         public static bool IsValidPositionForLisView(this IUIInput input, bool validIfNotListView = false)
         {
             var sender = input.Sender as ListView;
