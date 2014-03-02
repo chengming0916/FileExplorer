@@ -83,7 +83,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         private DragState _dragState = DragState.Normal;
         private bool _isDragging = false;
-        private IUIInput _startInput = null;
+        private IUIInput _startInput = InvalidInput.Instance;
         //private Func<Point, Point> _positionAdjustFunc = pt => pt;
 
         #endregion

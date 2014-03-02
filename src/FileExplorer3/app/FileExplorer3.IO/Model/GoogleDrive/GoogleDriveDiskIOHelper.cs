@@ -57,7 +57,11 @@ namespace FileExplorer.Models
                      MimeType = GoogleMimeTypeManager.FolderMimeType
                 };
                 if (parentDir.UniqueId != "root")
+                {
+                    if (newFolder.Parents == null)
+                        newFolder.Parents = new List<ParentReference>();
                     newFolder.Parents.Add(new ParentReference() { Id = parentDir.UniqueId });
+                }
                 var insertedFolder = (await _profile.DriveService.Files.Insert(newFolder).ExecuteAsync());
                 return new GoogleDriveItemModel(_profile, insertedFolder, parentDir.FullPath);
             }

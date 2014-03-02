@@ -38,7 +38,7 @@ namespace FileExplorer.BaseControls
                             return ResultCommand.OK;
                         }
                 }
-                return ResultCommand.OK;
+                return ResultCommand.NoError;
             }
         }
 

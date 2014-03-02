@@ -21,8 +21,8 @@ namespace FileExplorer.BaseControls.Menu
         {
             var pd = pm.AsUIParameterDic();
             pd.IsHandled = true;
-            object trigger = AttachedProperties.GetStartInput(pd.Sender as DependencyObject);
-            if (trigger != null && trigger.Equals(MouseButton.Right))
+            
+            if (pd.Input.InputType == UIInputType.MouseRight)
             {
                 _contextMenu.PlacementTarget = (pd.Sender as Control);
                 _contextMenu.SetValue(ContextMenu.IsOpenProperty, true);
