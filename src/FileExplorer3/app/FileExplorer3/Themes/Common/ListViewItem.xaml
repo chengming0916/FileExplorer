@@ -16,12 +16,8 @@
                             BorderThickness="1"
                             BorderBrush="Transparent"
                             Background="Transparent">
-            <DockPanel>
-                <CheckBox IsChecked="{Binding IsSelected}" 
-                          Visibility="{Binding IsCheckBoxVisible, 
-                                            RelativeSource={RelativeSource AncestorType={x:Type uc:ListViewEx}},
-                                            Converter={StaticResource btvc}}"
-                          DockPanel.Dock="Left" />
+            <Grid>
+               
                 <bc:HotTrack IsEnabled="{TemplateBinding IsEnabled}" 
                          IsDragging="{Binding (def:AttachedProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
                          IsDraggingOver="{Binding (def:AttachedProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"
@@ -33,7 +29,12 @@
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Grid>
                 </bc:HotTrack>
-            </DockPanel>
+                <CheckBox IsChecked="{Binding IsSelected}" 
+                          Visibility="{Binding IsCheckBoxVisible, 
+                                            RelativeSource={RelativeSource AncestorType={x:Type uc:ListViewEx}},
+                                            Converter={StaticResource btvc}}"
+                          DockPanel.Dock="Left" />
+            </Grid>
         </Border>
         <ControlTemplate.Triggers>
             <!--<Trigger Property="uc:SelectionHelper.IsDragging" Value="true">
