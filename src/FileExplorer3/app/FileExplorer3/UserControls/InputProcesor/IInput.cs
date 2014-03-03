@@ -20,7 +20,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         object Sender { get;  }
 
-        int ClickCount { get; }
+        int ClickCount { get; set; }
 
         /// <summary>
         /// Cursor position relative to the sender.
@@ -46,6 +46,7 @@ namespace FileExplorer.UserControls.InputProcesor
         /// </summary>
         UIInputState InputState { get; }
 
+        bool IsDragging { get; set; }
     }
 
     public abstract class InputBase : IUIInput
@@ -104,13 +105,14 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public RoutedEventArgs EventArgs { get { return _args; } }
         public object Sender { get { return _sender; } }
-        public int ClickCount { get { return _clickCount; } }
+        public int ClickCount { get { return _clickCount; } set { _clickCount = value; } }
         public Point ScrollBarPosition { get { return _sbPosition; } set { _sbPosition = value; } }
         public Point Position { get { return _position; } set { _position = value; } }
         //public Point PositionRelativeToScp { get { return _positionScp; } set { _positionScp = value; } }
         public UIInputType InputType { get { return _inputType; } set { _inputType = value; } }
         public UIInputState InputState { get { return _inputState; } set { _inputState = value; } }
-  
+
+        public bool IsDragging { get; set; }
         #endregion
 
     }

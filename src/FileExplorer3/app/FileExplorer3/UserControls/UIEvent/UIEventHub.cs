@@ -53,7 +53,8 @@ namespace FileExplorer.BaseControls
             Control = control;
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
             _inputProcessors = new UIInputManager(
-                    new DragInputProcessor()
+                new ClickCountInputProcessor(),    
+                new DragInputProcessor()
                         {
                             DragStartedFunc = inp =>
                               Control_MouseDrag(inp.Sender, inp.EventArgs as InputEventArgs)
@@ -105,7 +106,7 @@ namespace FileExplorer.BaseControls
                                             await executeAsync(_eventProcessors, e, input,
                                                     pd =>
                                                     {
-                                                        if (pd.IsHandled)
+                                                        if (pd.IsHandled || pd.AsUIParameterDic().EventArgs.RoutedEvent.Name.Contains("Touch"))
                                                             re.Handled = true;
                                                     }
                                                 );
@@ -139,6 +140,10 @@ namespace FileExplorer.BaseControls
                .Where(c => c.CanExecute(pd)));
 
             await _scriptRunner.RunAsync(commands, pd);
+
+            if (input.EventArgs is TouchEventArgs)
+                input.EventArgs.Handled = true;
+
             if (thenFunc != null)
                 thenFunc(pd);
             return pd.IsHandled;

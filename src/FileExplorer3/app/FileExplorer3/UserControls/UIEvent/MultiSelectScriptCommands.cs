@@ -73,6 +73,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
 
+
             if (!ic.IsKeyboardFocusWithin)
             {
                 var itemUnderMouse = UITools.GetItemUnderMouse(ic, pd.Input.PositionRelativeTo(scp));
@@ -109,6 +110,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var c = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(c);
             var eventArgs = pd.EventArgs;
+
 
             if (scp == null)
                 return ResultCommand.NoError;

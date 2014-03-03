@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using Cofe.Core;
 using Cofe.Core.Script;
+using FileExplorer.UserControls.InputProcesor;
 
 namespace FileExplorer.BaseControls
 {
@@ -27,11 +28,18 @@ namespace FileExplorer.BaseControls
             }            
             public override IScriptCommand Execute(ParameterDic pm)
             {
-                object sender = pm["Sender"];
-                InputEventArgs eventArgs = pm["EventArgs"] as InputEventArgs;
+                IUIInput input = pm.AsUIParameterDic().Input;
+                object sender = input.Sender;
+                InputEventArgs eventArgs = input.EventArgs as InputEventArgs;
                 foreach (InputBinding ib in _processor.InputBindings)
                 {
-                    if (ib.Gesture.Matches(sender, eventArgs))
+                    bool match = ib.Gesture.Matches(sender, eventArgs);
+                    if (!match && ib is MouseBinding && 
+                        input.InputType == Defines.UIInputType.Touch &&
+                        (ib as MouseBinding).MouseAction == MouseAction.LeftDoubleClick)
+                        match = input.ClickCount == 2;
+
+                    if (match)
                         if (ib.Command.CanExecute(ib.CommandParameter))
                         {
                             ib.Command.Execute(ib.CommandParameter);
@@ -47,7 +55,8 @@ namespace FileExplorer.BaseControls
             _processEvents.AddRange(
                 new [] {
                     FrameworkElement.KeyDownEvent, 
-                    FrameworkElement.PreviewMouseDownEvent
+                    FrameworkElement.PreviewMouseDownEvent,
+                    FrameworkElement.PreviewTouchDownEvent
                 });
         }
 

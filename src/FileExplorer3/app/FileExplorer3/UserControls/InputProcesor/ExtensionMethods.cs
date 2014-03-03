@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace FileExplorer
 {
@@ -42,7 +43,31 @@ namespace FileExplorer
                 );
         }
 
-        public static void Update(this IEnumerable<IInputProcessor> processors, IUIInput input)
+        public static bool IsWithin(this IUIInput input, IUIInput input2, int x, int y)
+        {
+            return
+                input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
+
+                (
+                     Math.Abs(input.Position.X - input2.Position.X) < x &&
+                     Math.Abs(input.Position.Y - input2.Position.Y) < y
+                )
+                ;
+        }
+
+        public static bool IsDragThresholdReached(this TouchInput input, TouchInput input2)
+        {
+            return 
+                input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
+                
+                (
+                     Math.Abs(input.Position.X - input2.Position.X) < 10 &&
+                     Math.Abs(input.Position.Y - input2.Position.Y) < 10
+                )
+                ;
+        }
+
+        public static void Update(this IEnumerable<IUIInputProcessor> processors, IUIInput input)
         {
             foreach (var p in processors)
                 p.Update(input);

@@ -9,7 +9,7 @@ namespace FileExplorer.UserControls.InputProcesor
 {
     public interface IUIInputManager
     {
-        IEnumerable<IInputProcessor> Processors { get; }
+        IEnumerable<IUIInputProcessor> Processors { get; }
         void Update(IUIInput input);
     }
 
@@ -17,7 +17,7 @@ namespace FileExplorer.UserControls.InputProcesor
     {
         #region Constructors
 
-        public UIInputManager(params IInputProcessor[] processors)
+        public UIInputManager(params IUIInputProcessor[] processors)
         {
             Processors = processors.ToList();
         }
@@ -60,7 +60,7 @@ namespace FileExplorer.UserControls.InputProcesor
         #region Public Properties
 
         //public Dictionary<Type, Func<Point, FrameworkElement, Point>> PositionAdjustDictionary { get { return _positionAdjustDictionary;  } }
-        public IEnumerable<IInputProcessor> Processors { get; private set; }
+        public IEnumerable<IUIInputProcessor> Processors { get; private set; }
 
         #endregion
 

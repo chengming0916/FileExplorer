@@ -69,9 +69,9 @@ namespace FileExplorer.BaseControls
             set { if (this.ContainsKey("Input")) this["Input"] = value; else this.Add("Input", value); }
         }
 
-        public IList<IInputProcessor> InputProcessors
+        public IList<IUIInputProcessor> InputProcessors
         {
-            get { return this.ContainsKey("InputProcessors") ? this["InputProcessors"] as IList<IInputProcessor> : null; }
+            get { return this.ContainsKey("InputProcessors") ? this["InputProcessors"] as IList<IUIInputProcessor> : null; }
             set { if (this.ContainsKey("InputProcessors")) this["InputProcessors"] = value; else this.Add("InputProcessors", value); }
         }
     }    
