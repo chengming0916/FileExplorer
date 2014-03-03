@@ -213,18 +213,16 @@ namespace FileExplorer.UserControls.InputProcesor
             Position = touchPoint.Position;
 
             _inputType =
-                touchPoint.Action == TouchAction.Move ?
-                UIInputType.None :
                 UIInputType.Touch;
             switch (touchPoint.Action)
             {
                 case  TouchAction.Down :
                     _inputState = UIInputState.Pressed;
-                    _inputType = UIInputType.Touch;
+                    
                     break;
                 case TouchAction.Up: 
                     _inputState = UIInputState.Released;
-                    _inputType = UIInputType.Touch;
+                
                     break;
 
             }

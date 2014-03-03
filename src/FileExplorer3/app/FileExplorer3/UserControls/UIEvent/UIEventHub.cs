@@ -57,7 +57,18 @@ namespace FileExplorer.BaseControls
                 new DragInputProcessor()
                         {
                             DragStartedFunc = inp =>
-                              Control_MouseDrag(inp.Sender, inp.EventArgs as InputEventArgs)
+                              {
+                                  if (inp.InputType ==  UIInputType.Touch)
+                                      Control_TouchDrag(inp.Sender, inp.EventArgs as InputEventArgs);
+                                  else Control_MouseDrag(inp.Sender, inp.EventArgs as InputEventArgs);
+                                  //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 0);
+                                  ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.None);
+                              },
+                            DragStoppedFunc = inp =>
+                            {
+                                //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 1);
+                                ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.Both);
+                            }
                         }
                 );
             _scriptRunner = runner;
@@ -106,7 +117,7 @@ namespace FileExplorer.BaseControls
                                             await executeAsync(_eventProcessors, e, input,
                                                     pd =>
                                                     {
-                                                        if (pd.IsHandled || pd.AsUIParameterDic().EventArgs.RoutedEvent.Name.Contains("Touch"))
+                                                        if (pd.IsHandled)
                                                             re.Handled = true;
                                                     }
                                                 );
@@ -114,6 +125,8 @@ namespace FileExplorer.BaseControls
                                     });
                                 _registeredHandler.Add(e, handler);
                                 Control.AddHandler(e, handler);
+
+                                ScrollViewer.SetPanningMode(Control as DependencyObject, PanningMode.Both);
                             }
                         }
                         else
@@ -156,6 +169,20 @@ namespace FileExplorer.BaseControls
             FrameworkElement control = sender as FrameworkElement;
             var input = InputBase.FromEventArgs(sender, e);
             if (await executeAsync(_eventProcessors, UIEventHub.MouseDragEvent, input))
+            {
+                (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
+            }
+        }
+
+
+        public static RoutedEvent TouchDragEvent = EventManager.RegisterRoutedEvent(
+               "TouchDrag", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UIEventHub));
+
+        public async void Control_TouchDrag(object sender, InputEventArgs e)
+        {
+            FrameworkElement control = sender as FrameworkElement;
+            var input = InputBase.FromEventArgs(sender, e);
+            if (await executeAsync(_eventProcessors, UIEventHub.TouchDragEvent, input))
             {
                 (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
             }
