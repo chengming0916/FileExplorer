@@ -98,10 +98,12 @@ namespace FileExplorer.UserControls.InputProcesor
                     UpdateInputPosition(input);
                     break;
             }
+            input.IsDragging = IsDragging;
         }
 
         private void UpdateInputPosition(IUIInput input)
         {
+          
             if (_dragState == DragState.Touched && input.EventArgs is TouchEventArgs)
             {
                 if (DateTime.UtcNow.Subtract(_touchTime).TotalSeconds >= 0.5)
@@ -109,10 +111,10 @@ namespace FileExplorer.UserControls.InputProcesor
                     var rect = (input.EventArgs as TouchEventArgs).GetTouchPoint(null).Size;
                     if ((input as TouchInput).IsDragThresholdReached(_startTouchInput as TouchInput))
                     {
-                        _dragState = DragState.TouchDragging;
-                        _touchTime = DateTime.MinValue;
-                        _isDragging = true;
-                        DragStartedFunc(input);
+                        _dragState = DragState.Pressed;
+                        //_touchTime = DateTime.MinValue;
+                        //_isDragging = true;
+                        //DragStartedFunc(input);
                     }
                     else
                     {
@@ -155,7 +157,7 @@ namespace FileExplorer.UserControls.InputProcesor
                             _startTouchInput = input;
                             _dragState = DragState.Touched;
                             _touchTime = DateTime.UtcNow;
-                            input.EventArgs.Handled = true;
+                            //input.EventArgs.Handled = true;
                             break;
                         default:
                             switch (_dragState)

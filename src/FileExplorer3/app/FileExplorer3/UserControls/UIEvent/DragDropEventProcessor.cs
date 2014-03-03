@@ -26,6 +26,11 @@ namespace FileExplorer.BaseControls
                     FrameworkElement.DragOverEvent,
                     FrameworkElement.DragLeaveEvent,
                     FrameworkElement.DropEvent
+
+                    
+                    //FrameworkElement.PreviewTouchDownEvent,
+                    //FrameworkElement.TouchMoveEvent,
+                    //FrameworkElement.PreviewTouchUpEvent
                 }
              );
         }
@@ -35,10 +40,17 @@ namespace FileExplorer.BaseControls
             if (EnableDrag)
                 switch (eventId.Name)
                 {
-                    case "PreviewMouseDown": return new RecordStartSelectedItem();
-                    case "MouseDrag": return new BeginDrag();
-                    case "PreviewMouseUp": return new EndDrag();
-                    case "MouseMove": return new ContinueDrag();
+                    case "PreviewMouseDown":
+                    //case "PreviewTouchDown":
+                        return new RecordStartSelectedItem();
+                    case "MouseDrag": 
+                        return new BeginDrag();
+                    case "PreviewMouseUp":
+                    //case "PreviewTouchUp": 
+                        return new EndDrag();
+                    case "MouseMove":
+                    //case "TouchMove": 
+                        return new ContinueDrag();
                 }
 
             if (EnableDrop)

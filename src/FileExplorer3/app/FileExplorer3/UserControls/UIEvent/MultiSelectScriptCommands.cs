@@ -73,7 +73,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
 
-            
+
             if (!ic.IsKeyboardFocusWithin)
             {
                 var itemUnderMouse = UITools.GetItemUnderMouse(ic, pd.Input.PositionRelativeTo(scp));
@@ -139,7 +139,7 @@ namespace FileExplorer.BaseControls.MultiSelect
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
-  
+
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
 
@@ -186,7 +186,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                         return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
                             pd2 =>
                             {
-                                
+
                                 //(If not mouse over item and is selecting (dragging), this will unselect all)
                                 object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
                                 if (itemUnderMouse == null)
@@ -306,10 +306,10 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             if (!(pd.ContainsKey("StartScrollbarPosition")))
                 pd["StartScrollbarPosition"] = pd.GetDragInputProcessor().StartInput.ScrollBarPosition;
-                    
+
             if (!(pd.ContainsKey("CurrentScrollbarPosition")))
                 pd["CurrentScrollbarPosition"] = pd.Input.ScrollBarPosition;
-            
+
 
             if (!(pd.ContainsKey("CurrentPosition")))
                 pd["CurrentPosition"] = AdjustHeaderPosition(pd.Input.Position, pd);
@@ -374,7 +374,7 @@ namespace FileExplorer.BaseControls.MultiSelect
         public FindSelectedItemsUsingGridView(ItemsControl ic, GridView gview,
             ScrollContentPresenter scp) :
             base("FindSelectedItemsUsingGridView", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted")
-        { _ic = ic; _gview = gview; _scp = scp;  }
+        { _ic = ic; _gview = gview; _scp = scp; }
 
         private GridView _gview;
         private ItemsControl _ic;
@@ -549,7 +549,6 @@ namespace FileExplorer.BaseControls.MultiSelect
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
                 : new List<int>();
-
 
             for (int i = 0; i < ic.Items.Count; i++)
             {
