@@ -73,7 +73,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var ic = pd.Sender as ItemsControl;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
 
-
+            
             if (!ic.IsKeyboardFocusWithin)
             {
                 var itemUnderMouse = UITools.GetItemUnderMouse(ic, pd.Input.PositionRelativeTo(scp));
@@ -182,10 +182,11 @@ namespace FileExplorer.BaseControls.MultiSelect
                 //var startInput = AttachedProperties.GetStartInput(ic);
                 //if (MouseButton.Left.Equals(startInput) && Keyboard.Modifiers == ModifierKeys.None)
                 {
-                    if (!pd.IsHandled)
+                    if (!pd.IsHandled && pd.Input.InputType == UIInputType.MouseLeft)
                         return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
                             pd2 =>
                             {
+                                
                                 //(If not mouse over item and is selecting (dragging), this will unselect all)
                                 object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
                                 if (itemUnderMouse == null)
