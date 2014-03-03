@@ -141,9 +141,6 @@ namespace FileExplorer.BaseControls
 
             await _scriptRunner.RunAsync(commands, pd);
 
-            if (input.EventArgs is TouchEventArgs)
-                input.EventArgs.Handled = true;
-
             if (thenFunc != null)
                 thenFunc(pd);
             return pd.IsHandled;
