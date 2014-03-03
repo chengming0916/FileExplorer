@@ -27,7 +27,7 @@
     </UserControl.Resources>
     <Grid>
 
-        <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"                
+        <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems" IsManipulationEnabled="True"               
                      ItemsSource="{Binding ProcessedEntries.All}"   BorderBrush="Transparent"
                      ViewMode="{Binding ViewMode}"  
                      Columns="{Binding Columns.ColumnList}"
@@ -56,7 +56,7 @@
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
-                        <MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />
+                        <!--<MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />-->
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
                         <KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> <!-- Testing -->
                         <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
