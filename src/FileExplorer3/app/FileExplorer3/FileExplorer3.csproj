@@ -148,6 +148,9 @@
     <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
     <Compile Include="ViewModels\FileListCommandManager.cs" />
     <Compile Include="ViewModels\Helpers\IScriptCommandManager.cs" />
+    <Compile Include="ViewModels\Interfaces\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\Interfaces\IExplorerInitializer.cs" />
+    <Compile Include="ViewModels\Interfaces\IViewModelInitializer.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />
     <Compile Include="ViewModels\Helpers\DialogFilterViewModel.cs" />
     <Compile Include="ViewModels\FilePickerViewModel.cs" />

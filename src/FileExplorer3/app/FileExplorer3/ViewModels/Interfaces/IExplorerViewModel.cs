@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Models;
+using Caliburn.Micro;
 
 namespace FileExplorer.ViewModels
 {
@@ -15,6 +16,7 @@ namespace FileExplorer.ViewModels
         IFileListViewModel FileList { get; }
         IStatusbarViewModel Statusbar { get; }
 
-        void Go(string gotoPath);
+        Task GoAsync(string gotoPath);
+        Task GoAsync(IEntryModel entryModel);
     }
 }

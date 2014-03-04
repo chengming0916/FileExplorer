@@ -40,9 +40,9 @@ namespace FileExplorer.ViewModels
     {
         #region Constructor
 
-        public FilePickerViewModel(IEventAggregator events, IWindowManager windowManager, string filterStr,
-            FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
-            : base(events, windowManager, rootModels)
+          public FilePickerViewModel(IExplorerInitializer initializer, string filterStr,
+            FilePickerMode mode = FilePickerMode.Open)
+            : base(initializer)
         {
             WindowTitleMask = Enum.GetName(typeof(FilePickerMode), mode);
             _mode = mode;
@@ -81,6 +81,13 @@ namespace FileExplorer.ViewModels
             FileList.EnableDrag = false;
             FileList.EnableDrop = false;
             FileList.EnableMultiSelect = false;
+        }
+
+        public FilePickerViewModel(IEventAggregator events, IWindowManager windowManager, string filterStr,
+            FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
+            : this(new ExplorerInitializer(windowManager, events, rootModels), filterStr, mode)
+        {
+            
         }
 
         #endregion

@@ -90,6 +90,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Copy of AuthorizationKeys.cs" />
+    <Compile Include="ExplorerInitializers.cs" />
     <Compile Include="MdiWindow.xaml.cs">
       <DependentUpon>MdiWindow.xaml</DependentUpon>
     </Compile>

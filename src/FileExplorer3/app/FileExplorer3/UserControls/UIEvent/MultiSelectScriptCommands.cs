@@ -178,28 +178,23 @@ namespace FileExplorer.BaseControls.MultiSelect
                 return new UpdateIsSelecting(false);
             else
             {
+                if (!pd.IsHandled && pd.Input.InputType == UIInputType.MouseLeft)
+                    return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
+                        pd2 =>
+                        {
 
-                //var startInput = AttachedProperties.GetStartInput(ic);
-                //if (MouseButton.Left.Equals(startInput) && Keyboard.Modifiers == ModifierKeys.None)
-                {
-                    if (!pd.IsHandled && pd.Input.InputType == UIInputType.MouseLeft)
-                        return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
-                            pd2 =>
+                            //(If not mouse over item and is selecting (dragging), this will unselect all)
+                            object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
+                            if (itemUnderMouse == null)
                             {
+                                pd2["SelectedList"] = new List<object>();
+                                return new SelectItems(ItemSelectProcessor.SelectItemInSelectedList);
+                            }
+                            else return ResultCommand.NoError;
+                        }));
 
-                                //(If not mouse over item and is selecting (dragging), this will unselect all)
-                                object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
-                                if (itemUnderMouse == null)
-                                {
-                                    pd2["SelectedList"] = new List<object>();
-                                    return new SelectItems(ItemSelectProcessor.SelectItemInSelectedList);
-                                }
-                                else return ResultCommand.NoError;
-                            }));
-
-                }
-                return ResultCommand.NoError;
             }
+            return ResultCommand.NoError;
         }
     }
 

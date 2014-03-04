@@ -13,6 +13,7 @@ namespace FileExplorer.Defines
         public static string strRename = "Rename";
         public static string strToggleCheckBox = "Checkboxes";
         public static string strToggleViewMode = "ViewMode";
+        //public static string strOpenInNewWindow = "Open in new windw";
         public static string strNewFolder = "New Folder";
         public static string strFolder = "Folder";
         public static string strNew = "New";
