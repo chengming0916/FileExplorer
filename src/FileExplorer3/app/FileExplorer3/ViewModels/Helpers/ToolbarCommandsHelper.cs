@@ -70,10 +70,11 @@ namespace FileExplorer.ViewModels.Helpers
             switch (propertyName)
             {
                 case "ExtraCommandProviders":
-                case "AppliedModels":
                     if (propertyName == "ExtraCommandProviders")
                         CommandModels.IsLoaded = false; //Reset CommandModels
-                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(propertyName == "ExtraCommandProviders"));
+                    break;
+                case "AppliedModels":
+                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(false));
                     if (AppliedModels != null)
                         foreach (var commandVM in CommandModels.AllNonBindable)
                             commandVM.CommandModel.NotifySelectionChanged(AppliedModels);
@@ -112,7 +113,7 @@ namespace FileExplorer.ViewModels.Helpers
                 var val = _whenDirectoryChanged(message);
                 if (val != null)
                     AppliedModels = val;
-            }      
+            }
         }
 
 

@@ -54,9 +54,13 @@ namespace TestApp
 
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
-            explorerModel.DirectoryTree.Commands.ScriptCommands.New =
-                DirectoryTree.OpenCurrentDirectoryInNewWindow(
-                AppViewModel.getInitializer(_windowManager, _events, explorerModel.RootModels.ToArray()));
+            var initilizer = AppViewModel.getInitializer(_windowManager, _events, explorerModel.RootModels.ToArray());
+
+            explorerModel.DirectoryTree.Commands.ScriptCommands.NewWindow =
+                Explorer.NewWindow(initilizer, FileExplorer.ExtensionMethods.GetCurrentDirectoryFunc);
+
+            explorerModel.FileList.Commands.ScriptCommands.NewWindow =
+               Explorer.NewWindow(initilizer, FileExplorer.ExtensionMethods.GetFileListSelectionFunc);
 
             explorerModel.FileList.Commands.ScriptCommands.Open =
              FileList.IfSelection(evm => evm.Count() == 1,
@@ -133,8 +137,13 @@ namespace TestApp
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
             explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
+                new StaticCommandProvider(
+                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnToolbar = false },
+                    new SeparatorCommandModel()
+                    ),
                 new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
                 new StaticCommandProvider(
+                    
                     new SeparatorCommandModel(),
                     new SelectGroupCommand( explorerModel.FileList),    
                     new ViewModeCommand( explorerModel.FileList),
@@ -150,7 +159,7 @@ namespace TestApp
 
             explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
-                    new CommandModel(ApplicationCommands.New) { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnToolbar = false },
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
                     new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }                    
