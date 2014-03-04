@@ -22,11 +22,11 @@ namespace FileExplorer.ViewModels
     {
         #region Cosntructor
 
-        public ExplorerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
+        public ExplorerViewModel(IExplorerInitializer initializer)
         {
-            _events = events;
-            _rootModels = rootModels;
-            _windowManager = windowManager;
+            _events = initializer.Events;
+            _rootModels = initializer.RootModels;
+            _windowManager = initializer.WindowManager;
 
             WindowTitleMask = "{0}";
             //Toolbar = new ToolbarViewModel(events);
@@ -36,12 +36,20 @@ namespace FileExplorer.ViewModels
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
 
-            Commands = new ExplorerCommandManager(this, events, FileList, DirectoryTree, Navigation);
+            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation);
             setRootModels(_rootModels);
 
             if (_events != null)
                 _events.Subscribe(this);
             _internalEvents.Subscribe(this);
+
+            Task.Run(() => initializer.Initializers.InitalizeAsync(this).ConfigureAwait(false));
+        }
+
+        public ExplorerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
+            : this(new ExplorerInitializer(windowManager, events, rootModels))
+        {
+
         }
 
 
@@ -56,16 +64,27 @@ namespace FileExplorer.ViewModels
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
         }
 
-        public void Go(string gotoPath)
+        public async Task GoAsync(IEntryModel entryModel)
+        {
+
+            if (entryModel != null)
+            {
+                await DirectoryTree.SelectAsync(entryModel);
+                FileList.CurrentDirectory = entryModel;
+                await Breadcrumb.Selection.AsRoot().SelectAsync(entryModel);
+                return;
+            }
+
+        }
+
+        public async Task GoAsync(string gotoPath)
         {
             foreach (var evm in _rootModels)
             {
-                var model = evm.Profile.ParseAsync(gotoPath).Result;
+                var model = await evm.Profile.ParseAsync(gotoPath);
                 if (model != null)
                 {
-                    DirectoryTree.SelectAsync(model);
-                    FileList.CurrentDirectory = model;
-                    Breadcrumb.Selection.AsRoot().SelectAsync(model);
+                    await GoAsync(model);
                     return;
                 }
             }
@@ -138,6 +157,9 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Public Properties
+
+
+        public IExplorerInitializer Initializer { get; private set; }
 
         public string WindowTitleMask { get; set; }
 

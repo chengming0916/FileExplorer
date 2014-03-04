@@ -118,5 +118,9 @@ namespace FileExplorer.Models
             return await profile.ParseAsync(parentFullPath);
         }
 
+        public static IProfile[] GetProfiles(this IEntryModel[] entryModels)
+        {
+            return entryModels.Select(em => em.Profile).Distinct().ToArray();
+        }
     }
 }

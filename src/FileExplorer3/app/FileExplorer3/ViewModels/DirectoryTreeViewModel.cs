@@ -97,6 +97,7 @@ namespace FileExplorer.ViewModels
 
         void setRootModels(IEntryModel[] rootModels)
         {
+            _rootModels = rootModels;
             DirectoryNodeViewModel[] rootViewModels = rootModels
                .Select(r => new DirectoryNodeViewModel(_events, this, r, null)).ToArray();
             Entries.SetEntries(rootViewModels);            
@@ -126,6 +127,8 @@ namespace FileExplorer.ViewModels
         private IEnumerable<IProfile> _profiles = new List<IProfile>();
         private IEventAggregator _events;
         private bool _enableDrag = true, _enableDrop = true;
+        private IWindowManager _windowManager;
+private  IEntryModel[] _rootModels;
 
         #endregion
 
@@ -136,7 +139,7 @@ namespace FileExplorer.ViewModels
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
 
-        public IEntryModel[] RootModels { set { setRootModels(value); } }
+        public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
         public IProfile[] Profiles { set { setProfiles(value); } }
 
         public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }

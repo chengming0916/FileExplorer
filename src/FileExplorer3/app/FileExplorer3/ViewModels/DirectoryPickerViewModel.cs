@@ -12,20 +12,25 @@ namespace FileExplorer.ViewModels
     {
         #region Constructor
 
-
-        public DirectoryPickerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
-            : base(events, windowManager, rootModels)
+         public DirectoryPickerViewModel(IExplorerInitializer initializer)
+            : base(initializer)
         {
             FileList.Selection.SelectionChanged += (o, e) =>
-                {
-                    int selectedCount = FileList.Selection.SelectedItems.Count();
-                    CanOpen =
-                        selectedCount == 0 ||
-                        (selectedCount == 1 && FileList.Selection.SelectedItems[0].EntryModel.IsDirectory);
-                };
+            {
+                int selectedCount = FileList.Selection.SelectedItems.Count();
+                CanOpen =
+                    selectedCount == 0 ||
+                    (selectedCount == 1 && FileList.Selection.SelectedItems[0].EntryModel.IsDirectory);
+            };
             FileList.EnableDrag = false;
             FileList.EnableDrop = false;
             FileList.EnableMultiSelect = false;
+        }
+
+        public DirectoryPickerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
+            : this(new ExplorerInitializer(windowManager, events, rootModels))
+        {
+           
         }
 
         #endregion

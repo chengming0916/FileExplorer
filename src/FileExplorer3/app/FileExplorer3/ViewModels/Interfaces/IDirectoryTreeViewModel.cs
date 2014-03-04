@@ -11,7 +11,7 @@ namespace FileExplorer.ViewModels
 {
     public interface IDirectoryTreeViewModel : ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>,  ISupportCommandManager
     {
-        IEntryModel[] RootModels { set; }
+        IEntryModel[] RootModels { get;  set; }
         IProfile[] Profiles { set; }
 
         bool EnableDrag { get; set; }

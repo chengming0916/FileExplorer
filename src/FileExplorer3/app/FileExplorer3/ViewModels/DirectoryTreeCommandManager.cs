@@ -9,6 +9,7 @@ using Cofe.Core.Script;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
+using FileExplorer.Models;
 
 namespace FileExplorer.ViewModels
 {
@@ -31,7 +32,8 @@ namespace FileExplorer.ViewModels
 
             ScriptCommands = new DynamicDictionary<IScriptCommand>();
             ScriptCommands.Delete = NullScriptCommand.Instance;
-            ScriptCommands.ToggleRename = DirectoryTree.ToggleRename;            
+            ScriptCommands.ToggleRename = DirectoryTree.ToggleRename;
+            ScriptCommands.New = NullScriptCommand.Instance;
 
             #endregion
 
@@ -40,7 +42,8 @@ namespace FileExplorer.ViewModels
             exportBindingSource.Add(
                 new ExportCommandBindings(                                    
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local)
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.New, this, (ch) => ch.ScriptCommands.New, ParameterDicConverter, ScriptBindingScope.Local)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();
@@ -49,6 +52,13 @@ namespace FileExplorer.ViewModels
                 message => new[] { message.NewModel },
                 null)
                 {
+                   ExtraCommandProviders = new[] { 
+                        new StaticCommandProvider(
+                    new CommandModel(ApplicationCommands.New) { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
+                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }                    
+                    )}
                 };
         }
 
