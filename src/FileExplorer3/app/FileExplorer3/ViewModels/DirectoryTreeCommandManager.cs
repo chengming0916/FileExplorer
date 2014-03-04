@@ -33,7 +33,7 @@ namespace FileExplorer.ViewModels
             ScriptCommands = new DynamicDictionary<IScriptCommand>();
             ScriptCommands.Delete = NullScriptCommand.Instance;
             ScriptCommands.ToggleRename = DirectoryTree.ToggleRename;
-            ScriptCommands.New = NullScriptCommand.Instance;
+            ScriptCommands.NewWindow = NullScriptCommand.Instance;
 
             #endregion
 
@@ -43,7 +43,7 @@ namespace FileExplorer.ViewModels
                 new ExportCommandBindings(                                    
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.New, this, (ch) => ch.ScriptCommands.New, ParameterDicConverter, ScriptBindingScope.Local)
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();

@@ -35,7 +35,7 @@ namespace FileExplorer.UserControls.InputProcesor
             else
                 if (input.InputType == UIInputType.Touch && input.InputState == UIInputState.Pressed)
                 {
-                    if (DateTime.UtcNow.Subtract(_lastClickTime).TotalSeconds < 0.8 && 
+                    if (DateTime.UtcNow.Subtract(_lastClickTime).TotalMilliseconds < 500 && 
                         input.IsWithin(_startInput, 10, 10))
                     {
                         _clickCount += 1;

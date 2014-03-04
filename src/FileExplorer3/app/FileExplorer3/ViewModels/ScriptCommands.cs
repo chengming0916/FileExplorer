@@ -147,17 +147,17 @@ namespace FileExplorer.ViewModels
 
     public class ShowFilePicker : ScriptCommandBase
     {
-        
+
         private string _filter;
         private string _defaultFileName;
         private Func<IEntryModelInfo, IScriptCommand> _successCommandFunc;
-        
+
         private IScriptCommand _cancelFunc;
         private FilePickerMode _mode;
         private IExplorerInitializer _initializer;
 
-         internal ShowFilePicker(IExplorerInitializer initializer, FilePickerMode mode, string filter, string defaultFileName,
-            Func<IEntryModelInfo, IScriptCommand> successCommandFunc, IScriptCommand cancelCommand)
+        internal ShowFilePicker(IExplorerInitializer initializer, FilePickerMode mode, string filter, string defaultFileName,
+           Func<IEntryModelInfo, IScriptCommand> successCommandFunc, IScriptCommand cancelCommand)
             : base(mode.ToString() + "File")
         {
             _initializer = initializer;
@@ -171,7 +171,7 @@ namespace FileExplorer.ViewModels
         internal ShowFilePicker(IWindowManager wm, IEventAggregator events,
             IEntryModel[] rootDirModels, FilePickerMode mode, string filter, string defaultFileName,
             Func<IEntryModelInfo, IScriptCommand> successCommandFunc, IScriptCommand cancelCommand)
-            : this(new ExplorerInitializer(wm, events, rootDirModels), mode, 
+            : this(new ExplorerInitializer(wm, events, rootDirModels), mode,
             filter, defaultFileName, successCommandFunc, cancelCommand)
         {
         }
@@ -350,24 +350,36 @@ namespace FileExplorer.ViewModels
             return new GotoDirectory(dir, thenCommand);
         }
 
-        public static IScriptCommand GoTo(string path, IScriptCommand thenCommand = null)
-        {
-            return new GotoDirectory(path, thenCommand);
-        }
+        //public static IScriptCommand GoTo(string path, IScriptCommand thenCommand = null)
+        //{
+        //    return new GotoDirectory(path, thenCommand);
+        //}
 
         public static IScriptCommand NewWindow(IExplorerInitializer initializer,
             string selectedDirectoryPath, bool openIfNotFound = true)
         {
             return ScriptCommands.ParsePath(initializer.RootModels.GetProfiles(), selectedDirectoryPath,
                 dirM => Explorer.NewWindow(initializer, dirM),
-                openIfNotFound ? Explorer.NewWindow(initializer, null) :
+                openIfNotFound ? Explorer.NewWindow(initializer) :
                 ResultCommand.Error(new System.IO.FileNotFoundException(selectedDirectoryPath)));
         }
 
-        public static IScriptCommand NewWindow(IExplorerInitializer initializer, IEntryModel selectedDirectory = null)
+        public static IScriptCommand NewWindow(IExplorerInitializer initializer)
+        {
+            return NewWindow(initializer, (IEntryModel)null);
+        }
+
+        public static IScriptCommand NewWindow(IExplorerInitializer initializer, IEntryModel selectedDirectory)
         {
             return new ShowNewExplorer(initializer, selectedDirectory);
         }
+
+        public static IScriptCommand NewWindow(IExplorerInitializer initializer,
+            Func<ParameterDic, IEntryModel[]> getSelectedDirectryFunc)
+        {
+            return new OpenInNewWindowCommand(initializer, getSelectedDirectryFunc);
+        }
+
 
         //public static IScriptCommand NewWindow(IExplorerViewModel senderEvm, IEntryModel selectedDirectory = null)
         //{
@@ -411,7 +423,7 @@ namespace FileExplorer.ViewModels
         public override bool CanExecute(ParameterDic pm)
         {
             VM evm = (VM)pm[_viewModelName];
-            return evm != null && AsyncUtils.RunSync(() => _commandFunc(evm)).CanExecute(pm);
+            return evm != null;// && AsyncUtils.RunSync(() => _commandFunc(evm)).CanExecute(pm);
         }
     }
 
@@ -428,24 +440,34 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    internal class GotoDirectory : DoExplorer
+    internal class GotoDirectory : ScriptCommandBase
     {
+        private IEntryModel _dir;
+        private IScriptCommand _thenCommand;
         public GotoDirectory(IEntryModel dir, IScriptCommand thenCommand)
-            : base(evm => 
-                {
-                    AsyncUtils.RunSync(() => evm.GoAsync(dir));
-                    return thenCommand ?? ResultCommand.NoError;
-                })
+            : base("GoToDirectory")
         {
-
+            _dir = dir;
+            _thenCommand = thenCommand;
         }
 
-        public GotoDirectory(string path, IScriptCommand thenCommand)
-            : base(evm =>
-                Task.Run(async () => { await evm.GoAsync(path); return thenCommand ?? ResultCommand.NoError; }))
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-
+            IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
+            if (evm != null)
+            {
+                await evm.GoAsync(_dir);
+                return _thenCommand ?? ResultCommand.NoError;
+            }
+            return ResultCommand.Error(new ArgumentException("Explorer"));
         }
+
+        //public GotoDirectory(string path, IScriptCommand thenCommand)
+        //    : base(evm =>
+        //        Task.Run(async () => { await evm.GoAsync(path); return thenCommand ?? ResultCommand.NoError; }))
+        //{
+
+        //}
     }
 
     public class ShowNewExplorer : ScriptCommandBase
@@ -464,12 +486,10 @@ namespace FileExplorer.ViewModels
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var evm = new ExplorerViewModel(_initializer);
+            pm["Explorer"] = evm;
+            _initializer.WindowManager.ShowWindow(evm);
             if (_selectedDirectory != null)
-                return Explorer.GoTo(_selectedDirectory,
-                    new SimpleScriptCommand("ShowWindow",
-                        pd =>
-                        { _initializer.WindowManager.ShowWindow(evm); return ResultCommand.NoError; }));
-            
+                return Explorer.GoTo(_selectedDirectory);
             return ResultCommand.NoError;
         }
     }
@@ -494,10 +514,6 @@ namespace FileExplorer.ViewModels
             return new DoDirectoryTree(commandFunc);
         }
 
-        public static IScriptCommand OpenCurrentDirectoryInNewWindow(IExplorerInitializer initializer)
-        {
-            return new OpenInNewWindowCommand(initializer, ExtensionMethods.GetCurrentDirectoryFunc);
-        }
     }
 
     internal class DoDirectoryTree : DoCommandBase<IDirectoryTreeViewModel>
@@ -594,10 +610,7 @@ namespace FileExplorer.ViewModels
             return new RefreshFileList(nextCommand, force);
         }
 
-        public static IScriptCommand OpenCurrentDirectoryInNewWindow(IExplorerInitializer initializer)
-        {
-            return new OpenInNewWindowCommand(initializer, ExtensionMethods.GetFileListSelectionFunc);
-        }
+
     }
 
     /// <summary>

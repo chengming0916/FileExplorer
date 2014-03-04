@@ -27,6 +27,7 @@ namespace FileExplorer.ViewModels
             _events = initializer.Events;
             _rootModels = initializer.RootModels;
             _windowManager = initializer.WindowManager;
+            _initializer = initializer;
 
             WindowTitleMask = "{0}";
             //Toolbar = new ToolbarViewModel(events);
@@ -43,7 +44,7 @@ namespace FileExplorer.ViewModels
                 _events.Subscribe(this);
             _internalEvents.Subscribe(this);
 
-            Task.Run(() => initializer.Initializers.InitalizeAsync(this).ConfigureAwait(false));
+            
         }
 
         public ExplorerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
@@ -62,6 +63,7 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
+            Task.Run(() => _initializer.Initializers.InitalizeAsync(this));
         }
 
         public async Task GoAsync(IEntryModel entryModel)
@@ -72,7 +74,7 @@ namespace FileExplorer.ViewModels
                 await DirectoryTree.SelectAsync(entryModel);
                 FileList.CurrentDirectory = entryModel;
                 await Breadcrumb.Selection.AsRoot().SelectAsync(entryModel);
-                return;
+
             }
 
         }
@@ -153,6 +155,7 @@ namespace FileExplorer.ViewModels
         private IEventAggregator _internalEvents = new EventAggregator();
         protected IWindowManager _windowManager = new WindowManager();
         private IProfile[] _rootProfiles = new IProfile[] { };
+        private IExplorerInitializer _initializer;
 
         #endregion
 
