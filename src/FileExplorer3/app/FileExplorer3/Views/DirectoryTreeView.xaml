@@ -34,7 +34,8 @@
 
 
         <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" BorderBrush="Transparent"                       
-                       def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"                       
+                       def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"  
+                       ScrollViewer.PanningMode="Both"
                        >
             <uc:TreeViewEx.ItemContainerStyle>
                 <Style TargetType="{x:Type uc:TreeViewItemEx}" 

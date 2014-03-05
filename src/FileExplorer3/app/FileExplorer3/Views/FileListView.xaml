@@ -56,11 +56,10 @@
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
-                      
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
-                        <KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> 
+                        <!--<KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> 
                         <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
-                        <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />
+                        <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />-->
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
             </bc:UIEventAdapter.Processors>

@@ -138,8 +138,7 @@ namespace TestApp
         {
             explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
-                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnToolbar = false },
-                    new SeparatorCommandModel()
+                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnToolbar = false }
                     ),
                 new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
                 new StaticCommandProvider(
