@@ -142,7 +142,6 @@ namespace FileExplorer.BaseControls.DragnDrop
                     var previousDraggables = AttachedProperties.GetSelectedDraggables(ic);
                     var currentDraggables = isd.GetDraggables().ToList();
 
-
                     if (currentDraggables.Any() && previousDraggables != null &&
                         currentDraggables.SequenceEqual(previousDraggables))
                     {
@@ -185,7 +184,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
 
             //if (AttachedProperties.GetStartDraggingItem(ic) != null)
-                //pd.IsHandled = true;
+            //    pd.IsHandled = true;
 
             AttachedProperties.SetStartDraggingItem(ic, null);
             AttachedProperties.SetIsDragging(ic, false);
@@ -202,7 +201,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
 
 
-    
+
 
 
     #region Update/CheckIsDragging
@@ -370,7 +369,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
             var draggables = _isd.GetDraggables().ToList();
             _dataObj = _isd.GetDataObject(draggables);
-            
+
             if (_dataObj == null)
                 return ResultCommand.NoError; //Nothing to drag.
 

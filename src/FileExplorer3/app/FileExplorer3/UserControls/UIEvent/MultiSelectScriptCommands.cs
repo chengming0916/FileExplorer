@@ -174,11 +174,12 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             Mouse.Capture(null);
 
+          
             if (AttachedProperties.GetIsSelecting(ic))
                 return new UpdateIsSelecting(false);
             else
             {
-                if (!pd.IsHandled && pd.Input.InputType == UIInputType.MouseLeft)
+                if (!pd.IsHandled && pd.Input.InputType != UIInputType.MouseRight)
                     return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
                         pd2 =>
                         {

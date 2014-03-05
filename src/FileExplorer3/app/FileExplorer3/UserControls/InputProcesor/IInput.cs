@@ -47,6 +47,7 @@ namespace FileExplorer.UserControls.InputProcesor
         UIInputState InputState { get; }
 
         bool IsDragging { get; set; }
+        UIInputState Touch { get; set; }
     }
 
     public abstract class InputBase : IUIInput
@@ -96,6 +97,7 @@ namespace FileExplorer.UserControls.InputProcesor
         protected Point _sbPosition = AttachedProperties.InvalidPoint;
         protected UIInputType _inputType = UIInputType.None;
         protected UIInputState _inputState = UIInputState.NotApplied;
+        protected UIInputState _touchInputState = UIInputState.NotApplied;
         private object _sender;
         //private Point _positionScp = AttachedProperties.InvalidPoint;
 
@@ -111,6 +113,7 @@ namespace FileExplorer.UserControls.InputProcesor
         //public Point PositionRelativeToScp { get { return _positionScp; } set { _positionScp = value; } }
         public UIInputType InputType { get { return _inputType; } set { _inputType = value; } }
         public UIInputState InputState { get { return _inputState; } set { _inputState = value; } }
+        public UIInputState Touch { get { return _touchInputState; } set { _touchInputState = value; } }
 
         public bool IsDragging { get; set; }
         #endregion

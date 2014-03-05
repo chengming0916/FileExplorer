@@ -1,6 +1,7 @@
 ﻿using FileExplorer.Defines;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,46 +12,157 @@ namespace FileExplorer.UserControls.InputProcesor
 {
     public interface IUIInputProcessor
     {
+        IEnumerable<RoutedEvent> ProcessEvents { get; }
+        bool ProcessAllEvents { get; }
         void Update(IUIInput input);
     }
 
-    public class ClickCountInputProcessor : IUIInputProcessor
+    public class InputProcessorBase : IUIInputProcessor
     {
-        #region Constructors
+        protected List<RoutedEvent> _processEvents;
+        public InputProcessorBase()
+        {
+            ProcessAllEvents = false;
+            _processEvents = new List<RoutedEvent>();
+        }
 
-        public ClickCountInputProcessor()
+        public virtual void Update(IUIInput input)
         {
 
+        }
+
+        public bool ProcessAllEvents { get; protected set; }
+
+        public IEnumerable<RoutedEvent> ProcessEvents { get { return _processEvents; }}
+        
+    }
+
+    public class FlickInputProcessor : InputProcessorBase
+    {
+
+        #region Constructors
+
+        public FlickInputProcessor()
+        {
+            _processEvents.AddRange(new [] { 
+                UIElement.StylusSystemGestureEvent,
+                UIElement.PreviewTouchDownEvent
+            }
+            );
         }
 
         #endregion
 
         #region Methods
 
-        public void Update(IUIInput input)
+        public override void Update(IUIInput input)
         {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Data
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
+
+    }
+
+    public class IsTouchDownInputProcessor : InputProcessorBase
+    {
+
+        #region Constructors
+
+        public IsTouchDownInputProcessor()
+        {
+            ProcessAllEvents = true;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public override void Update(IUIInput input)
+        {
+            if (input.InputType == UIInputType.Touch && input.InputState != UIInputState.NotApplied)
+                _touchState = input.InputState;
+
+            input.Touch = _touchState;
+        }
+
+        #endregion
+
+        #region Data
+
+        private UIInputState _touchState = UIInputState.NotApplied;
+
+        #endregion
+
+        #region Public Properties
+
+
+        #endregion
+
+    }
+
+    public class ClickCountInputProcessor : InputProcessorBase
+    {
+        #region Constructors
+
+        public ClickCountInputProcessor()
+        {
+            
+            ProcessAllEvents = false;
+            _processEvents.AddRange(new [] { 
+                UIElement.StylusSystemGestureEvent,
+                UIElement.PreviewTouchDownEvent,
+                UIElement.PreviewMouseLeftButtonDownEvent,
+                UIElement.PreviewTouchDownEvent
+            });
+        }
+
+        #endregion
+
+        #region Methods
+
+        public override void Update(IUIInput input)
+        {
+            var touchEventArgs = input.EventArgs as TouchEventArgs;
+            if (touchEventArgs != null)
+            {
+                var touchPts = touchEventArgs.GetIntermediateTouchPoints(input.Sender as IInputElement);
+                var touchInput = String.Join("", touchPts.Select(tp => tp.Action.ToString()[0]));
+                Console.WriteLine(touchInput);
+            }
+
 
             if (input.EventArgs is MouseButtonEventArgs)
                 input.ClickCount = (input.EventArgs as MouseButtonEventArgs).ClickCount;
             else
                 if (input.InputType == UIInputType.Touch && input.InputState == UIInputState.Pressed)
                 {
-                    if (DateTime.UtcNow.Subtract(_lastClickTime).TotalMilliseconds < 500 && 
+
+                    //touchPts.First().Action == TouchAction.
+                    if (DateTime.UtcNow.Subtract(_lastClickTime).TotalMilliseconds < 500 &&
                         input.IsWithin(_startInput, 10, 10))
                     {
                         _clickCount += 1;
                         input.ClickCount = _clickCount;
-                        
+
                     }
-                    else 
+                    else
                     {
                         _startInput = input;
                         _clickCount = 1;
                     }
                     _lastClickTime = DateTime.UtcNow;
                 }
-                //else _clickCount = 0;
-            
+            //else _clickCount = 0;
+
         }
 
         #endregion
@@ -59,17 +171,18 @@ namespace FileExplorer.UserControls.InputProcesor
 
         private int _clickCount = 1;
         private IUIInput _startInput = InvalidInput.Instance;
-        private DateTime _lastClickTime  = DateTime.MinValue;
+        private DateTime _lastClickTime = DateTime.MinValue;
 
         #endregion
 
         #region Public Properties
 
-       
+        
+
         #endregion
     }
 
-    public class DragInputProcessor : IUIInputProcessor
+    public class DragInputProcessor : InputProcessorBase
     {
         #region Constructors
 
@@ -77,14 +190,25 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public DragInputProcessor()
         {
+            ProcessAllEvents = false;
+            _processEvents.AddRange(new [] { 
+                UIElement.PreviewMouseLeftButtonDownEvent,
+                UIElement.PreviewTouchDownEvent,
 
+                UIElement.MouseMoveEvent,
+                UIElement.TouchMoveEvent,
+
+                UIElement.PreviewMouseLeftButtonUpEvent,
+                UIElement.PreviewTouchUpEvent
+            }
+            );
         }
 
         #endregion
 
         #region Methods
 
-        public void Update(IUIInput input)
+        public override void Update(IUIInput input)
         {
             switch (input.InputState)
             {
@@ -103,7 +227,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         private void UpdateInputPosition(IUIInput input)
         {
-          
+
             if (_dragState == DragState.Touched && input.EventArgs is TouchEventArgs)
             {
                 if (DateTime.UtcNow.Subtract(_touchTime).TotalSeconds >= 0.5)
@@ -212,6 +336,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public Action<IUIInput> DragStartedFunc = (currentInput) => { };
         public Action<IUIInput> DragStoppedFunc = (currentInput) => { };
 
+ 
         #endregion
     }
 }
