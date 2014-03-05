@@ -33,13 +33,23 @@ namespace FileExplorer
                  input.Sender.Equals(input2.Sender);
         }
 
+        private static Size getMiniumDragDistance(Defines.UIInputType inputType)
+        {
+            if (inputType == Defines.UIInputType.Touch)
+                return new Size(5, 5);
+            else return new Size(SystemParameters.MinimumHorizontalDragDistance,
+                SystemParameters.MinimumVerticalDragDistance);
+        }
+
         public static bool IsDragThresholdReached(this IUIInput input, IUIInput input2)
         {
+            var minDragDist = getMiniumDragDistance(input.InputType);
+
             return
                 input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
                 (
-                     Math.Abs(input.Position.X - input2.Position.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                     Math.Abs(input.Position.Y - input2.Position.Y) > SystemParameters.MinimumVerticalDragDistance
+                     Math.Abs(input.Position.X - input2.Position.X) > minDragDist.Width ||
+                     Math.Abs(input.Position.Y - input2.Position.Y) > minDragDist.Height
                 );
         }
 
@@ -57,9 +67,9 @@ namespace FileExplorer
 
         public static bool IsDragThresholdReached(this TouchInput input, TouchInput input2)
         {
-            return 
+            return
                 input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
-                
+
                 (
                      Math.Abs(input.Position.X - input2.Position.X) < 10 &&
                      Math.Abs(input.Position.Y - input2.Position.Y) < 10
@@ -70,7 +80,8 @@ namespace FileExplorer
         public static void Update(this IEnumerable<IUIInputProcessor> processors, IUIInput input)
         {
             foreach (var p in processors)
-                p.Update(input);
+                if (p.ProcessEvents.Contains(input.EventArgs.RoutedEvent))
+                    p.Update(input);
         }
 
         public static bool IsValid(this IUIInput input)
