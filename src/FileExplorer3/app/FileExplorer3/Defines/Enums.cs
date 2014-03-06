@@ -22,6 +22,7 @@ namespace FileExplorer.Defines
 
     public enum UIInputType { None, MouseLeft, MouseRight, Touch, Stylus }
     public enum UIInputState { NotApplied, Pressed, Released }
+    public enum UITouchGesture { NotApplied, FlickLeft, FlickRight, FlickUp, FlickDown }
 
     public enum ViewMode : int
     {

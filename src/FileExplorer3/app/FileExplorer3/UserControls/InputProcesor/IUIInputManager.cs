@@ -25,11 +25,12 @@ namespace FileExplorer.UserControls.InputProcesor
         #endregion
 
         #region Methods
-        
+
         public void Update(IUIInput input)
         {
             foreach (var p in Processors)
-                p.Update(input);
+                if (p.ProcessAllEvents || p.ProcessEvents.Contains(input.EventArgs.RoutedEvent))
+                    p.Update(input);
         }
 
         //public void AddPostionAdjust(Type type, Func<Point, FrameworkElement, Point> func)
@@ -64,6 +65,6 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #endregion
 
-       
+
     }
 }

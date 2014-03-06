@@ -99,6 +99,7 @@
     <Compile Include="Defines\Converters\BorderClipConverter.cs" />
     <Compile Include="Defines\Converters\DynamicConverter.cs" />
     <Compile Include="Defines\Converters\VisibleIfEqualConverter.cs" />
+    <Compile Include="Defines\Defaults.cs" />
     <Compile Include="Defines\Strings.cs" />
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\CommandModelImpl.cs" />

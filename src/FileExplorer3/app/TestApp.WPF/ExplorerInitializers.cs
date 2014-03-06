@@ -23,8 +23,14 @@ namespace TestApp
                 {
                     ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
                     ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
-                    ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoExModel).Size), 200),  
-                    ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", new ValueComparer<IEntryModel>(p => (p as FileSystemInfoModel).Attributes), 200)   
+                    ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", 
+                    new ValueComparer<IEntryModel>(p => 
+                        (p is FileSystemInfoModel) ? (p as FileSystemInfoExModel).Size
+                        : 0), 200),  
+                    ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 
+                        new ValueComparer<IEntryModel>(p => 
+                            (p is FileSystemInfoModel) ? (p as FileSystemInfoModel).Attributes
+                            : System.IO.FileAttributes.Normal), 200)   
                 };
 
             explorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
