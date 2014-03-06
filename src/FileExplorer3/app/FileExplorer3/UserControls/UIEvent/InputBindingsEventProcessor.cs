@@ -39,7 +39,7 @@ namespace FileExplorer.BaseControls
                         (ib as MouseBinding).MouseAction == MouseAction.LeftDoubleClick)
                         match = input.ClickCount == 2;
 
-                    if (match)
+                    if (match && ib.Command != null)
                         if (ib.Command.CanExecute(ib.CommandParameter))
                         {
                             ib.Command.Execute(ib.CommandParameter);

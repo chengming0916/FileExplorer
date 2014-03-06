@@ -41,15 +41,12 @@ namespace FileExplorer.BaseControls
                 switch (eventId.Name)
                 {
                     case "PreviewMouseDown":
-                    //case "PreviewTouchDown":
                         return new RecordStartSelectedItem();
                     case "MouseDrag": 
                         return new BeginDrag();
-                    case "PreviewMouseUp":
-                    //case "PreviewTouchUp": 
+                    case "PreviewMouseUp": 
                         return new EndDrag();
                     case "MouseMove":
-                    //case "TouchMove": 
                         return new ContinueDrag();
                 }
 

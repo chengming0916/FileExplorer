@@ -41,7 +41,7 @@
                      AllowDrop="True"
                      cal:View.ApplyConventions="False"                                            
                      def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
-                       >            
+                       >
             <bc:UIEventAdapter.Processors>
                 <bc:TouchGestureEventProcessor Gesture="FlickLeft" Command="NavigationCommands.BrowseBack" />
                 <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
@@ -53,27 +53,27 @@
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
 
                         <!--<KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> 
-                        <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
-                        <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />-->
+                    <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
+                    <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />-->
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
 
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
-                                              IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
-                   />
+                                            IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
+                />
                 <!--UnselectAllCommand="{Binding Selection.UnselectAll.Command}"-->
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
-                                     ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
+                                    ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
                 </bc:ContextMenuEventProcessor>
-               
-              
+
+
             </bc:UIEventAdapter.Processors>
-            
-              <!--<MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />-->
+
+            <!--<MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />-->
             <!--<i:Interaction.Triggers>                
                 <uc:InputBindingTrigger>                                        
                     <uc:InputBindingTrigger.InputBinding>
@@ -81,8 +81,8 @@
                     </uc:InputBindingTrigger.InputBinding>
                     <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
-            </i:Interaction.Triggers>-->           
-                
+            </i:Interaction.Triggers>-->
+
             <uc:ListViewEx.ContentBelowHeader>
                 <Border Margin="2" >
                     <uc:ToolbarEx ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}"                                  
