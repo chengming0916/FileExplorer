@@ -84,24 +84,6 @@ namespace FileExplorer.UserControls.InputProcesor
                     }
                     break;
             }
-            //if (input.EventArgs.RoutedEvent.Equals(UIElement.PreviewTouchDownEvent))
-            //{
-            //    _touchDownPosition = input.Position;
-            //}
-            //else if ()
-
-            //if (input.EventArgs.RoutedEvent.Equals(UIElement.StylusSystemGestureEvent))
-            //{
-            //    var gesture = (input.EventArgs as StylusSystemGestureEventArgs).SystemGesture;
-            //    if (gesture == SystemGesture.Flick)
-            //    {
-            //        if (input.Position.X > _touchDownPosition.X + 10)
-            //            input.FlickDirection = UIFlickDirection.Left;
-
-            //        if (_touchDownPosition.X > input.Position.X + 10)
-            //            input.FlickDirection = UIFlickDirection.Right;
-            //    }
-            //}
         }
 
         #endregion
