@@ -43,25 +43,34 @@
                      def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
                        >            
             <bc:UIEventAdapter.Processors>
+                <bc:TouchGestureEventProcessor Gesture="FlickLeft" Command="NavigationCommands.BrowseBack" />
+                <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
+                <bc:TouchGestureEventProcessor Gesture="FlickUp" Command="NavigationCommands.BrowseHome" />
+
+                <bc:InputBindingsEventProcessor >
+                    <bc:InputBindingsEventProcessor.InputBindings>
+                        <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
+                        <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
+
+                        <!--<KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> 
+                        <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
+                        <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />-->
+                    </bc:InputBindingsEventProcessor.InputBindings>
+                </bc:InputBindingsEventProcessor>
+
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
                                               IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
-                    UnselectAllCommand="{Binding Selection.UnselectAll.Command}" />             
+                   />
+                <!--UnselectAllCommand="{Binding Selection.UnselectAll.Command}"-->
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                      ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
                 </bc:ContextMenuEventProcessor>
-                <bc:InputBindingsEventProcessor >
-                    <bc:InputBindingsEventProcessor.InputBindings>
-                        <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
-                        <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
-                        <!--<KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> 
-                        <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
-                        <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />-->
-                    </bc:InputBindingsEventProcessor.InputBindings>
-                </bc:InputBindingsEventProcessor>
+               
+              
             </bc:UIEventAdapter.Processors>
             
               <!--<MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />-->

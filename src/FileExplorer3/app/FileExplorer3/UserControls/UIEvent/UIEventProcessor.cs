@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core.Script;
 using FileExplorer.ViewModels;
+using Cofe.Core;
+using System.Windows.Input;
+using FileExplorer.Defines;
 
 namespace FileExplorer.BaseControls
 {
-   
+
     /// <summary>
     /// Allow one application (e.g. dragging) to handle events from an control.
     /// </summary>
@@ -25,12 +28,12 @@ namespace FileExplorer.BaseControls
     public abstract class UIEventProcessorBase : Freezable, IUIEventProcessor
     {
         public int Priority { get; protected set; }
-        public IEnumerable<RoutedEvent> ProcessEvents { get { return _processEvents; } }
+        public virtual IEnumerable<RoutedEvent> ProcessEvents { get { return _processEvents; } }
         protected List<RoutedEvent> _processEvents = new List<RoutedEvent>();
 
         public UIEventProcessorBase()
         {
-     
+
         }
 
         public virtual IScriptCommand OnEvent(RoutedEvent eventId)
@@ -42,6 +45,53 @@ namespace FileExplorer.BaseControls
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class SimpleUIEventProcessor : UIEventProcessorBase, IUIEventProcessor
+    {
+        #region Constructors
+
+        #endregion
+
+        #region Methods
+
+
+        public override IScriptCommand OnEvent(RoutedEvent eventId)
+        {
+            if (_processEvents.ContainsKey(eventId))
+                return _processEvents[eventId];
+            return ResultCommand.NoError;
+        }
+
+        protected void registerEvent(RoutedEvent onEvent, IScriptCommand command)
+        {
+            _processEvents.Add(onEvent, command);
+        }
+
+
+        //protected void registerEvent(RoutedEvent onEvent, 
+        //    Func<ParameterDic, IScriptCommand> actionFunc, 
+        //    Func<ParameterDic, bool> canExecuteFunc = null,
+        //    string commandKey = "SimpleUIEventProcessor")
+        //{
+        //    registerEvent(onEvent, new SimpleScriptCommand(commandKey, actionFunc, canExecuteFunc));
+        //}
+
+
+
+        #endregion
+
+        #region Data
+
+        Dictionary<RoutedEvent, IScriptCommand> _processEvents = new Dictionary<RoutedEvent, IScriptCommand>();
+
+        #endregion
+
+        #region Public Properties
+
+        public override IEnumerable<RoutedEvent> ProcessEvents { get { return _processEvents.Keys; } }
+
+        #endregion
     }
 
     public class DebugUIEventProcessor : UIEventProcessorBase
@@ -63,9 +113,76 @@ namespace FileExplorer.BaseControls
 
         public DebugUIEventProcessor()
         {
-            Priority = 0;         
+            Priority = 0;
         }
     }
 
+    public class TouchGestureEventProcessor : SimpleUIEventProcessor
+    {
+        #region Constructors
+
+        public TouchGestureEventProcessor()
+        {
+            registerEvent(UIElement.PreviewTouchUpEvent,
+                new SimpleScriptCommand("TouchGesture",
+                    pd =>
+                    {
+                        if (Gesture == pd.AsUIParameterDic().Input.TouchGesture)
+                            if (Command.CanExecute(CommandParameter))
+                            {
+                                Command.Execute(CommandParameter);
+                                return ResultCommand.OK;
+                            }
+
+                        return ResultCommand.NoError;
+                    }));
+        }
+
+        #endregion
+
+        #region Methods
+
+        #endregion
+
+        #region Data
+
+        #endregion
+
+        #region Public Properties
+
+        public static DependencyProperty GestureProperty =
+          DependencyProperty.Register("Gesture", typeof(UITouchGesture), typeof(TouchGestureEventProcessor),
+          new PropertyMetadata(null));
+
+        public UITouchGesture Gesture
+        {
+            get { return (UITouchGesture)GetValue(GestureProperty); }
+            set { SetValue(GestureProperty, value); }
+        }
+
+
+        public static DependencyProperty CommandProperty =
+           DependencyProperty.Register("Command", typeof(ICommand), typeof(TouchGestureEventProcessor),
+           new PropertyMetadata(null));
+
+        public ICommand Command
+        {
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
+
+
+        public static DependencyProperty CommandParameterProperty =
+           DependencyProperty.Register("CommandParameter", typeof(object), typeof(TouchGestureEventProcessor),
+           new PropertyMetadata(null));
+
+        public object CommandParameter
+        {
+            get { return (object)GetValue(CommandParameterProperty); }
+            set { SetValue(CommandParameterProperty, value); }
+        }
+
+        #endregion
+    }
 
 }

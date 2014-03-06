@@ -25,9 +25,9 @@ namespace FileExplorer.BaseControls
         {
             if (ic is ListView)
             {
-                var scp = ControlUtils.GetScrollContentPresenter(ic);
-                if (scp != null)
-                    return UITools.GetSelectedListBoxItem(scp, position);
+                //var scp = ControlUtils.GetScrollContentPresenter(ic);
+                //if (scp != null)
+                    return UITools.GetSelectedListBoxItem(ic, position);
                 return null;
             }
             else if (ic is TreeView)

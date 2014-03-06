@@ -33,20 +33,22 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public bool ProcessAllEvents { get; protected set; }
 
-        public IEnumerable<RoutedEvent> ProcessEvents { get { return _processEvents; }}
-        
+        public IEnumerable<RoutedEvent> ProcessEvents { get { return _processEvents; } }
+
     }
 
     public class FlickInputProcessor : InputProcessorBase
     {
 
+
+
         #region Constructors
 
         public FlickInputProcessor()
         {
-            _processEvents.AddRange(new [] { 
-                UIElement.StylusSystemGestureEvent,
-                UIElement.PreviewTouchDownEvent
+            _processEvents.AddRange(new[] { 
+                UIElement.PreviewTouchDownEvent,
+                UIElement.PreviewTouchUpEvent
             }
             );
         }
@@ -57,12 +59,57 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public override void Update(IUIInput input)
         {
-            throw new NotImplementedException();
+            switch (input.EventArgs.RoutedEvent.Name)
+            {
+                case "PreviewTouchDown":
+                    _touchTime = DateTime.UtcNow;
+                    _touchDownPosition = input.Position;
+                    break;
+
+                case "PreviewTouchUp":
+                    if (DateTime.UtcNow.Subtract(_touchTime).TotalMilliseconds < Defines.Defaults.MaximumFlickTime)
+                    {
+                        if (Math.Abs(input.Position.X - _touchDownPosition.X) > Defines.Defaults.MinimumFlickThreshold)
+                        {
+                            if (input.Position.X > _touchDownPosition.X)
+                                input.TouchGesture = UITouchGesture.FlickRight;
+                            else input.TouchGesture = UITouchGesture.FlickLeft;
+                        }
+                        else if (Math.Abs(input.Position.Y - _touchDownPosition.Y) > Defines.Defaults.MinimumFlickThreshold)
+                        {
+                            if (input.Position.Y > _touchDownPosition.Y)
+                                input.TouchGesture = UITouchGesture.FlickDown;
+                            else input.TouchGesture = UITouchGesture.FlickUp;
+                        }
+                    }
+                    break;
+            }
+            //if (input.EventArgs.RoutedEvent.Equals(UIElement.PreviewTouchDownEvent))
+            //{
+            //    _touchDownPosition = input.Position;
+            //}
+            //else if ()
+
+            //if (input.EventArgs.RoutedEvent.Equals(UIElement.StylusSystemGestureEvent))
+            //{
+            //    var gesture = (input.EventArgs as StylusSystemGestureEventArgs).SystemGesture;
+            //    if (gesture == SystemGesture.Flick)
+            //    {
+            //        if (input.Position.X > _touchDownPosition.X + 10)
+            //            input.FlickDirection = UIFlickDirection.Left;
+
+            //        if (_touchDownPosition.X > input.Position.X + 10)
+            //            input.FlickDirection = UIFlickDirection.Right;
+            //    }
+            //}
         }
 
         #endregion
 
         #region Data
+
+        private Point _touchDownPosition = AttachedProperties.InvalidPoint;
+        private DateTime _touchTime = DateTime.MinValue;
 
         #endregion
 
@@ -109,15 +156,34 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
+    public class DebugInputProcessor : InputProcessorBase
+    {
+        public DebugInputProcessor()
+        {
+            ProcessAllEvents = true;
+        }
+
+        public override void Update(IUIInput input)
+        {
+            var touchEventArgs = input.EventArgs as TouchEventArgs;
+            if (touchEventArgs != null)
+            {
+                var touchPts = touchEventArgs.GetIntermediateTouchPoints(input.Sender as IInputElement);
+                var touchInput = String.Join("", touchPts.Select(tp => tp.Action.ToString()[0]));
+                Console.WriteLine(touchInput);
+            }
+        }
+    }
+
     public class ClickCountInputProcessor : InputProcessorBase
     {
         #region Constructors
 
         public ClickCountInputProcessor()
         {
-            
+
             ProcessAllEvents = false;
-            _processEvents.AddRange(new [] { 
+            _processEvents.AddRange(new[] { 
                 UIElement.StylusSystemGestureEvent,
                 UIElement.PreviewTouchDownEvent,
                 UIElement.PreviewMouseLeftButtonDownEvent,
@@ -131,13 +197,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public override void Update(IUIInput input)
         {
-            var touchEventArgs = input.EventArgs as TouchEventArgs;
-            if (touchEventArgs != null)
-            {
-                var touchPts = touchEventArgs.GetIntermediateTouchPoints(input.Sender as IInputElement);
-                var touchInput = String.Join("", touchPts.Select(tp => tp.Action.ToString()[0]));
-                Console.WriteLine(touchInput);
-            }
+
 
 
             if (input.EventArgs is MouseButtonEventArgs)
@@ -147,8 +207,10 @@ namespace FileExplorer.UserControls.InputProcesor
                 {
 
                     //touchPts.First().Action == TouchAction.
-                    if (DateTime.UtcNow.Subtract(_lastClickTime).TotalMilliseconds < 500 &&
-                        input.IsWithin(_startInput, 10, 10))
+                    if (DateTime.UtcNow.Subtract(_lastClickTime).TotalMilliseconds <
+                        FileExplorer.Defines.Defaults.MaximumClickInterval &&
+                        input.IsWithin(_startInput, FileExplorer.Defines.Defaults.MinimumDragDistance,
+                        FileExplorer.Defines.Defaults.MinimumDragDistance))
                     {
                         _clickCount += 1;
                         input.ClickCount = _clickCount;
@@ -177,7 +239,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Public Properties
 
-        
+
 
         #endregion
     }
@@ -191,7 +253,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public DragInputProcessor()
         {
             ProcessAllEvents = false;
-            _processEvents.AddRange(new [] { 
+            _processEvents.AddRange(new[] { 
                 UIElement.PreviewMouseLeftButtonDownEvent,
                 UIElement.PreviewTouchDownEvent,
 
@@ -336,7 +398,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public Action<IUIInput> DragStartedFunc = (currentInput) => { };
         public Action<IUIInput> DragStoppedFunc = (currentInput) => { };
 
- 
+
         #endregion
     }
 }

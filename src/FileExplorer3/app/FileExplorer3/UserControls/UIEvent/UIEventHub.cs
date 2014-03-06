@@ -53,6 +53,7 @@ namespace FileExplorer.BaseControls
             Control = control;
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
             _inputProcessors = new UIInputManager(
+                new FlickInputProcessor(),
                 new ClickCountInputProcessor(),    
                 new DragInputProcessor()
                         {
@@ -98,7 +99,9 @@ namespace FileExplorer.BaseControls
                 {
                     if (value != _isEnabled)
                     {
-                        var listenEvents = _eventProcessors.SelectMany(ep => ep.ProcessEvents).Distinct().ToArray();
+                        var listenEvents = _eventProcessors.SelectMany(ep => ep.ProcessEvents).Union(
+                        _inputProcessors.Processors.SelectMany(ip => ip.ProcessEvents))
+                        .Distinct().ToArray();
 
                         _isEnabled = value;
 

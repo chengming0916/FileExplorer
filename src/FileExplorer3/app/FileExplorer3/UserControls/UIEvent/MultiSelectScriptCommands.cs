@@ -183,9 +183,8 @@ namespace FileExplorer.BaseControls.MultiSelect
                     return new ObtainPointerPosition(new SimpleScriptCommand("ClearSelectionIfNoItemUnderCurrentPosition",
                         pd2 =>
                         {
-
                             //(If not mouse over item and is selecting (dragging), this will unselect all)
-                            object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentPosition"]);
+                            object itemUnderMouse = UITools.GetItemUnderMouse(ic, pd2.AsUIParameterDic().Input.Position);
                             if (itemUnderMouse == null)
                             {
                                 pd2["SelectedList"] = new List<object>();

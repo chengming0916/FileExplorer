@@ -80,7 +80,7 @@ namespace FileExplorer
         public static void Update(this IEnumerable<IUIInputProcessor> processors, IUIInput input)
         {
             foreach (var p in processors)
-                if (p.ProcessEvents.Contains(input.EventArgs.RoutedEvent))
+                if (p.ProcessAllEvents || p.ProcessEvents.Contains(input.EventArgs.RoutedEvent))
                     p.Update(input);
         }
 
