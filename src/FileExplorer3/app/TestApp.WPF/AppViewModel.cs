@@ -126,7 +126,7 @@ namespace TestApp
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
         {
             var directoryPicker = new DirectoryPickerViewModel(
-                AppViewModel.getInitializer(_windowManager, _events, RootModels.ToArray(), true, false));
+                AppViewModel.getInitializer(_windowManager, _events, rootModels, true, false));
             directoryPicker.DirectoryTree.ExpandRootEntryModels();
             directoryPicker.FileList.EnableDrag = false;
             directoryPicker.FileList.EnableDrop = false;
