@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using FileExplorer.BaseControls;
+using FileExplorer.BaseControls.DragnDrop;
+using FileExplorer.BaseControls.MultiSelect;
+
+namespace FileExplorer.Views
+{
+    /// <summary>
+    /// Interaction logic for FileListView.xaml
+    /// </summary>
+    [Export(typeof(UserControl))]
+    public partial class FileListView : UserControl
+    {
+        public FileListView()
+        {
+            InitializeComponent();            
+            //CommandBindings.Add(new CommandBinding(this.ProcessedItems.RenameCommand));
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            //this.ProcessedItems.ContextMenu.PlacementTarget = this.ProcessedItems;
+            //this.RegisterEventProcessors(new DragDropEventProcessor(),
+            //    new MultiSelectEventProcessor(vm1.UnselectAllCommand));
+        }
+
+        //protected override void OnManipulationDelta(ManipulationDeltaEventArgs e)
+        //{
+        //    base.OnManipulationDelta(e);
+        //    Console.WriteLine("OnManipulationDelta");
+        //}
+
+        protected override void OnManipulationStarting(ManipulationStartingEventArgs e)
+        {
+            e.ManipulationContainer = this;
+            e.Handled = true;
+            Console.WriteLine("OnManipulationStarting");
+        }
+    }
+}

@@ -1,0 +1,79 @@
+<Window x:Class="TestApp.AppView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cal="http://www.caliburnproject.org"
+        Width="800" Height="480" 
+        >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="Button">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Margin" Value="5" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <StackPanel Orientation="Vertical">
+        <TextBlock Text="Root directory list" />
+        <ListBox x:Name="RootModels" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text=" (" />
+                        <TextBlock Text="{Binding Label}" />
+                        <TextBlock Text=")" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="Clear" Content="Clear" />
+        <WrapPanel Orientation="Horizontal">
+            <Button x:Name="AddDirectoryInfo" Content="Add (using DirectoryInfo)" ToolTip="Drag n Drop is not coded in DirectoryInfo" />
+            <Button x:Name="AddDirectoryInfoEx" Content="Add (using DirectoryInfoEx)" />
+            <Button x:Name="AddSkyDrive" Content="Add (using OneDrive)" />
+            <Button x:Name="AddGoogleDrive" Content="Add (using GoogleDrive)" ToolTip="Not working yet" />
+        </WrapPanel>
+                       
+        <Rectangle Height="50" />
+        <StackPanel Orientation="Horizontal">
+            <CheckBox x:Name="ExpandRootDirectories" Content="Expand" ToolTip="Expand Root directory when start" IsChecked="True" />
+            <CheckBox x:Name="EnableDrag" Content="Drag" ToolTip="Enable Drag support" IsChecked="True" />
+            <CheckBox x:Name="EnableDrop" Content="Drop" ToolTip="Enable Drop support" IsChecked="True"  />
+            <CheckBox x:Name="EnableMultiSelect" Content="MultiSelect" ToolTip="Enable Multiselect using drag" IsChecked="True" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="OpenWindow"  Content="Open new Explorer Window" />
+            <Button x:Name="UpdateWindow" Content="Update Previous Opened Window" />
+            
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="PickFiles"  Content="FilePicker" />
+            <Button x:Name="SaveFile"  Content="FilePicker(Save)" />
+            <TextBox x:Name="FileFilter" />
+        </StackPanel>        
+        <Button x:Name="ShowDialog" Content="ShowDialog" />        
+        <Button x:Name="MdiWindow" Content="MdiWindow" />
+    </StackPanel>
+
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <ComboBox SelectedValue="{Binding ExplorerModel.FileList.ViewMode}" x:Name="ViewModes" Width="100" />
+            <Slider Value="{Binding ExplorerModel.FileList.ItemSize, Mode=TwoWay}" Minimum="30" Maximum="120" Width="200" />
+            <TextBox x:Name="GotoPath" Width="200" />
+            <Button x:Name="Go" Content="Go"  />
+            <Button x:Name="Change" Content="Change"  />
+            <Button x:Name="Add" Content="Add" />
+            <TextBlock Text="{Binding ExplorerModel.SelectionCount}" />
+        </StackPanel>
+        <ContentControl Name="ExplorerModel" Margin="2"  Grid.Row="1"/>        
+    </Grid>-->
+
+</Window>
