@@ -49,13 +49,14 @@ namespace FileExplorer.UserControls.InputProcesor
         bool IsDragging { get; set; }
         UIInputState Touch { get; set; }
         UITouchGesture TouchGesture { get; set; }
+        ManipulationDelta Delta { get; set; }
     }
 
-    public abstract class InputBase : IUIInput
+    public abstract class UIInputBase : IUIInput
     {
         #region Constructors
 
-        protected InputBase(object sender, RoutedEventArgs args)
+        protected UIInputBase(object sender, RoutedEventArgs args)
         {
             _sender = sender;
             _args = args;
@@ -69,6 +70,8 @@ namespace FileExplorer.UserControls.InputProcesor
                 return new MouseInput(sender, args as MouseButtonEventArgs);
             if (args is MouseEventArgs)
                 return new MouseInput(sender, args as MouseEventArgs);
+            if (args is ManipulationDeltaEventArgs)
+                return new ManipulationInput(sender, args as ManipulationDeltaEventArgs);
             if (args is TouchEventArgs)
                 return new TouchInput(sender, args as TouchEventArgs);
             if (args is StylusEventArgs)
@@ -101,6 +104,7 @@ namespace FileExplorer.UserControls.InputProcesor
         protected UIInputState _touchInputState = UIInputState.NotApplied;
         protected UITouchGesture _flickDirection = UITouchGesture.NotApplied;
         private object _sender;
+        private ManipulationDelta _delta = null;
         //private Point _positionScp = AttachedProperties.InvalidPoint;
 
         #endregion
@@ -117,13 +121,14 @@ namespace FileExplorer.UserControls.InputProcesor
         public UIInputState InputState { get { return _inputState; } set { _inputState = value; } }
         public UIInputState Touch { get { return _touchInputState; } set { _touchInputState = value; } }
         public UITouchGesture TouchGesture { get { return _flickDirection; } set { _flickDirection = value; } }
+        public ManipulationDelta Delta { get { return _delta; } set { _delta = value; } }
 
         public bool IsDragging { get; set; }
         #endregion
 
     }
 
-    public class OtherInput : InputBase
+    public class OtherInput : UIInputBase
     {
         public OtherInput(object sender, RoutedEventArgs args)
             : base(sender, args)
@@ -137,7 +142,7 @@ namespace FileExplorer.UserControls.InputProcesor
         }
     }
 
-    public class InvalidInput : InputBase
+    public class InvalidInput : UIInputBase
     {
         public static InvalidInput Instance = new InvalidInput();
         public InvalidInput()
@@ -149,7 +154,7 @@ namespace FileExplorer.UserControls.InputProcesor
         }
     }
 
-    public class MouseInput : InputBase
+    public class MouseInput : UIInputBase
     {
         #region Constructors
 
@@ -208,7 +213,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
-    public class TouchInput : InputBase
+    public class TouchInput : UIInputBase
     {
         #region Constructors
 
@@ -257,7 +262,41 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
-    public class StylusInput : InputBase
+    public class ManipulationInput : UIInputBase
+    {
+        #region Constructors
+
+        public ManipulationInput(object sender, ManipulationDeltaEventArgs args)
+            : base(sender, args)
+        {
+            _inputState = UIInputState.NotApplied;
+            _inputType = UIInputType.MultiTouch;
+            _position = args.ManipulationOrigin;
+            Delta = args.DeltaManipulation;
+
+        }
+
+        #endregion
+
+        #region Methods
+
+        public override Point PositionRelativeTo(IInputElement inputElement)
+        {
+            throw new NotSupportedException();
+        }
+
+        #endregion
+
+        #region Data
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
+    }
+
+    public class StylusInput : UIInputBase
     {
         #region Constructors
 

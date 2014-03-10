@@ -136,7 +136,7 @@
                                Style="{StaticResource GridViewColumnHeaderGripper}" />
                     </Grid>
                     <ControlTemplate.Triggers>
-                     
+
 
                         <Trigger Property="uc:ListViewEx.ColumnHeaderSortDirection" Value="1">
                             <Setter TargetName="PART_SortSymbol" Property="Data" Value="{StaticResource ascArrow}" />
@@ -178,7 +178,7 @@
                                     ColumnHeaderTemplateSelector="{Binding TemplatedParent.View.ColumnHeaderTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" 
                                     Margin="2,0,2,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                             </ScrollViewer>
-                            <ContentPresenter Content="{Binding ContentBelowHeader, RelativeSource={RelativeSource  AncestorType={x:Type uc:ListViewEx}}}" DockPanel.Dock="Top" />                            
+                            <ContentPresenter Content="{Binding ContentBelowHeader, RelativeSource={RelativeSource  AncestorType={x:Type uc:ListViewEx}}}" DockPanel.Dock="Top" />
                             <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" KeyboardNavigation.DirectionalNavigation="Local" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </DockPanel>
                         <ScrollBar x:Name="PART_HorizontalScrollBar" Cursor="Arrow" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0.0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
@@ -203,12 +203,17 @@
                     <Border Name="Border" BorderThickness="{TemplateBinding BorderThickness}" 
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                        <DockPanel>
+                        <DockPanel >
+                     
                             <AdornerDecorator>
-                                <ScrollViewer Style="{StaticResource ListViewExGridViewScrollViewerStyle}">
-                                    <ItemsPresenter />
+                                <ScrollViewer 
+                                    PanningMode="None"
+                                    Style="{StaticResource ListViewExGridViewScrollViewerStyle}">
+                                    <ItemsPresenter  />
                                 </ScrollViewer>
                             </AdornerDecorator>
+
+
                         </DockPanel>
                     </Border>
                     <ControlTemplate.Triggers>

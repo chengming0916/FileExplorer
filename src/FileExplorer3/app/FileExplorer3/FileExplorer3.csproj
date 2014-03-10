@@ -128,6 +128,7 @@
     <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\ExtensionMethods.cs" />
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
+    <Compile Include="UserControls\UIEvent\PinchEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
     <Compile Include="Utils\DynamicDictionary.cs" />

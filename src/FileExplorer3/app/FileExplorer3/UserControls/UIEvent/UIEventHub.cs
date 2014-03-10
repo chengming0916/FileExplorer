@@ -53,6 +53,7 @@ namespace FileExplorer.BaseControls
             Control = control;
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
             _inputProcessors = new UIInputManager(
+                new ManipulationInputProcessor(),
                 new FlickInputProcessor(),
                 new ClickCountInputProcessor(),    
                 new DragInputProcessor()
@@ -63,12 +64,12 @@ namespace FileExplorer.BaseControls
                                       Control_TouchDrag(inp.Sender, inp.EventArgs as InputEventArgs);
                                   else Control_MouseDrag(inp.Sender, inp.EventArgs as InputEventArgs);
                                   //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 0);
-                                  ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.None);
+                                  //ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.None);
                               },
                             DragStoppedFunc = inp =>
                             {
                                 //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 1);
-                                ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.Both);
+                                //ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.Both);
                             }
                         }
                 );
@@ -112,7 +113,7 @@ namespace FileExplorer.BaseControls
                                 RoutedEventHandler handler = (RoutedEventHandler)(
                                     async (o, re) =>
                                     {
-                                        var input = InputBase.FromEventArgs(o, re);
+                                        var input = UIInputBase.FromEventArgs(o, re);
                                         if (input.IsValid())
                                         {
 
@@ -129,7 +130,7 @@ namespace FileExplorer.BaseControls
                                 _registeredHandler.Add(e, handler);
                                 Control.AddHandler(e, handler);
 
-                                ScrollViewer.SetPanningMode(Control as DependencyObject, PanningMode.Both);
+                                //ScrollViewer.SetPanningMode(Control as DependencyObject, PanningMode.Both);
                             }
                         }
                         else
@@ -170,7 +171,7 @@ namespace FileExplorer.BaseControls
         public async void Control_MouseDrag(object sender, InputEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            var input = InputBase.FromEventArgs(sender, e);
+            var input = UIInputBase.FromEventArgs(sender, e);
             if (await executeAsync(_eventProcessors, UIEventHub.MouseDragEvent, input))
             {
                 (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
@@ -184,7 +185,7 @@ namespace FileExplorer.BaseControls
         public async void Control_TouchDrag(object sender, InputEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            var input = InputBase.FromEventArgs(sender, e);
+            var input = UIInputBase.FromEventArgs(sender, e);
             if (await executeAsync(_eventProcessors, UIEventHub.TouchDragEvent, input))
             {
                 (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;

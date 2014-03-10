@@ -610,6 +610,7 @@ namespace FileExplorer.ViewModels
             return new RefreshFileList(nextCommand, force);
         }
 
+        public static IScriptCommand Zoom = new FileListZoom();
 
     }
 
@@ -727,6 +728,30 @@ namespace FileExplorer.ViewModels
         }
 
 
+    }
+
+    internal class FileListZoom : ScriptCommandBase
+    {
+        internal FileListZoom()
+            : base("Zoom", "ZoomOffset", "ZoomValue")
+        {
+            
+        }
+
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            if (!pm.ContainsKey("FileList"))
+                return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
+            IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
+            
+            if (pm.ContainsKey("ZoomOffset"))
+                flvm.ItemSize += (int)pm["ZoomOffset"];
+            else if (pm.ContainsKey("ZoomValue"))
+                flvm.ItemSize = (int)pm["ZoomValue"];
+
+            return ResultCommand.NoError;
+        }
     }
 
     /// <summary>

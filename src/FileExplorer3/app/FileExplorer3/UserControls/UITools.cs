@@ -434,6 +434,9 @@ namespace FileExplorer.BaseControls
                 DependencyPropertyDescriptor.FromProperty(
                 ScrollViewer.ComputedVerticalScrollBarVisibilityProperty, typeof(ScrollViewer));
 
+            if (scrollView == null)
+                return;
+
             vertScrollbarVisibilityDescriptor.AddValueChanged
                       (scrollView, delegate
                       {

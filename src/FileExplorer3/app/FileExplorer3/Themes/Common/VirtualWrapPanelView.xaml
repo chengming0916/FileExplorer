@@ -17,7 +17,6 @@
         <Setter Property="ItemContainerStyle" 
           Value="{Binding (ListView.View).ItemContainerStyle,
           RelativeSource={RelativeSource Self}}"/>
-       
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>

@@ -59,7 +59,6 @@
     <Style x:Key="ItemContainerStyleBase" TargetType="{x:Type uc:ListViewItemEx}"  >
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
-        
         <!-- Bind to ViewModel -->
         <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />

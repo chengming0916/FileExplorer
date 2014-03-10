@@ -38,5 +38,18 @@ namespace FileExplorer.Views
             //this.RegisterEventProcessors(new DragDropEventProcessor(),
             //    new MultiSelectEventProcessor(vm1.UnselectAllCommand));
         }
+
+        //protected override void OnManipulationDelta(ManipulationDeltaEventArgs e)
+        //{
+        //    base.OnManipulationDelta(e);
+        //    Console.WriteLine("OnManipulationDelta");
+        //}
+
+        protected override void OnManipulationStarting(ManipulationStartingEventArgs e)
+        {
+            e.ManipulationContainer = this;
+            e.Handled = true;
+            Console.WriteLine("OnManipulationStarting");
+        }
     }
 }
