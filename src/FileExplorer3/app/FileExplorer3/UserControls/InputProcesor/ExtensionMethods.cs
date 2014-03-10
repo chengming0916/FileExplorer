@@ -98,6 +98,10 @@ namespace FileExplorer
             if (sender == null)
                 return false;
             var scp = ControlUtils.GetScrollContentPresenter(sender);
+            
+            //Make sure return false for ContextMenu items 
+            if (UITools.FindAncestor<ListView>(originalSource) == null)
+                return false;
             if (scp == null ||
                 //ListViewEx contains ContentBelowHeader, allow placing other controls in it, this is to avoid that)
                 (!scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(originalSource)) &&
@@ -105,6 +109,7 @@ namespace FileExplorer
                  !(originalSource is ScrollViewer))
                 )
                 return false;
+
 
             bool isOverGridViewHeader = UITools.FindAncestor<GridViewColumnHeader>(originalSource) != null;
             bool isOverScrollBar = UITools.FindAncestor<ScrollBar>(originalSource) != null;
