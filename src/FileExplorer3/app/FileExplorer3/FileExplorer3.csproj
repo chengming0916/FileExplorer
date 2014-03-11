@@ -120,7 +120,7 @@
     <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
-    <Compile Include="UserControls\InputProcesor\IInput.cs" />
+    <Compile Include="UserControls\InputProcesor\IUIInput.cs" />
     <Compile Include="UserControls\InputProcesor\IUIInputProcessor.cs" />
     <Compile Include="UserControls\InputProcesor\IUIInputManager.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
@@ -128,7 +128,6 @@
     <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\ExtensionMethods.cs" />
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
-    <Compile Include="UserControls\UIEvent\PinchEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
     <Compile Include="Utils\DynamicDictionary.cs" />

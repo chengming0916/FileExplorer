@@ -19,9 +19,6 @@ namespace FileExplorer.Defines
         public static RoutedUICommand NewWindow = new RoutedUICommand(Strings.strOpenInNewWindow, "OpenInNewWindow", typeof(ExplorerCommands));
 
 
-        public static RoutedUICommand ZoomIn = new RoutedUICommand(Strings.strZoomIn, "ZoomIn", typeof(ExplorerCommands));
-
-
         public static RoutedUICommand Refresh = new RoutedUICommand(Strings.strRefresh, "Refresh", typeof(ExplorerCommands),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.R, ModifierKeys.Control) }));
 

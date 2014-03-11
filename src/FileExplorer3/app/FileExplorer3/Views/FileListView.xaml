@@ -10,7 +10,7 @@
              xmlns:def="clr-namespace:FileExplorer.Defines"
              xmlns:m="clr-namespace:FileExplorer.Models"
              xmlns:v="clr-namespace:FileExplorer.Views"
-             mc:Ignorable="d"   
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -28,21 +28,20 @@
     <Grid>
 
         <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"       
-                    ItemsSource="{Binding ProcessedEntries.All}"   BorderBrush="Transparent"
-                    ViewMode="{Binding ViewMode}"  
-                    Columns="{Binding Columns.ColumnList}"
-                    ColumnFilters ="{Binding Columns.ColumnFilters}"
-                    ColumnsVisibility="Visible"
-                    ItemSize="{Binding ItemSize}"
-                    ItemAnimationDuration="00:00:00" 
-                    IsCheckBoxVisible="{Binding IsCheckBoxVisible, Mode=OneWay}"
-                    SortDirection="{Binding Columns.SortDirection}"
-                    SortBy="{Binding Columns.SortBy}"
-                    AllowDrop="True"
-                    cal:View.ApplyConventions="False"                                            
-                    def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
-                    >
-
+                     ItemsSource="{Binding ProcessedEntries.All}"   BorderBrush="Transparent"
+                     ViewMode="{Binding ViewMode}"  
+                     Columns="{Binding Columns.ColumnList}"
+                     ColumnFilters ="{Binding Columns.ColumnFilters}"
+                     ColumnsVisibility="Visible"
+                     ItemSize="{Binding ItemSize}"
+                     ItemAnimationDuration="00:00:00" 
+                     IsCheckBoxVisible="{Binding IsCheckBoxVisible, Mode=OneWay}"
+                     SortDirection="{Binding Columns.SortDirection}"
+                     SortBy="{Binding Columns.SortBy}"
+                     AllowDrop="True"
+                     cal:View.ApplyConventions="False"                                            
+                     def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
+                       >
             <bc:UIEventAdapter.Processors>
                 <bc:TouchGestureEventProcessor Gesture="FlickLeft" Command="NavigationCommands.BrowseBack" />
                 <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
@@ -54,22 +53,19 @@
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
                         <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlUp}" />
                         <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlDown}" />
-                        <!--<KeyBinding Key="A" Command="def:ExplorerCommands.UnselectAll" /> 
-                <KeyBinding Key="C" Command="def:ExplorerCommands.ToggleCheckBox" />
-                <KeyBinding Key="V" Command="def:ExplorerCommands.ToggleViewMode" />-->
+
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
-                <!--<bc:PinchEventProcessor Mode="XIn" Command="NavigationCommands.IncreaseZoom" 
-                    CommandTarget="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
-                <bc:PinchEventProcessor Mode="XOut" Command="NavigationCommands.DecreaseZoom" 
-                    CommandTarget="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />-->
+
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
-                                        IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"/>
+                                            IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
+                />
+             
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
-                                ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
+                                    ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
                 </bc:ContextMenuEventProcessor>
 

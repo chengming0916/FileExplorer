@@ -27,7 +27,7 @@ namespace FileExplorer.Models
         }
 
         public DirectoryCommandModel(RoutedUICommand routedCommand, params ICommandModel[] commandModels)
-             : base(routedCommand)
+            : base(routedCommand)
         {
             SubCommands = new List<ICommandModel>(commandModels);
         }
@@ -35,7 +35,7 @@ namespace FileExplorer.Models
         public DirectoryCommandModel(params ICommandModel[] commandModels)
             : base()
         {
-            SubCommands = new List<ICommandModel>(commandModels);            
+            SubCommands = new List<ICommandModel>(commandModels);
         }
 
         #endregion
@@ -77,9 +77,11 @@ namespace FileExplorer.Models
             foreach (ISliderStepCommandModel scm in sliderCommandModels)
             {
                 if (scm.Command == null)
-                    scm.Command = new SimpleScriptCommand("", 
-                        pd => { 
-                            SliderValue = scm.SliderStep; return ResultCommand.NoError; });
+                    scm.Command = new SimpleScriptCommand("",
+                        pd =>
+                        {
+                            SliderValue = scm.SliderStep; return ResultCommand.NoError;
+                        });
 
                 if (scm.SliderStep < SliderMinimum) SliderMinimum = scm.SliderStep;
                 if (scm.SliderStep > SliderMaximum) SliderMaximum = scm.SliderStep;
@@ -117,7 +119,18 @@ namespace FileExplorer.Models
 
         public int SliderMaximum { get { return _sliderMaximum; } set { _sliderMaximum = value; NotifyOfPropertyChange(() => SliderMaximum); } }
         public int SliderMinimum { get { return _sliderMinimum; } set { _sliderMinimum = value; NotifyOfPropertyChange(() => SliderMinimum); } }
-        public int SliderValue { get { return _sliderValue; } set { _sliderValue = value; NotifyOfPropertyChange(() => SliderValue); } }
+        public int SliderValue
+        {
+            get { return _sliderValue; }
+            set
+            {
+                if (value > SliderMaximum)
+                    value = SliderMaximum;
+                if (value < SliderMinimum)
+                    value = SliderMinimum;
+                _sliderValue = value; NotifyOfPropertyChange(() => SliderValue);
+            }
+        }
 
         #endregion
     }

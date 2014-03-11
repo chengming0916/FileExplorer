@@ -20,10 +20,11 @@ namespace FileExplorer.Defines
 
     public enum ChangeType { Changed, Created, Deleted, Moved }
 
-    public enum UIInputType { None, MouseLeft, MouseRight, Touch, Stylus, MultiTouch }
+    public enum UIInputType { None, MouseLeft, MouseRight, Touch, Stylus }
     public enum UIInputState { NotApplied, Pressed, Released }
     public enum UITouchGesture { NotApplied, FlickLeft, FlickRight, FlickUp, FlickDown }
 
+    public enum ZoomMode {  ZoomIn, ZoomOut }
     public enum ViewMode : int
     {
         vmTile = 13,

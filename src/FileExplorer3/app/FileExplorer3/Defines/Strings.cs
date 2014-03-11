@@ -20,8 +20,5 @@ namespace FileExplorer.Defines
         public static string strUnselectAll = "Unselect all";
         public static string strInvertSelect = "Invert selection";
         public static string strUpOneLevel = "Up";
-
-        public static string strZoomIn = "Zoom In";
-        public static string strZoomOut = "Zoom Out";
     }
 }
