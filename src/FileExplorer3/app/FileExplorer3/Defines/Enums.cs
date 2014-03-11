@@ -24,6 +24,7 @@ namespace FileExplorer.Defines
     public enum UIInputState { NotApplied, Pressed, Released }
     public enum UITouchGesture { NotApplied, FlickLeft, FlickRight, FlickUp, FlickDown }
 
+    public enum ZoomMode {  ZoomIn, ZoomOut }
     public enum ViewMode : int
     {
         vmTile = 13,

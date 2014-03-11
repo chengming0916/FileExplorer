@@ -51,8 +51,9 @@
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
+                        <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlUp}" />
+                        <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlDown}" />
 
-                   
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
 

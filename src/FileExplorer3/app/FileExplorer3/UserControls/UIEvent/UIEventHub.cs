@@ -112,7 +112,7 @@ namespace FileExplorer.BaseControls
                                 RoutedEventHandler handler = (RoutedEventHandler)(
                                     async (o, re) =>
                                     {
-                                        var input = InputBase.FromEventArgs(o, re);
+                                        var input = UIInputBase.FromEventArgs(o, re);
                                         if (input.IsValid())
                                         {
 
@@ -170,7 +170,7 @@ namespace FileExplorer.BaseControls
         public async void Control_MouseDrag(object sender, InputEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            var input = InputBase.FromEventArgs(sender, e);
+            var input = UIInputBase.FromEventArgs(sender, e);
             if (await executeAsync(_eventProcessors, UIEventHub.MouseDragEvent, input))
             {
                 (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
@@ -184,7 +184,7 @@ namespace FileExplorer.BaseControls
         public async void Control_TouchDrag(object sender, InputEventArgs e)
         {
             FrameworkElement control = sender as FrameworkElement;
-            var input = InputBase.FromEventArgs(sender, e);
+            var input = UIInputBase.FromEventArgs(sender, e);
             if (await executeAsync(_eventProcessors, UIEventHub.TouchDragEvent, input))
             {
                 (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
