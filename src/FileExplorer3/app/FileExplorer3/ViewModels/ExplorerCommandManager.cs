@@ -8,12 +8,13 @@ using Cofe.Core.Script;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
+using System.Windows.Input;
 
 namespace FileExplorer.ViewModels
 {
     public class ExplorerCommandManager : CommandManagerBase
     {
-                #region Constructor
+        #region Constructor
 
         public ExplorerCommandManager(IExplorerViewModel evm, IEventAggregator events,
              params ISupportCommandManager[] cMs)
@@ -45,12 +46,17 @@ namespace FileExplorer.ViewModels
             
             ScriptCommands.Transfer = NullScriptCommand.Instance;
 
+            ScriptCommands.ZoomIn = Explorer.Zoom(ZoomMode.ZoomIn);
+            ScriptCommands.ZoomOut = Explorer.Zoom(ZoomMode.ZoomOut);
+
             #endregion
 
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
             exportBindingSource.Add(
               new ExportCommandBindings(
-              ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.ScriptCommands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer)
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.ScriptCommands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.ScriptCommands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.ScriptCommands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer)
               ));
             exportBindingSource.AddRange(additionalBindingExportSource);
           

@@ -74,8 +74,10 @@ namespace FileExplorer.ViewModels
             );
 
             ScriptCommands.NewWindow = NullScriptCommand.Instance;
-            ScriptCommands.ZoomIn = FileList.Do(fvm => { fvm.ItemSize += 1; return ResultCommand.NoError; });
-            ScriptCommands.ZoomOut = FileList.Do(fvm => { fvm.ItemSize -= 1; return ResultCommand.NoError; });
+
+            ScriptCommands.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
+            ScriptCommands.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
+
             #endregion
 
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
@@ -93,10 +95,6 @@ namespace FileExplorer.ViewModels
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.ScriptCommands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.ScriptCommands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.ZoomIn, this, (ch) => ch.ScriptCommands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Local),
-                //new ScriptCommandBinding(NavigationCommands.IncreaseZoom, p => true, p => ZoomIn(), ParameterDicConverter, ScriptBindingScope.Local),
-                //new ScriptCommandBinding(ExplorerCommands.ZoomIn, p => true, p => ZoomIn(), ParameterDicConverter, ScriptBindingScope.Local),
-                //new ScriptCommandBinding(NavigationCommands.DecreaseZoom, p => true, p => ZoomOut(), ParameterDicConverter, ScriptBindingScope.Local),
                 new ScriptCommandBinding(ExplorerCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), ParameterDicConverter, ScriptBindingScope.Explorer),
                 new ScriptCommandBinding(ExplorerCommands.ToggleViewMode, p => true, p => ToggleViewMode(), ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));
@@ -117,16 +115,6 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
-
-        public void ZoomIn()
-        {
-            _flvm.ItemSize += 1;
-        }
-
-        public void ZoomOut()
-        {
-            _flvm.ItemSize -= 1;
-        }
 
         public void ToggleViewMode()
         {

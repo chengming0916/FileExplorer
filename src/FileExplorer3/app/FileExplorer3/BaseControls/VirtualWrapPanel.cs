@@ -28,7 +28,6 @@ namespace FileExplorer.UserControls
         {
             // For use in the IScrollInfo implementation
             this.RenderTransform = _trans;
-            this.IsManipulationEnabled = true;
         }
 
         #region Methods

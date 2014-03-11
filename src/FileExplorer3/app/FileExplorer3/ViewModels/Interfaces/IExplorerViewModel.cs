@@ -16,6 +16,8 @@ namespace FileExplorer.ViewModels
         IFileListViewModel FileList { get; }
         IStatusbarViewModel Statusbar { get; }
 
+        float UIScale { get; set; }
+
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);
     }

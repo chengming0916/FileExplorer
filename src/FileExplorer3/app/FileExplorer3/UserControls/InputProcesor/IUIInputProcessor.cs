@@ -37,60 +37,11 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
-    public class ManipulationInputProcessor : InputProcessorBase
-    {
-        #region Constructors
-
-        public ManipulationInputProcessor()
-        {
-            _processEvents.AddRange(new[] { 
-                //UIElement.ManipulationStartingEvent,
-                UIElement.ManipulationDeltaEvent
-                //UIElement.ManipulationInertiaStartingEvent
-            }
-            );
-        }
-
-        #endregion
-
-        #region Methods
-
-        public override void Update(IUIInput input)
-        {
-            //Console.WriteLine(input.EventArgs.RoutedEvent.Name);
-            //switch (input.EventArgs.RoutedEvent.Name)
-            //{
-            //    case "ManipulationStarting":
-            //         var args = input.EventArgs as ManipulationStartingEventArgs;
-            //        args.ManipulationContainer = (input.Sender as IInputElement);
-            //        args.IsSingleTouchEnabled = false;
-            //        args.Mode = ManipulationModes.Scale | ManipulationModes.Translate;
-            //        args.Handled = true;
-            //        break;
-            //    case "ManipulationInertiaStarting" :
-            //        //var args2 = input.EventArgs as ManipulationInertiaStartingEventArgs;
-                    
-            //        //args2.Handled = true;
-            //        break;
-            //    case "ManipulationDelta":
-                    
-            //        break;
-            //}
-        }
-
-        #endregion
-
-        #region Data
-
-        #endregion
-
-        #region Public Properties
-
-        #endregion
-    }
-
     public class FlickInputProcessor : InputProcessorBase
     {
+
+
+
         #region Constructors
 
         public FlickInputProcessor()
@@ -285,13 +236,13 @@ namespace FileExplorer.UserControls.InputProcesor
         {
             ProcessAllEvents = false;
             _processEvents.AddRange(new[] { 
-                UIElement.PreviewMouseDownEvent,
+                UIElement.PreviewMouseLeftButtonDownEvent,
                 UIElement.PreviewTouchDownEvent,
 
                 UIElement.MouseMoveEvent,
                 UIElement.TouchMoveEvent,
 
-                UIElement.PreviewMouseUpEvent,
+                UIElement.PreviewMouseLeftButtonUpEvent,
                 UIElement.PreviewTouchUpEvent
             }
             );

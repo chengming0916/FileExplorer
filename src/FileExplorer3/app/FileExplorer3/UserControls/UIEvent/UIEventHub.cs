@@ -53,7 +53,6 @@ namespace FileExplorer.BaseControls
             Control = control;
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
             _inputProcessors = new UIInputManager(
-                new ManipulationInputProcessor(),
                 new FlickInputProcessor(),
                 new ClickCountInputProcessor(),    
                 new DragInputProcessor()
@@ -64,12 +63,12 @@ namespace FileExplorer.BaseControls
                                       Control_TouchDrag(inp.Sender, inp.EventArgs as InputEventArgs);
                                   else Control_MouseDrag(inp.Sender, inp.EventArgs as InputEventArgs);
                                   //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 0);
-                                  //ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.None);
+                                  ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.None);
                               },
                             DragStoppedFunc = inp =>
                             {
                                 //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 1);
-                                //ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.Both);
+                                ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.Both);
                             }
                         }
                 );
@@ -130,7 +129,7 @@ namespace FileExplorer.BaseControls
                                 _registeredHandler.Add(e, handler);
                                 Control.AddHandler(e, handler);
 
-                                //ScrollViewer.SetPanningMode(Control as DependencyObject, PanningMode.Both);
+                                ScrollViewer.SetPanningMode(Control as DependencyObject, PanningMode.Both);
                             }
                         }
                         else

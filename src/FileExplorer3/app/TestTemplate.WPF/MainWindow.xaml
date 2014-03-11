@@ -527,12 +527,12 @@
             </Grid>
         </TabItem>
         <TabItem Header="InputProcessor" IsSelected="True">
-            <Grid >
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ScrollViewer x:Name="inputProcessorCanvas" IsManipulationEnabled="True" Grid.Row="0" />
+                <Rectangle x:Name="inputProcessorCanvas" Fill="Gray" Grid.Row="0" />
                 <ListBox x:Name="inputProcessorOutput" Grid.Row="1" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>

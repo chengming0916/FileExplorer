@@ -24,7 +24,6 @@ using FileExplorer.BaseControls.DragnDrop;
 using FileExplorer.BaseControls.MultiSelect;
 using System.Windows.Media.Animation;
 using FileExplorer.UserControls.InputProcesor;
-using FileExplorer.Defines;
 
 namespace TestTemplate.WPF
 {
@@ -80,7 +79,6 @@ namespace TestTemplate.WPF
         {
             _inputProcessors =
                 new UIInputManager(
-                new ManipulationInputProcessor(), 
                 new DragInputProcessor()
                 {
                     DragStartedFunc = inp => inputProcessorOutput.Items.Add("*DragStarted* " + inp.ToString()),
@@ -91,7 +89,7 @@ namespace TestTemplate.WPF
                     IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
                     // e.Handled = true;
                     _inputProcessors.Update(input);
-                    if (!input.EventArgs.RoutedEvent.Name.Contains("Move"))
+                    if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)
                         inputProcessorOutput.Items.Add(input.ToString());
                     while (inputProcessorOutput.Items.Count > 10)
                         inputProcessorOutput.Items.RemoveAt(0);
@@ -108,8 +106,6 @@ namespace TestTemplate.WPF
             inputProcessorCanvas.AddHandler(UIElement.StylusDownEvent, handler);
             inputProcessorCanvas.AddHandler(UIElement.StylusMoveEvent, handler);
             inputProcessorCanvas.AddHandler(UIElement.StylusUpEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.ManipulationStartingEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.ManipulationDeltaEvent, handler);
         }
 
         private void setupDropDownList()
