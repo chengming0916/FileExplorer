@@ -86,7 +86,7 @@ namespace TestTemplate.WPF
                 });
             RoutedEventHandler handler = (o, e) =>
                 {
-                    IUIInput input = InputBase.FromEventArgs(o, e as InputEventArgs);
+                    IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
                     // e.Handled = true;
                     _inputProcessors.Update(input);
                     if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)

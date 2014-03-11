@@ -75,6 +75,9 @@ namespace FileExplorer.ViewModels
 
             ScriptCommands.NewWindow = NullScriptCommand.Instance;
 
+            ScriptCommands.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
+            ScriptCommands.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
+
             #endregion
 
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
@@ -90,6 +93,8 @@ namespace FileExplorer.ViewModels
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Copy, this, (ch) => ch.ScriptCommands.Copy, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Paste, this, (ch) => ch.ScriptCommands.Paste, ParameterDicConverter, ScriptBindingScope.Local),
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.ScriptCommands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.ScriptCommands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Local),
                 new ScriptCommandBinding(ExplorerCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), ParameterDicConverter, ScriptBindingScope.Explorer),
                 new ScriptCommandBinding(ExplorerCommands.ToggleViewMode, p => true, p => ToggleViewMode(), ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));

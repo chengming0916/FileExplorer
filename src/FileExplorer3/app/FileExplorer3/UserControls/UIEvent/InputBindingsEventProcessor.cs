@@ -56,7 +56,8 @@ namespace FileExplorer.BaseControls
                 new [] {
                     FrameworkElement.KeyDownEvent, 
                     FrameworkElement.PreviewMouseDownEvent,
-                    FrameworkElement.PreviewTouchDownEvent
+                    FrameworkElement.PreviewTouchDownEvent,
+                    FrameworkElement.PreviewMouseWheelEvent
                 });
         }
 

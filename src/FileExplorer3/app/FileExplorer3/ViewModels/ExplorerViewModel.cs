@@ -156,6 +156,7 @@ namespace FileExplorer.ViewModels
         protected IWindowManager _windowManager = new WindowManager();
         private IProfile[] _rootProfiles = new IProfile[] { };
         private IExplorerInitializer _initializer;
+        private float _uiScale = 1.5f;
 
         #endregion
 
@@ -165,6 +166,8 @@ namespace FileExplorer.ViewModels
         public IExplorerInitializer Initializer { get; private set; }
 
         public string WindowTitleMask { get; set; }
+
+        public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChange(() => UIScale); } }
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 

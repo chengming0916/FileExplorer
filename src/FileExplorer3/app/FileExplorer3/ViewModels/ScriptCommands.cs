@@ -350,6 +350,14 @@ namespace FileExplorer.ViewModels
             return new GotoDirectory(dir, thenCommand);
         }
 
+
+        public static IScriptCommand Zoom(ZoomMode mode, int multiplier = 1, IScriptCommand nextCommand = null)
+        {
+            nextCommand = nextCommand ?? ResultCommand.NoError;
+            float offset = (float)(mode == ZoomMode.ZoomIn ? 0.1 : -0.1) * multiplier;
+            return Do(evm => { evm.UIScale += offset; return nextCommand; });
+        }
+
         //public static IScriptCommand GoTo(string path, IScriptCommand thenCommand = null)
         //{
         //    return new GotoDirectory(path, thenCommand);
@@ -535,6 +543,7 @@ namespace FileExplorer.ViewModels
             return new DoFileList(commandFunc);
         }
 
+
         public static IScriptCommand If(Func<IFileListViewModel, bool> condition, IScriptCommand ifTrueCommand,
             IScriptCommand otherwiseCommand)
         {
@@ -553,6 +562,24 @@ namespace FileExplorer.ViewModels
             return new IfFileList(flvm => condition(flvm.Selection.SelectedItems.Select(vm => vm.EntryModel).ToArray()),
                 ifTrueCommand, otherwiseCommand);
         }
+
+        public static IScriptCommand Zoom(ZoomMode mode, int multiplier = 1, IScriptCommand nextCommand = null)
+        {
+            nextCommand = nextCommand ?? ResultCommand.NoError;
+            int offset = (mode == ZoomMode.ZoomIn ? 1 : -1) * multiplier;
+            return Do(flvm =>
+            {
+                var viewModeModel = flvm.Commands.ToolbarCommands.CommandModels.AllNonBindable
+                    .FirstOrDefault(cvm => cvm.CommandModel is ViewModeCommand).CommandModel as ViewModeCommand;
+
+                if (viewModeModel != null)
+                {
+                    viewModeModel.SliderValue += offset;
+                }
+                return nextCommand;
+            });
+        }
+
 
         public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand, string variableName = "Parameter")
         {

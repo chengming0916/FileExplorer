@@ -215,7 +215,7 @@ namespace FileExplorer.UserControls
         /// </summary>
         public double ItemSize
         {
-            get { return (int)GetValue(ItemSizeProperty); }
+            get { return (double)GetValue(ItemSizeProperty); }
             set { SetValue(ItemSizeProperty, value); }
         }
 

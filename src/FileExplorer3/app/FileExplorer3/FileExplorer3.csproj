@@ -120,7 +120,7 @@
     <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
-    <Compile Include="UserControls\InputProcesor\IInput.cs" />
+    <Compile Include="UserControls\InputProcesor\IUIInput.cs" />
     <Compile Include="UserControls\InputProcesor\IUIInputProcessor.cs" />
     <Compile Include="UserControls\InputProcesor\IUIInputManager.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />

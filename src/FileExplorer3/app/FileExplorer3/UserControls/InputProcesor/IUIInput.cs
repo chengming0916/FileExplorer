@@ -51,11 +51,11 @@ namespace FileExplorer.UserControls.InputProcesor
         UITouchGesture TouchGesture { get; set; }
     }
 
-    public abstract class InputBase : IUIInput
+    public abstract class UIInputBase : IUIInput
     {
         #region Constructors
 
-        protected InputBase(object sender, RoutedEventArgs args)
+        protected UIInputBase(object sender, RoutedEventArgs args)
         {
             _sender = sender;
             _args = args;
@@ -123,7 +123,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
-    public class OtherInput : InputBase
+    public class OtherInput : UIInputBase
     {
         public OtherInput(object sender, RoutedEventArgs args)
             : base(sender, args)
@@ -137,7 +137,7 @@ namespace FileExplorer.UserControls.InputProcesor
         }
     }
 
-    public class InvalidInput : InputBase
+    public class InvalidInput : UIInputBase
     {
         public static InvalidInput Instance = new InvalidInput();
         public InvalidInput()
@@ -149,7 +149,7 @@ namespace FileExplorer.UserControls.InputProcesor
         }
     }
 
-    public class MouseInput : InputBase
+    public class MouseInput : UIInputBase
     {
         #region Constructors
 
@@ -208,7 +208,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
-    public class TouchInput : InputBase
+    public class TouchInput : UIInputBase
     {
         #region Constructors
 
@@ -257,7 +257,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
     }
 
-    public class StylusInput : InputBase
+    public class StylusInput : UIInputBase
     {
         #region Constructors
 
