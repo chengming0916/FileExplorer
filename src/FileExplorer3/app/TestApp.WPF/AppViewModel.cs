@@ -48,9 +48,25 @@ namespace TestApp
 
         public static IExplorerInitializer getInitializer(
             IWindowManager windowManager, IEventAggregator events, IEntryModel[] rootModels,
-            bool updateColumns = true, bool updateScriptCommands = true)
+            bool updateColumns = true, bool updateScriptCommands = true,
+            bool enableDrag = true, bool enableDrop = true, bool enableMultiSelect = true, bool expandRootDirectories = false)
         {
             var retVal = new ExplorerInitializer(windowManager, events, rootModels);
+            retVal.Initializers.Add(new ViewModelInitializer<IExplorerViewModel>(evm =>
+                {
+                    //Uncomment this to disable zoom in Explorer / FileList.
+                    //evm.Commands.ScriptCommands.ZoomIn = NullScriptCommand.Instance;
+                    //evm.FileList.Commands.ScriptCommands.ZoomIn = NullScriptCommand.Instance;
+
+                    evm.FileList.EnableDrag = enableDrag;
+                    evm.FileList.EnableDrop = enableDrop;
+                    evm.FileList.EnableMultiSelect = enableMultiSelect;
+                    evm.DirectoryTree.EnableDrag = enableDrag;
+                    evm.DirectoryTree.EnableDrop = enableDrop;
+                    if (expandRootDirectories)
+                        evm.DirectoryTree.ExpandRootEntryModels();
+
+                }));
             if (updateColumns)
                 retVal.Initializers.Add(new ColumnInitializers());
             if (updateScriptCommands)
@@ -62,17 +78,7 @@ namespace TestApp
         }
 
 
-        private void updateExplorerModel(IExplorerViewModel explorerViewModel)
-        {
-            explorerViewModel.FileList.EnableDrag = EnableDrag;
-            explorerViewModel.FileList.EnableDrop = EnableDrop;
-            explorerViewModel.FileList.EnableMultiSelect = EnableMultiSelect;
-            explorerViewModel.DirectoryTree.EnableDrag = EnableDrag;
-            explorerViewModel.DirectoryTree.EnableDrop = EnableDrop;
-            if (_expandRootDirectories)
-                explorerViewModel.DirectoryTree.ExpandRootEntryModels();
-        }
-
+      
         public void OpenWindow()
         {
             var sr = new ScriptRunner();
@@ -87,14 +93,6 @@ namespace TestApp
             //_windowManager.ShowWindow(_explorer);
         }
 
-        public void UpdateWindow()
-        {
-            if (_explorer != null)
-            {
-                _explorer.RootModels = RootModels.ToArray();
-                updateExplorerModel(_explorer);
-            }
-        }
 
         public void PickFiles()
         {
@@ -229,7 +227,7 @@ namespace TestApp
         private IWindowManager _windowManager;
         private IExplorerViewModel _explorer = null;
         private bool _expandRootDirectories = false;
-        private bool _enableDrag, _enableDrop, _enableMultiSelect;
+        private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
 
         private ObservableCollection<IEntryModel> _rootModels = new ObservableCollection<IEntryModel>();
         private string _fileFilter = "Texts (.txt)|*.txt|Pictures (.jpg, .png)|*.jpg,*.png|Songs (.mp3)|*.mp3|All Files (*.*)|*.*";

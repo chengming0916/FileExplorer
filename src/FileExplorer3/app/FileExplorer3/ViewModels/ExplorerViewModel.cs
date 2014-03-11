@@ -156,7 +156,7 @@ namespace FileExplorer.ViewModels
         protected IWindowManager _windowManager = new WindowManager();
         private IProfile[] _rootProfiles = new IProfile[] { };
         private IExplorerInitializer _initializer;
-        private float _uiScale = 1.5f;
+        private float _uiScale = 1.0f;
 
         #endregion
 
