@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Drive.v2.Data;
+using Google.Apis.Drive.v2;
 
 namespace FileExplorer.Models
 {
@@ -43,7 +44,7 @@ namespace FileExplorer.Models
         {
             if (isDirectory)
             {
-                 string parentPath = _profile.Path.GetDirectoryName(fullPath);
+                string parentPath = _profile.Path.GetDirectoryName(fullPath);
                 string name = _profile.Path.GetFileName(fullPath);
                 GoogleDriveItemModel parentDir = await _profile.ParseAsync(parentPath)
                      as GoogleDriveItemModel;
@@ -53,8 +54,8 @@ namespace FileExplorer.Models
 
                 var newFolder = new Google.Apis.Drive.v2.Data.File()
                 {
-                     Title = name,                     
-                     MimeType = GoogleMimeTypeManager.FolderMimeType
+                    Title = name,
+                    MimeType = GoogleMimeTypeManager.FolderMimeType
                 };
                 if (parentDir.UniqueId != "root")
                 {
@@ -66,6 +67,17 @@ namespace FileExplorer.Models
                 return new GoogleDriveItemModel(_profile, insertedFolder, parentDir.FullPath);
             }
             else return new GoogleDriveItemModel(_profile, fullPath, false);
+        }
+
+        public override async Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName, CancellationToken ct)
+        {
+            var entry = (entryModel as GoogleDriveItemModel).Metadata;
+            entry.Title = newName;
+            //if (entry.OriginalFilename != null)
+            //    entry.OriginalFilename = newName;
+
+            var renamedEntry = await _profile.DriveService.Files.Update(entry, entry.Id).ExecuteAsync();
+            return new GoogleDriveItemModel(_profile, renamedEntry, entryModel.Parent.FullPath);
         }
 
         #endregion

@@ -43,7 +43,7 @@ namespace FileExplorer.Models
             UniqueId = f.Id;
             this.Metadata = f;
             this.IsDirectory = f.MimeType.Equals(GoogleMimeTypeManager.FolderMimeType);
-            this.Name = f.OriginalFilename ?? f.Title;
+            this.Name = profile.Path.GetFileName(path);
 
             this.Size = f.FileSize.HasValue ? f.FileSize.Value : 0;
             this._isRenamable = true;
@@ -60,8 +60,17 @@ namespace FileExplorer.Models
                 if (!String.IsNullOrEmpty(extension))
                 {
                     this.FullPath += extension;
-                    this.Label = this.Name += extension;
+                    this.Label = this._name += extension;
                     this.SourceUrl = f.ExportLinks[this.Type];
+                }
+                else
+                {
+                    extension = profile.Path.GetExtension(f.OriginalFilename);
+                    if (!String.IsNullOrEmpty(extension))
+                    {
+                        this.FullPath += extension;
+                        this.Label = this._name += extension;
+                    }
                 }
             }
 
@@ -95,7 +104,12 @@ namespace FileExplorer.Models
         public GoogleDriveItemModel(GoogleDriveProfile profile, Google.Apis.Drive.v2.Data.File file, string parentFullPath = null)
             : base(profile)
         {
-            string name = file.OriginalFilename ?? file.Title;
+            //string ext = file.OriginalFilename == null ? "" : profile.Path.GetExtension(file.OriginalFilename);
+            string name = file.Title;
+            //if (!String.IsNullOrEmpty(ext) &&                                  //OriginalFileName have ext  
+            //    !file.MimeType.Equals(GoogleMimeTypeManager.FolderMimeType) && //Not folder
+            //    String.IsNullOrEmpty(profile.Path.GetExtension(name)))         //Title does not have ext
+            //    name += ext;
             string path = parentFullPath == null ? profile.Alias : parentFullPath + "/" + name;
             init(profile, path, file);
         }
