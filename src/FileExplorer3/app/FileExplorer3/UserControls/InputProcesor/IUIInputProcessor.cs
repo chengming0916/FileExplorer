@@ -236,13 +236,13 @@ namespace FileExplorer.UserControls.InputProcesor
         {
             ProcessAllEvents = false;
             _processEvents.AddRange(new[] { 
-                UIElement.PreviewMouseLeftButtonDownEvent,
+                UIElement.PreviewMouseDownEvent,
                 UIElement.PreviewTouchDownEvent,
 
                 UIElement.MouseMoveEvent,
                 UIElement.TouchMoveEvent,
 
-                UIElement.PreviewMouseLeftButtonUpEvent,
+                UIElement.PreviewMouseUpEvent,
                 UIElement.PreviewTouchUpEvent
             }
             );
@@ -269,7 +269,7 @@ namespace FileExplorer.UserControls.InputProcesor
             input.IsDragging = IsDragging;
         }
 
-        private void UpdateInputPosition(IUIInput input)
+        public void UpdateInputPosition(IUIInput input)
         {
 
             if (_dragState == DragState.Touched && input.EventArgs is TouchEventArgs)
@@ -292,6 +292,8 @@ namespace FileExplorer.UserControls.InputProcesor
                 }
 
             }
+
+            //Console.WriteLine(String.Format("UpdateInputPosition - {0}", _dragState));
             if (_dragState == DragState.Pressed && input.IsDragThresholdReached(_startInput))
             {
                 _dragState = DragState.Dragging;
@@ -300,7 +302,7 @@ namespace FileExplorer.UserControls.InputProcesor
             }
         }
 
-        private void UpdatInputReleased(IUIInput input)
+        public void UpdatInputReleased(IUIInput input)
         {
             if (input.IsSameSource(_startInput))
             {
@@ -309,9 +311,10 @@ namespace FileExplorer.UserControls.InputProcesor
             }
             _isDragging = false;
             _dragState = DragState.Released;
+            //Console.WriteLine(String.Format("UpdatInputReleased - {0}", _dragState));
         }
 
-        private void UpdateInputPressed(IUIInput input)
+        public void UpdateInputPressed(IUIInput input)
         {
 
             if (!_isDragging && input.IsValidPositionForLisView(true))
@@ -332,6 +335,7 @@ namespace FileExplorer.UserControls.InputProcesor
                             {
                                 case DragState.Touched:
                                     break;
+                                case DragState.Normal:
                                 case DragState.Released:
                                     _dragState = DragState.Pressed;
                                     break;
@@ -342,6 +346,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
 
                 }
+            //Console.WriteLine(String.Format("UpdateInputPressed - {0}", _dragState));
         }
 
         #endregion

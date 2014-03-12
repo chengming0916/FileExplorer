@@ -35,7 +35,7 @@
             <Button x:Name="AddDirectoryInfo" Content="Add (using DirectoryInfo)" ToolTip="Drag n Drop is not coded in DirectoryInfo" />
             <Button x:Name="AddDirectoryInfoEx" Content="Add (using DirectoryInfoEx)" />
             <Button x:Name="AddSkyDrive" Content="Add (using OneDrive)" />
-            <Button x:Name="AddGoogleDrive" Content="Add (using GoogleDrive)" ToolTip="Not working yet" />
+            <Button x:Name="AddGoogleDrive" Content="Add (using GoogleDrive)" />
         </WrapPanel>
                        
         <Rectangle Height="50" />
@@ -56,6 +56,7 @@
         </StackPanel>        
         <Button x:Name="ShowDialog" Content="ShowDialog" />        
         <Button x:Name="MdiWindow" Content="MdiWindow" />
+        <Button x:Name="TestLoginDropBox" Content="DropBox" />
     </StackPanel>
 
     <!--<Grid>
