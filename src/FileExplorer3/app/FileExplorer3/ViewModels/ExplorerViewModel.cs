@@ -13,6 +13,7 @@ using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
+using Cofe.Core.Utils;
 
 namespace FileExplorer.ViewModels
 {
@@ -63,7 +64,7 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
-            Task.Run(() => _initializer.Initializers.InitalizeAsync(this));
+            AsyncUtils.RunSync(() => _initializer.Initializers.InitalizeAsync(this));
         }
 
         public async Task GoAsync(IEntryModel entryModel)

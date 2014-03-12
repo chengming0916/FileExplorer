@@ -184,7 +184,7 @@ namespace FileExplorer.BaseControls.MultiSelect
                         pd2 =>
                         {
                             //(If not mouse over item and is selecting (dragging), this will unselect all)
-                            object itemUnderMouse = UITools.GetItemUnderMouse(ic, pd2.AsUIParameterDic().Input.Position);
+                            object itemUnderMouse = UITools.GetItemUnderMouse(ic, (Point)pd2["CurrentRelativePosition"]);
                             if (itemUnderMouse == null)
                             {
                                 pd2["SelectedList"] = new List<object>();
