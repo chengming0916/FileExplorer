@@ -39,6 +39,7 @@ namespace FileExplorer.BaseControls
     {
         UIElement Control { get; }
         IList<UIEventProcessorBase> EventProcessors { get; }
+        IList<IUIInputProcessor> InputProcessors { get; }
         bool IsEnabled { get; set; }
     }
 
@@ -125,6 +126,8 @@ namespace FileExplorer.BaseControls
                                                     }
                                                 );
                                         }
+
+
                                     });
                                 _registeredHandler.Add(e, handler);
                                 Control.AddHandler(e, handler);
@@ -174,6 +177,7 @@ namespace FileExplorer.BaseControls
             if (await executeAsync(_eventProcessors, UIEventHub.MouseDragEvent, input))
             {
                 (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
+                //await executeAsync(_eventProcessors, UIElement.PreviewMouseUpEvent, input);
             }
         }
 
@@ -207,6 +211,7 @@ namespace FileExplorer.BaseControls
 
         public bool IsEnabled { get { return _isEnabled; } set { setIsEnabled(value); } }
         public UIElement Control { get; private set; }
+        public IList<IUIInputProcessor> InputProcessors { get { return _inputProcessors.Processors.ToList(); } }
         public IList<UIEventProcessorBase> EventProcessors
         {
             get { return _eventProcessors; }
