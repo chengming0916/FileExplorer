@@ -96,6 +96,12 @@ namespace TestApp
                 return ResultCommand.NoError;
             }
 
+
+            public override bool CanExecute(ParameterDic pm)
+            {
+                var selection = _getSelectionFunc == null ? null : _getSelectionFunc(pm);
+                return selection == null || (selection.Count() == 1 && selection[0].IsDirectory);
+            }
         }
 
 
