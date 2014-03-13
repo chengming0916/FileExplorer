@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace TestApp
 {
-    public class BasicParamInitalizers :  IViewModelInitializer<IExplorerViewModel>
+    public class BasicParamInitalizers : IViewModelInitializer<IExplorerViewModel>
     {
         private bool _expand;
         private bool _multiSelect;
@@ -70,6 +70,27 @@ namespace TestApp
         }
     }
 
+    public class MdiWindowInitializers : IViewModelInitializer<IExplorerViewModel>
+    {
+
+        private IExplorerInitializer _initializer;
+        private WPF.MDI.MdiContainer _container;
+        public MdiWindowInitializers(IExplorerInitializer initializer, WPF.MDI.MdiContainer container)
+        {
+            _container = container;
+            _initializer = initializer;
+        }
+
+        public async Task InitalizeAsync(IExplorerViewModel explorerModel)
+        {
+            explorerModel.DirectoryTree.Commands.ScriptCommands.NewWindow =
+              new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.ExtensionMethods.GetCurrentDirectoryFunc);
+
+            explorerModel.FileList.Commands.ScriptCommands.NewWindow =
+                new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.ExtensionMethods.GetFileListSelectionFunc);
+        }
+    }
+
     public class ScriptCommandsInitializers : IViewModelInitializer<IExplorerViewModel>
     {
         public static IScriptCommand TransferCommand { get; private set; }
@@ -89,11 +110,6 @@ namespace TestApp
                 new ScriptCommandsInitializers(_windowManager, _events),
                 new ToolbarCommandsInitializers(_windowManager));
 
-            explorerModel.DirectoryTree.Commands.ScriptCommands.NewWindow =
-                Explorer.NewWindow(initilizer, FileExplorer.ExtensionMethods.GetCurrentDirectoryFunc);
-
-            explorerModel.FileList.Commands.ScriptCommands.NewWindow =
-               Explorer.NewWindow(initilizer, FileExplorer.ExtensionMethods.GetFileListSelectionFunc);
 
             explorerModel.FileList.Commands.ScriptCommands.Open =
              FileList.IfSelection(evm => evm.Count() == 1,
