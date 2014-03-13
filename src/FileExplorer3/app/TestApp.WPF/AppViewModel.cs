@@ -99,14 +99,8 @@ namespace TestApp
         {
             var directoryPicker = new DirectoryPickerViewModel(
                 AppViewModel.getInitializer(_windowManager, _events, rootModels, 
+                new BasicParamInitalizers(true, false, false, false),
                 new ColumnInitializers()));
-            
-            directoryPicker.DirectoryTree.ExpandRootEntryModels();
-            directoryPicker.FileList.EnableDrag = false;
-            directoryPicker.FileList.EnableDrop = false;
-            directoryPicker.FileList.EnableMultiSelect = false;
-            directoryPicker.DirectoryTree.EnableDrag = false;
-            directoryPicker.DirectoryTree.EnableDrop = false;
             
             if (_windowManager.ShowDialog(directoryPicker).Value)
                 return directoryPicker.SelectedDirectory;
@@ -179,13 +173,7 @@ namespace TestApp
 
         public void MdiWindow()
         {
-            new MdiWindow()
-            {
-                _profileEx = _profileEx,
-                _events = _events,
-                _windowManager = _windowManager
-            }
-                .Show();
+            new MdiWindow(RootModels.ToArray()).Show();
         }
 
         public void TestLoginDropBox()

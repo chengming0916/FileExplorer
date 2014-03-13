@@ -27,13 +27,12 @@ namespace TestApp
     /// </summary>
     public partial class MdiWindow : Window
     {
-        public MdiWindow()
+        public MdiWindow(IEntryModel[] rootModels)
         {
             InitializeComponent();
 
-            _profileEx = new FileSystemInfoExProfile(_events, _windowManager);
-            _root = _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result;
-            _initializer = AppViewModel.getInitializer(_windowManager, _events, new[] { _root },
+            _root = rootModels;
+            _initializer = AppViewModel.getInitializer(_windowManager, _events,  _root,
                 new ColumnInitializers(),
                 new ScriptCommandsInitializers(_windowManager, _events),
                 new ToolbarCommandsInitializers(_windowManager));
@@ -46,7 +45,7 @@ namespace TestApp
         public IEventAggregator _events = new EventAggregator();
         public IWindowManager _windowManager = new WindowManager();
         public IProfile _profileEx = null;
-        public IEntryModel _root = null;
+        public IEntryModel[] _root = null;
 
         public override void OnApplyTemplate()
         {
@@ -103,6 +102,11 @@ namespace TestApp
         private void Explorer_Click(object sender, RoutedEventArgs e)
         {
             new OpenInNewWindowCommand(Container, _initializer).Execute(new ParameterDic());
+        }
+
+        private void WPFMDI_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://wpfmdi.codeplex.com/");
         }
     }
 

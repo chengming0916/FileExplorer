@@ -33,6 +33,8 @@ namespace TestApp
         {
             viewModel.FileList.EnableDrag = _enableDrag;
             viewModel.FileList.EnableDrop = _enableDrop;
+            viewModel.DirectoryTree.EnableDrag = _enableDrag;
+            viewModel.DirectoryTree.EnableDrop = _enableDrop;
             viewModel.FileList.EnableMultiSelect = _multiSelect;
             if (_expand)
                 viewModel.DirectoryTree.ExpandRootEntryModels();
