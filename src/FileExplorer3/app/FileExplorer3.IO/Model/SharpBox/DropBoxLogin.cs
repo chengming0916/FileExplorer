@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
+    //Does not work for default version (IE7) of WebBrowser, please run SetWebBrowserToIE9.reg
+    //http://weblog.west-wind.com/posts/2011/May/21/Web-Browser-Control-Specifying-the-IE-Version
     public class DropBoxLogin : ILoginInfo
     {
         DropBoxRequestToken _requestToken;
