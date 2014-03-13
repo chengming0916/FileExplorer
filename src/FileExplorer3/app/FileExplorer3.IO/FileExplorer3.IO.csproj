@@ -137,6 +137,7 @@
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
+    <Compile Include="Model\SharpBox\DropBoxLogin.cs" />
     <Compile Include="Model\SharpBox\SharpBoxItemModel.cs" />
     <Compile Include="Model\SharpBox\SharpBoxProfile.cs" />
     <Compile Include="Model\FileBasedCommandProvider.cs" />

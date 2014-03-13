@@ -10,6 +10,7 @@ namespace FileExplorer.Models
     {
         public Uri Url { get; set; }
         public string Title { get; set; }
+        public bool IsCompleted { get; set; }
     }
 
     public interface ILoginInfo

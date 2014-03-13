@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Caliburn.Micro;
 using FileExplorer.Models;
+using FileExplorer.BaseControls;
 
 namespace FileExplorer.ViewModels
 {
@@ -30,9 +31,22 @@ namespace FileExplorer.ViewModels
             _webBrowser = uc.FindName("webBrowser") as WebBrowser;
 
             _webBrowser.LoadCompleted += loadCompleted;
-
+            _webBrowser.Navigating += navigating;
             _webBrowser.Navigate(LoginInfo.StartUrl);
+            
 
+        }
+
+        void navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            CurrentUri = e.Uri;
+            if (LoginInfo != null)
+                if (LoginInfo.CheckLogin(new BrowserStatus()
+                {
+                    Url = CurrentUri,
+                    IsCompleted = false
+                }))
+                    TryClose(true);
         }
 
         void loadCompleted(object sender, NavigationEventArgs e)
@@ -42,7 +56,8 @@ namespace FileExplorer.ViewModels
                 if (LoginInfo.CheckLogin(new BrowserStatus()
                     {
                         Url = CurrentUri, 
-                        Title = ((dynamic)_webBrowser.Document).Title
+                        Title = ((dynamic)_webBrowser.Document).Title,
+                        IsCompleted = true
                     }))
                     TryClose(true);
         }
