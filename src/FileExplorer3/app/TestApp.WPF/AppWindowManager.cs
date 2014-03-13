@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
+using System.Windows.Data;
 
 namespace TestApp
 {
@@ -36,6 +37,8 @@ namespace TestApp
                 {
                     window.Width = 500; window.Height = 500;
                 }
+
+                window.SetBinding(Window.IconProperty, new Binding("CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
             }
 
             return window;

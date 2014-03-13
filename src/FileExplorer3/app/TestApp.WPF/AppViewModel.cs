@@ -46,51 +46,25 @@ namespace TestApp
 
         #region Methods
 
-        public static IExplorerInitializer getInitializer(
-            IWindowManager windowManager, IEventAggregator events, IEntryModel[] rootModels,
-            bool updateColumns = true, bool updateScriptCommands = true,
-            bool enableDrag = true, bool enableDrop = true, bool enableMultiSelect = true, bool expandRootDirectories = false)
+
+        public static IExplorerInitializer getInitializer(IWindowManager windowManager, 
+            IEventAggregator events, IEntryModel[] rootModels, params IViewModelInitializer<IExplorerViewModel>[] initalizers)
         {
             var retVal = new ExplorerInitializer(windowManager, events, rootModels);
-            retVal.Initializers.Add(new ViewModelInitializer<IExplorerViewModel>(evm =>
-                {
-                    //Uncomment this to disable zoom in Explorer / FileList.
-                    //evm.Commands.ScriptCommands.ZoomIn = NullScriptCommand.Instance;
-                    //evm.FileList.Commands.ScriptCommands.ZoomIn = NullScriptCommand.Instance;
-
-                    evm.FileList.EnableDrag = enableDrag;
-                    evm.FileList.EnableDrop = enableDrop;
-                    evm.FileList.EnableMultiSelect = enableMultiSelect;
-                    evm.DirectoryTree.EnableDrag = enableDrag;
-                    evm.DirectoryTree.EnableDrop = enableDrop;
-                    if (expandRootDirectories)
-                        evm.DirectoryTree.ExpandRootEntryModels();
-
-                }));
-            if (updateColumns)
-                retVal.Initializers.Add(new ColumnInitializers());
-            if (updateScriptCommands)
-            {
-                 retVal.Initializers.Add(new ScriptCommandsInitializers(windowManager, events));
-                 retVal.Initializers.Add(new ToolbarCommandsInitializers(windowManager));
-            }
+            retVal.Initializers.AddRange(initalizers);
             return retVal;
         }
-
 
       
         public void OpenWindow()
         {
             var sr = new ScriptRunner();
-            sr.Run(Explorer.NewWindow(getInitializer(_windowManager, _events, RootModels.ToArray())), new ParameterDic());
-
-            //_explorer = new ExplorerViewModel(_events, _windowManager, RootModels.ToArray());
-
-
-
-
-            //updateExplorerModel(initExplorerModel(_explorer, true, true, RootModels.ToArray(), _windowManager));
-            //_windowManager.ShowWindow(_explorer);
+            sr.Run(Explorer.NewWindow(
+                getInitializer(_windowManager, _events, RootModels.ToArray(), 
+                 new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
+                 new ColumnInitializers(),
+                 new ScriptCommandsInitializers(_windowManager, _events),
+                 new ToolbarCommandsInitializers(_windowManager))), new ParameterDic());
         }
 
 
@@ -124,7 +98,9 @@ namespace TestApp
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
         {
             var directoryPicker = new DirectoryPickerViewModel(
-                AppViewModel.getInitializer(_windowManager, _events, rootModels, true, false));
+                AppViewModel.getInitializer(_windowManager, _events, rootModels, 
+                new ColumnInitializers()));
+            
             directoryPicker.DirectoryTree.ExpandRootEntryModels();
             directoryPicker.FileList.EnableDrag = false;
             directoryPicker.FileList.EnableDrop = false;

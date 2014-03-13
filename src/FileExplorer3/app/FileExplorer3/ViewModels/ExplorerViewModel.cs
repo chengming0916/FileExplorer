@@ -14,6 +14,7 @@ using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
 using Cofe.Core.Utils;
+using System.Windows.Media;
 
 namespace FileExplorer.ViewModels
 {
@@ -51,7 +52,7 @@ namespace FileExplorer.ViewModels
         public ExplorerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
             : this(new ExplorerInitializer(windowManager, events, rootModels))
         {
-
+            
         }
 
 
@@ -140,6 +141,8 @@ namespace FileExplorer.ViewModels
         public void Handle(DirectoryChangedEvent message)
         {
             this.DisplayName = String.Format(WindowTitleMask, message.NewModel.Label);
+            _currentDirectoryViewModel = EntryViewModel.FromEntryModel(message.NewModel);
+            NotifyOfPropertyChange("CurrentDirectory");
         }
 
         public void Handle(EntryChangedEvent message)
@@ -159,6 +162,8 @@ namespace FileExplorer.ViewModels
         private IExplorerInitializer _initializer;
         private float _uiScale = 1.0f;
 
+        private IEntryViewModel _currentDirectoryViewModel;
+
         #endregion
 
         #region Public Properties
@@ -167,7 +172,8 @@ namespace FileExplorer.ViewModels
         public IExplorerInitializer Initializer { get; private set; }
 
         public string WindowTitleMask { get; set; }
-
+        public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; } }
+  
         public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChange(() => UIScale); } }
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
