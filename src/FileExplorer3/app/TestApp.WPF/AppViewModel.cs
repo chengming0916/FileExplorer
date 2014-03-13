@@ -47,7 +47,7 @@ namespace TestApp
         #region Methods
 
 
-        public static IExplorerInitializer getInitializer(IWindowManager windowManager, 
+        public static IExplorerInitializer getInitializer(IWindowManager windowManager,
             IEventAggregator events, IEntryModel[] rootModels, params IViewModelInitializer<IExplorerViewModel>[] initalizers)
         {
             var retVal = new ExplorerInitializer(windowManager, events, rootModels);
@@ -55,12 +55,12 @@ namespace TestApp
             return retVal;
         }
 
-      
+
         public void OpenWindow()
         {
             var sr = new ScriptRunner();
             sr.Run(Explorer.NewWindow(
-                getInitializer(_windowManager, _events, RootModels.ToArray(), 
+                getInitializer(_windowManager, _events, RootModels.ToArray(),
                  new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
                  new ColumnInitializers(),
                  new ScriptCommandsInitializers(_windowManager, _events),
@@ -98,10 +98,10 @@ namespace TestApp
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
         {
             var directoryPicker = new DirectoryPickerViewModel(
-                AppViewModel.getInitializer(_windowManager, _events, rootModels, 
+                AppViewModel.getInitializer(_windowManager, _events, rootModels,
                 new BasicParamInitalizers(true, false, false, false),
                 new ColumnInitializers()));
-            
+
             if (_windowManager.ShowDialog(directoryPicker).Value)
                 return directoryPicker.SelectedDirectory;
             return null;
@@ -178,7 +178,11 @@ namespace TestApp
 
         public void TestLoginDropBox()
         {
+            var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id, AuthorizationKeys.DropBox_Client_Secret);
+            if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+            {
 
+            }
         }
 
         #endregion
