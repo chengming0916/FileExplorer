@@ -31,7 +31,7 @@ namespace TestApp
                 }
                 else if (model is FileExplorer.ViewModels.LoginViewModel)
                 {
-                    window.Width = 800; window.Height = 500;
+                    window.Width = 300; window.Height = 350;
                 }
                 else
                 {
