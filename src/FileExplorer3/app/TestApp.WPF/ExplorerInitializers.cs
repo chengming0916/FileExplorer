@@ -15,6 +15,30 @@ using System.Windows.Input;
 
 namespace TestApp
 {
+    public class BasicParamInitalizers :  IViewModelInitializer<IExplorerViewModel>
+    {
+        private bool _expand;
+        private bool _multiSelect;
+        private bool _enableDrag;
+        private bool _enableDrop;
+        public BasicParamInitalizers(bool expand, bool multiSelect, bool enableDrag, bool enableDrop)
+        {
+            _expand = expand;
+            _multiSelect = multiSelect;
+            _enableDrag = enableDrag;
+            _enableDrop = enableDrop;
+        }
+
+        public async Task InitalizeAsync(IExplorerViewModel viewModel)
+        {
+            viewModel.FileList.EnableDrag = _enableDrag;
+            viewModel.FileList.EnableDrop = _enableDrop;
+            viewModel.FileList.EnableMultiSelect = _multiSelect;
+            if (_expand)
+                viewModel.DirectoryTree.ExpandRootEntryModels();
+        }
+    }
+
     public class ColumnInitializers : IViewModelInitializer<IExplorerViewModel>
     {
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
@@ -60,7 +84,10 @@ namespace TestApp
 
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
-            var initilizer = AppViewModel.getInitializer(_windowManager, _events, explorerModel.RootModels.ToArray());
+            var initilizer = AppViewModel.getInitializer(_windowManager, _events, explorerModel.RootModels.ToArray(),
+                new ColumnInitializers(),
+                new ScriptCommandsInitializers(_windowManager, _events),
+                new ToolbarCommandsInitializers(_windowManager));
 
             explorerModel.DirectoryTree.Commands.ScriptCommands.NewWindow =
                 Explorer.NewWindow(initilizer, FileExplorer.ExtensionMethods.GetCurrentDirectoryFunc);
@@ -133,9 +160,9 @@ namespace TestApp
 
     public class ToolbarCommandsInitializers : IViewModelInitializer<IExplorerViewModel>
     {
-         private IWindowManager _windowManager;
-         
-         public ToolbarCommandsInitializers(IWindowManager windowManager)
+        private IWindowManager _windowManager;
+
+        public ToolbarCommandsInitializers(IWindowManager windowManager)
         {
             _windowManager = windowManager;
         }
