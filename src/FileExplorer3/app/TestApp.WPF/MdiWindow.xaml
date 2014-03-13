@@ -10,6 +10,9 @@
                     <MenuItem Header="Add">
                         <MenuItem Header="Explorer" Click="Explorer_Click" />
                     </MenuItem>
+                    <MenuItem Header="About">
+                        <MenuItem Header="This demo uses WPF.MDI class" Click="WPFMDI_Click" />
+                    </MenuItem>
                 </Menu>
             </mdi:MdiContainer.Menu>
         </mdi:MdiContainer>
