@@ -50,7 +50,6 @@ namespace FileExplorer.Models
         #region Public Properties
 
         public FileAttributes Attributes { get; protected set; }
-        public long Size { get; protected set; }
         public string ParentFullPath { get; protected set; }
         public DirectoryInfoEx.DirectoryTypeEnum DirectoryType { get; protected set; }
 

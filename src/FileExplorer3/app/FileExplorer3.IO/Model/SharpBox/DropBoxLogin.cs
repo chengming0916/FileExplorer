@@ -49,7 +49,9 @@ namespace FileExplorer.Models
             set;
         }
 
-        public object AccessToken
+        public DropBoxConfiguration Configuration { get { return _config; } }
+
+        public ICloudStorageAccessToken AccessToken
         {
             get;
             set;
