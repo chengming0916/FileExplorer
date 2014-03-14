@@ -181,7 +181,19 @@ namespace TestApp
             var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id, AuthorizationKeys.DropBox_Client_Secret);
             if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
             {
+                var profile = new DropBoxProfile(_events, _windowManager, login.Client, login.AccessToken);
 
+                var sr = new ScriptRunner();
+                sr.Run(Explorer.NewWindow(
+                    getInitializer(_windowManager, _events, new [] { profile.RootModel },
+                     new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
+                     new ColumnInitializers(),
+                     new ScriptCommandsInitializers(_windowManager, _events),
+                     new ToolbarCommandsInitializers(_windowManager))), new ParameterDic());
+
+                //var children = AsyncUtils.RunSync(() => profile.ListAsync(profile.RootModel, CancellationToken.None));
+                //foreach (var c in children)
+                //    Console.WriteLine(c.FullPath);
             }
         }
 

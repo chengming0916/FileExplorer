@@ -33,7 +33,7 @@ namespace FileExplorer.Models
             init(profile, path);
             UniqueId = d.id;
             this.IsDirectory = d.type == "folder" || d.type == "album";
-
+            
             this._isRenamable = true;
             this.Type = d.type; //photo, album or folder
             this.Description = d.description;

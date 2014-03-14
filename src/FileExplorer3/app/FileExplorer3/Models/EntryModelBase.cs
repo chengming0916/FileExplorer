@@ -92,6 +92,7 @@ namespace FileExplorer.Models
         }
 
         protected IDiskProfile DiskProfile { get; set; }
+        public long Size { get; protected set; }
 
     }
 }

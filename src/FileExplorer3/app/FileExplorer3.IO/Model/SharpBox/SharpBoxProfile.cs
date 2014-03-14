@@ -1,64 +1,94 @@
-﻿//using AppLimit.CloudComputing.SharpBox;
-//using AppLimit.CloudComputing.SharpBox.StorageProvider.DropBox;
-//using Caliburn.Micro;
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using AppLimit.CloudComputing.SharpBox;
+using AppLimit.CloudComputing.SharpBox.StorageProvider.DropBox;
+using Caliburn.Micro;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace FileExplorer.Models
-//{
-//    public class SharpBoxProfile : DiskProfileBase
-//    {
-       
-//        #region Constructors
+namespace FileExplorer.Models
+{
+    public class SharpBoxProfile : DiskProfileBase
+    {
 
-//        /// <summary>
-//        /// For DropBox
-//        /// </summary>
-//        /// <param name="events"></param>
-//        /// <param name="requestToken"></param>
-//        public SharpBoxProfile(IEventAggregator events, IWindowManager windowManager, 
-//            string clientId, string clientSecret, Func<string> authCodeFunc,
-//            string aliasMask = "{0}'s DropBox",
-//            string rootAccessPath = "/me")
-//            : base(events)
-//        {
-//            _cloudStorage = new CloudStorage();
-//            DropBoxConfiguration config = 
-//                CloudStorage.GetCloudConfigurationEasy(nSupportedCloudConfigurations.DropBox) as DropBoxConfiguration;
-//            requestToken = DropBoxStorageProviderTools
-//                .GetDropBoxRequestToken(config,  clientId,  clientSecret); 
-//            ICloudStorageAccessToken accessToken = _cloudStorage.DeserializeSecurityToken(tokenStream);
+        #region Constructors
 
-//            _cloudStorage.Open(cloudConfig, accessToken);
-//        }
+        /// <summary>
+        /// For DropBox
+        /// </summary>
+        /// <param name="events"></param>
+        /// <param name="requestToken"></param>
+        public SharpBoxProfile(IEventAggregator events, IWindowManager windowManager,
+            ICloudStorageConfiguration config, ICloudStorageAccessToken accessToken,
+            string aliasMask = "{0}'s DropBox")
+            : base(events)
+        {
+            _cloudStorage = new CloudStorage();
+            _cloudStorage.Open(config, accessToken);
+
+            var rootFolder = _cloudStorage.GetFolder("/");
+            RootModel = new SharpBoxItemModel(this, rootFolder);
+            Alias = "DropBox";
+            
+            //DropBoxConfiguration config =
+            //    CloudStorage.GetCloudConfigurationEasy(nSupportedCloudConfigurations.DropBox) as DropBoxConfiguration;
+            //requestToken = DropBoxStorageProviderTools
+            //    .GetDropBoxRequestToken(config, clientId, clientSecret);
+            //ICloudStorageAccessToken accessToken = _cloudStorage.DeserializeSecurityToken(tokenStream);
+
+            //_cloudStorage.Open(cloudConfig, accessToken);
+        }
 
 
-//        ~SharpBoxProfile()
-//        {
-//            if (_cloudStorage != null)
-//            {
-//                _cloudStorage.Close();
-//                _cloudStorage = null;
-//            }
-//        }
-//        #endregion
+        ~SharpBoxProfile()
+        {
+            if (_cloudStorage != null)
+            {
+                if (_cloudStorage.IsOpened)
+                    _cloudStorage.Close();
+                _cloudStorage = null;
+            }
+        }
+        #endregion
 
-//        #region Methods
+        #region Methods
 
-//        #endregion
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, System.Threading.CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false)
+        {
+            var dirEntry = (entry as SharpBoxItemModel).Metadata as ICloudDirectoryEntry;
 
-//        #region Data
+            if (dirEntry == null)
+                throw new ArgumentException("Entry");
 
-//        private CloudStorage _cloudStorage;
+            ct.ThrowIfCancellationRequested();
 
-//        #endregion
+            List<IEntryModel> retVal = new List<IEntryModel>();
 
-//        #region Public Properties
+            foreach (var item in dirEntry)
+                retVal.Add(new SharpBoxItemModel(this, item, entry.FullPath));
 
-//        #endregion
-//    }
-//}
+            return retVal;
+        }
+
+        public override Task<IEntryModel> ParseAsync(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Data
+
+        private CloudStorage _cloudStorage;
+        #endregion
+
+        #region Public Properties
+
+        public IEntryModel RootModel { get; protected set; }
+        public string Alias { get; protected set; }
+
+        #endregion
+    }
+}

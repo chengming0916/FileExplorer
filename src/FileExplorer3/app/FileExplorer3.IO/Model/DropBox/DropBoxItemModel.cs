@@ -1,5 +1,4 @@
-﻿using AppLimit.CloudComputing.SharpBox;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,28 +6,36 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
-    public class SharpBoxItemModel : DiskEntryModelBase
+    public class DropBoxItemModel : DiskEntryModelBase
     {
         #region Constructors
 
-        public SharpBoxItemModel(SharpBoxProfile profile, ICloudFileSystemEntry metadata, 
+        public DropBoxItemModel(DropBoxProfile profile, DropNet.Models.MetaData metadata,
             string parentFullPath = null)
             : base(profile)
         {
             //A list of GetPropertyValue - https://www.dropbox.com/developers/core/docs#metadata-details
             Metadata = metadata;
-            base.FullPath = parentFullPath == null ? profile.Alias : profile.Path.Combine(parentFullPath, metadata.Name);
-            this.IsDirectory = metadata is ICloudDirectoryEntry;
-            this.Label = metadata.Name;
+            if (parentFullPath == null)
+            {
+                base.FullPath = base.Label = base.Name = profile.Alias;
+            }
+            else
+            {
+                base.FullPath = profile.Path.Combine(parentFullPath, metadata.Name);
+                base.Label = base.Name = metadata.Name;
+            }
+            this.IsDirectory = metadata.Is_Dir;
+
             this._isRenamable = true;
             if (!this.IsDirectory)
             {
                 long size = 0;
-                if (long.TryParse(metadata.GetPropertyValue("size"), out size))
+                if (long.TryParse(metadata.Size, out size))
                     this.Size = size;
             }
-   
-            this.ImageUrl = metadata.GetPropertyValue("icon");
+
+
         }
 
         #endregion
@@ -43,8 +50,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
-        public ICloudFileSystemEntry Metadata { get; private set; }
-        public string ImageUrl { get; protected set; }
+        public DropNet.Models.MetaData Metadata { get; private set; }
 
         #endregion
     }
