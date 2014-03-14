@@ -128,9 +128,7 @@
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
-    <None Include="Model\SharpBox\DropBoxLogin.cs" />
-    <None Include="Model\SharpBox\SharpBoxItemModel.cs" />
-    <None Include="Model\SharpBox\SharpBoxProfile.cs" />
+    <Compile Include="Model\DropBox\EntryModelExtractorImpl.cs" />
     <Compile Include="Model\DropBox\DropBoxLogin.cs" />
     <Compile Include="Model\DropBox\DropBoxItemModel.cs" />
     <Compile Include="Model\DropBox\DropBoxProfile.cs" />
