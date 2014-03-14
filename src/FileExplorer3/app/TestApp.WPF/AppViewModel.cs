@@ -165,6 +165,22 @@ namespace TestApp
                 RootModels.Add(selectedModel);
         }
 
+        public async Task AddDropBox()
+        {
+            if (_profileDropBox == null)
+            {
+                var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id, AuthorizationKeys.DropBox_Client_Secret);
+                if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+                {
+                    _profileDropBox = new DropBoxProfile(_events, _windowManager, login.Client, login.AccessToken);
+                }
+            }
+            var rootModel = new[] { await _profileDropBox.ParseAsync("") };
+            IEntryModel selectedModel = showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                RootModels.Add(selectedModel);
+        }
+
         public void ShowDialog()
         {
             _windowManager.ShowDialog(new MessageDialogViewModel("Caption", "Message 1 2 3 4 5 6 7 8 9 10",
@@ -176,26 +192,7 @@ namespace TestApp
             new MdiWindow(RootModels.ToArray()).Show();
         }
 
-        public void TestLoginDropBox()
-        {
-            var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id, AuthorizationKeys.DropBox_Client_Secret);
-            if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
-            {
-                var profile = new DropBoxProfile(_events, _windowManager, login.Client, login.AccessToken);
 
-                var sr = new ScriptRunner();
-                sr.Run(Explorer.NewWindow(
-                    getInitializer(_windowManager, _events, new [] { profile.RootModel },
-                     new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
-                     new ColumnInitializers(),
-                     new ScriptCommandsInitializers(_windowManager, _events),
-                     new ToolbarCommandsInitializers(_windowManager))), new ParameterDic());
-
-                //var children = AsyncUtils.RunSync(() => profile.ListAsync(profile.RootModel, CancellationToken.None));
-                //foreach (var c in children)
-                //    Console.WriteLine(c.FullPath);
-            }
-        }
 
         #endregion
 
@@ -216,6 +213,7 @@ namespace TestApp
 
         private ObservableCollection<IEntryModel> _rootModels = new ObservableCollection<IEntryModel>();
         private string _fileFilter = "Texts (.txt)|*.txt|Pictures (.jpg, .png)|*.jpg,*.png|Songs (.mp3)|*.mp3|All Files (*.*)|*.*";
+        private DropBoxProfile _profileDropBox;
         #endregion
 
         #region Public Properties

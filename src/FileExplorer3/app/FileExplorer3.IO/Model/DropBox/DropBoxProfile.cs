@@ -27,12 +27,13 @@ namespace FileExplorer.Models
             string aliasMask = "{0}'s DropBox")
             : base(events)
         {
+            ModelCache = new EntryModelCache<DropBoxItemModel>(m => m.FullPath, () => Alias, true);
             _client = client;
             _accessToken = accessToken;
             Path = PathHelper.Web;
 
             Alias = String.Format(aliasMask, _client.AccountInfo().display_name);
-            RootModel = new DropBoxItemModel(this, _client.GetMetaData("/"));
+            RootModel = ModelCache.RegisterModel(new DropBoxItemModel(this, _client.GetMetaData("/")));
 
             //DiskIO = new SkyDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
@@ -53,6 +54,8 @@ namespace FileExplorer.Models
 
         private string convertRemotePath(string path)
         {
+            path = ModelCache.CheckPath(path);
+
             if (path == Alias)
                 return "/";
 
@@ -67,37 +70,49 @@ namespace FileExplorer.Models
             if (filter == null)
                 filter = em => true;
 
-            var dirEntry = (entry as DropBoxItemModel);
+            var dirModel = (entry as DropBoxItemModel);
+            List<IEntryModel> retList = new List<IEntryModel>();
+            List<DropBoxItemModel> cacheList = new List<DropBoxItemModel>();
 
-            if (dirEntry == null)
-                throw new ArgumentException("Entry");
-
-            ct.ThrowIfCancellationRequested();
-
-            var fetchedMetadata = await _client.GetMetaDataTask(convertRemotePath(entry.FullPath));
-
-
-            List<IEntryModel> retVal = new List<IEntryModel>();
-
-            foreach (var metadata in fetchedMetadata.Contents)
+            if (dirModel != null)
             {
-                var newModel = new DropBoxItemModel(this, metadata, dirEntry.FullPath);
-                if (filter(newModel))
-                    retVal.Add(newModel);
-            }
+                if (!refresh)
+                {
+                    var cachedChild = ModelCache.GetChildModel(dirModel);
+                    if (cachedChild != null)
+                        return cachedChild.Where(m => filter(m)).Cast<IEntryModel>().ToList();
+                }
+                ct.ThrowIfCancellationRequested();
 
-            return retVal;
+                var fetchedMetadata = await _client.GetMetaDataTask(
+                    convertRemotePath(entry.FullPath));
+                foreach (var metadata in fetchedMetadata.Contents)
+                {
+                    var newModel = new DropBoxItemModel(this, metadata, dirModel.FullPath);
+                    cacheList.Add(newModel);
+                    if (filter(newModel))
+                        retList.Add(newModel);
+                }
+                ModelCache.RegisterChildModels(dirModel, cacheList.ToArray());
+            }
+            return retList;
+
         }
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
+            string fullPath = ModelCache.GetUniqueId(ModelCache.CheckPath(path));
+            if (fullPath != null)
+                return ModelCache.GetModel(fullPath);
+
             string remotePath = convertRemotePath(path);
             if (String.IsNullOrEmpty(remotePath))
                 return RootModel;
             else
             {
                 var fetchedMetadata = await _client.GetMetaDataTask(remotePath);
-                return new DropBoxItemModel(this, fetchedMetadata, Path.GetDirectoryName(path));
+                return ModelCache.RegisterModel(
+                    new DropBoxItemModel(this, fetchedMetadata, Path.GetDirectoryName(path)));
             }
         }
 
@@ -113,6 +128,9 @@ namespace FileExplorer.Models
             //else
             if (model.Name.IndexOf('.') != -1)
                 yield return GetFromSystemImageListUsingExtension.Instance;
+
+            if (model.Metadata.Thumb_Exists)
+                yield return DropBoxModelThumbnailExtractor.Instance;
 
             if (model.FullPath == Alias)
                 yield return DropBoxLogo;
@@ -130,6 +148,8 @@ namespace FileExplorer.Models
 
         public IEntryModel RootModel { get; protected set; }
         public string Alias { get; protected set; }
+        internal DropNetClient Client { get { return _client; } }
+        public IEntryModelCache<DropBoxItemModel> ModelCache { get; private set; }
 
         #endregion
     }
