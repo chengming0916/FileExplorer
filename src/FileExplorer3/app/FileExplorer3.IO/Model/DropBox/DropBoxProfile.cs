@@ -22,21 +22,22 @@ namespace FileExplorer.Models
         /// </summary>
         /// <param name="events"></param>
         /// <param name="requestToken"></param>
-        public DropBoxProfile(IEventAggregator events, IWindowManager windowManager, 
-            Func<DropNetClient> clientFunc,
+        public DropBoxProfile(IEventAggregator events, IWindowManager windowManager,
+            string clientId, string clientSecret,
+            Func<UserLogin> loginFunc,
             string aliasMask = "{0}'s DropBox")
             : base(events)
         {
             ModelCache = new EntryModelCache<DropBoxItemModel>(m => m.FullPath, () => Alias, true);
             //_accessToken = accessToken;
             Path = PathHelper.Web;
-            _clientFunc = clientFunc;
-            
-            _client = GetClient();
+            _loginFunc = loginFunc;
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+            _aliasMask = aliasMask;
 
-            _thumbnailExtractor = new DropBoxModelThumbnailExtractor(() => _client);
-            Alias = String.Format(aliasMask, _client.AccountInfo().display_name);
-            RootModel = ModelCache.RegisterModel(new DropBoxItemModel(this, _client.GetMetaData("/")));
+            _thumbnailExtractor = new DropBoxModelThumbnailExtractor(() => GetClient());
+
 
             //DiskIO = new SkyDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
@@ -70,6 +71,8 @@ namespace FileExplorer.Models
         public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct,
             Func<IEntryModel, bool> filter = null, bool refresh = false)
         {
+            checkLogin();
+
             if (filter == null)
                 filter = em => true;
 
@@ -87,7 +90,7 @@ namespace FileExplorer.Models
                 }
                 ct.ThrowIfCancellationRequested();
 
-                var fetchedMetadata = await _client.GetMetaDataTask(ConvertRemotePath(entry.FullPath));
+                var fetchedMetadata = await GetClient().GetMetaDataTask(ConvertRemotePath(entry.FullPath));
                 foreach (var metadata in fetchedMetadata.Contents)
                 {
                     var retVal = new DropBoxItemModel(this, metadata, dirModel.FullPath);
@@ -103,24 +106,28 @@ namespace FileExplorer.Models
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
+            checkLogin();
+            if (path == "" || path == Alias)
+                return new DropBoxItemModel(this);
+
             string fullPath = ModelCache.GetUniqueId(ModelCache.CheckPath(path));
             if (fullPath != null)
                 return ModelCache.GetModel(fullPath);
 
             string remotePath = ConvertRemotePath(path);
-            if (String.IsNullOrEmpty(remotePath))
-                return RootModel;
-            else
-            {
-                var fetchedMetadata = await _client.GetMetaDataTask(remotePath);
-                return ModelCache.RegisterModel(
-                    new DropBoxItemModel(this, fetchedMetadata, Path.GetDirectoryName(path)));
-            }
+            var fetchedMetadata = await GetClient().GetMetaDataTask(remotePath);
+            return ModelCache.RegisterModel(
+                new DropBoxItemModel(this, fetchedMetadata, Path.GetDirectoryName(path)));
+
         }
+
+
 
 
         public override IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
         {
+            checkLogin();
+
             foreach (var extractor in base.GetIconExtractSequence(entry))
                 yield return extractor;
 
@@ -131,28 +138,58 @@ namespace FileExplorer.Models
             if (model.Name.IndexOf('.') != -1)
                 yield return GetFromSystemImageListUsingExtension.Instance;
 
-            if (model.Metadata.Thumb_Exists)
-                yield return _thumbnailExtractor;
-
             if (model.FullPath == Alias)
                 yield return DropBoxLogo;
+
+            else if (model.Metadata.Thumb_Exists)
+                yield return _thumbnailExtractor;
+
+
         }
 
-        public DropNetClient GetClient() { return _clientFunc(); }
+        internal async void checkLogin()
+        {
+            if (_login == null)
+            {
+                _login = _loginFunc();
+                if (_login == null)
+                    throw new Exception("Login failed.");
+
+                var client = new DropNetClient(_clientId, _clientSecret) { UserLogin = _login };
+                Alias = String.Format(_aliasMask, client.AccountInfo().display_name);
+            }
+        }
+
+        public DropNetClient GetClient()
+        {
+            checkLogin();
+            if (_client != null)
+                return _client;
+
+            _client = new DropNetClient(_clientId, _clientSecret) { UserLogin = _login };
+
+
+
+
+            return _client;
+        }
 
         #endregion
 
         #region Data
         private static GetResourceIcon DropBoxLogo = new GetResourceIcon("FileExplorer3.IO", "/Model/DropBox/DropBox_Logo.png");
-        private UserLogin _accessToken;
         private DropBoxModelThumbnailExtractor _thumbnailExtractor;
-        private Func<DropNetClient> _clientFunc;
+        private UserLogin _login = null;
         private DropNetClient _client;
+        private Func<UserLogin> _loginFunc;
+        private string _clientId;
+        private string _clientSecret;
+        private string _aliasMask;
         #endregion
 
         #region Public Properties
 
-        public IEntryModel RootModel { get; protected set; }
+        //public IEntryModel RootModel { get; protected set; }
         public string Alias { get; protected set; }
         public IEntryModelCache<DropBoxItemModel> ModelCache { get; private set; }
 

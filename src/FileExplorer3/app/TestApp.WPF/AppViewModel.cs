@@ -23,6 +23,7 @@ using FileExplorer.BaseControls;
 using System.Threading;
 using Cofe.Core;
 using DropNet;
+using DropNet.Models;
 
 namespace TestApp
 {
@@ -168,24 +169,28 @@ namespace TestApp
 
         public async Task AddDropBox()
         {
-            if (_profileDropBox == null)
+            Func<UserLogin> loginDropBox = () =>
             {
-                var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id, AuthorizationKeys.DropBox_Client_Secret);
+                var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id,
+                    AuthorizationKeys.DropBox_Client_Secret);
                 if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
                 {
-
-                    _profileDropBox = new DropBoxProfile(_events, _windowManager,
-                        () => new DropNetClient(AuthorizationKeys.DropBox_Client_Id,
-                            AuthorizationKeys.DropBox_Client_Secret) { UserLogin = login.AccessToken });
+                    return login.AccessToken;
                 }
-            }
-            if (_profileDropBox != null)
-            {
-                var rootModel = new[] { await _profileDropBox.ParseAsync("") };
-                IEntryModel selectedModel = showDirectoryPicker(rootModel);
-                if (selectedModel != null)
-                    RootModels.Add(selectedModel);
-            }
+                return null;
+            };
+
+            if (_profileDropBox == null)
+                _profileDropBox = new DropBoxProfile(_events, _windowManager,
+                    AuthorizationKeys.DropBox_Client_Id,
+                          AuthorizationKeys.DropBox_Client_Secret,
+                          loginDropBox);
+
+            var rootModel = new[] { await _profileDropBox.ParseAsync("") };
+            IEntryModel selectedModel = showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                RootModels.Add(selectedModel);
+
         }
 
         public void ShowDialog()
