@@ -128,10 +128,12 @@
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
+    <Compile Include="Model\DropBox\DropBoxDiskIOHelper.cs" />
     <Compile Include="Model\DropBox\EntryModelExtractorImpl.cs" />
     <Compile Include="Model\DropBox\DropBoxLogin.cs" />
     <Compile Include="Model\DropBox\DropBoxItemModel.cs" />
     <Compile Include="Model\DropBox\DropBoxProfile.cs" />
+    <Compile Include="Model\DropBox\DropBoxFileStream.cs" />
     <Compile Include="Model\FileBasedCommandProvider.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
     <Compile Include="Model\FileBasedIconExtractors.cs" />

@@ -22,16 +22,19 @@ namespace FileExplorer.Models
         /// </summary>
         /// <param name="events"></param>
         /// <param name="requestToken"></param>
-        public DropBoxProfile(IEventAggregator events, IWindowManager windowManager,
-            DropNetClient client, UserLogin accessToken,
+        public DropBoxProfile(IEventAggregator events, IWindowManager windowManager, 
+            Func<DropNetClient> clientFunc,
             string aliasMask = "{0}'s DropBox")
             : base(events)
         {
             ModelCache = new EntryModelCache<DropBoxItemModel>(m => m.FullPath, () => Alias, true);
-            _client = client;
-            _accessToken = accessToken;
+            //_accessToken = accessToken;
             Path = PathHelper.Web;
+            _clientFunc = clientFunc;
+            
+            _client = GetClient();
 
+            _thumbnailExtractor = new DropBoxModelThumbnailExtractor(() => _client);
             Alias = String.Format(aliasMask, _client.AccountInfo().display_name);
             RootModel = ModelCache.RegisterModel(new DropBoxItemModel(this, _client.GetMetaData("/")));
 
@@ -52,7 +55,7 @@ namespace FileExplorer.Models
 
         #region Methods
 
-        private string convertRemotePath(string path)
+        public string ConvertRemotePath(string path)
         {
             path = ModelCache.CheckPath(path);
 
@@ -70,10 +73,10 @@ namespace FileExplorer.Models
             if (filter == null)
                 filter = em => true;
 
-            var dirModel = (entry as DropBoxItemModel);
             List<IEntryModel> retList = new List<IEntryModel>();
             List<DropBoxItemModel> cacheList = new List<DropBoxItemModel>();
 
+            var dirModel = (entry as DropBoxItemModel);
             if (dirModel != null)
             {
                 if (!refresh)
@@ -84,14 +87,13 @@ namespace FileExplorer.Models
                 }
                 ct.ThrowIfCancellationRequested();
 
-                var fetchedMetadata = await _client.GetMetaDataTask(
-                    convertRemotePath(entry.FullPath));
+                var fetchedMetadata = await _client.GetMetaDataTask(ConvertRemotePath(entry.FullPath));
                 foreach (var metadata in fetchedMetadata.Contents)
                 {
-                    var newModel = new DropBoxItemModel(this, metadata, dirModel.FullPath);
-                    cacheList.Add(newModel);
-                    if (filter(newModel))
-                        retList.Add(newModel);
+                    var retVal = new DropBoxItemModel(this, metadata, dirModel.FullPath);
+                    cacheList.Add(ModelCache.RegisterModel(retVal));
+                    if (filter(retVal))
+                        retList.Add(retVal);
                 }
                 ModelCache.RegisterChildModels(dirModel, cacheList.ToArray());
             }
@@ -105,7 +107,7 @@ namespace FileExplorer.Models
             if (fullPath != null)
                 return ModelCache.GetModel(fullPath);
 
-            string remotePath = convertRemotePath(path);
+            string remotePath = ConvertRemotePath(path);
             if (String.IsNullOrEmpty(remotePath))
                 return RootModel;
             else
@@ -130,25 +132,28 @@ namespace FileExplorer.Models
                 yield return GetFromSystemImageListUsingExtension.Instance;
 
             if (model.Metadata.Thumb_Exists)
-                yield return DropBoxModelThumbnailExtractor.Instance;
+                yield return _thumbnailExtractor;
 
             if (model.FullPath == Alias)
                 yield return DropBoxLogo;
         }
 
+        public DropNetClient GetClient() { return _clientFunc(); }
+
         #endregion
 
         #region Data
         private static GetResourceIcon DropBoxLogo = new GetResourceIcon("FileExplorer3.IO", "/Model/DropBox/DropBox_Logo.png");
-        private DropNetClient _client;
         private UserLogin _accessToken;
+        private DropBoxModelThumbnailExtractor _thumbnailExtractor;
+        private Func<DropNetClient> _clientFunc;
+        private DropNetClient _client;
         #endregion
 
         #region Public Properties
 
         public IEntryModel RootModel { get; protected set; }
         public string Alias { get; protected set; }
-        internal DropNetClient Client { get { return _client; } }
         public IEntryModelCache<DropBoxItemModel> ModelCache { get; private set; }
 
         #endregion
