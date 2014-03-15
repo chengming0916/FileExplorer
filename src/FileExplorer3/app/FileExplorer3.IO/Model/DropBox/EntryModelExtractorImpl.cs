@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DropNet;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,12 @@ namespace FileExplorer.Models
 {
     public class DropBoxModelThumbnailExtractor : IEntryModelIconExtractor
     {
-        public static DropBoxModelThumbnailExtractor Instance = new DropBoxModelThumbnailExtractor();
+        private Func<DropNetClient> _clientFunc;
+        public DropBoxModelThumbnailExtractor(Func<DropNetClient> clientFunc)
+        {
+            _clientFunc = clientFunc;
+        }
+
 
         public async Task<ImageSource>
             GetIconForModelAsync(IEntryModel model, System.Threading.CancellationToken ct)
@@ -19,7 +25,7 @@ namespace FileExplorer.Models
             var dboxModel = model as DropBoxItemModel;
             if (dboxModel != null && dboxModel.Metadata.Thumb_Exists)
             {
-                byte[] bytes = (await (model.Profile as DropBoxProfile).Client.GetThumbnailTask(dboxModel.Metadata, 
+                byte[] bytes = (await _clientFunc().GetThumbnailTask(dboxModel.Metadata, 
                     DropNet.Models.ThumbnailSize.Large)).RawBytes;
                 
                 BitmapImage retIcon = new BitmapImage();

@@ -65,7 +65,7 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
-            AsyncUtils.RunSync(() => _initializer.Initializers.InitalizeAsync(this));
+            _initializer.Initializers.InitalizeAsync(this);
         }
 
         public async Task GoAsync(IEntryModel entryModel)

@@ -22,6 +22,7 @@ using FileExplorer.ViewModels.Helpers;
 using FileExplorer.BaseControls;
 using System.Threading;
 using Cofe.Core;
+using DropNet;
 
 namespace TestApp
 {
@@ -172,13 +173,19 @@ namespace TestApp
                 var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id, AuthorizationKeys.DropBox_Client_Secret);
                 if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
                 {
-                    _profileDropBox = new DropBoxProfile(_events, _windowManager, login.Client, login.AccessToken);
+
+                    _profileDropBox = new DropBoxProfile(_events, _windowManager,
+                        () => new DropNetClient(AuthorizationKeys.DropBox_Client_Id,
+                            AuthorizationKeys.DropBox_Client_Secret) { UserLogin = login.AccessToken });
                 }
             }
-            var rootModel = new[] { await _profileDropBox.ParseAsync("") };
-            IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            if (selectedModel != null)
-                RootModels.Add(selectedModel);
+            if (_profileDropBox != null)
+            {
+                var rootModel = new[] { await _profileDropBox.ParseAsync("") };
+                IEntryModel selectedModel = showDirectoryPicker(rootModel);
+                if (selectedModel != null)
+                    RootModels.Add(selectedModel);
+            }
         }
 
         public void ShowDialog()

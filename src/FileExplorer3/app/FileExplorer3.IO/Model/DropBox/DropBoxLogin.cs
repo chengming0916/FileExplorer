@@ -38,9 +38,6 @@ namespace FileExplorer.Models
             get;
             set;
         }
-
-        public DropNetClient Client
-        { get { return _client; } }
       
         public UserLogin AccessToken
         {

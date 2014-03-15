@@ -25,6 +25,7 @@ namespace FileExplorer.Models
                 base.FullPath = profile.Path.Combine(parentFullPath, metadata.Name);
                 base.Label = base.Name = metadata.Name;
             }
+            this.RemotePath = profile.ConvertRemotePath(base.FullPath);
             this.IsDirectory = metadata.Is_Dir;
 
             this._isRenamable = true;
@@ -50,6 +51,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        public string RemotePath { get; private set; }
         public DropNet.Models.MetaData Metadata { get; private set; }
 
         #endregion
