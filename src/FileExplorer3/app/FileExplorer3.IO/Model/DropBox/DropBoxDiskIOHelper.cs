@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace FileExplorer.Models
+{
+    public class DropBoxDiskIOHelper : DiskIOHelperBase
+    {
+
+        #region Constructors
+
+        public DropBoxDiskIOHelper(DropBoxProfile profile)
+            : base(profile)
+        {
+            _profile = profile;
+
+            this.Mapper = new FileBasedDiskPathMapper();
+        }
+
+
+        #endregion
+
+        #region Methods
+
+        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct)
+        {
+            switch (access)
+            {
+                case FileAccess.Read: return await DropBoxFileStream.OpenReadAsync(entryModel, ct);
+                case FileAccess.Write: return DropBoxFileStream.OpenWrite(entryModel);
+                case FileAccess.ReadWrite: return await DropBoxFileStream.OpenReadWriteAsync(entryModel, ct);
+            }
+            throw new NotSupportedException();
+        }
+
+        public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)
+        {
+            _profile.checkLogin();
+            string parentPath = _profile.Path.GetDirectoryName(fullPath);
+            string parentRemotePath = _profile.ConvertRemotePath(parentPath);
+            string name = _profile.Path.GetFileName(fullPath);
+            string remotePath = _profile.Path.Combine(parentRemotePath, name);
+
+            if (isDirectory)
+            {
+
+                DropBoxItemModel parentDir = await _profile.ParseAsync(parentPath)
+                     as DropBoxItemModel;
+
+                if (parentDir == null)
+                    throw new DirectoryNotFoundException(parentPath);
+
+                
+                var addedFolder = await _profile.GetClient().CreateFolderTask(remotePath, m => { }, e => { });
+                ct.ThrowIfCancellationRequested();
+                return new DropBoxItemModel(_profile, addedFolder, parentDir.FullPath);
+
+
+
+            }
+            else return new DropBoxItemModel(_profile, name, parentRemotePath);
+        }
+
+
+        #endregion
+
+        #region Data
+
+        private DropBoxProfile _profile;
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
+    }
+}
