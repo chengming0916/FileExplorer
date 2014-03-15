@@ -10,6 +10,19 @@ namespace FileExplorer.Models
     {
         #region Constructors
 
+        /// <summary>
+        /// For root directory.
+        /// </summary>
+        /// <param name="profile"></param>
+        public DropBoxItemModel(DropBoxProfile profile)
+            : base(profile)
+        {
+            this.FullPath = this.Label = this.Name = profile.Alias;
+            this.IsDirectory = true;
+            this.RemotePath = "/";
+
+        }
+
         public DropBoxItemModel(DropBoxProfile profile, DropNet.Models.MetaData metadata,
             string parentFullPath = null)
             : base(profile)

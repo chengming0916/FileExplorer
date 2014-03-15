@@ -23,7 +23,7 @@ namespace FileExplorer.Models
             GetIconForModelAsync(IEntryModel model, System.Threading.CancellationToken ct)
         {
             var dboxModel = model as DropBoxItemModel;
-            if (dboxModel != null && dboxModel.Metadata.Thumb_Exists)
+            if (dboxModel != null && dboxModel.Metadata != null && dboxModel.Metadata.Thumb_Exists)
             {
                 byte[] bytes = (await _clientFunc().GetThumbnailTask(dboxModel.Metadata, 
                     DropNet.Models.ThumbnailSize.Large)).RawBytes;
