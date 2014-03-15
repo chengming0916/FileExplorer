@@ -16,7 +16,7 @@ namespace FileExplorer.Models
     {
         #region Constructor        
 
-        public FileBasedDiskPathMapper(Func<IEntryModel, string> urlFunc, string tempPath = null)
+        public FileBasedDiskPathMapper(Func<IEntryModel, string> urlFunc = null, string tempPath = null)
         {            
             _tempPath = tempPath != null ? tempPath : Path.Combine(Path.GetTempPath(), "FileExplorer");
             _urlFunc = urlFunc;
@@ -47,7 +47,7 @@ namespace FileExplorer.Models
                 string path = Path.Combine(_tempPath, model.FullPath.Replace('/', '\\').TrimStart('\\'));
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 bool isCached = _isCachedDictionary.ContainsKey(model.FullPath) && _isCachedDictionary[model.FullPath];
-                string sourceUrl = _urlFunc(model);
+                string sourceUrl = _urlFunc == null ? null : _urlFunc(model);
                 if (sourceUrl == null)
                 {
                     if (model.IsDirectory)

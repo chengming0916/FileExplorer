@@ -23,6 +23,21 @@ namespace FileExplorer.Models
 
         }
 
+        /// <summary>
+        /// For temporary file.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="name"></param>
+        /// <param name="parentFullPath"></param>
+        internal DropBoxItemModel(DropBoxProfile profile, string name,
+            string parentFullPath)
+            : base(profile)
+        {
+            base.FullPath = profile.Path.Combine(parentFullPath, name);
+            base.Label = base.Name = name;
+            this.RemotePath = profile.ConvertRemotePath(this.FullPath);
+        }
+
         public DropBoxItemModel(DropBoxProfile profile, DropNet.Models.MetaData metadata,
             string parentFullPath = null)
             : base(profile)

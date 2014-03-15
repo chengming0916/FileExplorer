@@ -39,7 +39,7 @@ namespace FileExplorer.Models
             _thumbnailExtractor = new DropBoxModelThumbnailExtractor(() => GetClient());
 
 
-            //DiskIO = new SkyDriveDiskIOHelper(this);
+            DiskIO = new DropBoxDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
@@ -64,8 +64,8 @@ namespace FileExplorer.Models
                 return "/";
 
             if (path.StartsWith(Alias))
-                return path.Substring(Alias.Length + 1);
-            return path;
+                return "/" + path.Substring(Alias.Length + 1);
+            return "/" + path.TrimStart('/');
         }
 
         public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct,
@@ -115,10 +115,16 @@ namespace FileExplorer.Models
                 return ModelCache.GetModel(fullPath);
 
             string remotePath = ConvertRemotePath(path);
-            var fetchedMetadata = await GetClient().GetMetaDataTask(remotePath);
-            return ModelCache.RegisterModel(
-                new DropBoxItemModel(this, fetchedMetadata, Path.GetDirectoryName(path)));
-
+            try
+            {
+                var fetchedMetadata = await GetClient().GetMetaDataTask(remotePath);
+                return ModelCache.RegisterModel(
+                    new DropBoxItemModel(this, fetchedMetadata, Path.GetDirectoryName(path)));
+            }
+            catch
+            {
+                return null; //Not found
+            }
         }
 
 
@@ -141,13 +147,13 @@ namespace FileExplorer.Models
             if (model.FullPath == Alias)
                 yield return DropBoxLogo;
 
-            else if (model.Metadata.Thumb_Exists)
+            else if (model.Metadata != null && model.Metadata.Thumb_Exists)
                 yield return _thumbnailExtractor;
 
 
         }
 
-        internal async void checkLogin()
+        internal void checkLogin()
         {
             if (_login == null)
             {
@@ -163,8 +169,8 @@ namespace FileExplorer.Models
         public DropNetClient GetClient()
         {
             checkLogin();
-            if (_client != null)
-                return _client;
+            //if (_client != null)
+            //    return _client;
 
             _client = new DropNetClient(_clientId, _clientSecret) { UserLogin = _login };
 
