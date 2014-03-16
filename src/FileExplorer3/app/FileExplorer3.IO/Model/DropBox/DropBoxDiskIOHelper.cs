@@ -65,6 +65,25 @@ namespace FileExplorer.Models
             else return new DropBoxItemModel(_profile, name, parentRemotePath);
         }
 
+        public override async Task DeleteAsync(IEntryModel entryModel, CancellationToken ct)
+        {
+            DropBoxItemModel entry = entryModel as DropBoxItemModel;
+            var profile = entry.Profile as DropBoxProfile;
+
+            await profile.GetClient().DeleteTask(entry.RemotePath);
+        }
+
+        public override async Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName, CancellationToken ct)
+        {
+            DropBoxItemModel entry = entryModel as DropBoxItemModel;
+            var profile = entry.Profile as DropBoxProfile;
+            string newRemotePath = profile.Path.Combine(
+                profile.Path.GetDirectoryName(entry.RemotePath), newName);
+            string newPath = profile.Path.Combine(
+                profile.Path.GetDirectoryName(entry.FullPath), newName);
+            await profile.GetClient().MoveTask(entry.RemotePath, newRemotePath);
+            return await profile.ParseAsync(newPath);
+        }
 
         #endregion
 
