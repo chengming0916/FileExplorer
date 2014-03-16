@@ -47,7 +47,9 @@ namespace FileExplorer.ViewModels
                 (ems, eff) => curDir.Profile.DragDrop.QueryDrop(ems, curDir, eff),                
                 da => dataObjectFunc(da, selection),
                 (ems, da, eff) => curDir.Profile.DragDrop.OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
-            { }
+            {
+                
+            }
         }
         #endregion
 

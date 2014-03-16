@@ -22,6 +22,7 @@ namespace FileExplorer.Models
         public FileSystemInfoProfile(IEventAggregator events, IWindowManager windowsManager)
             : base(events)
         {
+            DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new FileSystemInfoExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();

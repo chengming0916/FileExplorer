@@ -112,7 +112,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
             if (isd != null)
             {
-                UITools.SetItemUnderMouseToAttachedProperty(ic, pd.Input.Position,
+                UITools.SetItemUnderMouseToAttachedProperty(ic, pd.Input.PositionRelativeTo(scp),
                     AttachedProperties.StartDraggingItemProperty);
 
                 return new IfItemUnderMouseSelected(new SetSelectedDraggables(), ResultCommand.NoError);
