@@ -111,6 +111,7 @@ namespace FileExplorer.Models
         public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager)
             : base(events)
         {
+            DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer();
             MetadataProvider = new FileSystemInfoMetadataProvider();
             CommandProviders = new List<ICommandProvider>()

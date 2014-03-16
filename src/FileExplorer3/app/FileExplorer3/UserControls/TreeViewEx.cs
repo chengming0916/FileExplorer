@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace FileExplorer.UserControls
 {
@@ -40,7 +41,7 @@ namespace FileExplorer.UserControls
     }
 
     public class TreeViewItemEx : TreeViewItem
-    {       
+    {
         #region Cosntructor
 
         public TreeViewItemEx()
@@ -63,6 +64,28 @@ namespace FileExplorer.UserControls
             return new TreeViewItemEx();
         }
 
+
+        protected override void OnDragEnter(DragEventArgs e)
+        {
+            base.OnDragEnter(e);
+
+            if (ExpandIfDragOver)
+            {
+                DispatcherTimer dispatcherTimer = new DispatcherTimer();
+                EventHandler onTick = null;
+                onTick = (o1, e1) =>
+                    {
+                        if (this.IsDraggingOver)
+                            this.SetValue(TreeViewItem.IsExpandedProperty, true);
+                        dispatcherTimer.Tick -= onTick;
+                        dispatcherTimer.Stop();
+                    };
+                dispatcherTimer.Tick += onTick;
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                dispatcherTimer.Start();
+            }
+
+        }
         //override hittestvi
 
         #endregion
@@ -88,10 +111,20 @@ namespace FileExplorer.UserControls
             get { return (bool)GetValue(IsDraggingOverProperty); }
             set { SetValue(IsDraggingOverProperty, value); }
         }
-        
+
         public static readonly DependencyProperty IsDraggingOverProperty =
-            DependencyProperty.Register("IsDraggingOver", typeof(bool), 
+            DependencyProperty.Register("IsDraggingOver", typeof(bool),
             typeof(TreeViewItemEx), new UIPropertyMetadata(false));
+
+        public bool ExpandIfDragOver
+        {
+            get { return (bool)GetValue(ExpandIfDragOverProperty); }
+            set { SetValue(ExpandIfDragOverProperty, value); }
+        }
+
+        public static readonly DependencyProperty ExpandIfDragOverProperty =
+            DependencyProperty.Register("ExpandIfDragOver", typeof(bool),
+            typeof(TreeViewItemEx), new UIPropertyMetadata(true));
 
         #endregion
     }

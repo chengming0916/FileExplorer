@@ -78,7 +78,7 @@ namespace FileExplorer.Models
         public DiskProfileBase(IEventAggregator events)
             : base(events)
         {
-            DiskIO = new DefaultDiskIOHelper(this);
+            
         }
 
         public IDiskIOHelper DiskIO { get; protected set; }        
