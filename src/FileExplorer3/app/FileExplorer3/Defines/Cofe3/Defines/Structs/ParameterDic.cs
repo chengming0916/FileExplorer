@@ -99,5 +99,7 @@ namespace Cofe.Core
             set { if (this.ContainsKey("Error")) this["Error"] = value; else this.Add("Error", value); }
         }
 
+        public List<string> CommandHistory = new List<string>();
+
     }
 }
