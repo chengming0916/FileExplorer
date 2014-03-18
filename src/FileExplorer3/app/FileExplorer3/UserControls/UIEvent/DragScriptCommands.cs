@@ -57,6 +57,34 @@ namespace FileExplorer.BaseControls.DragnDrop
             return ele;
         }
 
+        public static T GetDataContext<T>(ref FrameworkElement ele, Func<object, T> filter = null)
+        {
+            object dataContext = ele.DataContext;
+            var filterResult = filter(dataContext);
+            if (filterResult != null)
+            {
+                ele = GetDataContextOwner(ele);
+                return filterResult;
+            }
+            else
+            {
+                var ic = UITools.FindAncestor<ItemsControl>(ele);
+                while (ic != null)
+                {
+                    filterResult = filter(ic.DataContext);
+                    if (filterResult != null)
+                    {
+                        ele = GetDataContextOwner(ic);
+                        return filterResult;
+                    }
+                    ic = UITools.FindAncestor<ItemsControl>(VisualTreeHelper.GetParent(ic));
+                }
+
+                return default(T);
+            }
+
+        }
+
         public static T GetDataContext<T>(ParameterDic pm, out FrameworkElement ele, Func<object, T> filter = null)
         {
             var pd = pm.AsUIParameterDic();
@@ -89,9 +117,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             return default(T);
         }
 
-
     }
-
     /// <summary>
     /// Set StartSelectedItem when PreviewMouseDown.
     /// </summary>
@@ -121,7 +147,41 @@ namespace FileExplorer.BaseControls.DragnDrop
         }
     }
 
+    public class QueryDrag : ScriptCommandBase
+    {
+        private IScriptCommand _otherwiseCmd;
+        private Func<ItemsControl, ISupportDrag, IScriptCommand> _succeedCmd;
+        public QueryDrag(Func<ItemsControl, ISupportDrag, IScriptCommand> succeedCmd,
+            IScriptCommand otherwiseCmd)
+            : base("QueryDrag")
+        {
+            _succeedCmd = succeedCmd;
+            _otherwiseCmd = otherwiseCmd;
+        }
 
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
+
+
+            if (ic != null && isd != null)
+                if (ic.GetValue(AttachedProperties.StartDraggingItemProperty) != null)
+                {
+                    var previousDraggables = AttachedProperties.GetSelectedDraggables(ic);
+                    var currentDraggables = isd.GetDraggables().ToList();
+
+                    if (currentDraggables.Any() && previousDraggables != null &&
+                        currentDraggables.SequenceEqual(previousDraggables))
+                    {
+                        return _succeedCmd(ic, isd);
+                    }
+                }
+
+            return _otherwiseCmd;
+        }
+    }
 
     public class BeginDrag : ScriptCommandBase
     {
@@ -130,30 +190,17 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
-
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
 
-            if (ic.GetValue(AttachedProperties.StartDraggingItemProperty) != null)
-                if (isd != null)
-                {
-                    var previousDraggables = AttachedProperties.GetSelectedDraggables(ic);
-                    var currentDraggables = isd.GetDraggables().ToList();
-
-                    if (currentDraggables.Any() && previousDraggables != null &&
-                        currentDraggables.SequenceEqual(previousDraggables))
-                    {
-                        //Set it handled so it wont call multi-select.
-                        pd.EventArgs.Handled = true;
-                        pd.IsHandled = true;
-                        AttachedProperties.SetIsDragging(ic, true);
-                        return new DoDragDrop(ic, isd);
-                    }
-                }
-
-            return ResultCommand.NoError; //Not supported
+            return new QueryDrag((ic, isd) =>
+            {
+                //Set it handled so it wont call multi-select.
+                pd.EventArgs.Handled = true;
+                pd.IsHandled = true;
+                AttachedProperties.SetIsDragging(ic, true);
+                return new DoDragDrop(ic, isd);
+            }, ResultCommand.NoError);
         }
     }
 
