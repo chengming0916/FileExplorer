@@ -18,9 +18,10 @@ namespace Cofe.Core.Script
             while (cmds.Any())
             {
                 var current = cmds.Dequeue();
-                Debug.WriteLine("ScriptRunner:" + current.CommandKey);
+                //Debug.WriteLine("ScriptRunner:" + current.CommandKey);
                 if (current.CanExecute(pd))
-                {                    
+                {
+                    pd.CommandHistory.Add(current.CommandKey);
                     var retCmd = current.Execute(pd);
                     if (retCmd != null)
                     {
@@ -49,6 +50,7 @@ namespace Cofe.Core.Script
                 var current = cmds.Dequeue();
                 if (current.CanExecute(pd))
                 {
+                    pd.CommandHistory.Add(current.CommandKey);
                     var retCmd = await current.ExecuteAsync(pd).ConfigureAwait(false);
                     if (retCmd != null)
                     {

@@ -392,7 +392,7 @@
             </uc:ListViewEx>
         </TabItem>
 
-        <TabItem Header="UIEventHub" >
+        <TabItem Header="UIEventHub" IsSelected="True" >
             <Grid>
                 <Grid.Resources>
                     <DataTemplate x:Key="dragnDropItemTemplate">
@@ -526,7 +526,7 @@
                 </ListView>
             </Grid>
         </TabItem>
-        <TabItem Header="InputProcessor" IsSelected="True">
+        <TabItem Header="InputProcessor" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100" />

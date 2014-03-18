@@ -254,6 +254,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public override void Update(IUIInput input)
         {
+
             switch (input.InputState)
             {
                 case Defines.UIInputState.Pressed:
@@ -271,7 +272,6 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public void UpdateInputPosition(IUIInput input)
         {
-
             if (_dragState == DragState.Touched && input.EventArgs is TouchEventArgs)
             {
                 if (DateTime.UtcNow.Subtract(_touchTime).TotalSeconds >= 0.5)
@@ -279,6 +279,7 @@ namespace FileExplorer.UserControls.InputProcesor
                     var rect = (input.EventArgs as TouchEventArgs).GetTouchPoint(null).Size;
                     if ((input as TouchInput).IsDragThresholdReached(_startTouchInput as TouchInput))
                     {
+                        StartInput = _startTouchInput;
                         _dragState = DragState.Pressed;
                         //_touchTime = DateTime.MinValue;
                         //_isDragging = true;

@@ -37,6 +37,13 @@ namespace FileExplorer.Defines
         vmViewer = 256
     }
 
+    public enum DragMode
+    {
+        None, //Not dragging.
+        DoDragDrop, //By calling DoDragDrop(), default mode. 
+        Lite //By setting DraggingDataObject
+    }
+
     public enum SelectionModeEx : int
     {
         Single = 1,
