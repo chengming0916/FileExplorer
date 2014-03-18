@@ -65,12 +65,11 @@
       <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.DragnDrop.ContinueDragLite" Collapsed="true">
+  <Class Name="FileExplorer.BaseControls.DragnDrop.ContinueDrag" Collapsed="true">
     <Position X="2.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>UserControls\UIEvent\DragLiteScriptCommands.cs</FileName>
-      <NewMemberFileName>UserControls\UIEvent\DragScriptCommands.cs</NewMemberFileName>
+      <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FileExplorer.BaseControls.DragnDrop.IfItemUnderMouseSelected" Collapsed="true">
@@ -88,14 +87,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="FileExplorer.BaseControls.DragnDrop.DoDragDrop" Collapsed="true">
-    <Position X="4.5" Y="2.25" Width="1.5" />
+    <Position X="6.25" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAACAAAAEAAAAQAAABAAAAAAIAAAQBAAAAABAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FileExplorer.BaseControls.DragnDrop.NotifyDropCompleted" Collapsed="true">
-    <Position X="6.25" Y="2.25" Width="1.75" />
+    <Position X="8" Y="2.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAACAQABAAAAABAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
@@ -164,11 +163,32 @@
       <FileName>UserControls\UIEvent\DropScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.DragnDrop.EndDragLite" Collapsed="true">
+  <Class Name="FileExplorer.BaseControls.DragnDrop.EndDrag" Collapsed="true">
     <Position X="2.75" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>UserControls\UIEvent\DragLiteScriptCommands.cs</FileName>
+      <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileExplorer.BaseControls.DragnDrop.DataContextFinder" Collapsed="true">
+    <Position X="12.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAIAAAAAAAAAACAAAEAA=</HashCode>
+      <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileExplorer.BaseControls.DragnDrop.QueryDrag" Collapsed="true">
+    <Position X="4.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileExplorer.BaseControls.DragnDrop.IfIsDragging" Collapsed="true">
+    <Position X="12.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserControls\UIEvent\DragScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="FileExplorer.BaseControls.DragnDrop.QueryDragDropEffectMode" Collapsed="true">

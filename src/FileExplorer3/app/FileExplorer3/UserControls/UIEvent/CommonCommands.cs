@@ -19,6 +19,8 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.BaseControls
 {
+
+
     public static partial class UITools
     {
         public static Control GetItemUnderMouse(ItemsControl ic, Point position)
@@ -114,6 +116,44 @@ namespace FileExplorer.BaseControls
         {
             pm.IsHandled = _toVal;
             return _nextCommand == null ? ResultCommand.NoError : _nextCommand;
+        }
+    }
+
+    public class CapturePointer : ScriptCommandBase
+    {
+        public static IScriptCommand Capture(IInputElement ele, CaptureMode mode = CaptureMode.Element, IScriptCommand nextCommand = null)
+        {
+            return new CapturePointer(ele, mode, nextCommand);
+        }
+        public static IScriptCommand Release(IScriptCommand nextCommand)
+        { return new CapturePointer(null, CaptureMode.None, nextCommand); }
+
+        private IInputElement _ele;
+        private CaptureMode _mode;
+        public CapturePointer(IInputElement ele, CaptureMode mode = CaptureMode.Element, IScriptCommand nextCommand = null)
+            : base("CapturePointer", nextCommand)
+        {
+            _ele = ele;
+            _mode = mode;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            switch (pd.Input.InputType)
+            {
+                case UIInputType.Touch:
+                    (pd.Input.EventArgs as TouchEventArgs).TouchDevice.Capture(_ele, _mode);
+                    break;
+                case UIInputType.MouseLeft:
+                case UIInputType.MouseRight:
+                case UIInputType.Stylus:
+                    Mouse.Capture(_ele, _mode);
+                    break;
+                default:
+                    return ResultCommand.Error(new NotSupportedException());
+            }
+            return _nextCommand;
         }
     }
 

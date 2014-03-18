@@ -478,8 +478,9 @@
 
                 <ListView x:Name="lvDnd1" Grid.Column="1" Grid.Row="2" >
                     <bc:UIEventAdapter.Processors>
-                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
-                        <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
+                        <!--<bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />-->
+                        <bc:DragDropLiteEventProcessor />
+                        <!--<bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />-->
                     </bc:UIEventAdapter.Processors>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -491,8 +492,9 @@
                 </ListView>
                 <ListView x:Name="lvDnd2" Grid.Column="2" Grid.Row="2">
                     <bc:UIEventAdapter.Processors>
-                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
-                        <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
+                        <bc:DragDropLiteEventProcessor />
+                        <!--<bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                        <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />-->
                     </bc:UIEventAdapter.Processors>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
