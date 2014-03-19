@@ -237,11 +237,13 @@ namespace FileExplorer.BaseControls.DragnDrop
                         _previousDataObject = newDataObject;
                     }
 
-                    var adornerPos = pd.Input.PositionRelativeTo(parentWindow);
-                    //if (pd.Input is TouchInput)
-                    //    adornerPos.Offset(-dragAdorner.ActualWidth, -dragAdorner.ActualHeight);
-                    dragAdorner.PointerPosition = adornerPos;
-
+                    //if (!Double.IsNaN(pd.Input.Position.X) && !Double.IsNaN(pd.Input.Position.Y))
+                    {
+                        var adornerPos = pd.Input.PositionRelativeTo(parentWindow);
+                        //if (pd.Input is TouchInput)
+                        //    adornerPos.Offset(-dragAdorner.ActualWidth, -dragAdorner.ActualHeight);
+                        dragAdorner.PointerPosition = adornerPos;
+                    }
                     dragAdorner.IsDragging = true;
                 }
                 pd["DragAdorner"] = dragAdorner;

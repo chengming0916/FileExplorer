@@ -43,6 +43,8 @@ namespace FileExplorer.UserControls.InputProcesor
         {
             _sourceInput = sourceInput;
             var eventArgs = sourceInput.EventArgs as DragEventArgs;
+            _relPositionFunc = relTo => eventArgs.GetPosition(relTo);
+            _position = _relPositionFunc(sourceInput.Sender as IInputElement);
             init(eventArgs.Data, eventArgs.AllowedEffects, (eff) => { eventArgs.Effects = eff; });
         }
 
@@ -52,7 +54,9 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public Point PositionRelativeTo(IInputElement inputElement)
         {
-            return _sourceInput.PositionRelativeTo(inputElement);
+            return _relPositionFunc != null ?
+                _relPositionFunc(inputElement) :
+                _sourceInput.PositionRelativeTo(inputElement);
         }
 
         #endregion
@@ -60,7 +64,9 @@ namespace FileExplorer.UserControls.InputProcesor
         #region Data
 
         IUIInput _sourceInput;
-private  Action<DragDropEffects> _effectSetFunc;
+        private Action<DragDropEffects> _effectSetFunc;
+        private Func<IInputElement, Point> _relPositionFunc;
+        private Point? _position;
 
         #endregion
 
@@ -73,7 +79,7 @@ private  Action<DragDropEffects> _effectSetFunc;
         public RoutedEventArgs EventArgs { get { return _sourceInput.EventArgs; } }
         public object Sender { get { return _sourceInput.Sender; } }
         public int ClickCount { get { return _sourceInput.ClickCount; } set { _sourceInput.ClickCount = value; } }
-        public Point Position { get { return _sourceInput.Position; } }
+        public Point Position { get { return _position.HasValue ? _position.Value : _sourceInput.Position; } }
         public Point ScrollBarPosition { get { return _sourceInput.ScrollBarPosition; } }
         public UIInputType InputType { get { return _sourceInput.InputType; } }
         public UIInputState InputState { get { return _sourceInput.InputState; } }

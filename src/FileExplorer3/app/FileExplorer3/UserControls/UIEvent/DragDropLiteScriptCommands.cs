@@ -110,30 +110,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         }
     }
 
-    //public class UpdateAdornerTextLite : ScriptCommandBase
-    //{
-    //    public UpdateAdornerTextLite()
-    //        : base("UpdateAdornerTextLite", "EventArgs")
-    //    { }
 
-    //    public override IScriptCommand Execute(ParameterDic pm)
-    //    {
-    //        var pd = pm.AsUIParameterDic();
-    //        DragAdorner dragAdorner = pd["DragAdorner"] as DragAdorner;
-    //        var ic = pd.Sender as ItemsControl;
-    //        FrameworkElement ele;
-    //        ISupportDrop isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
-    //        if (isd != null && dragAdorner != null)
-    //        {
-    //            dragAdorner.Text = String.Format("{0} {1} items to {2}",
-    //              "Copy",
-    //                (int)pd["DraggingItemsCount"],
-    //                isd.DropTargetLabel);
-    //        }
-
-    //        return ResultCommand.NoError;
-    //    }
-    //}
 
     public class EndDragLite : ScriptCommandBase
     {
@@ -154,7 +131,11 @@ namespace FileExplorer.BaseControls.DragnDrop
             //AttachedProperties.SetStartDraggingItem(ic, null);
             //AttachedProperties.SetIsDragging(ic, false);
 
-            return CapturePointer.Release(new DetachAdorner());
+            pd.Input = new DragInput(pd.Input,
+                   DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
+                   DragDropEffects.Copy, (eff) => { });
+            return new BeginDrop();
+            //return CapturePointer.Release(new DetachAdorner());
         }
     }
 
