@@ -14,7 +14,7 @@ namespace FileExplorer.UserControls.InputProcesor
     {
         IEnumerable<RoutedEvent> ProcessEvents { get; }
         bool ProcessAllEvents { get; }
-        void Update(IUIInput input);
+        IUIInput Update(IUIInput input);
     }
 
     public class InputProcessorBase : IUIInputProcessor
@@ -26,9 +26,9 @@ namespace FileExplorer.UserControls.InputProcesor
             _processEvents = new List<RoutedEvent>();
         }
 
-        public virtual void Update(IUIInput input)
+        public virtual IUIInput Update(IUIInput input)
         {
-
+            return input;
         }
 
         public bool ProcessAllEvents { get; protected set; }
@@ -57,7 +57,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Methods
 
-        public override void Update(IUIInput input)
+        public override IUIInput Update(IUIInput input)
         {
             switch (input.EventArgs.RoutedEvent.Name)
             {
@@ -84,6 +84,8 @@ namespace FileExplorer.UserControls.InputProcesor
                     }
                     break;
             }
+
+            return input;
         }
 
         #endregion
@@ -115,12 +117,13 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Methods
 
-        public override void Update(IUIInput input)
+        public override IUIInput Update(IUIInput input)
         {
             if (input.InputType == UIInputType.Touch && input.InputState != UIInputState.NotApplied)
                 _touchState = input.InputState;
 
             input.Touch = _touchState;
+            return input;
         }
 
         #endregion
@@ -145,7 +148,7 @@ namespace FileExplorer.UserControls.InputProcesor
             ProcessAllEvents = true;
         }
 
-        public override void Update(IUIInput input)
+        public override IUIInput Update(IUIInput input)
         {
             var touchEventArgs = input.EventArgs as TouchEventArgs;
             if (touchEventArgs != null)
@@ -154,6 +157,29 @@ namespace FileExplorer.UserControls.InputProcesor
                 var touchInput = String.Join("", touchPts.Select(tp => tp.Action.ToString()[0]));
                 Console.WriteLine(touchInput);
             }
+
+            return input;
+        }
+    }
+
+    public class DropInputProcessor : InputProcessorBase
+    {
+        public DropInputProcessor()
+        {
+            ProcessAllEvents = false;
+            _processEvents.AddRange(new[] { 
+                UIElement.DragEnterEvent,
+                UIElement.DragLeaveEvent,
+
+                UIElement.DragOverEvent,
+                UIElement.DropEvent
+            }
+            );
+        }
+
+        public override IUIInput Update(IUIInput input)
+        {
+            return new DragInput(input);
         }
     }
 
@@ -177,7 +203,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Methods
 
-        public override void Update(IUIInput input)
+        public override IUIInput Update(IUIInput input)
         {
 
 
@@ -206,7 +232,7 @@ namespace FileExplorer.UserControls.InputProcesor
                     _lastClickTime = DateTime.UtcNow;
                 }
             //else _clickCount = 0;
-
+            return input;
         }
 
         #endregion
@@ -252,7 +278,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Methods
 
-        public override void Update(IUIInput input)
+        public override IUIInput Update(IUIInput input)
         {
 
             switch (input.InputState)
@@ -268,6 +294,7 @@ namespace FileExplorer.UserControls.InputProcesor
                     break;
             }
             input.IsDragging = IsDragging;
+            return input;
         }
 
         public void UpdateInputPosition(IUIInput input)

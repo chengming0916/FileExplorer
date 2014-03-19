@@ -18,7 +18,7 @@ namespace FileExplorer.UserControls.InputProcesor
         /// </summary>
         RoutedEventArgs EventArgs { get; }
 
-        object Sender { get;  }
+        object Sender { get; }
 
         int ClickCount { get; set; }
 
@@ -84,7 +84,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public override string ToString()
         {
-            return String.Format("{0} {1} {2} {3}", _args.RoutedEvent.Name, 
+            return String.Format("{0} {1} {2} {3}", _args.RoutedEvent.Name,
                 _inputType, _inputState, _position);
         }
 
@@ -128,7 +128,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public OtherInput(object sender, RoutedEventArgs args)
             : base(sender, args)
         {
-         
+
         }
 
         public override Point PositionRelativeTo(IInputElement inputElement)
@@ -203,9 +203,6 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #endregion
 
-
-
-
     }
 
     public class TouchInput : UIInputBase
@@ -222,13 +219,13 @@ namespace FileExplorer.UserControls.InputProcesor
                 UIInputType.Touch;
             switch (touchPoint.Action)
             {
-                case  TouchAction.Down :
+                case TouchAction.Down:
                     _inputState = UIInputState.Pressed;
-                    
+
                     break;
-                case TouchAction.Up: 
+                case TouchAction.Up:
                     _inputState = UIInputState.Released;
-                
+
                     break;
 
             }
@@ -278,7 +275,7 @@ namespace FileExplorer.UserControls.InputProcesor
                 case "StylusMove":
                     _inputState = UIInputState.NotApplied;
                     break;
-                default :
+                default:
                     _inputType = UIInputType.None;
                     break;
             }

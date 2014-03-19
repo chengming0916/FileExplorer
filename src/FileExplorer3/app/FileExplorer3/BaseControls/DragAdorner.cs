@@ -66,7 +66,6 @@ namespace FileExplorer.BaseControls
             }));
 
             _canvas.Children.Add(_stackPanel);
-
             this.AddLogicalChild(_canvas);
             this.AddVisualChild(_canvas);
         }

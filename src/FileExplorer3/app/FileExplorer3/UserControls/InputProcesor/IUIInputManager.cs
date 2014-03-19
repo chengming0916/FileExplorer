@@ -10,7 +10,7 @@ namespace FileExplorer.UserControls.InputProcesor
     public interface IUIInputManager
     {
         IEnumerable<IUIInputProcessor> Processors { get; }
-        void Update(IUIInput input);
+        IUIInput Update(IUIInput input);
     }
 
     public class UIInputManager : IUIInputManager
@@ -26,11 +26,12 @@ namespace FileExplorer.UserControls.InputProcesor
 
         #region Methods
 
-        public void Update(IUIInput input)
+        public IUIInput Update(IUIInput input)
         {
             foreach (var p in Processors)
                 if (p.ProcessAllEvents || p.ProcessEvents.Contains(input.EventArgs.RoutedEvent))
-                    p.Update(input);
+                    input = p.Update(input);
+            return input;
         }
 
         //public void AddPostionAdjust(Type type, Func<Point, FrameworkElement, Point> func)

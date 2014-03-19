@@ -19,6 +19,9 @@ namespace FileExplorer.BaseControls
                     UIEventHub.MouseDragEvent,
                     FrameworkElement.PreviewMouseUpEvent,
                     FrameworkElement.MouseMoveEvent,
+                    
+                    FrameworkElement.MouseLeaveEvent,
+                    FrameworkElement.TouchLeaveEvent,
 
                     UIEventHub.TouchDragEvent,
                     FrameworkElement.PreviewTouchDownEvent,
@@ -41,8 +44,11 @@ namespace FileExplorer.BaseControls
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
                     return new EndDragLite();
+                case "MouseLeave":
+                case "TouchLeave":
+                    return new DetachAdorner();
                 case "TouchMove":
-                    case "MouseMove":
+                case "MouseMove":
                     return new ContinueDragLite();
             }
 
