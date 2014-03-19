@@ -146,9 +146,9 @@ namespace FileExplorer.BaseControls.DragnDrop
 
 
         public BeginDrop(DragDropEffects overrideDragDropEffect)
-            : this() 
-        { 
-            _overrideDragDropEffect = overrideDragDropEffect; 
+            : this()
+        {
+            _overrideDragDropEffect = overrideDragDropEffect;
         }
 
         DragDropEffects? _overrideDragDropEffect;
@@ -202,7 +202,7 @@ namespace FileExplorer.BaseControls.DragnDrop
     {
         public UpdateAdorner(IScriptCommand nextCommand)
             : base("UpdateAdorner", nextCommand, "EventArgs")
-        {  }
+        { }
 
         private static IDataObject _previousDataObject = null;
         private static int _draggingItemsCount = 0;
@@ -237,13 +237,14 @@ namespace FileExplorer.BaseControls.DragnDrop
                         _previousDataObject = newDataObject;
                     }
 
-                    //if (!Double.IsNaN(pd.Input.Position.X) && !Double.IsNaN(pd.Input.Position.Y))
-                    {
-                        var adornerPos = pd.Input.PositionRelativeTo(parentWindow);
-                        //if (pd.Input is TouchInput)
-                        //    adornerPos.Offset(-dragAdorner.ActualWidth, -dragAdorner.ActualHeight);
-                        dragAdorner.PointerPosition = adornerPos;
-                    }
+
+                    var adornerPos = pd.Input.PositionRelativeTo(parentWindow);
+                    //if (pd.Input is TouchInput)
+                    //    adornerPos.Offset(-dragAdorner.ActualWidth, -dragAdorner.ActualHeight);
+                    if (pd.Input.InputType == UIInputType.Touch)
+                        adornerPos.Offset(-50, -50);
+                    dragAdorner.PointerPosition = adornerPos;
+
                     dragAdorner.IsDragging = true;
                 }
                 pd["DragAdorner"] = dragAdorner;
@@ -272,7 +273,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             {
                 QueryDropResult queryEffects = isd.QueryDrop(inp.Data, inp.AllowedEffects);
 
-                DragDropEffects eff =  inp.Effects = inp.AllowedEffects & queryEffects.SupportedEffects;
+                DragDropEffects eff = inp.Effects = inp.AllowedEffects & queryEffects.SupportedEffects;
 
                 if (eff != DragDropEffects.None)
                 {
@@ -360,7 +361,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
     public class DetachAdorner : ScriptCommandBase
     {
-        public DetachAdorner() : base("DetachAdorner", "EventArgs") { }
+        public DetachAdorner(IScriptCommand nextCommand = null) : base("DetachAdorner", nextCommand, "EventArgs") { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -385,12 +386,12 @@ namespace FileExplorer.BaseControls.DragnDrop
                         AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(decorator);
                         adornerLayer.Remove(dragAdorner);
                         AttachedProperties.SetDragAdorner(parentWindow, null);
-                        return ResultCommand.NoError;
+                        return _nextCommand;
                     }
                 }
             }
 
-            return ResultCommand.NoError;
+            return _nextCommand;
         }
     }
 

@@ -164,8 +164,8 @@ namespace FileExplorer.UserControls.InputProcesor
         {
             ProcessAllEvents = false;
             _processEvents.AddRange(new[] { 
-                //UIElement.DragEnterEvent,
-                //UIElement.DragLeaveEvent,
+                UIElement.DragEnterEvent,
+                UIElement.DragLeaveEvent,
 
                 UIElement.DragOverEvent,
                 UIElement.DropEvent

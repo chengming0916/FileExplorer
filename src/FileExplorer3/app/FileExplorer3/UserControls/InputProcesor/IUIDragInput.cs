@@ -16,7 +16,7 @@ namespace FileExplorer.UserControls.InputProcesor
     {
         IDataObject Data { get; }
         DragDropEffects AllowedEffects { get; }
-        DragDropEffects Effects { set; }
+        DragDropEffects Effects { get;  set; }
 
     }
 
@@ -65,8 +65,10 @@ namespace FileExplorer.UserControls.InputProcesor
 
         IUIInput _sourceInput;
         private Action<DragDropEffects> _effectSetFunc;
+        private DragDropEffects _effect = DragDropEffects.None;
         private Func<IInputElement, Point> _relPositionFunc;
         private Point? _position;
+        
 
         #endregion
 
@@ -74,10 +76,10 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public IDataObject Data { get; private set; }
         public DragDropEffects AllowedEffects { get; private set; }
-        public DragDropEffects Effects { set { _effectSetFunc(value); } }
+        public DragDropEffects Effects { get { return _effect; } set { _effect = value; _effectSetFunc(value); } }
 
         public RoutedEventArgs EventArgs { get { return _sourceInput.EventArgs; } }
-        public object Sender { get { return _sourceInput.Sender; } }
+        public object Sender { get { return _sourceInput.Sender; } set { _sourceInput.Sender = value; } }
         public int ClickCount { get { return _sourceInput.ClickCount; } set { _sourceInput.ClickCount = value; } }
         public Point Position { get { return _position.HasValue ? _position.Value : _sourceInput.Position; } }
         public Point ScrollBarPosition { get { return _sourceInput.ScrollBarPosition; } }

@@ -145,6 +145,7 @@ namespace FileExplorer.BaseControls
                 case UIInputType.Touch:
                     (pd.Input.EventArgs as TouchEventArgs).TouchDevice.Capture(_ele, _mode);
                     break;
+                case UIInputType.Mouse:
                 case UIInputType.MouseLeft:
                 case UIInputType.MouseRight:
                 case UIInputType.Stylus:
