@@ -17,6 +17,7 @@ using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
+using FileExplorer.UserControls.InputProcesor;
 
 namespace FileExplorer.BaseControls.DragnDrop
 {
@@ -44,14 +45,14 @@ namespace FileExplorer.BaseControls.DragnDrop
 
 
 
-              
+
 
 
                 if (_mode == QueryDragDropEffectMode.Enter)
                 {
                     AttachedProperties.SetDraggingOverItem(ic, ele);
                     eventArgs.Handled = true;
-                    return new AttachAdorner();
+                    return new AttachAdorner(new UpdateAdorner(new UpdateAdornerText()));
 
                 }
                 else
@@ -83,7 +84,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
             var eventArgs = pd.EventArgs as DragEventArgs;
             var parentWindow = Window.GetWindow(ic);
-            
+
 
             return new UpdateAdorner(null);
         }
@@ -138,9 +139,17 @@ namespace FileExplorer.BaseControls.DragnDrop
 
     public class BeginDrop : ScriptCommandBase
     {
-        public BeginDrop() : base("BeginDrop", "EventArgs") { }
+        public BeginDrop()
+            : base("BeginDrop", "EventArgs")
+        {
+        }
 
-        public BeginDrop(DragDropEffects overrideDragDropEffect) : base("BeginDrop", "EventArgs") { _overrideDragDropEffect = overrideDragDropEffect; }
+
+        public BeginDrop(DragDropEffects overrideDragDropEffect)
+            : this() 
+        { 
+            _overrideDragDropEffect = overrideDragDropEffect; 
+        }
 
         DragDropEffects? _overrideDragDropEffect;
 
@@ -148,27 +157,27 @@ namespace FileExplorer.BaseControls.DragnDrop
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
+            var inp = pd.Input as IUIDragInput;
 
             AttachedProperties.SetDraggingOverItem(ic, null);
-            var eventArgs = pd.EventArgs as DragEventArgs;
-
+            //var eventArgs = pd.EventArgs as DragEventArgs;
             var dragMethod =
-                    eventArgs.Data.GetDataPresent(typeof(AttachedProperties.DragMethod)) ?
-                    (AttachedProperties.DragMethod)eventArgs.Data.GetData(typeof(AttachedProperties.DragMethod))
+                    inp.Data.GetDataPresent(typeof(AttachedProperties.DragMethod)) ?
+                    (AttachedProperties.DragMethod)inp.Data.GetData(typeof(AttachedProperties.DragMethod))
                     : AttachedProperties.DragMethod.Normal;
 
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
             if (isd != null)
             {
-                QueryDropResult queryDropResult = isd.QueryDrop(eventArgs.Data, eventArgs.AllowedEffects);
-                DragDropEffects supportedEffects = eventArgs.AllowedEffects & queryDropResult.SupportedEffects;
+                QueryDropResult queryDropResult = isd.QueryDrop(inp.Data, inp.AllowedEffects);
+                DragDropEffects supportedEffects = inp.AllowedEffects & queryDropResult.SupportedEffects;
                 if (supportedEffects != DragDropEffects.None && !_overrideDragDropEffect.HasValue &&
-                    dragMethod == AttachedProperties.DragMethod.Menu && eventArgs.Data.GetDataPresent(typeof(ISupportDrag)))
+                    dragMethod == AttachedProperties.DragMethod.Menu && inp.Data.GetDataPresent(typeof(ISupportDrag)))
                 {
-                    eventArgs.Effects = DragDropEffects.None;
-                    eventArgs.Handled = true;
-                    ISupportDrag isDrag = eventArgs.Data.GetData(typeof(ISupportDrag)) as ISupportDrag;
-                    return new ShowAdornerContextMenu(supportedEffects, queryDropResult.PreferredEffect, isDrag, isd, eventArgs.Data);
+                    inp.Effects = DragDropEffects.None;
+                    inp.EventArgs.Handled = true;
+                    ISupportDrag isDrag = inp.Data.GetData(typeof(ISupportDrag)) as ISupportDrag;
+                    return new ShowAdornerContextMenu(supportedEffects, queryDropResult.PreferredEffect, isDrag, isd, inp.Data);
                 }
 
                 //If OverrideDragDropEffect is set, use it instead.
@@ -176,9 +185,9 @@ namespace FileExplorer.BaseControls.DragnDrop
 
                 if (supportedEffects != DragDropEffects.None)
                 {
-                    IEnumerable<IDraggable> draggables = isd.QueryDropDraggables(eventArgs.Data);
-                    eventArgs.Effects = isd.Drop(draggables, eventArgs.Data, supportedEffects);
-                    eventArgs.Handled = true;
+                    IEnumerable<IDraggable> draggables = isd.QueryDropDraggables(inp.Data);
+                    inp.Effects = isd.Drop(draggables, inp.Data, supportedEffects);
+                    inp.EventArgs.Handled = true;
                 }
 
                 return new DetachAdorner();
@@ -191,22 +200,18 @@ namespace FileExplorer.BaseControls.DragnDrop
 
     public class UpdateAdorner : ScriptCommandBase
     {
-        public static Func<UIParameterDic, IDataObject> DraggablesFromDragEventArgs =
-            (pd) => (pd.EventArgs as DragEventArgs).Data;
-
-        public UpdateAdorner(IScriptCommand nextCommand, Func<UIParameterDic, IDataObject> draggableGetter = null)
+        public UpdateAdorner(IScriptCommand nextCommand)
             : base("UpdateAdorner", nextCommand, "EventArgs")
-        { _dataObjectGetter = draggableGetter ; }
+        {  }
 
         private static IDataObject _previousDataObject = null;
         private static int _draggingItemsCount = 0;
-        private Func<UIParameterDic, IDataObject> _dataObjectGetter;
-       
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
+            var inp = pd.Input as IUIDragInput;
             //var eventArgs = pd.EventArgs as DragEventArgs;
             Window parentWindow = Window.GetWindow(ic);
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
@@ -217,9 +222,9 @@ namespace FileExplorer.BaseControls.DragnDrop
                 pd["DraggingItemsCount"] = _draggingItemsCount;
                 if (dragAdorner != null)
                 {
-                    if (_dataObjectGetter != null)
+                    if (inp.Data != null)
                     {
-                        var newDataObject = _dataObjectGetter(pd);
+                        var newDataObject = inp.Data;
                         if (newDataObject != null && !newDataObject.Equals(_previousDataObject))
                         {
                             var newDraggables = isd.QueryDropDraggables(newDataObject);
@@ -231,8 +236,12 @@ namespace FileExplorer.BaseControls.DragnDrop
 
                         _previousDataObject = newDataObject;
                     }
-                    
-                    dragAdorner.PointerPosition = pd.Input.PositionRelativeTo(parentWindow);
+
+                    var adornerPos = pd.Input.PositionRelativeTo(parentWindow);
+                    //if (pd.Input is TouchInput)
+                    //    adornerPos.Offset(-dragAdorner.ActualWidth, -dragAdorner.ActualHeight);
+                    dragAdorner.PointerPosition = adornerPos;
+
                     dragAdorner.IsDragging = true;
                 }
                 pd["DragAdorner"] = dragAdorner;
@@ -253,25 +262,25 @@ namespace FileExplorer.BaseControls.DragnDrop
         {
             var pd = pm.AsUIParameterDic();
             DragAdorner dragAdorner = pd["DragAdorner"] as DragAdorner;
+            var inp = pd.Input as IUIDragInput;
             var ic = pd.Sender as ItemsControl;
-            var eventArgs = pd.EventArgs as DragEventArgs;
             FrameworkElement ele;
             ISupportDrop isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
-            if (isd != null && eventArgs != null && dragAdorner != null)
+            if (isd != null && inp != null && dragAdorner != null)
             {
-                QueryDropResult queryEffects = isd.QueryDrop(eventArgs.Data, eventArgs.AllowedEffects);
+                QueryDropResult queryEffects = isd.QueryDrop(inp.Data, inp.AllowedEffects);
 
-                eventArgs.Effects = eventArgs.AllowedEffects & queryEffects.SupportedEffects;
+                DragDropEffects eff =  inp.Effects = inp.AllowedEffects & queryEffects.SupportedEffects;
 
-                if (eventArgs.Effects != DragDropEffects.None)
+                if (eff != DragDropEffects.None)
                 {
                     var dragMethod =
-                        eventArgs.Data.GetDataPresent(typeof(AttachedProperties.DragMethod)) ?
-                        (AttachedProperties.DragMethod)eventArgs.Data.GetData(typeof(AttachedProperties.DragMethod))
+                        inp.Data.GetDataPresent(typeof(AttachedProperties.DragMethod)) ?
+                        (AttachedProperties.DragMethod)inp.Data.GetData(typeof(AttachedProperties.DragMethod))
                         : AttachedProperties.DragMethod.Normal;
 
                     dragAdorner.Text = String.Format("{0} {1} items to {2}",
-                        dragMethod == AttachedProperties.DragMethod.Menu ? eventArgs.AllowedEffects : queryEffects.PreferredEffect,
+                        dragMethod == AttachedProperties.DragMethod.Menu ? inp.AllowedEffects : queryEffects.PreferredEffect,
                         (int)pd["DraggingItemsCount"],
                         isd.DropTargetLabel);
                 }
@@ -310,12 +319,9 @@ namespace FileExplorer.BaseControls.DragnDrop
 
     public class AttachAdorner : ScriptCommandBase
     {
-        public AttachAdorner(Func<UIParameterDic, IDataObject> draggableGetter = null) : base("AttachAdorner", "EventArgs")
-        { _nextCommand = new UpdateAdorner(new UpdateAdornerText(), draggableGetter); }
-
-        public AttachAdorner(IScriptCommand nextCommand, Func<UIParameterDic, IDataObject> draggableGetter = null)
+        public AttachAdorner(IScriptCommand nextCommand)
             : base("AttachAdorner", nextCommand, "EventArgs")
-        {  }
+        { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {

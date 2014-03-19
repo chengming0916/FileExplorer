@@ -74,7 +74,6 @@ namespace FileExplorer.BaseControls.DragnDrop
             DragLiteParameters.Effects = _isd.QueryDrag(DragLiteParameters.DraggingItems);
             DragLiteParameters.DragSource = _isd;
 
-            
 
             return ResultCommand.NoError;
         }
@@ -94,7 +93,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             if (DragLiteParameters.DragMode == DragMode.Lite)
             {
                 FrameworkElement directlyOverEle = null;
-                if (pd.Input is TouchInput)
+                if (pd.Input.InputType == UIInputType.Touch)
                     directlyOverEle = (pd.EventArgs as TouchEventArgs).TouchDevice.DirectlyOver as FrameworkElement;
                 else directlyOverEle = Mouse.DirectlyOver as FrameworkElement;
 
@@ -102,38 +101,39 @@ namespace FileExplorer.BaseControls.DragnDrop
                 var isd = DataContextFinder.GetDataContext(ref directlyOverEle, DataContextFinder.SupportDrop);
              
                 pd.EventArgs.Handled = true;
-                return new AttachAdorner(
-                    new UpdateAdorner(new UpdateAdornerTextLite(), 
-                        pd1 => DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems)));
+                pd.Input = new DragInput(pd.Input,
+                    DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
+                    DragDropEffects.Copy, (eff) => { });
+                return new AttachAdorner(new UpdateAdorner(new UpdateAdornerText()));
             }
             return ResultCommand.OK;
         }
     }
 
-    public class UpdateAdornerTextLite : ScriptCommandBase
-    {
-        public UpdateAdornerTextLite()
-            : base("UpdateAdornerTextLite", "EventArgs")
-        { }
+    //public class UpdateAdornerTextLite : ScriptCommandBase
+    //{
+    //    public UpdateAdornerTextLite()
+    //        : base("UpdateAdornerTextLite", "EventArgs")
+    //    { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
-        {
-            var pd = pm.AsUIParameterDic();
-            DragAdorner dragAdorner = pd["DragAdorner"] as DragAdorner;
-            var ic = pd.Sender as ItemsControl;
-            FrameworkElement ele;
-            ISupportDrop isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
-            if (isd != null && dragAdorner != null)
-            {
-                dragAdorner.Text = String.Format("{0} {1} items to {2}",
-                  "Copy",
-                    (int)pd["DraggingItemsCount"],
-                    isd.DropTargetLabel);
-            }
+    //    public override IScriptCommand Execute(ParameterDic pm)
+    //    {
+    //        var pd = pm.AsUIParameterDic();
+    //        DragAdorner dragAdorner = pd["DragAdorner"] as DragAdorner;
+    //        var ic = pd.Sender as ItemsControl;
+    //        FrameworkElement ele;
+    //        ISupportDrop isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
+    //        if (isd != null && dragAdorner != null)
+    //        {
+    //            dragAdorner.Text = String.Format("{0} {1} items to {2}",
+    //              "Copy",
+    //                (int)pd["DraggingItemsCount"],
+    //                isd.DropTargetLabel);
+    //        }
 
-            return ResultCommand.NoError;
-        }
-    }
+    //        return ResultCommand.NoError;
+    //    }
+    //}
 
     public class EndDragLite : ScriptCommandBase
     {

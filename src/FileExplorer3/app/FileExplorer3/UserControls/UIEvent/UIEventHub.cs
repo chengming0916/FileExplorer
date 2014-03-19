@@ -56,6 +56,7 @@ namespace FileExplorer.BaseControls
             _inputProcessors = new UIInputManager(
                 new FlickInputProcessor(),
                 new ClickCountInputProcessor(),    
+                new DropInputProcessor(),
                 new DragInputProcessor()
                         {
                             DragStartedFunc = inp =>
@@ -117,7 +118,7 @@ namespace FileExplorer.BaseControls
                                         if (input.IsValid())
                                         {
 
-                                            _inputProcessors.Update(input);
+                                            input = _inputProcessors.Update(input);
                                             await executeAsync(_eventProcessors, e, input,
                                                     pd =>
                                                     {
