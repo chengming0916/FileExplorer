@@ -15,12 +15,12 @@ namespace FileExplorer.BaseControls
             _processEvents.AddRange(
                 new[] {
                  
-                    FrameworkElement.PreviewMouseDownEvent,
-                    UIEventHub.MouseDragEvent,
-                    FrameworkElement.PreviewMouseUpEvent,
-                    FrameworkElement.MouseMoveEvent,
+                    //FrameworkElement.PreviewMouseDownEvent,
+                    //UIEventHub.MouseDragEvent,
+                    //FrameworkElement.PreviewMouseUpEvent,
+                    //FrameworkElement.MouseMoveEvent,
                     
-                    FrameworkElement.MouseLeaveEvent,
+                    //FrameworkElement.MouseLeaveEvent,
                     FrameworkElement.TouchLeaveEvent,
 
                     UIEventHub.TouchDragEvent,

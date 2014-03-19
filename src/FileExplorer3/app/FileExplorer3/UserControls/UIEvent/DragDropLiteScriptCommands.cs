@@ -75,7 +75,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             DragLiteParameters.DragSource = _isd;
 
 
-            return ResultCommand.NoError;
+            return CapturePointer.Release(null);
         }
     }
 
@@ -89,22 +89,29 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             //TODO: Find mouse over items control, and attach adorner.
-            
+
             if (DragLiteParameters.DragMode == DragMode.Lite)
             {
-                FrameworkElement directlyOverEle = null;
-                if (pd.Input.InputType == UIInputType.Touch)
-                    directlyOverEle = (pd.EventArgs as TouchEventArgs).TouchDevice.DirectlyOver as FrameworkElement;
-                else directlyOverEle = Mouse.DirectlyOver as FrameworkElement;
+                
+                //FrameworkElement directlyOverEle = null;
+                //if (pd.Input.InputType == UIInputType.Touch)
+                //    directlyOverEle = (pd.EventArgs as TouchEventArgs).TouchDevice.DirectlyOver as FrameworkElement;
+                //else directlyOverEle = Mouse.DirectlyOver as FrameworkElement;
 
 
-                var isd = DataContextFinder.GetDataContext(ref directlyOverEle, DataContextFinder.SupportDrop);
-             
+                //var isd = DataContextFinder.GetDataContext(ref directlyOverEle, DataContextFinder.SupportDrop);
+
+                //Console.WriteLine(directlyOverEle);
+
                 pd.EventArgs.Handled = true;
-                pd.Input = new DragInput(pd.Input,
-                    DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
-                    DragDropEffects.Copy, (eff) => { });
-                return new AttachAdorner(new UpdateAdorner(new UpdateAdornerText()));
+                //if (DragLiteParameters.DragInputType == pd.Input.InputType)
+                {
+                    pd.Input = new DragInput(pd.Input,
+                        DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
+                        DragDropEffects.Copy, (eff) => { });
+
+                    return new AttachAdorner(new UpdateAdorner(new UpdateAdornerText()));
+                }
             }
             return ResultCommand.OK;
         }
@@ -124,16 +131,30 @@ namespace FileExplorer.BaseControls.DragnDrop
             if (DragLiteParameters.DragMode != DragMode.Lite)
                 return ResultCommand.NoError;
 
-            if (DragLiteParameters.DragInputType != pd.Input.InputType)
+            if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
+            //if (DragLiteParameters.DragInputType != pd.Input.InputType)
+            //    return ResultCommand.NoError;
+
+            //FrameworkElement directlyOverEle = null;
+            //if (pd.Input.InputType == UIInputType.Touch)
+            //    directlyOverEle = (pd.EventArgs as TouchEventArgs).TouchDevice.DirectlyOver as FrameworkElement;
+            //else directlyOverEle = Mouse.DirectlyOver as FrameworkElement;
+
+
+            //var isd = DataContextFinder.GetDataContext(ref directlyOverEle, DataContextFinder.SupportDrop);
+
 
             DragLiteParameters.DragMode = DragMode.None;
             //AttachedProperties.SetStartDraggingItem(ic, null);
             //AttachedProperties.SetIsDragging(ic, false);
 
-            pd.Input = new DragInput(pd.Input,
-                   DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
-                   DragDropEffects.Copy, (eff) => { });
+            IDataObject da = DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems);
+            DragDropEffects queryEffs = DragLiteParameters.DragSource.QueryDrag(DragLiteParameters.DraggingItems);
+            da.SetData(typeof(AttachedProperties.DragMethod), AttachedProperties.DragMethod.Menu);
+            da.SetData(typeof(ISupportDrag), DragLiteParameters.DragSource);
+            pd.Input = new DragInput(pd.Input, da, queryEffs, (eff) => { });
+
             return new BeginDrop();
             //return CapturePointer.Release(new DetachAdorner());
         }
