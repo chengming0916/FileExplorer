@@ -88,7 +88,7 @@ namespace TestTemplate.WPF
                 {
                     IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
                     // e.Handled = true;
-                    input = _inputProcessors.Update(input);
+                    _inputProcessors.Update(ref input);
                     if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)
                         inputProcessorOutput.Items.Add(input.ToString());
                     while (inputProcessorOutput.Items.Count > 10)

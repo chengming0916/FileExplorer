@@ -77,11 +77,11 @@ namespace FileExplorer
                 ;
         }
 
-        public static void Update(this IEnumerable<IUIInputProcessor> processors, IUIInput input)
+        public static void Update(this IEnumerable<IUIInputProcessor> processors, ref IUIInput input)
         {
             foreach (var p in processors)
                 if (p.ProcessAllEvents || p.ProcessEvents.Contains(input.EventArgs.RoutedEvent))
-                    p.Update(input);
+                    p.Update(ref input);
         }
 
         public static bool IsValid(this IUIInput input)
