@@ -17,6 +17,7 @@ namespace TestTemplate.WPF
     public class DragDropItemViewModel : NotifyPropertyChanged, ISupportDrag, ISupportDrop, IDraggable, ISelectable
     {
         public static string Format_DragDropItem = "DragDropItemVM";
+        
         #region Constructor
 
         public DragDropItemViewModel(int value, bool isDroppable, bool isChildDroppable)
@@ -151,6 +152,7 @@ namespace TestTemplate.WPF
 
         #region Public Properties
 
+        public string Id { get; set; }
         public ICommand UnselectAllCommand { get; set; }
         public ObservableCollection<DragDropItemViewModel> Items { get { return _items; } }
         public bool IsDraggingOver

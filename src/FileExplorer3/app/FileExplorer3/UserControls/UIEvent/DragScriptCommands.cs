@@ -57,6 +57,12 @@ namespace FileExplorer.BaseControls.DragnDrop
             return ele;
         }
 
+        public static T GetDataContext<T>(FrameworkElement ele, Func<object, T> filter = null)
+        {
+            FrameworkElement ele1 = ele;
+            return GetDataContext<T>(ref ele1, filter);
+        }
+
         public static T GetDataContext<T>(ref FrameworkElement ele, Func<object, T> filter = null)
         {
             object dataContext = ele.DataContext;

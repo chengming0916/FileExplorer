@@ -18,7 +18,7 @@ namespace FileExplorer.UserControls.InputProcesor
         /// </summary>
         RoutedEventArgs EventArgs { get; }
 
-        object Sender { get; }
+        object Sender { get; set; }
 
         int ClickCount { get; set; }
 
@@ -73,6 +73,7 @@ namespace FileExplorer.UserControls.InputProcesor
                 return new TouchInput(sender, args as TouchEventArgs);
             if (args is StylusEventArgs)
                 return new StylusInput(sender, args as StylusEventArgs);
+            
             return new OtherInput(sender, args);
         }
 
@@ -108,7 +109,7 @@ namespace FileExplorer.UserControls.InputProcesor
         #region Public Properties
 
         public RoutedEventArgs EventArgs { get { return _args; } }
-        public object Sender { get { return _sender; } }
+        public object Sender { get { return _sender; } set { _sender = value; } }
         public int ClickCount { get { return _clickCount; } set { _clickCount = value; } }
         public Point ScrollBarPosition { get { return _sbPosition; } set { _sbPosition = value; } }
         public Point Position { get { return _position; } set { _position = value; } }
@@ -156,6 +157,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public MouseInput(object sender, MouseEventArgs args)
             : base(sender, args)
         {
+            _inputType = UIInputType.Mouse;
             _args = args;
             Position = args.GetPosition(sender as IInputElement);
         }
@@ -163,6 +165,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public MouseInput(object sender, MouseButtonEventArgs args)
             : this(sender, args as MouseEventArgs)
         {
+            _inputType = UIInputType.Mouse;
             _clickCount = args.ClickCount;
             switch (args.ChangedButton)
             {

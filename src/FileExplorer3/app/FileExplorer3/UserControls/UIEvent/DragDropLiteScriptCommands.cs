@@ -66,23 +66,32 @@ namespace FileExplorer.BaseControls.DragnDrop
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            Console.WriteLine("DoDragDropLite");
-            //AttachedProperties.SetIsDragging(_ic, true);
-            DragLiteParameters.DragInputType = pm.AsUIParameterDic().GetDragInputProcessor().StartInput.InputType;
-            DragLiteParameters.DraggingItems = _isd.GetDraggables();
-            DragLiteParameters.DragMode = DragMode.Lite;
-            DragLiteParameters.Effects = _isd.QueryDrag(DragLiteParameters.DraggingItems);
-            DragLiteParameters.DragSource = _isd;
+            if (DragLiteParameters.DragMode == DragMode.None)
+            {
+
+                //AttachedProperties.SetIsDragging(_ic, true);
+                DragLiteParameters.DragInputType = pm.AsUIParameterDic().GetDragInputProcessor().StartInput.InputType;
+                DragLiteParameters.DraggingItems = _isd.GetDraggables();
+                DragLiteParameters.DragMode = DragMode.Lite;
+                DragLiteParameters.Effects = _isd.QueryDrag(DragLiteParameters.DraggingItems);
+                DragLiteParameters.DragSource = _isd;
 
 
-            return CapturePointer.Release(null);
+                return CapturePointer.Release(null);
+            }
+
+            return ResultCommand.NoError;
         }
     }
 
 
     public class ContinueDragLite : ScriptCommandBase
     {
-        public ContinueDragLite() : base("ContinueDragLite", "EventArgs") { }
+        private bool _enableDrop;
+        private bool _enableDrag;
+        public ContinueDragLite(bool enableDrag, bool enableDrop)
+            : base("ContinueDragLite", "EventArgs")
+        { _enableDrag = enableDrag; _enableDrop = enableDrop; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -90,9 +99,9 @@ namespace FileExplorer.BaseControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
             //TODO: Find mouse over items control, and attach adorner.
 
-            if (DragLiteParameters.DragMode == DragMode.Lite)
+            if (DragLiteParameters.DragMode == DragMode.Lite && (_enableDrag || _enableDrop))
             {
-                
+
                 //FrameworkElement directlyOverEle = null;
                 //if (pd.Input.InputType == UIInputType.Touch)
                 //    directlyOverEle = (pd.EventArgs as TouchEventArgs).TouchDevice.DirectlyOver as FrameworkElement;
@@ -142,10 +151,14 @@ namespace FileExplorer.BaseControls.DragnDrop
             //else directlyOverEle = Mouse.DirectlyOver as FrameworkElement;
 
 
-            //var isd = DataContextFinder.GetDataContext(ref directlyOverEle, DataContextFinder.SupportDrop);
+
 
 
             DragLiteParameters.DragMode = DragMode.None;
+            var isd = DataContextFinder.GetDataContext(pd.Sender as FrameworkElement, DataContextFinder.SupportDrag);
+            if (isd != null && isd.Equals(DragLiteParameters.DragSource))
+                return new DetachAdorner();
+
             //AttachedProperties.SetStartDraggingItem(ic, null);
             //AttachedProperties.SetIsDragging(ic, false);
 
