@@ -155,9 +155,9 @@ namespace FileExplorer.BaseControls.DragnDrop
 
 
             DragLiteParameters.DragMode = DragMode.None;
-            var isd = DataContextFinder.GetDataContext(pd.Sender as FrameworkElement, DataContextFinder.SupportDrag);
-            if (isd != null && isd.Equals(DragLiteParameters.DragSource))
-                return new DetachAdorner();
+            //var isd = DataContextFinder.GetDataContext(pd.Sender as FrameworkElement, DataContextFinder.SupportDrag);
+            //if (isd != null && isd.Equals(DragLiteParameters.DragSource))
+            //    return new DetachAdorner();
 
             //AttachedProperties.SetStartDraggingItem(ic, null);
             //AttachedProperties.SetIsDragging(ic, false);

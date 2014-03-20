@@ -20,15 +20,17 @@ namespace FileExplorer.BaseControls.Menu
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            pd.IsHandled = true;
-            
-            if (pd.Input.InputType == UIInputType.MouseRight)
+            if (!pd.EventArgs.Handled)
             {
-                _contextMenu.PlacementTarget = (pd.Sender as Control);
-                _contextMenu.SetValue(ContextMenu.IsOpenProperty, true);
-                pd.EventArgs.Handled = true;
-            }
+                pd.IsHandled = true;
 
+                if (pd.Input.InputType == UIInputType.MouseRight)
+                {
+                    _contextMenu.PlacementTarget = (pd.Sender as Control);
+                    _contextMenu.SetValue(ContextMenu.IsOpenProperty, true);
+                    pd.EventArgs.Handled = true;
+                }
+            }
             return ResultCommand.NoError; //Set Handled to true.
         }
 
