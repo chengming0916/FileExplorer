@@ -125,7 +125,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                         new ScriptRunner().Run(new Queue<IScriptCommand>(
                         new IScriptCommand[] {
                             new BeginDrop(_dragAdorner.DragDropEffect),
-                            new NotifyDropCompleted(_isDrag, _isDrag.GetDraggables(), _dataObject, _dragAdorner.DragDropEffect)
+                            new NotifyDropCompleted(_isDrag, _isDrop.QueryDropDraggables(_dataObject), _dataObject, _dragAdorner.DragDropEffect)
                         }), pm);
                     };
 
@@ -198,6 +198,7 @@ namespace FileExplorer.BaseControls.DragnDrop
     }
 
 
+
     public class UpdateAdorner : ScriptCommandBase
     {
         public UpdateAdorner(IScriptCommand nextCommand)
@@ -236,19 +237,49 @@ namespace FileExplorer.BaseControls.DragnDrop
 
                         _previousDataObject = newDataObject;
                     }
+                }
+                pd["ParentWindow"] = parentWindow;
+                pd["DragAdorner"] = dragAdorner;
+                return new UpdateAdornerPosition(_nextCommand);
+            }
+
+            return ResultCommand.NoError;
+        }
+    }
 
 
+
+    public class UpdateAdornerPosition : ScriptCommandBase
+    {
+        public UpdateAdornerPosition(IScriptCommand nextCommand)
+            : base("UpdateAdornerPosition", nextCommand, "EventArgs")
+        { }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as UIElement;
+            var inp = pd.Input as IUIDragInput;
+            //var eventArgs = pd.EventArgs as DragEventArgs;
+            Window parentWindow = pd.ContainsKey("ParentWindow") ? pd["ParentWindow"] as Window : Window.GetWindow(ic);
+            var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
+
+            if (isd != null)
+            {
+                var offsetPosition = pd.ContainsKey("PointerOffsetPosition") ? (Point)pd["PointerOffsetPosition"] :
+                    new Point(0, 0);
+                var dragAdorner = pd.ContainsKey("DragAdorner") ? pd["DragAdorner"] as DragAdorner :
+                    AttachedProperties.GetDragAdorner(parentWindow); ;
+                if (dragAdorner != null)
+                {
                     var adornerPos = pd.Input.PositionRelativeTo(parentWindow);
-                    //if (pd.Input is TouchInput)
-                    //    adornerPos.Offset(-dragAdorner.ActualWidth, -dragAdorner.ActualHeight);
-                    if (pd.Input.InputType == UIInputType.Touch)
-                        adornerPos.Offset(-50, -50);
+
+                    adornerPos.Offset(offsetPosition.X, offsetPosition.Y);
                     dragAdorner.PointerPosition = adornerPos;
 
                     dragAdorner.IsDragging = true;
+                    return _nextCommand;
                 }
-                pd["DragAdorner"] = dragAdorner;
-                return _nextCommand;
             }
 
             return ResultCommand.NoError;
@@ -264,9 +295,12 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            DragAdorner dragAdorner = pd["DragAdorner"] as DragAdorner;
-            var inp = pd.Input as IUIDragInput;
             var c = pd.Sender as UIElement;
+            Window parentWindow = pd.ContainsKey("ParentWindow") ? pd["ParentWindow"] as Window : Window.GetWindow(c);
+            DragAdorner dragAdorner = pd.ContainsKey("DragAdorner") ? pd["DragAdorner"] as DragAdorner :
+                    AttachedProperties.GetDragAdorner(parentWindow); ;
+            var inp = pd.Input as IUIDragInput;
+
             FrameworkElement ele;
             ISupportDrop isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
             if (isd != null && inp != null && dragAdorner != null)

@@ -47,15 +47,6 @@
                 <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
                 <bc:TouchGestureEventProcessor Gesture="FlickUp" Command="NavigationCommands.BrowseHome" />
 
-              
-
-                <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
-                <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
-                <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
-                                              UnselectAllCommand="{x:Static def:ExplorerCommands.UnselectAll}"
-                                            IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
-                />
-
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
@@ -66,12 +57,19 @@
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
 
-                <!--<bc:ContextMenuEventProcessor>
+                <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
+                <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
+                <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
+                                              UnselectAllCommand="{x:Static def:ExplorerCommands.UnselectAll}"
+                                            IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
+                />
+             
+                <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                     ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
-                </bc:ContextMenuEventProcessor>-->
+                </bc:ContextMenuEventProcessor>
 
 
             </bc:UIEventAdapter.Processors>

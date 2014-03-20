@@ -75,9 +75,12 @@ namespace FileExplorer.BaseControls.DragnDrop
                 DragLiteParameters.DragMode = DragMode.Lite;
                 DragLiteParameters.Effects = _isd.QueryDrag(DragLiteParameters.DraggingItems);
                 DragLiteParameters.DragSource = _isd;
+                var pd = pm.AsUIParameterDic();
+                pd.Input = new DragInput(pd.Input,
+                       DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
+                       DragDropEffects.Copy, (eff) => { });
 
-
-                return CapturePointer.Release(null);
+                return new AttachAdorner(new UpdateAdorner(new UpdateAdornerText()));
             }
 
             return ResultCommand.NoError;
@@ -97,8 +100,6 @@ namespace FileExplorer.BaseControls.DragnDrop
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
-            //TODO: Find mouse over items control, and attach adorner.
-
             if (DragLiteParameters.DragMode == DragMode.Lite && (_enableDrag || _enableDrop))
             {
 
@@ -115,11 +116,13 @@ namespace FileExplorer.BaseControls.DragnDrop
                 pd.EventArgs.Handled = true;
                 //if (DragLiteParameters.DragInputType == pd.Input.InputType)
                 {
+                    pd["DraggingItemsCount"] = DragLiteParameters.DraggingItems.Count();
                     pd.Input = new DragInput(pd.Input,
-                        DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
-                        DragDropEffects.Copy, (eff) => { });
-
-                    return new AttachAdorner(new UpdateAdorner(new UpdateAdornerText()));
+                       DragLiteParameters.DragSource.GetDataObject(DragLiteParameters.DraggingItems),
+                       DragDropEffects.Copy, (eff) => { });
+                    if (DragLiteParameters.DragInputType == UIInputType.Touch)
+                        pd["PointerOffsetPosition"] = new Point(-50, -50);
+                    return new UpdateAdornerPosition(new UpdateAdornerText());
                 }
             }
             return ResultCommand.OK;
@@ -168,7 +171,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             da.SetData(typeof(ISupportDrag), DragLiteParameters.DragSource);
             pd.Input = new DragInput(pd.Input, da, queryEffs, (eff) => { });
 
-            return new BeginDrop();
+            return  CapturePointer.Release(new BeginDrop());
             //return CapturePointer.Release(new DetachAdorner());
         }
     }
