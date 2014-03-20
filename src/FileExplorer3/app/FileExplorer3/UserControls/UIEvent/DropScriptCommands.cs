@@ -156,10 +156,10 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var c = pd.Sender as Control;
             var inp = pd.Input as IUIDragInput;
 
-            AttachedProperties.SetDraggingOverItem(ic, null);
+            AttachedProperties.SetDraggingOverItem(c, null);
             //var eventArgs = pd.EventArgs as DragEventArgs;
             var dragMethod =
                     inp.Data.GetDataPresent(typeof(AttachedProperties.DragMethod)) ?
@@ -210,7 +210,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var ic = pd.Sender as Control;
             var inp = pd.Input as IUIDragInput;
             //var eventArgs = pd.EventArgs as DragEventArgs;
             Window parentWindow = Window.GetWindow(ic);
@@ -220,7 +220,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             {
                 var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
                 pd["DraggingItemsCount"] = _draggingItemsCount;
-                if (dragAdorner != null)
+                if (dragAdorner != null && ic is ItemsControl)
                 {
                     if (inp.Data != null)
                     {
@@ -231,7 +231,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                             dragAdorner.DraggingItems = newDraggables;
                             pd["DraggingItemsCount"] = _draggingItemsCount = newDraggables.Count();
                             var hintTemplate = AttachedProperties.GetDragItemTemplate(ic);
-                            dragAdorner.DraggingItemTemplate = hintTemplate ?? ic.ItemTemplate;
+                            dragAdorner.DraggingItemTemplate = hintTemplate ?? (ic as ItemsControl).ItemTemplate;
                         }
 
                         _previousDataObject = newDataObject;
@@ -266,7 +266,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             DragAdorner dragAdorner = pd["DragAdorner"] as DragAdorner;
             var inp = pd.Input as IUIDragInput;
-            var ic = pd.Sender as ItemsControl;
+            var c = pd.Sender as Control;
             FrameworkElement ele;
             ISupportDrop isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
             if (isd != null && inp != null && dragAdorner != null)
@@ -307,9 +307,9 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var c = pd.Sender as Control;
             var eventArgs = pd.EventArgs as DragEventArgs;
-            Window parentWindow = Window.GetWindow(ic);
+            Window parentWindow = Window.GetWindow(c);
 
             var dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
             if (dragAdorner != null)
@@ -329,9 +329,9 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var c = pd.Sender as Control;
 
-            Window parentWindow = Window.GetWindow(ic);
+            Window parentWindow = Window.GetWindow(c);
 
             if (parentWindow != null)
             {
@@ -366,9 +366,9 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var c = pd.Sender as Control;
 
-            Window parentWindow = Window.GetWindow(ic);
+            Window parentWindow = Window.GetWindow(c);
 
             if (parentWindow != null)
             {

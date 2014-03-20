@@ -342,6 +342,10 @@ namespace FileExplorer.UserControls.InputProcesor
             if (!_isDragging && input.IsValidPositionForLisView(true))
                 if (input.ClickCount <= 1) //Touch/Stylus input 's ClickCount = 0
                 {
+                    //When touch and hold it raise a mouse right click command, skip it.
+                    if (_dragState == DragState.Touched && input.InputType == UIInputType.MouseRight)
+                        return;
+
                     StartInput = input;
                     _isDragging = false;
                     switch (input.InputType)
