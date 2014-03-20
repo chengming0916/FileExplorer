@@ -24,36 +24,37 @@ namespace FileExplorer.BaseControls
                 : base("QueryInputBindings")
             {
                 _processor = processor;
-                
-            }            
+
+            }
             public override IScriptCommand Execute(ParameterDic pm)
             {
                 IUIInput input = pm.AsUIParameterDic().Input;
                 object sender = input.Sender;
                 InputEventArgs eventArgs = input.EventArgs as InputEventArgs;
-                foreach (InputBinding ib in _processor.InputBindings)
-                {
-                    bool match = ib.Gesture.Matches(sender, eventArgs);
-                    if (!match && ib is MouseBinding && 
-                        input.InputType == Defines.UIInputType.Touch &&
-                        (ib as MouseBinding).MouseAction == MouseAction.LeftDoubleClick)
-                        match = input.ClickCount == 2;
+                if (!eventArgs.Handled)
+                    foreach (InputBinding ib in _processor.InputBindings)
+                    {
+                        bool match = ib.Gesture.Matches(sender, eventArgs);
+                        if (!match && ib is MouseBinding &&
+                            input.InputType == Defines.UIInputType.Touch &&
+                            (ib as MouseBinding).MouseAction == MouseAction.LeftDoubleClick)
+                            match = input.ClickCount == 2;
 
-                    if (match && ib.Command != null)
-                        if (ib.Command.CanExecute(ib.CommandParameter))
-                        {
-                            ib.Command.Execute(ib.CommandParameter);
-                            return ResultCommand.OK;
-                        }
-                }
+                        if (match && ib.Command != null)
+                            if (ib.Command.CanExecute(ib.CommandParameter))
+                            {
+                                ib.Command.Execute(ib.CommandParameter);
+                                return ResultCommand.OK;
+                            }
+                    }
                 return ResultCommand.NoError;
             }
         }
 
         public InputBindingsEventProcessor()
-        {            
+        {
             _processEvents.AddRange(
-                new [] {
+                new[] {
                     FrameworkElement.KeyDownEvent, 
                     FrameworkElement.PreviewMouseDownEvent,
                     FrameworkElement.PreviewTouchDownEvent,
@@ -67,7 +68,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static DependencyProperty InputBindingsProperty =
-            DependencyProperty.Register("InputBindings", typeof(InputBindingCollection), typeof(InputBindingsEventProcessor), 
+            DependencyProperty.Register("InputBindings", typeof(InputBindingCollection), typeof(InputBindingsEventProcessor),
             new PropertyMetadata(new InputBindingCollection()));
 
         public InputBindingCollection InputBindings

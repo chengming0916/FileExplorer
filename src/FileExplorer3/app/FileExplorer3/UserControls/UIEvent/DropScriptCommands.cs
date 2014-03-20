@@ -110,9 +110,9 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var c = pd.Sender as UIElement;
             var eventArgs = pd.EventArgs as DragEventArgs;
-            Window parentWindow = Window.GetWindow(ic);
+            Window parentWindow = Window.GetWindow(c);
 
             _dragAdorner = AttachedProperties.GetDragAdorner(parentWindow);
             if (_dragAdorner != null)
@@ -156,7 +156,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
+            var c = pd.Sender as UIElement;
             var inp = pd.Input as IUIDragInput;
 
             AttachedProperties.SetDraggingOverItem(c, null);
@@ -210,7 +210,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as Control;
+            var ic = pd.Sender as UIElement;
             var inp = pd.Input as IUIDragInput;
             //var eventArgs = pd.EventArgs as DragEventArgs;
             Window parentWindow = Window.GetWindow(ic);
@@ -266,7 +266,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             DragAdorner dragAdorner = pd["DragAdorner"] as DragAdorner;
             var inp = pd.Input as IUIDragInput;
-            var c = pd.Sender as Control;
+            var c = pd.Sender as UIElement;
             FrameworkElement ele;
             ISupportDrop isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
             if (isd != null && inp != null && dragAdorner != null)
@@ -307,7 +307,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
+            var c = pd.Sender as UIElement;
             var eventArgs = pd.EventArgs as DragEventArgs;
             Window parentWindow = Window.GetWindow(c);
 
@@ -329,7 +329,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
+            var c = pd.Sender as UIElement;
 
             Window parentWindow = Window.GetWindow(c);
 
@@ -366,7 +366,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            var c = pd.Sender as Control;
+            var c = pd.Sender as UIElement;
 
             Window parentWindow = Window.GetWindow(c);
 
