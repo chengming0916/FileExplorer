@@ -50,6 +50,7 @@ namespace FileExplorer.ViewModels
         private Func<ParameterDic, bool> _condition;
         private IScriptCommand _otherwiseCommand;
         private IScriptCommand _ifTrueCommand;
+        private bool _continueOnCaptureContext = false;
         public IfScriptCommand(Func<ParameterDic, bool> condition,
             IScriptCommand ifTrueCommand, IScriptCommand otherwiseCommand)
         { _condition = condition; _ifTrueCommand = ifTrueCommand; _otherwiseCommand = otherwiseCommand; }
@@ -79,6 +80,12 @@ namespace FileExplorer.ViewModels
             if (_condition(pm))
                 return _ifTrueCommand;
             return _otherwiseCommand;
+        }
+
+        public bool ContinueOnCaptureContext
+        {
+            get { return _continueOnCaptureContext; }
+            protected set { _continueOnCaptureContext = value; }
         }
     }
 
@@ -157,6 +164,11 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.Error(pm.Error);
             else return _nextCommand;
         }
+
+        public bool ContinueOnCaptureContext
+        {
+            get { return _scriptCommands.Any(c => c.ContinueOnCaptureContext); }
+        }
     }
 
     public class DebugScriptCommand : IScriptCommand
@@ -223,6 +235,7 @@ namespace FileExplorer.ViewModels
         {
             return Execute(pm);
         }
+        public bool ContinueOnCaptureContext { get { return false; }}
 
     }
 
@@ -248,5 +261,8 @@ namespace FileExplorer.ViewModels
         {
             return Execute(pm);
         }
+
+        public bool ContinueOnCaptureContext { get { return false; } }
+
     }
 }

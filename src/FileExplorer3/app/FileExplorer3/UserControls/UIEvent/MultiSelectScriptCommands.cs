@@ -754,7 +754,7 @@ namespace FileExplorer.BaseControls.MultiSelect
         public UpdateAdorner()
             : base("UpdateAdorner",
             "IsSelecting", "StartPostion", "EndPosition")
-        { }
+        { ContinueOnCaptureContext = true; }
 
         //private Point adjustScrollBarPosition(Control c, ScrollContentPresenter scp, Point pt)
         //{

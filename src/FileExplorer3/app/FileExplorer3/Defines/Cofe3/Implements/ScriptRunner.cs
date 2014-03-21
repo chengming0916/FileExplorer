@@ -51,7 +51,7 @@ namespace Cofe.Core.Script
                 if (current.CanExecute(pd))
                 {
                     pd.CommandHistory.Add(current.CommandKey);
-                    var retCmd = await current.ExecuteAsync(pd).ConfigureAwait(false);
+                    var retCmd = await current.ExecuteAsync(pd).ConfigureAwait(current.ContinueOnCaptureContext);
                     if (retCmd != null)
                     {
                         if (pd.Error != null)

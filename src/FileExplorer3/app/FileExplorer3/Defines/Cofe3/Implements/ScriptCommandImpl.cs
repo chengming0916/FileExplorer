@@ -64,6 +64,9 @@ namespace Cofe.Core.Script
         {
             return false;
         }
+
+        public bool ContinueOnCaptureContext { get { return false; }}
+        
     }
 
 
