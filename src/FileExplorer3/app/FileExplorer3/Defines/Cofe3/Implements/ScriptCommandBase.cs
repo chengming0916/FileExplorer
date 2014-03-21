@@ -54,11 +54,14 @@ namespace Cofe.Core.Script
         #region Data
 
         protected IScriptCommand _nextCommand;
+        private bool _continueOnCaptureContext = false;
 
         #endregion
 
         #region Public Properties
 
+        public bool ContinueOnCaptureContext { get { return _continueOnCaptureContext; } 
+            protected set { _continueOnCaptureContext = value; } }
         public string CommandKey { get; private set; }
         public string[] CommandParameters { get; private set; }
 
@@ -69,7 +72,8 @@ namespace Cofe.Core.Script
 
 
 
-      
+
+
     }
 
     
