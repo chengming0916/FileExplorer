@@ -1,4 +1,5 @@
 ﻿using FileExplorer.BaseControls;
+using FileExplorer.Defines;
 using FileExplorer.UserControls.InputProcesor;
 using FileExplorer.Utils;
 using System;
@@ -33,6 +34,19 @@ namespace FileExplorer
                  input.Sender.Equals(input2.Sender);
         }
 
+        public static bool IsSameInputType(this IUIInput input, IUIInput input2)
+        {
+            if (input != null && input2 != null)
+            {
+                var inp1 = input.InputType;
+                var inp2 = input2.InputType;
+                if (inp1 == UIInputType.MouseLeft || inp1 == UIInputType.MouseRight) inp1 = UIInputType.Mouse;
+                if (inp2 == UIInputType.MouseLeft || inp2 == UIInputType.MouseRight) inp2 = UIInputType.Mouse;
+                return inp1 == inp2;
+            }
+            return false;
+        }
+
         private static Size getMiniumDragDistance(Defines.UIInputType inputType)
         {
             if (inputType == Defines.UIInputType.Touch)
@@ -53,7 +67,7 @@ namespace FileExplorer
                 );
         }
 
-        public static bool IsWithin(this IUIInput input, IUIInput input2, int x, int y)
+        public static bool IsWithin(this IUIInput input, IUIInput input2, float x, float y)
         {
             return
                 input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
@@ -71,8 +85,8 @@ namespace FileExplorer
                 input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
 
                 (
-                     Math.Abs(input.Position.X - input2.Position.X) < 10 &&
-                     Math.Abs(input.Position.Y - input2.Position.Y) < 10
+                     Math.Abs(input.Position.X - input2.Position.X) < Defaults.MaximumTouchDragThreshold.X &&
+                     Math.Abs(input.Position.Y - input2.Position.Y) < Defaults.MaximumTouchDragThreshold.Y
                 )
                 ;
         }

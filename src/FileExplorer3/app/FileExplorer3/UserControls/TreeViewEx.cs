@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using FileExplorer.BaseControls;
+
 
 namespace FileExplorer.UserControls
 {
@@ -65,25 +67,33 @@ namespace FileExplorer.UserControls
         }
 
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            this.AddValueChanged(TreeViewItemEx.IsDraggingOverProperty, (o,e) =>
+                {
+                    TreeViewItemEx tvItem = o as TreeViewItemEx;
+                    if (tvItem.IsDraggingOver && ExpandIfDragOver)
+                    {
+                        DispatcherTimer dispatcherTimer = new DispatcherTimer();
+                        EventHandler onTick = null;
+                        onTick = (o1, e1) =>
+                        {
+                            if (tvItem.IsDraggingOver)
+                                tvItem.SetValue(TreeViewItem.IsExpandedProperty, true);
+                            dispatcherTimer.Tick -= onTick;
+                            dispatcherTimer.Stop();
+                        };
+                        dispatcherTimer.Tick += onTick;
+                        dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                        dispatcherTimer.Start();
+                    }
+                });
+        }
+
         protected override void OnDragEnter(DragEventArgs e)
         {
             base.OnDragEnter(e);
-
-            if (ExpandIfDragOver)
-            {
-                DispatcherTimer dispatcherTimer = new DispatcherTimer();
-                EventHandler onTick = null;
-                onTick = (o1, e1) =>
-                    {
-                        if (this.IsDraggingOver)
-                            this.SetValue(TreeViewItem.IsExpandedProperty, true);
-                        dispatcherTimer.Tick -= onTick;
-                        dispatcherTimer.Stop();
-                    };
-                dispatcherTimer.Tick += onTick;
-                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-                dispatcherTimer.Start();
-            }
 
         }
         //override hittestvi

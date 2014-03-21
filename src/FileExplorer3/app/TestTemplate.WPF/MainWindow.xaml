@@ -394,7 +394,7 @@
 
         <TabItem Header="UIEventHub" IsSelected="True" >
             <bc:UIEventAdapter.Processors>
-                <bc:DragDropLiteEventProcessor EnableDrag="False" EnableDrop="False" />
+                <bc:DragDropLiteEventProcessor />
             </bc:UIEventAdapter.Processors>
             <Grid>
                 <Grid.Resources>

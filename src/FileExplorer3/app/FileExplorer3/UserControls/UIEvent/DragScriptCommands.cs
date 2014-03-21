@@ -65,6 +65,8 @@ namespace FileExplorer.BaseControls.DragnDrop
 
         public static T GetDataContext<T>(ref FrameworkElement ele, Func<object, T> filter = null)
         {
+            if (ele == null)
+                return default(T);
             object dataContext = ele.DataContext;
             var filterResult = filter(dataContext);
             if (filterResult != null)
@@ -171,7 +173,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
 
-
+            //if (!pd.EventArgs.Handled)
             if (ic != null && isd != null)
                 if (ic.GetValue(AttachedProperties.StartDraggingItemProperty) != null)
                 {

@@ -1,5 +1,6 @@
 ﻿using Cofe.Core.Script;
 using FileExplorer.BaseControls.DragnDrop;
+using FileExplorer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,8 @@ namespace FileExplorer.BaseControls
         {
             _processEvents.AddRange(
                 new[] {
-                 
+                    FrameworkElement.KeyDownEvent,
+
                     FrameworkElement.PreviewMouseDownEvent,
                     UIEventHub.MouseDragEvent,
                     FrameworkElement.PreviewMouseUpEvent,
@@ -37,13 +39,16 @@ namespace FileExplorer.BaseControls
             {
                 case "PreviewTouchDown":
                 case "PreviewMouseDown":
-                    return EnableDrag ? (IScriptCommand)new RecordStartSelectedItem() : ResultCommand.NoError;
+                    return EnableDrag ? (IScriptCommand)SetDragLiteState.Reset(new RecordStartSelectedItem())
+                        : ResultCommand.NoError;
                 case "TouchDrag":
                 case "MouseDrag":
                     return EnableDrag ? (IScriptCommand)new BeginDragLite() : ResultCommand.NoError;
                 case "TouchUp":
-                case "MouseUp": 
+                case "MouseUp":
                     return EnableDrop ? (IScriptCommand)new EndDragLite() : new DetachAdorner();
+                case "KeyDown":
+                    return ScriptCommands.IfKeyPressed(System.Windows.Input.Key.Escape, SetDragLiteState.Reset(null), null);
                 //case "MouseLeave":
                 //case "TouchLeave":
                 //    return new DetachAdorner();

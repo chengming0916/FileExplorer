@@ -9,6 +9,7 @@ using System.Windows;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.BaseControls;
+using System.Windows.Input;
 
 namespace FileExplorer.ViewModels
 {
@@ -19,9 +20,25 @@ namespace FileExplorer.ViewModels
         public static DebugScriptCommand PrepareDrag = new DebugScriptCommand(DebugScriptCommand.HandleType.prepareDataObject);
         public static NoScriptCommand NoCommand = new NoScriptCommand();
 
-        public static IScriptCommand If(Func<ParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise)
+        public static IScriptCommand If(Func<ParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise = null)
         {
             return new IfScriptCommand(condition, ifTrue, otherwise);
+        }
+
+        public static IScriptCommand IfKeyPressed(Key key, IScriptCommand ifTrue, IScriptCommand otherwise = null)
+        {
+            Func<ParameterDic, bool> condition = pm =>
+                {
+                    var pd = pm.AsUIParameterDic();
+                    switch (pd.EventArgs.RoutedEvent.Name)
+                    {
+                        case "KeyDown":
+                        case "PreviewKeyDown":
+                            return (pd.EventArgs as KeyEventArgs).Key == key;
+                    }
+                    return false;
+                };
+            return If(condition, ifTrue, otherwise);
         }
 
         public static IScriptCommand RunInSequence(params IScriptCommand[] scriptCommands)
@@ -52,7 +69,9 @@ namespace FileExplorer.ViewModels
         private IScriptCommand _ifTrueCommand;
         public IfScriptCommand(Func<ParameterDic, bool> condition,
             IScriptCommand ifTrueCommand, IScriptCommand otherwiseCommand)
-        { _condition = condition; _ifTrueCommand = ifTrueCommand; _otherwiseCommand = otherwiseCommand; }
+        { _condition = condition; 
+            _ifTrueCommand = ifTrueCommand ?? ResultCommand.NoError; 
+            _otherwiseCommand = otherwiseCommand ?? ResultCommand.NoError; }
 
         public string CommandKey
         {
