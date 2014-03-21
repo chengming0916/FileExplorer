@@ -34,11 +34,11 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
-            if (DragLiteParameters.DragMode == DragMode.Lite)
-            {
-                pd.EventArgs.Handled = true;
-                return ResultCommand.OK;
-            }
+            //if (DragLiteParameters.DragMode == DragMode.Lite)
+            //{
+            //    pd.EventArgs.Handled = true;
+            //    return ResultCommand.OK;
+            //}
 
             return new QueryDrag((ic, isd) =>
             {
@@ -48,7 +48,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                 AttachedProperties.SetIsDragging(ic, true);
 
                 return new DoDragDropLite(ic, isd);
-            }, ResultCommand.NoError);
+            }, ResultCommand.NoError).Execute(pm);
         }
     }
 
@@ -70,7 +70,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             {
 
                 //AttachedProperties.SetIsDragging(_ic, true);
-                DragLiteParameters.DragInputType = pm.AsUIParameterDic().GetDragInputProcessor().StartInput.InputType;
+                //DragLiteParameters.DragInputType = pm.AsUIParameterDic().GetDragInputProcessor().StartInput.InputType;
                 DragLiteParameters.DraggingItems = _isd.GetDraggables();
                 DragLiteParameters.DragMode = DragMode.Lite;
                 DragLiteParameters.Effects = _isd.QueryDrag(DragLiteParameters.DraggingItems);

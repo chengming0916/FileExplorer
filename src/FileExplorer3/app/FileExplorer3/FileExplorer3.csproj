@@ -208,7 +208,9 @@
     <Compile Include="UserControls\BreadcrumbTree.cs" />
     <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
     <Compile Include="BaseControls\DropDownList.cs" />
-    <None Include="Diagrams\DragDropUIProcessor.cd" />
+    <None Include="Diagrams\DragDropUIProcessor.cd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Diagrams\MultiSelectUIProcessor.cd" />
     <None Include="Diagrams\Toolbar.cd" />
     <None Include="Diagrams\TreeSelection.cd" />
