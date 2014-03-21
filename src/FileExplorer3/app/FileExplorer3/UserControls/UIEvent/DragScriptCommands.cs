@@ -181,7 +181,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                     if (currentDraggables.Any() && previousDraggables != null &&
                         currentDraggables.SequenceEqual(previousDraggables))
                     {
-                        return _succeedCmd(ic, isd);
+                        return _succeedCmd(ic, isd).Execute(pm);
                     }
                 }
 

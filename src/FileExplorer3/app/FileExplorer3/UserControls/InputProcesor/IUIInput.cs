@@ -85,6 +85,8 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public override string ToString()
         {
+            if (_args == null)
+                return "Invalid";
             return String.Format("{0} {1} {2} {3}", _args.RoutedEvent.Name,
                 _inputType, _inputState, _position);
         }
