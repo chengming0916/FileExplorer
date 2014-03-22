@@ -199,6 +199,14 @@ namespace TestApp
                 MessageDialogViewModel.DialogButtons.OK | MessageDialogViewModel.DialogButtons.Cancel));
         }
 
+        public void ProgressDialog()
+        {
+            _windowManager.ShowDialog(new ProgressDialogViewModel(new ParameterDic() 
+            {
+                
+            }));
+        }
+
         public void MdiWindow()
         {
             new MdiWindow(RootModels.ToArray()).Show();
