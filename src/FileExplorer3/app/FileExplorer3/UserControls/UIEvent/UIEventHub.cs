@@ -192,7 +192,7 @@ namespace FileExplorer.BaseControls
             var input = UIInputBase.FromEventArgs(sender, e);
             if (await executeAsync(_eventProcessors, UIEventHub.TouchDragEvent, input))
             {
-                (_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
+                //(_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
             }
         }
 

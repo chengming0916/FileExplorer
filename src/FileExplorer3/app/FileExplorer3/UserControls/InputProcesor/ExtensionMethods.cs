@@ -28,12 +28,6 @@ namespace FileExplorer
             return adjustFunc(input.PositionRelativeTo(inputElement));
         }
 
-        public static bool IsSameSource(this IUIInput input, IUIInput input2)
-        {
-            return input != null && input2 != null &&
-                 input.Sender.Equals(input2.Sender);
-        }
-
         public static bool IsSameInputType(this IUIInput input, IUIInput input2)
         {
             if (input != null && input2 != null)
@@ -47,12 +41,32 @@ namespace FileExplorer
             return false;
         }
 
+
+
+        public static bool IsSameSource(this IUIInput input, IUIInput input2)
+        {
+            return input != null && input2 != null &&
+                 input.Sender.Equals(input2.Sender);
+        }
+
         private static Size getMiniumDragDistance(Defines.UIInputType inputType)
         {
             if (inputType == Defines.UIInputType.Touch)
                 return new Size(5, 5);
             else return new Size(SystemParameters.MinimumHorizontalDragDistance,
                 SystemParameters.MinimumVerticalDragDistance);
+        }
+
+        public static bool IsDragThresholdReached(this TouchInput input, TouchInput input2)
+        {
+            return
+                input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
+
+                (
+                     Math.Abs(input.Position.X - input2.Position.X) < Defaults.MaximumTouchDragThreshold.X &&
+                     Math.Abs(input.Position.Y - input2.Position.Y) < Defaults.MaximumTouchDragThreshold.Y
+                )
+                ;
         }
 
         public static bool IsDragThresholdReached(this IUIInput input, IUIInput input2)
@@ -67,7 +81,7 @@ namespace FileExplorer
                 );
         }
 
-        public static bool IsWithin(this IUIInput input, IUIInput input2, float x, float y)
+        public static bool IsWithin(this IUIInput input, IUIInput input2, double x, double y)
         {
             return
                 input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
@@ -79,17 +93,7 @@ namespace FileExplorer
                 ;
         }
 
-        public static bool IsDragThresholdReached(this TouchInput input, TouchInput input2)
-        {
-            return
-                input.IsSameSource(input2) && input.IsValidPositionForLisView(true) &&
-
-                (
-                     Math.Abs(input.Position.X - input2.Position.X) < Defaults.MaximumTouchDragThreshold.X &&
-                     Math.Abs(input.Position.Y - input2.Position.Y) < Defaults.MaximumTouchDragThreshold.Y
-                )
-                ;
-        }
+      
 
         public static void Update(this IEnumerable<IUIInputProcessor> processors, ref IUIInput input)
         {

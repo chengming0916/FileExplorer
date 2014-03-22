@@ -16,7 +16,7 @@ namespace FileExplorer.BaseControls
         {
             _processEvents.AddRange(
                 new[] {
-                    FrameworkElement.KeyDownEvent,
+                 FrameworkElement.KeyDownEvent,
 
                     FrameworkElement.PreviewMouseDownEvent,
                     UIEventHub.MouseDragEvent,
@@ -37,18 +37,20 @@ namespace FileExplorer.BaseControls
         {
             switch (eventId.Name)
             {
+                case "KeyDown":
+                    return ScriptCommands.IfKeyPressed(System.Windows.Input.Key.Escape, 
+                        SetDragLiteState.Reset(ResultCommand.OK), null);
+
                 case "PreviewTouchDown":
                 case "PreviewMouseDown":
-                    return EnableDrag ? (IScriptCommand)SetDragLiteState.Reset(new RecordStartSelectedItem())
-                        : ResultCommand.NoError;
+                    return EnableDrag ? (IScriptCommand)new RecordStartSelectedItem()
+                         : ResultCommand.NoError;
                 case "TouchDrag":
                 case "MouseDrag":
                     return EnableDrag ? (IScriptCommand)new BeginDragLite() : ResultCommand.NoError;
                 case "TouchUp":
                 case "MouseUp":
                     return EnableDrop ? (IScriptCommand)new EndDragLite() : new DetachAdorner();
-                case "KeyDown":
-                    return ScriptCommands.IfKeyPressed(System.Windows.Input.Key.Escape, SetDragLiteState.Reset(null), null);
                 //case "MouseLeave":
                 //case "TouchLeave":
                 //    return new DetachAdorner();
