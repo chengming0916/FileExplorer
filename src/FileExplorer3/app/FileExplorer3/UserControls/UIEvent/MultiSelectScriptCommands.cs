@@ -717,7 +717,7 @@ namespace FileExplorer.BaseControls.MultiSelect
     /// </summary>
     public class AttachAdorner : ScriptCommandBase
     {
-        public AttachAdorner() : base("AttachAdorner") { }
+        public AttachAdorner() : base("AttachAdorner") { ContinueOnCaptureContext = true; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -798,7 +798,7 @@ namespace FileExplorer.BaseControls.MultiSelect
     /// </summary>
     public class DetachAdorner : ScriptCommandBase
     {
-        public DetachAdorner() : base("DetachAdorner") { }
+        public DetachAdorner() : base("DetachAdorner") { ContinueOnCaptureContext = true; }
 
 
         public override IScriptCommand Execute(ParameterDic pm)

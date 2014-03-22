@@ -43,11 +43,6 @@ namespace FileExplorer.BaseControls.DragnDrop
                 bool isDraggingOver = isd.IsDraggingOver = _mode == QueryDragDropEffectMode.Enter;
                 AttachedProperties.SetIsDraggingOver(ele, isDraggingOver);
 
-
-
-
-
-
                 if (_mode == QueryDragDropEffectMode.Enter)
                 {
                     AttachedProperties.SetDraggingOverItem(ic, ele);

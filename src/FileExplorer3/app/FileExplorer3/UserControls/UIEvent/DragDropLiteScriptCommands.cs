@@ -23,6 +23,32 @@ namespace FileExplorer.BaseControls.DragnDrop
         public static DragDropEffects Effects;
     }
 
+    public class SetDragLiteState : ScriptCommandBase
+    {
+        public static IScriptCommand Reset(IScriptCommand nextCommand)
+        { return new SetDragLiteState(DragMode.None, nextCommand); }
+        private DragMode _mode;
+        public SetDragLiteState(DragMode mode, IScriptCommand nextCommand)
+            : base("SetDragLiteState", nextCommand)
+        {
+            _mode = mode;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            DragLiteParameters.DragMode = _mode;
+
+            switch (_mode)
+            {
+                case DragMode.None:
+                    return new DetachAdorner(_nextCommand);
+                case DragMode.Lite:
+                    return new AttachAdorner(_nextCommand);
+            }
+            return _nextCommand;
+        }
+    }
+
 
 
     public class BeginDragLite : ScriptCommandBase
@@ -88,13 +114,64 @@ namespace FileExplorer.BaseControls.DragnDrop
     }
 
 
+    /// <summary>
+    /// Update Previous and Current selected ISupportDrop's IsDraggingOver property.
+    /// </summary>
+    public class QueryDragDropEffectModeLite : ScriptCommandBase
+    {
+        private static ISupportDrop _previousIsd = null;
+
+        public QueryDragDropEffectModeLite(IScriptCommand nextCommand)
+            : base("QueryDragDropEffectModeLite", nextCommand)
+        {
+
+
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            var ic = pd.Sender as ItemsControl;
+            if (DragLiteParameters.DragMode == DragMode.Lite)
+            {
+                FrameworkElement directlyOverEle = null;
+                if (pd.Input.InputType == UIInputType.Touch)
+                    directlyOverEle = (pd.EventArgs as TouchEventArgs).TouchDevice.DirectlyOver as FrameworkElement;
+                else directlyOverEle = Mouse.DirectlyOver as FrameworkElement;
+
+                if (_previousIsd != null)
+                {
+                    _previousIsd.IsDraggingOver = false;
+                    _previousIsd = null;
+                }
+
+                if (directlyOverEle != null)
+                {
+                    var isd = DataContextFinder.GetDataContext(ref directlyOverEle, DataContextFinder.SupportDrop);
+                    if (_previousIsd != isd)
+                    {
+                        isd.IsDraggingOver = true;
+
+                        _previousIsd = isd;
+                    }
+                }
+
+            }
+
+            return _nextCommand;
+
+        }
+    }
+
     public class ContinueDragLite : ScriptCommandBase
     {
+      
+
         private bool _enableDrop;
         private bool _enableDrag;
         public ContinueDragLite(bool enableDrag, bool enableDrop)
             : base("ContinueDragLite", "EventArgs")
-        { _enableDrag = enableDrag; _enableDrop = enableDrop; }
+        { _enableDrag = enableDrag; _enableDrop = enableDrop; ContinueOnCaptureContext = true; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -102,17 +179,6 @@ namespace FileExplorer.BaseControls.DragnDrop
             var ic = pd.Sender as ItemsControl;
             if (DragLiteParameters.DragMode == DragMode.Lite && (_enableDrag || _enableDrop))
             {
-
-                //FrameworkElement directlyOverEle = null;
-                //if (pd.Input.InputType == UIInputType.Touch)
-                //    directlyOverEle = (pd.EventArgs as TouchEventArgs).TouchDevice.DirectlyOver as FrameworkElement;
-                //else directlyOverEle = Mouse.DirectlyOver as FrameworkElement;
-
-
-                //var isd = DataContextFinder.GetDataContext(ref directlyOverEle, DataContextFinder.SupportDrop);
-
-                //Console.WriteLine(directlyOverEle);
-
                 pd.EventArgs.Handled = true;
                 //if (DragLiteParameters.DragInputType == pd.Input.InputType)
                 {
@@ -122,7 +188,7 @@ namespace FileExplorer.BaseControls.DragnDrop
                        DragDropEffects.Copy, (eff) => { });
                     if (DragLiteParameters.DragInputType == UIInputType.Touch)
                         pd["PointerOffsetPosition"] = new Point(-50, -50);
-                    return new UpdateAdornerPosition(new UpdateAdornerText());
+                    return new QueryDragDropEffectModeLite(new UpdateAdornerPosition(new UpdateAdornerText()));
                 }
             }
             return ResultCommand.OK;
@@ -171,7 +237,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             da.SetData(typeof(ISupportDrag), DragLiteParameters.DragSource);
             pd.Input = new DragInput(pd.Input, da, queryEffs, (eff) => { });
 
-            return  CapturePointer.Release(new BeginDrop());
+            return CapturePointer.Release(new BeginDrop());
             //return CapturePointer.Release(new DetachAdorner());
         }
     }

@@ -9,6 +9,7 @@ using System.Windows;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.BaseControls;
+using System.Windows.Input;
 
 namespace FileExplorer.ViewModels
 {
@@ -23,6 +24,23 @@ namespace FileExplorer.ViewModels
         {
             return new IfScriptCommand(condition, ifTrue, otherwise);
         }
+
+        public static IScriptCommand IfKeyPressed(Key key, IScriptCommand ifTrue, IScriptCommand otherwise = null)
+        {
+            Func<ParameterDic, bool> condition = pm =>
+            {
+                var pd = pm.AsUIParameterDic();
+                switch (pd.EventArgs.RoutedEvent.Name)
+                {
+                    case "KeyDown":
+                    case "PreviewKeyDown":
+                        return (pd.EventArgs as KeyEventArgs).Key == key;
+                }
+                return false;
+            };
+            return If(condition, ifTrue, otherwise);
+        }
+
 
         public static IScriptCommand RunInSequence(params IScriptCommand[] scriptCommands)
         {
