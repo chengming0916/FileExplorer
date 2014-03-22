@@ -152,7 +152,7 @@ namespace FileExplorer.UserControls.InputProcesor
             {
                 var touchPts = touchEventArgs.GetIntermediateTouchPoints(input.Sender as IInputElement);
                 var touchInput = String.Join("", touchPts.Select(tp => tp.Action.ToString()[0]));
-                Console.WriteLine(touchInput);
+                //Console.WriteLine(touchInput);
             }
 
         }
@@ -326,7 +326,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public void UpdatInputReleased(IUIInput input)
         {
-            Console.WriteLine("UpdatInputReleased -" + input.ToString());
+            //Console.WriteLine("UpdatInputReleased -" + input.ToString());
             if (input.IsSameSource(_startInput))
             {
                 if (_isDragging && _dragState == DragState.Dragging)
@@ -354,7 +354,7 @@ namespace FileExplorer.UserControls.InputProcesor
                     //When touch and hold it raise a mouse right click command, skip it.
                     if (_dragState == DragState.Touched && input.InputType == UIInputType.MouseRight)
                         return;
-                    Console.WriteLine(input);
+                    //Console.WriteLine(input);
                     StartInput = input;
                     _isDragging = false;
                     switch (input.InputType)
@@ -405,7 +405,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public IUIInput StartInput
         {
             get { return _startInput; }
-            private set { _startInput = value; Console.WriteLine("StartInput =" + value.ToString()); }
+            private set { _startInput = value; /*Console.WriteLine("StartInput =" + value.ToString());*/ }
         }
         public bool IsDragging
         {
