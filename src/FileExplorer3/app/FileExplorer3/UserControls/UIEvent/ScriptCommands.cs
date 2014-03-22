@@ -20,7 +20,7 @@ namespace FileExplorer.ViewModels
         public static DebugScriptCommand PrepareDrag = new DebugScriptCommand(DebugScriptCommand.HandleType.prepareDataObject);
         public static NoScriptCommand NoCommand = new NoScriptCommand();
 
-        public static IScriptCommand If(Func<ParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise = null)
+        public static IScriptCommand If(Func<ParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise)
         {
             return new IfScriptCommand(condition, ifTrue, otherwise);
         }
@@ -28,18 +28,19 @@ namespace FileExplorer.ViewModels
         public static IScriptCommand IfKeyPressed(Key key, IScriptCommand ifTrue, IScriptCommand otherwise = null)
         {
             Func<ParameterDic, bool> condition = pm =>
+            {
+                var pd = pm.AsUIParameterDic();
+                switch (pd.EventArgs.RoutedEvent.Name)
                 {
-                    var pd = pm.AsUIParameterDic();
-                    switch (pd.EventArgs.RoutedEvent.Name)
-                    {
-                        case "KeyDown":
-                        case "PreviewKeyDown":
-                            return (pd.EventArgs as KeyEventArgs).Key == key;
-                    }
-                    return false;
-                };
+                    case "KeyDown":
+                    case "PreviewKeyDown":
+                        return (pd.EventArgs as KeyEventArgs).Key == key;
+                }
+                return false;
+            };
             return If(condition, ifTrue, otherwise);
         }
+
 
         public static IScriptCommand RunInSequence(params IScriptCommand[] scriptCommands)
         {
@@ -67,11 +68,10 @@ namespace FileExplorer.ViewModels
         private Func<ParameterDic, bool> _condition;
         private IScriptCommand _otherwiseCommand;
         private IScriptCommand _ifTrueCommand;
+        private bool _continueOnCaptureContext = false;
         public IfScriptCommand(Func<ParameterDic, bool> condition,
             IScriptCommand ifTrueCommand, IScriptCommand otherwiseCommand)
-        { _condition = condition; 
-            _ifTrueCommand = ifTrueCommand ?? ResultCommand.NoError; 
-            _otherwiseCommand = otherwiseCommand ?? ResultCommand.NoError; }
+        { _condition = condition; _ifTrueCommand = ifTrueCommand; _otherwiseCommand = otherwiseCommand; }
 
         public string CommandKey
         {
@@ -98,6 +98,12 @@ namespace FileExplorer.ViewModels
             if (_condition(pm))
                 return _ifTrueCommand;
             return _otherwiseCommand;
+        }
+
+        public bool ContinueOnCaptureContext
+        {
+            get { return _continueOnCaptureContext; }
+            protected set { _continueOnCaptureContext = value; }
         }
     }
 
@@ -176,6 +182,11 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.Error(pm.Error);
             else return _nextCommand;
         }
+
+        public bool ContinueOnCaptureContext
+        {
+            get { return _scriptCommands.Any(c => c.ContinueOnCaptureContext); }
+        }
     }
 
     public class DebugScriptCommand : IScriptCommand
@@ -242,6 +253,7 @@ namespace FileExplorer.ViewModels
         {
             return Execute(pm);
         }
+        public bool ContinueOnCaptureContext { get { return false; }}
 
     }
 
@@ -267,5 +279,8 @@ namespace FileExplorer.ViewModels
         {
             return Execute(pm);
         }
+
+        public bool ContinueOnCaptureContext { get { return false; } }
+
     }
 }

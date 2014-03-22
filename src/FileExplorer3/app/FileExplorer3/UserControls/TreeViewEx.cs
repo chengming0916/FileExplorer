@@ -95,6 +95,7 @@ namespace FileExplorer.UserControls
         {
             base.OnDragEnter(e);
 
+
         }
         //override hittestvi
 

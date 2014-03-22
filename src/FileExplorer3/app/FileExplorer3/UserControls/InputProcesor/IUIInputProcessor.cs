@@ -152,7 +152,7 @@ namespace FileExplorer.UserControls.InputProcesor
             {
                 var touchPts = touchEventArgs.GetIntermediateTouchPoints(input.Sender as IInputElement);
                 var touchInput = String.Join("", touchPts.Select(tp => tp.Action.ToString()[0]));
-                Console.WriteLine(touchInput);
+                //Console.WriteLine(touchInput);
             }
 
         }
@@ -212,9 +212,9 @@ namespace FileExplorer.UserControls.InputProcesor
 
                     //touchPts.First().Action == TouchAction.
                     if (DateTime.UtcNow.Subtract(_lastClickTime).TotalMilliseconds <
-                        Defaults.MaximumClickInterval &&
-                        input.IsWithin(_startInput, (float)Defaults.MaximumTouchClickDragDistance.X, 
-                        (float)Defaults.MaximumTouchClickDragDistance.Y))
+                        FileExplorer.Defines.Defaults.MaximumClickInterval &&
+                        input.IsWithin(_startInput, Defaults.MaximumTouchClickDragDistance.X,
+                        Defaults.MaximumTouchClickDragDistance.Y))
                     {
                         _clickCount += 1;
                         input.ClickCount = _clickCount;
@@ -295,13 +295,16 @@ namespace FileExplorer.UserControls.InputProcesor
         {
             if (_dragState == DragState.Touched && input.EventArgs is TouchEventArgs)
             {
-                if (DateTime.UtcNow.Subtract(_touchTime).Milliseconds >= Defaults.MaximumTouchHoldInterval)
+                if (DateTime.UtcNow.Subtract(_touchTime).TotalMilliseconds >= Defaults.MaximumTouchHoldInterval)
                 {
                     var rect = (input.EventArgs as TouchEventArgs).GetTouchPoint(null).Size;
                     if ((input as TouchInput).IsDragThresholdReached(_startTouchInput as TouchInput))
                     {
                         StartInput = _startTouchInput;
                         _dragState = DragState.Pressed;
+                        //_touchTime = DateTime.MinValue;
+                        //_isDragging = true;
+                        //DragStartedFunc(input);
                     }
                     else
                     {
@@ -313,10 +316,7 @@ namespace FileExplorer.UserControls.InputProcesor
             }
 
             //Console.WriteLine(String.Format("UpdateInputPosition - {0}", _dragState));
-            if (!_isDragging && _dragState == DragState.Pressed && 
-                input.IsSameSource(_startInput) &&
-                //input.IsSameInputType(_startInput) &&
-                input.IsDragThresholdReached(_startInput))
+            if (_dragState == DragState.Pressed && input.IsDragThresholdReached(_startInput))
             {
                 _dragState = DragState.Dragging;
                 _isDragging = true;
@@ -326,28 +326,35 @@ namespace FileExplorer.UserControls.InputProcesor
 
         public void UpdatInputReleased(IUIInput input)
         {
-            if (input.IsSameSource(_startInput) && input.IsSameInputType(_startInput))
+            //Console.WriteLine("UpdatInputReleased -" + input.ToString());
+            if (input.IsSameSource(_startInput))
             {
                 if (_isDragging && _dragState == DragState.Dragging)
+                {
                     DragStoppedFunc(input);
+                }
                 _isDragging = false;
-                _dragState = DragState.Released;    
+                _dragState = DragState.Released;
             }
-            
+          
             //Console.WriteLine(String.Format("UpdatInputReleased - {0}", _dragState));
         }
 
         public void UpdateInputPressed(IUIInput input)
         {
+            if (_dragState == DragState.Released)
+            {
+                StartInput = InvalidInput.Instance;
+                _dragState = DragState.Normal;
+            }
 
             if (!_isDragging && input.IsValidPositionForLisView(true))
                 if (input.ClickCount <= 1) //Touch/Stylus input 's ClickCount = 0
                 {
-          
                     //When touch and hold it raise a mouse right click command, skip it.
                     if (_dragState == DragState.Touched && input.InputType == UIInputType.MouseRight)
                         return;
-
+                    //Console.WriteLine(input);
                     StartInput = input;
                     _isDragging = false;
                     switch (input.InputType)
@@ -365,6 +372,7 @@ namespace FileExplorer.UserControls.InputProcesor
                                     break;
                                 case DragState.Normal:
                                 case DragState.Released:
+                                    IsDragging = false;
                                     _dragState = DragState.Pressed;
                                     break;
                             }
@@ -397,7 +405,7 @@ namespace FileExplorer.UserControls.InputProcesor
         public IUIInput StartInput
         {
             get { return _startInput; }
-            private set { _startInput = value; }
+            private set { _startInput = value; /*Console.WriteLine("StartInput =" + value.ToString());*/ }
         }
         public bool IsDragging
         {

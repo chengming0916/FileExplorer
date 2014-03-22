@@ -9,6 +9,10 @@ namespace Cofe.Core.Script
 
     public interface IScriptCommand
     {
+        /// <summary>
+        /// Call ExecuteAsync() calls ConfigureAwait(ContinueOnCaptureContext), if command is UI command, set to true.
+        /// </summary>
+        bool ContinueOnCaptureContext { get; }
         string CommandKey { get; }
 
         IScriptCommand Execute(ParameterDic pm);
