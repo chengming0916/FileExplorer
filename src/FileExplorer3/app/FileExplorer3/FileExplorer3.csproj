@@ -176,6 +176,7 @@
     <Compile Include="ViewModels\Interfaces\IScriptCommandContainer.cs" />
     <Compile Include="ViewModels\Interfaces\ISelectable.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
+    <Compile Include="ViewModels\EstimateTimeRemainViewModel.cs" />
     <Compile Include="Views\FilePickerView.xaml.cs">
       <DependentUpon>FilePickerView.xaml</DependentUpon>
     </Compile>

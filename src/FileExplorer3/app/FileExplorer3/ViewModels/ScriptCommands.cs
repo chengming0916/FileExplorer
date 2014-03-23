@@ -1154,10 +1154,11 @@ namespace FileExplorer.ViewModels
             var transferCommands = source.Select(s => _transferOneFunc(effects, s, dest)).ToArray();
             if (transferCommands.Any(c => c == null || !c.CanExecute(pm)))
                 return ResultCommand.Error(new ArgumentException("Not all items are transferrable."));
-
+           
             if (_windowManager != null)
                 return ScriptCommands.ShowProgress(_windowManager, effects.ToString(),
-                    new RunInSequenceScriptCommand(transferCommands, new HideProgress()));
+                            ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(source.Length), 
+                                new RunInSequenceScriptCommand(transferCommands, new HideProgress())));
             else return new RunInSequenceScriptCommand(transferCommands);
         }
 
