@@ -201,10 +201,17 @@ namespace TestApp
 
         public void ProgressDialog()
         {
-            _windowManager.ShowDialog(new ProgressDialogViewModel(new ParameterDic() 
-            {
+            new ScriptRunner().Run(
+                ScriptCommands.ShowProgress(_windowManager, "Testing",
+                    ScriptCommands.ReportProgress(TransferProgress.From("C:\\Demo\\Abc.txt", "http://FileExplorer.org/abc.txt"), 
+                    ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(100),
+                    ScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries(20), 
+                    ScriptCommands.ReportProgress(TransferProgress.UpdateCurrentProgress(50)))))), 
+                new ParameterDic());
+            //_windowManager.ShowDialog(new ProgressDialogViewModel(new ParameterDic() 
+            //{
                 
-            }));
+            //}));
         }
 
         public void MdiWindow()

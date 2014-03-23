@@ -87,9 +87,9 @@ namespace FileExplorer.ViewModels
 
         public virtual bool CanExecute(ParameterDic pm)
         {
-            if (_condition(pm))
-                return _ifTrueCommand.CanExecute(pm);
-            else return _otherwiseCommand.CanExecute(pm);
+            if (_condition != null && _condition(pm))
+                return _ifTrueCommand == null || _ifTrueCommand.CanExecute(pm);
+            else return _otherwiseCommand == null || _otherwiseCommand.CanExecute(pm);
         }
 
 

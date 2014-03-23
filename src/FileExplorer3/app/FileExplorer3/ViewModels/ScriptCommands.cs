@@ -109,6 +109,15 @@ namespace FileExplorer.ViewModels
             return new DownloadFile(sourceUrl, entry, httpClient, nextCommand);
         }
 
+        public static ShowProgress ShowProgress(IWindowManager wm, string header, IScriptCommand nextCommand)
+        {
+            return new ShowProgress(wm, header, nextCommand);
+        }
+
+        public static ReportProgress ReportProgress(TransferProgress progress, IScriptCommand nextCommand = null)
+        {
+            return new ReportProgress(progress, nextCommand);
+        }
     }
 
 
@@ -219,16 +228,18 @@ namespace FileExplorer.ViewModels
     public class ShowProgress : ScriptCommandBase
     {
         private IWindowManager _wm;
-        public ShowProgress(IWindowManager wm, IScriptCommand nextCommand)
+        private string _header;
+        internal ShowProgress(IWindowManager wm, string header, IScriptCommand nextCommand)
             : base("ShowProgress", nextCommand)
         {
             _wm = wm;
+            _header = header;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+            pm["ProgressHeader"] = _header;
             var pdv = new ProgressDialogViewModel(pm);
-
             pm["Progress"] = pdv;
             pm["CancellationToken"] = pdv.CancellationToken;
 
@@ -237,6 +248,22 @@ namespace FileExplorer.ViewModels
         }
     }
 
+    public class ReportProgress : ScriptCommandBase
+    {
+        private TransferProgress _progress;
+        public ReportProgress(TransferProgress progress, IScriptCommand nextCommand = null)
+            : base("ReportProgress", nextCommand)
+        {
+            _progress = progress;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pdv = pm["Progress"] as ProgressDialogViewModel;
+            pdv.Report(_progress);
+            return _nextCommand;
+        }
+    }
 
     public class HideProgress : ScriptCommandBase
     {
@@ -260,7 +287,7 @@ namespace FileExplorer.ViewModels
         private bool _disposeHttpClient;
         private Func<HttpClient> _httpClientFunc;
         private Func<CancellationToken, Task<Stream>> _destStreamFunc;
-        private IEntryModel _entry;
+        private string _destId = null;
         public DownloadFile(string sourceUrl, Func<CancellationToken, Task<Stream>> destStreamFunc,
             Func<HttpClient> httpClientFunc, IScriptCommand nextCommand = null)
             : base("Download", nextCommand)
@@ -287,6 +314,7 @@ namespace FileExplorer.ViewModels
                 (entry.Profile as IDiskProfile).DiskIO.OpenStreamAsync(entry,
                 FileAccess.Write, ct), httpClient, nextCommand)
         {
+            _destId = entry.FullPath;
         }
 
 
@@ -307,14 +335,19 @@ namespace FileExplorer.ViewModels
                     using (Stream srcStream = await response.Content.ReadAsStreamAsync())
                     using (Stream destStream = await _destStreamFunc(pm.CancellationToken))
                     {
+                        pdv.Report(TransferProgress.From(_sourceUrl, _destId));
                         byte[] buffer = new byte[1024];
                         ulong totalBytesRead = 0;
+                        ulong totalBytes = 0;
+                        try { totalBytes = (ulong)srcStream.Length; } catch (NotSupportedException) { }
+                            
                         int byteRead = await srcStream.ReadAsync(buffer, 0, buffer.Length, pm.CancellationToken);
                         while (byteRead > 0)
                         {
                             await destStream.WriteAsync(buffer, 0, byteRead, pm.CancellationToken);
                             totalBytesRead = totalBytesRead + (uint)byteRead;
-                            pdv.Report(TransferProgress.UpdateCurrentProgress(1));
+                            short percentCompleted = (short)((float)totalBytesRead / (float)totalBytes * 100.0f);
+                            pdv.Report(TransferProgress.UpdateCurrentProgress(percentCompleted));
 
                             byteRead = await srcStream.ReadAsync(buffer, 0, buffer.Length, pm.CancellationToken);
 
@@ -1123,7 +1156,7 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.Error(new ArgumentException("Not all items are transferrable."));
 
             if (_windowManager != null)
-                return new ShowProgress(_windowManager,
+                return ScriptCommands.ShowProgress(_windowManager, effects.ToString(),
                     new RunInSequenceScriptCommand(transferCommands, new HideProgress()));
             else return new RunInSequenceScriptCommand(transferCommands);
         }

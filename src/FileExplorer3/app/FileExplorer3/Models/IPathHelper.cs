@@ -14,11 +14,13 @@ namespace FileExplorer.Models
         string GetExtension(string path);
     }
 
+ 
     public class PathHelper : IPathHelper
     {
         public static PathHelper Disk = new PathHelper('\\', p => p.Contains(":\\"));
         public static PathHelper Web = new PathHelper('/', p => p.Contains("://"));
-
+        public static PathHelper Auto(string path) 
+        { return path.Contains('/') ? Web : Disk; }
         #region Constructor
 
         /// <summary>
