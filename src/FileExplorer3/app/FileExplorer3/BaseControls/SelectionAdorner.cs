@@ -29,9 +29,11 @@ namespace FileExplorer.BaseControls
                 Point ptValue = (Point)value;
                 SelectionAdorner adorner = sender as SelectionAdorner;
                 ptValue.X = Math.Max(ptValue.X, 0);
-                ptValue.X = Math.Min(ptValue.X, adorner.ActualWidth);
+                if (adorner.ActualWidth != 0)
+                    ptValue.X = Math.Min(ptValue.X, adorner.ActualWidth);
                 ptValue.Y = Math.Max(ptValue.Y, 0);
-                ptValue.Y = Math.Min(ptValue.Y, adorner.ActualHeight);
+                if (adorner.ActualHeight != 0)
+                    ptValue.Y = Math.Min(ptValue.Y, adorner.ActualHeight);
                 return ptValue;
             }
             return value;
