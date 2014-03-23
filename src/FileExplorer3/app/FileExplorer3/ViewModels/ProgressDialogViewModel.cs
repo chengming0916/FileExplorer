@@ -29,6 +29,7 @@ namespace FileExplorer.ViewModels
             if (_pd.ContainsKey("ProgressHeader"))
                 Header = _pd["ProgressHeader"] as string;
             _cts = cts ?? new CancellationTokenSource();
+            _timeRemain = new EstimateTimeRemainViewModel();
         }
 
         #endregion
@@ -43,9 +44,15 @@ namespace FileExplorer.ViewModels
             if (value.DestinationPathHelper != null) DestinationPathHelper = value.DestinationPathHelper;
 
             if (value.TotalEntriesIncrement.HasValue)
+            {
                 TotalEntries += value.TotalEntriesIncrement.Value;
+                TimeRemain.TotalItems = TotalEntries;
+            }
             if (value.ProcessedEntriesIncrement.HasValue)
+            {
                 ProcessedEntries += value.ProcessedEntriesIncrement.Value;
+                TimeRemain.ProcessedItems = ProcessedEntries;
+            }
             if (value.CurrentProgressPercent.HasValue)
                 CurrentEntryProgress = value.CurrentProgressPercent.Value;
         }
@@ -76,11 +83,13 @@ namespace FileExplorer.ViewModels
         private string _message;
         private IPathHelper _sourcePathHelper;
         private IPathHelper _destinationPathHelper;
+        private IEstimateTimeRemainViewModel _timeRemain;
 
         #endregion
 
         #region Public Properties
 
+        public IEstimateTimeRemainViewModel TimeRemain { get { return _timeRemain; } set { _timeRemain = value; NotifyOfPropertyChange(() => TimeRemain); } }
         public string Header { get { return _header; } set { _header = value; NotifyOfPropertyChange(() => Header); } }
         public string Message { get { return getMessage(); } }
 
