@@ -62,7 +62,7 @@ namespace FileExplorer.Models
                                      _rootModelFunc(), filter, defaultName,
                                      (fi) => ScriptCommands.ParseOrCreatePath(fi.Profile as IDiskProfile, 
                                          fi.FileName, false, 
-                                         (m) => new ShowProgress(WindowManager, 
+                                         (m) => ScriptCommands.ShowProgress(WindowManager, "Saving", 
                                                     ScriptCommands.Download(url, m, 
                                                     (appliedModels[0].Profile as GoogleDriveProfile)
                                                     .HttpClientFunc(), 

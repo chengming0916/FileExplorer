@@ -38,7 +38,7 @@ namespace FileExplorer.Defines
     public class DirectoryChangedEvent : ViewModelEvent
     {
         public IEntryViewModel OriginalViewModel { get; private set; }
-        public IEntryModel OriginalModel { get { return OriginalViewModel== null ? null : OriginalViewModel.EntryModel; } }
+        public IEntryModel OriginalModel { get { return OriginalViewModel == null ? null : OriginalViewModel.EntryModel; } }
         public IEntryViewModel NewViewModel { get; private set; }
         public IEntryModel NewModel { get { return NewViewModel == null ? null : NewViewModel.EntryModel; } }
 
@@ -53,7 +53,7 @@ namespace FileExplorer.Defines
         public DirectoryChangedEvent(object sender, IEntryModel newM, IEntryModel originalM)
             : this(sender, EntryViewModel.FromEntryModel(newM), EntryViewModel.FromEntryModel(originalM))
         {
-            
+
         }
     }
 
@@ -102,15 +102,45 @@ namespace FileExplorer.Defines
             return null;
         }
     }
-    #endregion    
+    #endregion
 
-    public class TransferProgress 
+    public class TransferProgress
     {
         public Int32? TotalEntriesIncrement { get; set; }
         public Int32? ProcessedEntriesIncrement { get; set; }
         public short? CurrentProgressPercent { get; set; }
+        public string Source { get; set; }
+        public IPathHelper SourcePathHelper { get; set; }
+        public string Destination { get; set; }
+        public IPathHelper DestinationPathHelper { get; set; }
 
-        public static TransferProgress IncrementTotalEntries(int count = 1) 
+        public static TransferProgress From(string src, IPathHelper srcPathHelper, string dest, IPathHelper destPathHelper)
+        {
+            return new TransferProgress()
+            {
+                Source = src,
+                SourcePathHelper = srcPathHelper,
+                Destination = dest,
+                DestinationPathHelper = destPathHelper
+            };
+        }
+
+        public static TransferProgress From(string src, IPathHelper pathHelper = null)
+        {
+            return From(src, pathHelper, null, null);
+        }
+
+        public static TransferProgress From(string src, string dest)
+        {
+            return From(src, PathHelper.Auto(src), dest, PathHelper.Auto(dest));
+        }
+
+        public static TransferProgress To(string dest, IPathHelper pathHelper = null)
+        {
+            return From(null, null, dest, pathHelper);
+        }
+
+        public static TransferProgress IncrementTotalEntries(int count = 1)
         {
             return new TransferProgress() { TotalEntriesIncrement = count };
         }
@@ -128,7 +158,7 @@ namespace FileExplorer.Defines
     {
         public static NullTransferProgress Instance = new NullTransferProgress();
         public void Report(TransferProgress value)
-        {            
+        {
         }
     }
 
@@ -154,32 +184,32 @@ namespace FileExplorer.Defines
 
     public class EntryChangedEvent
     {
-         public EntryChangedEvent(ChangeType changeType, params string[] parseNames)
+        public EntryChangedEvent(ChangeType changeType, params string[] parseNames)
         {
             ChangeType = changeType;
             ParseNames = parseNames;
         }
 
-         public EntryChangedEvent(Dictionary<string, string> renamedParseNames)
-             : this(ChangeType.Moved, renamedParseNames.Keys.ToArray())
+        public EntryChangedEvent(Dictionary<string, string> renamedParseNames)
+            : this(ChangeType.Moved, renamedParseNames.Keys.ToArray())
         {
             _renamedParseNames = renamedParseNames ?? _renamedParseNames;
         }
 
-         public EntryChangedEvent(string parseName, string orgParseName)
+        public EntryChangedEvent(string parseName, string orgParseName)
             : this(new Dictionary<string, string>() { { parseName, orgParseName } })
-        {            
+        {
         }
 
-         public string GetOrgParseName(string parseName)
-         {
-             return _renamedParseNames[parseName];
-         }
+        public string GetOrgParseName(string parseName)
+        {
+            return _renamedParseNames[parseName];
+        }
 
-        private Dictionary<string, string> _renamedParseNames = new Dictionary<string,string>();
+        private Dictionary<string, string> _renamedParseNames = new Dictionary<string, string>();
 
         public ChangeType ChangeType { get; private set; }
-        public string[] ParseNames { get; private set; }        
+        public string[] ParseNames { get; private set; }
     }
 
     public class ColumnInfo

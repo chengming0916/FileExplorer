@@ -35,6 +35,10 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlTextBlock">
+      <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.1.1309.1617\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -96,8 +100,11 @@
     <Compile Include="Defines\Cofe3\Utils\StreamUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\StringUtils.cs" />
     <Compile Include="Defines\Commands\FileListCommands.cs" />
+    <Compile Include="Defines\Converters\AddBracketConverter.cs" />
     <Compile Include="Defines\Converters\BorderClipConverter.cs" />
     <Compile Include="Defines\Converters\DynamicConverter.cs" />
+    <Compile Include="Defines\Converters\StripPathConverter.cs" />
+    <Compile Include="Defines\Converters\TimeSpanToStrConverter.cs" />
     <Compile Include="Defines\Converters\VisibleIfEqualConverter.cs" />
     <Compile Include="Defines\Defaults.cs" />
     <Compile Include="Defines\Strings.cs" />
@@ -413,6 +420,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Page Include="Themes\Common\ProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Common\BreadcrumbParts.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

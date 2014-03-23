@@ -53,6 +53,9 @@
     <Reference Include="ExifLib">
       <HintPath>..\..\..\..\..\COFE\lib\ExifLib.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlTextBlock">
+      <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Live, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

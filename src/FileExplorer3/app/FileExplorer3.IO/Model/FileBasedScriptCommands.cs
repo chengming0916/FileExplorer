@@ -167,6 +167,7 @@ namespace FileExplorer.Models
             var srcProfile = _srcModel.Profile as IDiskProfile;
             var destProfile = _destDirModel.Profile as IDiskProfile;
             string destName = _srcModel.GetName();
+            string srcFullName = _srcModel.FullPath;
             string destFullName = _destDirModel.Combine(destName);
 
             ChangeType ct = ChangeType.Created;
@@ -180,9 +181,11 @@ namespace FileExplorer.Models
 
             using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read, pm.CancellationToken))
             using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write, pm.CancellationToken))
-                await StreamUtils.CopyStreamAsync(srcStream, destStream, false, false, false, 
-                    p => _progress.Report(new TransferProgress() { CurrentProgressPercent = p }) ).ConfigureAwait(false);
-
+            {
+                _progress.Report(TransferProgress.From(srcFullName, destFullName));
+                await StreamUtils.CopyStreamAsync(srcStream, destStream, false, false, false,
+                    p => _progress.Report(new TransferProgress() { CurrentProgressPercent = p })).ConfigureAwait(false);
+            }
             if (_removeOriginal)
                 await srcProfile.DiskIO.DeleteAsync(_srcModel, pm.CancellationToken).ConfigureAwait(false);
 
@@ -231,12 +234,15 @@ namespace FileExplorer.Models
                         em.FullPath.Equals(destFullName,
                         StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
                 _destDirModel.Profile.Events.Publish(new EntryChangedEvent(ChangeType.Created, destFullName));
-            }            
+            }
 
             if (destModel == null)
                 return ResultCommand.Error(new Exception("Cannot construct destination " + destFullName));
-            else _progress.Report(TransferProgress.IncrementProcessedEntries()); //dest directory created
-
+            else
+            {
+                _progress.Report(TransferProgress.From(_srcModel.FullPath, destFullName));
+                _progress.Report(TransferProgress.IncrementProcessedEntries()); //dest directory created
+            }
             var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel, CancellationToken.None)).ToList();
             
             _progress.Report(TransferProgress.IncrementTotalEntries(srcSubModels.Count())); //source entries
@@ -288,7 +294,8 @@ namespace FileExplorer.Models
 
 
                 if (!srcMapping.IsVirtual && !destMapping.IsVirtual && _removeOriginal)
-                {                    
+                {
+                    progress.Report(TransferProgress.From(_srcModel.FullPath, destFullName));
                     if (_srcModel.IsDirectory)
                     {
                         if (Directory.Exists(destFullName))

@@ -174,7 +174,7 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             Mouse.Capture(null);
 
-          
+
             if (AttachedProperties.GetIsSelecting(ic))
                 return new UpdateIsSelecting(false);
             else
@@ -778,8 +778,8 @@ namespace FileExplorer.BaseControls.MultiSelect
 
             lastAdorner.IsSelecting = AttachedProperties.GetIsSelecting(c);
 
-            lastAdorner.StartPosition = (Point)pd["StartAdjustedPosition"];
-            lastAdorner.EndPosition = (Point)pd["CurrentPosition"];
+            lastAdorner.SetValue(SelectionAdorner.StartPositionProperty, (Point)pd["StartAdjustedPosition"]);
+            lastAdorner.SetValue(SelectionAdorner.EndPositionProperty, (Point)pd["CurrentPosition"]);
 
             return new AutoScroll();
         }

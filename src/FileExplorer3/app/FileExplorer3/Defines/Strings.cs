@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace FileExplorer.Defines
 {
     public static class Strings
     {
+        public static string strCancel = "Cancel";
         public static string txtSelection = "Selection";
         public static string strRefresh = "Refresh";
         public static string strRename = "Rename";
@@ -20,5 +22,20 @@ namespace FileExplorer.Defines
         public static string strUnselectAll = "Unselect all";
         public static string strInvertSelect = "Invert selection";
         public static string strUpOneLevel = "Up";
+
+        //Progress Dialog
+
+        public static string strClose = ApplicationCommands.Close.Text;
+        //public static string strCancel = "Cancel";
+        public static string strRestart = "Restart";
+        public static string strPause = MediaCommands.Pause.Text;
+        public static string strResume = "Resume";
+        public static string strFrom = "From";
+        public static string strTo = "To";
+        public static string strRemainTime = "Remain Time";
+        public static string strRemainItem = "Remain Item";
+        public static string strMessage = "Message";
+        public static string strMoreInformation = "More Information";
+        public static string strLessInformation = "Less Information";
     }
 }

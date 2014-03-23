@@ -131,7 +131,7 @@ namespace TestApp
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                        new ShowProgress(_windowManager,
+                        ScriptCommands.ShowProgress(_windowManager, "Delete",
                                     ScriptCommands.RunInSequence(
                                         FileList.AssignSelectionToParameter(
                                             DeleteFileBasedEntryCommand.FromParameter),
@@ -158,7 +158,7 @@ namespace TestApp
             explorerModel.DirectoryTree.Commands.ScriptCommands.Delete =
                        ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                            pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
-                                 new ShowProgress(_windowManager,
+                                ScriptCommands.ShowProgress(_windowManager, "Delete",
                                         ScriptCommands.RunInSequence(
                                             DirectoryTree.AssignSelectionToParameter(
                                                 DeleteFileBasedEntryCommand.FromParameter),
