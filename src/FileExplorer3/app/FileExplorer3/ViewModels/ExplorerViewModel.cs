@@ -20,7 +20,8 @@ namespace FileExplorer.ViewModels
 {
     public class ExplorerViewModel : Screen, IExplorerViewModel,
         IHandle<DirectoryChangedEvent>,
-        IHandle<EntryChangedEvent>
+        IHandle<EntryChangedEvent>, 
+        IHandle<RootChangedEvent>
     {
         #region Cosntructor
 
@@ -150,6 +151,16 @@ namespace FileExplorer.ViewModels
             BroascastAsync(message);
         }
 
+        public void Handle(RootChangedEvent message)
+        {
+            //ParameterDic pd = new ParameterDic()
+            //{
+            //   { "ChangeType", message.ChangeType },
+            //   { "AppliedRootDirectories", message.AppliedRootDirectories }
+            //};
+            Commands.Execute(new[] { (IScriptCommand)Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories) });
+        }
+
         #endregion
 
         #region Data
@@ -190,5 +201,7 @@ namespace FileExplorer.ViewModels
         #endregion
 
 
+
+        
     }
 }

@@ -18,7 +18,7 @@
     </Window.Resources>
     <StackPanel Orientation="Vertical">
         <TextBlock Text="Root directory list" />
-        <ListBox x:Name="RootModels" >
+        <ListBox x:Name="RootModels" SelectedIndex="{Binding SelectedIndex}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -30,7 +30,10 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button x:Name="Clear" Content="Clear" />
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="Clear" Content="Clear" />
+            <Button x:Name="Remove" Content="Remove" />
+        </StackPanel>
         <WrapPanel Orientation="Horizontal">
             <Button x:Name="AddDirectoryInfo" Content="Add (using DirectoryInfo)" ToolTip="Drag n Drop is not coded in DirectoryInfo" />
             <Button x:Name="AddDirectoryInfoEx" Content="Add (using DirectoryInfoEx)" />

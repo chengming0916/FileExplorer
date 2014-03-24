@@ -339,8 +339,9 @@ namespace FileExplorer.ViewModels
                         byte[] buffer = new byte[1024];
                         ulong totalBytesRead = 0;
                         ulong totalBytes = 0;
-                        try { totalBytes = (ulong)srcStream.Length; } catch (NotSupportedException) { }
-                            
+                        try { totalBytes = (ulong)srcStream.Length; }
+                        catch (NotSupportedException) { }
+
                         int byteRead = await srcStream.ReadAsync(buffer, 0, buffer.Length, pm.CancellationToken);
                         while (byteRead > 0)
                         {
@@ -377,6 +378,12 @@ namespace FileExplorer.ViewModels
         {
             return new DoExplorer(commandFunc);
         }
+
+
+        //public static IScriptCommand GoTo(IScriptCommand thenCommand = null)
+        //{
+        //    return new GotoDirectory(thenCommand);
+        //}
 
         public static IScriptCommand GoTo(IEntryModel dir, IScriptCommand thenCommand = null)
         {
@@ -421,7 +428,22 @@ namespace FileExplorer.ViewModels
             return new OpenInNewWindowCommand(initializer, getSelectedDirectryFunc);
         }
 
+        //public static IScriptCommand ChangeRoot(IScriptCommand nextCommand = null)
+        //{
+        //    return new ChangeRootCommand(nextCommand);
+        //}
 
+        public static IScriptCommand ChangeRoot(ChangeType changeType,
+            IEntryModel[] appliedRootDirectories, IScriptCommand nextCommand = null)
+        {
+            return new ChangeRootCommand(changeType, appliedRootDirectories, nextCommand);
+        }
+
+        public static IScriptCommand ChangeRoot(ChangeType changeType,
+           params IEntryModel[] appliedRootDirectories)
+        {
+            return ChangeRoot(changeType, appliedRootDirectories, ResultCommand.NoError);
+        }
         //public static IScriptCommand NewWindow(IExplorerViewModel senderEvm, IEntryModel selectedDirectory = null)
         //{
         //    return NewWindow(senderEvm.WindowManager, senderEvm.Events, senderEvm.RootModels, selectedDirectory);
@@ -479,17 +501,107 @@ namespace FileExplorer.ViewModels
             : base("Explorer", commandFunc)
         {
         }
+
+        internal DoExplorer(string commandKey, Func<IExplorerViewModel, IScriptCommand> commandFunc)
+            : base(commandKey, commandFunc)
+        {
+        }
+
+        protected DoExplorer(string commandKey, Func<IExplorerViewModel, Task<IScriptCommand>> commandFunc)
+            : base(commandKey, commandFunc)
+        {
+        }
+    }
+
+    public class ChangeRootCommand : ScriptCommandBase
+    {
+        private ChangeType? _changeType;
+        private IEntryModel[] _appliedRootDirectories = null;
+        #region Constructors
+
+        public ChangeRootCommand(IScriptCommand nextCommand = null)
+            : base("ChangeRoot", "Explorer", "ChangeType", "AppliedRootDirectories")
+        {
+            _nextCommand = nextCommand;
+        }
+
+        public ChangeRootCommand(ChangeType changeType, IEntryModel[] appliedRootDirectories, IScriptCommand nextCommand = null)
+            : this(nextCommand)
+        {
+            _changeType = changeType;
+            _appliedRootDirectories = appliedRootDirectories;
+        }
+
+
+
+        #endregion
+
+        #region Methods
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
+            if (evm != null)
+            {
+                try
+                {
+                    _changeType = _changeType.HasValue ? _changeType : (ChangeType)pm["ChangeType"];
+                    _appliedRootDirectories = _appliedRootDirectories ?? (IEntryModel[])pm["AppliedRootDirectories"];
+
+                    List<IEntryModel> currentList = evm.RootModels.ToList();
+                    switch (_changeType)
+                    {
+                        case ChangeType.Created:
+                            currentList.AddRange(_appliedRootDirectories);
+                            break;
+                        case ChangeType.Deleted:
+                            foreach (var root in _appliedRootDirectories)
+                                currentList.Remove(root);
+                            break;
+                        case ChangeType.Changed:
+                            currentList = new List<IEntryModel>(_appliedRootDirectories);
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                    evm.RootModels = currentList.ToArray();
+
+
+                    return _nextCommand ?? ResultCommand.NoError;
+                }
+                catch (Exception ex)
+                {
+                    return ResultCommand.Error(ex);
+                }
+            }
+            return ResultCommand.Error(new ArgumentException("Explorer"));
+        }
+
+
+        #endregion
+
+        #region Data
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
     }
 
     internal class GotoDirectory : ScriptCommandBase
     {
-        private IEntryModel _dir;
-        private IScriptCommand _thenCommand;
+        private IEntryModel _dir = null;
+
+        internal GotoDirectory(IScriptCommand thenCommand)
+            : base("GoToDirectory", thenCommand, "Directory")
+        {
+        }
+
         public GotoDirectory(IEntryModel dir, IScriptCommand thenCommand)
-            : base("GoToDirectory")
+            : this(thenCommand)
         {
             _dir = dir;
-            _thenCommand = thenCommand;
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
@@ -497,8 +609,9 @@ namespace FileExplorer.ViewModels
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
             if (evm != null)
             {
+                _dir = _dir ?? (IEntryModel)pm["Directory"];
                 await evm.GoAsync(_dir);
-                return _thenCommand ?? ResultCommand.NoError;
+                return _nextCommand ?? ResultCommand.NoError;
             }
             return ResultCommand.Error(new ArgumentException("Explorer"));
         }
@@ -1107,9 +1220,7 @@ namespace FileExplorer.ViewModels
     #endregion
 
 
-    #region Explorer Based
-
-
+    #region Transfer Based
 
     /// <summary>
     /// Transfer Source entries (IEntryModel[]) to Dest directory (IEntryModel)
@@ -1154,10 +1265,10 @@ namespace FileExplorer.ViewModels
             var transferCommands = source.Select(s => _transferOneFunc(effects, s, dest)).ToArray();
             if (transferCommands.Any(c => c == null || !c.CanExecute(pm)))
                 return ResultCommand.Error(new ArgumentException("Not all items are transferrable."));
-           
+
             if (_windowManager != null)
                 return ScriptCommands.ShowProgress(_windowManager, effects.ToString(),
-                            ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(source.Length), 
+                            ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(source.Length),
                                 new RunInSequenceScriptCommand(transferCommands, new HideProgress())));
             else return new RunInSequenceScriptCommand(transferCommands);
         }
