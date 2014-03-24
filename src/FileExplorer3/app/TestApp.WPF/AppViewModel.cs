@@ -112,22 +112,36 @@ namespace TestApp
         public void Clear()
         {
             RootModels.Clear();
+            _events.Publish(new RootChangedEvent(ChangeType.Changed, RootModels.ToArray()));
+        }
+
+        public void Remove()
+        {
+            if (SelectedRootModel != null)
+            {
+                _events.Publish(new RootChangedEvent(ChangeType.Deleted, SelectedRootModel));
+                RootModels.Remove(SelectedRootModel);
+            }
+        }
+
+        private void pickAndAdd(IEntryModel[] rootModel)
+        {
+            IEntryModel selectedModel = showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                RootModels.Add(selectedModel);
+            _events.Publish(new RootChangedEvent(ChangeType.Created, selectedModel));
         }
 
         public void AddDirectoryInfo()
         {
             var rootModel = new[] { _profile.ParseAsync("C:\\").Result };
-            IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            if (selectedModel != null)
-                RootModels.Add(selectedModel);
+            pickAndAdd(rootModel);
         }
 
         public void AddDirectoryInfoEx()
         {
             var rootModel = new[] { _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result };
-            IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            if (selectedModel != null)
-                RootModels.Add(selectedModel);
+            pickAndAdd(rootModel);
         }
 
 
@@ -148,9 +162,7 @@ namespace TestApp
             if (_profileSkyDrive == null)
                 _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
-            IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            if (selectedModel != null)
-                RootModels.Add(selectedModel);
+            pickAndAdd(rootModel);
         }
 
         public async Task AddGoogleDrive()
@@ -162,9 +174,7 @@ namespace TestApp
                     _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, gapi_secret_stream);
                 }
             var rootModel = new[] { await _profileGoogleDrive.ParseAsync("") };
-            IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            if (selectedModel != null)
-                RootModels.Add(selectedModel);
+            pickAndAdd(rootModel);
         }
 
         public async Task AddDropBox()
@@ -187,10 +197,7 @@ namespace TestApp
                           loginDropBox);
 
             var rootModel = new[] { await _profileDropBox.ParseAsync("") };
-            IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            if (selectedModel != null)
-                RootModels.Add(selectedModel);
-
+            pickAndAdd(rootModel);
         }
 
         public void ShowDialog()
@@ -203,14 +210,14 @@ namespace TestApp
         {
             new ScriptRunner().Run(
                 ScriptCommands.ShowProgress(_windowManager, "Testing",
-                    ScriptCommands.ReportProgress(TransferProgress.From("C:\\Demo\\Abc.txt", "http://FileExplorer.org/abc.txt"), 
+                    ScriptCommands.ReportProgress(TransferProgress.From("C:\\Demo\\Abc.txt", "http://FileExplorer.org/abc.txt"),
                     ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(100),
-                    ScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries(20), 
-                    ScriptCommands.ReportProgress(TransferProgress.UpdateCurrentProgress(50)))))), 
+                    ScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries(20),
+                    ScriptCommands.ReportProgress(TransferProgress.UpdateCurrentProgress(50)))))),
                 new ParameterDic());
             //_windowManager.ShowDialog(new ProgressDialogViewModel(new ParameterDic() 
             //{
-                
+
             //}));
         }
 
@@ -241,11 +248,13 @@ namespace TestApp
         private ObservableCollection<IEntryModel> _rootModels = new ObservableCollection<IEntryModel>();
         private string _fileFilter = "Texts (.txt)|*.txt|Pictures (.jpg, .png)|*.jpg,*.png|Songs (.mp3)|*.mp3|All Files (*.*)|*.*";
         private DropBoxProfile _profileDropBox;
+        private IEntryModel _selectedRootModel;
         #endregion
 
         #region Public Properties
 
         public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
+        public IEntryModel SelectedRootModel { get { return _selectedRootModel; } set { _selectedRootModel = value; NotifyOfPropertyChange(() => SelectedRootModel); } }
         public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }

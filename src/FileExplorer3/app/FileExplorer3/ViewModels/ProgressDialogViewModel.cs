@@ -65,7 +65,7 @@ namespace FileExplorer.ViewModels
         public string getMessage()
         {
             string src = Source == null ? null : SourcePathHelper == null ? Source : SourcePathHelper.GetFileName(Source);
-            string dest = Destination == null ? null : DestinationPathHelper == null ? Destination : DestinationPathHelper.GetFileName(Destination);
+            string dest = Destination == null ? null : DestinationPathHelper == null ? Destination : DestinationPathHelper.GetDirectoryName(Destination);
             return String.Format("From [b]{0}[/b] To [b]{1}[/b]", src, dest);
         }
 

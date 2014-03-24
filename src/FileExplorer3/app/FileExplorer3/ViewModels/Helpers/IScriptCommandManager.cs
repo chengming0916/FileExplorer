@@ -7,6 +7,7 @@ using Caliburn.Micro;
 using Cofe.Core.Script;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
+using Cofe.Core;
 
 namespace FileExplorer.ViewModels
 {
@@ -30,6 +31,23 @@ namespace FileExplorer.ViewModels
         /// Return a list of Commands for Toolbar and ContextMenu.
         /// </summary>
         IToolbarCommandsHelper ToolbarCommands { get; }
+
+        /// <summary>
+        /// Execute an Explorer command.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="parameterDic">Will be merged with parameters from ParameterDicConverter</param>
+        /// <param name="scriptRunner"></param>
+        void Execute(IScriptCommand[] commands, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null);
+
+        /// <summary>
+        /// Execute an Explorer command.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="parameterDic"></param>
+        /// <param name="scriptRunner"></param>
+        /// <returns></returns>
+        Task ExecuteAsync(IScriptCommand[] commands, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null);
     }
 
     public class CommandManagerBase : ICommandManager
@@ -47,6 +65,18 @@ namespace FileExplorer.ViewModels
         private IEnumerable<IScriptCommandBinding> getCommandBindings()
         {
             return _exportBindingSource.SelectMany(eb => eb.ExportedCommandBindings);
+        }
+
+        public void Execute(IScriptCommand[] commands, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+        {
+            scriptRunner = scriptRunner ?? new ScriptRunner();
+            scriptRunner.Run(ParameterDicConverter.ConvertAndMerge(parameterDic), commands);
+        }
+
+        public async Task ExecuteAsync(IScriptCommand[] commands, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+        {
+            scriptRunner = scriptRunner ?? new ScriptRunner();
+            await scriptRunner.RunAsync(ParameterDicConverter.ConvertAndMerge(parameterDic), commands);
         }
 
         #endregion
@@ -72,6 +102,9 @@ namespace FileExplorer.ViewModels
 
 
 
+
+
+    
     }
 
     public interface ISupportCommandManager 

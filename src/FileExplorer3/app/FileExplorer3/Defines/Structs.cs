@@ -181,6 +181,17 @@ namespace FileExplorer.Defines
     //    public string OrgParseName { get; private set; }
     //}
 
+    public class RootChangedEvent
+    {
+        public RootChangedEvent(ChangeType changeType, params IEntryModel[] appliedRootDirectories)
+        {
+            ChangeType = changeType;
+            AppliedRootDirectories = appliedRootDirectories;
+        }
+
+        public ChangeType ChangeType { get; private set; }
+        public IEntryModel[] AppliedRootDirectories { get; private set; }
+    }
 
     public class EntryChangedEvent
     {

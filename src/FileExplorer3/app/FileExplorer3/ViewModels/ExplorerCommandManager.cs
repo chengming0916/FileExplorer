@@ -45,7 +45,6 @@ namespace FileExplorer.ViewModels
             });
             
             ScriptCommands.Transfer = NullScriptCommand.Instance;
-
             ScriptCommands.ZoomIn = Explorer.Zoom(ZoomMode.ZoomIn);
             ScriptCommands.ZoomOut = Explorer.Zoom(ZoomMode.ZoomOut);
 

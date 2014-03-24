@@ -17,12 +17,12 @@ namespace Cofe.Core.Script
                 (pd, p2) => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
 
         /// <summary>
-        /// Convert Sender, EventName, EventArgs to ParameterDic
+        /// For CommandViewModel, Convert Sender, EventName, EventArgs to ParameterDic
         /// </summary>
         public static IParameterDicConverter ConvertUIParameter =
             new ParameterDicConverterBase((p, p2) =>
                 {
-                    if (p2.Length < 3)
+                    if (p2 == null || p2.Length < 3)
                         return ConvertParameterOnly.Convert(p, p2);
 
                     string eventName = p2[0] as string;
@@ -39,12 +39,12 @@ namespace Cofe.Core.Script
 
 
         /// <summary>
-        /// Convert Sender, Input, InputProcessors to ParameterDic
+        /// For UIEventHub's UIInput, Convert Sender, Input, InputProcessors to ParameterDic
         /// </summary>
         public static IParameterDicConverter ConvertUIInputParameter =
             new ParameterDicConverterBase((p, p2) =>
             {
-                if (p2.Length < 3)
+                if (p2 == null || p2.Length < 3)
                     return ConvertParameterOnly.Convert(p, p2);
 
                 string eventName = p2[0] as string;
@@ -61,6 +61,11 @@ namespace Cofe.Core.Script
                 };
             }, null, ParameterDicConverters.ConvertParameterOnly);
 
+        /// <summary>
+        /// Convert ConvertUIParameter +  parameters specified in viewModelProperties
+        /// </summary>
+        /// <param name="viewModelProperties"></param>
+        /// <returns></returns>
         public static IParameterDicConverter ConvertVMParameter(params Tuple<string, object>[] viewModelProperties)
         {
             return new ParameterDicConverterBase((p, p2) =>

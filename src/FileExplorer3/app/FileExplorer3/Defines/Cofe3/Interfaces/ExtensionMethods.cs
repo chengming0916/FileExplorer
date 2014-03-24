@@ -19,5 +19,14 @@ namespace FileExplorer
             await scriptRunner.RunAsync(new Queue<IScriptCommand>(cmds), initialParameters);
         }
 
+        public static ParameterDic ConvertAndMerge(this IParameterDicConverter converter, ParameterDic pd, object parameter = null, params object[] additionalParameters)
+        {
+            var convertedPd = converter.Convert(parameter, additionalParameters);
+            if (pd != null)
+                foreach (var k in pd.Keys)
+                    convertedPd.AddOrUpdate(k, pd[k]);
+            return convertedPd;
+        }
+
     }
 }

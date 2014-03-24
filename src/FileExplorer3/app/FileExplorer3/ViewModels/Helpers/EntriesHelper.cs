@@ -87,6 +87,7 @@ namespace FileExplorer.ViewModels.Helpers
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
             all.Clear();
+            all.NotifyChanges();
             //foreach (var vm in viewModels)
             //    All.Add(vm);
             all.AddItems(viewModels);
