@@ -2,6 +2,7 @@
 using DropNet;
 using DropNet.Models;
 using FileExplorer.BaseControls;
+using FileExplorer.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +29,9 @@ namespace FileExplorer.Models
             string aliasMask = "{0}'s DropBox")
             : base(events)
         {
+            ProfileName = "DropBox";
+            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/DropBox/DropBox_Logo.png");
+            DropBoxLogo = new GetResourceIcon(ProfileIcon); 
             ModelCache = new EntryModelCache<DropBoxItemModel>(m => m.FullPath, () => Alias, true);
             //_accessToken = accessToken;
             Path = PathHelper.Web;
@@ -183,7 +187,7 @@ namespace FileExplorer.Models
         #endregion
 
         #region Data
-        private static GetResourceIcon DropBoxLogo = new GetResourceIcon("FileExplorer3.IO", "/Model/DropBox/DropBox_Logo.png");
+        private GetResourceIcon DropBoxLogo;
         private DropBoxModelThumbnailExtractor _thumbnailExtractor;
         private UserLogin _login = null;
         private DropNetClient _client;

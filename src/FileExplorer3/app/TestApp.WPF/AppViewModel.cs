@@ -41,6 +41,43 @@ namespace TestApp
             _profile = new FileSystemInfoProfile(_events, windowManager);
             _profileEx = new FileSystemInfoExProfile(events, windowManager);
 
+
+            Func<string> loginSkyDrive = () =>
+            {
+                var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
+                if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+                {
+                    return login.AuthCode;
+                }
+                return null;
+            };
+
+            _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
+
+
+            Func<UserLogin> loginDropBox = () =>
+            {
+                var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id,
+                    AuthorizationKeys.DropBox_Client_Secret);
+                if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
+                {
+                    return login.AccessToken;
+                }
+                return null;
+            };
+
+            _profileDropBox = new DropBoxProfile(_events, _windowManager,
+                    AuthorizationKeys.DropBox_Client_Id,
+                          AuthorizationKeys.DropBox_Client_Secret,
+                          loginDropBox);
+
+             if (System.IO.File.Exists("gapi_client_secret.json"))
+                using (var gapi_secret_stream = System.IO.File.OpenRead("gapi_client_secret.json")) //For demo only.
+                {
+                    _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, gapi_secret_stream);
+                }
+
+
             RootModels.Add(_profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result);
         }
 
@@ -132,6 +169,18 @@ namespace TestApp
             _events.Publish(new RootChangedEvent(ChangeType.Created, selectedModel));
         }
 
+        public void Add()
+        {
+            var advm = new AddDirectoryViewModel(_windowManager, _events, new IProfile[] {
+                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
+            });
+            if (_windowManager.ShowDialog(advm).Value)
+            {
+                RootModels.Add(advm.SelectedDirectory);
+                _events.Publish(new RootChangedEvent(ChangeType.Created, advm.SelectedDirectory));
+            }
+        }
+
         public void AddDirectoryInfo()
         {
             var rootModel = new[] { _profile.ParseAsync("C:\\").Result };
@@ -149,52 +198,21 @@ namespace TestApp
         public async Task AddSkyDrive()
         {
 
-            Func<string> loginSkyDrive = () =>
-                {
-                    var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
-                    if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
-                    {
-                        return login.AuthCode;
-                    }
-                    return null;
-                };
-
-            if (_profileSkyDrive == null)
-                _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
             pickAndAdd(rootModel);
         }
 
         public async Task AddGoogleDrive()
         {
-
-            if (_profileGoogleDrive == null)
-                using (var gapi_secret_stream = System.IO.File.OpenRead("gapi_client_secret.json")) //For demo only.
-                {
-                    _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, gapi_secret_stream);
-                }
             var rootModel = new[] { await _profileGoogleDrive.ParseAsync("") };
             pickAndAdd(rootModel);
         }
 
+        public bool CanAddGoogleDrive { get { return _profileGoogleDrive != null; } }
+
         public async Task AddDropBox()
         {
-            Func<UserLogin> loginDropBox = () =>
-            {
-                var login = new DropBoxLogin(AuthorizationKeys.DropBox_Client_Id,
-                    AuthorizationKeys.DropBox_Client_Secret);
-                if (_windowManager.ShowDialog(new LoginViewModel(login)).Value)
-                {
-                    return login.AccessToken;
-                }
-                return null;
-            };
-
-            if (_profileDropBox == null)
-                _profileDropBox = new DropBoxProfile(_events, _windowManager,
-                    AuthorizationKeys.DropBox_Client_Id,
-                          AuthorizationKeys.DropBox_Client_Secret,
-                          loginDropBox);
+          
 
             var rootModel = new[] { await _profileDropBox.ParseAsync("") };
             pickAndAdd(rootModel);

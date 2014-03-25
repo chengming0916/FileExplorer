@@ -15,11 +15,12 @@ using System.Windows;
 using FileExplorer.ViewModels.Helpers;
 using Cofe.Core.Script;
 using System.Threading;
+using System.ComponentModel;
 
 namespace FileExplorer.Models
 {
    
-    public interface IProfile
+    public interface IProfile : INotifyPropertyChanged
     {
         
         #region Methods
@@ -46,7 +47,7 @@ namespace FileExplorer.Models
         /// <returns></returns>
         IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry);
 
-        string RootDisplayName { get; }
+        
 
         #endregion
 
@@ -55,7 +56,10 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
+        string ProfileName { get; }
+        Uri ProfileIcon { get; }
 
+        string RootDisplayName { get; }
         IPathHelper Path { get; }
 
         IEntryHierarchyComparer HierarchyComparer { get; }

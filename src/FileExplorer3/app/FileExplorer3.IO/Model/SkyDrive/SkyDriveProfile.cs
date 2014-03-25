@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.BaseControls;
 using Microsoft.Live;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
@@ -19,6 +20,9 @@ namespace FileExplorer.Models
             string rootAccessPath = "/me/skydrive")
             : base(events)
         {
+            ProfileName = "SkyDrive";
+            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/SkyDrive/OneDrive_Logo.png");
+            OneDriveLogo = new GetResourceIcon(ProfileIcon); 
             ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, () => Alias, true);
             Alias = "SkyDrive";
             _aliasMask = aliasMask;
@@ -200,7 +204,7 @@ namespace FileExplorer.Models
 
         #region Data
 
-        private static GetResourceIcon OneDriveLogo = new GetResourceIcon("FileExplorer3.IO", "/Model/SkyDrive/OneDrive_Logo.png");
+        private static GetResourceIcon OneDriveLogo;
         private LiveAuthClient _authClient;
         private string _authCode = null;
         private string _rootAccessPath;

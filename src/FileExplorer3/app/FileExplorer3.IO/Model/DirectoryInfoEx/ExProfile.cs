@@ -17,6 +17,7 @@ using FileExplorer.ViewModels.Helpers;
 using QuickZip.Converters;
 using QuickZip.UserControls.Logic.Tools.IconExtractor;
 using System.Collections.Concurrent;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
@@ -49,10 +50,10 @@ namespace FileExplorer.Models
                 if (!(a is FileSystemInfoExModel) || !(b is FileSystemInfoExModel))
                     return HierarchicalResult.Unrelated;
 
-                if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))                    
+                if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);
 
-               // if (a.FullPath.StartsWith("::") && b.FullPath.StartsWith("::"))
+                // if (a.FullPath.StartsWith("::") && b.FullPath.StartsWith("::"))
                 {
                     string key = String.Format("{0}-compare-{1}", a.FullPath, b.FullPath);
                     if (_hierarchyResultCache.ContainsKey(key))
@@ -67,11 +68,11 @@ namespace FileExplorer.Models
                     else if (IOTools.HasParent(fsia, fsib.FullName))
                         _hierarchyResultCache[key] = HierarchicalResult.Parent;
                     else _hierarchyResultCache[key] = HierarchicalResult.Unrelated;
-                    
+
                     return _hierarchyResultCache[key];
                 }
 
-                
+
 
                 //if (fsia is DirectoryInfoEx && HasParent(fsib, fsia as DirectoryInfoEx))
                 //    return HierarchicalResult.Child;
@@ -97,7 +98,7 @@ namespace FileExplorer.Models
                 //    (!(a as FileSystemInfoExModel).ParentFullPath.Equals(b.FullPath)))
                 //    return HierarchicalResult.Unrelated;
 
-                
+
             }
 
             public HierarchicalResult CompareHierarchy(IEntryModel a, IEntryModel b)
@@ -111,6 +112,8 @@ namespace FileExplorer.Models
         public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager)
             : base(events)
         {
+            ProfileName = "FileSystem (Ex)";
+            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/DirectoryInfoEx/My_Computer.png");
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer();
             MetadataProvider = new FileSystemInfoMetadataProvider();
@@ -152,12 +155,16 @@ namespace FileExplorer.Models
 
         public override Task<IEntryModel> ParseAsync(string path)
         {
+
             IEntryModel retVal = null;
-            if (DirectoryEx.Exists(path))
-                retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+            if (String.IsNullOrEmpty(path))
+                retVal = new FileSystemInfoExModel(this, DirectoryInfoEx.DesktopDirectory);
             else
-                if (FileEx.Exists(path))
-                    retVal = new FileSystemInfoExModel(this, createFileInfo(path));
+                if (DirectoryEx.Exists(path))
+                    retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+                else
+                    if (FileEx.Exists(path))
+                        retVal = new FileSystemInfoExModel(this, createFileInfo(path));
             return Task.FromResult<IEntryModel>(retVal);
         }
 
