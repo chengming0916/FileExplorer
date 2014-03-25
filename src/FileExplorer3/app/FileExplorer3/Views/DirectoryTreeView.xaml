@@ -48,6 +48,11 @@
                 </Style>
             </uc:TreeViewEx.ItemContainerStyle>
             <bc:UIEventAdapter.Processors>
+                <bc:InputBindingsEventProcessor >
+                    <bc:InputBindingsEventProcessor.InputBindings>
+                        <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
+                    </bc:InputBindingsEventProcessor.InputBindings>
+                </bc:InputBindingsEventProcessor>
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
                 <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
                 <bc:ContextMenuEventProcessor>

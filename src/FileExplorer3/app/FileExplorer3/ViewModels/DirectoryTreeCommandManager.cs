@@ -33,6 +33,7 @@ namespace FileExplorer.ViewModels
             ScriptCommands = new DynamicDictionary<IScriptCommand>();
             ScriptCommands.Delete = NullScriptCommand.Instance;
             ScriptCommands.ToggleRename = DirectoryTree.ToggleRename;
+            ScriptCommands.Open = DirectoryTree.ExpandSelected;
             ScriptCommands.NewWindow = NullScriptCommand.Instance;
 
             #endregion
@@ -40,10 +41,12 @@ namespace FileExplorer.ViewModels
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
             exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
-                new ExportCommandBindings(                                    
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local)
+                new ExportCommandBindings(
+                    
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.ScriptCommands.Open, ParameterDicConverter, ScriptBindingScope.Local),           
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();

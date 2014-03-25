@@ -657,6 +657,9 @@ namespace FileExplorer.ViewModels
         public static IScriptCommand ToggleRename =
           new ToggleRenameCommand(ExtensionMethods.GetCurrentDirectoryVMFunc);
 
+        public static IScriptCommand ExpandSelected =
+            new ExpandSelectedDirectory(ExtensionMethods.GetCurrentDirectoryVMFunc);
+
         public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand)
         {
             return new AssignSelectionToVariable(
@@ -675,6 +678,38 @@ namespace FileExplorer.ViewModels
         internal DoDirectoryTree(Func<IDirectoryTreeViewModel, IScriptCommand> commandFunc)
             : base("DirectoryTree", commandFunc)
         {
+        }
+    }
+
+    internal class ExpandSelectedDirectory : ScriptCommandBase
+    {
+        private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
+
+        /// <summary>
+        /// Broadcast change directory to current selected directory, required FileList (IDirectoryTreeViewModel)
+        /// </summary>
+        public ExpandSelectedDirectory(Func<ParameterDic, IEntryViewModel[]> getSelectionVMFunc)
+            : base("ExpandSelectedDirectory")
+        {
+            _getSelectionFunc = getSelectionVMFunc;
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            var selectedItems = _getSelectionFunc(pm);
+            return selectedItems.Length == 1 && selectedItems[0].EntryModel.IsDirectory;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var selectedItem = _getSelectionFunc(pm).FirstOrDefault();
+
+            //IDirectoryTreeViewModel dlvm = pm["DirectoryTree"] as IDirectoryTreeViewModel;
+            //IEventAggregator events = pm["Events"] as IEventAggregator;
+            var entryHelper = (selectedItem as IDirectoryNodeViewModel).Entries;
+            entryHelper.IsExpanded = !entryHelper.IsExpanded;
+
+            return ResultCommand.OK;
         }
     }
 
