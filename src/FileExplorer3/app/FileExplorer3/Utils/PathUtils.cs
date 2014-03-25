@@ -39,5 +39,10 @@ namespace FileExplorer.Utils
 
             return sb.ToString();
         }
+
+        public static Uri MakeResourcePath(string library, string path2Resource)
+        {
+            return new Uri(String.Format("pack://application:,,,/{0};component{1}", library, path2Resource));
+        }
     }
 }

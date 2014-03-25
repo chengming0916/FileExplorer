@@ -177,6 +177,9 @@
     <Compile Include="ViewModels\Interfaces\ISelectable.cs" />
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
     <Compile Include="ViewModels\EstimateTimeRemainViewModel.cs" />
+    <Compile Include="Views\AddDirectoryView.xaml.cs">
+      <DependentUpon>AddDirectoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FilePickerView.xaml.cs">
       <DependentUpon>FilePickerView.xaml</DependentUpon>
     </Compile>
@@ -612,6 +615,10 @@
     <Page Include="Themes\Common\EditBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AddDirectoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BreadcrumbView.xaml">
       <SubType>Designer</SubType>

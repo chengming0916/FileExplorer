@@ -9,21 +9,24 @@ using Caliburn.Micro;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.ViewModels.Helpers;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
-    public abstract class ProfileBase : IProfile 
+    public abstract class ProfileBase : NotifyPropertyChanged, IProfile
     {
 
         #region Constructor
 
         public ProfileBase(IEventAggregator events)
         {
+            ProfileName = "Unspecified";
+            ProfileIcon = null;
             RootDisplayName = "Root";
 
             Path = PathHelper.Disk;
             SuggestSource = new ProfileSuggestionSource(this);
-            
+
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
@@ -33,13 +36,13 @@ namespace FileExplorer.Models
             Events = events;
 
         }
-        
+
         #endregion
 
         #region Methods
 
         public virtual IComparer<IEntryModel> GetComparer(ColumnInfo column)
-        {            
+        {
             return column.Comparer;
         }
 
@@ -48,39 +51,41 @@ namespace FileExplorer.Models
             yield return GetDefaultIcon.Instance;
         }
 
-         public abstract Task<IEntryModel> ParseAsync(string path);
-         public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false);
-        
+        public abstract Task<IEntryModel> ParseAsync(string path);
+        public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false);
+
         #endregion
 
         #region Data
-        
+
         #endregion
 
         #region Public Properties
-
-         public IPathHelper Path { get; protected set; }
+        public string ProfileName { get; protected set; }
+        public Uri ProfileIcon { get; protected set; }
+        public IPathHelper Path { get; protected set; }
         public ISuggestSource SuggestSource { get; protected set; }
         public IDragDropHandler DragDrop { get; protected set; }
         public string RootDisplayName { get; protected set; }
         public IEntryHierarchyComparer HierarchyComparer { get; protected set; }
-        public IMetadataProvider MetadataProvider { get; protected set; }        
+        public IMetadataProvider MetadataProvider { get; protected set; }
         public IEnumerable<ICommandProvider> CommandProviders { get; protected set; }
         //public IDiskPathMapper PathMapper { get; protected set; }
         public IEventAggregator Events { get; protected set; }
 
         #endregion
+
     }
 
     public abstract class DiskProfileBase : ProfileBase, IDiskProfile
     {
-        
+
         public DiskProfileBase(IEventAggregator events)
             : base(events)
         {
-            
+
         }
 
-        public IDiskIOHelper DiskIO { get; protected set; }        
+        public IDiskIOHelper DiskIO { get; protected set; }
     }
 }

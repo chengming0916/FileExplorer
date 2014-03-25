@@ -47,14 +47,20 @@ namespace FileExplorer.Models
     {
         private ImageSource IconResource { get; set; }
 
-        public GetResourceIcon(string library, string path2Resource)
+        public GetResourceIcon(Uri uri)
         {
             BitmapImage iconResource = new BitmapImage();
             iconResource.BeginInit();
-            iconResource.UriSource = new Uri(String.Format("pack://application:,,,/{0};component{1}", library, path2Resource));
+            iconResource.UriSource = uri;
             iconResource.EndInit();
             IconResource = iconResource;
-            
+
+        }
+
+        public GetResourceIcon(string library, string path2Resource)
+            : this(PathUtils.MakeResourcePath(library, path2Resource))
+        {
+    
         }
 
         public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)

@@ -12,6 +12,7 @@ using FileExplorer.BaseControls;
 using Google.Apis.Drive.v2;
 using Google.Apis.Http;
 using Google.Apis.Services;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
@@ -67,7 +68,10 @@ namespace FileExplorer.Models
                    string aliasMask = "{0}'s GoogleDrive",
                    string rootAccessPath = "/gdrive")
             : base(events)
-        {            
+        {
+            ProfileName = "GoogleDrive";
+            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/GoogleDrive/GoogleDrive_Logo.png");
+            GoogleDriveLogo = new GetResourceIcon(ProfileIcon); 
             _driveService = new Google.Apis.Drive.v2.DriveService(
                 new BaseClientService.Initializer()
                 {
@@ -184,7 +188,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
-        private static GetResourceIcon GoogleDriveLogo = new GetResourceIcon("FileExplorer3.IO", "/Model/GoogleDrive/GoogleDrive_Logo.png");
+        private GetResourceIcon GoogleDriveLogo;
         public string Alias { get; protected set; }
         public string RootAccessPath { get { return _rootAccessPath; } }
         public IEntryModelCache<GoogleDriveItemModel> ModelCache { get; private set; }

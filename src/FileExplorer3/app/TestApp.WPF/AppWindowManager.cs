@@ -25,6 +25,11 @@ namespace TestApp
                     window.SizeToContent = SizeToContent.Height;
                     window.Width = 300;
                 }
+                else if (model is FileExplorer.ViewModels.AddDirectoryViewModel)
+                {
+                    window.SizeToContent = SizeToContent.Height;
+                    window.Width = 300;
+                }
                 else
                 {
                     window.SizeToContent = SizeToContent.Manual;

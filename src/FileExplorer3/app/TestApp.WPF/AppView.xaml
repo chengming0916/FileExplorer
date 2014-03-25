@@ -38,8 +38,9 @@
             <Button x:Name="AddDirectoryInfo" Content="Add (using DirectoryInfo)" ToolTip="Drag n Drop is not coded in DirectoryInfo" />
             <Button x:Name="AddDirectoryInfoEx" Content="Add (using DirectoryInfoEx)" />
             <Button x:Name="AddSkyDrive" Content="Add (using OneDrive)" />
-            <Button x:Name="AddGoogleDrive" Content="Add (using GoogleDrive)" />
-            <Button x:Name="AddDropBox" Content="Add (using DropBox)" ToolTip="Under Construction" />
+            <Button x:Name="AddGoogleDrive" Content="Add (using GoogleDrive)" ToolTip="Requires gapi_client_secret.json" />
+            <Button x:Name="AddDropBox" Content="Add (using DropBox)" />
+            <Button x:Name="Add" Content="Add" />
         </WrapPanel>
 
         <Rectangle Height="50" />

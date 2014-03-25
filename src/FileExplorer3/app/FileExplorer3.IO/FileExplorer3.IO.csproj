@@ -190,6 +190,9 @@
   <ItemGroup>
     <Resource Include="Model\DropBox\DropBox_Logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="Model\DirectoryInfoEx\My_Computer.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
