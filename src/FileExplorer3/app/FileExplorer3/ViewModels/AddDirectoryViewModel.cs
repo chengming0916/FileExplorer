@@ -16,10 +16,9 @@ namespace FileExplorer.ViewModels
 
         #region Constructors
 
-        public AddDirectoryViewModel(IWindowManager windowManager, IEventAggregator events, IProfile[] rootProfiles)
+        public AddDirectoryViewModel(IExplorerInitializer initializer, IProfile[] rootProfiles)
         {
-            _windowManager = windowManager;
-            _events = events;
+            _initializer = initializer.Clone();
             _rootProfiles = rootProfiles;
             _selectedPath = null;
 
@@ -45,10 +44,10 @@ namespace FileExplorer.ViewModels
             if (SelectedRootProfile != null)
             {
                 IEntryModel rootDirectory = await SelectedRootProfile.ParseAsync("");
-                var directoryPicker = new DirectoryPickerViewModel(
-                    new ExplorerInitializer(_windowManager, _events, new IEntryModel[] { rootDirectory }));
+                _initializer.RootModels = new IEntryModel[] { rootDirectory };
+                var directoryPicker = new DirectoryPickerViewModel(_initializer);
 
-                if (_windowManager.ShowDialog(directoryPicker).Value)
+                if (_initializer.WindowManager.ShowDialog(directoryPicker).Value)
                     SelectedDirectory = directoryPicker.SelectedDirectory;
 
 
@@ -62,8 +61,7 @@ namespace FileExplorer.ViewModels
         private IProfile[] _rootProfiles;
         private IProfile _selectedRootProfile;
         private IEntryModel _selectedPath;
-        private IWindowManager _windowManager;
-        private IEventAggregator _events;
+        private IExplorerInitializer _initializer;
 
         #endregion
 

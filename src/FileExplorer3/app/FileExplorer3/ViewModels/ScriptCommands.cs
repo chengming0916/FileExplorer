@@ -428,6 +428,12 @@ namespace FileExplorer.ViewModels
             return new OpenInNewWindowCommand(initializer, getSelectedDirectryFunc);
         }
 
+          public static IScriptCommand PickDirectory(IExplorerInitializer initializer,
+            IProfile[] rootProfiles, Func<IEntryModel, IScriptCommand> nextCommandFunc, IScriptCommand cancelCommand = null)
+        {
+            return new ShowDirectoryPicker(initializer, rootProfiles, nextCommandFunc, cancelCommand);
+        }
+
         //public static IScriptCommand ChangeRoot(IScriptCommand nextCommand = null)
         //{
         //    return new ChangeRootCommand(nextCommand);
@@ -645,6 +651,46 @@ namespace FileExplorer.ViewModels
             if (_selectedDirectory != null)
                 return Explorer.GoTo(_selectedDirectory);
             return ResultCommand.NoError;
+        }
+    }
+
+    public class ShowDirectoryPicker : ScriptCommandBase
+    {
+        private IExplorerInitializer _initializer;
+        private IProfile[] _rootProfiles;
+        private Func<IEntryModel, IScriptCommand> _nextCommandFunc;
+        private IScriptCommand _cancelCommand;
+
+        internal ShowDirectoryPicker(IExplorerInitializer initializer,
+            IProfile[] rootProfiles, Func<IEntryModel, IScriptCommand> nextCommandFunc, IScriptCommand cancelCommand)
+            : base("PickDirectory")
+        {
+            _initializer = initializer;
+            _rootProfiles = rootProfiles;
+            _nextCommandFunc = nextCommandFunc;
+            _cancelCommand = cancelCommand;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            _nextCommandFunc = _nextCommandFunc ?? (em => ResultCommand.NoError);
+            if (_rootProfiles != null && _rootProfiles.Length > 0)
+            {
+                if (_rootProfiles.Length == 1)
+                {
+                    var dpvm = new DirectoryPickerViewModel(_initializer.Events, _initializer.WindowManager, 
+                        _rootProfiles.First().ParseAsync("").Result);
+                    if (_initializer.WindowManager.ShowDialog(dpvm).Value)
+                        return  _nextCommandFunc(dpvm.SelectedDirectory);
+                }
+                else
+                {
+                    var advm = new AddDirectoryViewModel(_initializer, _rootProfiles);
+                    if (_initializer.WindowManager.ShowDialog(advm).Value)
+                        return _nextCommandFunc(advm.SelectedDirectory);
+                }
+            }
+            return _cancelCommand;
         }
     }
 

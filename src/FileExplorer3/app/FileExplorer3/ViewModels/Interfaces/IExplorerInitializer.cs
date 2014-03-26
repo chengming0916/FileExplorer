@@ -10,9 +10,11 @@ namespace FileExplorer.ViewModels
 {
     public interface IExplorerInitializer
     {
-        IEventAggregator Events { get; }
-        IWindowManager WindowManager { get; }
-        IEntryModel[] RootModels { get; }
+        IEventAggregator Events { get; set; }
+        IWindowManager WindowManager { get; set; }
+        IEntryModel[] RootModels { get; set; }
+
+        IExplorerInitializer Clone();
 
         List<IViewModelInitializer<IExplorerViewModel>> Initializers { get; }
     }
@@ -33,6 +35,11 @@ namespace FileExplorer.ViewModels
         #endregion
 
         #region Methods
+
+        public IExplorerInitializer Clone()
+        {
+            return new ExplorerInitializer(WindowManager, Events, RootModels, Initializers.ToArray());
+        }
 
 
         #endregion
