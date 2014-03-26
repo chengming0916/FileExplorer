@@ -35,15 +35,15 @@ namespace FileExplorer.Models
 
         private static async Task<IConfigurableHttpClientInitializer> GetCredentialAsync(Stream clientSecretStream)
         {
-                var credential = await Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.AuthorizeAsync(
-                       Google.Apis.Auth.OAuth2.GoogleClientSecrets.Load(clientSecretStream).Secrets,
-                       new[] { DriveService.Scope.Drive },
-                       "user", CancellationToken.None);
+            var credential = await Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.AuthorizeAsync(
+                   Google.Apis.Auth.OAuth2.GoogleClientSecrets.Load(clientSecretStream).Secrets,
+                   new[] { DriveService.Scope.Drive },
+                   "user", CancellationToken.None);
 
-                return credential;
+            return credential;
         }
 
-        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, 
+        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
                  string clientSecretFile,
                  string aliasMask = "{0}'s GoogleDrive",
                  string rootAccessPath = "/gdrive")
@@ -53,7 +53,7 @@ namespace FileExplorer.Models
 
         }
 
-        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, 
+        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
                  Stream clientSecretStream,
                  string aliasMask = "{0}'s GoogleDrive",
                  string rootAccessPath = "/gdrive")
@@ -63,7 +63,7 @@ namespace FileExplorer.Models
 
         }
 
-        internal GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager, 
+        internal GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
                    IConfigurableHttpClientInitializer credential,
                    string aliasMask = "{0}'s GoogleDrive",
                    string rootAccessPath = "/gdrive")
@@ -71,18 +71,8 @@ namespace FileExplorer.Models
         {
             ProfileName = "GoogleDrive";
             ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/GoogleDrive/GoogleDrive_Logo.png");
-            GoogleDriveLogo = new GetResourceIcon(ProfileIcon); 
-            _driveService = new Google.Apis.Drive.v2.DriveService(
-                new BaseClientService.Initializer()
-                {
-                    HttpClientInitializer = credential,
-                    ApplicationName = "FileExplorer",
-                    //ApiKey = clientId
-                });
-            _aboutInfo = AsyncUtils.RunSync(() => _driveService.About.Get().ExecuteAsync());
-
-            Alias = String.Format(aliasMask, _aboutInfo.User.DisplayName);
-            ModelCache = new EntryModelCache<GoogleDriveItemModel>(m => m.UniqueId, () => Alias, true);
+            GoogleDriveLogo = new GetResourceIcon(ProfileIcon);
+            _credential = credential;
 
             _aliasMask = aliasMask;
             Path = PathHelper.Web;
@@ -93,7 +83,26 @@ namespace FileExplorer.Models
             SuggestSource = new NullSuggestSource();
             DragDrop = new FileBasedDragDropHandler(this, windowManager);
             _rootAccessPath = rootAccessPath;
-            MimeTypeManager = new GoogleMimeTypeManager(_aboutInfo);
+
+        }
+
+        private async Task checkLoginAsync()
+        {
+            if (_driveService == null)
+            {
+                _driveService = new Google.Apis.Drive.v2.DriveService(
+                    new BaseClientService.Initializer()
+                    {
+                        HttpClientInitializer = _credential,
+                        ApplicationName = "FileExplorer",
+                        //ApiKey = clientId
+                    });
+                _aboutInfo = await _driveService.About.Get().ExecuteAsync();
+
+                Alias = String.Format(_aliasMask, _aboutInfo.User.DisplayName);
+                ModelCache = new EntryModelCache<GoogleDriveItemModel>(m => m.UniqueId, () => Alias, true);
+                MimeTypeManager = new GoogleMimeTypeManager(_aboutInfo);
+            }
         }
 
         #endregion
@@ -103,6 +112,7 @@ namespace FileExplorer.Models
         public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null,
             bool refresh = false)
         {
+            await checkLoginAsync();
             if (filter == null)
                 filter = e => true;
 
@@ -121,25 +131,18 @@ namespace FileExplorer.Models
                 listRequest.Q = String.Format("'{0}' in parents", dirModel.UniqueId);
                 var listResult = (await listRequest.ExecuteAsync().ConfigureAwait(false));
                 var listResultItems = listResult.Items.ToList();
-                var outputModels = listResultItems.Select(f =>  new GoogleDriveItemModel(this, f, dirModel.FullPath)).ToArray();
+                var outputModels = listResultItems.Select(f => new GoogleDriveItemModel(this, f, dirModel.FullPath)).ToArray();
                 ModelCache.RegisterChildModels(dirModel, outputModels);
 
                 return outputModels.Where(m => filter(m)).Cast<IEntryModel>().ToList();
-
-                //var listedItemIds = (await _driveService.Children.List(dirModel.UniqueId).ExecuteAsync(ct)).Items;
-                //var listedItemGetFileTasks = listedItemIds.Select(fr => _driveService.Files.Get(fr.Id).ExecuteAsync()
-                //    .ContinueWith<GoogleDriveItemModel>(f => ModelCache.RegisterModel(
-                //        new GoogleDriveItemModel(this, f.Result, dirModel.FullPath))));
-                //var listedItems = (await Task.WhenAll<GoogleDriveItemModel>(listedItemGetFileTasks)).ToList();
-
-                //ModelCache.RegisterChildModels(dirModel, listedItems.ToArray());
-                //return listedItems.Cast<IEntryModel>().Where(m => filter(m)).ToList();
             }
             return new List<IEntryModel>();
         }
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
+            await checkLoginAsync();
+
             string uid = ModelCache.GetUniqueId(ModelCache.CheckPath(path));
             if (uid != null)
                 return ModelCache.GetModel(uid);
@@ -189,6 +192,7 @@ namespace FileExplorer.Models
         #region Public Properties
 
         private GetResourceIcon GoogleDriveLogo;
+        private IConfigurableHttpClientInitializer _credential;
         public string Alias { get; protected set; }
         public string RootAccessPath { get { return _rootAccessPath; } }
         public IEntryModelCache<GoogleDriveItemModel> ModelCache { get; private set; }
