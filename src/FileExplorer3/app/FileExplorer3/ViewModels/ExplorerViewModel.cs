@@ -103,6 +103,8 @@ namespace FileExplorer.ViewModels
 
         private void setRootModels(IEntryModel[] rootModels)
         {
+            if (rootModels == null)
+                return;
             _rootModels = rootModels;
             _rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
 

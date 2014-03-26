@@ -71,7 +71,7 @@ namespace TestApp
                           AuthorizationKeys.DropBox_Client_Secret,
                           loginDropBox);
 
-             if (System.IO.File.Exists("gapi_client_secret.json"))
+            if (System.IO.File.Exists("gapi_client_secret.json"))
                 using (var gapi_secret_stream = System.IO.File.OpenRead("gapi_client_secret.json")) //For demo only.
                 {
                     _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, gapi_secret_stream);
@@ -171,14 +171,28 @@ namespace TestApp
 
         public void Add()
         {
-            var advm = new AddDirectoryViewModel(_windowManager, _events, new IProfile[] {
+            var initializer = getInitializer(_windowManager, _events, null);
+            var profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
-            });
-            if (_windowManager.ShowDialog(advm).Value)
-            {
-                RootModels.Add(advm.SelectedDirectory);
-                _events.Publish(new RootChangedEvent(ChangeType.Created, advm.SelectedDirectory));
-            }
+            };
+            new ScriptRunner().Run(
+              Explorer.PickDirectory(initializer, profiles,
+                dir => new SimpleScriptCommand("AddToRootProfile",
+                    pd =>
+                    {
+                        RootModels.Add(dir);
+                        _events.Publish(new RootChangedEvent(ChangeType.Created, dir));
+                        return ResultCommand.NoError;
+                    })
+              , null), new ParameterDic());
+
+
+            //var advm = new AddDirectoryViewModel(initializer, profiles);
+            //if (_windowManager.ShowDialog(advm).Value)
+            //{
+            //    RootModels.Add(advm.SelectedDirectory);
+            //    _events.Publish(new RootChangedEvent(ChangeType.Created, advm.SelectedDirectory));
+            //}
         }
 
         public void AddDirectoryInfo()
@@ -212,7 +226,7 @@ namespace TestApp
 
         public async Task AddDropBox()
         {
-          
+
 
             var rootModel = new[] { await _profileDropBox.ParseAsync("") };
             pickAndAdd(rootModel);
