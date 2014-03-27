@@ -99,10 +99,12 @@ namespace TestApp
 
         private IWindowManager _windowManager;
         private IEventAggregator _events;
-        public ScriptCommandsInitializers(IWindowManager windowManager, IEventAggregator events)
+        private IProfile[] _profiles;
+        public ScriptCommandsInitializers(IWindowManager windowManager, IEventAggregator events, params IProfile[] profiles)
         {
             _windowManager = windowManager;
             _events = events;
+            _profiles = profiles;
         }
 
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
@@ -165,6 +167,10 @@ namespace TestApp
                                             new HideProgress())),
                            ResultCommand.NoError);
 
+            if (_profiles.Length > 0)
+                explorerModel.DirectoryTree.Commands.ScriptCommands.Map =
+                    Explorer.PickDirectory(initilizer, _profiles,
+                    dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(explorerModel.DirectoryTree, dir)), ResultCommand.NoError);
 
             explorerModel.Commands.ScriptCommands.Transfer =
                 TransferCommand =
@@ -210,9 +216,13 @@ namespace TestApp
             explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
                     new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnToolbar = false },
+                     new CommandModel(ApplicationCommands.New) { IsVisibleOnToolbar = false },
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }                    
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false },   
+              
+                    new CommandModel(ExplorerCommands.Map)  { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.Unmap)  { IsVisibleOnToolbar = false }
                     )
               };
         }

@@ -162,28 +162,34 @@ namespace FileExplorer.Defines
         }
     }
 
-    //public class EntryChangedEvent
-    //{
-    //    public EntryChangedEvent(string parseName, ChangeType changeType)
-    //    {
-    //        ChangeType = changeType;
-    //        ParseName = parseName;
-    //    }
-
-    //    public EntryChangedEvent(string parseName, string orgParseName)
-    //        : this(parseName, ChangeType.Moved)
-    //    {
-    //        OrgParseName = orgParseName;
-    //    }
-
-    //    public ChangeType ChangeType { get; private set; }
-    //    public string ParseName { get; private set; }
-    //    public string OrgParseName { get; private set; }
-    //}
-
-    public class RootChangedEvent
+    public class ExplorerEvent
     {
-        public RootChangedEvent(ChangeType changeType, params IEntryModel[] appliedRootDirectories)
+        protected ExplorerEvent(object sender)
+        {
+            Sender = sender;
+        }
+
+        public object Sender { get; set; }
+    }
+    public class RootChangedEvent : ExplorerEvent
+    {
+        public static RootChangedEvent Created(object sender, params IEntryModel[] appliedRootDirectories)
+        {
+            return new RootChangedEvent(sender, ChangeType.Created, appliedRootDirectories);
+        }
+
+        public static RootChangedEvent Deleted(object sender, params IEntryModel[] appliedRootDirectories)
+        {
+            return new RootChangedEvent(sender, ChangeType.Deleted, appliedRootDirectories);
+        }
+
+        public static RootChangedEvent Changed(object sender, params IEntryModel[] appliedRootDirectories)
+        {
+            return new RootChangedEvent(sender, ChangeType.Changed, appliedRootDirectories);
+        }
+
+        public RootChangedEvent(object sender, ChangeType changeType, params IEntryModel[] appliedRootDirectories)
+            : base(sender)
         {
             ChangeType = changeType;
             AppliedRootDirectories = appliedRootDirectories;
@@ -193,22 +199,23 @@ namespace FileExplorer.Defines
         public IEntryModel[] AppliedRootDirectories { get; private set; }
     }
 
-    public class EntryChangedEvent
+    public class EntryChangedEvent : ExplorerEvent
     {
-        public EntryChangedEvent(ChangeType changeType, params string[] parseNames)
+        public EntryChangedEvent(object sender, ChangeType changeType, params string[] parseNames)
+            : base(sender)
         {
             ChangeType = changeType;
             ParseNames = parseNames;
         }
 
-        public EntryChangedEvent(Dictionary<string, string> renamedParseNames)
-            : this(ChangeType.Moved, renamedParseNames.Keys.ToArray())
+        public EntryChangedEvent(object sender, Dictionary<string, string> renamedParseNames)
+            : this(sender, ChangeType.Moved, renamedParseNames.Keys.ToArray())
         {
             _renamedParseNames = renamedParseNames ?? _renamedParseNames;
         }
 
-        public EntryChangedEvent(string parseName, string orgParseName)
-            : this(new Dictionary<string, string>() { { parseName, orgParseName } })
+        public EntryChangedEvent(object sender, string parseName, string orgParseName)
+            : this(sender, new Dictionary<string, string>() { { parseName, orgParseName } })
         {
         }
 

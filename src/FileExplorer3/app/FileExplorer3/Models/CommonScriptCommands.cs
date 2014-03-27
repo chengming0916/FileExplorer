@@ -30,7 +30,7 @@ namespace FileExplorer.Models
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            _profile.NotifyEntryChanges(_fullParseName, _changeType);
+            _profile.NotifyEntryChanges(this, _fullParseName, _changeType);
             return _nextCommand;
         }
 

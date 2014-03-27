@@ -39,6 +39,14 @@ namespace FileExplorer.ViewModels
         {
             return (pd["Parameter"] as IEntryModel[]).FirstOrDefault();
         }
+
+        public static IScriptCommand DoSelection(string commandKey, 
+            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc, 
+            Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
+            IScriptCommand noSelectionCommand)
+        {
+            return new DoSelection(commandKey, getSelectionFunc, nextCommandFunc, noSelectionCommand);
+        }
     }
 
     #region MessageBox
@@ -117,6 +125,14 @@ namespace FileExplorer.ViewModels
         public static ReportProgress ReportProgress(TransferProgress progress, IScriptCommand nextCommand = null)
         {
             return new ReportProgress(progress, nextCommand);
+        }
+
+        /// <summary>
+        /// If events is not assignd here, it must be assigned in ParameterDic (Events) when run.
+        /// </summary>
+        public static IScriptCommand BroadcastEvent(object evnt, IScriptCommand nextCommand = null, IEventAggregator events = null)
+        {
+            return new BroadcastEvent(events, evnt, nextCommand);
         }
     }
 
@@ -367,6 +383,25 @@ namespace FileExplorer.ViewModels
         }
     }
 
+    internal class BroadcastEvent : ScriptCommandBase
+    {
+        private IEventAggregator _events;
+        private object _evnt;
+        public BroadcastEvent(IEventAggregator events, object evnt, IScriptCommand nextCommand)
+            : base("BroadcastEvent", nextCommand)
+        {
+            _events = events;
+            _evnt = evnt;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            _events = _events ?? pm.AsVMParameterDic().Events;
+            _events.Publish(_evnt);
+            return _nextCommand;
+        }
+    }
+
     #endregion
 
     #region ExplorerBased
@@ -378,6 +413,15 @@ namespace FileExplorer.ViewModels
         {
             return new DoExplorer(commandFunc);
         }
+
+        public static IScriptCommand DoSelection(Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
+           IScriptCommand noSelectionCommand = null)
+        {
+            return new DoSelection("DoSelectionExplorer", ExtensionMethods.GetCurrentDirectoryVMFunc,
+                nextCommandFunc, noSelectionCommand);
+        }
+
+      
 
 
         //public static IScriptCommand GoTo(IScriptCommand thenCommand = null)
@@ -428,16 +472,11 @@ namespace FileExplorer.ViewModels
             return new OpenInNewWindowCommand(initializer, getSelectedDirectryFunc);
         }
 
-          public static IScriptCommand PickDirectory(IExplorerInitializer initializer,
-            IProfile[] rootProfiles, Func<IEntryModel, IScriptCommand> nextCommandFunc, IScriptCommand cancelCommand = null)
+        public static IScriptCommand PickDirectory(IExplorerInitializer initializer,
+          IProfile[] rootProfiles, Func<IEntryModel, IScriptCommand> nextCommandFunc, IScriptCommand cancelCommand = null)
         {
             return new ShowDirectoryPicker(initializer, rootProfiles, nextCommandFunc, cancelCommand);
         }
-
-        //public static IScriptCommand ChangeRoot(IScriptCommand nextCommand = null)
-        //{
-        //    return new ChangeRootCommand(nextCommand);
-        //}
 
         public static IScriptCommand ChangeRoot(ChangeType changeType,
             IEntryModel[] appliedRootDirectories, IScriptCommand nextCommand = null)
@@ -445,23 +484,12 @@ namespace FileExplorer.ViewModels
             return new ChangeRootCommand(changeType, appliedRootDirectories, nextCommand);
         }
 
-        public static IScriptCommand ChangeRoot(ChangeType changeType,
-           params IEntryModel[] appliedRootDirectories)
+        public static IScriptCommand BroadcastRootChanged(RootChangedEvent evnt, IEventAggregator events = null, 
+            IScriptCommand nextCommand = null)
         {
-            return ChangeRoot(changeType, appliedRootDirectories, ResultCommand.NoError);
+            return new BroadcastChangeRoot(evnt, events, nextCommand);
         }
-        //public static IScriptCommand NewWindow(IExplorerViewModel senderEvm, IEntryModel selectedDirectory = null)
-        //{
-        //    return NewWindow(senderEvm.WindowManager, senderEvm.Events, senderEvm.RootModels, selectedDirectory);
-        //}
 
-        //public static IScriptCommand NewWindow(IExplorerViewModel senderEvm, string selectedDirectoryPath, bool openIfNotFound = true)
-        //{
-        //    return ScriptCommands.ParsePath(senderEvm.RootModels.GetProfiles(), selectedDirectoryPath,
-        //        dirM => Explorer.NewWindow(senderEvm, dirM),
-        //        openIfNotFound ? Explorer.NewWindow(senderEvm, null) :
-        //        ResultCommand.Error(new System.IO.FileNotFoundException(selectedDirectoryPath)));
-        //}
     }
 
     internal abstract class DoCommandBase<VM> : ScriptCommandBase
@@ -496,6 +524,38 @@ namespace FileExplorer.ViewModels
         }
     }
 
+    internal class DoSelection : ScriptCommandBase
+    {
+        private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
+        private Func<IEntryViewModel[], IScriptCommand> _nextCommandFunc;
+        private IScriptCommand _noSelectionCommand;
+        
+        internal DoSelection(string commandKey, 
+            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc, 
+            Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
+            IScriptCommand noSelectionCommand)
+            : base(commandKey)
+        {
+            _getSelectionFunc = getSelectionFunc;
+            _nextCommandFunc = nextCommandFunc;
+            _noSelectionCommand = noSelectionCommand;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var selection = _getSelectionFunc(pm);
+            if (selection == null || selection.Length == 0)
+                return _noSelectionCommand;
+            else return _nextCommandFunc(selection);
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            IScriptCommand nextCommand = Execute(pm);
+            return nextCommand != null && nextCommand.CanExecute(pm);
+        }
+    }
+
     internal class DoExplorer : DoCommandBase<IExplorerViewModel>
     {
         internal DoExplorer(Func<IExplorerViewModel, IScriptCommand> commandFunc)
@@ -519,7 +579,37 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    public class ChangeRootCommand : ScriptCommandBase
+    
+
+    internal class BroadcastChangeRoot : ScriptCommandBase
+    {
+        private RootChangedEvent _evnt;
+        private IEventAggregator _events;
+
+        internal BroadcastChangeRoot(RootChangedEvent evnt, IEventAggregator events = null, 
+            IScriptCommand nextCommand = null)
+            : base("BroadcastChangeRoot", nextCommand, "Events")
+        {
+            _events = events;
+            _evnt = evnt;
+        }
+    
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            _events = _events ?? pm["Events"] as IEventAggregator;
+            if (_events != null)
+                return ScriptCommands.BroadcastEvent(_evnt, _nextCommand, _events);
+
+            return ResultCommand.Error(new ArgumentException("Events"));
+        }
+
+    }
+
+    /// <summary>
+    /// Used by Change root directory in current ExplorerViwModel 
+    /// </summary>
+    internal class ChangeRootCommand : ScriptCommandBase
     {
         private ChangeType? _changeType;
         private IEntryModel[] _appliedRootDirectories = null;
@@ -547,7 +637,7 @@ namespace FileExplorer.ViewModels
         public override IScriptCommand Execute(ParameterDic pm)
         {
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
-            if (evm != null)
+            if (evm != null && _appliedRootDirectories != null)
             {
                 try
                 {
@@ -678,10 +768,10 @@ namespace FileExplorer.ViewModels
             {
                 if (_rootProfiles.Length == 1)
                 {
-                    var dpvm = new DirectoryPickerViewModel(_initializer.Events, _initializer.WindowManager, 
+                    var dpvm = new DirectoryPickerViewModel(_initializer.Events, _initializer.WindowManager,
                         _rootProfiles.First().ParseAsync("").Result);
                     if (_initializer.WindowManager.ShowDialog(dpvm).Value)
-                        return  _nextCommandFunc(dpvm.SelectedDirectory);
+                        return _nextCommandFunc(dpvm.SelectedDirectory);
                 }
                 else
                 {

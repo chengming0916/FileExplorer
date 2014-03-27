@@ -41,7 +41,7 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        public DirectoryTreeViewModel(IEventAggregator events)
+        public DirectoryTreeViewModel(IWindowManager windowManager, IEventAggregator events)
         {
             _events = events;
 
@@ -57,7 +57,7 @@ namespace FileExplorer.ViewModels
             };
             Selection = selection;
 
-            Commands = new DirectoryTreeCommandManager(this, events);
+            Commands = new DirectoryTreeCommandManager(this, windowManager, events);
 
             DragHelper = new DirectoryTreeDragHelper(Entries, Selection);
         }

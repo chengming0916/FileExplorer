@@ -97,12 +97,15 @@ namespace TestApp
 
         public void OpenWindow()
         {
+            var profiles = new IProfile[] {
+                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
+            };
             var sr = new ScriptRunner();
             sr.Run(Explorer.NewWindow(
                 getInitializer(_windowManager, _events, RootModels.ToArray(),
                  new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
                  new ColumnInitializers(),
-                 new ScriptCommandsInitializers(_windowManager, _events),
+                 new ScriptCommandsInitializers(_windowManager, _events, profiles),
                  new ToolbarCommandsInitializers(_windowManager))), new ParameterDic());
         }
 
@@ -149,14 +152,14 @@ namespace TestApp
         public void Clear()
         {
             RootModels.Clear();
-            _events.Publish(new RootChangedEvent(ChangeType.Changed, RootModels.ToArray()));
+            _events.Publish(new RootChangedEvent(this, ChangeType.Changed, RootModels.ToArray()));
         }
 
         public void Remove()
         {
             if (SelectedRootModel != null)
             {
-                _events.Publish(new RootChangedEvent(ChangeType.Deleted, SelectedRootModel));
+                _events.Publish(new RootChangedEvent(this, ChangeType.Deleted, SelectedRootModel));
                 RootModels.Remove(SelectedRootModel);
             }
         }
@@ -166,7 +169,7 @@ namespace TestApp
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             if (selectedModel != null)
                 RootModels.Add(selectedModel);
-            _events.Publish(new RootChangedEvent(ChangeType.Created, selectedModel));
+            _events.Publish(new RootChangedEvent(this, ChangeType.Created, selectedModel));
         }
 
         public void Add()
@@ -181,10 +184,9 @@ namespace TestApp
                     pd =>
                     {
                         RootModels.Add(dir);
-                        _events.Publish(new RootChangedEvent(ChangeType.Created, dir));
-                        return ResultCommand.NoError;
+                        return Explorer.BroadcastRootChanged(RootChangedEvent.Created(this, dir));
                     })
-              , null), new ParameterDic());
+              , null), new ParameterDic() { { "Events", _events } });
 
 
             //var advm = new AddDirectoryViewModel(initializer, profiles);
