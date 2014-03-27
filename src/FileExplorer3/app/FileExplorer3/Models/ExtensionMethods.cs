@@ -48,11 +48,11 @@ namespace FileExplorer.Models
             return new List<IEntryModelIconExtractor>();
         }
 
-        public static void NotifyEntryChanges(this IProfile profile, string fullPath, ChangeType changeType, string orgParseName = null)
+        public static void NotifyEntryChanges(this IProfile profile, object sender, string fullPath, ChangeType changeType, string orgParseName = null)
         {
             if (changeType == ChangeType.Moved)
-                profile.Events.Publish(new EntryChangedEvent(fullPath, orgParseName));
-            else profile.Events.Publish(new EntryChangedEvent(changeType, fullPath));
+                profile.Events.Publish(new EntryChangedEvent(sender, fullPath, orgParseName));
+            else profile.Events.Publish(new EntryChangedEvent(sender, changeType, fullPath));
         }
 
 

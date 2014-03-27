@@ -15,6 +15,17 @@ namespace FileExplorer
         }
 
         /// <summary>
+        /// Whether current directory is root directory
+        /// </summary>
+        /// <typeparam name="VM"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static bool IsFirstLevelSelector<VM, T>(this ITreeSelector<VM, T> selector)
+        {
+            return selector.ParentSelector.Equals(selector.RootSelector);
+        }
+        /// <summary>
         /// Broadcast changes, so the tree can refresh changed items.
         /// </summary>
         public static async Task BroascastAsync<VM, T>(this ITreeRootSelector<VM, T> rootSelector, T changedItem)

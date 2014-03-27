@@ -20,7 +20,7 @@ namespace FileExplorer.ViewModels
 {
     public class ExplorerViewModel : Screen, IExplorerViewModel,
         IHandle<DirectoryChangedEvent>,
-        IHandle<EntryChangedEvent>, 
+        IHandle<EntryChangedEvent>,
         IHandle<RootChangedEvent>
     {
         #region Cosntructor
@@ -36,7 +36,7 @@ namespace FileExplorer.ViewModels
             //Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents);
             FileList = new FileListViewModel(_internalEvents);
-            DirectoryTree = new DirectoryTreeViewModel(_internalEvents);
+            DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
 
@@ -47,13 +47,13 @@ namespace FileExplorer.ViewModels
                 _events.Subscribe(this);
             _internalEvents.Subscribe(this);
 
-            
+
         }
 
         public ExplorerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
             : this(new ExplorerInitializer(windowManager, events, rootModels))
         {
-            
+
         }
 
 
@@ -155,12 +155,11 @@ namespace FileExplorer.ViewModels
 
         public void Handle(RootChangedEvent message)
         {
-            //ParameterDic pd = new ParameterDic()
-            //{
-            //   { "ChangeType", message.ChangeType },
-            //   { "AppliedRootDirectories", message.AppliedRootDirectories }
-            //};
-            Commands.Execute(new[] { (IScriptCommand)Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories) });
+            if (DirectoryTree.Equals(message.Sender)) //From internal, pass it to external
+                _events.Publish(new RootChangedEvent(this, message.ChangeType, message.AppliedRootDirectories));
+            else
+                Commands.Execute(new[] { (IScriptCommand)
+                Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories) });
         }
 
         #endregion
@@ -186,7 +185,7 @@ namespace FileExplorer.ViewModels
 
         public string WindowTitleMask { get; set; }
         public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; } }
-  
+
         public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChange(() => UIScale); } }
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
@@ -204,6 +203,6 @@ namespace FileExplorer.ViewModels
 
 
 
-        
+
     }
 }
