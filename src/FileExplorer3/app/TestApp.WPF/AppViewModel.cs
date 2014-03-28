@@ -28,7 +28,7 @@ using DropNet.Models;
 namespace TestApp
 {
     [Export(typeof(IScreen))]
-    public class AppViewModel : Screen//, IHandle<SelectionChangedEvent>
+    public class AppViewModel : Screen, IHandle<RootChangedEvent>//, IHandle<SelectionChangedEvent>
     {
         #region Cosntructor
 
@@ -38,6 +38,7 @@ namespace TestApp
             _windowManager = windowManager;
             _events = events;
 
+            _events.Subscribe(this);
             _profile = new FileSystemInfoProfile(_events, windowManager);
             _profileEx = new FileSystemInfoExProfile(events, windowManager);
 
@@ -260,7 +261,23 @@ namespace TestApp
             new MdiWindow(RootModels.ToArray()).Show();
         }
 
-
+        public void Handle(RootChangedEvent message)
+        {
+            switch (message.ChangeType)
+            {
+                case ChangeType.Created:
+                case ChangeType.Changed:
+                    if (message.ChangeType == ChangeType.Changed)
+                        RootModels.Clear();
+                    foreach (var root in message.AppliedRootDirectories)
+                        RootModels.Add(root);
+                    break;
+                case ChangeType.Deleted :
+                    foreach (var root in message.AppliedRootDirectories)
+                        RootModels.Remove(root);
+                    break;
+            }
+        }
 
         #endregion
 
@@ -296,6 +313,8 @@ namespace TestApp
         public string FileFilter { get { return _fileFilter; } set { _fileFilter = value; NotifyOfPropertyChange(() => FileFilter); } }
 
         #endregion
+
+
 
 
 
