@@ -222,7 +222,7 @@ namespace FileExplorer.UserControls
 
         #endregion
 
-        #region Columns, and ColumnsVisibility property, FilterChanged event
+        #region Columns, and ColumnsVisibility property, FilterChanged event, ContentBelowHeader
 
         public static readonly DependencyProperty ColumnsProperty =
          DependencyProperty.Register("Columns", typeof(ColumnInfo[]), typeof(ListViewEx),
@@ -374,30 +374,6 @@ namespace FileExplorer.UserControls
         {
             return (int)obj.GetValue(ColumnHeaderSortDirectionProperty);
         }
-
-        //public static readonly DependencyProperty ColumnHeaderValueProperty =
-        //    DependencyProperty.RegisterAttached("ColumnHeaderValue", typeof(string), typeof(FileList),
-        //    new PropertyMetadata(0));
-
-        //public static void SetColumnHeaderValue(DependencyObject obj, int value)
-        //{
-        //    obj.SetValue(ColumnHeaderSortDirectionProperty, value);
-        //}
-
-        //[AttachedPropertyBrowsableForType(typeof(GridViewColumnHeader))]
-        //public static string GetColumnHeaderValue(DependencyObject obj)
-        //{
-        //    return (string)obj.GetValue(ColumnHeaderSortDirectionProperty);
-        //}
-
-        //public static readonly DependencyProperty SelectedItemsProperty =
-        //    DependencyProperty.Register("SelectedItems", typeof(IList), typeof(FileList));
-        //public IList SelectedItems
-        //{
-        //    get { return (IList)GetValue(SelectedItemsProperty); }
-        //    set { SetValue(SelectedItemsProperty, value); }
-        //}
-
 
         #region Commands
 

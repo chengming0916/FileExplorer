@@ -40,8 +40,8 @@ namespace FileExplorer.ViewModels
             return (pd["Parameter"] as IEntryModel[]).FirstOrDefault();
         }
 
-        public static IScriptCommand DoSelection(string commandKey, 
-            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc, 
+        public static IScriptCommand DoSelection(string commandKey,
+            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc,
             Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
             IScriptCommand noSelectionCommand)
         {
@@ -130,9 +130,14 @@ namespace FileExplorer.ViewModels
         /// <summary>
         /// If events is not assignd here, it must be assigned in ParameterDic (Events) when run.
         /// </summary>
+        public static IScriptCommand PublishEvent(object evnt, IScriptCommand nextCommand = null, IEventAggregator events = null)
+        {
+            return new PublishEvent(events, evnt, nextCommand);
+        }
+
         public static IScriptCommand BroadcastEvent(object evnt, IScriptCommand nextCommand = null, IEventAggregator events = null)
         {
-            return new BroadcastEvent(events, evnt, nextCommand);
+            return new PublishEvent(events, new BroadcastEvent(evnt), nextCommand);
         }
     }
 
@@ -383,12 +388,12 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    internal class BroadcastEvent : ScriptCommandBase
+    internal class PublishEvent : ScriptCommandBase
     {
         private IEventAggregator _events;
         private object _evnt;
-        public BroadcastEvent(IEventAggregator events, object evnt, IScriptCommand nextCommand)
-            : base("BroadcastEvent", nextCommand)
+        public PublishEvent(IEventAggregator events, object evnt, IScriptCommand nextCommand)
+            : base("PublishEvent", nextCommand)
         {
             _events = events;
             _evnt = evnt;
@@ -421,7 +426,7 @@ namespace FileExplorer.ViewModels
                 nextCommandFunc, noSelectionCommand);
         }
 
-      
+
 
 
         //public static IScriptCommand GoTo(IScriptCommand thenCommand = null)
@@ -484,7 +489,7 @@ namespace FileExplorer.ViewModels
             return new ChangeRootCommand(changeType, appliedRootDirectories, nextCommand);
         }
 
-        public static IScriptCommand BroadcastRootChanged(RootChangedEvent evnt, IEventAggregator events = null, 
+        public static IScriptCommand BroadcastRootChanged(RootChangedEvent evnt, IEventAggregator events = null,
             IScriptCommand nextCommand = null)
         {
             return new BroadcastChangeRoot(evnt, events, nextCommand);
@@ -529,9 +534,9 @@ namespace FileExplorer.ViewModels
         private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
         private Func<IEntryViewModel[], IScriptCommand> _nextCommandFunc;
         private IScriptCommand _noSelectionCommand;
-        
-        internal DoSelection(string commandKey, 
-            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc, 
+
+        internal DoSelection(string commandKey,
+            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc,
             Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
             IScriptCommand noSelectionCommand)
             : base(commandKey)
@@ -579,21 +584,21 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    
+
 
     internal class BroadcastChangeRoot : ScriptCommandBase
     {
         private RootChangedEvent _evnt;
         private IEventAggregator _events;
 
-        internal BroadcastChangeRoot(RootChangedEvent evnt, IEventAggregator events = null, 
+        internal BroadcastChangeRoot(RootChangedEvent evnt, IEventAggregator events = null,
             IScriptCommand nextCommand = null)
             : base("BroadcastChangeRoot", nextCommand, "Events")
         {
             _events = events;
             _evnt = evnt;
         }
-    
+
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -637,7 +642,7 @@ namespace FileExplorer.ViewModels
         public override IScriptCommand Execute(ParameterDic pm)
         {
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
-            if (evm != null && _appliedRootDirectories != null)
+            if (evm != null && _appliedRootDirectories != null && _appliedRootDirectories.Length > 0)
             {
                 try
                 {
@@ -662,8 +667,16 @@ namespace FileExplorer.ViewModels
                     }
                     evm.RootModels = currentList.ToArray();
 
-
-                    return _nextCommand ?? ResultCommand.NoError;
+                    switch (_changeType)
+                    {
+                        case ChangeType.Created:
+                        case ChangeType.Changed:
+                            return Explorer.GoTo(_appliedRootDirectories.First(), _nextCommand);
+                        case ChangeType.Deleted:
+                            return Explorer.GoTo(evm.RootModels.FirstOrDefault(), _nextCommand);
+                        default:
+                            return _nextCommand ?? ResultCommand.NoError;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -705,8 +718,9 @@ namespace FileExplorer.ViewModels
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
             if (evm != null)
             {
-                _dir = _dir ?? (IEntryModel)pm["Directory"];
-                await evm.GoAsync(_dir);
+                _dir = _dir ?? (pm.ContainsKey("Directory") ? (IEntryModel)pm["Directory"] : null);
+                if (_dir != null)
+                    await evm.GoAsync(_dir);
                 return _nextCommand ?? ResultCommand.NoError;
             }
             return ResultCommand.Error(new ArgumentException("Explorer"));

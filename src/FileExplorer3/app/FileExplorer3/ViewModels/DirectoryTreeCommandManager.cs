@@ -40,7 +40,7 @@ namespace FileExplorer.ViewModels
                 ViewModels.ScriptCommands.If(pd => (ems.First() as IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
                         ViewModels.ScriptCommands.IfOkCancel(windowManager, pd => "Unmap",  
                             pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label), 
-                            Explorer.BroadcastRootChanged(RootChangedEvent.Deleted(this._dlvm, ems.Select(em => em.EntryModel).ToArray())),
+                            Explorer.BroadcastRootChanged(RootChangedEvent.Deleted(ems.Select(em => em.EntryModel).ToArray())),
                             ResultCommand.OK),
                         ViewModels.ScriptCommands.NoCommand), ViewModels.ScriptCommands.NoCommand); 
 
@@ -55,7 +55,7 @@ namespace FileExplorer.ViewModels
                     ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.ScriptCommands.Map, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.ScriptCommands.Map, ParameterDicConverter, ScriptBindingScope.Explorer),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Unmap, this, (ch) => ch.ScriptCommands.Unmap, ParameterDicConverter, ScriptBindingScope.Local)
                 ));
 
@@ -71,8 +71,14 @@ namespace FileExplorer.ViewModels
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
                     new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Map)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Unmap)  { IsVisibleOnToolbar = false }
+                   
+                    new CommandModel(ExplorerCommands.Map)  { 
+                        Symbol = Convert.ToChar(0xE17B), 
+                        IsEnabled = true,
+                        IsHeaderVisible = false, IsVisibleOnMenu = false  
+                    },
+
+                    new CommandModel(ExplorerCommands.Unmap)  {  }
                     )}
                 };
         }

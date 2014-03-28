@@ -51,8 +51,8 @@ namespace FileExplorer.Models
         public static void NotifyEntryChanges(this IProfile profile, object sender, string fullPath, ChangeType changeType, string orgParseName = null)
         {
             if (changeType == ChangeType.Moved)
-                profile.Events.Publish(new EntryChangedEvent(sender, fullPath, orgParseName));
-            else profile.Events.Publish(new EntryChangedEvent(sender, changeType, fullPath));
+                profile.Events.Publish(new EntryChangedEvent(fullPath, orgParseName));
+            else profile.Events.Publish(new EntryChangedEvent(changeType, fullPath));
         }
 
 
