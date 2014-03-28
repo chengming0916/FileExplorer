@@ -58,6 +58,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
+           
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
             //if (DragLiteParameters.DragMode == DragMode.Lite)
@@ -206,11 +207,16 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
 
-            if (DragLiteParameters.DragMode != DragMode.Lite)
-                return ResultCommand.NoError;
+           
 
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
+
+            if (DragLiteParameters.DragMode != DragMode.Lite)
+            {
+              
+                return ResultCommand.NoError;
+            }
             //if (DragLiteParameters.DragInputType != pd.Input.InputType)
             //    return ResultCommand.NoError;
 

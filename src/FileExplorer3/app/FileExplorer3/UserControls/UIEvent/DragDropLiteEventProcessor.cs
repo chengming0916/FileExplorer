@@ -42,25 +42,50 @@ namespace FileExplorer.BaseControls
                         SetDragLiteState.Reset(ResultCommand.OK), null);
 
                 case "PreviewTouchDown":
+                    return EnableDrag && EnableTouch ? (IScriptCommand)new RecordStartSelectedItem()
+                      : ResultCommand.NoError;
                 case "PreviewMouseDown":
-                    return EnableDrag ? (IScriptCommand)new RecordStartSelectedItem()
+                    return EnableDrag && EnableMouse ? (IScriptCommand)new RecordStartSelectedItem()
                          : ResultCommand.NoError;
                 case "TouchDrag":
+                    return EnableDrag && EnableTouch ? (IScriptCommand)new BeginDragLite() : ResultCommand.NoError;
                 case "MouseDrag":
-                    return EnableDrag ? (IScriptCommand)new BeginDragLite() : ResultCommand.NoError;
+                    return EnableDrag && EnableMouse? (IScriptCommand)new BeginDragLite() : ResultCommand.NoError;
                 case "TouchUp":
+                    return EnableDrop && EnableTouch ? (IScriptCommand)new EndDragLite() : new DetachAdorner();
                 case "MouseUp":
-                    return EnableDrop ? (IScriptCommand)new EndDragLite() : new DetachAdorner();
+                    return EnableDrop && EnableMouse ? (IScriptCommand)new EndDragLite() : new DetachAdorner();
                 //case "MouseLeave":
                 //case "TouchLeave":
                 //    return new DetachAdorner();
                 case "TouchMove":
+                    return EnableTouch ?  (IScriptCommand)new ContinueDragLite(EnableDrag, EnableDrop) : ResultCommand.NoError;
                 case "MouseMove":
-                    return new ContinueDragLite(EnableDrag, EnableDrop);
+                    return EnableMouse ? (IScriptCommand)new ContinueDragLite(EnableDrag, EnableDrop) : ResultCommand.NoError;
             }
 
 
             return base.OnEvent(eventId);
+        }
+
+        public static DependencyProperty EnableMouseProperty =
+          DependencyProperty.Register("EnableMouse", typeof(bool), typeof(DragDropLiteEventProcessor), 
+          new PropertyMetadata(true));
+
+        public bool EnableMouse
+        {
+            get { return (bool)GetValue(EnableMouseProperty); }
+            set { SetValue(EnableMouseProperty, value); }
+        }
+
+        public static DependencyProperty EnableTouchProperty =
+         DependencyProperty.Register("EnableTouch", typeof(bool), typeof(DragDropLiteEventProcessor),
+         new PropertyMetadata(true));
+
+        public bool EnableTouch
+        {
+            get { return (bool)GetValue(EnableTouchProperty); }
+            set { SetValue(EnableTouchProperty, value); }
         }
 
         public static DependencyProperty EnableDragProperty =

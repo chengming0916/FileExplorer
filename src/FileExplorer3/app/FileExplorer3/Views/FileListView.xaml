@@ -58,7 +58,8 @@
                 </bc:InputBindingsEventProcessor>
 
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
-                <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
+                <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
+                                               EnableMouse="False" EnableTouch="True" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
                                               UnselectAllCommand="{x:Static def:ExplorerCommands.UnselectAll}"
                                             IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
