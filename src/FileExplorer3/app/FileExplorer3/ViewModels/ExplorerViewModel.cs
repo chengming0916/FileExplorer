@@ -157,13 +157,33 @@ namespace FileExplorer.ViewModels
         public void Handle(BroadcastEvent message)
         {
             if (message.EventToBroadcast != null)
+            {
+                if (message.EventToBroadcast is ExplorerEvent)
+                    (message.EventToBroadcast as ExplorerEvent).Sender = this;
                 _events.Publish(message.EventToBroadcast);
+            }
         }
 
         public void Handle(RootChangedEvent message)
         {
-            Commands.Execute(new[] { (IScriptCommand)
-                Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories) });
+            Queue<IScriptCommand> cmds = new Queue<IScriptCommand>();
+            
+            cmds.Enqueue(Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories));
+            if (message.Sender != this)
+                cmds.Enqueue(Explorer.GoTo(CurrentDirectory.EntryModel));
+            else 
+                switch (message.ChangeType)
+                {
+                    case ChangeType.Created:
+                    case ChangeType.Changed :
+                        cmds.Enqueue(Explorer.GoTo(message.AppliedRootDirectories.First()));
+                        break;
+                    case ChangeType.Deleted:
+                        cmds.Enqueue(Explorer.GoTo(RootModels.FirstOrDefault()));
+                        break;
+                }
+                
+            Commands.Execute(cmds.ToArray());
         }
 
         #endregion

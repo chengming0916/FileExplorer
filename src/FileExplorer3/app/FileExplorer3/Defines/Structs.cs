@@ -162,6 +162,11 @@ namespace FileExplorer.Defines
         }
     }
 
+    public class ExplorerEvent
+    {
+        public object Sender { get; set; }
+    }
+
     public class BroadcastEvent
     {
         public object EventToBroadcast { get; set; }
@@ -171,8 +176,8 @@ namespace FileExplorer.Defines
             EventToBroadcast = evnt;
         }
     }
-    
-    public class RootChangedEvent 
+
+    public class RootChangedEvent : ExplorerEvent
     {
         public static RootChangedEvent Created(params IEntryModel[] appliedRootDirectories)
         {
@@ -200,7 +205,7 @@ namespace FileExplorer.Defines
         public IEntryModel[] AppliedRootDirectories { get; private set; }
     }
 
-    public class EntryChangedEvent
+    public class EntryChangedEvent : ExplorerEvent
     {
         public EntryChangedEvent(ChangeType changeType, params string[] parseNames)
             : base()

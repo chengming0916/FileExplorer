@@ -667,16 +667,7 @@ namespace FileExplorer.ViewModels
                     }
                     evm.RootModels = currentList.ToArray();
 
-                    switch (_changeType)
-                    {
-                        case ChangeType.Created:
-                        case ChangeType.Changed:
-                            return Explorer.GoTo(_appliedRootDirectories.First(), _nextCommand);
-                        case ChangeType.Deleted:
-                            return Explorer.GoTo(evm.RootModels.FirstOrDefault(), _nextCommand);
-                        default:
-                            return _nextCommand ?? ResultCommand.NoError;
-                    }
+                    return _nextCommand ?? ResultCommand.NoError;
                 }
                 catch (Exception ex)
                 {
