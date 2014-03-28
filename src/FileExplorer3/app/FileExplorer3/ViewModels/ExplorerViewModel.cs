@@ -21,7 +21,8 @@ namespace FileExplorer.ViewModels
     public class ExplorerViewModel : Screen, IExplorerViewModel,
         IHandle<DirectoryChangedEvent>,
         IHandle<EntryChangedEvent>,
-        IHandle<RootChangedEvent>
+        IHandle<RootChangedEvent>,
+        IHandle<BroadcastEvent>
     {
         #region Cosntructor
 
@@ -153,12 +154,15 @@ namespace FileExplorer.ViewModels
             BroascastAsync(message);
         }
 
+        public void Handle(BroadcastEvent message)
+        {
+            if (message.EventToBroadcast != null)
+                _events.Publish(message.EventToBroadcast);
+        }
+
         public void Handle(RootChangedEvent message)
         {
-            if (DirectoryTree.Equals(message.Sender)) //From internal, pass it to external
-                _events.Publish(new RootChangedEvent(this, message.ChangeType, message.AppliedRootDirectories));
-            else
-                Commands.Execute(new[] { (IScriptCommand)
+            Commands.Execute(new[] { (IScriptCommand)
                 Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories) });
         }
 
@@ -200,6 +204,8 @@ namespace FileExplorer.ViewModels
         public IToolbarViewModel Toolbar { get; private set; }
 
         #endregion
+
+
 
 
 

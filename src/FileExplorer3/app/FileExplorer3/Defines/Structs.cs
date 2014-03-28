@@ -162,34 +162,35 @@ namespace FileExplorer.Defines
         }
     }
 
-    public class ExplorerEvent
+    public class BroadcastEvent
     {
-        protected ExplorerEvent(object sender)
-        {
-            Sender = sender;
-        }
+        public object EventToBroadcast { get; set; }
 
-        public object Sender { get; set; }
+        public BroadcastEvent(object evnt)
+        {
+            EventToBroadcast = evnt;
+        }
     }
-    public class RootChangedEvent : ExplorerEvent
+    
+    public class RootChangedEvent 
     {
-        public static RootChangedEvent Created(object sender, params IEntryModel[] appliedRootDirectories)
+        public static RootChangedEvent Created(params IEntryModel[] appliedRootDirectories)
         {
-            return new RootChangedEvent(sender, ChangeType.Created, appliedRootDirectories);
+            return new RootChangedEvent(ChangeType.Created, appliedRootDirectories);
         }
 
-        public static RootChangedEvent Deleted(object sender, params IEntryModel[] appliedRootDirectories)
+        public static RootChangedEvent Deleted(params IEntryModel[] appliedRootDirectories)
         {
-            return new RootChangedEvent(sender, ChangeType.Deleted, appliedRootDirectories);
+            return new RootChangedEvent(ChangeType.Deleted, appliedRootDirectories);
         }
 
-        public static RootChangedEvent Changed(object sender, params IEntryModel[] appliedRootDirectories)
+        public static RootChangedEvent Changed(params IEntryModel[] appliedRootDirectories)
         {
-            return new RootChangedEvent(sender, ChangeType.Changed, appliedRootDirectories);
+            return new RootChangedEvent(ChangeType.Changed, appliedRootDirectories);
         }
 
-        public RootChangedEvent(object sender, ChangeType changeType, params IEntryModel[] appliedRootDirectories)
-            : base(sender)
+        public RootChangedEvent(ChangeType changeType, params IEntryModel[] appliedRootDirectories)
+            : base()
         {
             ChangeType = changeType;
             AppliedRootDirectories = appliedRootDirectories;
@@ -199,23 +200,23 @@ namespace FileExplorer.Defines
         public IEntryModel[] AppliedRootDirectories { get; private set; }
     }
 
-    public class EntryChangedEvent : ExplorerEvent
+    public class EntryChangedEvent
     {
-        public EntryChangedEvent(object sender, ChangeType changeType, params string[] parseNames)
-            : base(sender)
+        public EntryChangedEvent(ChangeType changeType, params string[] parseNames)
+            : base()
         {
             ChangeType = changeType;
             ParseNames = parseNames;
         }
 
-        public EntryChangedEvent(object sender, Dictionary<string, string> renamedParseNames)
-            : this(sender, ChangeType.Moved, renamedParseNames.Keys.ToArray())
+        public EntryChangedEvent(Dictionary<string, string> renamedParseNames)
+            : this(ChangeType.Moved, renamedParseNames.Keys.ToArray())
         {
             _renamedParseNames = renamedParseNames ?? _renamedParseNames;
         }
 
-        public EntryChangedEvent(object sender, string parseName, string orgParseName)
-            : this(sender, new Dictionary<string, string>() { { parseName, orgParseName } })
+        public EntryChangedEvent(string parseName, string orgParseName)
+            : this(new Dictionary<string, string>() { { parseName, orgParseName } })
         {
         }
 

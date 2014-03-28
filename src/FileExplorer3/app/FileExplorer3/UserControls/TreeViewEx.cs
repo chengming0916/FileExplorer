@@ -39,6 +39,14 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
+        public static readonly DependencyProperty ContentBelowScrollViewerProperty =
+        DependencyProperty.Register("ContentBelowScrollViewer", typeof(object), typeof(TreeViewEx));
+        public object ContentBelowScrollViewer
+        {
+            get { return (object)GetValue(ContentBelowScrollViewerProperty); }
+            set { SetValue(ContentBelowScrollViewerProperty, value); }
+        }
+
         #endregion
     }
 

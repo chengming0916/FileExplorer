@@ -170,7 +170,7 @@ namespace TestApp
             if (_profiles.Length > 0)
                 explorerModel.DirectoryTree.Commands.ScriptCommands.Map =
                     Explorer.PickDirectory(initilizer, _profiles,
-                    dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(explorerModel.DirectoryTree, dir)), ResultCommand.NoError);
+                    dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(dir)), ResultCommand.NoError);
 
             explorerModel.Commands.ScriptCommands.Transfer =
                 TransferCommand =
@@ -215,14 +215,20 @@ namespace TestApp
 
             explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
-                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnToolbar = false },
+                    new CommandModel(ExplorerCommands.NewWindow) { },
                      new CommandModel(ApplicationCommands.New) { IsVisibleOnToolbar = false },
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
                     new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
                     new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false },   
               
-                    new CommandModel(ExplorerCommands.Map)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Unmap)  { IsVisibleOnToolbar = false }
+                    new CommandModel(ExplorerCommands.Map)  { 
+                        Symbol = Convert.ToChar(0xE17B), 
+                        IsEnabled = true,
+                        IsHeaderVisible = false, IsVisibleOnMenu = false  
+                    },
+                    new CommandModel(ExplorerCommands.Unmap)  { 
+                        Symbol = Convert.ToChar(0xE17A)
+                    }
                     )
               };
         }
