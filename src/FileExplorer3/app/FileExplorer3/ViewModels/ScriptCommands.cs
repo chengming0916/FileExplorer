@@ -707,6 +707,7 @@ namespace FileExplorer.ViewModels
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
+            IEventAggregator events = pm["Events"] as IEventAggregator;
             if (evm != null)
             {
                 _dir = _dir ?? (pm.ContainsKey("Directory") ? (IEntryModel)pm["Directory"] : null);

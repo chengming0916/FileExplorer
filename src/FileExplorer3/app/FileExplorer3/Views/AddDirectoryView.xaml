@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel Margin="10">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Margin="0,10" >
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Margin="0,10" Height="30" >
             <Button x:Name="Cancel" Content="Cancel" Width="50" />
             <Button x:Name="Add" Content="Add" Width="50" Margin="10,0,0,0" />
         </StackPanel>
@@ -18,9 +18,9 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Profile" Grid.Row="0" Grid.Column="0" />

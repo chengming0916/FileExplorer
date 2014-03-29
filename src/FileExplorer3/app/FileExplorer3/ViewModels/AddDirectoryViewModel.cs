@@ -18,6 +18,7 @@ namespace FileExplorer.ViewModels
 
         public AddDirectoryViewModel(IExplorerInitializer initializer, IProfile[] rootProfiles)
         {
+            DisplayName = "Map directory";
             _initializer = initializer.Clone();
             _rootProfiles = rootProfiles;
             _selectedPath = null;
