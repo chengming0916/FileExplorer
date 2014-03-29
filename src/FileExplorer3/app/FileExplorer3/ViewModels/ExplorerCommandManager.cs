@@ -31,6 +31,9 @@ namespace FileExplorer.ViewModels
             ParameterDicConverter =
              ParameterDicConverters.ConvertVMParameter(
                  new Tuple<string, object>("Explorer", _evm),
+                 new Tuple<string, object>("DirectoryTree", _evm.DirectoryTree),
+                 new Tuple<string, object>("FileList", _evm.FileList),
+                 new Tuple<string, object>("Statusbar", _evm.Statusbar),
                  new Tuple<string, object>("Events", events));
 
             #region Set ScriptCommands

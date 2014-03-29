@@ -97,7 +97,18 @@ namespace FileExplorer.ViewModels.Helpers
             ITreeLookup<VM, T> lookupProc,
             params ITreeLookupProcessor<VM, T>[] processors)
         {
-            await lookupProc.Lookup(value, this, RootSelector, processors);
+            if (!callingLookup)
+            {
+                callingLookup = true;
+                try
+                {
+                    await lookupProc.Lookup(value, this, RootSelector, processors);
+                }
+                finally
+                {
+                    callingLookup = false;
+                }
+            }
         }
 
         public void SetIsSelected(bool value)
@@ -169,7 +180,7 @@ namespace FileExplorer.ViewModels.Helpers
         bool _isSelected = false;
         T _selectedValue = default(T);
         ITreeSelector<VM, T> _prevSelected = null;
-
+        bool callingLookup = false;
 
 
         #endregion

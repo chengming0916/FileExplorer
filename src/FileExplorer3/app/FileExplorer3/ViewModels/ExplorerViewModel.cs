@@ -78,7 +78,6 @@ namespace FileExplorer.ViewModels
                 await DirectoryTree.SelectAsync(entryModel);
                 FileList.CurrentDirectory = entryModel;
                 await Breadcrumb.Selection.AsRoot().SelectAsync(entryModel);
-
             }
 
         }
@@ -183,7 +182,7 @@ namespace FileExplorer.ViewModels
                         break;
                 }
                 
-            Commands.Execute(cmds.ToArray());
+            Commands.ExecuteAsync(cmds.ToArray());
         }
 
         #endregion
@@ -208,7 +207,7 @@ namespace FileExplorer.ViewModels
         public IExplorerInitializer Initializer { get; private set; }
 
         public string WindowTitleMask { get; set; }
-        public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; } }
+        public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; }}
 
         public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChange(() => UIScale); } }
 

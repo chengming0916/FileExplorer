@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Models;
 using Caliburn.Micro;
+using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IExplorerViewModel  : ISupportCommandManager
+    public interface IExplorerViewModel : ISupportCommandManager
     {
         IEntryModel[] RootModels { get; set; }
 
@@ -17,7 +18,7 @@ namespace FileExplorer.ViewModels
         IStatusbarViewModel Statusbar { get; }
 
         float UIScale { get; set; }
-
+        IEntryViewModel CurrentDirectory { get; }
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);
     }
