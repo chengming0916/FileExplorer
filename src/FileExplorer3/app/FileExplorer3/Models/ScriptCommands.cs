@@ -119,7 +119,7 @@ namespace FileExplorer.Models
             string newEntryPath = _profile.Path.Combine(_parentPath, fileName);
             var createddModel = await _profile.DiskIO.CreateAsync(newEntryPath, _isFolder, pm.CancellationToken);
 
-            return new NotifyChangedCommand(_profile, newEntryPath, Defines.ChangeType.Created, null,
+            return new NotifyChangedCommand(_profile, newEntryPath, Defines.ChangeType.Created,
                 _thenFunc(createddModel));
         }
     }

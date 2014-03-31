@@ -24,17 +24,17 @@ namespace FileExplorer.Models
             return null;
         }
 
-        public static IScriptCommand Parse(this IProfile[] profiles, string path, 
+        public static IScriptCommand Parse(this IProfile[] profiles, string path,
             Func<IEntryModel, IScriptCommand> ifFoundFunc, IScriptCommand ifNotFound)
         {
             return new ParsePathCommand(profiles, path, ifFoundFunc, ifNotFound);
         }
 
 
-        public static IScriptCommand Parse(this IProfile profile, string path, 
+        public static IScriptCommand Parse(this IProfile profile, string path,
             Func<IEntryModel, IScriptCommand> ifFoundFunc, IScriptCommand ifNotFound)
         {
-            return new ParsePathCommand(new [] { profile }, path, ifFoundFunc, ifNotFound);
+            return new ParsePathCommand(new[] { profile }, path, ifFoundFunc, ifNotFound);
         }
 
         public static IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(this IProfile[] profiles, IEntryModel entry)
@@ -50,6 +50,9 @@ namespace FileExplorer.Models
 
         public static void NotifyEntryChanges(this IProfile profile, object sender, string fullPath, ChangeType changeType, string orgParseName = null)
         {
+            if (profile == null || profile.Events == null)
+                return;
+
             if (changeType == ChangeType.Moved)
                 profile.Events.Publish(new EntryChangedEvent(fullPath, orgParseName));
             else profile.Events.Publish(new EntryChangedEvent(changeType, fullPath));
@@ -89,7 +92,7 @@ namespace FileExplorer.Models
                 if (entry.IsDirectory)
                 {
                     System.IO.Directory.CreateDirectory(mapping.IOPath);
-                    var listing =  await entry.Profile.ListAsync(entry, ct).ConfigureAwait(false);
+                    var listing = await entry.Profile.ListAsync(entry, ct).ConfigureAwait(false);
                     foreach (var subEntry in listing)
                         await WriteToCacheAsync(ioHelper, subEntry, ct, force).ConfigureAwait(false);
                 }
