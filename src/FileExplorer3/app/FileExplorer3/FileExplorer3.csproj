@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="BaseControls\ClipCorner.cs" />
     <None Include="BaseControls\LoginControl.cs" />
+    <Compile Include="BaseControls\DockableScrollViewer.cs" />
     <Compile Include="Themes\ThirdParty\DockPanelSplitter.cs" />
     <Compile Include="BaseControls\MultiStepSlider.cs" />
     <Compile Include="BaseControls\SliderSupportedPanel.cs" />

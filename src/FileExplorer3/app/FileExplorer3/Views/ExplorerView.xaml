@@ -40,16 +40,8 @@
 
             <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="2" Grid.RowSpan="3" />
             <ContentControl Grid.Column="0" Grid.Row="1"  Name="DirectoryTree" Margin="2" />
-            <DockPanel Grid.Column="1" Grid.Row="1">
-                <ContentControl Name="Previewer" DockPanel.Dock="Right" MinWidth="50"
-                                Visibility="{Binding Previewer.IsVisible, Converter={StaticResource btv}}"
-                                />
-                <bc:DockPanelSplitter DockPanel.Dock="Right" HorizontalAlignment="Stretch" 
-                                   Background="{x:Static SystemColors.ControlBrush}"
-                                    Visibility="{Binding Visibility, ElementName=Previewer}" />
-                                                          
-                <ContentControl  Name="FileList" Grid.Column="1" Grid.Row="1" Margin="2" />
-            </DockPanel>
+            <ContentControl  Name="FileList" Grid.Column="1" Grid.Row="1" Margin="2" />
+        
 
             <ContentControl Grid.ColumnSpan="2" Grid.Row="2"  Name="Statusbar" Margin="0,5,0,0" />
 

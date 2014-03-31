@@ -85,8 +85,8 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-
-            Commands = new FileListCommandManager(this, events, Selection);        
+            Previewer = new PreviewerViewModel(events);
+            Commands = new FileListCommandManager(this, events, Selection, Previewer.Commands);        
         }
 
         #endregion
@@ -188,6 +188,8 @@ namespace FileExplorer.ViewModels
         public IListSelector<IEntryViewModel, IEntryModel> Selection { get; private set; }
         public ISupportDrag DragHelper { get; private set; }
         public ISupportDrop DropHelper { get; private set; }
+
+        public IPreviewerViewModel Previewer { get; private set; }
 
         public IToolbarViewModel Toolbar { get { return _toolbar; } set { _toolbar = value; NotifyOfPropertyChange(() => Toolbar); } }
 
