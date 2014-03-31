@@ -29,46 +29,49 @@ namespace FileExplorer.Models
 
         public void NotifyPrepareDrop(VirtualDataObject sender, string format)
         {
-              FileDropDataObject dataObject = sender as FileDropDataObject;
+            FileDropDataObject dataObject = sender as FileDropDataObject;
 
-              foreach (var m in _models)
-                  if (m.Profile is IDiskProfile)
-                  {
-                      var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];                      
-                      if (mapping != null && !mapping.IsCached)
-                          AsyncUtils.RunSync(() => (m.Profile as IDiskProfile).DiskIO
-                              .WriteToCacheAsync(m, CancellationToken.None)
-                              );
-                  }
+            foreach (var m in _models)
+                if (m.Profile is IDiskProfile)
+                {
+                    var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];
+                    if (mapping != null && !mapping.IsCached)
+                        AsyncUtils.RunSync(() => (m.Profile as IDiskProfile).DiskIO
+                            .WriteToCacheAsync(m, CancellationToken.None)
+                            );
+                }
 
-              //AsyncUtils.RunSync(() => Task.Run(async () =>
-              //    {
-              //        foreach (var m in _models)
-              //            if (m.Profile is IDiskProfile)
-              //            {
-              //                var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];                              
-              //                if (mapping != null && !mapping.IsCached)
-              //                    await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m, CancellationToken.None);
-              //            }
-              //    }));
+            //AsyncUtils.RunSync(() => Task.Run(async () =>
+            //    {
+            //        foreach (var m in _models)
+            //            if (m.Profile is IDiskProfile)
+            //            {
+            //                var mapping = (m.Profile as IDiskProfile).DiskIO.Mapper[m];                              
+            //                if (mapping != null && !mapping.IsCached)
+            //                    await (m.Profile as IDiskProfile).DiskIO.WriteToCacheAsync(m, CancellationToken.None);
+            //            }
+            //    }));
         }
     }
 
     public class FileBasedDragDropHandler : IDragDropHandler
     {
-        private static IProfile _fsiProfile = new FileSystemInfoProfile(null, null); //For loading drag items.        
+        private IProfile _fsiProfile; //For loading drag items.        
         public IScriptCommand TransferCommand { get; set; }
 
         private IProfile _profile;
         public FileBasedDragDropHandler(IProfile profile, IWindowManager windowManager)
         {
             _profile = profile;
-             TransferCommand = 
-                new FileExplorer.ViewModels.TransferCommand((effect, source, destDir) =>
-                    source.Profile is IDiskProfile ?
-                        (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
-                        : ResultCommand.Error(new NotSupportedException())
-                    , windowManager);
+            _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
+                new FileSystemInfoProfile(profile.Events, windowManager);
+
+            TransferCommand =
+               new FileExplorer.ViewModels.TransferCommand((effect, source, destDir) =>
+                   source.Profile is IDiskProfile ?
+                       (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
+                       : ResultCommand.Error(new NotSupportedException())
+                   , windowManager);
         }
 
         public async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
@@ -77,9 +80,9 @@ namespace FileExplorer.Models
             retVal.SetFileDropData(entries
                 .Where(m => m.Profile is IDiskProfile)
                 .Select(m => new FileDrop((m.Profile as IDiskProfile).DiskIO.Mapper[m].IOPath, m.IsDirectory))
-                .Where (fd => fd.FileSystemPath != null)
+                .Where(fd => fd.FileSystemPath != null)
                 .ToArray());
-            
+
             return retVal;
         }
 
@@ -93,7 +96,8 @@ namespace FileExplorer.Models
 
         public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)
         {
-
+            //if (effect == DragDropEffects.Move)
+            //    draggables.First().Profile.
         }
 
         public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
@@ -109,7 +113,7 @@ namespace FileExplorer.Models
                         if (Directory.Exists(fn))
                             vm = new FileSystemInfoModel(_fsiProfile, new DirectoryInfo(fn));
                         else if (File.Exists(fn))
-                            vm = new FileSystemInfoModel(_fsiProfile, new FileInfo(fn));                                                    
+                            vm = new FileSystemInfoModel(_fsiProfile, new FileInfo(fn));
                     }
                     catch
                     {
@@ -157,11 +161,11 @@ namespace FileExplorer.Models
                         { "Dest" , destDir },
                         {"DragDropEffects", effect }
                     }, TransferCommand);
-                return effect;                
+                return effect;
             };
             return DragDropEffects.None;
         }
 
-      
+
     }
 }

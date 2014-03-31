@@ -22,21 +22,20 @@ namespace FileExplorer.ViewModels
         #region Constructor
 
         public BreadcrumbViewModel(IEventAggregator events)
-        {            
+        {
             _events = events;
 
             if (events != null)
                 events.Subscribe(this);
-            
+
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
-            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries)
-                 { Comparers = new[] { PathComparer.LocalDefault } };                
+            var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries) { Comparers = new[] { PathComparer.LocalDefault } };
             selection.SelectionChanged += (o, e) =>
                 {
                     BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
                 };
             Selection = selection;
-           
+
 
         }
 
@@ -85,12 +84,15 @@ namespace FileExplorer.ViewModels
 
         public async Task SelectAsync(IEntryModel value)
         {
-            _sbox.SetValue(SuggestBoxBase.TextProperty, value.FullPath);
+            if (_sbox != null)
+                _sbox.SetValue(SuggestBoxBase.TextProperty, value.FullPath);
+
 
             await Selection.LookupAsync(value,
                 RecrusiveSearch<IBreadcrumbItemViewModel, IEntryModel>.LoadSubentriesIfNotLoaded,
                 SetSelected<IBreadcrumbItemViewModel, IEntryModel>.WhenSelected,
                 SetChildSelected<IBreadcrumbItemViewModel, IEntryModel>.ToSelectedChild);
+
         }
 
         void OnSuggestPathChanged()
@@ -101,8 +103,8 @@ namespace FileExplorer.ViewModels
                     {
                         foreach (var p in _profiles)
                         {
-                            if (String.IsNullOrEmpty(SuggestedPath) && Entries.AllNonBindable.Count() > 0)                            
-                                SuggestedPath = Entries.AllNonBindable.First().EntryModel.FullPath;                            
+                            if (String.IsNullOrEmpty(SuggestedPath) && Entries.AllNonBindable.Count() > 0)
+                                SuggestedPath = Entries.AllNonBindable.First().EntryModel.FullPath;
 
                             var found = await p.ParseAsync(SuggestedPath);
                             if (found != null)
@@ -122,7 +124,7 @@ namespace FileExplorer.ViewModels
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
             Entries.SetEntries(rootModels
                 .Select(r => new BreadcrumbItemViewModel(_events, this, r, null)).ToArray());
-            
+
         }
 
         private void setProfiles(IProfile[] profiles)
@@ -165,7 +167,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IEntryModel[] RootModels { set { setRootModels(value); }}
+        public IEntryModel[] RootModels { set { setRootModels(value); } }
         public IProfile[] Profiles { set { setProfiles(value); } }
 
         public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }

@@ -1263,7 +1263,8 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.Error(new ArgumentException());
 
             IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel, newName, pm.CancellationToken);
-            return new NotifyChangedCommand(destModel.Profile, destModel.FullPath, ChangeType.Moved, srcModel.FullPath);
+            return new NotifyChangedCommand(destModel.Profile, destModel.FullPath,  
+                srcModel.Profile, srcModel.FullPath, ChangeType.Moved);
         }
     }
 

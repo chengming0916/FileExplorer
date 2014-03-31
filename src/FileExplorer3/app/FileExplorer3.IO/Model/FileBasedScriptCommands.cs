@@ -191,7 +191,8 @@ namespace FileExplorer.Models
 
             _progress.Report(TransferProgress.IncrementProcessedEntries());
 
-            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ct);
+            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, 
+                _srcModel.Profile, srcFullName, ct);
         }
 
     }
@@ -310,7 +311,8 @@ namespace FileExplorer.Models
                         File.Move(srcMapping.IOPath, destFullName);                        
                     }
                     progress.Report(TransferProgress.IncrementProcessedEntries());
-                    return new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Moved);
+                    return new NotifyChangedCommand(_destDirModel.Profile, destFullName, _srcModel.Profile, 
+                        _srcModel.FullPath, ChangeType.Moved);
                 }
                 else
                 {

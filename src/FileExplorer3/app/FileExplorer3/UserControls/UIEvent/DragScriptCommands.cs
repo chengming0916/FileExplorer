@@ -455,7 +455,11 @@ namespace FileExplorer.BaseControls.DragnDrop
         public NotifyDropCompleted(ISupportDrag isd, IEnumerable<IDraggable> draggables, IDataObject dataObj,
             DragDropEffects resultEffect)
             : base("NotifyDropCompleted")
-        { _isd = isd; _draggables = draggables; _dataObj = dataObj; _resultEffect = resultEffect; }
+        {
+            _isd = isd;
+            _draggables = new List<IDraggable>(draggables);
+            _dataObj = dataObj; _resultEffect = resultEffect;
+        }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
