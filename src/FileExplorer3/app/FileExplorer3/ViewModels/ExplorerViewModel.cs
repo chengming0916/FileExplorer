@@ -40,14 +40,14 @@ namespace FileExplorer.ViewModels
             DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
+            Previewer = new PreviewerViewModel(_internalEvents);
 
-            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation);
+            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation, Previewer);
             setRootModels(_rootModels);
 
             if (_events != null)
                 _events.Subscribe(this);
             _internalEvents.Subscribe(this);
-
 
         }
 
@@ -68,6 +68,17 @@ namespace FileExplorer.ViewModels
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
             _initializer.Initializers.InitalizeAsync(this);
+
+            //if (_rootModels != null && _rootModels.Length > 0)
+            //    uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
+
+                //Commands.Execute(
+                //    new IScriptCommand[] { 
+                //        Explorer.GoTo(_rootModels.First())
+                //    })), System.Windows.Threading.DispatcherPriority.Background
+                //    );
+
+
         }
 
         public async Task GoAsync(IEntryModel entryModel)
@@ -166,22 +177,22 @@ namespace FileExplorer.ViewModels
         public void Handle(RootChangedEvent message)
         {
             Queue<IScriptCommand> cmds = new Queue<IScriptCommand>();
-            
+
             cmds.Enqueue(Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories));
             if (message.Sender != this)
                 cmds.Enqueue(Explorer.GoTo(CurrentDirectory.EntryModel));
-            else 
+            else
                 switch (message.ChangeType)
                 {
                     case ChangeType.Created:
-                    case ChangeType.Changed :
+                    case ChangeType.Changed:
                         cmds.Enqueue(Explorer.GoTo(message.AppliedRootDirectories.First()));
                         break;
                     case ChangeType.Deleted:
                         cmds.Enqueue(Explorer.GoTo(RootModels.FirstOrDefault()));
                         break;
                 }
-                
+
             Commands.ExecuteAsync(cmds.ToArray());
         }
 
@@ -207,7 +218,7 @@ namespace FileExplorer.ViewModels
         public IExplorerInitializer Initializer { get; private set; }
 
         public string WindowTitleMask { get; set; }
-        public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; }}
+        public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; } }
 
         public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChange(() => UIScale); } }
 
@@ -221,6 +232,7 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
+        public IPreviewerViewModel Previewer { get; private set; }
 
         #endregion
 

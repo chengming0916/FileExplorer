@@ -1263,7 +1263,7 @@ namespace FileExplorer.ViewModels
                 return ResultCommand.Error(new ArgumentException());
 
             IEntryModel destModel = await profile.DiskIO.RenameAsync(srcModel, newName, pm.CancellationToken);
-            return new NotifyChangedCommand(destModel.Profile, destModel.FullPath,  
+            return new NotifyChangedCommand(destModel.Profile, destModel.FullPath,
                 srcModel.Profile, srcModel.FullPath, ChangeType.Moved);
         }
     }
@@ -1295,6 +1295,45 @@ namespace FileExplorer.ViewModels
             if (foundItem != null)
                 return _foundCommandFunc(foundItem);
             else return _notFoundCommand;
+        }
+    }
+
+    #endregion
+
+    #region Previewer based.
+
+    public static class Previewer
+    {
+        public static IScriptCommand Show(IScriptCommand nextCommand = null) 
+            { return new ToggleVisibility("Previewer", true, nextCommand); }
+        public static IScriptCommand Hide(IScriptCommand nextCommand = null)
+            { return new ToggleVisibility("Previewer", false, nextCommand); }
+        public static IScriptCommand Toggle(IScriptCommand nextCommand = null)
+            { return new ToggleVisibility("Previewer", nextCommand); }
+    }
+
+    /// <summary>
+    /// Do certain action using the previewer.
+    /// required Previewer (IPreviewerViewModel)
+    /// </summary>
+    internal class DoPreviewer : DoCommandBase<IPreviewerViewModel>
+    {
+        internal DoPreviewer(Func<IPreviewerViewModel, IScriptCommand> commandFunc)
+            : base("Previewer", commandFunc)
+        {
+        }
+    }
+
+    internal class ToggleVisibility : DoCommandBase<IToggleableVisibility>
+    {
+        internal ToggleVisibility(string viewModelName, bool toValue, IScriptCommand nextCommand)
+            : base(viewModelName, pvm => { pvm.IsVisible = toValue; return nextCommand; })
+        {
+        }
+
+        internal ToggleVisibility(string viewModelName, IScriptCommand nextCommand)
+            : base(viewModelName, pvm => { pvm.IsVisible = !pvm.IsVisible; return nextCommand; })
+        {
         }
     }
 
