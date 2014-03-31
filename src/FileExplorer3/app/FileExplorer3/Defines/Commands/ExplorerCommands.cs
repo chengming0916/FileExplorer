@@ -13,6 +13,7 @@ namespace FileExplorer.Defines
         public static RoutedUICommand UnselectAll = new RoutedUICommand(Strings.strUnselectAll, "UnselectAll", typeof(ExplorerCommands));
         public static RoutedUICommand ToggleCheckBox = new RoutedUICommand(Strings.strToggleCheckBox, "ToggleCheckBox", typeof(ExplorerCommands));
         public static RoutedUICommand ToggleViewMode = new RoutedUICommand(Strings.strToggleViewMode, "ToggleViewMode", typeof(ExplorerCommands));
+        public static RoutedUICommand TogglePreviewer = new RoutedUICommand(Strings.strTogglePreviewer, "TogglePreviewer", typeof(ExplorerCommands));
 
         public static RoutedUICommand NewFolder = new RoutedUICommand(Strings.strNewFolder, "NewFolder", typeof(ExplorerCommands));
 

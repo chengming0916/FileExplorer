@@ -3,7 +3,8 @@
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
     >
     <ResourceDictionary.MergedDictionaries>
-        
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/ThirdParty/DockPanelSplitter.xaml" />
+
     </ResourceDictionary.MergedDictionaries>
 
 

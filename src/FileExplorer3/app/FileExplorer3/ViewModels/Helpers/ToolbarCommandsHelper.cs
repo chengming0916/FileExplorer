@@ -19,7 +19,7 @@ namespace FileExplorer.ViewModels.Helpers
     /// Populate Commands (CommandViewModel, e.g. ToggleView), and notify the commands when AppliedModels changes.
     /// For use in toolbar and context menu.
     /// </summary>
-    public interface IToolbarCommandsHelper : IExportCommandBindings
+    public interface IToolbarCommandsHelper //: IExportCommandBindings
     {
         IProfile[] RootProfiles { set; }
 
@@ -124,7 +124,7 @@ namespace FileExplorer.ViewModels.Helpers
         IEntryModel[] _appliedModels = null;
         IProfile[] _rootProfiles = null;
         private ICommandProvider[] _extraCommandProviders;
-        protected List<IScriptCommandBinding> _exportedCommandBindings = new List<IScriptCommandBinding>(); //Remove
+        //protected List<IScriptCommandBinding> _exportedCommandBindings = new List<IScriptCommandBinding>(); //Remove
         private Func<DirectoryChangedEvent, IEntryModel[]> _whenDirectoryChanged;
         private Func<SelectionChangedEvent, IEntryModel[]> _whenSelectionChanged;
 
@@ -147,10 +147,10 @@ namespace FileExplorer.ViewModels.Helpers
         }
         public IEntriesHelper<ICommandViewModel> CommandModels { get; private set; }
 
-        public IEnumerable<IScriptCommandBinding> ExportedCommandBindings //Remove
-        {
-            get { return _exportedCommandBindings; }
-        }
+        //public IEnumerable<IScriptCommandBinding> ExportedCommandBindings //Remove
+        //{
+        //    get { return _exportedCommandBindings; }
+        //}
 
         #endregion
 
