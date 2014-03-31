@@ -46,7 +46,9 @@ namespace FileExplorer.ViewModels
         //bool IsContextMenuVisible { get; set; }
 
         void SignalChangeDirectory(IEntryModel newDirectory);
-        
+
+        IPreviewerViewModel Previewer { get; }
+
         IProfile[] Profiles { set; }        
     }
 }

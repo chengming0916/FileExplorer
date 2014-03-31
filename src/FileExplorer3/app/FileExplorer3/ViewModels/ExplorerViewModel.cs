@@ -40,9 +40,9 @@ namespace FileExplorer.ViewModels
             DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
-            Previewer = new PreviewerViewModel(_internalEvents);
 
-            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation, Previewer);
+
+            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation);
             setRootModels(_rootModels);
 
             if (_events != null)
@@ -232,7 +232,7 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
-        public IPreviewerViewModel Previewer { get; private set; }
+
 
         #endregion
 

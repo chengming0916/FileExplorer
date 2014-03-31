@@ -392,7 +392,7 @@
             </uc:ListViewEx>
         </TabItem>
 
-        <TabItem Header="UIEventHub" IsSelected="True" >
+        <TabItem Header="UIEventHub" >
             <bc:UIEventAdapter.Processors>
                 <bc:DragDropLiteEventProcessor EnableDrag="False" EnableDrop="False" />
             </bc:UIEventAdapter.Processors>
@@ -545,52 +545,94 @@
                          ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>
         </TabItem>
-        <TabItem Header="Toolbar">            
-                <TabItem.CommandBindings>
-                    <CommandBinding Command="Close" Executed="ToolbarClose_Executed" />
-                </TabItem.CommandBindings>
-                <uc:ToolbarEx VerticalAlignment="Top">
-                    <!--<Button>Test</Button>
+        <TabItem Header="Toolbar">
+            <TabItem.CommandBindings>
+                <CommandBinding Command="Close" Executed="ToolbarClose_Executed" />
+            </TabItem.CommandBindings>
+            <uc:ToolbarEx VerticalAlignment="Top">
+                <!--<Button>Test</Button>
                 <Button>Test</Button>-->
-                    <uc:ToolbarItemEx HeaderType="Button" Header="Button" Symbol="&#xE102;"  />
-                    <uc:ToolbarItemEx HeaderType="Button" Header="Button" Symbol="&#xE103;" />
-                    <uc:ToolbarItemEx x:Name="tbiMenu1" Command="Close" HeaderType="MenuButton" Header="Close" Symbol="&#xE106; " />
-                    <uc:ToolbarItemEx x:Name="tbiMenu2" HeaderType="MenuButton" Symbol="&#xE15D;" Header="{Binding SliderValue, ElementName=tbiMenu2}"                                   
+                <uc:ToolbarItemEx HeaderType="Button" Header="Button" Symbol="&#xE102;"  />
+                <uc:ToolbarItemEx HeaderType="Button" Header="Button" Symbol="&#xE103;" />
+                <uc:ToolbarItemEx x:Name="tbiMenu1" Command="Close" HeaderType="MenuButton" Header="Close" Symbol="&#xE106; " />
+                <uc:ToolbarItemEx x:Name="tbiMenu2" HeaderType="MenuButton" Symbol="&#xE15D;" Header="{Binding SliderValue, ElementName=tbiMenu2}"                                   
                                   IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="200" >
-                        <uc:ToolbarItemEx.ItemTemplate>
-                            <DataTemplate>
-                                <ProgressBar Minimum="0" Maximum="10" Value="10" />
-                            </DataTemplate>
-                        </uc:ToolbarItemEx.ItemTemplate>
-                    </uc:ToolbarItemEx>
+                    <uc:ToolbarItemEx.ItemTemplate>
+                        <DataTemplate>
+                            <ProgressBar Minimum="0" Maximum="10" Value="10" />
+                        </DataTemplate>
+                    </uc:ToolbarItemEx.ItemTemplate>
+                </uc:ToolbarItemEx>
 
-                    <uc:ToolbarItemEx x:Name="tbiMenu3" HeaderType="Button" Symbol="&#xE15D;" Width="50"
+                <uc:ToolbarItemEx x:Name="tbiMenu3" HeaderType="Button" Symbol="&#xE15D;" Width="50"
                                   Header="{Binding SliderValue, ElementName=tbiMenu3}"
                                   IsSliderEnabled="True" SliderMinimum="0" SliderMaximum="100"  >
-                    </uc:ToolbarItemEx>
-                    <uc:ToolbarItemEx HeaderType="Combo" >
-                        <uc:ToolbarSubItemEx Symbol="&#xE1A2;" IsChecked="True" IsCheckable="True" HeaderType="ComboItem"  />
-                        <uc:ToolbarSubItemEx Symbol="&#xE1A1;" IsCheckable="True" HeaderType="ComboItem" />
-                        <uc:ToolbarSubItemEx Symbol="&#xE1A0;" IsCheckable="True" HeaderType="ComboItem" />
+                </uc:ToolbarItemEx>
+                <uc:ToolbarItemEx HeaderType="Combo" >
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A2;" IsChecked="True" IsCheckable="True" HeaderType="ComboItem"  />
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A1;" IsCheckable="True" HeaderType="ComboItem" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE1A0;" IsCheckable="True" HeaderType="ComboItem" />
 
-                        <!--<uc:ToolbarSubItemEx Symbol="&#xE155;" ToolTip="ExtraLargeIcon" />
+                    <!--<uc:ToolbarSubItemEx Symbol="&#xE155;" ToolTip="ExtraLargeIcon" />
                     <uc:ToolbarSubItemEx Symbol="&#xe20f;" ToolTip="LargeIcon" />
                     <uc:ToolbarSubItemEx Symbol="&#xE138;" ToolTip="Icon" />
                     <uc:ToolbarSubItemEx Symbol="&#xE14C;" ToolTip="List" />
                     <uc:ToolbarSubItemEx Symbol="&#xE179;" ToolTip="Details" />-->
 
-                    </uc:ToolbarItemEx>
+                </uc:ToolbarItemEx>
 
-                    <uc:ToolbarItemEx HeaderType="Check" >
-                        <uc:ToolbarSubItemEx Symbol="&#xE19B;" IsChecked="True" IsCheckable="True" HeaderType="CheckItem" />
-                        <uc:ToolbarSubItemEx Symbol="&#xE199;" IsCheckable="True" HeaderType="CheckItem" />
-                        <uc:ToolbarSubItemEx Symbol="&#xE19A;" IsCheckable="True" HeaderType="CheckItem" />
-                    </uc:ToolbarItemEx>
-                    <!--<uc:ToolbarEx.LayoutTransform>
+                <uc:ToolbarItemEx HeaderType="Check" >
+                    <uc:ToolbarSubItemEx Symbol="&#xE19B;" IsChecked="True" IsCheckable="True" HeaderType="CheckItem" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE199;" IsCheckable="True" HeaderType="CheckItem" />
+                    <uc:ToolbarSubItemEx Symbol="&#xE19A;" IsCheckable="True" HeaderType="CheckItem" />
+                </uc:ToolbarItemEx>
+                <!--<uc:ToolbarEx.LayoutTransform>
                     <ScaleTransform ScaleX="3" ScaleY="3" />
                 </uc:ToolbarEx.LayoutTransform>-->
-                </uc:ToolbarEx>                            
+            </uc:ToolbarEx>
         </TabItem>
+        <TabItem Header="ScrollViewer" IsSelected="True">
+            <StackPanel Orientation="Vertical">
+                <bc:HtmlTextBlock TextWrapping="WrapWithOverflow" Html="[b]DockableScrollViewer[/b] - ScrollViewer that allow you to place fixed content in it by setting OuterTop/Right/Bottom/LeftContent "/>
+                <bc:DockableScrollViewer Height="200" Width="200" PanningMode="Both"
+                                     HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+                    <bc:DockableScrollViewer.TopContent>
+                        <Rectangle Fill="Red" Height="10" />
+                    </bc:DockableScrollViewer.TopContent>
+                    <bc:DockableScrollViewer.RightContent>
+                        <Rectangle Fill="Green" Width="10" />
+                    </bc:DockableScrollViewer.RightContent>
+                    <bc:DockableScrollViewer.BottomContent>
+                        <Rectangle Fill="Blue" Height="10" />
+                    </bc:DockableScrollViewer.BottomContent>
+                    <bc:DockableScrollViewer.LeftContent>
+                        <Rectangle Fill="Yellow" Width="10" />
+                    </bc:DockableScrollViewer.LeftContent>
+
+                    <bc:DockableScrollViewer.OuterTopContent>
+                        <Rectangle Fill="Brown" Height="10" />
+                    </bc:DockableScrollViewer.OuterTopContent>
+                    <bc:DockableScrollViewer.OuterRightContent>
+                        <Rectangle Fill="GreenYellow" Width="10" />
+                    </bc:DockableScrollViewer.OuterRightContent>
+                    <bc:DockableScrollViewer.OuterBottomContent>
+                        <Rectangle Fill="MidnightBlue" Height="10" />
+                    </bc:DockableScrollViewer.OuterBottomContent>
+                    <bc:DockableScrollViewer.OuterLeftContent>
+                        <Rectangle Fill="YellowGreen" Width="10" />
+                    </bc:DockableScrollViewer.OuterLeftContent>
+                    <Rectangle Height="500" Width="500" >
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" >
+                                <GradientStop Color="White" Offset="0" />
+                                <GradientStop Color="Gray" Offset="1" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </bc:DockableScrollViewer>
+            </StackPanel>
+        </TabItem>
+
     </TabControl>
 
 </Window>

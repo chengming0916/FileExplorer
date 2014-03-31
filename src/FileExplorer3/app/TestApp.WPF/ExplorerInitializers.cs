@@ -210,7 +210,7 @@ namespace TestApp
                     new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnMenu = false, Symbol = Convert.ToChar(0xE188) },
                     new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder })
                         { IsVisibleOnToolbar = false, Header = Strings.strNew, IsEnabled = true},
-                    new ToggleVisibilityCommand(explorerModel.Previewer, ExplorerCommands.TogglePreviewer)
+                    new ToggleVisibilityCommand(explorerModel.FileList.Previewer, ExplorerCommands.TogglePreviewer)
                     //new CommandModel(ExplorerCommands.TogglePreviewer) { IsVisibleOnMenu = false, Header = "", IsHeaderAlignRight = true, Symbol = Convert.ToChar(0xE239) }
                     )
             };

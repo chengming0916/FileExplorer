@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\ThirdParty\Caliburn.Micro.1.5.2\bin\WPF45\Debug\Caliburn.Micro.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlTextBlock">
+      <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
