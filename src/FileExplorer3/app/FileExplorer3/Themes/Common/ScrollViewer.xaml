@@ -56,9 +56,29 @@
                 <ControlTemplate TargetType="{x:Type bc:DockableScrollViewer}">
                     <DockPanel>
                         <ContentPresenter DockPanel.Dock="Top" Content="{TemplateBinding OuterTopContent}"  />
+                        <bc:DockPanelSplitter DockPanel.Dock="Top" 
+                              Visibility="{Binding OuterTopContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+
                         <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding OuterRightContent}"  />
+                        <bc:DockPanelSplitter DockPanel.Dock="Right" 
+                              Visibility="{Binding OuterRightContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+
                         <ContentPresenter DockPanel.Dock="Bottom" Content="{TemplateBinding OuterBottomContent}"  />
+                        <bc:DockPanelSplitter DockPanel.Dock="Bottom" 
+                              Visibility="{Binding OuterBottomContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+                        
                         <ContentPresenter DockPanel.Dock="Left" Content="{TemplateBinding OuterLeftContent}"  />
+                        <bc:DockPanelSplitter DockPanel.Dock="Left" 
+                              Visibility="{Binding OuterLeftContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+
                         <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -71,9 +91,30 @@
                             </Grid.RowDefinitions>
                             <DockPanel Margin="{TemplateBinding Padding}">
                                 <ContentPresenter DockPanel.Dock="Top" Content="{TemplateBinding TopContent}"  />
+                                <bc:DockPanelSplitter DockPanel.Dock="Top" 
+                                      Visibility="{Binding TopContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+
                                 <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding RightContent}"  />
+                                <bc:DockPanelSplitter DockPanel.Dock="Right" 
+                                      Visibility="{Binding RightContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+                                
                                 <ContentPresenter DockPanel.Dock="Bottom" Content="{TemplateBinding BottomContent}"  />
+                                <bc:DockPanelSplitter DockPanel.Dock="Bottom" 
+                                      Visibility="{Binding BottomContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+                                
                                 <ContentPresenter DockPanel.Dock="Left" Content="{TemplateBinding LeftContent}"  />
+                                <bc:DockPanelSplitter DockPanel.Dock="Left" 
+                                      Visibility="{Binding LeftContent.IsResizable, 
+                                              RelativeSource={RelativeSource TemplatedParent},
+                                              Converter={StaticResource btvc}}" />
+
+
                                 <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" 
                                                     ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" KeyboardNavigation.DirectionalNavigation="Local" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                             </DockPanel>
