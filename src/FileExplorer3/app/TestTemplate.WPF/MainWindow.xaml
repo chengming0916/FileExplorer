@@ -137,7 +137,7 @@
                         <bc:DropDownList.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" >
-                                    <ProgressBar Minimum="0" Maximum="10" Value="{Binding Mode=OneTime}" Width="30" Height="10" />
+                                    <ProgressBar Minimum="0" Maximum="10" Value="{Binding Mode=OneTime}" Width="30" />
                                     <TextBlock Text="{Binding Mode=OneTime}" Margin="5,0" />
                                 </StackPanel>
                             </DataTemplate>
@@ -597,29 +597,45 @@
                 <bc:DockableScrollViewer Height="200" Width="200" PanningMode="Both"
                                      HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
                     <bc:DockableScrollViewer.TopContent>
-                        <Rectangle Fill="Red" Height="10" />
+                        <bc:DockableContent  MinHeight="10">
+                            <Border Background="Red" />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.TopContent>
                     <bc:DockableScrollViewer.RightContent>
-                        <Rectangle Fill="Green" Width="10" />
+                        <bc:DockableContent IsResizable="true" MinWidth="10">
+                            <Rectangle Fill="Green" />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.RightContent>
                     <bc:DockableScrollViewer.BottomContent>
-                        <Rectangle Fill="Blue" Height="10" />
+                        <bc:DockableContent IsResizable="true" MinHeight="10">
+                            <Rectangle Fill="Blue" />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.BottomContent>
                     <bc:DockableScrollViewer.LeftContent>
-                        <Rectangle Fill="Yellow" Width="10" />
+                        <bc:DockableContent MinWidth="10">
+                            <Rectangle Fill="Yellow"  />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.LeftContent>
 
                     <bc:DockableScrollViewer.OuterTopContent>
-                        <Rectangle Fill="Brown" Height="10" />
+                        <bc:DockableContent IsResizable="True" MinHeight="10"  >
+                            <Border Background="Brown"  />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.OuterTopContent>
                     <bc:DockableScrollViewer.OuterRightContent>
-                        <Rectangle Fill="GreenYellow" Width="10" />
+                        <bc:DockableContent MinWidth="10">
+                            <Rectangle Fill="GreenYellow" />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.OuterRightContent>
                     <bc:DockableScrollViewer.OuterBottomContent>
-                        <Rectangle Fill="MidnightBlue" Height="10" />
+                        <bc:DockableContent MinHeight="10">
+                            <Rectangle Fill="MidnightBlue" />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.OuterBottomContent>
                     <bc:DockableScrollViewer.OuterLeftContent>
-                        <Rectangle Fill="YellowGreen" Width="10" />
+                        <bc:DockableContent IsResizable="true" MinWidth="10">
+                            <Rectangle Fill="YellowGreen" />
+                        </bc:DockableContent>
                     </bc:DockableScrollViewer.OuterLeftContent>
                     <Rectangle Height="500" Width="500" >
                         <Rectangle.Fill>
