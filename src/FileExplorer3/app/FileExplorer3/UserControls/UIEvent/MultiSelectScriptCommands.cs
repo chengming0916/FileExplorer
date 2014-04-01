@@ -284,7 +284,7 @@ namespace FileExplorer.BaseControls.MultiSelect
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
 
-            var contentBelowHeader = (c is ListViewEx) ? (c as ListViewEx).ContentBelowHeader as FrameworkElement : null;
+            var contentBelowHeader = (c is ListViewEx) ? (c as ListViewEx).OuterTopContent as FrameworkElement : null;
             pd["ContentBelowHeaderSize"] =
                contentBelowHeader == null ? new Size(0, 0) :
                    new Size(contentBelowHeader.ActualWidth, contentBelowHeader.ActualHeight);

@@ -44,7 +44,7 @@ namespace FileExplorer.UserControls
             base.OnApplyTemplate();
             this.HandleScrollBarInvisible();
             this.AddHandler(ListViewEx.LoadedEvent, (RoutedEventHandler)((o, e) => OnLoaded()));
-            
+
         }
 
         public void OnLoaded()
@@ -272,12 +272,22 @@ namespace FileExplorer.UserControls
             remove { RemoveHandler(FilterChangedEvent, value); }
         }
 
-        public static readonly DependencyProperty ContentBelowHeaderProperty =
-            DependencyProperty.Register("ContentBelowHeader", typeof(object), typeof(ListViewEx));
-        public object ContentBelowHeader
+        public static readonly DependencyProperty OuterTopContentProperty =
+            DockableScrollViewer.OuterTopContentProperty.AddOwner(typeof(ListViewEx));
+
+        public object OuterTopContent
         {
-            get { return (object)GetValue(ContentBelowHeaderProperty); }
-            set { SetValue(ContentBelowHeaderProperty, value); }
+            get { return (object)GetValue(OuterTopContentProperty); }
+            set { SetValue(OuterTopContentProperty, value); }
+        }
+
+        public static readonly DependencyProperty RightContentProperty =
+         DockableScrollViewer.RightContentProperty.AddOwner(typeof(ListViewEx));
+
+        public object RightContent
+        {
+            get { return (object)GetValue(RightContentProperty); }
+            set { SetValue(RightContentProperty, value); }
         }
 
 
