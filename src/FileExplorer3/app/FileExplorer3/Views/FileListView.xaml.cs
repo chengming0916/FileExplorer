@@ -34,6 +34,7 @@ namespace FileExplorer.Views
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
             //this.ProcessedItems.ContextMenu.PlacementTarget = this.ProcessedItems;
             //this.RegisterEventProcessors(new DragDropEventProcessor(),
             //    new MultiSelectEventProcessor(vm1.UnselectAllCommand));

@@ -51,33 +51,71 @@
 
     <Style TargetType="{x:Type bc:DockableScrollViewer}">
         <Setter Property="Focusable" Value="false"/>
+        <Setter Property="TopContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="LeftContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BottomContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RightContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="OuterTopContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="OuterLeftContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="OuterBottomContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="OuterRightContent" >
+            <Setter.Value>
+                <Rectangle></Rectangle>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type bc:DockableScrollViewer}">
                     <DockPanel>
                         <ContentPresenter DockPanel.Dock="Top" Content="{TemplateBinding OuterTopContent}"  />
-                        <bc:DockPanelSplitter DockPanel.Dock="Top" 
-                              Visibility="{Binding OuterTopContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
+                        <bc:DockPanelSplitter DockPanel.Dock="Top"
+                                      Visibility="{Binding Path=OuterTopContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
 
                         <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding OuterRightContent}"  />
-                        <bc:DockPanelSplitter DockPanel.Dock="Right" 
-                              Visibility="{Binding OuterRightContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
+                        <bc:DockPanelSplitter DockPanel.Dock="Right"
+                                      Visibility="{Binding Path=OuterRightContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
 
                         <ContentPresenter DockPanel.Dock="Bottom" Content="{TemplateBinding OuterBottomContent}"  />
-                        <bc:DockPanelSplitter DockPanel.Dock="Bottom" 
-                              Visibility="{Binding OuterBottomContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
-                        
+                        <bc:DockPanelSplitter DockPanel.Dock="Bottom"
+                                      Visibility="{Binding Path=OuterBottomContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
+
                         <ContentPresenter DockPanel.Dock="Left" Content="{TemplateBinding OuterLeftContent}"  />
-                        <bc:DockPanelSplitter DockPanel.Dock="Left" 
-                              Visibility="{Binding OuterLeftContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
+                        <bc:DockPanelSplitter DockPanel.Dock="Left"
+                                      Visibility="{Binding Path=OuterLeftContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
+
 
                         <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
                             <Grid.ColumnDefinitions>
@@ -91,28 +129,27 @@
                             </Grid.RowDefinitions>
                             <DockPanel Margin="{TemplateBinding Padding}">
                                 <ContentPresenter DockPanel.Dock="Top" Content="{TemplateBinding TopContent}"  />
-                                <bc:DockPanelSplitter DockPanel.Dock="Top" 
-                                      Visibility="{Binding TopContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
+                                <bc:DockPanelSplitter DockPanel.Dock="Top"
+                                      Visibility="{Binding Path=TopContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
 
-                                <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding RightContent}"  />
-                                <bc:DockPanelSplitter DockPanel.Dock="Right" 
-                                      Visibility="{Binding RightContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
-                                
+                                <ContentPresenter DockPanel.Dock="Right" Content="{TemplateBinding RightContent}"
+                                    />
+                                <bc:DockPanelSplitter DockPanel.Dock="Right"
+                                      Visibility="{Binding Path=RightContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
+
+
                                 <ContentPresenter DockPanel.Dock="Bottom" Content="{TemplateBinding BottomContent}"  />
-                                <bc:DockPanelSplitter DockPanel.Dock="Bottom" 
-                                      Visibility="{Binding BottomContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
-                                
+                                <bc:DockPanelSplitter DockPanel.Dock="Bottom"
+                                      Visibility="{Binding Path=BottomContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
+
                                 <ContentPresenter DockPanel.Dock="Left" Content="{TemplateBinding LeftContent}"  />
-                                <bc:DockPanelSplitter DockPanel.Dock="Left" 
-                                      Visibility="{Binding LeftContent.IsResizable, 
-                                              RelativeSource={RelativeSource TemplatedParent},
-                                              Converter={StaticResource btvc}}" />
+                                <bc:DockPanelSplitter DockPanel.Dock="Left"
+                                      Visibility="{Binding Path=LeftContent.(bc:DockableScrollViewer.IsResizable), 
+                                        Converter={StaticResource btvc}, RelativeSource={RelativeSource TemplatedParent} }" />
+
 
 
                                 <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" 

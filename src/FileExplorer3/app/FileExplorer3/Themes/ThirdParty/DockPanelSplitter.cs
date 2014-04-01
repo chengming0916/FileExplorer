@@ -263,13 +263,13 @@ namespace FileExplorer.BaseControls
         protected override void OnMouseEnter(MouseEventArgs e)
         {
             base.OnMouseEnter(e);
-            if (!IsEnabled) return;
+            if (!IsEnabled || Visibility == System.Windows.Visibility.Collapsed) return;
             Cursor = IsHorizontal ? Cursors.SizeNS : Cursors.SizeWE;
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            if (!IsEnabled) return;
+            if (!IsEnabled || Visibility == System.Windows.Visibility.Collapsed) return;
 
             if (!IsMouseCaptured)
             {

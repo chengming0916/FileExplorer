@@ -9,22 +9,22 @@ using System.Windows.Controls;
 namespace FileExplorer.BaseControls
 {
 
-    public class DockableContent : ContentControl
-    {
-        public DockableContent()
-        {
-            HorizontalContentAlignment = System.Windows.HorizontalAlignment.Stretch;
-            VerticalContentAlignment = System.Windows.VerticalAlignment.Stretch;
-            //Visibility = false;
-        }
-        public static readonly DependencyProperty IsResizebleProperty =
-         DependencyProperty.Register("IsResizable", typeof(bool), typeof(DockableContent), new PropertyMetadata(false));
-        public bool IsResizable
-        {
-            get { return (bool)GetValue(IsResizebleProperty); }
-            set { SetValue(IsResizebleProperty, value); }
-        }
-    }
+    //public class object : ContentControl
+    //{
+    //    public object()
+    //    {
+    //        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Stretch;
+    //        VerticalContentAlignment = System.Windows.VerticalAlignment.Stretch;
+    //        //Visibility = false;
+    //    }
+    //    public static readonly DependencyProperty IsResizebleProperty =
+    //     DependencyProperty.Register("IsResizable", typeof(bool), typeof(object), new PropertyMetadata(false));
+    //    public bool IsResizable
+    //    {
+    //        get { return (bool)GetValue(IsResizebleProperty); }
+    //        set { SetValue(IsResizebleProperty, value); }
+    //    }
+    //}
 
     /// <summary>
     /// ScrollViewer that contains Top/Right/Bottom/LeftContent so you can insert fixed content to it.
@@ -40,6 +40,11 @@ namespace FileExplorer.BaseControls
                 new FrameworkPropertyMetadata(typeof(DockableScrollViewer)));
         }
 
+        public DockableScrollViewer()
+        {
+          
+        }
+
         #endregion
 
         #region Methods
@@ -52,68 +57,97 @@ namespace FileExplorer.BaseControls
 
         #region Public Properties
 
-        public static readonly DependencyProperty TopContentProperty =
-            DependencyProperty.Register("TopContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent TopContent
+        public static readonly DependencyProperty IsResizableProperty =
+            DependencyProperty.RegisterAttached("IsResizable", typeof(bool), typeof(DockableScrollViewer), new PropertyMetadata(false));
+
+        public static bool GetIsResizable(DependencyObject obj)
         {
-            get { return (DockableContent)GetValue(TopContentProperty); }
+            return (bool)obj.GetValue(IsResizableProperty);
+        }
+
+
+        public static void SetIsResizable(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsResizableProperty, value);
+        }
+
+
+        public static readonly DependencyProperty IsContentVisibleProperty =
+           DependencyProperty.RegisterAttached("IsContentVisible", typeof(bool), typeof(DockableScrollViewer), new PropertyMetadata(true));
+
+        public static bool GetIsContentVisible(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsContentVisibleProperty);
+        }
+
+        public static void SetIsContentVisible(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsContentVisibleProperty, value);
+        }
+
+
+        public static readonly DependencyProperty TopContentProperty =
+            DependencyProperty.Register("TopContent", typeof(object), typeof(DockableScrollViewer));
+        public object TopContent
+        {
+            get { return (object)GetValue(TopContentProperty); }
             set { SetValue(TopContentProperty, value); }
         }
 
         public static readonly DependencyProperty RightContentProperty =
-           DependencyProperty.Register("RightContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent RightContent
+           DependencyProperty.Register("RightContent", typeof(object), typeof(DockableScrollViewer));
+        public object RightContent
         {
-            get { return (DockableContent)GetValue(RightContentProperty); }
+            get { return (object)GetValue(RightContentProperty); }
             set { SetValue(RightContentProperty, value); }
         }
 
         public static readonly DependencyProperty BottomContentProperty =
-           DependencyProperty.Register("BottomContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent BottomContent
+           DependencyProperty.Register("BottomContent", typeof(object), typeof(DockableScrollViewer));
+        public object BottomContent
         {
-            get { return (DockableContent)GetValue(BottomContentProperty); }
+            get { return (object)GetValue(BottomContentProperty); }
             set { SetValue(BottomContentProperty, value); }
         }
 
         public static readonly DependencyProperty LeftContentProperty =
-           DependencyProperty.Register("LeftContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent LeftContent
+           DependencyProperty.Register("LeftContent", typeof(object), typeof(DockableScrollViewer));
+        public object LeftContent
         {
-            get { return (DockableContent)GetValue(LeftContentProperty); }
+            get { return (object)GetValue(LeftContentProperty); }
             set { SetValue(LeftContentProperty, value); }
         }
 
 
         public static readonly DependencyProperty OuterTopContentProperty =
-           DependencyProperty.Register("OuterTopContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent OuterTopContent
+           DependencyProperty.Register("OuterTopContent", typeof(object), typeof(DockableScrollViewer));
+        public object OuterTopContent
         {
-            get { return (DockableContent)GetValue(OuterTopContentProperty); }
+            get { return (object)GetValue(OuterTopContentProperty); }
             set { SetValue(OuterTopContentProperty, value); }
         }
 
         public static readonly DependencyProperty OuterRightContentProperty =
-           DependencyProperty.Register("OuterRightContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent OuterRightContent
+           DependencyProperty.Register("OuterRightContent", typeof(object), typeof(DockableScrollViewer));
+        public object OuterRightContent
         {
-            get { return (DockableContent)GetValue(OuterRightContentProperty); }
+            get { return (object)GetValue(OuterRightContentProperty); }
             set { SetValue(OuterRightContentProperty, value); }
         }
 
         public static readonly DependencyProperty OuterBottomContentProperty =
-           DependencyProperty.Register("OuterBottomContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent OuterBottomContent
+           DependencyProperty.Register("OuterBottomContent", typeof(object), typeof(DockableScrollViewer));
+        public object OuterBottomContent
         {
-            get { return (DockableContent)GetValue(OuterBottomContentProperty); }
+            get { return (object)GetValue(OuterBottomContentProperty); }
             set { SetValue(OuterBottomContentProperty, value); }
         }
 
         public static readonly DependencyProperty OuterLeftContentProperty =
-           DependencyProperty.Register("OuterLeftContent", typeof(DockableContent), typeof(DockableScrollViewer));
-        public DockableContent OuterLeftContent
+           DependencyProperty.Register("OuterLeftContent", typeof(object), typeof(DockableScrollViewer));
+        public object OuterLeftContent
         {
-            get { return (DockableContent)GetValue(OuterLeftContentProperty); }
+            get { return (object)GetValue(OuterLeftContentProperty); }
             set { SetValue(OuterLeftContentProperty, value); }
         }
 
