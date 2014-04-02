@@ -90,7 +90,7 @@
             <uc:ListViewEx.OuterTopContent>
                 <Border Margin="2" bc:DockableScrollViewer.IsResizable="True" >
                     <uc:ToolbarEx ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}"                                  
-                                  def:AttachedProperties.SkipLookup="True" >
+                                  def:AttachedProperties.SkipLookup="True" VerticalAlignment="Top" >
                         <uc:ToolbarEx.Resources>
                             <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ExplorerToolbar.xaml" />
                         </uc:ToolbarEx.Resources>
@@ -98,13 +98,13 @@
                 </Border>
             </uc:ListViewEx.OuterTopContent>
             <uc:ListViewEx.RightContent>
-                <ContentControl Name="Previewer" 
+                <ContentControl Name="Sidebar" 
                                 cal:Bind.Model="{Binding}"
                                 MinWidth="50" Background="Blue"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                 bc:DockableScrollViewer.IsResizable="True"
-                                
-                                Visibility="{Binding Previewer.IsVisible, Converter={StaticResource btv}}" />
+                                bc:DockableScrollViewer.IsContentVisible="{Binding Sidebar.IsVisible}" />
             </uc:ListViewEx.RightContent>
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>

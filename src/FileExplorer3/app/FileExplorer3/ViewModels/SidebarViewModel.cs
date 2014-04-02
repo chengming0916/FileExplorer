@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels
 {
-    public class PreviewerViewModel : ViewAware, IPreviewerViewModel
+    public class SidebarViewModel : ViewAware, ISidebarViewModel
     {
         #region Constructors
 
-        public PreviewerViewModel(IEventAggregator events)
+        public SidebarViewModel(IEventAggregator events)
         {
-            Commands = new PreviewerCommandManager(this, events);
+            Commands = new SidebarCommandManager(this, events);
         }
 
         #endregion

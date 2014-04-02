@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace FileExplorer.Views
 {
     /// <summary>
-    /// Interaction logic for PreviewerView.xaml
+    /// Interaction logic for SidebarView.xaml
     /// </summary>
-    public partial class PreviewerView : UserControl
+    public partial class SidebarView : UserControl
     {
-        public PreviewerView()
+        public SidebarView()
         {
             InitializeComponent();
         }

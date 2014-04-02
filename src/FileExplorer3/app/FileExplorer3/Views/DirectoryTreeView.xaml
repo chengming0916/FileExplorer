@@ -32,13 +32,7 @@
                           Content="{Binding SelectedViewModel.CurrentDirectory}" />
         </StackPanel>-->
 
-        <uc:ToolbarEx DockPanel.Dock="Bottom" ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}"                                  
-                                  def:AttachedProperties.SkipLookup="True" >
-            <uc:ToolbarEx.Resources>
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ExplorerToolbar.xaml" />
-            </uc:ToolbarEx.Resources>
-        </uc:ToolbarEx>
-
+      
 
         <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" BorderBrush="Transparent"                       
                        def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"  
@@ -70,6 +64,16 @@
                     </bc:ContextMenuEventProcessor.ContextMenu>
                 </bc:ContextMenuEventProcessor>
             </bc:UIEventAdapter.Processors>
+            
+            <uc:TreeViewEx.BottomContent>
+                <uc:ToolbarEx 
+                    ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}"                                  
+                                  def:AttachedProperties.SkipLookup="True" >
+                    <uc:ToolbarEx.Resources>
+                        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ExplorerToolbar.xaml" />
+                    </uc:ToolbarEx.Resources>
+                </uc:ToolbarEx>
+            </uc:TreeViewEx.BottomContent>
         </uc:TreeViewEx>
     </DockPanel>
 </UserControl>

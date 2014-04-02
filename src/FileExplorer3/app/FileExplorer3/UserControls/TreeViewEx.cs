@@ -39,12 +39,12 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
-        public static readonly DependencyProperty ContentBelowScrollViewerProperty =
-        DependencyProperty.Register("ContentBelowScrollViewer", typeof(object), typeof(TreeViewEx));
-        public object ContentBelowScrollViewer
+        public static readonly DependencyProperty BottomContentProperty =
+        DockableScrollViewer.BottomContentProperty.AddOwner(typeof(TreeViewEx));
+        public object BottomContent
         {
-            get { return (object)GetValue(ContentBelowScrollViewerProperty); }
-            set { SetValue(ContentBelowScrollViewerProperty, value); }
+            get { return (object)GetValue(BottomContentProperty); }
+            set { SetValue(BottomContentProperty, value); }
         }
 
         #endregion
@@ -78,7 +78,7 @@ namespace FileExplorer.UserControls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.AddValueChanged(TreeViewItemEx.IsDraggingOverProperty, (o,e) =>
+            this.AddValueChanged(TreeViewItemEx.IsDraggingOverProperty, (o, e) =>
                 {
                     TreeViewItemEx tvItem = o as TreeViewItemEx;
                     if (tvItem.IsDraggingOver && ExpandIfDragOver)

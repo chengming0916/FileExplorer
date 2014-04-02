@@ -11,25 +11,25 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels
 {
-    public class PreviewerCommandManager: CommandManagerBase
+    public class SidebarCommandManager: CommandManagerBase
     {
         #region Constructor
 
-        public PreviewerCommandManager(IPreviewerViewModel pvm, IEventAggregator events,
+        public SidebarCommandManager(ISidebarViewModel svm, IEventAggregator events,
              params IExportCommandBindings[] additionalBindingExportSource)
         {
-            _pvm = pvm;
+            _svm = svm;
 
             ParameterDicConverter =
              ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("Previewer", _pvm),
+                 new Tuple<string, object>("Sidebar", _svm),
                  new Tuple<string, object>("Events", events));
 
             #region Set ScriptCommands
 
             ScriptCommands = new DynamicDictionary<IScriptCommand>();
 
-            ScriptCommands.TogglePreviewer = Previewer.Toggle();
+            ScriptCommands.TogglePreviewer = Sidebar.Toggle();
 
             #endregion
 
@@ -58,7 +58,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        IPreviewerViewModel _pvm;
+        ISidebarViewModel _svm;
         
         #endregion
 

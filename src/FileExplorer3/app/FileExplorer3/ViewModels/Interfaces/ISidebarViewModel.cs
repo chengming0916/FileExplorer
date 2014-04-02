@@ -12,7 +12,7 @@ namespace FileExplorer.ViewModels
         bool IsVisible { get; set; }
     }
 
-    public interface IPreviewerViewModel :  
+    public interface ISidebarViewModel :  
         IToggleableVisibility, ISupportCommandManager
     {
        
