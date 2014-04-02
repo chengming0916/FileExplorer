@@ -47,7 +47,7 @@ namespace FileExplorer.ViewModels
 
         void SignalChangeDirectory(IEntryModel newDirectory);
 
-        IPreviewerViewModel Previewer { get; }
+        ISidebarViewModel Sidebar { get; }
 
         IProfile[] Profiles { set; }        
     }

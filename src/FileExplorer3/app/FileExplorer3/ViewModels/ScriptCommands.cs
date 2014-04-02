@@ -1300,26 +1300,26 @@ namespace FileExplorer.ViewModels
 
     #endregion
 
-    #region Previewer based.
+    #region Sidebar based.
 
-    public static class Previewer
+    public static class Sidebar
     {
-        public static IScriptCommand Show(IScriptCommand nextCommand = null) 
-            { return new ToggleVisibility("Previewer", true, nextCommand); }
+        public static IScriptCommand Show(IScriptCommand nextCommand = null)
+        { return new ToggleVisibility("Sidebar", true, nextCommand); }
         public static IScriptCommand Hide(IScriptCommand nextCommand = null)
-            { return new ToggleVisibility("Previewer", false, nextCommand); }
+        { return new ToggleVisibility("Sidebar", false, nextCommand); }
         public static IScriptCommand Toggle(IScriptCommand nextCommand = null)
-            { return new ToggleVisibility("Previewer", nextCommand); }
+        { return new ToggleVisibility("Sidebar", nextCommand); }
     }
 
     /// <summary>
     /// Do certain action using the previewer.
-    /// required Previewer (IPreviewerViewModel)
+    /// required Sidebar (ISidebarViewModel)
     /// </summary>
-    internal class DoPreviewer : DoCommandBase<IPreviewerViewModel>
+    internal class DoSidebar : DoCommandBase<ISidebarViewModel>
     {
-        internal DoPreviewer(Func<IPreviewerViewModel, IScriptCommand> commandFunc)
-            : base("Previewer", commandFunc)
+        internal DoSidebar(Func<ISidebarViewModel, IScriptCommand> commandFunc)
+            : base("Sidebar", commandFunc)
         {
         }
     }

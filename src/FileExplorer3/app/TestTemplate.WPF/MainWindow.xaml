@@ -598,24 +598,24 @@
                                      HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
                     <bc:DockableScrollViewer.TopContent>
                         <Border Background="Red" MinHeight="10" 
-                                bc:DockableScrollViewer.IsResizable="True" />
+                                bc:DockableScrollViewer.IsResizable="True" bc:DockableScrollViewer.IsContentVisible="True" />
                     </bc:DockableScrollViewer.TopContent>
                     <bc:DockableScrollViewer.RightContent>
                         <Rectangle Fill="Green" MinWidth="10"
-                                   bc:DockableScrollViewer.IsResizable="True"/>
+                                   bc:DockableScrollViewer.IsResizable="True" bc:DockableScrollViewer.IsContentVisible="True"/>
                     </bc:DockableScrollViewer.RightContent>
                     <bc:DockableScrollViewer.BottomContent>
-                        <Rectangle Fill="Blue" MinHeight="10" />
+                        <Rectangle Fill="Blue" MinHeight="10" bc:DockableScrollViewer.IsContentVisible="True"/>
                     </bc:DockableScrollViewer.BottomContent>
                     <bc:DockableScrollViewer.LeftContent>
-                        <Rectangle Fill="Yellow" MinWidth="10" />
+                        <Rectangle Fill="Yellow" MinWidth="10" bc:DockableScrollViewer.IsContentVisible="True"/>
                     </bc:DockableScrollViewer.LeftContent>
 
                     <bc:DockableScrollViewer.OuterTopContent>
-                        <Border Background="Brown" MinHeight="10"  />
+                        <Border Background="Brown" MinHeight="10" bc:DockableScrollViewer.IsContentVisible="True" />
                     </bc:DockableScrollViewer.OuterTopContent>
                     <bc:DockableScrollViewer.OuterRightContent>
-                        <Rectangle Fill="GreenYellow" MinWidth="10" />
+                        <Rectangle Fill="GreenYellow" MinWidth="10"  />
                     </bc:DockableScrollViewer.OuterRightContent>
                     <bc:DockableScrollViewer.OuterBottomContent>
                         <Rectangle Fill="MidnightBlue" MinHeight="10"
