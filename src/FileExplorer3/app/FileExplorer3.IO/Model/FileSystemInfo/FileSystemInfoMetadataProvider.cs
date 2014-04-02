@@ -8,9 +8,9 @@ using FileExplorer.Models;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoMetadataProvider : IMetadataProvider
+    public class FileSystemInfoMetadataProvider : MetadataProviderBase
     {
-        public IEnumerable<IMetadata> GetMetadata(IEnumerable<IEntryModel> selectedModels,
+        public override IEnumerable<IMetadata> GetMetadata(IEnumerable<IEntryModel> selectedModels,
             int modelCount, IEntryModel parentModel)
         {
             //Items.Add(MetadataViewModel.FromText("", String.Format("{0} items", flvm.Items.Count()), true));

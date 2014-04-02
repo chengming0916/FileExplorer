@@ -36,9 +36,10 @@ namespace FileExplorer.ViewModels
             WindowTitleMask = "{0}";
             //Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents);
-            FileList = new FileListViewModel(_internalEvents);
-            DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
+            Sidebar = new SidebarViewModel(_internalEvents);
+            FileList = new FileListViewModel(_internalEvents, Sidebar);
+            DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
 
 
@@ -229,6 +230,7 @@ namespace FileExplorer.ViewModels
         public IBreadcrumbViewModel Breadcrumb { get; private set; }
         public IDirectoryTreeViewModel DirectoryTree { get; private set; }
         public IFileListViewModel FileList { get; private set; }
+        public ISidebarViewModel Sidebar { get; private set; }
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }

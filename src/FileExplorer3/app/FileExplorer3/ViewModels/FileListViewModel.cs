@@ -64,7 +64,7 @@ namespace FileExplorer.ViewModels
 
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events)
+        public FileListViewModel(IEventAggregator events, ISidebarViewModel sidebar = null)
         {
             Events = events;
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask) { ClearBeforeLoad = false };
@@ -85,7 +85,7 @@ namespace FileExplorer.ViewModels
             if (events != null)
                 events.Subscribe(this);
 
-            Sidebar = new SidebarViewModel(events);
+            Sidebar = sidebar ?? new SidebarViewModel(events);
             Commands = new FileListCommandManager(this, events, Selection, Sidebar.Commands);        
         }
 
