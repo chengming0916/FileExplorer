@@ -27,31 +27,6 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-            <!--<ComboBox x:Name="ViewModes" Grid.Row="1" Grid.Column="1" 
-                      SelectedValue="{Binding SelectedViewMode}" SelectedValuePath="ViewMode" 
-                      VerticalAlignment="Bottom" 
-                  Style="{StaticResource RadioCombo}" >
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <Image Source="{Binding ViewModeIcon.Value}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>-->
-        
-        <!--<ItemsControl DockPanel.Dock="Right" x:Name="ViewModes">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <RadioButton Style="{StaticResource {x:Type ToggleButton}}" GroupName="ViewMode" 
-                                 Content="{Binding}" ></RadioButton>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" IsItemsHost="True" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>    
-        </ItemsControl>-->
-        
         <uc:StatusbarEx x:Name="Items" Grid.RowSpan="2" Grid.Column="0" 
                         IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" >
             <uc:StatusbarEx.Header>

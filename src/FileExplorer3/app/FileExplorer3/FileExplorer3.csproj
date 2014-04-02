@@ -170,6 +170,7 @@
     <Compile Include="ViewModels\FilePickerViewModel.cs" />
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\MetadataHelperViewModel.cs" />
     <Compile Include="ViewModels\NavigationCommandManager.cs" />
     <Compile Include="ViewModels\SidebarCommandManager.cs" />
     <Compile Include="ViewModels\SidebarCommandModelImpls.cs" />

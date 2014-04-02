@@ -16,7 +16,7 @@ namespace FileExplorer.ViewModels
         IDirectoryTreeViewModel DirectoryTree { get; }
         IFileListViewModel FileList { get; }
         IStatusbarViewModel Statusbar { get; }
-        
+        ISidebarViewModel Sidebar { get; }
 
         float UIScale { get; set; }
         IEntryViewModel CurrentDirectory { get; }

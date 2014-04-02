@@ -16,7 +16,7 @@ namespace FileExplorer.ViewModels
     [Export(typeof(StatusbarViewModel))]
 #endif
     public class StatusbarViewModel : PropertyChangedBase, IStatusbarViewModel,
-        IHandle<SelectionChangedEvent>, IHandle<ListCompletedEvent>, IHandle<ViewChangedEvent>
+        IHandle<SelectionChangedEvent>, IHandle<ListCompletedEvent>
     {
         #region Cosntructor
 
@@ -27,10 +27,6 @@ namespace FileExplorer.ViewModels
             _allMetadataItems = new BindableCollection<IMetadataViewModel>();
 
 
-            _viewModes = new BindableCollection<ViewModeViewModel>();
-            _viewModes.Add(new ViewModeViewModel("Icon"));
-            _viewModes.Add(new ViewModeViewModel("SmallIcon"));
-            _viewModes.Add(new ViewModeViewModel("Grid"));
             events.Subscribe(this);
         }
 
@@ -108,11 +104,6 @@ namespace FileExplorer.ViewModels
             }
         }
 
-        public void Handle(ViewChangedEvent message)
-        {
-            if (!(message.Sender.Equals(this)))
-                this.SelectedViewMode = message.ViewMode;
-        }
         #endregion
 
         #region Data
@@ -122,7 +113,6 @@ namespace FileExplorer.ViewModels
         string _caption;
         IObservableCollection<IEntryViewModel> _displayItems;
         IObservableCollection<IMetadataViewModel> _allMetadataItems;
-        IObservableCollection<ViewModeViewModel> _viewModes;
         string _selectedViewMode = "Icon";
         private IEventAggregator _events;
         
@@ -131,18 +121,7 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public string SelectedViewMode
-        {
-            get { return _selectedViewMode; }
-            set
-            {
-                string orgViewMode = _selectedViewMode;
-                _selectedViewMode = value;
-                NotifyOfPropertyChange(() => SelectedViewMode);
-                _events.Publish(new ViewChangedEvent(this, value, orgViewMode));
-            }
-        }
-
+   
         public bool IsExpanded { get { return _isExpanded; } set { if (_isExpanded != value) { _isExpanded = value;
         NotifyOfPropertyChange(() => IsExpanded);
             OnIsExpandedChanged(_isExpanded); } } }
@@ -152,7 +131,6 @@ namespace FileExplorer.ViewModels
         public IObservableCollection<IMetadataViewModel> Items { get { return _allMetadataItems; } }
 
 
-        public IObservableCollection<ViewModeViewModel> ViewModes { get { return _viewModes; } }
         public string Caption { get { return _caption; } set { _caption = value; NotifyOfPropertyChange(() => Caption); } }
 
         #endregion
