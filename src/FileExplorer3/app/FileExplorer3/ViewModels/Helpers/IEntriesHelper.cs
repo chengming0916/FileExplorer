@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         /// <param name="force">Load sub-entries even if it's already loaded.</param>
         /// <returns></returns>
-        Task<IEnumerable<VM>> LoadAsync(bool force = false);
+        Task<IEnumerable<VM>> LoadAsync(bool force = false, object parameter = null);
 
         Task UnloadAsync();
 

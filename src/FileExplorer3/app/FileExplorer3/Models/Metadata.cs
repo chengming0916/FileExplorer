@@ -18,6 +18,9 @@ namespace FileExplorer.Models
             _header = header;
             _content = content;
             _isEditable = isEditable;
+
+            IsVisibleInStatusbar = true;
+            IsVisibleInSidebar = true;
         }
 
         #endregion
@@ -40,6 +43,8 @@ namespace FileExplorer.Models
         public bool IsHeader { get; set; }
         public bool IsEditable { get { return _isEditable; } set { _isEditable = value; NotifyOfPropertyChange(() => IsEditable); } }
         public DisplayType DisplayType { get; set; }
+        public bool IsVisibleInStatusbar { get; set; }
+        public bool IsVisibleInSidebar { get; set; }
         public string HeaderText { get { return _header; } set { _header = value; NotifyOfPropertyChange(() => HeaderText); } }
         public object Content
         {
@@ -55,5 +60,8 @@ namespace FileExplorer.Models
         }
 
         #endregion
+
+
+       
     }
 }

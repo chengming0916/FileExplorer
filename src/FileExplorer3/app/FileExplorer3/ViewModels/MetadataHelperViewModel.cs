@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using FileExplorer.Models;
+using FileExplorer.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,33 +9,38 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IMetadataHelperViewModel
-    {
-        IObservableCollection<IMetadataViewModel> Metadata { get; }
-    }
+    //public interface IMetadataHelperViewModel : 
+    //{
+    //    IObservableCollection<IMetadataViewModel> All { get; }
+    //    Task UpdateMetadaAsync(IFileListViewModel flvm);
+    //}
 
-    public class MetadataHelperViewModel : PropertyChangedBase, IMetadataHelperViewModel
+    public class MetadataHelperViewModel : EntriesHelper<IMetadataViewModel>
     {
         #region Cosntructor
 
-        public MetadataHelperViewModel(IEventAggregator events)
+        public MetadataHelperViewModel(Func<IMetadata, bool> filter = null)
+            : base()
         {
-
-            _allMetadataItems = new BindableCollection<IMetadataViewModel>();
-            events.Subscribe(this);
+            _loadSubEntryFunc = (b,p) => loadEntriesTask(p as IFileListViewModel); 
+            _filter = filter ?? (m => true);
         }
 
         #endregion
 
         #region Methods
 
-        protected async Task updateMetadaAsync(IFileListViewModel flvm)
+        public async Task<IEnumerable<IMetadataViewModel>> loadEntriesTask(IFileListViewModel flvm)
         {
-            Metadata.Clear();
-            Metadata.AddRange((await flvm.CurrentDirectory.Profile.MetadataProvider.GetMetadataAsync(
+            if (flvm == null)
+                return new List<IMetadataViewModel>();
+
+            return (await flvm.CurrentDirectory.Profile.MetadataProvider.GetMetadataAsync(
                     flvm.Selection.SelectedItems.Select(evm => evm.EntryModel),
                     flvm.ProcessedEntries.All.Count,
-                    flvm.CurrentDirectory)).Select(m => MetadataViewModel.FromMetadata(m)));
+                    flvm.CurrentDirectory))
+                    .Where(m => _filter(m))
+                    .Select(m => MetadataViewModel.FromMetadata(m));
         }
 
 
@@ -41,15 +48,13 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        IObservableCollection<IMetadataViewModel> _allMetadataItems;
+        private Func<IMetadata, bool> _filter;
+        //private IFileListViewModel _flvm;
 
 
         #endregion
 
         #region Public Properties
-
-
-        public IObservableCollection<IMetadataViewModel> Metadata { get { return _allMetadataItems; } }
 
         #endregion
 

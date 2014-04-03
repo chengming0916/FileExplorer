@@ -15,6 +15,10 @@ namespace FileExplorer.Models
         /// </summary>
         bool IsHeader { get; }
 
+        bool IsVisibleInStatusbar { get; }
+
+        bool IsVisibleInSidebar { get; }
+
         /// <summary>
         /// Specify how this item to be displayed.
         /// </summary>

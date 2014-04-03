@@ -27,7 +27,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <uc:StatusbarEx x:Name="Items" Grid.RowSpan="2" Grid.Column="0" 
+        <uc:StatusbarEx ItemsSource="{Binding Metadata.All}" Grid.RowSpan="2" Grid.Column="0" 
                         IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" >
             <uc:StatusbarEx.Header>
                 <DockPanel>
