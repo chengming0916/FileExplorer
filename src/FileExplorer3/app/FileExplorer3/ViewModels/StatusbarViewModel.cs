@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels
         {
             _events = events;            
             _displayItems = new BindableCollection<IEntryViewModel>();
-            _metadata = new MetadataHelperViewModel(m => m.IsVisibleInStatusbar);
+            Metadata = new MetadataHelperViewModel(m => m.IsVisibleInStatusbar);
 
             events.Subscribe(this);
         }
@@ -113,7 +113,7 @@ namespace FileExplorer.ViewModels
 
         public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
         public IObservableCollection<IEntryViewModel> DisplayItems { get { return _displayItems; } }
-        public IEntriesHelper<IMetadataViewModel> Metadata { get { return _metadata; } }
+        public IEntriesHelper<IMetadataViewModel> Metadata { get { return _metadata; } private set { _metadata = value; } }
 
 
         public string Caption { get { return _caption; } set { _caption = value; NotifyOfPropertyChange(() => Caption); } }

@@ -9,23 +9,6 @@ using System.Windows.Controls;
 namespace FileExplorer.BaseControls
 {
 
-    //public class object : ContentControl
-    //{
-    //    public object()
-    //    {
-    //        HorizontalContentAlignment = System.Windows.HorizontalAlignment.Stretch;
-    //        VerticalContentAlignment = System.Windows.VerticalAlignment.Stretch;
-    //        //Visibility = false;
-    //    }
-    //    public static readonly DependencyProperty IsResizebleProperty =
-    //     DependencyProperty.Register("IsResizable", typeof(bool), typeof(object), new PropertyMetadata(false));
-    //    public bool IsResizable
-    //    {
-    //        get { return (bool)GetValue(IsResizebleProperty); }
-    //        set { SetValue(IsResizebleProperty, value); }
-    //    }
-    //}
-
     /// <summary>
     /// ScrollViewer that contains Top/Right/Bottom/LeftContent so you can insert fixed content to it.
     /// </summary>
