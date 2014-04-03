@@ -17,12 +17,12 @@ namespace FileExplorer.Models
             //if (SelectionCount > 0)
             //    Items.Add(MetadataViewModel.FromText("", String.Format("{0} items selected", SelectionCount), true));
 
-            yield return new Metadata(DisplayType.Text, "", String.Format("{0} items", modelCount)) { IsHeader = true };
+            yield return new Metadata(DisplayType.Text, "", String.Format("{0} items", modelCount)) { IsHeader = true, IsVisibleInSidebar = false };
 
             if (selectedModels.Count() > 0)
             {
-                yield return new Metadata(DisplayType.Text, "", String.Format("{0} items selected", 
-                    selectedModels.Count())) { IsHeader = true };
+                yield return new Metadata(DisplayType.Text, "", String.Format("{0} items selected",
+                    selectedModels.Count())) { IsHeader = true, IsVisibleInSidebar = false };
 
                 long size = 0;
                 foreach (var m in selectedModels)
@@ -36,7 +36,7 @@ namespace FileExplorer.Models
                 yield return new Metadata(DisplayType.Boolean, "Boolean", true, false);
             }
 
-            
+
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
+using FileExplorer.Defines;
 using FileExplorer.Utils;
+using FileExplorer.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +10,17 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels
 {
-    public class SidebarViewModel : ViewAware, ISidebarViewModel
+    public class SidebarViewModel : ViewAware, ISidebarViewModel,
+        IHandle<SelectionChangedEvent>, IHandle<ListCompletedEvent>
     {
         #region Constructors
 
         public SidebarViewModel(IEventAggregator events)
         {
             Commands = new SidebarCommandManager(this, events);
+            Metadata = new MetadataHelperViewModel(m => m.IsVisibleInSidebar);
+
+            events.Subscribe(this);
         }
 
         #endregion
@@ -28,11 +34,22 @@ namespace FileExplorer.ViewModels
             Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
         }
 
+        public void Handle(ListCompletedEvent message)
+        {
+            Metadata.LoadAsync(true, message.Sender as IFileListViewModel);
+        }
+
+        public void Handle(SelectionChangedEvent message)
+        {
+            Metadata.LoadAsync(true, message.Sender as IFileListViewModel);
+        }
+
         #endregion
 
         #region Data
 
         private bool _isVisible = false;
+        private IEntriesHelper<IMetadataViewModel> _metadata;
 
         #endregion
 
@@ -40,10 +57,13 @@ namespace FileExplorer.ViewModels
 
         public bool IsVisible { get { return _isVisible; } set { _isVisible = value; NotifyOfPropertyChange(() => IsVisible);}}
         public ICommandManager Commands { get; private set; }
+        public IEntriesHelper<IMetadataViewModel> Metadata { get { return _metadata; } private set { _metadata = value; } }
 
         #endregion
 
-       
+
+
+      
     }
       
 }
