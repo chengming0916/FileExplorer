@@ -15,12 +15,18 @@ namespace FileExplorer.ViewModels.Helpers
     {
         #region Constructor
 
-        public EntriesHelper(Func<bool, Task<IEnumerable<VM>>> loadSubEntryFunc)
+        public EntriesHelper(Func<bool, object, Task<IEnumerable<VM>>> loadSubEntryFunc)
         {
             _loadSubEntryFunc = loadSubEntryFunc;
 
             All = new FastObservableCollection<VM>();
             All.Add(default(VM));
+        }
+
+        public EntriesHelper(Func<bool, Task<IEnumerable<VM>>> loadSubEntryFunc)
+            : this((b, __) => loadSubEntryFunc(b))
+        {
+
         }
 
         public EntriesHelper(Func<Task<IEnumerable<VM>>> loadSubEntryFunc)
@@ -41,7 +47,7 @@ namespace FileExplorer.ViewModels.Helpers
         #endregion
 
         #region Methods
-   
+
         public async Task UnloadAsync()
         {
             _lastCancellationToken.Cancel(); //Cancel previous load.                
@@ -53,7 +59,7 @@ namespace FileExplorer.ViewModels.Helpers
             }
         }
 
-        public async Task<IEnumerable<VM>> LoadAsync(bool force = false)
+        public async Task<IEnumerable<VM>> LoadAsync(bool force = false, object parameter = null)
         {
             if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
             {
@@ -65,7 +71,7 @@ namespace FileExplorer.ViewModels.Helpers
                     {
                         if (_clearBeforeLoad)
                             All.Clear();
-                        await _loadSubEntryFunc(_isLoaded).ContinueWith((prevTask, _) =>
+                        await _loadSubEntryFunc(_isLoaded, parameter).ContinueWith((prevTask, _) =>
                             {
                                 if (!prevTask.IsCanceled && !prevTask.IsFaulted)
                                 {
@@ -75,7 +81,7 @@ namespace FileExplorer.ViewModels.Helpers
                                 }
                             }, _lastCancellationToken, TaskScheduler.FromCurrentSynchronizationContext());
                     }
-                }                
+                }
             }
             return _subItemList;
         }
@@ -109,7 +115,7 @@ namespace FileExplorer.ViewModels.Helpers
         private bool _isLoaded = false;
         private bool _isExpanded = false;
         private IEnumerable<VM> _subItemList = new List<VM>();
-        private Func<bool, Task<IEnumerable<VM>>> _loadSubEntryFunc;
+        protected Func<bool, object, Task<IEnumerable<VM>>> _loadSubEntryFunc;
         private ObservableCollection<VM> _subItems;
         private DateTime _lastRefreshTimeUtc = DateTime.MinValue;
 

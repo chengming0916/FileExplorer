@@ -9,6 +9,7 @@ using System.Windows.Data;
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
@@ -24,8 +25,7 @@ namespace FileExplorer.ViewModels
         {
             _events = events;            
             _displayItems = new BindableCollection<IEntryViewModel>();
-            _allMetadataItems = new BindableCollection<IMetadataViewModel>();
-
+            _metadata = new MetadataHelperViewModel(m => m.IsVisibleInStatusbar);
 
             events.Subscribe(this);
         }
@@ -46,25 +46,9 @@ namespace FileExplorer.ViewModels
 
         private void updateDisplayItemsAndCaption(IFileListViewModel flvm)
         {
-           
-            Items.Clear();
             SelectionCount = flvm.Selection.SelectedItems.Count();
 
-            Items.AddRange(flvm.CurrentDirectory.Profile.MetadataProvider.GetMetadata(
-                flvm.Selection.SelectedItems.Select(evm => evm.EntryModel), 
-                flvm.ProcessedEntries.All.Count, 
-                flvm.CurrentDirectory).Select(m => MetadataViewModel.FromMetadata(m)));
-
-            //Items.Add(MetadataViewModel.FromText("", String.Format("{0} items", flvm.Items.Count()), true));
-            //if (SelectionCount > 0)
-            //    Items.Add(MetadataViewModel.FromText("", String.Format("{0} items selected", SelectionCount), true));
-
-            //Items.Add(MetadataViewModel.FromMetadata(new Metadata(DisplayType.Text, "text", "text")));
-            //Items.Add(MetadataViewModel.FromMetadata(new Metadata(DisplayType.Percent, "percent", 50)));
-
-            //MetadataItems.Add(MetadataViewModel.FromTotalItems(flvm.Items.Count()));
-            //MetadataItems.Add(MetadataViewModel.FromMetadata(new Metadata(DisplayType.Percent, "abc", 50)));
-
+            Metadata.LoadAsync(true, flvm);
             DisplayItems.Clear();
             switch (SelectionCount)
             {
@@ -101,6 +85,7 @@ namespace FileExplorer.ViewModels
             if (message.Sender is IFileListViewModel)
             {
                 updateDisplayItemsAndCaption(message.Sender as IFileListViewModel);
+                
             }
         }
 
@@ -112,9 +97,9 @@ namespace FileExplorer.ViewModels
         int _selectionCount;
         string _caption;
         IObservableCollection<IEntryViewModel> _displayItems;
-        IObservableCollection<IMetadataViewModel> _allMetadataItems;
         string _selectedViewMode = "Icon";
         private IEventAggregator _events;
+        private IEntriesHelper<IMetadataViewModel> _metadata;
         
 
         #endregion
@@ -128,7 +113,7 @@ namespace FileExplorer.ViewModels
 
         public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
         public IObservableCollection<IEntryViewModel> DisplayItems { get { return _displayItems; } }
-        public IObservableCollection<IMetadataViewModel> Items { get { return _allMetadataItems; } }
+        public IEntriesHelper<IMetadataViewModel> Metadata { get { return _metadata; } }
 
 
         public string Caption { get { return _caption; } set { _caption = value; NotifyOfPropertyChange(() => Caption); } }
