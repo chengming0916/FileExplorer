@@ -10,32 +10,34 @@ namespace FileExplorer.Models
 {
     public class FileSystemInfoExMetadataProvider : MetadataProviderBase
     {
-        public override IEnumerable<IMetadata> GetMetadata(IEnumerable<IEntryModel> selectedModels,
+        public FileSystemInfoExMetadataProvider()
+            : base(new BasicMetadataProvider())
+        { }
+
+        public override async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels,
             int modelCount, IEntryModel parentModel)
         {
-            //Items.Add(MetadataViewModel.FromText("", String.Format("{0} items", flvm.Items.Count()), true));
-            //if (SelectionCount > 0)
-            //    Items.Add(MetadataViewModel.FromText("", String.Format("{0} items selected", SelectionCount), true));
+            List<IMetadata> retList = new List<IMetadata>();
 
-            yield return new Metadata(DisplayType.Text, "", String.Format("{0} items", modelCount)) { IsHeader = true, IsVisibleInSidebar = false };
+            foreach (var m in await base.GetMetadataAsync(selectedModels, modelCount, parentModel))
+                retList.Add(m);
 
             if (selectedModels.Count() > 0)
             {
-                yield return new Metadata(DisplayType.Text, "", String.Format("{0} items selected",
-                    selectedModels.Count())) { IsHeader = true, IsVisibleInSidebar = false };
-
                 long size = 0;
                 foreach (var m in selectedModels)
                     if (m is FileSystemInfoExModel)
                         size += (m as FileSystemInfoExModel).Size;
                 if (size > 0)
-                    yield return new Metadata(DisplayType.Kb, "Size", size);
+                    retList.Add(new Metadata(DisplayType.Kb, MetadataStrings.strCategoryInfo,
+                        "Size", size));
 
-                yield return new Metadata(DisplayType.Number, "Number", 10000);
-                yield return new Metadata(DisplayType.Percent, "Percent", 10);
-                yield return new Metadata(DisplayType.Boolean, "Boolean", true, false);
+                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000));
+                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10));
+                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false));
             }
 
+            return retList;
 
         }
     }

@@ -12,7 +12,35 @@ namespace FileExplorer.UserControls
 {
     public class DisplayTemplateSelector : DataTemplateSelector
     {
+        //public static Func<DependencyObject, DisplayType> FromStatusbar = ((container) =>
+        //    {
+        //        var parentItem = UITools.FindAncestor<StatusbarItemEx>(container);
+        //        if (parentItem != null)
+        //            return (DisplayType)parentItem.GetValue(StatusbarItemEx.TypeProperty);
+        //        else return DisplayType.Auto;
+        //    });
+
+        public static Func<DependencyObject, DisplayType> FromDisplayContentControl = ((container) =>
+        {
+            var parentItem = UITools.FindAncestor<DisplayContentControl>(container);
+            if (parentItem != null)
+                return (DisplayType)parentItem.GetValue(DisplayContentControl.TypeProperty);
+            else return DisplayType.Auto;
+        });
+
+        private Func<DependencyObject, DisplayType> _displayTypeFunc;
         #region Cosntructor
+
+        public DisplayTemplateSelector(Func<DependencyObject, DisplayType> displayTypeFunc)
+        {
+            _displayTypeFunc = displayTypeFunc ?? FromDisplayContentControl;
+        }
+
+        public DisplayTemplateSelector()
+            : this(null)
+        {
+
+        }
 
         #endregion
 
@@ -20,30 +48,28 @@ namespace FileExplorer.UserControls
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var parentItem = UITools.FindAncestor<StatusbarItemEx>(container);
+            DisplayType type = _displayTypeFunc(container);
             DataTemplate retVal = null;
-            if (parentItem != null)
-            {
-                DisplayType type = (DisplayType)parentItem.GetValue(StatusbarItemEx.TypeProperty);
-                if (type == DisplayType.Auto)
-                {
-                    if (item is string && (item as string).Any(c => c.Equals('.') || c.Equals('\\'))) type = DisplayType.Filename;
-                    else if (item is Int16) type = DisplayType.Percent;
-                    else if (item is Int32 || item is Int64) type = DisplayType.Number;
-                    else if (item is Boolean) type = DisplayType.Boolean;
-                    else type = DisplayType.Text;
-                }
 
-                switch (type)
-                {
-                    case DisplayType.Text: retVal = TextTemplate; break;
-                    case DisplayType.Number: retVal = NumberTemplate; break;
-                    case DisplayType.Percent: retVal = PercentTemplate; break;
-                    case DisplayType.Kb: retVal = KbTemplate; break;
-                    case DisplayType.Filename: retVal = FilenameTemplate; break;
-                    case DisplayType.Boolean: retVal = BooleanTemplate; break;
-                }
+            if (type == DisplayType.Auto)
+            {
+                if (item is string && (item as string).Any(c => c.Equals('.') || c.Equals('\\'))) type = DisplayType.Filename;
+                else if (item is Int16) type = DisplayType.Percent;
+                else if (item is Int32 || item is Int64) type = DisplayType.Number;
+                else if (item is Boolean) type = DisplayType.Boolean;
+                else type = DisplayType.Text;
             }
+
+            switch (type)
+            {
+                case DisplayType.Text: retVal = TextTemplate; break;
+                case DisplayType.Number: retVal = NumberTemplate; break;
+                case DisplayType.Percent: retVal = PercentTemplate; break;
+                case DisplayType.Kb: retVal = KbTemplate; break;
+                case DisplayType.Filename: retVal = FilenameTemplate; break;
+                case DisplayType.Boolean: retVal = BooleanTemplate; break;
+            }
+
             return retVal ?? base.SelectTemplate(item, container);
         }
 

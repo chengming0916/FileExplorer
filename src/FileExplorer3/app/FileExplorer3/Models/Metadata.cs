@@ -12,9 +12,10 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public Metadata(DisplayType displayType, string header, object content, bool isEditable = false)
+        public Metadata(DisplayType displayType, string category, string header, object content, bool isEditable = false)
         {
             DisplayType = displayType;
+            Category = category;
             _header = header;
             _content = content;
             _isEditable = isEditable;
@@ -40,6 +41,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        public string Category { get; set; }
         public bool IsHeader { get; set; }
         public bool IsEditable { get { return _isEditable; } set { _isEditable = value; NotifyOfPropertyChange(() => IsEditable); } }
         public DisplayType DisplayType { get; set; }

@@ -10,6 +10,7 @@ namespace FileExplorer.Models
 {
     public interface IMetadata : INotifyPropertyChanged
     {
+        string Category { get; }
         /// <summary>
         /// Display the metadata in header when expanded.
         /// </summary>
