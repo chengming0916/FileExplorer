@@ -17,10 +17,10 @@ namespace FileExplorer.ViewModels
             return new MetadataViewModel() { MetadataModel = metadata };
         }
 
-        public static MetadataViewModel FromText(string header, string value, bool isHeader = false)
+        public static MetadataViewModel FromText(string header, string category, string value, bool isHeader = false)
         {
             return FromMetadata(
-                new Metadata(Defines.DisplayType.Text, header, value) { IsHeader = isHeader });
+                new Metadata(Defines.DisplayType.Text, category, header, value) { IsHeader = isHeader });
         }
 
         #endregion

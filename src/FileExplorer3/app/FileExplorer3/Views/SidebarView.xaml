@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:uc="clr-namespace:FileExplorer.UserControls"
+             xmlns:bc="clr-namespace:FileExplorer.BaseControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -21,8 +22,8 @@
                     <WrapPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding MetadataModel.HeaderText}" />
                         <TextBlock x:Name="ColonTextBlock" Text=":" Padding="5,0"  />
-                         <!--See DisplayTemplates--> 
-                        <ContentPresenter Content="{Binding MetadataModel.Content}" 
+                         <!--See DisplayTemplates-->
+                        <bc:DisplayContentControl Content="{Binding MetadataModel.Content}" Type="{Binding MetadataModel.DisplayType}" 
                                           ContentTemplateSelector="{StaticResource dts}" />
                     </WrapPanel>
                 </DataTemplate>

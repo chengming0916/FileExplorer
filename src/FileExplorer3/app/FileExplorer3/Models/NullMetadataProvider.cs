@@ -9,17 +9,23 @@ namespace FileExplorer.Models
 {
     public abstract class MetadataProviderBase : IMetadataProvider
     {
+        private IMetadataProvider[] _additionalProvider;
 
-        public virtual IEnumerable<IMetadata> GetMetadata(IEnumerable<IEntryModel> selectedModels, int modelCount,
-            IEntryModel parentModel)
+        public MetadataProviderBase(params IMetadataProvider[] additionalProvider)
         {
-            return AsyncUtils.RunSync(() => GetMetadataAsync(selectedModels, modelCount, parentModel));
+            _additionalProvider = additionalProvider;
         }
+
+        
 
 
         public async virtual Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels, int modelCount, IEntryModel parentModel)
         {
-            return GetMetadata(selectedModels, modelCount, parentModel);
+            List<IMetadata> retList = new List<IMetadata>();
+            foreach (var p in _additionalProvider)
+                retList.AddRange(await p.GetMetadataAsync(selectedModels, modelCount, parentModel));
+
+            return retList;
         }
     }
 
@@ -27,10 +33,10 @@ namespace FileExplorer.Models
     public class NullMetadataProvider : MetadataProviderBase
     {
 
-        public override IEnumerable<IMetadata> GetMetadata(IEnumerable<IEntryModel> selectedModels, int modelCount, 
+        public override async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels, int modelCount, 
             IEntryModel parentModel)
         {
-            yield break;
+            return new List<IMetadata>();
         }
     }
 }
