@@ -28,7 +28,7 @@ namespace FileExplorer.Models
             SuggestSource = new ProfileSuggestionSource(this);
 
             HierarchyComparer = PathComparer.LocalDefault;
-            MetadataProvider = new NullMetadataProvider();
+            MetadataProvider = new BasicMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = NullDiskPatheMapper.Instance;
 
@@ -77,15 +77,4 @@ namespace FileExplorer.Models
 
     }
 
-    public abstract class DiskProfileBase : ProfileBase, IDiskProfile
-    {
-
-        public DiskProfileBase(IEventAggregator events)
-            : base(events)
-        {
-
-        }
-
-        public IDiskIOHelper DiskIO { get; protected set; }
-    }
 }

@@ -32,6 +32,8 @@ namespace FileExplorer.Models
                         (profile as FileSystemInfoProfile).createDirectoryInfo(parentPath));
                 };
             this.Description = fsi.GetType().ToString();
+            this.CreationTimeUtc = fsi.CreationTimeUtc;
+            this.LastUpdateTimeUtc = fsi.LastWriteTimeUtc;
         }
 
         #endregion

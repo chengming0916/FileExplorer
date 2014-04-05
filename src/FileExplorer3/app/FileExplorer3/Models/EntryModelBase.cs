@@ -21,7 +21,8 @@ namespace FileExplorer.Models
             Profile = profile;
             _isRenamable = false;
             _parentFunc = () => AsyncUtils.RunSync(() => Profile.ParseAsync(Profile.Path.GetDirectoryName(FullPath)));
-
+            CreationTimeUtc = DateTime.MinValue;
+            LastUpdateTimeUtc = DateTime.MinValue;
         }
 
 
@@ -67,6 +68,9 @@ namespace FileExplorer.Models
         public bool IsRenamable { get { return _isRenamable; } set { _isRenamable = value; NotifyOfPropertyChange(() => IsRenamable); } }
         public string Description { get; protected set; }
         public string FullPath { get; protected set; }
+
+        public DateTime CreationTimeUtc { get; protected set; }
+        public DateTime LastUpdateTimeUtc { get; protected set; }
 
         #endregion
 

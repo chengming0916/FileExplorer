@@ -8,11 +8,8 @@ using System.Windows;
 namespace QuickZip.Converters
 {
     [ValueConversion(typeof(DateTime), typeof(string))]
-    public class FormatTimeConverter : IValueConverter
+    public class FormatDateTimeConverter : IValueConverter
     {
-        public static FormatTimeConverter Instance = new FormatTimeConverter();
-
-
         #region IValueConverter Members
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -22,7 +19,7 @@ namespace QuickZip.Converters
                 if (time.Equals(DateTime.MinValue))
                     return "";
                 else
-                    return time.ToShortDateString() + " " + time.ToShortTimeString(); ;
+                    return time.ToString(Mask);
             }
             catch { return ""; }
         }
@@ -31,6 +28,9 @@ namespace QuickZip.Converters
         {
             throw new NotImplementedException();
         }
+
+        private string _mask = "yyyy/MM/dd HH:mm:ss";
+        public string Mask { get { return _mask; } set { _mask = value; } }
 
         #endregion
     }

@@ -11,23 +11,35 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DisplayTemplates.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Expander.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid >
-   
-        <ListBox ItemsSource="{Binding Metadata.All}" BorderThickness="0" >
-            <ListBox.ItemTemplate>
+
+        <ListView ItemsSource="{Binding Metadata.All}" BorderThickness="0" 
+                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding MetadataModel.HeaderText}" />
                         <TextBlock x:Name="ColonTextBlock" Text=":" Padding="5,0"  />
-                         <!--See DisplayTemplates-->
+                        <!--See DisplayTemplates-->
                         <bc:DisplayContentControl Content="{Binding MetadataModel.Content}" Type="{Binding MetadataModel.DisplayType}" 
                                           ContentTemplateSelector="{StaticResource dts}" />
                     </WrapPanel>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ListView.ItemTemplate>
+            <ListView.GroupStyle>
+                <GroupStyle ContainerStyle="{StaticResource SimpleGroupItemTemplate}" />
+            </ListView.GroupStyle>
+
+        </ListView>
     </Grid>
+
 </UserControl>

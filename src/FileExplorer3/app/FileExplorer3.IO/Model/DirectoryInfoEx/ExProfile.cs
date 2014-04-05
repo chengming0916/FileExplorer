@@ -116,7 +116,7 @@ namespace FileExplorer.Models
             ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/DirectoryInfoEx/My_Computer.png");
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer();
-            MetadataProvider = new FileSystemInfoMetadataProvider();
+            MetadataProvider = new ExMetadataProvider();
             CommandProviders = new List<ICommandProvider>()
             {
                 new ExCommandProvider(this)

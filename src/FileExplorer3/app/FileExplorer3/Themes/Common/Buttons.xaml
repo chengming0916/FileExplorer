@@ -49,20 +49,31 @@
                 Padding="2,0" Background="Transparent" 
                 BorderBrush="Transparent" BorderThickness="1"
 				MinHeight="20" MinWidth ="12" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-            <Path x:Name="path"  Stroke="Black" StrokeThickness="1.2"
-                    Data="{StaticResource ExpanderArrow}"
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <Path x:Name="path"  Stroke="Black" Fill="Black"
+                    Data="{StaticResource NormalArrow}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center" 
                     Margin="{TemplateBinding Padding}" IsHitTestVisible="True" />
+                <ContentPresenter x:Name="HeaderContent"
+                          Grid.Column="1"
+                          Margin="4,0,0,0"
+                          ContentSource="Content"/>
+            </Grid>
         </Border>
-        <!--<ControlTemplate.Triggers>
+        <ControlTemplate.Triggers>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Data" TargetName="path" Value="{StaticResource ExpandedArrow}"/>
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Data" TargetName="path" Value="{StaticResource ExpandedArrow}"/>
             </Trigger>
-        </ControlTemplate.Triggers>-->
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate x:Key="ExpandCollapseToggleButton" TargetType="{x:Type ToggleButton}" >

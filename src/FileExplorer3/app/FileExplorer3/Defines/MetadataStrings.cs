@@ -13,5 +13,9 @@ namespace FileExplorer.Defines
 
         public static string strTotalItems = "{0} items";
         public static string strSelectedItems = "{0} items selected";
+        public static string strSize = "Size";
+        public static string strCreationTime = "Created";
+        public static string strLastUpdateTime = "Modified";
+        
     }
 }

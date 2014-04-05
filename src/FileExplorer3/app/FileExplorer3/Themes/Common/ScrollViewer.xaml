@@ -51,26 +51,26 @@
 
     <Style TargetType="{x:Type bc:DockableScrollViewer}">
         <Setter Property="Focusable" Value="false"/>
-        
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type bc:DockableScrollViewer}">
                     <DockPanel>
                         <ContentPresenter x:Name="OuterTopContent" DockPanel.Dock="Top" 
                                                   Content="{TemplateBinding OuterTopContent}" Visibility="Visible" />
-                        <bc:DockPanelSplitter x:Name="OuterTopSplitter" DockPanel.Dock="Top" Visibility="Collapsed" Thickness="1" />
+                        <bc:DockPanelSplitter x:Name="OuterTopSplitter" DockPanel.Dock="Top" Visibility="Collapsed" />
 
                         <ContentPresenter x:Name="OuterRightContent" DockPanel.Dock="Right" 
                                                   Content="{TemplateBinding OuterRightContent}" Visibility="Visible" />
-                        <bc:DockPanelSplitter x:Name="OuterRightSplitter" DockPanel.Dock="Right" Visibility="Collapsed" Thickness="1" />
+                        <bc:DockPanelSplitter x:Name="OuterRightSplitter" DockPanel.Dock="Right" Visibility="Collapsed" />
 
                         <ContentPresenter x:Name="OuterBottomContent" DockPanel.Dock="Bottom" 
                                                   Content="{TemplateBinding OuterBottomContent}" Visibility="Visible" />
-                        <bc:DockPanelSplitter x:Name="OuterBottomSplitter" DockPanel.Dock="Bottom" Visibility="Collapsed" Thickness="1" />
+                        <bc:DockPanelSplitter x:Name="OuterBottomSplitter" DockPanel.Dock="Bottom" Visibility="Collapsed" />
 
                         <ContentPresenter x:Name="OuterLeftContent" DockPanel.Dock="Left" 
                                                   Content="{TemplateBinding OuterLeftContent}" Visibility="Visible" />
-                        <bc:DockPanelSplitter x:Name="OuterLeftSplitter" DockPanel.Dock="Left" Visibility="Collapsed" Thickness="1" />
+                        <bc:DockPanelSplitter x:Name="OuterLeftSplitter" DockPanel.Dock="Left" Visibility="Collapsed" />
 
 
                         <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
@@ -83,23 +83,23 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            
+
                             <DockPanel Margin="{TemplateBinding Padding}">
                                 <ContentPresenter x:Name="TopContent" DockPanel.Dock="Top" 
                                                   Content="{TemplateBinding TopContent}" Visibility="Visible" />
-                                <bc:DockPanelSplitter x:Name="TopSplitter" DockPanel.Dock="Top" Visibility="Collapsed" Thickness="1" />
+                                <bc:DockPanelSplitter x:Name="TopSplitter" DockPanel.Dock="Top" Visibility="Collapsed" />
 
                                 <ContentPresenter x:Name="RightContent" DockPanel.Dock="Right" 
                                                   Content="{TemplateBinding RightContent}" Visibility="Visible" />
-                                <bc:DockPanelSplitter x:Name="RightSplitter" DockPanel.Dock="Right" Visibility="Collapsed" Thickness="1" />
+                                <bc:DockPanelSplitter x:Name="RightSplitter" DockPanel.Dock="Right" Visibility="Collapsed"  />
 
                                 <ContentPresenter x:Name="BottomContent" DockPanel.Dock="Bottom" 
                                                   Content="{TemplateBinding BottomContent}" Visibility="Visible" />
-                                <bc:DockPanelSplitter x:Name="BottomSplitter" DockPanel.Dock="Bottom" Visibility="Collapsed" Thickness="1" />
+                                <bc:DockPanelSplitter x:Name="BottomSplitter" DockPanel.Dock="Bottom" Visibility="Collapsed" />
 
                                 <ContentPresenter x:Name="LeftContent" DockPanel.Dock="Left" 
                                                   Content="{TemplateBinding LeftContent}" Visibility="Visible" />
-                                <bc:DockPanelSplitter x:Name="LeftSplitter" DockPanel.Dock="Left" Visibility="Collapsed" Thickness="1" />
+                                <bc:DockPanelSplitter x:Name="LeftSplitter" DockPanel.Dock="Left" Visibility="Collapsed" />
 
                                 <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" 
                                                     ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" KeyboardNavigation.DirectionalNavigation="Local" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>

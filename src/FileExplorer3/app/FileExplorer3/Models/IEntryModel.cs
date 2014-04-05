@@ -18,5 +18,8 @@ namespace FileExplorer.Models
         string Description { get; }
         string FullPath { get; }
         bool IsRenamable { get; }
+
+        DateTime CreationTimeUtc { get; }
+        DateTime LastUpdateTimeUtc { get; }
     }
 }
