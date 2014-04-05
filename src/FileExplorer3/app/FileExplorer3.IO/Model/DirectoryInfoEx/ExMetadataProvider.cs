@@ -8,10 +8,10 @@ using FileExplorer.Models;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoExMetadataProvider : MetadataProviderBase
+    public class ExMetadataProvider : MetadataProviderBase
     {
-        public FileSystemInfoExMetadataProvider()
-            : base(new BasicMetadataProvider())
+        public ExMetadataProvider()
+            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider())
         { }
 
         public override async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels,
@@ -22,19 +22,11 @@ namespace FileExplorer.Models
             foreach (var m in await base.GetMetadataAsync(selectedModels, modelCount, parentModel))
                 retList.Add(m);
 
-            if (selectedModels.Count() > 0)
+            if (selectedModels.Count() == 0)
             {
-                long size = 0;
-                foreach (var m in selectedModels)
-                    if (m is FileSystemInfoExModel)
-                        size += (m as FileSystemInfoExModel).Size;
-                if (size > 0)
-                    retList.Add(new Metadata(DisplayType.Kb, MetadataStrings.strCategoryInfo,
-                        "Size", size));
-
-                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000));
-                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10));
-                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false));
+                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000) { IsVisibleInStatusbar = false });
+                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10) { IsVisibleInStatusbar = false });
+                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false) { IsVisibleInStatusbar = false });
             }
 
             return retList;

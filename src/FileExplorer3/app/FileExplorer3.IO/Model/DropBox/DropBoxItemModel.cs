@@ -21,6 +21,7 @@ namespace FileExplorer.Models
             this.IsDirectory = true;
             this.RemotePath = "/";
 
+
         }
 
         /// <summary>
@@ -64,6 +65,8 @@ namespace FileExplorer.Models
                     this.Size = size;
             }
 
+            //this.CreationTimeUtc = DateTime.MinValue;
+            this.LastUpdateTimeUtc = metadata.UTCDateModified;
 
         }
 

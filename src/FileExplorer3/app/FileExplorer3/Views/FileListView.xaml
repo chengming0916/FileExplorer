@@ -100,10 +100,10 @@
             <uc:ListViewEx.RightContent>
                 <ContentControl Name="Sidebar" 
                                 cal:Bind.Model="{Binding}"
-                                MinWidth="150" Background="Blue"
                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                 bc:DockableScrollViewer.IsResizable="True"
+                                bc:DockableScrollViewer.ContentSize="150.0"
                                 bc:DockableScrollViewer.IsContentVisible="{Binding Sidebar.IsVisible}" />
             </uc:ListViewEx.RightContent>
             <!--<uc:FileList.GroupStyle>

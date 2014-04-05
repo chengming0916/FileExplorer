@@ -128,6 +128,7 @@
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
+    <Compile Include="Model\DiskProfileBase.cs" />
     <Compile Include="Model\DropBox\DropBoxDiskIOHelper.cs" />
     <Compile Include="Model\DropBox\EntryModelExtractorImpl.cs" />
     <Compile Include="Model\DropBox\DropBoxLogin.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Model\GoogleDrive\GoogleDriveFileStream.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMimeTypeManager.cs" />
     <Compile Include="Model\HardDriveDiskIOHelper.cs" />
+    <Compile Include="Model\FileBasedMetadataProvider.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveLogin.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveDiskIOHelper.cs" />
     <Compile Include="Model\FileBasedDiskPathMapper.cs" />

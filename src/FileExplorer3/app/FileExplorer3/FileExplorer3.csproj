@@ -87,6 +87,7 @@
     <None Include="BaseControls\LoginControl.cs" />
     <Compile Include="BaseControls\DisplayContentControl.cs" />
     <Compile Include="BaseControls\DockableScrollViewer.cs" />
+    <Compile Include="Defines\Converters\TimeElapsedConverter.cs" />
     <Compile Include="Defines\MetadataStrings.cs" />
     <Compile Include="Models\BasicMetadataProvider.cs" />
     <Compile Include="Themes\ThirdParty\DockPanelSplitter.cs" />
@@ -257,7 +258,7 @@
     <Compile Include="Defines\Converters\FlipBoolToVisibilityCollapsed.cs" />
     <Compile Include="Defines\Converters\FormatDouble.cs" />
     <Compile Include="Defines\Converters\FormatFileSize.cs" />
-    <Compile Include="Defines\Converters\FormatTime.cs" />
+    <Compile Include="Defines\Converters\FormatDateTime.cs" />
     <Compile Include="Defines\Converters\IntAdd.cs" />
     <Compile Include="Defines\Converters\IntSubstract.cs" />
     <Compile Include="Defines\Converters\InvertSignConverter.cs" />
@@ -437,6 +438,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Page Include="Themes\Common\Expander.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\ThirdParty\DockPanelSplitter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

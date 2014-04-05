@@ -78,7 +78,7 @@ namespace FileExplorer.Models
             Path = PathHelper.Web;
             DiskIO = new GoogleDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
-            MetadataProvider = new NullMetadataProvider();
+            //MetadataProvider = new NullMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             DragDrop = new FileBasedDragDropHandler(this, windowManager);

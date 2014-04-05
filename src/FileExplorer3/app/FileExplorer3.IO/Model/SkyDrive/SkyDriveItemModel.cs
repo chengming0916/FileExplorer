@@ -33,12 +33,17 @@ namespace FileExplorer.Models
             init(profile, path);
             UniqueId = d.id;
             this.IsDirectory = d.type == "folder" || d.type == "album";
-            
+            if (!IsDirectory)
+                this.Size = d.size;
+            this.CreationTimeUtc = d.created_time != null ? DateTime.Parse(d.created_time) : this.CreationTimeUtc;
+            this.LastUpdateTimeUtc = d.updated_tie != null ? DateTime.Parse(d.updated_time) : this.LastUpdateTimeUtc;
+
             this._isRenamable = true;
             this.Type = d.type; //photo, album or folder
             this.Description = d.description;
             this.ImageUrl = d.picture;
             this.SourceUrl = d.source;
+
         }
         /// <summary>
         /// Generate a temporary model for uploading.

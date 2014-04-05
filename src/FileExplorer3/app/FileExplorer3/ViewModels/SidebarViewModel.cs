@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace FileExplorer.ViewModels
 {
@@ -20,6 +21,8 @@ namespace FileExplorer.ViewModels
             Commands = new SidebarCommandManager(this, events);
             Metadata = new MetadataHelperViewModel(m => m.IsVisibleInSidebar);
 
+        
+
             events.Subscribe(this);
         }
 
@@ -32,6 +35,9 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
+
+            CollectionView collectionView = (CollectionView)CollectionViewSource.GetDefaultView(Metadata.All);
+            collectionView.GroupDescriptions.Add(new PropertyGroupDescription("MetadataModel.Category"));
         }
 
         public void Handle(ListCompletedEvent message)

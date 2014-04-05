@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
-    public abstract class MetadataProviderBase : IMetadataProvider
+    public class MetadataProviderBase : IMetadataProvider
     {
         private IMetadataProvider[] _additionalProvider;
 

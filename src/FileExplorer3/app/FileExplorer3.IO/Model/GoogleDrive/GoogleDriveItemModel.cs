@@ -52,7 +52,7 @@ namespace FileExplorer.Models
             this.ImageUrl = f.ThumbnailLink;
             this.SourceUrl = f.DownloadUrl;
             this.SourceExportUrls = f.ExportLinks;
-
+            
             this.Type = profile.MimeTypeManager.GetExportableMimeTypes(f.MimeType).FirstOrDefault();
             if (!this.IsDirectory && String.IsNullOrEmpty(Profile.Path.GetExtension(this.Name)))
             {
@@ -73,6 +73,11 @@ namespace FileExplorer.Models
                     }
                 }
             }
+
+            
+            this.Size = f.FileSize.HasValue ? f.FileSize.Value : this.Size;
+            this.CreationTimeUtc = f.CreatedDate.HasValue ? f.CreatedDate.Value.ToUniversalTime() : this.CreationTimeUtc;
+            this.LastUpdateTimeUtc = f.LastViewedByMeDate.HasValue ? f.LastViewedByMeDate.Value.ToUniversalTime() : this.LastUpdateTimeUtc;
 
             if (!this.IsDirectory && System.IO.Path.GetExtension(this.Name) == "" && this.Type != null)
             {
@@ -127,11 +132,11 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
-        public string Description { get; private set; }
+        //public string Description { get; private set; }
         public string UniqueId { get; private set; }
         public string Type { get; private set; }
         public string ImageUrl { get; protected set; }
-        public long Size { get; protected set; }
+        //public long Size { get; protected set; }
 
         public Google.Apis.Drive.v2.Data.File Metadata { get; protected set; }
 
