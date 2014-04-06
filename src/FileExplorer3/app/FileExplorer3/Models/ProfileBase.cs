@@ -51,6 +51,11 @@ namespace FileExplorer.Models
             yield return GetDefaultIcon.Instance;
         }
 
+        public virtual IEntryModelIconExtractor GetThumbnailExtractor(IEntryModel entry)
+        {
+            return null;
+        }
+
         public abstract Task<IEntryModel> ParseAsync(string path);
         public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false);
 
@@ -75,6 +80,9 @@ namespace FileExplorer.Models
 
         #endregion
 
+
+
+        
     }
 
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Models
@@ -20,12 +21,28 @@ namespace FileExplorer.Models
             retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strCategoryInfo,
                 "", String.Format(MetadataStrings.strTotalItems, modelCount)) { IsHeader = true, IsVisibleInSidebar = false });
 
+
             if (selectedModels.Count() > 0)
-            {
                 retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strCategoryInfo,
-                    "", String.Format(MetadataStrings.strSelectedItems,
-                    selectedModels.Count())) { IsHeader = true, IsVisibleInSidebar = false });
+                   "", String.Format(MetadataStrings.strSelectedItems,
+                   selectedModels.Count())) { IsHeader = true, IsVisibleInSidebar = false });
+
+            switch (selectedModels.Count())
+            {
+                case 1:
+                    var firstEntry = selectedModels.First();
+                    var thumbnailExtractor = firstEntry.Profile.GetThumbnailExtractor(firstEntry);
+                    if (thumbnailExtractor != null)
+                    {
+                        var iconRetVal = await thumbnailExtractor.GetIconForModelAsync(firstEntry, 
+                            CancellationToken.None);
+                        if (iconRetVal != null)
+                            retList.Add(new Metadata(DisplayType.Image, "", "Thumbnail", iconRetVal) 
+                            { IsVisibleInStatusbar = false });
+                    }
+                    break;
             }
+
 
             return retList;
         }

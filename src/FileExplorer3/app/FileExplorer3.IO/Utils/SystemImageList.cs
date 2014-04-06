@@ -854,15 +854,16 @@ namespace QuickZip.Converters
 
             IntPtr hIcon = IntPtr.Zero;
 
-            if (_iImageList == null || Thread.CurrentThread.GetApartmentState() == ApartmentState.MTA)
-            {
+            //if (_iImageList == null || Thread.CurrentThread.GetApartmentState() == ApartmentState.MTA)
+            //{
                 hIcon = ImageList_GetIcon(_ptrImageList, index,
                     (int)(ImageListDrawItemConstants.ILD_TRANSPARENT | ImageListDrawItemConstants.ILD_SCALE));
-            }
-            else
-            {
-                _iImageList.GetIcon(index, (int)ImageListDrawItemConstants.ILD_TRANSPARENT, ref hIcon);
-            }
+            //}
+            //else
+            //{
+            //InvalidCastException if run through this.
+            //    _iImageList.GetIcon(index, (int)ImageListDrawItemConstants.ILD_TRANSPARENT, ref hIcon);
+            //}
 
             if (hIcon != IntPtr.Zero)
             {

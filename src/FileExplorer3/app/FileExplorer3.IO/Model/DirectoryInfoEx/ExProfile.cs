@@ -197,8 +197,6 @@ namespace FileExplorer.Models
                     yield return GetImageFromImageExtractor.Instance;
         }
 
-
-
         #endregion
 
         #region Data
