@@ -9,6 +9,15 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
     </ResourceDictionary.MergedDictionaries>
+    
+    <ControlTemplate x:Key="InactiveListViewItem" TargetType="ListViewItem">
+        <Grid>
+            <Rectangle x:Name="ContentBackground" Fill="Transparent" Opacity="0.5"/>
+            <ContentPresenter  Margin="2"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Grid>
+    </ControlTemplate>
+
 
 
     <ControlTemplate x:Key="lbControlTemplate" TargetType="uc:ListViewItemEx">

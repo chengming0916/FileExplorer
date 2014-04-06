@@ -95,7 +95,7 @@ namespace FileExplorer.Models
             //Then DiskIO raise NotifyChange, and refresh the ExplorerViewModel.
         }
 
-        protected IDiskProfile DiskProfile { get; set; }
+        public IDiskProfile DiskProfile { get; private set; }
         public long Size { get; protected set; }
 
     }

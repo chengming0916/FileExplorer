@@ -16,7 +16,7 @@ namespace FileExplorer.Defines
     public enum TransferMode { Copy, Move, Rename, Link }
 
     //ToAdd a template, you have to update DisplayTemplateSelector.cs
-    public enum DisplayType { Auto, Text, Number, DateTime, TimeElapsed, Kb, Percent, Filename, Boolean }
+    public enum DisplayType { Auto, Text, Number, DateTime, TimeElapsed, Kb, Percent, Filename, Boolean, Image }
 
     public enum ChangeType { Changed, Created, Deleted, Moved }
 

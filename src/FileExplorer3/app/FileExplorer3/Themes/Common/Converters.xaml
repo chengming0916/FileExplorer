@@ -17,6 +17,7 @@
     <conv:BorderClipConverter  x:Key="bc" />
     <conv:FormatDateTimeConverter x:Key="ft" Mask="yyyy/MM/dd HH:mm:ss" />
     <conv:TimeElapsedConverter x:Key="te" />
+    <conv:UriToImageSourceConverter x:Key="uti" />
     <!--
     
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />

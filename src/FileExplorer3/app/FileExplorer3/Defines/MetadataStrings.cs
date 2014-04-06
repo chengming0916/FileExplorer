@@ -16,6 +16,9 @@ namespace FileExplorer.Defines
         public static string strSize = "Size";
         public static string strCreationTime = "Created";
         public static string strLastUpdateTime = "Modified";
+
+        public static string strImage = "Image";
+        public static string strThumbnail = "Thumbnail";
         
     }
 }

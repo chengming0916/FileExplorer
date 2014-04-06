@@ -47,7 +47,7 @@ namespace FileExplorer.Models
         /// <returns></returns>
         IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry);
 
-        
+        IEntryModelIconExtractor GetThumbnailExtractor(IEntryModel entry);
 
         #endregion
 

@@ -26,16 +26,19 @@
         <TextBlock Text="{Binding Converter={StaticResource te}}" />
     </DataTemplate>
     <DataTemplate x:Key="TextTemplate">
-        <TextBlock Text="{TemplateBinding Content}" Foreground="BlueViolet" />
+        <TextBlock Text="{TemplateBinding Content}" />
     </DataTemplate>
     <DataTemplate x:Key="KbTemplate">
         <TextBlock Text="{Binding Converter={StaticResource ffs}}" />
     </DataTemplate>
     <DataTemplate x:Key="FilenameTemplate">
-        <TextBlock Text="{TemplateBinding Content}" Foreground="BlueViolet" />
+        <TextBlock Text="{TemplateBinding Content}"  />
     </DataTemplate>
     <DataTemplate x:Key="BooleanTemplate">
         <CheckBox IsChecked="{TemplateBinding Content}" />        
+    </DataTemplate>
+    <DataTemplate x:Key="ImageTemplate">
+        <Image Source="{Binding Converter={StaticResource uti}}" />
     </DataTemplate>
 
     <uc:DisplayTemplateSelector x:Key="dts"                                          
@@ -47,6 +50,7 @@
               PercentTemplate="{StaticResource PercentTemplate}"
               FilenameTemplate="{StaticResource FilenameTemplate}"
               BooleanTemplate="{StaticResource BooleanTemplate}"
+              ImageTemplate="{StaticResource ImageTemplate}"    
               >
     </uc:DisplayTemplateSelector>
 

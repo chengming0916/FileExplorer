@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Models
@@ -41,7 +42,7 @@ namespace FileExplorer.Models
                 if (size > 0)
                     retList.Add(new Metadata(DisplayType.Kb, MetadataStrings.strCategoryInfo,
                         MetadataStrings.strSize, size) { IsVisibleInStatusbar = false });
-                retList.Add(new Metadata(DisplayType.Image, "", "Thumbnail", "http://rs.sinahk.net/ne/i/120517/sinalogo.gif"));
+
 
             }
 

@@ -12,6 +12,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DisplayTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Expander.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -21,7 +22,7 @@
                        ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
-                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Template" Value="{StaticResource InactiveListViewItem}"/>
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListView.ItemTemplate>

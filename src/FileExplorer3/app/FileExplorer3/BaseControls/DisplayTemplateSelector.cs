@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FileExplorer.BaseControls;
 using FileExplorer.Defines;
+using System.Windows.Media;
 
 namespace FileExplorer.UserControls
 {
@@ -57,6 +58,7 @@ namespace FileExplorer.UserControls
                 else if (item is Int16) type = DisplayType.Percent;
                 else if (item is Int32 || item is Int64) type = DisplayType.Number;
                 else if (item is Boolean) type = DisplayType.Boolean;
+                else if (item is ImageSource) type = DisplayType.Image;
                 else type = DisplayType.Text;
             }
 
@@ -70,6 +72,7 @@ namespace FileExplorer.UserControls
                 case DisplayType.Kb: retVal = KbTemplate; break;
                 case DisplayType.Filename: retVal = FilenameTemplate; break;
                 case DisplayType.Boolean: retVal = BooleanTemplate; break;
+                case DisplayType.Image: retVal = ImageTemplate; break;
             }
 
             return retVal ?? base.SelectTemplate(item, container);
@@ -91,6 +94,7 @@ namespace FileExplorer.UserControls
         public DataTemplate PercentTemplate { get; set; }
         public DataTemplate FilenameTemplate { get; set; }
         public DataTemplate BooleanTemplate { get; set; }
+        public DataTemplate ImageTemplate { get; set; }
 
         #endregion
     }
