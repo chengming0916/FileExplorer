@@ -21,7 +21,7 @@ namespace QuickZip.Converters
             var elapsed = DateTime.UtcNow.Subtract(time);
             string retVal = null;
             if (elapsed.TotalDays > 365)
-                retVal = string.Format("{0:0} year {1:0} days", elapsed.TotalDays / 365, 
+                retVal = string.Format("{0:0} years {1:0} days", elapsed.TotalDays / 365, 
                     elapsed.TotalDays % 365 );
             else
                 if (elapsed.TotalDays > 0)

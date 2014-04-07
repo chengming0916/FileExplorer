@@ -43,7 +43,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Expander IsExpanded="False" 
+                    <Expander IsExpanded="True" 
                                                   x:Name="expander"
                                                   Template="{StaticResource SimpleExpander}">
                         <Expander.Header>

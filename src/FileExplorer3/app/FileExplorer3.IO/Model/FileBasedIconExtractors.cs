@@ -14,6 +14,7 @@ using QuickZip.UserControls.Logic.Tools.IconExtractor;
 using ExifLib;
 using System.Windows.Media.Imaging;
 using Cofe.Core.Utils;
+using FileExplorer.Defines;
 
 namespace FileExplorer.Models
 {
@@ -111,18 +112,10 @@ namespace FileExplorer.Models
 
     public class GetExifThumbnail : IEntryModelIconExtractor
     {
-        public static string ExifExtensions = ".jpeg,.jpg";
-        public static bool IsExifSupported(IEntryModel model)
-        {
-            string extension = model.Profile.Path.GetExtension(model.Name);
-            return !model.IsDirectory && ExifExtensions.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Contains(extension, StringComparer.CurrentCultureIgnoreCase);
-        }
-
         public async Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
         {
             var diskModel = model as DiskEntryModelBase;
-            if (diskModel != null && IsExifSupported(model))
+            if (diskModel != null && diskModel.IsFileWithExtension(FileExtensions.ExifExtensions))
             {
                 using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, FileAccess.Read, ct))
                 {

@@ -8,7 +8,7 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.Models
 {
-    public class Metadata : PropertyChangedBase, IMetadata
+    public class Metadata : PropertyChangedBase, IMetadata, IEquatable<Metadata>
     {
         #region Cosntructor
 
@@ -20,13 +20,36 @@ namespace FileExplorer.Models
             _content = content;
             _isEditable = isEditable;
 
-            IsVisibleInStatusbar = true;
-            IsVisibleInSidebar = true;
+            IsVisibleInStatusbar = false;
+            IsVisibleInSidebar = false;
         }
 
         #endregion
 
         #region Methods
+
+        public override string ToString()
+        {
+            return String.Format("Metadata {0}-{1}={2}", Category, HeaderText, Content);
+        }
+
+        public bool Equals(Metadata other)
+        {
+            return other.GetHashCode() == GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            if (String.IsNullOrEmpty(HeaderText))
+                return Content.GetHashCode() + Category.GetHashCode();
+            return HeaderText.GetHashCode() + Category.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Metadata && Equals(obj as Metadata);
+        }
+
 
         #endregion
 
@@ -64,6 +87,7 @@ namespace FileExplorer.Models
         #endregion
 
 
-       
+
+
     }
 }

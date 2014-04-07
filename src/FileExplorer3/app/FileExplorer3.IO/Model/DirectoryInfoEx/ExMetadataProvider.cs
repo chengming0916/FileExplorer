@@ -11,7 +11,8 @@ namespace FileExplorer.Models
     public class ExMetadataProvider : MetadataProviderBase
     {
         public ExMetadataProvider()
-            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider(), new ExifMetadataProvider())
+            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider(), new ExifMetadataProvider(), 
+                    new ImageMetadataProvider())
         { }
 
         public override async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels,
@@ -24,12 +25,12 @@ namespace FileExplorer.Models
 
             if (selectedModels.Count() == 0)
             {
-                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000) { IsVisibleInStatusbar = false });
-                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10) { IsVisibleInStatusbar = false });
-                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false) { IsVisibleInStatusbar = false });
+                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000) { IsVisibleInSidebar = true });
+                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10) { IsVisibleInSidebar = true });
+                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false) { IsVisibleInSidebar = true });
             }
 
-            return retList;
+            return retList.Distinct();
 
         }
     }

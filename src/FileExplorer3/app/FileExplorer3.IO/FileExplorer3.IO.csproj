@@ -124,6 +124,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defines\FileExtensions.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExCommandProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
@@ -135,8 +136,10 @@
     <Compile Include="Model\DropBox\DropBoxItemModel.cs" />
     <Compile Include="Model\DropBox\DropBoxProfile.cs" />
     <Compile Include="Model\DropBox\DropBoxFileStream.cs" />
-    <Compile Include="Model\FileBasedMetaProvider1.cs" />
-    <Compile Include="Model\ExifMetadataProvider.cs" />
+    <Compile Include="Model\ExtensionMethods.cs" />
+    <Compile Include="Model\FileBasedMetaProvider.cs" />
+    <Compile Include="Model\GoogleDrive\GoogleDriveMetaProvider.cs" />
+    <Compile Include="Model\MetadataProviderImpls.cs" />
     <Compile Include="Model\FileBasedCommandProvider.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
     <Compile Include="Model\FileBasedIconExtractors.cs" />
@@ -152,6 +155,7 @@
     <Compile Include="Model\GoogleDrive\GoogleDriveFileStream.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMimeTypeManager.cs" />
     <Compile Include="Model\HardDriveDiskIOHelper.cs" />
+    <Compile Include="Model\SkyDrive\SkyDriveMetaProvider.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveLogin.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveDiskIOHelper.cs" />
     <Compile Include="Model\FileBasedDiskPathMapper.cs" />

@@ -90,6 +90,7 @@
     <Compile Include="Defines\Cofe3\Defines\Attributes\MediaTypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Defines\Attributes\MIMETypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
+    <Compile Include="Defines\Cofe3\Utils\RegistryUtils.cs" />
     <Compile Include="Defines\Converters\TimeElapsedConverter.cs" />
     <Compile Include="Defines\Converters\UriToImageSourceConverter.cs" />
     <Compile Include="Defines\MetadataStrings.cs" />

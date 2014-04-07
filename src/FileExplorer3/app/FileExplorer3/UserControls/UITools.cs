@@ -33,16 +33,15 @@ namespace FileExplorer.BaseControls
                 });
         }
 
-        public static T FindAncestor<T>(DependencyObject obj) where T : DependencyObject
+        public static T FindAncestor<T>(DependencyObject obj, Func<T, bool> filter = null) where T : DependencyObject
         {
-
-            while (obj != null)
+            filter = filter ?? (depObj => true);
+            while (obj != null && obj is Visual)
             {
 
                 T o = obj as T;
 
-                if (o != null)
-
+                if (o != null && filter(o))
                     return o;
 
                 obj = VisualTreeHelper.GetParent(obj);
@@ -54,16 +53,15 @@ namespace FileExplorer.BaseControls
 
         }
 
-        public static T FindLogicalAncestor<T>(DependencyObject obj) where T : DependencyObject
+        public static T FindLogicalAncestor<T>(DependencyObject obj, Func<T, bool> filter = null) where T : DependencyObject
         {
-
+            filter = filter ?? (depObj => true);
             while (obj != null)
             {
 
                 T o = obj as T;
 
-                if (o != null)
-
+                if (o != null && filter(o))
                     return o;
 
                 obj = LogicalTreeHelper.GetParent(obj);
