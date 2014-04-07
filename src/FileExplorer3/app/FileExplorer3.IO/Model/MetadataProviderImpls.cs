@@ -4,6 +4,8 @@ using FileExplorer.Defines;
 using FileExplorer.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,38 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
+    public class ImageMetadataProvider : MetadataProviderBase
+    {
+        public override async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels, int modelCount, IEntryModel parentModel)
+        {
+            List<IMetadata> retList = new List<IMetadata>();
+            if (selectedModels.Count() == 1)
+            {
+                var diskModel = selectedModels.First() as DiskEntryModelBase;
+                if (diskModel.IsFileWithExtension(FileExtensions.ImageExtensions))
+                {
+                    try
+                    {
+                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, FileAccess.Read, CancellationToken.None))
+                        using (Bitmap bitmap = new Bitmap(stream))
+                        {
+                            retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
+                                ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
+
+                        }
+                    }
+                    catch { }
+                }
+            }
+            return retList;
+        }
+    }
+
 
     public class ExifMetadataProvider : MetadataProviderBase
     {
+
+
         public static ExifTags[] RecognizedExifTags = new[]
             {
                 ExifTags.ResolutionUnit, ExifTags.ExposureProgram, ExifTags.ISOSpeedRatings, ExifTags.Flash, 
@@ -33,18 +64,29 @@ namespace FileExplorer.Models
         {
             List<IMetadata> retList = new List<IMetadata>();
 
-            Action<ExifReader, ExifTags> addExifVal = (reader, tag) =>
+
+            if (selectedModels.Count() == 1)
+            {
+
+                #region addExifVal
+                Action<ExifReader, ExifTags> addExifVal = (reader, tag) =>
                 {
                     object val = null;
                     switch (tag)
                     {
                         case ExifTags.FNumber:
                         case ExifTags.FocalLength:
-                        case ExifTags.XResolution : 
-                        case ExifTags.YResolution :
+                        case ExifTags.XResolution:
+                        case ExifTags.YResolution:
                             int[] rational;
                             if (reader.GetTagValue(tag, out rational))
                                 val = rational[0];
+                            break;
+                        case ExifTags.DateTime:
+                        case ExifTags.DateTimeDigitized:
+                        case ExifTags.DateTimeOriginal:
+                            if (reader.GetTagValue<object>(tag, out val))
+                                val = DateTime.ParseExact((string)val, "yyyy:MM:dd HH:mm:ss", CultureInfo.InvariantCulture);
                             break;
                         default:
                             reader.GetTagValue<object>(tag, out val);
@@ -57,29 +99,27 @@ namespace FileExplorer.Models
                         switch (val.GetType().Name)
                         {
                             case "DateTime":
-                                displayType = DisplayType.DateTime;
+                                displayType = DisplayType.TimeElapsed;
                                 break;
-                            case "Double" :
-                            case "Float" :
+                            case "Double":
+                            case "Float":
                                 val = Math.Round(Convert.ToDouble(val), 2).ToString();
                                 displayType = DisplayType.Text;
                                 break;
-                            default :
+                            default:
                                 displayType = DisplayType.Text;
                                 val = val.ToString();
                                 break;
                         }
                         retList.Add(new Metadata(displayType, MetadataStrings.strImage, tag.ToString(),
-                                 val) { IsVisibleInStatusbar = false });
+                                 val) { IsVisibleInSidebar = true });
                     }
                 };
-
-            if (selectedModels.Count() == 1)
-            {
+                #endregion
                 try
                 {
                     var diskModel = selectedModels.First() as DiskEntryModelBase;
-                    if (GetExifThumbnail.IsExifSupported(diskModel))
+                    if (diskModel.IsFileWithExtension(FileExtensions.ExifExtensions))
                     {
                         using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, FileAccess.Read, CancellationToken.None))
                         using (ExifReader reader = new ExifReader(stream))
@@ -87,14 +127,20 @@ namespace FileExplorer.Models
                             var thumbnailBytes = reader.GetJpegThumbnailBytes();
                             if (thumbnailBytes != null && thumbnailBytes.Length > 0)
                                 retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
-                                    ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInStatusbar = false });
+                                    ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInSidebar = true });
+                            else retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
+                                    ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
 
                             foreach (var tag in RecognizedExifTags)
                                 addExifVal(reader, tag);
                         }
                     }
                 }
-                catch { }
+                catch
+                {
+                    return AsyncUtils.RunSync(() => (new ImageMetadataProvider()
+                        .GetMetadataAsync(selectedModels, modelCount, parentModel)));
+                }
             }
 
 
@@ -103,4 +149,5 @@ namespace FileExplorer.Models
         }
 
     }
+
 }

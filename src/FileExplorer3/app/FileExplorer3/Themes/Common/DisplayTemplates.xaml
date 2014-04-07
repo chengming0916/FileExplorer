@@ -19,6 +19,13 @@
     <DataTemplate x:Key="NumberTemplate">
         <TextBlock Text="{Binding Converter={StaticResource fnc}}" />
     </DataTemplate>
+    <DataTemplate x:Key="LinkTemplate">
+        <TextBlock TextTrimming="CharacterEllipsis">
+            <Hyperlink NavigateUri="{TemplateBinding Content}" >
+                <TextBlock Text="{TemplateBinding Content}" TextTrimming="CharacterEllipsis" />
+            </Hyperlink>       
+        </TextBlock>
+    </DataTemplate>
     <DataTemplate x:Key="DateTimeTemplate">
         <TextBlock Text="{Binding Converter={StaticResource ft}}" />
     </DataTemplate>
@@ -44,6 +51,7 @@
     <uc:DisplayTemplateSelector x:Key="dts"                                          
               TextTemplate="{StaticResource TextTemplate}"
               NumberTemplate="{StaticResource NumberTemplate}"
+              LinkTemplate="{StaticResource LinkTemplate}"
               DateTimeTemplate="{StaticResource DateTimeTemplate}"
               TimeElapsedTemplate="{StaticResource TimeElapsedTemplate}"
               KbTemplate="{StaticResource KbTemplate}"

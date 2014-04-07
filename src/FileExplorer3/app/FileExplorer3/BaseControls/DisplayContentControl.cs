@@ -7,12 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Navigation;
 
 namespace FileExplorer.BaseControls
 {
     public class DisplayContentControl : ContentControl
     {
-         #region Cosntructor
+        #region Cosntructor
 
         //static DisplayContentControl()
         //{
@@ -31,6 +33,12 @@ namespace FileExplorer.BaseControls
 
         #region Methods
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+          
+        }
+
         #endregion
 
         #region Data
@@ -39,7 +47,7 @@ namespace FileExplorer.BaseControls
 
         #region Public Properties
 
-       
+
         public static DependencyProperty TypeProperty = DependencyProperty.Register("Type",
             typeof(DisplayType), typeof(DisplayContentControl), new PropertyMetadata(DisplayType.Auto));
 
@@ -49,7 +57,7 @@ namespace FileExplorer.BaseControls
             set { SetValue(TypeProperty, value); }
         }
 
-        
+
 
         #endregion
     }

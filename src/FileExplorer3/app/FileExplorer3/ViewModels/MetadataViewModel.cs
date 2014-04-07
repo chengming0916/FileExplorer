@@ -27,6 +27,17 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
+        public override bool Equals(object obj)
+        {
+            if (obj is IMetadataViewModel)
+            {
+                var objViewModel = obj as IMetadataViewModel;
+                return objViewModel.MetadataModel.Category == MetadataModel.Category &&
+                    objViewModel.MetadataModel.HeaderText == MetadataModel.HeaderText;
+            }
+            return false;
+        }
+
         #endregion
 
         #region Data

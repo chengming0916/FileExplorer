@@ -290,6 +290,16 @@ namespace FileExplorer.UserControls
             set { SetValue(RightContentProperty, value); }
         }
 
+        public static readonly DependencyProperty OuterRightContentProperty =
+      DockableScrollViewer.OuterRightContentProperty.AddOwner(typeof(ListViewEx));
+
+        public object OuterRightContent
+        {
+            get { return (object)GetValue(OuterRightContentProperty); }
+            set { SetValue(OuterRightContentProperty, value); }
+        }
+
+
 
         #endregion
 

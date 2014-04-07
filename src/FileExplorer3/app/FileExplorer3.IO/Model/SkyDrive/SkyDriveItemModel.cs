@@ -31,6 +31,7 @@ namespace FileExplorer.Models
         internal void init(SkyDriveProfile profile, string path, dynamic d)
         {            
             init(profile, path);
+            Metadata = d;
             UniqueId = d.id;
             this.IsDirectory = d.type == "folder" || d.type == "album";
             if (!IsDirectory)
@@ -78,7 +79,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
-        
+
+        public dynamic Metadata { get; private set; }
         public string Description { get; private set; }
         public string UniqueId { get; private set; }
         public string Type { get; private set; }

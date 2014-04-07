@@ -64,6 +64,12 @@ namespace FileExplorer.Models
             return model.Profile.Path.GetFileName(model.FullPath);
         }
 
+        public static string GetExtension(this IEntryModel model)
+        {
+            return model.Profile.Path.GetExtension(model.FullPath);
+        }
+
+
         public static string Combine(this IEntryModel model, params string[] paths)
         {
             return model.Profile.Path.Combine(model.FullPath, paths);

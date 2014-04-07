@@ -28,7 +28,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <WrapPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding MetadataModel.HeaderText}" />
+                        <TextBlock Text="{Binding MetadataModel.HeaderText}" FontWeight="Bold" />
                         <TextBlock x:Name="ColonTextBlock" Text=":" Padding="5,0"  />
                         <!--See DisplayTemplates-->
                         <bc:DisplayContentControl Content="{Binding MetadataModel.Content}" Type="{Binding MetadataModel.DisplayType}" 

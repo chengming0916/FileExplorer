@@ -49,7 +49,7 @@
                 <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
                 <bc:TouchGestureEventProcessor Gesture="FlickUp" Command="NavigationCommands.BrowseHome" />
 
-                <bc:InputBindingsEventProcessor >
+                <bc:InputBindingsEventProcessor TargetName="lvItemsPresenter" > <!-- In ListView.xaml -->
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
@@ -97,7 +97,7 @@
                     </uc:ToolbarEx>
                 </Border>
             </uc:ListViewEx.OuterTopContent>
-            <uc:ListViewEx.RightContent>
+            <uc:ListViewEx.OuterRightContent>
                 <ContentControl Name="Sidebar" 
                                 cal:Bind.Model="{Binding}"
                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -105,7 +105,7 @@
                                 bc:DockableScrollViewer.IsResizable="True"
                                 bc:DockableScrollViewer.ContentSize="150.0"
                                 bc:DockableScrollViewer.IsContentVisible="{Binding Sidebar.IsVisible}" />
-            </uc:ListViewEx.RightContent>
+            </uc:ListViewEx.OuterRightContent>
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>

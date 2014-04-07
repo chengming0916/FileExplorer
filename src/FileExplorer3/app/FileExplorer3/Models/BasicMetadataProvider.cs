@@ -19,29 +19,29 @@ namespace FileExplorer.Models
                 retList.Add(m);
 
             retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strCategoryInfo,
-                "", String.Format(MetadataStrings.strTotalItems, modelCount)) { IsHeader = true, IsVisibleInSidebar = false });
+                "", String.Format(MetadataStrings.strTotalItems, modelCount)) { IsHeader = true, IsVisibleInStatusbar = true });
 
 
             if (selectedModels.Count() > 0)
                 retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strCategoryInfo,
                    "", String.Format(MetadataStrings.strSelectedItems,
-                   selectedModels.Count())) { IsHeader = true, IsVisibleInSidebar = false });
+                   selectedModels.Count())) { IsHeader = true, IsVisibleInStatusbar = true });
 
-            switch (selectedModels.Count())
-            {
-                case 1:
-                    var firstEntry = selectedModels.First();
-                    var thumbnailExtractor = firstEntry.Profile.GetThumbnailExtractor(firstEntry);
-                    if (thumbnailExtractor != null)
-                    {
-                        var iconRetVal = await thumbnailExtractor.GetIconForModelAsync(firstEntry, 
-                            CancellationToken.None);
-                        if (iconRetVal != null)
-                            retList.Add(new Metadata(DisplayType.Image, "", "Thumbnail", iconRetVal) 
-                            { IsVisibleInStatusbar = false });
-                    }
-                    break;
-            }
+            //switch (selectedModels.Count())
+            //{
+            //    case 1:
+            //        var firstEntry = selectedModels.First();
+            //        var thumbnailExtractor = firstEntry.Profile.GetThumbnailExtractor(firstEntry);
+            //        if (thumbnailExtractor != null)
+            //        {
+            //            var iconRetVal = await thumbnailExtractor.GetIconForModelAsync(firstEntry, 
+            //                CancellationToken.None);
+            //            if (iconRetVal != null)
+            //                retList.Add(new Metadata(DisplayType.Image, "", "Thumbnail", iconRetVal) 
+            //                { IsVisibleInStatusbar = false });
+            //        }
+            //        break;
+            //}
 
 
             return retList;

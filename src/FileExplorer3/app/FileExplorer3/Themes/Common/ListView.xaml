@@ -206,6 +206,7 @@
                         <DockPanel>
                             <AdornerDecorator>
                                 <bc:DockableScrollViewer
+                                    OuterRightContent="{Binding OuterRightContent, RelativeSource={RelativeSource TemplatedParent}}"
                                     RightContent="{Binding RightContent, RelativeSource={RelativeSource TemplatedParent}}">
                                     <bc:DockableScrollViewer.OuterTopContent>
 
@@ -229,7 +230,7 @@
                                         </DockPanel>
 
                                     </bc:DockableScrollViewer.OuterTopContent>
-                                    <ItemsPresenter />
+                                    <ItemsPresenter x:Name="lvItemsPresenter" />
                                 </bc:DockableScrollViewer>
                                 <!--<ScrollViewer Style="{StaticResource ListViewExGridViewScrollViewerStyle}">
                                     <ItemsPresenter />

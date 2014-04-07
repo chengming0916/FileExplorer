@@ -29,7 +29,7 @@ namespace FileExplorer.Models
             Path = PathHelper.Web;
             DiskIO = new SkyDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
-            //MetadataProvider = new NullMetadataProvider();
+            MetadataProvider = new SkyDriveMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             //PathMapper = new SkyDriveDiskPathMapper(this, null);

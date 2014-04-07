@@ -66,6 +66,7 @@ namespace FileExplorer.UserControls
             {
                 case DisplayType.Text: retVal = TextTemplate; break;
                 case DisplayType.Number: retVal = NumberTemplate; break;
+                case DisplayType.Link: retVal = LinkTemplate; break;
                 case DisplayType.DateTime: retVal = DateTimeTemplate; break;
                 case DisplayType.TimeElapsed: retVal = TimeElapsedTemplate; break;
                 case DisplayType.Percent: retVal = PercentTemplate; break;
@@ -88,6 +89,7 @@ namespace FileExplorer.UserControls
 
         public DataTemplate TextTemplate { get; set; }
         public DataTemplate NumberTemplate { get; set; }
+        public DataTemplate LinkTemplate { get; set; }
         public DataTemplate DateTimeTemplate { get; set; }
         public DataTemplate TimeElapsedTemplate { get; set; }
         public DataTemplate KbTemplate { get; set; }

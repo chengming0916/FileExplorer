@@ -1,4 +1,5 @@
-﻿using FileExplorer.Defines;
+﻿using Cofe.Core.Utils;
+using FileExplorer.Defines;
 using FileExplorer.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace FileExplorer.Models
         public override async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels, int modelCount, IEntryModel parentModel)
         {
             List<IMetadata> retList = new List<IMetadata>();
-
+            retList.AddRange(await base.GetMetadataAsync(selectedModels, modelCount, parentModel));
 
             if (selectedModels.Count() > 0)
             {
@@ -33,17 +34,31 @@ namespace FileExplorer.Models
 
                 if (creationTime != DateTime.MinValue)
                     retList.Add(new Metadata(DisplayType.TimeElapsed, MetadataStrings.strCategoryInfo,
-                       MetadataStrings.strCreationTime, creationTime.ToLocalTime()) { IsVisibleInStatusbar = false });
+                       MetadataStrings.strCreationTime, creationTime.ToLocalTime()) { IsVisibleInSidebar = true });
 
                 if (lastUpdateTime != DateTime.MinValue && lastUpdateTime.Subtract(creationTime).TotalSeconds > 5)
                     retList.Add(new Metadata(DisplayType.TimeElapsed, MetadataStrings.strCategoryInfo,
-                       MetadataStrings.strLastUpdateTime, lastUpdateTime.ToLocalTime()) { IsVisibleInStatusbar = false });
+                       MetadataStrings.strLastUpdateTime, lastUpdateTime.ToLocalTime()) { IsVisibleInSidebar = true });
 
                 if (size > 0)
                     retList.Add(new Metadata(DisplayType.Kb, MetadataStrings.strCategoryInfo,
-                        MetadataStrings.strSize, size) { IsVisibleInStatusbar = false });
+                        MetadataStrings.strSize, size) { IsVisibleInSidebar = true });
 
-
+                if (selectedModels.Count() == 1)
+                {
+                    string extension = selectedModels.First().GetExtension();
+                    string fileType, mimeType;
+                    if (!String.IsNullOrEmpty(extension))
+                    {
+                        RegistryUtils.GetTypeInformation(extension, out fileType, out mimeType);
+                        if (fileType != null)
+                            retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strCategoryInfo,
+                                MetadataStrings.strFileType, fileType) { IsVisibleInSidebar = true });
+                        if (mimeType != null)
+                            retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strCategoryInfo,
+                                MetadataStrings.strMimeType, mimeType) { IsVisibleInSidebar = true });
+                    }                    
+                }
             }
 
             return retList;

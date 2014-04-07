@@ -40,6 +40,7 @@ namespace FileExplorer.ViewModels
                     flvm.ProcessedEntries.All.Count,
                     flvm.CurrentDirectory))
                     .Where(m => _filter(m))
+                    .Distinct()
                     .Select(m => MetadataViewModel.FromMetadata(m));
         }
 
