@@ -68,6 +68,7 @@ namespace FileExplorer.Models
             //this.CreationTimeUtc = DateTime.MinValue;
             this.LastUpdateTimeUtc = metadata.UTCDateModified;
 
+
         }
 
         #endregion

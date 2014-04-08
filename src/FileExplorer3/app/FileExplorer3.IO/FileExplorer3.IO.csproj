@@ -131,11 +131,12 @@
     <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
     <Compile Include="Model\DiskProfileBase.cs" />
     <Compile Include="Model\DropBox\DropBoxDiskIOHelper.cs" />
-    <Compile Include="Model\DropBox\EntryModelExtractorImpl.cs" />
+    <Compile Include="Model\DropBox\DropBoxModelThumbnailExtractor.cs" />
     <Compile Include="Model\DropBox\DropBoxLogin.cs" />
     <Compile Include="Model\DropBox\DropBoxItemModel.cs" />
     <Compile Include="Model\DropBox\DropBoxProfile.cs" />
     <Compile Include="Model\DropBox\DropBoxFileStream.cs" />
+    <Compile Include="Model\DropBox\DropBoxMetaProvider.cs" />
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\FileBasedMetaProvider.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMetaProvider.cs" />
