@@ -55,13 +55,13 @@ namespace FileExplorer.BaseControls
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
             _inputProcessors = new UIInputManager(
                 new FlickInputProcessor(),
-                new ClickCountInputProcessor(),    
+                new ClickCountInputProcessor(),
                 new DropInputProcessor(),
                 new DragInputProcessor()
                         {
                             DragStartedFunc = inp =>
                               {
-                                  if (inp.InputType ==  UIInputType.Touch)
+                                  if (inp.InputType == UIInputType.Touch)
                                       Control_TouchDrag(inp.Sender, inp.EventArgs as InputEventArgs);
                                   else Control_MouseDrag(inp.Sender, inp.EventArgs as InputEventArgs);
                                   //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 0);
@@ -116,17 +116,17 @@ namespace FileExplorer.BaseControls
                                     {
                                         var input = UIInputBase.FromEventArgs(o, re);
                                         if (input.IsValid())
-                                        {
+                                            {
 
-                                            _inputProcessors.Update(ref input);
-                                            await executeAsync(_eventProcessors, e, input,
-                                                    pd =>
-                                                    {
-                                                        if (pd.IsHandled)
-                                                            re.Handled = true;
-                                                    }
-                                                );
-                                        }
+                                                _inputProcessors.Update(ref input);
+                                                await executeAsync(_eventProcessors, e, input,
+                                                        pd =>
+                                                        {
+                                                            if (pd.IsHandled)
+                                                                re.Handled = true;
+                                                        }
+                                                    );
+                                            }
 
 
                                     });
