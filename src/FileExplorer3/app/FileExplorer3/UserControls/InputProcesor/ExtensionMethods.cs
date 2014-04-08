@@ -117,15 +117,19 @@ namespace FileExplorer
                 return false;
             var scp = ControlUtils.GetScrollContentPresenter(sender);
             
+            var lvo = UITools.FindAncestor<ListView>(originalSource);
+            var scpo = originalSource == sender ? scp : 
+                UITools.FindAncestor<ScrollContentPresenter>(originalSource);
             //Make sure return false for ContextMenu items 
-            if (UITools.FindAncestor<ListView>(originalSource) == null)
+            if (lvo == null)
                 return false;
+
+            //This is for handling user click in empty area of a panel.
+            bool isOverScrollViewer = (originalSource is ScrollViewer) && scpo == null && lvo == sender;
             if (scp == null ||
-                //ListViewEx contains ContentBelowHeader, allow placing other controls in it, this is to avoid that)
-                (!scp.Equals(UITools.FindAncestor<ScrollContentPresenter>(originalSource)) &&
-                //This is for handling user click in empty area of a panel.
-                 !(originalSource is ScrollViewer))
-                )
+                //ListViewEx contains Top/RightContent, allow placing other controls in it, this is to avoid that)
+                //scp of event listener (the main ListView) is not equals to scp of event source
+                (!scp.Equals(scpo) && !isOverScrollViewer))
                 return false;
 
 

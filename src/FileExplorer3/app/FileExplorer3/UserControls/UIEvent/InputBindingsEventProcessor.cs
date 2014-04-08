@@ -34,26 +34,37 @@ namespace FileExplorer.BaseControls
                 InputEventArgs eventArgs = input.EventArgs as InputEventArgs;
 
                 if (!eventArgs.Handled)
-                    if (String.IsNullOrEmpty(_targetName) || UITools.FindAncestor<FrameworkElement>(
-                        eventArgs.OriginalSource as DependencyObject,
-                        (ele) => ele.Name == _targetName) != null)
+                {
+                    foreach (InputBinding ib in _processor.InputBindings)
                     {
-                        foreach (InputBinding ib in _processor.InputBindings)
-                        {
-                            bool match = ib.Gesture.Matches(sender, eventArgs);
-                            if (!match && ib is MouseBinding &&
-                                input.InputType == Defines.UIInputType.Touch &&
-                                (ib as MouseBinding).MouseAction == MouseAction.LeftDoubleClick)
-                                match = input.ClickCount == 2;
+                        bool match = ib.Gesture.Matches(sender, eventArgs);
+                        if (!match && ib is MouseBinding &&
+                            input.InputType == Defines.UIInputType.Touch &&
+                            (ib as MouseBinding).MouseAction == MouseAction.LeftDoubleClick)
+                            match = input.ClickCount == 2;
 
-                            if (match && ib.Command != null)
-                                if (ib.Command.CanExecute(ib.CommandParameter))
+                        if (match && ib.Command != null)
+                        {
+                            if (!String.IsNullOrEmpty(_targetName))
+                                if (UITools.FindAncestor<FrameworkElement>(
+                                   eventArgs.OriginalSource as DependencyObject,
+                                   (ele) => ele.Name == _targetName) == null)
                                 {
-                                    ib.Command.Execute(ib.CommandParameter);
-                                    return ResultCommand.OK;
+                                    //If TargetName is set, and targetName is not found.
+                                    //Then the event is outside scope, setting it handled
+                                    //to prevent it being handled by parent's InputBindingEventProcessor.
+                                    eventArgs.Handled = true;
+                                    return ResultCommand.NoError;
                                 }
+
+                            if (ib.Command.CanExecute(ib.CommandParameter))
+                            {
+                                ib.Command.Execute(ib.CommandParameter);
+                                return ResultCommand.OK;
+                            }
                         }
                     }
+                }
                 return ResultCommand.NoError;
             }
         }

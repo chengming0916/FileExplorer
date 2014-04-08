@@ -49,7 +49,7 @@
                 <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
                 <bc:TouchGestureEventProcessor Gesture="FlickUp" Command="NavigationCommands.BrowseHome" />
 
-                <bc:InputBindingsEventProcessor TargetName="lvItemsPresenter" > <!-- In ListView.xaml -->
+                <bc:InputBindingsEventProcessor > <!-- In ListView.xaml -->
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
