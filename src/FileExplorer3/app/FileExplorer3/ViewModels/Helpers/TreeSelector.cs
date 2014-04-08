@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
+using FileExplorer.Utils;
 
 namespace FileExplorer.ViewModels.Helpers
 {
@@ -52,7 +53,7 @@ namespace FileExplorer.ViewModels.Helpers
             if (path.Count() > 0)
             {
                 _selectedValue = path.Peek().Value;
-                
+
 
                 NotifyOfPropertyChanged(() => SelectedChild);
             }
@@ -87,6 +88,8 @@ namespace FileExplorer.ViewModels.Helpers
                 ParentSelector.ReportChildDeselected(path);
         }
 
+
+        private readonly AsyncLock _lookupLock = new AsyncLock();
         /// <summary>
         /// Tunnel down to select the specified item.
         /// </summary>
@@ -97,17 +100,9 @@ namespace FileExplorer.ViewModels.Helpers
             ITreeLookup<VM, T> lookupProc,
             params ITreeLookupProcessor<VM, T>[] processors)
         {
-            if (!callingLookup)
+            using (await _lookupLock.LockAsync())
             {
-                callingLookup = true;
-                try
-                {
-                    await lookupProc.Lookup(value, this, RootSelector, processors);
-                }
-                finally
-                {
-                    callingLookup = false;
-                }
+                await lookupProc.Lookup(value, this, RootSelector, processors);
             }
         }
 
@@ -180,8 +175,6 @@ namespace FileExplorer.ViewModels.Helpers
         bool _isSelected = false;
         T _selectedValue = default(T);
         ITreeSelector<VM, T> _prevSelected = null;
-        bool callingLookup = false;
-
 
         #endregion
 
@@ -222,7 +215,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public virtual bool IsChildSelected
         {
-            get { return _selectedValue != null; }            
+            get { return _selectedValue != null; }
         }
 
         public virtual bool IsRootAndIsChildSelected
@@ -236,7 +229,7 @@ namespace FileExplorer.ViewModels.Helpers
             set
             {
                 SetIsSelected(false);
-                NotifyOfPropertyChanged(() => IsSelected);                
+                NotifyOfPropertyChanged(() => IsSelected);
                 OnChildSelected(value);
                 NotifyOfPropertyChanged(() => IsChildSelected);
             }
