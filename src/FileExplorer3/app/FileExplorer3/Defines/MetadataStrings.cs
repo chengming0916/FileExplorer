@@ -21,6 +21,8 @@ namespace FileExplorer.Defines
 
         public static string strImage = "Image";
         public static string strThumbnail = "Thumbnail";
+        public static string strDimension = "Dimension";
+
         
     }
 }

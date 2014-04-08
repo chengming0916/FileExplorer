@@ -45,7 +45,7 @@ namespace FileExplorer.Models
 
             DiskIO = new DropBoxDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
-            //MetadataProvider = new NullMetadataProvider();
+            MetadataProvider = new DropBoxMetadataProvider(() => GetClient());
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             //PathMapper = new SkyDriveDiskPathMapper(this, null);
