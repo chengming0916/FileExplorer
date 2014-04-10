@@ -26,6 +26,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Statusbar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Toolbar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Breadcrumb.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TabControl.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 

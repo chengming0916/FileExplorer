@@ -71,6 +71,7 @@ namespace TestTemplate.WPF
             setupDragAndDrop();
             setupToolbarItem();
             setupInputProcessor();
+            setupTabControl();
         }
 
 
@@ -232,6 +233,13 @@ namespace TestTemplate.WPF
                      IsStepStop = true,
                      Header = num.ToString()
                  }));
+        }
+
+        private void setupTabControl()
+        {
+            for (int i = 1; i < 5; i++)
+                tabControl1.Items.Add(new TabItemEx() { Header = "Tab "  + i.ToString(), 
+                    Content = String.Format("This is page {0}", i) });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

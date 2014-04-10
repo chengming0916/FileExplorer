@@ -591,7 +591,7 @@
                 </uc:ToolbarEx.LayoutTransform>-->
             </uc:ToolbarEx>
         </TabItem>
-        <TabItem Header="ScrollViewer" IsSelected="True">
+        <TabItem Header="ScrollViewer">
             <StackPanel Orientation="Vertical">
                 <bc:HtmlTextBlock TextWrapping="WrapWithOverflow" Html="[b]DockableScrollViewer[/b] - ScrollViewer that allow you to place fixed content in it by setting OuterTop/Right/Bottom/LeftContent "/>
                 <bc:DockableScrollViewer Height="200" Width="200" PanningMode="Both"
@@ -636,7 +636,13 @@
                 </bc:DockableScrollViewer>
             </StackPanel>
         </TabItem>
-
+        <TabItem Header="TabControl" IsSelected="True" >
+            <uc:TabControlEx x:Name="tabControl1" Margin="5">
+                <uc:TabControlEx.LayoutTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                </uc:TabControlEx.LayoutTransform>
+            </uc:TabControlEx>
+        </TabItem>
     </TabControl>
 
 </Window>

@@ -6,6 +6,11 @@ using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
+using FileExplorer.Views;
+using FileExplorer.UserControls;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace TestApp
 {
@@ -19,15 +24,27 @@ namespace TestApp
                 new AggregateCatalog(
                     AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()
                         .Concat(new ComposablePartCatalog[] { new DirectoryCatalog(".") }))
-                );             
+                );
 
             CompositionBatch batch = new CompositionBatch();
 
             batch.AddExportedValue<IWindowManager>(new AppWindowManager());
-            batch.AddExportedValue<IEventAggregator>(new EventAggregator());            
-            
-            batch.AddExportedValue(container);
+            batch.AddExportedValue<IEventAggregator>(new EventAggregator());
 
+            batch.AddExportedValue(container);
+            //Debug.WriteLine(ConventionManager.GetElementConvention(typeof(ListViewEx)));
+
+            //To-Do: https://caliburnmicro.codeplex.com/wikipage?title=All%20About%20Conventions
+            //ConventionManager.AddElementConvention<ListViewEx>(ListViewEx.OuterRightContentProperty, 
+            //    "DataContext", "Loaded").GetBindableProperty =
+            //    delegate(DependencyObject foundControl)
+            //    {
+            //        var element = (ListViewEx)foundControl;
+
+            //        return !(element.OuterRightContent is DependencyObject)
+            //            ? View.ModelProperty
+            //            : ListViewEx.OuterRightContentProperty;
+            //    };
             container.Compose(batch);
 
         }

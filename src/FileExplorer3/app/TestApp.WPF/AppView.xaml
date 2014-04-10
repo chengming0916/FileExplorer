@@ -64,6 +64,8 @@
             <Button x:Name="ShowDialog" Content="ShowDialog" />
             <Button x:Name="ProgressDialog" Content="ProgressDialog" />
         </StackPanel>
+        
+        <Button x:Name="TabWindow" Content="TabWindow" />
     </StackPanel>
 
     <!--<Grid>
