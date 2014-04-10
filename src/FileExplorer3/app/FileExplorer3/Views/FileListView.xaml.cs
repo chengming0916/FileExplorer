@@ -34,7 +34,7 @@ namespace FileExplorer.Views
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
+            Caliburn.Micro.Bind.SetModel(ProcessedItems, this.DataContext);
             //this.ProcessedItems.ContextMenu.PlacementTarget = this.ProcessedItems;
             //this.RegisterEventProcessors(new DragDropEventProcessor(),
             //    new MultiSelectEventProcessor(vm1.UnselectAllCommand));

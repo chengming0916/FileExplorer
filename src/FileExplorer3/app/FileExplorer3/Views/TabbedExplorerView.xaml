@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="FileExplorer.Views.TabbedExplorerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"  
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button x:Name="OpenTab" Content="Add" />
+        <TabControl x:Name="Items" Grid.Row="1" >
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding CurrentDirectory.Icon}" Width="16" Height="16" />
+                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="2,0" />
+                        <Button Content="X" VerticalAlignment="Center"
+                                Template="{StaticResource BaseButton}"
+                                cal:Message.Attach="CloseTab($dataContext)" />
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+        </TabControl>
+    </Grid>
+</UserControl>

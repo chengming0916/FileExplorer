@@ -9,7 +9,7 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IExplorerViewModel : ISupportCommandManager
+    public interface IExplorerViewModel : ISupportCommandManager, IScreen
     {
         IEntryModel[] RootModels { get; set; }
 

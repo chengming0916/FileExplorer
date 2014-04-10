@@ -1,6 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!--http://web.archive.org/web/20071210050943/http://www.brethorsting.com/resources/syscolors.html-->
+    <!--http://msdn.microsoft.com/en-us/library/aa974176.aspx#fonts-->
+    
     <Color x:Key="{x:Static SystemColors.ControlLightColorKey}">White</Color>
     <Color x:Key="{x:Static SystemColors.ActiveCaptionColorKey}">Azure</Color>
     <!--Control colors.-->
