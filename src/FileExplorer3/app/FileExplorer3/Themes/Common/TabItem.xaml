@@ -18,17 +18,15 @@
     <Thickness x:Key="TabItemMargin_Base">0,2,-4,0</Thickness>
     <Thickness x:Key="TabItemMargin_Selected">-4,0,-4,0</Thickness>
     <Thickness x:Key="TabItemMargin_Hover">0,1,-4,0</Thickness>
-    <Thickness x:Key="TabItemPanel_Padding">4,0,0,0</Thickness>
-
-
-
+    <Thickness x:Key="TabItemPanel_Padding">4,0,4,0</Thickness>
     
+
+
+
     <Style TargetType="{x:Type uc:TabItemEx}">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
-        <!--<Setter Property="Margin" Value="0"/>-->
-        <!--<Setter Property="Padding" Value="6,2,6,2"/>-->
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="Template">
@@ -37,7 +35,7 @@
                     <Grid VerticalAlignment="Bottom" >
                         <Border Name="Border"
                              Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"
-                             BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
+                             BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
                              Margin="{StaticResource TabItemMargin_Selected}"
                              BorderThickness="2,1,1,0"
                              CornerRadius="3,3,0,0"
@@ -57,11 +55,6 @@
                         <!-- The appearance of a TabItem when it's inactive/unselected -->
                         <Trigger Property="IsSelected" Value="False">
                             <Setter Property="Panel.ZIndex" Value="90" />
-                            <!--<Setter TargetName="Border" Property="BorderBrush"
-                                Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}" />
-                            <Setter Property="Foreground"
-                                Value="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" />-->
-                            <!-- Except for the selected TabItem, tabs are to appear smaller in height. -->
                             <Setter TargetName="Border" Property="Margin" 
                                     Value="{StaticResource TabItemMargin_Base}"/>
                             <Setter TargetName="Border" Property="BorderThickness" 
@@ -89,17 +82,6 @@
                                 <Condition Property="IsSelected" Value="False"/>
                             </MultiTrigger.Conditions>
                             <Setter Property="Panel.ZIndex" Value="99" />
-                            <!--<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />-->
-                            <!--<Setter Property="BorderBrush"
-                                TargetName="Border"
-                                Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />-->
-                            <!--<Setter TargetName="Border" Property="BorderThickness" Value="2,1,1,1" />-->
-                            <!--<Setter Property="Background" TargetName="Border"
-                                Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>-->
-                            <!--
-                           To further increase the hover-effect, extend the TabItem's height a little
-                           more compared to unselected TabItems.
-                        -->
                             <Setter TargetName="hotTrack" Property="IsEnabled" Value="True"/>
                             <Setter TargetName="Border" Property="Margin"
                                 Value="{StaticResource TabItemMargin_Hover}"/>
@@ -114,8 +96,6 @@
                             <Setter TargetName="Border" Property="Background"
                                 Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
                             <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
-                            <!--<Setter Property="Foreground"
-                                Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />-->
                             <Setter TargetName="Border" Property="Margin"
                                 Value="{StaticResource TabItemMargin_Selected}"/>
                         </Trigger>

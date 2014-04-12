@@ -47,6 +47,8 @@ namespace FileExplorer.ViewModels
         {
             return new DoSelection(commandKey, getSelectionFunc, nextCommandFunc, noSelectionCommand);
         }
+
+       
     }
 
     #region MessageBox
@@ -409,10 +411,58 @@ namespace FileExplorer.ViewModels
 
     #endregion
 
+
+    public static class TabbedExplorer
+    {
+        public static IScriptCommand CloseWindow =
+            TabbedExplorer.Do((tevm, pd) =>
+            {
+                tevm.CloseTab(pd.Parameter as IExplorerViewModel);
+                return ResultCommand.NoError;
+            });
+
+        public static IScriptCommand NewWindow =
+            TabbedExplorer.Do((tevm, pd) =>
+            {
+                tevm.OpenTab();
+                return ResultCommand.NoError;
+            });
+
+        public static IScriptCommand Do(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
+        {
+            return new DoTabbedExplorer(commandFunc);
+        }
+    }
+
+    internal class DoTabbedExplorer : DoCommandBase<ITabbedExplorerViewModel>
+    {
+        internal DoTabbedExplorer(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
+            : base("TabbedExplorer", commandFunc)
+        {
+        }
+
+        protected DoTabbedExplorer(Func<ITabbedExplorerViewModel, ParameterDic, Task<IScriptCommand>> commandFunc)
+            : base("TabbedExplorer", commandFunc)
+        {
+        }
+
+        internal DoTabbedExplorer(string commandKey, Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
+            : base(commandKey, commandFunc)
+        {
+        }
+
+        protected DoTabbedExplorer(string commandKey, Func<ITabbedExplorerViewModel, ParameterDic, Task<IScriptCommand>> commandFunc)
+            : base(commandKey, commandFunc)
+        {
+        }
+    }
+
     #region ExplorerBased
 
     public static class Explorer
     {
+        //public static IScriptCommand TryCloseWindow =
+        //    Explorer.Do(evm => { evm.TryClose(); return ResultCommand.NoError; });
 
         public static IScriptCommand Do(Func<IExplorerViewModel, IScriptCommand> commandFunc)
         {
@@ -495,21 +545,35 @@ namespace FileExplorer.ViewModels
             return new BroadcastChangeRoot(evnt, events, nextCommand);
         }
 
+        
+        
+
     }
 
     internal abstract class DoCommandBase<VM> : ScriptCommandBase
     {
-        private Func<VM, Task<IScriptCommand>> _commandFunc;
+        private Func<VM, ParameterDic, Task<IScriptCommand>> _commandFunc;
         private string _viewModelName;
-        protected DoCommandBase(string viewModelName, Func<VM, Task<IScriptCommand>> commandFunc)
+        protected DoCommandBase(string viewModelName, Func<VM, ParameterDic, Task<IScriptCommand>> commandFunc)
             : base(viewModelName, viewModelName)
         {
             _viewModelName = viewModelName;
             _commandFunc = commandFunc;
         }
 
+        protected DoCommandBase(string viewModelName, Func<VM, ParameterDic, IScriptCommand> commandFunc)
+            : this(viewModelName, (vm, pd) => Task.Run(() => commandFunc(vm, pd)))
+        {
+
+        }
+
+        protected DoCommandBase(string viewModelName, Func<VM, Task<IScriptCommand>> commandFunc)
+            : this(viewModelName, (vm, pd) => commandFunc(vm))
+        {
+        }
+
         protected DoCommandBase(string viewModelName, Func<VM, IScriptCommand> commandFunc)
-            : this(viewModelName, vm => Task.Run(() => commandFunc(vm)))
+            : this(viewModelName, (vm, pd) => commandFunc(vm))
         {
 
         }
@@ -519,7 +583,7 @@ namespace FileExplorer.ViewModels
             VM evm = (VM)pm[_viewModelName];
             if (evm == null)
                 return ResultCommand.Error(new ArgumentException(_viewModelName));
-            return await _commandFunc(evm);
+            return await _commandFunc(evm, pm);
         }
 
         public override bool CanExecute(ParameterDic pm)

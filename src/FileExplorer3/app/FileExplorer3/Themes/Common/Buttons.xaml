@@ -129,22 +129,21 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="BaseButton" TargetType="{x:Type ButtonBase}">
-        <bc:HotTrack SelectedBorderBrush="{TemplateBinding BorderBrush}"
+        <bc:HotTrack x:Name="HotTrack" SelectedBorderBrush="{TemplateBinding BorderBrush}"
                 Padding="{TemplateBinding Padding}" Background="Transparent" 
                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                 BorderThickness="{TemplateBinding BorderThickness}">
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
                               VerticalAlignment="{TemplateBinding VerticalAlignment}" />
         </bc:HotTrack>
-        <!--<ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="border" Property="BorderThickness" Value="1,0" />
-                <Setter TargetName="border" Property="Padding" Value="0" />
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="HotTrack" Property="Background" 
+                                Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                <Setter TargetName="HotTrack" Property="Opacity" Value="0.4"/>
             </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
-            </Trigger>
-        </ControlTemplate.Triggers>-->
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate x:Key="RoundedButton" TargetType="{x:Type ButtonBase}">
@@ -169,7 +168,8 @@
             </bc:HotTrack>
         </Border>
     </ControlTemplate>
-    
+
+
     <ControlTemplate x:Key="NavButton" TargetType="{x:Type ButtonBase}">
         <Grid Margin="3">
             <bc:Invert x:Name="cc" 

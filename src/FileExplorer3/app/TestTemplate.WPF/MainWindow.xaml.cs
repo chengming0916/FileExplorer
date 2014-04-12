@@ -237,7 +237,7 @@ namespace TestTemplate.WPF
 
         private void setupTabControl()
         {
-            for (int i = 1; i < 5; i++)
+            for (int i = 1; i < 20; i++)
                 tabControl1.Items.Add(new TabItemEx() { Header = "Tab "  + i.ToString(), 
                     Content = String.Format("This is page {0}", i) });
         }

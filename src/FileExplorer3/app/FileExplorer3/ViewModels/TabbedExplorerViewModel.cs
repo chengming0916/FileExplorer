@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using FileExplorer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels
 {
-    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive
+   
+    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, ITabbedExplorerViewModel
     {
         private IExplorerInitializer _initializer;
         #region Constructors
@@ -16,6 +18,7 @@ namespace FileExplorer.ViewModels
         public TabbedExplorerViewModel(IExplorerInitializer initializer)
         {
             _initializer = initializer;
+            Commands = new TabbedExplorerCommandManager(this, initializer.Events);
             OpenTab();
             ////_tabs = new ObservableCollection<ITabItemViewModel>();
         }
@@ -30,9 +33,16 @@ namespace FileExplorer.ViewModels
             ActivateItem(evm);
         }
 
-        public void CloseTab(IExplorerViewModel evm = null)
+        public void CloseTab(IExplorerViewModel evm)
         {
             DeactivateItem(evm, true);
+        }
+
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+            var uiEle = view as System.Windows.UIElement;
+            this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Application);
         }
 
         #endregion
