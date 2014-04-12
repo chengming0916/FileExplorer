@@ -49,7 +49,8 @@
                 <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
                 <bc:TouchGestureEventProcessor Gesture="FlickUp" Command="NavigationCommands.BrowseHome" />
 
-                <bc:InputBindingsEventProcessor > <!-- In ListView.xaml -->
+                <bc:InputBindingsEventProcessor >
+                    <!-- In ListView.xaml -->
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
@@ -69,6 +70,7 @@
 
                 <bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
+
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                     ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
@@ -76,7 +78,6 @@
 
 
             </bc:UIEventAdapter.Processors>
-
             <!--<MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />-->
             <!--<i:Interaction.Triggers>                
                 <uc:InputBindingTrigger>                                        

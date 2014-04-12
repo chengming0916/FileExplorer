@@ -99,6 +99,8 @@ namespace FileExplorer.UserControls
             set { SetValue(ColumnHeaderContainerStyleProperty, value); }
         }
 
+        public static readonly DependencyProperty ColumnHeaderTemplateProperty =
+          GridView.ColumnHeaderTemplateProperty.AddOwner(typeof(VirtualWrapPanelView));
         public static readonly DependencyProperty ColumnHeaderTemplateSelectorProperty =
             GridView.ColumnHeaderTemplateSelectorProperty.AddOwner(typeof(VirtualWrapPanelView));
         public static readonly DependencyProperty ColumnHeaderStringFormatProperty =

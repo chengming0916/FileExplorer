@@ -177,7 +177,7 @@
                             <ScrollViewer x:Name="SubMenuScrollViewer" 
                                       Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, 
                                         TypeInTargetAssembly={x:Type FrameworkElement}}}">
-                                <Grid RenderOptions.ClearTypeHint="Enabled">
+                                <Grid x:Name="baseGrid" RenderOptions.ClearTypeHint="Enabled">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <!-- Slider -->
@@ -186,9 +186,9 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0" Grid.ColumnSpan="2">
-                                        <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=SubMenuBorder}" 
-                                               Height="{Binding ActualHeight, ElementName=SubMenuBorder}"
-                                               Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>
+                                        <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=baseGrid}" 
+                                               Height="{Binding ActualHeight, ElementName=baseGrid}"
+                                               Width="{Binding ActualWidth, ElementName=baseGrid}"/>
                                     </Canvas>
 
                                     <Rectangle Fill="{StaticResource Menu.Static.Separator}" HorizontalAlignment="Left" 

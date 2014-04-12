@@ -21,7 +21,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Button x:Name="OpenTab"  Grid.Row="1"  Content="Add" />
+        <!--<Button x:Name="OpenTab"  Grid.Row="1"  Content="Add" />-->
         <uc:TabControlEx x:Name="Items">
             <uc:TabControlEx.ItemTemplate>
                 <DataTemplate>

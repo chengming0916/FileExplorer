@@ -70,7 +70,7 @@
                     <bc:HotTrack x:Name="headerToggleHL"  bc:OverflowableStackPanel.CanOverflow="True"
                                  BorderThickness="1,0,0,0"
                                  SelectedBorderBrush="Transparent"
-                                 Visibility="{Binding ShowToggle, RelativeSource={RelativeSource TemplatedParent}, 
+                                 Visibility="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, 
                                         Converter={StaticResource btvc}}"
                                 >
                         <bc:DropDownList x:Name="PART_Toggle" ItemsSource="{TemplateBinding ItemsSource}"

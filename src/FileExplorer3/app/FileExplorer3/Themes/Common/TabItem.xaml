@@ -17,7 +17,7 @@
       -->
     <Thickness x:Key="TabItemMargin_Base">0,2,-4,0</Thickness>
     <Thickness x:Key="TabItemMargin_Selected">-4,0,-4,0</Thickness>
-    <Thickness x:Key="TabItemMargin_Hover">0,1,-4,0</Thickness>
+    <Thickness x:Key="TabItemMargin_Hover">0,2,-4,0</Thickness>
     <Thickness x:Key="TabItemPanel_Padding">4,0,4,0</Thickness>
     
 
