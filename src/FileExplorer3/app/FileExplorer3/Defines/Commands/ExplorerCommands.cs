@@ -18,6 +18,8 @@ namespace FileExplorer.Defines
         public static RoutedUICommand NewFolder = new RoutedUICommand(Strings.strNewFolder, "NewFolder", typeof(ExplorerCommands));
 
         public static RoutedUICommand NewWindow = new RoutedUICommand(Strings.strOpenInNewWindow, "OpenInNewWindow", typeof(ExplorerCommands));
+        public static RoutedUICommand CloseWindow = new RoutedUICommand(Strings.strCloseWindow, "CloseWindow", typeof(ExplorerCommands));
+        
         public static RoutedUICommand Map = new RoutedUICommand("Map", "Map", typeof(ExplorerCommands));
         public static RoutedUICommand Unmap = new RoutedUICommand("Unmap", "Unmap", typeof(ExplorerCommands));
         public static RoutedUICommand Refresh = new RoutedUICommand(Strings.strRefresh, "Refresh", typeof(ExplorerCommands),

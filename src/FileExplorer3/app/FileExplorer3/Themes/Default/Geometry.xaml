@@ -12,6 +12,11 @@
     <Geometry x:Key="RefreshArrow">M2,7 L7,7 4,9.5z M7,8 L10,5.5 12,8 z</Geometry>
     <PathGeometry x:Key="TreeArrow" Figures="M0,0 L0,6 L6,0 z"/>
 
+    <Geometry x:Key="DownArrow">M0,0 L10,0 5,10Z</Geometry>
+    <Geometry x:Key="UpArrow">M0,10 L10,10 5,0Z</Geometry>
+    <Geometry x:Key="RightArrow">M0,0 L10,5 L0,10Z</Geometry>
+    <Geometry x:Key="LeftArrow">M0,5 L10,10 10,0Z</Geometry>
+    <Geometry x:Key="CloseX">M0,0 L1,1 M0,1 L1,0</Geometry>
     <!--UpdatedVersion-->
     <!--<Geometry x:Key="RefreshArrow">M4,7 L9,7 6,9.5z M9,8 L12,5.5 14,8 z</Geometry>-->
     <!--<Geometry x:Key="RefreshBranch">M8,3 A6,10,0,0,0,6,8 M10,12 A6,10,0,0,0,12,7</Geometry>-->

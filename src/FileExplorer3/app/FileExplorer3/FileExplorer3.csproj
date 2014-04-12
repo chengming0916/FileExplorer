@@ -63,6 +63,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -87,10 +88,12 @@
     <None Include="BaseControls\LoginControl.cs" />
     <Compile Include="BaseControls\DisplayContentControl.cs" />
     <Compile Include="BaseControls\DockableScrollViewer.cs" />
+    <Compile Include="BaseControls\ScrollableTabPanel.cs" />
     <Compile Include="Defines\Cofe3\Defines\Attributes\MediaTypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Defines\Attributes\MIMETypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\RegistryUtils.cs" />
+    <Compile Include="Defines\Converters\ScrollBarConverters.cs" />
     <Compile Include="Defines\Converters\TimeElapsedConverter.cs" />
     <Compile Include="Defines\Converters\UriToImageSourceConverter.cs" />
     <Compile Include="Defines\MetadataStrings.cs" />
@@ -143,6 +146,9 @@
     <Compile Include="UserControls\InputProcesor\IUIInputProcessor.cs" />
     <Compile Include="UserControls\InputProcesor\IUIInputManager.cs" />
     <Compile Include="UserControls\TabControlEx.cs" />
+    <Compile Include="UserControls\Titlebar.cs" />
+    <Compile Include="BaseControls\TitlebarContainer.cs" />
+    <Compile Include="BaseControls\TitlebarControlButton.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
     <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
@@ -183,6 +189,7 @@
     <Compile Include="ViewModels\DirectoryPickerViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MetadataHelperViewModel.cs" />
+    <Compile Include="ViewModels\TabbedExplorerCommandManager.cs" />
     <Compile Include="ViewModels\NavigationCommandManager.cs" />
     <Compile Include="ViewModels\SidebarCommandManager.cs" />
     <Compile Include="ViewModels\SidebarCommandModelImpls.cs" />
@@ -459,6 +466,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Common\Expander.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Common\Titlebar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

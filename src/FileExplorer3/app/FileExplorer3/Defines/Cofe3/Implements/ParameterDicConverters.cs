@@ -13,7 +13,9 @@ namespace Cofe.Core.Script
     public static class ParameterDicConverters
     {
         public static IParameterDicConverter ConvertParameterOnly =
-            new ParameterDicConverterBase((p, p2) => new ParameterDic() { { "Parameter", p } },
+            new ParameterDicConverterBase((p, p2) => 
+                    p is ParameterDic ? (p as ParameterDic) : 
+                    new ParameterDic() { { "Parameter", p } },
                 (pd, p2) => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
 
         /// <summary>

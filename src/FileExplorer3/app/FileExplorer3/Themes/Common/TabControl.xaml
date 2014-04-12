@@ -3,8 +3,11 @@
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
     xmlns:bc="clr-namespace:FileExplorer.BaseControls"
     xmlns:conv="clr-namespace:QuickZip.Converters"
+    xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+    xmlns:tcs="clr-namespace:TabControlStyle"
     >
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Geometry.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
@@ -13,8 +16,113 @@
     </ResourceDictionary.MergedDictionaries>
 
     <!-- http://www.blogs.intuidev.com/post/2010/01/25/TabControlStyling_PartOne.aspx-->
-    
-   
+
+    <Style x:Key="TabPanelScrollViewerStyle" TargetType="{x:Type ScrollViewer}" >
+        <Style.Resources>
+            <tcs:ScrollbarOnFarLeftConverter x:Key="sbofl" />
+            <tcs:ScrollbarOnFarRightConverter x:Key="sbofr" />
+            <Style TargetType="TextBlock" >
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+            </Style>
+        </Style.Resources>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <!-- Hold tab items-->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- Buttons -->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- Title bar -->
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel  x:Name="leftButtons" HorizontalAlignment="Stretch" Orientation="Horizontal"
+            
+                                     VerticalAlignment="Bottom" Grid.Column="0">
+                            <RepeatButton Template="{StaticResource BaseButton}"
+                                                  Command="ScrollBar.PageLeftCommand"
+                                                  IsEnabled="{Binding Path=HorizontalOffset,
+                                                                      RelativeSource={RelativeSource TemplatedParent},  
+                                                                      Converter={StaticResource sbofl}}">
+                                <!--<Path Margin="4,3" Data="{StaticResource LeftArrow}"
+                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RepeatButton}}}"
+                                      Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                      />-->
+                                <TextBlock Text="&#xe239;" />
+                            </RepeatButton>
+                        </StackPanel>
+
+                        <StackPanel x:Name="rightButtons" HorizontalAlignment="Right"  Orientation="Horizontal"
+                                    VerticalAlignment="Stretch" Grid.Column="2">
+                            <RepeatButton Template="{StaticResource BaseButton}" 
+                                                  Command="ScrollBar.PageRightCommand"
+                                                
+                                                  >
+                                <RepeatButton.Content>
+                                    <!--<Path Margin="4,3" Data="{StaticResource RightArrow}"
+                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RepeatButton}}}"
+                                      Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                      />-->
+                                    <TextBlock Text="&#xe23a;" />
+                                </RepeatButton.Content>
+                                <RepeatButton.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource sbofr}">
+                                        <Binding Path="HorizontalOffset" RelativeSource="{RelativeSource TemplatedParent}"  />
+                                        <Binding Path="ViewportWidth"  RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ExtentWidth"  RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </RepeatButton.IsEnabled>
+                            </RepeatButton>
+
+                            <bc:DropDownList ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                AncestorType={x:Type TabControl}}, Path=Items}"
+                                              SelectedIndex="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                AncestorType={x:Type TabControl}}, Path=SelectedIndex}"
+                                             >
+                                <bc:DropDownList.Header>
+                                    <TextBlock Text="&#xE138;" />
+                                </bc:DropDownList.Header>
+                                <bc:DropDownList.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ComboBoxItem}">
+                                        <Setter Property="Content" Value="{Binding}" />
+                                        <Setter Property="ContentTemplate" Value="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                AncestorType={x:Type TabControl}}, Path=ItemTemplate}" />
+                                        <Setter Property="IsEnabled" Value="{Binding Path=IsEnabled}" />
+                                        <!--<Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay, 
+                                                RelativeSource={RelativeSource FindAncestor, 
+                                                AncestorType={x:Type TabItem}}}" />-->
+                                    </Style>
+                                </bc:DropDownList.ItemContainerStyle>
+                            </bc:DropDownList>
+                            <Button Template="{StaticResource BaseButton}"  
+                                    Command="ApplicationCommands.New">
+                                <TextBlock Text="&#xE109;" />
+                            </Button>
+                            <uc:Titlebar Grid.Row="3" VisibilityWhenNormal="Collapsed" 
+                                         WindowStyleWhenMaximized="None"
+                                         />
+                        </StackPanel>
+
+                        <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+                                    VirtualizingStackPanel.IsVirtualizing="False" SnapsToDevicePixels="True"
+                                    Grid.Column="1" Content="{TemplateBinding ScrollViewer.Content}"/>
+
+                    </Grid>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 
     <Style TargetType="{x:Type uc:TabControlEx}">
@@ -33,46 +141,47 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <!-- Create a border in top of content, which is covered by the tab panel -->
                         <Rectangle Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" 
                                    Height="1" VerticalAlignment="Bottom" />
-                        <Border Padding="{StaticResource TabItemPanel_Padding}" >
 
-                            <!-- This is the area in which TabItems (the strips) will be drawn. -->
+                        <Border Grid.Row="0" >
+                            <ScrollViewer Grid.Row="0" ScrollViewer.PanningMode="HorizontalOnly"
+                                          Style="{StaticResource TabPanelScrollViewerStyle}"
+                                VerticalScrollBarVisibility="Disabled"
+                                CanContentScroll="True" 
+                                 HorizontalScrollBarVisibility="Hidden" 
+                                IsDeferredScrollingEnabled="False"
+                                SnapsToDevicePixels="True" 
+                                HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Stretch"
+                                         
+                                          >
+                                <!--<tcs:ScrollableTabPanel IsItemsHost="True"
+                                                        x:Name="PART_ScrollContentPresenter"
+                                                        Margin="{StaticResource TabItemPanel_Padding}"                                  
+                                                        RightOverflowMargin="4"  
+                                                        AnimationTimeSpan="0:0:0.25" 
+                                                        LineScrollPixelCount="100" 
+                                                        KeyboardNavigation.TabIndex="1"/>-->
+                                <StackPanel IsItemsHost="True" Margin="{StaticResource TabItemPanel_Padding}" 
+                                            Orientation="Horizontal" />
+                            </ScrollViewer>
+                        </Border>
+
+                      
+                        <!--<Border Padding="{StaticResource TabItemPanel_Padding}" >     
                             <TabPanel IsItemsHost="True"/>
-                        </Border>
-                       
-                        <Border BorderThickness="1,0,1,1"
-                     Grid.Row="1"
-                     BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                            <!--
-                     This is where the Content of the selected TabPage
-                     will be rendered.
-                -->
-                            <ContentPresenter ContentSource="SelectedContent" Margin="0"/>
-                        </Border>
-                        <!--<TabPanel x:Name="headerPanel" Background="Transparent" Grid.Row="0" Grid.Column="0" 
-                                  IsItemsHost="true" Margin="2,2,2,0"  
-                                  KeyboardNavigation.TabIndex="1" Panel.ZIndex="1"/>-->
-                        <!--<StackPanel x:Name="headerPanel"
-                            Background="Transparent" Grid.Row="0" Grid.Column="0" 
-                                  IsItemsHost="true" Margin="2,2,2,0"  Orientation="Horizontal"
-                                  KeyboardNavigation.TabIndex="1" Panel.ZIndex="1">
-                        </StackPanel>
-                        
-                        <Border x:Name="contentPanel" Grid.Column="0"  Grid.Row="1"
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                Background="{TemplateBinding Background}" 
-                                KeyboardNavigation.DirectionalNavigation="Contained" 
-                                KeyboardNavigation.TabIndex="2" 
-                                KeyboardNavigation.TabNavigation="Local">
-                            <ContentPresenter x:Name="PART_SelectedContentHost" 
-                                              ContentSource="SelectedContent" 
-                                              Margin="{TemplateBinding Padding}" 
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                         </Border>-->
 
+                        <Border BorderThickness="1,0,1,1" Grid.Row="1"
+                                BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                            <!--This is where the Content of the selected TabPage will be rendered.-->
+                            <ContentPresenter ContentSource="SelectedContent" Margin="0"/>
+                        </Border>
+                        
+                      
                     </Grid>
                     <ControlTemplate.Triggers>
 

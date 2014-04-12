@@ -50,6 +50,7 @@ namespace FileExplorer.ViewModels
             ScriptCommands.Transfer = NullScriptCommand.Instance;
             ScriptCommands.ZoomIn = Explorer.Zoom(ZoomMode.ZoomIn);
             ScriptCommands.ZoomOut = Explorer.Zoom(ZoomMode.ZoomOut);
+            //ScriptCommands.Close = Explorer.TryCloseWindow;
 
             #endregion
 
@@ -59,6 +60,7 @@ namespace FileExplorer.ViewModels
                 ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.ScriptCommands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.ScriptCommands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.ScriptCommands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer)
+                //ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseWindow, this, (ch) => ch.ScriptCommands.Close, ParameterDicConverter, ScriptBindingScope.Explorer)
               ));
             exportBindingSource.AddRange(additionalBindingExportSource);
           
