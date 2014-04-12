@@ -39,6 +39,20 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
+        public static readonly DependencyProperty OuterTopContentProperty =
+           DockableScrollViewer.OuterTopContentProperty.AddOwner(typeof(TreeViewEx));
+        public static readonly DependencyProperty OuterRightContentProperty =
+           DockableScrollViewer.OuterRightContentProperty.AddOwner(typeof(TreeViewEx));
+        public static readonly DependencyProperty OuterBottomContentProperty =
+          DockableScrollViewer.OuterBottomContentProperty.AddOwner(typeof(TreeViewEx));
+        public static readonly DependencyProperty OuterLeftContentProperty =
+          DockableScrollViewer.OuterLeftContentProperty.AddOwner(typeof(TreeViewEx));
+
+        public static readonly DependencyProperty TopContentProperty =
+         DockableScrollViewer.TopContentProperty.AddOwner(typeof(TreeViewEx));
+        public static readonly DependencyProperty RightContentProperty =
+         DockableScrollViewer.RightContentProperty.AddOwner(typeof(TreeViewEx));
+
         public static readonly DependencyProperty BottomContentProperty =
         DockableScrollViewer.BottomContentProperty.AddOwner(typeof(TreeViewEx));
         public object BottomContent
@@ -46,6 +60,9 @@ namespace FileExplorer.UserControls
             get { return (object)GetValue(BottomContentProperty); }
             set { SetValue(BottomContentProperty, value); }
         }
+
+        public static readonly DependencyProperty LeftContentProperty =
+         DockableScrollViewer.LeftContentProperty.AddOwner(typeof(TreeViewEx));
 
         #endregion
     }

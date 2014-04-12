@@ -281,6 +281,24 @@ namespace FileExplorer.UserControls
             set { SetValue(OuterTopContentProperty, value); }
         }
 
+        public static readonly DependencyProperty OuterRightContentProperty =
+           DockableScrollViewer.OuterRightContentProperty.AddOwner(typeof(ListViewEx));
+
+        public object OuterRightContent
+        {
+            get { return (object)GetValue(OuterRightContentProperty); }
+            set { SetValue(OuterRightContentProperty, value); }
+        }
+
+        public static readonly DependencyProperty OuterBottomContentProperty =
+          DockableScrollViewer.OuterBottomContentProperty.AddOwner(typeof(ListViewEx));
+        public static readonly DependencyProperty OuterLeftContentProperty =
+          DockableScrollViewer.OuterLeftContentProperty.AddOwner(typeof(ListViewEx));
+
+
+        public static readonly DependencyProperty TopContentProperty =
+         DockableScrollViewer.TopContentProperty.AddOwner(typeof(ListViewEx));
+
         public static readonly DependencyProperty RightContentProperty =
          DockableScrollViewer.RightContentProperty.AddOwner(typeof(ListViewEx));
 
@@ -290,15 +308,11 @@ namespace FileExplorer.UserControls
             set { SetValue(RightContentProperty, value); }
         }
 
-        public static readonly DependencyProperty OuterRightContentProperty =
-      DockableScrollViewer.OuterRightContentProperty.AddOwner(typeof(ListViewEx));
+        public static readonly DependencyProperty BottomContentProperty =
+          DockableScrollViewer.BottomContentProperty.AddOwner(typeof(ListViewEx));
 
-        public object OuterRightContent
-        {
-            get { return (object)GetValue(OuterRightContentProperty); }
-            set { SetValue(OuterRightContentProperty, value); }
-        }
-
+        public static readonly DependencyProperty LeftContentProperty =
+           DockableScrollViewer.LeftContentProperty.AddOwner(typeof(ListViewEx));
 
 
         #endregion
