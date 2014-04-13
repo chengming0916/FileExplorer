@@ -71,12 +71,13 @@ namespace FileExplorer.ViewModels.Helpers
                     {
                         if (_clearBeforeLoad)
                             All.Clear();
+
                         await _loadSubEntryFunc(_isLoaded, parameter).ContinueWith((prevTask, _) =>
                             {
+                                _isLoaded = true;
                                 if (!prevTask.IsCanceled && !prevTask.IsFaulted)
                                 {
                                     SetEntries(prevTask.Result.ToArray());
-                                    _isLoaded = true;
                                     _lastRefreshTimeUtc = DateTime.UtcNow;
                                 }
                             }, _lastCancellationToken, TaskScheduler.FromCurrentSynchronizationContext());
@@ -93,7 +94,7 @@ namespace FileExplorer.ViewModels.Helpers
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
             all.Clear();
-            all.NotifyChanges();
+            //all.NotifyChanges();
             //foreach (var vm in viewModels)
             //    All.Add(vm);
             all.AddItems(viewModels);

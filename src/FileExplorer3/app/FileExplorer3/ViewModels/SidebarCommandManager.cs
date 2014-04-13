@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Cofe.Core.Script;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
 using System;
@@ -47,6 +48,7 @@ namespace FileExplorer.ViewModels
                 null,
                 null)
                 {
+                    
                 };
         }
         

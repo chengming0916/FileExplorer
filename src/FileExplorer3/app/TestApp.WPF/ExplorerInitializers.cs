@@ -204,12 +204,12 @@ namespace TestApp
                     new SelectGroupCommand( explorerModel.FileList),    
                     new ViewModeCommand( explorerModel.FileList),
                     new GoogleExportCommandModel(() => explorerModel.RootModels)
-                    { IsVisibleOnToolbar = false, WindowManager = _windowManager },
+                    { IsVisibleOnMenu = true, WindowManager = _windowManager },
                     
                     new SeparatorCommandModel(),
-                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnMenu = false, Symbol = Convert.ToChar(0xE188) },
+                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnToolbar = true, Symbol = Convert.ToChar(0xE188) },
                     new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder })
-                        { IsVisibleOnToolbar = false, Header = Strings.strNew, IsEnabled = true},
+                        { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
                     new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer)
                     //new CommandModel(ExplorerCommands.TogglePreviewer) { IsVisibleOnMenu = false, Header = "", IsHeaderAlignRight = true, Symbol = Convert.ToChar(0xE239) }
                     )
@@ -217,19 +217,21 @@ namespace TestApp
 
             explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
-                    new CommandModel(ExplorerCommands.NewWindow) { },
-                     new CommandModel(ApplicationCommands.New) { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false },   
+                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
+                     new CommandModel(ApplicationCommands.New) { IsVisibleOnMenu = true },
+                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnMenu = true },
+                    new CommandModel(ApplicationCommands.Delete) { IsVisibleOnMenu = true },
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnMenu = true },
               
                     new CommandModel(ExplorerCommands.Map)  { 
                         Symbol = Convert.ToChar(0xE17B), 
                         IsEnabled = true,
-                        IsHeaderVisible = false, IsVisibleOnMenu = false  
+                        IsHeaderVisible = false, IsVisibleOnToolbar = true
                     },
                     new CommandModel(ExplorerCommands.Unmap)  { 
-                        Symbol = Convert.ToChar(0xE17A)
+                        Symbol = Convert.ToChar(0xE17A),
+                        IsVisibleOnMenu = true,
+                        IsVisibleOnToolbar = true
                     }
                     )
               };

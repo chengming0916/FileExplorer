@@ -48,7 +48,7 @@ namespace FileExplorer.ViewModels
             return new DoSelection(commandKey, getSelectionFunc, nextCommandFunc, noSelectionCommand);
         }
 
-       
+
     }
 
     #region MessageBox
@@ -424,7 +424,11 @@ namespace FileExplorer.ViewModels
         public static IScriptCommand NewWindow =
             TabbedExplorer.Do((tevm, pd) =>
             {
-                tevm.OpenTab();
+                if (pd.Parameter is IEntryModel[])
+                    tevm.OpenTab((pd.Parameter as IEntryModel[]).FirstOrDefault());
+                else if (pd.Parameter is IEntryModel)
+                    tevm.OpenTab(pd.Parameter as IEntryModel);
+                else tevm.OpenTab();
                 return ResultCommand.NoError;
             });
 
@@ -545,8 +549,8 @@ namespace FileExplorer.ViewModels
             return new BroadcastChangeRoot(evnt, events, nextCommand);
         }
 
-        
-        
+
+
 
     }
 

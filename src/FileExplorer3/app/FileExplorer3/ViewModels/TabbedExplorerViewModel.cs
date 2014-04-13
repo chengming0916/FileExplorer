@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using Cofe.Core.Script;
+using FileExplorer.Models;
 using FileExplorer.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.ViewModels
 {
-   
+
     public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, ITabbedExplorerViewModel
     {
         private IExplorerInitializer _initializer;
@@ -27,9 +29,14 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        public void OpenTab(IExplorerViewModel evm = null)
+        public void OpenTab(IEntryModel model = null)
         {
-            evm = evm ?? new ExplorerViewModel(_initializer);
+            var initializer = _initializer.Clone();
+            if (model != null)
+                initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
+            IExplorerViewModel evm = new ExplorerViewModel(initializer);
+            //if (model != null)
+            //    evm.Commands.Execute(new IScriptCommand[] { Explorer.GoTo(model) });
             ActivateItem(evm);
         }
 
@@ -63,8 +70,8 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
-        
 
-       
+
+
     }
 }

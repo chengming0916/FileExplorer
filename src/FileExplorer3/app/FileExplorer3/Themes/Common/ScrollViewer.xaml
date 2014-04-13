@@ -56,19 +56,19 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type bc:DockableScrollViewer}">
                     <DockPanel>
-                        <ContentPresenter x:Name="OuterTopContent" DockPanel.Dock="Top" 
+                        <ContentControl x:Name="OuterTopContent" DockPanel.Dock="Top" 
                                                   Content="{TemplateBinding OuterTopContent}" Visibility="Visible" />
                         <bc:DockPanelSplitter x:Name="OuterTopSplitter" DockPanel.Dock="Top" Visibility="Collapsed" />
 
-                        <ContentPresenter x:Name="OuterRightContent" DockPanel.Dock="Right" 
+                        <ContentControl x:Name="OuterRightContent" DockPanel.Dock="Right" 
                                                   Content="{TemplateBinding OuterRightContent}" Visibility="Visible" />
                         <bc:DockPanelSplitter x:Name="OuterRightSplitter" DockPanel.Dock="Right" Visibility="Collapsed" />
 
-                        <ContentPresenter x:Name="OuterBottomContent" DockPanel.Dock="Bottom" 
+                        <ContentControl x:Name="OuterBottomContent" DockPanel.Dock="Bottom" 
                                                   Content="{TemplateBinding OuterBottomContent}" Visibility="Visible" />
                         <bc:DockPanelSplitter x:Name="OuterBottomSplitter" DockPanel.Dock="Bottom" Visibility="Collapsed" />
 
-                        <ContentPresenter x:Name="OuterLeftContent" DockPanel.Dock="Left" 
+                        <ContentControl x:Name="OuterLeftContent" DockPanel.Dock="Left" 
                                                   Content="{TemplateBinding OuterLeftContent}" Visibility="Visible" />
                         <bc:DockPanelSplitter x:Name="OuterLeftSplitter" DockPanel.Dock="Left" Visibility="Collapsed" />
 
@@ -85,24 +85,26 @@
                             </Grid.RowDefinitions>
 
                             <DockPanel Margin="{TemplateBinding Padding}">
-                                <ContentPresenter x:Name="TopContent" DockPanel.Dock="Top" 
+                                <ContentControl x:Name="TopContent" DockPanel.Dock="Top" 
                                                   Content="{TemplateBinding TopContent}" Visibility="Visible" />
                                 <bc:DockPanelSplitter x:Name="TopSplitter" DockPanel.Dock="Top" Visibility="Collapsed" />
 
-                                <ContentPresenter x:Name="RightContent" DockPanel.Dock="Right" 
+                                <ContentControl x:Name="RightContent" DockPanel.Dock="Right" 
                                                   Content="{TemplateBinding RightContent}" Visibility="Visible" />
                                 <bc:DockPanelSplitter x:Name="RightSplitter" DockPanel.Dock="Right" Visibility="Collapsed"  />
 
-                                <ContentPresenter x:Name="BottomContent" DockPanel.Dock="Bottom" 
+                                <ContentControl x:Name="BottomContent" DockPanel.Dock="Bottom" 
                                                   Content="{TemplateBinding BottomContent}" Visibility="Visible" />
                                 <bc:DockPanelSplitter x:Name="BottomSplitter" DockPanel.Dock="Bottom" Visibility="Collapsed" />
 
-                                <ContentPresenter x:Name="LeftContent" DockPanel.Dock="Left" 
+                                <ContentControl x:Name="LeftContent" DockPanel.Dock="Left" 
                                                   Content="{TemplateBinding LeftContent}" Visibility="Visible" />
                                 <bc:DockPanelSplitter x:Name="LeftSplitter" DockPanel.Dock="Left" Visibility="Collapsed" />
 
                                 <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" 
-                                                    ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" KeyboardNavigation.DirectionalNavigation="Local" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                        ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" 
+                                                        KeyboardNavigation.DirectionalNavigation="Local" 
+                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                             </DockPanel>
                             <ScrollBar x:Name="PART_HorizontalScrollBar" Cursor="Arrow" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0.0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
                             <ScrollBar x:Name="PART_VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0.0" Orientation="Vertical" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}"/>
@@ -113,7 +115,7 @@
                         </Grid>
                     </DockPanel>
                     <ControlTemplate.Triggers>
-                        <!-- Outer -->
+                         <!--Outer--> 
                         <DataTrigger Binding="{Binding Path=OuterTopContent.(bc:DockableScrollViewer.IsContentVisible), 
                             RelativeSource={RelativeSource TemplatedParent} }" Value="False">
                             <Setter TargetName="OuterTopContent" Property="Visibility" Value="Collapsed" />
@@ -173,7 +175,7 @@
                             <Setter TargetName="OuterLeftSplitter" Property="Visibility" Value="Visible" />
                         </MultiDataTrigger>
 
-                        <!-- Inner -->
+                         <!--Inner--> 
                         <DataTrigger Binding="{Binding Path=TopContent.(bc:DockableScrollViewer.IsContentVisible), 
                             RelativeSource={RelativeSource TemplatedParent} }" Value="False">
                             <Setter TargetName="TopContent" Property="Visibility" Value="Collapsed" />

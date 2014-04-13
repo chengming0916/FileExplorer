@@ -32,6 +32,13 @@ namespace FileExplorer.ViewModels
             Initializers = new List<IViewModelInitializer<IExplorerViewModel>>(initializers);
         }
 
+        protected ExplorerInitializer(IExplorerInitializer initializer)
+            : this(initializer.WindowManager, initializer.Events, initializer.RootModels,
+            initializer.Initializers.ToArray())
+        {
+       
+        }
+
         #endregion
 
         #region Methods

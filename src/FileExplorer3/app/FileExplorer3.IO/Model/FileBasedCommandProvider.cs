@@ -12,16 +12,16 @@ namespace FileExplorer.Models
     {
         public FileBasedCommandProvider()
             : base(
-            new CommandModel(ApplicationCommands.Open) { IsVisibleOnToolbar = false },
+            new CommandModel(ApplicationCommands.Open) { IsVisibleOnMenu = true },
             new SeparatorCommandModel(),
            
-            new CommandModel(ApplicationCommands.Cut) { IsVisibleOnToolbar = false },
-            new CommandModel(ApplicationCommands.Copy) { IsVisibleOnToolbar = false },
-            new CommandModel(ApplicationCommands.Paste) { IsVisibleOnToolbar = false },
+            new CommandModel(ApplicationCommands.Cut) { IsVisibleOnMenu = true },
+            new CommandModel(ApplicationCommands.Copy) { IsVisibleOnMenu = true },
+            new CommandModel(ApplicationCommands.Paste) { IsVisibleOnMenu = true },
 
             new SeparatorCommandModel(),
-            new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-            new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false }
+            new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnMenu = true },
+            new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnMenu = true }
             
             
             )

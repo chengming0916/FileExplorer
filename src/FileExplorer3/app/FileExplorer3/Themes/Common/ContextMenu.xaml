@@ -6,7 +6,7 @@
     xmlns:conv="clr-namespace:QuickZip.Converters"
     >
     <ResourceDictionary.MergedDictionaries>
- 
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
 
     </ResourceDictionary.MergedDictionaries>
 
@@ -15,7 +15,7 @@
         <Setter Property="Visibility" Value="{Binding IsVisibleOnMenu, Converter={StaticResource btvc}}" />
         <Setter Property="Header" Value="{Binding CommandModel.Header, Mode=OneWay}"  />
         <Setter Property="Command" Value="{Binding  CommandBinding.Command, Mode=OneWay}" />
-        <Setter Property="CommandParameter" Value="{Binding DataContext.ToolbarCommands.AppliedModels, 
+        <Setter Property="CommandParameter" Value="{Binding DataContext.Commands.ToolbarCommands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
         <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
         <Setter Property="IsCheckable" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
