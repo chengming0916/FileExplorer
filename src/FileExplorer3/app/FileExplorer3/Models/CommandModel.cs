@@ -71,7 +71,7 @@ namespace FileExplorer.Models
         private int _priority;
         private bool _isChecked, _isEnabled, _isHeaderVisible = true, _isHeaderAlignRight;
         private object _parameter;
-        private bool _isVisibleOnToolbar = true, _isVisibleOnMenu = true;
+        private bool _isVisibleOnToolbar = false, _isVisibleOnMenu = false;
 
         #endregion
 

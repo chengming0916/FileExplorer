@@ -66,10 +66,16 @@ namespace FileExplorer.ViewModels
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
-            var uiEle = view as System.Windows.UIElement;
-            this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
-            _initializer.Initializers.InitalizeAsync(this);
 
+            if (!_attachedView)
+            {
+                var uiEle = view as System.Windows.UIElement;
+                this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
+                _initializer.Initializers.InitalizeAsync(this);
+
+                _attachedView = true;
+            }
+            
             //if (_rootModels != null && _rootModels.Length > 0)
             //    uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
 
@@ -201,6 +207,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
+        private bool _attachedView = false;
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;
         private IEventAggregator _internalEvents = new EventAggregator();
@@ -234,6 +241,7 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
+
 
 
         #endregion

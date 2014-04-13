@@ -275,7 +275,7 @@ namespace TestApp
                 new ToolbarCommandsInitializers(_windowManager));
 
             var tabVM = new TabbedExplorerViewModel(initializer);
-
+            
             //var windowManager = new TabbedAppWindowManager(tabVM);
            
             

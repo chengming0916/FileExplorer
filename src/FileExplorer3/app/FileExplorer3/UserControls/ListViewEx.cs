@@ -310,6 +310,11 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty BottomContentProperty =
           DockableScrollViewer.BottomContentProperty.AddOwner(typeof(ListViewEx));
+        public object BottomContent
+        {
+            get { return (object)GetValue(BottomContentProperty); }
+            set { SetValue(BottomContentProperty, value); }
+        }
 
         public static readonly DependencyProperty LeftContentProperty =
            DockableScrollViewer.LeftContentProperty.AddOwner(typeof(ListViewEx));

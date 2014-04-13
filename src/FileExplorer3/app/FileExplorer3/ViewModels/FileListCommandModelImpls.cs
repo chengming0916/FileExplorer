@@ -106,6 +106,7 @@ namespace FileExplorer.ViewModels
                  generateCommandModel().ToArray()
             )
         {
+            IsVisibleOnMenu = true; IsVisibleOnToolbar = true;
             _flvm = flvm;
             IsHeaderVisible = false;
             SliderValue = flvm.ItemSize;
@@ -167,6 +168,7 @@ namespace FileExplorer.ViewModels
             new CommandModel(ApplicationCommands.SelectAll) { Symbol = Convert.ToChar(0xE14E) },
             new CommandModel(ExplorerCommands.ToggleCheckBox) { Symbol = Convert.ToChar(0xe1ef) })
         {
+            IsVisibleOnMenu = true; IsVisibleOnToolbar = true;
             Symbol = Convert.ToChar(0xE10B);
             Header = Strings.txtSelection;
         }

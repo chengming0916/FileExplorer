@@ -27,7 +27,11 @@
 
     </UserControl.Resources>
     <Grid>
+        <!--<Grid.ContextMenu>
 
+            <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
+                                    ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
+        </Grid.ContextMenu>-->
 
         <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"       
                      ItemsSource="{Binding ProcessedEntries.All}"   BorderBrush="Transparent"
@@ -106,6 +110,10 @@
                                 bc:DockableScrollViewer.ContentSize="150.0"
                                 bc:DockableScrollViewer.IsContentVisible="{Binding Sidebar.IsVisible}" />
             </uc:ListViewEx.OuterRightContent>
+
+            <uc:ListViewEx.BottomContent>
+                <Rectangle />
+            </uc:ListViewEx.BottomContent>
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>

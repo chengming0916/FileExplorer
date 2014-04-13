@@ -26,6 +26,9 @@ namespace FileExplorer.BaseControls.Menu
 
                 if (pd.Input.InputType == UIInputType.MouseRight)
                 {
+                    //_contextMenu.DataContext =
+                    //    _contextMenu.DataContext ??
+                    //    (pm["Sender"] as FrameworkElement).DataContext;
                     _contextMenu.PlacementTarget = (pd.Sender as Control);
                     _contextMenu.SetValue(ContextMenu.IsOpenProperty, true);
                     pd.EventArgs.Handled = true;

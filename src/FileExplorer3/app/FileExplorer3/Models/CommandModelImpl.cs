@@ -11,7 +11,7 @@ namespace FileExplorer.Models
 {
     public class SeparatorCommandModel : CommandModel, ISeparatorModel
     {
-        public SeparatorCommandModel() : base() { IsEnabled = true; }
+        public SeparatorCommandModel() : base() { IsEnabled = true; IsVisibleOnMenu = true; IsVisibleOnToolbar = true; }
 
 
     }

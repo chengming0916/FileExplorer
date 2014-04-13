@@ -67,18 +67,20 @@ namespace FileExplorer.ViewModels
                 {
                    ExtraCommandProviders = new[] { 
                         new StaticCommandProvider(
-                    new CommandModel(ApplicationCommands.New) { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnToolbar = false },
-                    new CommandModel(ApplicationCommands.Delete)  { IsVisibleOnToolbar = false },
-                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnToolbar = false },
+                    new CommandModel(ApplicationCommands.New){ IsVisibleOnMenu = true },
+                    new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnMenu = true },
+                    new CommandModel(ApplicationCommands.Delete){ IsVisibleOnMenu = true },
+                    new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnMenu = true },
                    
                     new CommandModel(ExplorerCommands.Map)  { 
                         Symbol = Convert.ToChar(0xE17B), 
                         IsEnabled = true,
-                        IsHeaderVisible = false, IsVisibleOnMenu = false  
+                        IsHeaderVisible = false, IsVisibleOnToolbar = true
                     },
 
-                    new CommandModel(ExplorerCommands.Unmap)  {  }
+                    new CommandModel(ExplorerCommands.Unmap)  {
+                     IsVisibleOnToolbar = true, IsVisibleOnMenu = true
+                    }
                     )}
                 };
         }

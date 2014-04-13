@@ -16,7 +16,7 @@ namespace FileExplorer.ViewModels
             : base(routedCommand)
         {
             Symbol = Convert.ToChar(0xE239);
-            IsVisibleOnMenu = false;
+            IsVisibleOnToolbar = true;
             Header = "";
             IsHeaderAlignRight = true;
 

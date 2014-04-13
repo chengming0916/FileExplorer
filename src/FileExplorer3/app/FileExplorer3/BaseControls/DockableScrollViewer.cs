@@ -44,7 +44,8 @@ namespace FileExplorer.BaseControls
                     if (contentSize != 0)
                     {
                         var eleContent = this.Template.FindName(contentProperty.Name, this) as ContentPresenter;
-                        eleContent.SetValue(ContentPresenter.WidthProperty, contentSize);
+                        if (eleContent != null)
+                            eleContent.SetValue(ContentPresenter.WidthProperty, contentSize);
                     }
                 }
             }
@@ -126,7 +127,7 @@ namespace FileExplorer.BaseControls
 
 
         public static readonly DependencyProperty TopContentProperty =
-            DependencyProperty.Register("TopContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+            DependencyProperty.Register("TopContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null, OnContentChanged));
         public object TopContent
         {
             get { return (object)GetValue(TopContentProperty); }
@@ -134,7 +135,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty RightContentProperty =
-           DependencyProperty.Register("RightContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+           DependencyProperty.Register("RightContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null, OnContentChanged));
         public object RightContent
         {
             get { return (object)GetValue(RightContentProperty); }
@@ -142,7 +143,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty BottomContentProperty =
-           DependencyProperty.Register("BottomContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+           DependencyProperty.Register("BottomContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null,OnContentChanged));
         public object BottomContent
         {
             get { return (object)GetValue(BottomContentProperty); }
@@ -150,7 +151,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty LeftContentProperty =
-           DependencyProperty.Register("LeftContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+           DependencyProperty.Register("LeftContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null, OnContentChanged));
         public object LeftContent
         {
             get { return (object)GetValue(LeftContentProperty); }
@@ -159,7 +160,7 @@ namespace FileExplorer.BaseControls
 
 
         public static readonly DependencyProperty OuterTopContentProperty =
-           DependencyProperty.Register("OuterTopContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+           DependencyProperty.Register("OuterTopContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null, OnContentChanged));
         public object OuterTopContent
         {
             get { return (object)GetValue(OuterTopContentProperty); }
@@ -167,7 +168,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty OuterRightContentProperty =
-           DependencyProperty.Register("OuterRightContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+           DependencyProperty.Register("OuterRightContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null, OnContentChanged));
         public object OuterRightContent
         {
             get { return (object)GetValue(OuterRightContentProperty); }
@@ -175,7 +176,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty OuterBottomContentProperty =
-           DependencyProperty.Register("OuterBottomContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+           DependencyProperty.Register("OuterBottomContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null, OnContentChanged));
         public object OuterBottomContent
         {
             get { return (object)GetValue(OuterBottomContentProperty); }
@@ -183,7 +184,7 @@ namespace FileExplorer.BaseControls
         }
 
         public static readonly DependencyProperty OuterLeftContentProperty =
-           DependencyProperty.Register("OuterLeftContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(OnContentChanged));
+           DependencyProperty.Register("OuterLeftContent", typeof(object), typeof(DockableScrollViewer), new PropertyMetadata(null, OnContentChanged));
         public object OuterLeftContent
         {
             get { return (object)GetValue(OuterLeftContentProperty); }
