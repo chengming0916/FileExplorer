@@ -184,6 +184,7 @@
     <Compile Include="ViewModels\Interfaces\ISidebarViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\ITabbedExplorerViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IViewModelInitializer.cs" />
+    <Compile Include="ViewModels\Interfaces\ViewAttached.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />
     <Compile Include="ViewModels\Helpers\DialogFilterViewModel.cs" />
     <Compile Include="ViewModels\FilePickerViewModel.cs" />

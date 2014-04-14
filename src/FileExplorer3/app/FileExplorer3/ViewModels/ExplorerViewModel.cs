@@ -71,7 +71,10 @@ namespace FileExplorer.ViewModels
             {
                 var uiEle = view as System.Windows.UIElement;
                 this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
+
                 _initializer.Initializers.InitalizeAsync(this);
+                if (!(_initializer.Initializers.Any(i => i is StartupDirectoryInitializers)))
+                    GoAsync(null as IEntryModel);
 
                 _attachedView = true;
             }
@@ -90,7 +93,7 @@ namespace FileExplorer.ViewModels
 
         public async Task GoAsync(IEntryModel entryModel)
         {
-
+            entryModel = entryModel ?? RootModels.FirstOrDefault();
             if (entryModel != null)
             {
                 await DirectoryTree.SelectAsync(entryModel);

@@ -18,7 +18,7 @@ namespace FileExplorer.ViewModels
 
 
 
-    public class DirectoryTreeViewModel : ViewAware, IDirectoryTreeViewModel,
+    public class DirectoryTreeViewModel : ViewAttached, IDirectoryTreeViewModel,
         IHandle<DirectoryChangedEvent>, ISupportDragHelper
     {
         #region Cosntructor
@@ -49,8 +49,7 @@ namespace FileExplorer.ViewModels
                 events.Subscribe(this);
 
             Entries = new EntriesHelper<IDirectoryNodeViewModel>();
-            var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries) 
-            { Comparers = new[] { PathComparer.LocalDefault } };
+            var selection = new TreeRootSelector<IDirectoryNodeViewModel, IEntryModel>(Entries) { Comparers = new[] { PathComparer.LocalDefault } };
             selection.SelectionChanged += (o, e) =>
             {
                 BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
@@ -68,9 +67,12 @@ namespace FileExplorer.ViewModels
 
         protected override void OnViewAttached(object view, object context)
         {
+            if (!IsViewAttached)
+            {
+                var uiEle = view as System.Windows.UIElement;
+                this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
+            }
             base.OnViewAttached(view, context);
-            var uiEle = view as System.Windows.UIElement;
-            this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
         }
 
         protected void BroadcastDirectoryChanged(IEntryViewModel viewModel)
@@ -100,7 +102,7 @@ namespace FileExplorer.ViewModels
             _rootModels = rootModels;
             DirectoryNodeViewModel[] rootViewModels = rootModels
                .Select(r => new DirectoryNodeViewModel(_events, this, r, null)).ToArray();
-            Entries.SetEntries(rootViewModels);            
+            Entries.SetEntries(rootViewModels);
         }
 
         public void ExpandRootEntryModels()
@@ -117,18 +119,17 @@ namespace FileExplorer.ViewModels
                 (Selection as ITreeRootSelector<IDirectoryNodeViewModel, IEntryModel>)
                     .Comparers = profiles.Select(p => p.HierarchyComparer);
             }
-        }     
+        }
 
         #endregion
 
         #region Data
 
-
         private IEnumerable<IProfile> _profiles = new List<IProfile>();
         private IEventAggregator _events;
         private bool _enableDrag = true, _enableDrop = true;
         private IWindowManager _windowManager;
-private  IEntryModel[] _rootModels;
+        private IEntryModel[] _rootModels;
 
         #endregion
 

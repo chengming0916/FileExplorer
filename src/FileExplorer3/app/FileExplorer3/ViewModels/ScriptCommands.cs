@@ -414,27 +414,55 @@ namespace FileExplorer.ViewModels
 
     public static class TabbedExplorer
     {
-        public static IScriptCommand CloseWindow =
+        public static IScriptCommand CloseTab =
             TabbedExplorer.Do((tevm, pd) =>
             {
                 tevm.CloseTab(pd.Parameter as IExplorerViewModel);
                 return ResultCommand.NoError;
             });
 
-        public static IScriptCommand NewWindow =
-            TabbedExplorer.Do((tevm, pd) =>
-            {
-                if (pd.Parameter is IEntryModel[])
-                    tevm.OpenTab((pd.Parameter as IEntryModel[]).FirstOrDefault());
-                else if (pd.Parameter is IEntryModel)
-                    tevm.OpenTab(pd.Parameter as IEntryModel);
-                else tevm.OpenTab();
-                return ResultCommand.NoError;
-            });
+        public static IScriptCommand NewTab = new OpenTab();
+        public static IScriptCommand OpenTab = new OpenTab(m => m != null && m.IsDirectory);
 
         public static IScriptCommand Do(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
         {
             return new DoTabbedExplorer(commandFunc);
+        }
+    }
+
+    internal class OpenTab : DoTabbedExplorer
+    {
+        private Func<IEntryModel, bool> _filter;
+        public OpenTab(Func<IEntryModel, bool> filter = null)
+            : base((tevm, pd) =>
+            {
+                IEntryModel dirModel = null;
+                if (pd.Parameter is IEntryModel[])
+                    dirModel =(pd.Parameter as IEntryModel[]).FirstOrDefault();
+                else if (pd.Parameter is IEntryModel)
+                    dirModel = pd.Parameter as IEntryModel;
+                
+                if (filter == null || filter(dirModel))
+                    tevm.OpenTab(dirModel);
+                return ResultCommand.NoError;
+            })
+        {
+            _filter = filter;
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            if (_filter == null)
+                return true;
+
+            var pd = pm.AsUIParameterDic();
+            IEntryModel dirModel = null;
+            if (pd.Parameter is IEntryModel[])
+                dirModel = (pd.Parameter as IEntryModel[]).FirstOrDefault();
+            else if (pd.Parameter is IEntryModel)
+                dirModel = pd.Parameter as IEntryModel;
+
+            return _filter(dirModel);
         }
     }
 
