@@ -3,6 +3,7 @@
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
     xmlns:bc="clr-namespace:FileExplorer.BaseControls"
     xmlns:conv="clr-namespace:QuickZip.Converters"
+    xmlns:def="clr-namespace:FileExplorer.Defines"
     xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
     xmlns:tcs="clr-namespace:TabControlStyle"
     >
@@ -104,7 +105,7 @@
                                 </bc:DropDownList.ItemContainerStyle>
                             </bc:DropDownList>
                             <Button Template="{StaticResource BaseButton}"  
-                                    Command="ApplicationCommands.New">
+                                    Command="def:ExplorerCommands.NewTab">
                                 <TextBlock Text="&#xE109;" />
                             </Button>
                             <uc:Titlebar Grid.Row="3" VisibilityWhenNormal="Collapsed" 
@@ -165,6 +166,7 @@
                                                         LineScrollPixelCount="100" 
                                                         KeyboardNavigation.TabIndex="1"/>-->
                                 <StackPanel IsItemsHost="True" Margin="{StaticResource TabItemPanel_Padding}" 
+                                            FocusManager.IsFocusScope="False"
                                             Orientation="Horizontal" />
                             </ScrollViewer>
                         </Border>

@@ -3,6 +3,8 @@
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
     xmlns:bc="clr-namespace:FileExplorer.BaseControls"
     xmlns:conv="clr-namespace:QuickZip.Converters"
+    xmlns:def="clr-namespace:FileExplorer.Defines"
+    xmlns:cal="http://www.caliburnproject.org"
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
@@ -19,9 +21,9 @@
     <Thickness x:Key="TabItemMargin_Selected">-4,0,-4,0</Thickness>
     <Thickness x:Key="TabItemMargin_Hover">0,2,-4,0</Thickness>
     <Thickness x:Key="TabItemPanel_Padding">4,0,4,0</Thickness>
+
+
     
-
-
 
     <Style TargetType="{x:Type uc:TabItemEx}">
         <Setter Property="Foreground" Value="Black"/>
@@ -42,12 +44,25 @@
                              >
                             <!-- This is where the Content of the TabItem will be rendered. -->
                             <bc:HotTrack x:Name="hotTrack" IsEnabled="False">
-                                <ContentPresenter x:Name="ContentSite"
+                                <StackPanel Orientation="Horizontal"  Margin="7,2,12,2">
+                                    <ContentPresenter x:Name="ContentSite"
                                           VerticalAlignment="Center"
                                           HorizontalAlignment="Center"
                                           ContentSource="Header"
-                                          Margin="7,2,12,2"
+                                         
                                           RecognizesAccessKey="True"/>
+
+
+                                    <Button 
+                                        
+                                        Content="X" VerticalAlignment="Center"
+                                Template="{StaticResource BaseButtonHideOnDisabled}"
+                                Command="def:ExplorerCommands.CloseTab"
+                                CommandParameter="{Binding}" Margin="2,0"
+                                />
+
+
+                                </StackPanel>
                             </bc:HotTrack>
                         </Border>
                     </Grid>

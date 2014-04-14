@@ -20,6 +20,7 @@ namespace FileExplorer.Utils
         ICommand Command { get; set; }
         RoutedUICommand UICommandKey { get; }
         CommandBinding CommandBinding { get; }
+        InputBinding InputBinding { get; }
         ScriptBindingScope Scope { get; }
     }
 
@@ -94,6 +95,14 @@ namespace FileExplorer.Utils
                });
         }
 
+        private InputBinding getInputBinding()
+         {
+            if (UICommandKey != null && UICommandKey.InputGestures.Count > 0)
+            {
+                return new InputBinding(UICommandKey, UICommandKey.InputGestures[0]);
+            }
+            return null;
+         }
         protected void setScriptCommand(IScriptCommand value)
         {
             _scriptCommand = value;
@@ -133,11 +142,15 @@ namespace FileExplorer.Utils
         private IParameterDicConverter ParameterDicConverter { get; set; }
         public RoutedUICommand UICommandKey { get; private set; }
         public CommandBinding CommandBinding { get { return getCommandBiniding(); } }
+        public InputBinding InputBinding {  get { return getInputBinding(); } }
         public ScriptBindingScope Scope { get; set; }
 
         #endregion
 
 
+
+
+       
     }
 
     public class ScriptCommandBinding<T> : ScriptCommandBinding

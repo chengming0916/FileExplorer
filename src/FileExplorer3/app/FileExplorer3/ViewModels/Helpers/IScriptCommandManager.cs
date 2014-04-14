@@ -31,6 +31,8 @@ namespace FileExplorer.ViewModels
         /// Return a list of Commands for Toolbar and ContextMenu.
         /// </summary>
         IToolbarCommandsHelper ToolbarCommands { get; }
+
+     
     }
 
     public class CommandManagerBase : ICommandManager
@@ -50,7 +52,7 @@ namespace FileExplorer.ViewModels
             return _exportBindingSource.SelectMany(eb => eb.ExportedCommandBindings);
         }
 
- 
+
         #endregion
 
         #region Data

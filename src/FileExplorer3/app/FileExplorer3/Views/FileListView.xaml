@@ -94,7 +94,7 @@
 
             <uc:ListViewEx.OuterTopContent>
                 <Border Margin="2" bc:DockableScrollViewer.IsResizable="True" >
-                    <uc:ToolbarEx ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}"                                  
+                    <uc:ToolbarEx ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All, Mode=OneTime}"                                  
                                   def:AttachedProperties.SkipLookup="True" VerticalAlignment="Top" >
                         <uc:ToolbarEx.Resources>
                             <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ExplorerToolbar.xaml" />

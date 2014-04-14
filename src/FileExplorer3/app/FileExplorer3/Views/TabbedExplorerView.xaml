@@ -28,11 +28,11 @@
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding CurrentDirectory.Icon}" Width="16" Height="16" />
                         <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="2,0" />
-                        <Button Content="X" VerticalAlignment="Center"
+                        <!--<Button Content="X" VerticalAlignment="Center"
                                 Template="{StaticResource BaseButton}"
-                                Command="def:ExplorerCommands.CloseWindow"
+                                Command="def:ExplorerCommands.CloseTab"
                                 CommandParameter="{Binding}"
-                                />
+                                />-->
                     </StackPanel>
                 </DataTemplate>
             </uc:TabControlEx.ItemTemplate>

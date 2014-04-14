@@ -215,8 +215,9 @@ namespace TestApp
 
             explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
-                    //new CommandModel(ExplorerCommands.NewTab) { IsVisibleOnMenu = true },
-                     new CommandModel(ApplicationCommands.New) { IsVisibleOnMenu = true },
+                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
+                    new CommandModel(ExplorerCommands.OpenNewTab) { IsVisibleOnMenu = true },
+                     //new CommandModel(ApplicationCommands.New) { IsVisibleOnMenu = true },
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnMenu = true },
                     new CommandModel(ApplicationCommands.Delete) { IsVisibleOnMenu = true },
                     new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnMenu = true },

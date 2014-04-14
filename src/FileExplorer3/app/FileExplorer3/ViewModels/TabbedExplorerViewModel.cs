@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace FileExplorer.ViewModels
 {
@@ -19,9 +20,9 @@ namespace FileExplorer.ViewModels
 
         public TabbedExplorerViewModel(IExplorerInitializer initializer)
         {
-            _initializer = initializer;
+            _initializer = initializer.Clone();
             Commands = new TabbedExplorerCommandManager(this, initializer.Events);
-            OpenTab();
+
             ////_tabs = new ObservableCollection<ITabItemViewModel>();
         }
 
@@ -35,8 +36,6 @@ namespace FileExplorer.ViewModels
             if (model != null)
                 initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
             IExplorerViewModel evm = new ExplorerViewModel(initializer);
-            //if (model != null)
-            //    evm.Commands.Execute(new IScriptCommand[] { Explorer.GoTo(model) });
             ActivateItem(evm);
         }
 
@@ -50,6 +49,14 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Application);
+             uiEle.Dispatcher.BeginInvoke(DispatcherPriority.Background, new System.Action(() => OpenTab()));
+
+            //uiEle.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, 
+            //    delegate () =>
+            //    {
+            //        OpenTab();
+            //    });
+            //OpenTab();
         }
 
         #endregion
