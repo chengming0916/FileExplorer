@@ -22,6 +22,11 @@ namespace FileExplorer.UserControls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ToolbarEx), new FrameworkPropertyMetadata(typeof(ToolbarEx)));
         }
 
+        public ToolbarEx()
+        {
+            
+        }
+
         #endregion
 
         #region Methods
@@ -56,7 +61,7 @@ namespace FileExplorer.UserControls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
+         
             this.AddHandler(MenuItem.CheckedEvent, (RoutedEventHandler)((o, e) =>
                 {
                     switch (this.HeaderType)
@@ -279,7 +284,7 @@ namespace FileExplorer.UserControls
     }
 
 
-    public class ToolbarSubItemEx : MenuItem
+    public class ToolbarSubItemEx : ToolbarItemEx 
     {
 
         #region Constructor

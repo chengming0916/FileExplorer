@@ -146,6 +146,22 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="BaseButtonHideOnDisabled" TargetType="{x:Type ButtonBase}">
+        <bc:HotTrack x:Name="HotTrack" SelectedBorderBrush="{TemplateBinding BorderBrush}"
+                Padding="{TemplateBinding Padding}" Background="Transparent" 
+                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                BorderThickness="{TemplateBinding BorderThickness}">
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                              VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+        </bc:HotTrack>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Hidden" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     <ControlTemplate x:Key="RoundedButton" TargetType="{x:Type ButtonBase}">
         <Border  CornerRadius="8" BorderThickness="{TemplateBinding BorderThickness}" 
                  BorderBrush="{TemplateBinding BorderBrush}">

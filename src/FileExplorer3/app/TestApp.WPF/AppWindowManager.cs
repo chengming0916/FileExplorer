@@ -38,7 +38,15 @@ namespace TestApp
                     if (model is FileExplorer.ViewModels.ExplorerViewModel)
                     {
                         window.Width = 800; window.Height = 500;
+                        window.SetBinding(Window.IconProperty, new Binding("CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
                     }
+                    else if (model is FileExplorer.ViewModels.TabbedExplorerViewModel)
+                    {
+                        window.Width = 800; window.Height = 500;
+                        window.SetBinding(Window.TitleProperty, new Binding("ActiveItem.DisplayName") { Mode = BindingMode.OneWay });
+                        window.SetBinding(Window.IconProperty, new Binding("ActiveItem.CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
+                    }
+
                     else if (model is FileExplorer.ViewModels.LoginViewModel)
                     {
                         window.Width = 300; window.Height = 350;
@@ -48,7 +56,7 @@ namespace TestApp
                         window.Width = 500; window.Height = 500;
                     }
 
-                    window.SetBinding(Window.IconProperty, new Binding("CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
+                    
                 }
 
             return window;

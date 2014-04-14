@@ -17,7 +17,9 @@ namespace FileExplorer.Defines
 
         public static RoutedUICommand NewFolder = new RoutedUICommand(Strings.strNewFolder, "NewFolder", typeof(ExplorerCommands));
 
-        public static RoutedUICommand NewTab = new RoutedUICommand(Strings.strOpenInNewTab, "OpenInNewTab", typeof(ExplorerCommands));
+        public static RoutedUICommand NewTab = new RoutedUICommand(Strings.strNewTab, "NewTab", typeof(ExplorerCommands));
+        public static RoutedUICommand OpenNewTab = new RoutedUICommand(Strings.strOpenInNewTab, "OpenInNewTab", typeof(ExplorerCommands),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift) }));
         public static RoutedUICommand CloseTab = new RoutedUICommand(Strings.strCloseTab, "CloseTab", typeof(ExplorerCommands));
 
         public static RoutedUICommand NewWindow = new RoutedUICommand(Strings.strOpenInNewWindow, "OpenInNewWindow", typeof(ExplorerCommands));

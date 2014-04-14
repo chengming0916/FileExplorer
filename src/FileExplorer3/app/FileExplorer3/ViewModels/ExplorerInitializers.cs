@@ -25,8 +25,7 @@ namespace FileExplorer.ViewModels
 
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
-            if (_startupDir != null)
-                await explorerModel.GoAsync(_startupDir);
+            await explorerModel.GoAsync(_startupDir);
         }
     }
 }

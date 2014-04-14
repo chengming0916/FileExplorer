@@ -15,6 +15,7 @@ using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
 using Cofe.Core.Utils;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace FileExplorer.ViewModels
 {
@@ -34,6 +35,7 @@ namespace FileExplorer.ViewModels
             _initializer = initializer;
 
             WindowTitleMask = "{0}";
+            DisplayName = "";
             //Toolbar = new ToolbarViewModel(events);
             Breadcrumb = new BreadcrumbViewModel(_internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
@@ -72,21 +74,21 @@ namespace FileExplorer.ViewModels
                 var uiEle = view as System.Windows.UIElement;
                 this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
 
-                _initializer.Initializers.InitalizeAsync(this);
                 if (!(_initializer.Initializers.Any(i => i is StartupDirectoryInitializers)))
-                    GoAsync(null as IEntryModel);
+                    _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(null));
+                _initializer.Initializers.InitalizeAsync(this);
 
                 _attachedView = true;
             }
-            
+
             //if (_rootModels != null && _rootModels.Length > 0)
             //    uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
 
-                //Commands.Execute(
-                //    new IScriptCommand[] { 
-                //        Explorer.GoTo(_rootModels.First())
-                //    })), System.Windows.Threading.DispatcherPriority.Background
-                //    );
+            //Commands.Execute(
+            //    new IScriptCommand[] { 
+            //        Explorer.GoTo(_rootModels.First())
+            //    })), System.Windows.Threading.DispatcherPriority.Background
+            //    );
 
 
         }
