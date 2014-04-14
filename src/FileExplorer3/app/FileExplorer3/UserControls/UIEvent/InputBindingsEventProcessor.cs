@@ -45,6 +45,7 @@ namespace FileExplorer.BaseControls
 
                         if (match && ib.Command != null)
                         {
+
                             if (!String.IsNullOrEmpty(_targetName))
                                 if (UITools.FindAncestor<FrameworkElement>(
                                    eventArgs.OriginalSource as DependencyObject,
@@ -62,6 +63,7 @@ namespace FileExplorer.BaseControls
                                 ib.Command.Execute(ib.CommandParameter);
                                 return ResultCommand.OK;
                             }
+
                         }
                     }
                 }
@@ -71,6 +73,7 @@ namespace FileExplorer.BaseControls
 
         public InputBindingsEventProcessor()
         {
+            InputBindings = new InputBindingCollection();
             _processEvents.AddRange(
                 new[] {
                     FrameworkElement.KeyDownEvent, 
@@ -99,7 +102,7 @@ namespace FileExplorer.BaseControls
 
         public static DependencyProperty InputBindingsProperty =
             DependencyProperty.Register("InputBindings", typeof(InputBindingCollection), typeof(InputBindingsEventProcessor),
-            new PropertyMetadata(new InputBindingCollection()));
+            new PropertyMetadata());
 
         public InputBindingCollection InputBindings
         {

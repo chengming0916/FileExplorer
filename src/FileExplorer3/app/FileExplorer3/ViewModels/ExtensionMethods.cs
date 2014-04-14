@@ -103,12 +103,7 @@ namespace FileExplorer
                 {
                     var binding = c.CommandBinding;
                     if (binding != null)
-                    {
                         ele.CommandBindings.Add(binding);
-                        //var inputBinding = c.InputBinding;
-                        //if (inputBinding != null)
-                        //    ele.InputBindings.Add(inputBinding);
-                    }
                 }
         }
 

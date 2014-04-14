@@ -19,12 +19,13 @@ namespace FileExplorer.Defines
 
         public static RoutedUICommand NewTab = new RoutedUICommand(Strings.strNewTab, "NewTab", typeof(ExplorerCommands));
         public static RoutedUICommand OpenNewTab = new RoutedUICommand(Strings.strOpenInNewTab, "OpenInNewTab", typeof(ExplorerCommands),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift) }));
-        public static RoutedUICommand CloseTab = new RoutedUICommand(Strings.strCloseTab, "CloseTab", typeof(ExplorerCommands));
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.T, ModifierKeys.Control) }));
+        public static RoutedUICommand CloseTab = new RoutedUICommand(Strings.strCloseTab, "CloseTab", typeof(ExplorerCommands),
+                    new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F4, ModifierKeys.Control) }));
 
         public static RoutedUICommand NewWindow = new RoutedUICommand(Strings.strOpenInNewWindow, "OpenInNewWindow", typeof(ExplorerCommands));
         public static RoutedUICommand CloseWindow = new RoutedUICommand(Strings.strCloseWindow, "CloseWindow", typeof(ExplorerCommands));
-        
+
         public static RoutedUICommand Map = new RoutedUICommand("Map", "Map", typeof(ExplorerCommands));
         public static RoutedUICommand Unmap = new RoutedUICommand("Unmap", "Unmap", typeof(ExplorerCommands));
         public static RoutedUICommand Refresh = new RoutedUICommand(Strings.strRefresh, "Refresh", typeof(ExplorerCommands),
