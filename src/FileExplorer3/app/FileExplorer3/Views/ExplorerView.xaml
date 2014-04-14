@@ -9,12 +9,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <bc:UIEventAdapter.Processors>
-            <!--<bc:InputBindingsEventProcessor >
+            <bc:InputBindingsEventProcessor >
                 <bc:InputBindingsEventProcessor.InputBindings>
                     <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlUp}" />
                     <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlDown}" />
                 </bc:InputBindingsEventProcessor.InputBindings>
-            </bc:InputBindingsEventProcessor>-->
+            </bc:InputBindingsEventProcessor>
             <bc:DragDropLiteEventProcessor />
         </bc:UIEventAdapter.Processors>
         <Grid.LayoutTransform>
