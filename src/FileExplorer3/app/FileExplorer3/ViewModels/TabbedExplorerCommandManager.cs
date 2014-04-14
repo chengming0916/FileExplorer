@@ -30,8 +30,8 @@ namespace FileExplorer.ViewModels
             #region Set ScriptCommands
 
             ScriptCommands = new DynamicDictionary<IScriptCommand>();
-            ScriptCommands.NewWindow = TabbedExplorer.NewWindow;
-            ScriptCommands.CloseWindow = TabbedExplorer.CloseWindow;
+            ScriptCommands.NewTab = TabbedExplorer.OpenTab;
+            ScriptCommands.CloseTab = TabbedExplorer.CloseTab;
 
             #endregion
 
@@ -39,9 +39,9 @@ namespace FileExplorer.ViewModels
             exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(                    
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Application),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.New, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Application),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseWindow, this, (ch) => ch.ScriptCommands.CloseWindow, ParameterDicConverter, ScriptBindingScope.Application)
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewTab, this, (ch) => ch.ScriptCommands.NewTab, ParameterDicConverter, ScriptBindingScope.Application),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.New, this, (ch) => ch.ScriptCommands.NewTab, ParameterDicConverter, ScriptBindingScope.Application),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseTab, this, (ch) => ch.ScriptCommands.CloseTab, ParameterDicConverter, ScriptBindingScope.Application)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();

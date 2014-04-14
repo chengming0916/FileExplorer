@@ -16,6 +16,8 @@ namespace FileExplorer.Defines
         public static string strToggleCheckBox = "Checkboxes";
         public static string strToggleViewMode = "ViewMode";
         public static string strTogglePreviewer = "Previewer";
+        public static string strOpenInNewTab = "Open in new tab";
+        public static string strCloseTab = "Close tab";
         public static string strOpenInNewWindow = "Open in new window";
         public static string strCloseWindow = "Close window";
         public static string strNewFolder = "New Folder";

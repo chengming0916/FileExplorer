@@ -12,7 +12,12 @@ namespace FileExplorer.Models
     {
         public FileBasedCommandProvider()
             : base(
-            new CommandModel(ApplicationCommands.Open) { IsVisibleOnMenu = true },
+            new DirectoryCommandModel(
+                new CommandModel(ApplicationCommands.Open) { IsVisibleOnMenu = true },
+                new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
+                new CommandModel(ExplorerCommands.NewTab) { IsVisibleOnMenu = true })
+                { Header = "Open", IsVisibleOnMenu = true, IsEnabled = true },
+             
             new SeparatorCommandModel(),
            
             new CommandModel(ApplicationCommands.Cut) { IsVisibleOnMenu = true },

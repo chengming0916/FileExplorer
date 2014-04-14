@@ -31,8 +31,12 @@ namespace FileExplorer.ViewModels
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
-            var uiEle = view as System.Windows.UIElement;
-            this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
+            if (!_viewAttached)
+            {
+                var uiEle = view as System.Windows.UIElement;
+                this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
+                _viewAttached = true;
+            }
         }
 
         public void Handle(SelectionChangedEvent message)
@@ -143,6 +147,7 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
+        bool _viewAttached = false;
         bool _updatingNavPosition = false, _updatingNavigationHistory = false;
         int _position = 0;
         IEntryViewModel _currentFolder;

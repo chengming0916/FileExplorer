@@ -76,9 +76,6 @@ namespace FileExplorer.ViewModels
 
                     }
                 });
-
-            if (Entries.AllNonBindable.Count() > 0)
-                SelectAsync(Entries.AllNonBindable.First().Selection.Value);
         }
 
 

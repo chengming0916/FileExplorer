@@ -33,6 +33,8 @@ namespace FileExplorer.Models
 
         public bool Equals(IEntryModel other)
         {
+            if (other == null)
+                return false;
             return FullPath.Equals(other.FullPath);
         }
 

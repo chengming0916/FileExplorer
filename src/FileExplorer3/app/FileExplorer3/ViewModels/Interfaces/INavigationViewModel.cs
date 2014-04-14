@@ -16,5 +16,6 @@ namespace FileExplorer.ViewModels
         bool CanGoBack { get; }
         bool CanGoNext { get; }
 
+     
     }
 }
