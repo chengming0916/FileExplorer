@@ -35,8 +35,17 @@ namespace FileExplorer.ViewModels
             var initializer = _initializer.Clone();
             if (model != null)
                 initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
-            IExplorerViewModel evm = new ExplorerViewModel(initializer);
-            ActivateItem(evm);
+            IExplorerViewModel expvm = new ExplorerViewModel(initializer);
+            expvm.FileList.Commands.ScriptCommands.OpenTab =
+                FileList.IfSelection(evm => evm.Count() >= 1,
+                    ScriptCommands.RunInSequence(
+                    FileList.AssignSelectionToParameter(TabbedExplorer.OpenTab(this))),
+                    NullScriptCommand.Instance);
+            expvm.DirectoryTree.Commands.ScriptCommands.OpenTab =
+                    ScriptCommands.RunInSequence(
+                    DirectoryTree.AssignSelectionToParameter(TabbedExplorer.OpenTab(this)));
+
+            ActivateItem(expvm);
         }
 
         public void CloseTab(IExplorerViewModel evm)

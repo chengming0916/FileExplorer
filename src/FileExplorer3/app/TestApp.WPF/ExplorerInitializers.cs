@@ -194,10 +194,9 @@ namespace TestApp
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
             explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
-
+               
                 new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
                 new StaticCommandProvider(
-                    
                     new SeparatorCommandModel(),
                     new SelectGroupCommand( explorerModel.FileList),    
                     new ViewModeCommand( explorerModel.FileList),
@@ -216,7 +215,7 @@ namespace TestApp
             explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
                     new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
-                    new CommandModel(ExplorerCommands.OpenNewTab) { IsVisibleOnMenu = true },
+                    new CommandModel(ExplorerCommands.OpenTab) { IsVisibleOnMenu = true },
                      //new CommandModel(ApplicationCommands.New) { IsVisibleOnMenu = true },
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnMenu = true },
                     new CommandModel(ApplicationCommands.Delete) { IsVisibleOnMenu = true },

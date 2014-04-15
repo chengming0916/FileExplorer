@@ -34,6 +34,7 @@ namespace FileExplorer.ViewModels
             ScriptCommands.Delete = NullScriptCommand.Instance;
             ScriptCommands.ToggleRename = DirectoryTree.ToggleRename;
             ScriptCommands.Open = DirectoryTree.ExpandSelected;
+            ScriptCommands.OpenTab = NullScriptCommand.Instance;
             ScriptCommands.NewWindow = NullScriptCommand.Instance;
             ScriptCommands.Map = NullScriptCommand.Instance;
             ScriptCommands.Unmap = Explorer.DoSelection(ems =>
@@ -54,6 +55,7 @@ namespace FileExplorer.ViewModels
                     ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.ScriptCommands.Open, ParameterDicConverter, ScriptBindingScope.Local),           
                     ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.ScriptCommands.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.ScriptCommands.Map, ParameterDicConverter, ScriptBindingScope.Explorer),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Unmap, this, (ch) => ch.ScriptCommands.Unmap, ParameterDicConverter, ScriptBindingScope.Local)
