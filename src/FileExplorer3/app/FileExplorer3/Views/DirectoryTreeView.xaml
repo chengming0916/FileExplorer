@@ -58,6 +58,7 @@
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
+                        <KeyBinding Command="def:ExplorerCommands.OpenTab" Key="T" Modifiers="Control" />
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />

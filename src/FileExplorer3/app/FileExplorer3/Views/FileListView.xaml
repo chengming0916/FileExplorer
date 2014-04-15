@@ -60,7 +60,7 @@
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
                         <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlUp}" />
                         <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlDown}" />
-
+                        <KeyBinding Command="def:ExplorerCommands.OpenTab" Key="T" Modifiers="Control" />
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
 

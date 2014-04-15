@@ -422,7 +422,16 @@ namespace FileExplorer.ViewModels
             });
 
         public static IScriptCommand NewTab = new OpenTab();
-        public static IScriptCommand OpenTab = new OpenTab(m => m != null && m.IsDirectory);
+
+        /// <summary>
+        /// Open directory (specified as Parameter) in new tab.
+        /// </summary>
+        /// <param name="tevm"></param>
+        /// <returns></returns>
+        public static IScriptCommand OpenTab(ITabbedExplorerViewModel tevm)
+        {
+            return new OpenTab(m => m != null && m.IsDirectory, tevm);
+        }
 
         public static IScriptCommand Do(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
         {
@@ -430,28 +439,39 @@ namespace FileExplorer.ViewModels
         }
     }
 
-    internal class OpenTab : DoTabbedExplorer
+    internal class OpenTab : ScriptCommandBase
     {
         private Func<IEntryModel, bool> _filter;
-        public OpenTab(Func<IEntryModel, bool> filter = null)
-            : base((tevm, pd) =>
-            {
-                IEntryModel dirModel = null;
-                if (pd.Parameter is IEntryModel[])
-                    dirModel =(pd.Parameter as IEntryModel[]).FirstOrDefault();
-                else if (pd.Parameter is IEntryModel)
-                    dirModel = pd.Parameter as IEntryModel;
-                
-                if (filter == null || filter(dirModel))
-                    tevm.OpenTab(dirModel);
-                return ResultCommand.NoError;
-            })
+        private ITabbedExplorerViewModel _tevm;
+        public OpenTab(Func<IEntryModel, bool> filter = null, ITabbedExplorerViewModel tevm = null)
+            : base("OpenTab", "Parameter", "TabbedExplorer")
         {
             _filter = filter;
+            _tevm = tevm;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var pd = pm.AsUIParameterDic();
+            IEntryModel dirModel = null;
+            if (pd.Parameter is IEntryModel[])
+                dirModel = (pd.Parameter as IEntryModel[]).FirstOrDefault();
+            else if (pd.Parameter is IEntryModel)
+                dirModel = pd.Parameter as IEntryModel;
+
+            var tevm = (_tevm ?? pm["TabbedExplorer"]) as ITabbedExplorerViewModel;
+            if (tevm == null)
+                return ResultCommand.Error(new ArgumentNullException("TabbedExplorer"));
+            if (_filter == null || _filter(dirModel))
+                tevm.OpenTab(dirModel);
+            return ResultCommand.NoError;
         }
 
         public override bool CanExecute(ParameterDic pm)
         {
+            if (_tevm == null && !pm.ContainsKey("TabbedExplorer"))
+                return false;
+
             if (_filter == null)
                 return true;
 

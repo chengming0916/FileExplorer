@@ -15,7 +15,7 @@ namespace FileExplorer.Models
             new DirectoryCommandModel(
                 new CommandModel(ApplicationCommands.Open) { IsVisibleOnMenu = true },
                 new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
-                new CommandModel(ExplorerCommands.OpenNewTab) { IsVisibleOnMenu = true })
+                new CommandModel(ExplorerCommands.OpenTab) { IsVisibleOnMenu = true })
                 { Header = "Open", IsVisibleOnMenu = true, IsEnabled = true },
              
             new SeparatorCommandModel(),
