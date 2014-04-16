@@ -43,6 +43,7 @@ namespace TestApp
                     else if (model is FileExplorer.ViewModels.TabbedExplorerViewModel)
                     {
                         window.Width = 800; window.Height = 500;
+                        window.WindowState = WindowState.Maximized;
                         window.SetBinding(Window.TitleProperty, new Binding("ActiveItem.DisplayName") { Mode = BindingMode.OneWay });
                         window.SetBinding(Window.IconProperty, new Binding("ActiveItem.CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
                     }

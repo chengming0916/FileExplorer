@@ -108,14 +108,19 @@
                                     Command="def:ExplorerCommands.NewTab">
                                 <TextBlock Text="&#xE109;" />
                             </Button>
-                            <uc:Titlebar Grid.Row="3" VisibilityWhenNormal="Collapsed" 
+
+                            <uc:Titlebar x:Name="PART_TitleBar" 
+                                         VisibilityWhenNormal="Collapsed" 
                                          WindowStyleWhenMaximized="None"
                                          />
+
                         </StackPanel>
 
                         <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
                                     VirtualizingStackPanel.IsVirtualizing="False" SnapsToDevicePixels="True"
-                                    Grid.Column="1" Content="{TemplateBinding ScrollViewer.Content}"/>
+                                    Grid.Column="1" Content="{TemplateBinding ScrollViewer.Content}">
+
+                        </ScrollContentPresenter>
 
                     </Grid>
 
@@ -171,7 +176,7 @@
                             </ScrollViewer>
                         </Border>
 
-                      
+
                         <!--<Border Padding="{StaticResource TabItemPanel_Padding}" >     
                             <TabPanel IsItemsHost="True"/>
                         </Border>-->
@@ -180,10 +185,10 @@
                                 BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
                                 Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                             <!--This is where the Content of the selected TabPage will be rendered.-->
-                            <ContentPresenter ContentSource="SelectedContent" Margin="0"/>
+                            <ContentPresenter x:Name="PART_ScrollContentPresenter" ContentSource="SelectedContent" Margin="0" />
                         </Border>
-                        
-                      
+
+
                     </Grid>
                     <ControlTemplate.Triggers>
 
