@@ -50,8 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DropNet.1.9.6\lib\net40\DropNet.dll</HintPath>
     </Reference>
-    <Reference Include="ExifLib">
-      <HintPath>..\..\..\..\..\COFE\lib\ExifLib.dll</HintPath>
+    <Reference Include="ExifLib, Version=1.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\ExifLib.dll</HintPath>
     </Reference>
     <Reference Include="HtmlTextBlock">
       <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
