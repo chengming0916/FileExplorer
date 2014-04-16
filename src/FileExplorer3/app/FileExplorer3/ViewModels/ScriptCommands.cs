@@ -48,6 +48,21 @@ namespace FileExplorer.ViewModels
             return new DoSelection(commandKey, getSelectionFunc, nextCommandFunc, noSelectionCommand);
         }
 
+        public static IScriptCommand AssignVariableToAnotherVariable(string sourceName, string targetName,
+            IScriptCommand thenCommand)
+        {
+            return new SimpleScriptCommand("AssignVariable", pm =>
+            {
+                pm[targetName] = pm[sourceName];
+                return thenCommand;
+            }, pm => pm.ContainsKey(sourceName));
+        }
+
+        public static IScriptCommand AssignVariableToParameter(string sourceName,
+           IScriptCommand thenCommand)
+        {
+            return AssignVariableToAnotherVariable(sourceName, "Parameter", thenCommand);
+        }
 
     }
 
@@ -414,14 +429,17 @@ namespace FileExplorer.ViewModels
 
     public static class TabbedExplorer
     {
-        public static IScriptCommand CloseTab =
-            TabbedExplorer.Do((tevm, pd) =>
-            {
-                tevm.CloseTab(pd.Parameter as IExplorerViewModel);
-                return ResultCommand.NoError;
-            });
+        public static IScriptCommand CloseTab(ITabbedExplorerViewModel tevm)
+        {
+            return new CloseTab(tevm);
+        }
 
         public static IScriptCommand NewTab = new OpenTab();
+
+        public static IScriptCommand AssignActiveTabToParameter(IScriptCommand thenCommand)
+        {
+            return Do((tevm, pd) => { pd.Parameter = tevm.ActiveItem; return thenCommand; });
+        }
 
         /// <summary>
         /// Open directory (specified as Parameter) in new tab.
@@ -436,6 +454,41 @@ namespace FileExplorer.ViewModels
         public static IScriptCommand Do(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
         {
             return new DoTabbedExplorer(commandFunc);
+        }
+    }
+
+    internal class CloseTab : ScriptCommandBase
+    {
+        private ITabbedExplorerViewModel _tevm;
+        public CloseTab(ITabbedExplorerViewModel tevm = null)
+            : base("CloseTab", "Parameter", "TabbedExplorer")
+        {
+            _tevm = tevm;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            var tevm = (_tevm ?? pm["TabbedExplorer"]) as ITabbedExplorerViewModel;
+            if (tevm == null)
+                return ResultCommand.Error(new ArgumentNullException("TabbedExplorer"));
+            var expvm = pm.Parameter as IExplorerViewModel ??
+                tevm.ActiveItem as IExplorerViewModel;
+            if (expvm == null)
+                return ResultCommand.Error(new ArgumentException("Parameter"));
+
+            tevm.CloseTab(expvm); ;
+            return ResultCommand.NoError;
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            if (_tevm == null && !pm.ContainsKey("TabbedExplorer"))
+                return false;
+
+            if (!pm.ContainsKey("Parameter") || !(pm["Parameter"] is IExplorerViewModel))
+                return false;
+
+            return true;
         }
     }
 

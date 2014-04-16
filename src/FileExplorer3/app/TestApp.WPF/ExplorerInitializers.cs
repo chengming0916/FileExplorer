@@ -197,6 +197,7 @@ namespace TestApp
                
                 new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
                 new StaticCommandProvider(
+                     //new CommandModel(ExplorerCommands.CloseTab) { IsEnabled = true, Header="CloseTab", IsVisibleOnToolbar = true },
                     new SeparatorCommandModel(),
                     new SelectGroupCommand( explorerModel.FileList),    
                     new ViewModeCommand( explorerModel.FileList),
