@@ -65,29 +65,33 @@ namespace FileExplorer.UserControls
                         bool isMaximized = AncestorWindow.WindowState == WindowState.Maximized;
                         this.Visibility = isMaximized ? VisibilityWhenMaximized : VisibilityWhenNormal;
                         AncestorWindow.WindowStyle = isMaximized ? WindowStyleWhenMaximized : WindowStyleWhenNormal;
+                        UIElement restoreButton = (UIElement)this.Template.FindName("restoreButton", this);
+                        UIElement maximizeButton = (UIElement)this.Template.FindName("maximizeButton", this);
+
+                        if (AncestorWindow.WindowState == WindowState.Maximized)
+                        {
+                            restoreButton.Visibility = System.Windows.Visibility.Visible;
+                            maximizeButton.Visibility = System.Windows.Visibility.Collapsed;
+                        }
+                        else
+                        {
+                            restoreButton.Visibility = System.Windows.Visibility.Collapsed;
+                            maximizeButton.Visibility = System.Windows.Visibility.Visible;
+                        }
                     };
-                updateVisibilityState();
+                
                 DependencyPropertyDescriptor descriptor = DependencyPropertyDescriptor.FromProperty(Window.WindowStateProperty, typeof(Window));
                 descriptor.AddValueChanged
                     (AncestorWindow, new EventHandler(delegate
                 {
-                    UIElement restoreButton = (UIElement)this.Template.FindName("restoreButton", this);
-                    UIElement maximizeButton = (UIElement)this.Template.FindName("maximizeButton", this);
+                  
                     updateVisibilityState();
 
-                    if (AncestorWindow.WindowState == WindowState.Maximized)
-                    {
-                        restoreButton.Visibility = System.Windows.Visibility.Visible;
-                        maximizeButton.Visibility = System.Windows.Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        restoreButton.Visibility = System.Windows.Visibility.Collapsed;
-                        maximizeButton.Visibility = System.Windows.Visibility.Visible;
-                    }
 
                     
                 }));
+
+                updateVisibilityState();
 
                 this.AddHandler(UIElement.MouseLeftButtonDownEvent,
                (MouseButtonEventHandler)delegate(object sender, MouseButtonEventArgs e)

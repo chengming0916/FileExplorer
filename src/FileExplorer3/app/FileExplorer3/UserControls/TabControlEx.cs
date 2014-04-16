@@ -13,6 +13,7 @@ namespace FileExplorer.UserControls
 {
     public class TabControlEx : TabControl
     {
+       
         #region Constructors
 
         static TabControlEx()
@@ -28,13 +29,36 @@ namespace FileExplorer.UserControls
         protected override DependencyObject GetContainerForItemOverride()
         {
             var newTabItem = new TabItemEx();
-            return newTabItem; 
+            return newTabItem;
             //return base.GetContainerForItemOverride();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _ancestorWindow = UITools.FindAncestor<Window>(this); 
+            //_titlebar = this.Template.FindName("PART_TitleBar", this) as Titlebar;
+        }
+
+        protected override void OnMouseDoubleClick(System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var parentTabItem =
+                UITools.FindAncestor<TabItem>(e.OriginalSource as System.Windows.DependencyObject, null);
+            var parentButton =
+                UITools.FindAncestor<Button>(e.OriginalSource as System.Windows.DependencyObject, null);
+
+            if (parentTabItem == null && parentButton == null &&
+                _ancestorWindow.WindowState == WindowState.Maximized)
+                _ancestorWindow.WindowState = WindowState.Normal;
+            else
+                base.OnMouseDoubleClick(e);
         }
 
         #endregion
 
         #region Data
+
+        private Window _ancestorWindow;
 
         #endregion
 
@@ -43,7 +67,7 @@ namespace FileExplorer.UserControls
         #endregion
     }
 
-    public class TabItemEx: TabItem
+    public class TabItemEx : TabItem
     {
         #region Constructors
 
@@ -55,16 +79,16 @@ namespace FileExplorer.UserControls
 
         public TabItemEx()
         {
-       
-            
+
+
         }
 
-    
+
         #endregion
 
         #region Methods
 
-       
+
 
         #endregion
 
