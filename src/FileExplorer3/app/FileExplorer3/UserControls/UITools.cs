@@ -33,6 +33,17 @@ namespace FileExplorer.BaseControls
                 });
         }
 
+        public static string PrintVisualAnestor(DependencyObject obj)
+        {
+            StringBuilder sb = new StringBuilder();
+            while (obj != null)
+            {
+                sb.AppendLine(obj.ToString());
+                obj = VisualTreeHelper.GetParent(obj);
+            }
+            return sb.ToString();
+        }
+
         public static T FindAncestor<T>(DependencyObject obj, Func<T, bool> filter = null) where T : DependencyObject
         {
             filter = filter ?? (depObj => true);

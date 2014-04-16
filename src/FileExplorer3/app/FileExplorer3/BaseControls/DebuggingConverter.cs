@@ -16,7 +16,7 @@ namespace FileExplorer.BaseControls
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException("This method should never be called");
+            return value;
         }
     }
 }

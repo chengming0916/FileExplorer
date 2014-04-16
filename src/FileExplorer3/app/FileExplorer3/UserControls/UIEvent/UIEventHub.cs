@@ -117,7 +117,7 @@ namespace FileExplorer.BaseControls
                                         var input = UIInputBase.FromEventArgs(o, re);
                                         if (input.IsValid())
                                             {
-
+                                            
                                                 _inputProcessors.Update(ref input);
                                                 await executeAsync(_eventProcessors, e, input,
                                                         pd =>
