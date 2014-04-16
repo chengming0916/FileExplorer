@@ -36,10 +36,9 @@ namespace FileExplorer.ViewModels
             if (model != null)
                 initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
             IExplorerViewModel expvm = new ExplorerViewModel(initializer);
+
             expvm.Commands.ScriptCommands.CloseTab =
                 ScriptCommands.AssignVariableToParameter("Explorer", TabbedExplorer.CloseTab(this));
-                
-
             expvm.FileList.Commands.ScriptCommands.OpenTab =
                 FileList.IfSelection(evm => evm.Count() >= 1,
                     ScriptCommands.RunInSequence(
