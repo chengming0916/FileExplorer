@@ -38,18 +38,12 @@
     <Reference Include="DirectoryInfoEx">
       <HintPath>..\..\..\..\lib\DirectoryInfoEx.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetOpenAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\ThirdParty\DotNetOpenAuth-4.3.1.13153\Bin-net4.0\DotNetOpenAuth.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetOpenAuth.ApplicationBlock">
-      <HintPath>..\..\..\..\..\ThirdParty\DotNetOpenAuth-4.3.1.13153\Samples\DotNetOpenAuth.ApplicationBlock\bin\Debug\DotNetOpenAuth.ApplicationBlock.dll</HintPath>
-    </Reference>
     <Reference Include="DropNet">
       <HintPath>..\packages\DropNet.1.9.6\lib\net40\DropNet.dll</HintPath>
     </Reference>
-    <Reference Include="ExifLib">
-      <HintPath>..\..\..\..\..\COFE\lib\ExifLib.dll</HintPath>
+    <Reference Include="ExifLib, Version=1.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\ExifLib.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis, Version=1.7.0.34454, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -76,7 +70,10 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Live, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Live, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\Microsoft.Live.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.16\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
