@@ -1,4 +1,5 @@
-﻿using FileExplorer.Models;
+﻿using FileExplorer.Defines;
+using FileExplorer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +11,53 @@ namespace FileExplorer.ViewModels
     public static class ExplorerInitializers
     {
         public static IViewModelInitializer<IExplorerViewModel> StartupDirectory(IEntryModel startupDir)
-        { return new StartupDirectoryInitializers(startupDir); }
+        { return DoAsync(async evm => await evm.GoAsync(startupDir)); }
+
+        public static IViewModelInitializer<IExplorerViewModel> ViewMode(string viewMode, int itemSize)
+        { return Do(evm => { evm.FileList.ViewMode = viewMode; evm.FileList.ItemSize = itemSize; }); }
+
+       
+        public static IViewModelInitializer<IExplorerViewModel> Do(Action<IExplorerViewModel> action)
+        {
+            return new DoViewModelInitializer(action);
+        }
+
+        public static IViewModelInitializer<IExplorerViewModel> DoAsync(Func<IExplorerViewModel, Task> action)
+        {
+            return new DoAsyncViewModelInitializer(action);
+        }
+    
     }
 
-
-    public class StartupDirectoryInitializers : IViewModelInitializer<IExplorerViewModel>
+    public class DoViewModelInitializer : IViewModelInitializer<IExplorerViewModel>
     {
-        private IEntryModel _startupDir;
+        private Action<IExplorerViewModel> _action;
 
-        public StartupDirectoryInitializers(IEntryModel startupDir)
+        public DoViewModelInitializer(Action<IExplorerViewModel> action)
         {
-            _startupDir = startupDir;
+            _action = action;
         }
 
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
-            await explorerModel.GoAsync(_startupDir);
+            _action(explorerModel);
         }
     }
+
+    public class DoAsyncViewModelInitializer : IViewModelInitializer<IExplorerViewModel>
+    {
+        private Func<IExplorerViewModel, Task> _action;
+
+        public DoAsyncViewModelInitializer(Func<IExplorerViewModel, Task> action)
+        {
+            _action = action;
+        }
+
+        public async Task InitalizeAsync(IExplorerViewModel explorerModel)
+        {
+            await _action(explorerModel);
+        }
+    }
+
+   
 }

@@ -269,6 +269,7 @@ namespace TestApp
             };
 
             var initializer = getInitializer(_windowManager, _events, RootModels.ToArray(),
+                ExplorerInitializers.ViewMode("Icon", 100),
                 new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
                 new ColumnInitializers(),
                 new ScriptCommandsInitializers(_windowManager, _events, profiles),
