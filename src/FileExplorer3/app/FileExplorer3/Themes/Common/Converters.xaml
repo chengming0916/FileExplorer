@@ -4,7 +4,6 @@
       xmlns:conv="clr-namespace:QuickZip.Converters"       >
 
     <!-- pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml -->
-
     <conv:FlipBoolToVisibilityCollapsedConverter x:Key="fbtvc" />
     <conv:BoolToVisibilityConverter x:Key="btv" />
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />

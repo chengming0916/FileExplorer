@@ -1,10 +1,13 @@
-﻿using System;
+﻿using FileExplorer.BaseControls;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace FileExplorer.UserControls
 {
@@ -24,7 +27,8 @@ namespace FileExplorer.UserControls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new TabItemEx();
+            var newTabItem = new TabItemEx();
+            return newTabItem; 
             //return base.GetContainerForItemOverride();
         }
 
@@ -49,17 +53,29 @@ namespace FileExplorer.UserControls
                 new FrameworkPropertyMetadata(typeof(TabItemEx)));
         }
 
+        public TabItemEx()
+        {
+       
+            
+        }
+
+    
         #endregion
 
         #region Methods
+
+       
 
         #endregion
 
         #region Data
 
+
         #endregion
 
         #region Public Properties
+
+
 
         #endregion
     }

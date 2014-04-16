@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,7 +16,11 @@ namespace TestApp
     {
         protected override void OnStartup(StartupEventArgs e)
         {            
-            base.OnStartup(e); 
+            base.OnStartup(e);
+            //PresentationTraceSources.DataBindingSource.Listeners.Add(
+            //        new ConsoleTraceListener());
+
+            //PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
         }
     }
 }
