@@ -34,7 +34,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         {
 
             var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
+            var ic = pd.Sender as UIElement;
             var eventArgs = pd.EventArgs as DragEventArgs;
             FrameworkElement ele;
             var isd = DataContextFinder.GetDataContext(pm, out ele, DataContextFinder.SupportDrop);
@@ -75,10 +75,10 @@ namespace FileExplorer.BaseControls.DragnDrop
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            var pd = pm.AsUIParameterDic();
-            var ic = pd.Sender as ItemsControl;
-            var eventArgs = pd.EventArgs as DragEventArgs;
-            var parentWindow = Window.GetWindow(ic);
+            //var pd = pm.AsUIParameterDic();
+            //var ic = pd.Sender as ItemsControl;
+            //var eventArgs = pd.EventArgs as DragEventArgs;
+            //var parentWindow = Window.GetWindow(ic);
 
 
             return new UpdateAdorner(null);

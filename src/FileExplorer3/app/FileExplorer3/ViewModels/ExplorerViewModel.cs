@@ -16,6 +16,7 @@ using FileExplorer.ViewModels.Helpers;
 using Cofe.Core.Utils;
 using System.Windows.Media;
 using System.Windows.Input;
+using System.Windows;
 
 namespace FileExplorer.ViewModels
 {
@@ -23,8 +24,12 @@ namespace FileExplorer.ViewModels
         IHandle<DirectoryChangedEvent>,
         IHandle<EntryChangedEvent>,
         IHandle<RootChangedEvent>,
-        IHandle<BroadcastEvent>
+        IHandle<BroadcastEvent>, 
+        ISupportDropHelper
     {
+
+       
+
         #region Cosntructor
 
         public ExplorerViewModel(IExplorerInitializer initializer)
@@ -43,7 +48,7 @@ namespace FileExplorer.ViewModels
             FileList = new FileListViewModel(_internalEvents, Sidebar);
             DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
-
+            DropHelper = NullSupportDrop.Instance;
 
             Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation);
             setRootModels(_rootModels);
@@ -246,15 +251,9 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
-
-
+        public ISupportDrop DropHelper { get; set; }
+        
 
         #endregion
-
-
-
-
-
-
     }
 }
