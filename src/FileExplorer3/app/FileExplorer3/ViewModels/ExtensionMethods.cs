@@ -112,5 +112,22 @@ namespace FileExplorer
             return new RenameFileBasedEntryCommand(pm => entryModel, newName);
         }
 
+        public static List<IViewModelInitializer<IExplorerViewModel>>
+          EnsureOneStartupDirectoryOnly(this List<IViewModelInitializer<IExplorerViewModel>> initializers)
+        {
+            List<IViewModelInitializer<IExplorerViewModel>>
+            allStartup = initializers.FindAll(i => i is StartupDirInitializer);
+
+            if (allStartup.Count > 1) //If more than one startup
+            {
+                allStartup.RemoveAt(0); //Remove the first from the list first, 
+                foreach (var startup in allStartup)//then remove the else from initializers.
+                    initializers.Remove(startup);
+            }
+         
+            return initializers;
+        }
+
+
     }
 }
