@@ -11,12 +11,12 @@ namespace FileExplorer.ViewModels
     public static class ExplorerInitializers
     {
         public static IViewModelInitializer<IExplorerViewModel> StartupDirectory(IEntryModel startupDir)
-        { return DoAsync(async evm => await evm.GoAsync(startupDir)); }
+        { return new StartupDirInitializer(startupDir); }
 
         public static IViewModelInitializer<IExplorerViewModel> ViewMode(string viewMode, int itemSize)
         { return Do(evm => { evm.FileList.ViewMode = viewMode; evm.FileList.ItemSize = itemSize; }); }
 
-       
+
         public static IViewModelInitializer<IExplorerViewModel> Do(Action<IExplorerViewModel> action)
         {
             return new DoViewModelInitializer(action);
@@ -26,7 +26,23 @@ namespace FileExplorer.ViewModels
         {
             return new DoAsyncViewModelInitializer(action);
         }
-    
+
+    }
+
+    internal class StartupDirInitializer : IViewModelInitializer<IExplorerViewModel>
+    {
+        private IEntryModel _entryModel;
+        public StartupDirInitializer(IEntryModel entryModel)
+        {
+            _entryModel = entryModel;
+        }
+
+        public async Task InitalizeAsync(IExplorerViewModel viewModel)
+        {
+            await viewModel.GoAsync(_entryModel);
+        }
+
+
     }
 
     public class DoViewModelInitializer : IViewModelInitializer<IExplorerViewModel>
@@ -59,5 +75,5 @@ namespace FileExplorer.ViewModels
         }
     }
 
-   
+
 }

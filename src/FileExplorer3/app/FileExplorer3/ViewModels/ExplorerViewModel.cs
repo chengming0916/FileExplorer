@@ -75,6 +75,7 @@ namespace FileExplorer.ViewModels
                 this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
 
                 _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(null));
+                _initializer.Initializers.EnsureOneStartupDirectoryOnly();
                 _initializer.Initializers.InitalizeAsync(this);
 
                 _attachedView = true;
