@@ -33,6 +33,11 @@ namespace FileExplorer.BaseControls.DragnDrop
                 (dc is ISupportDropHelper && (dc as ISupportDropHelper).DropHelper.IsDroppable) ? (dc as ISupportDropHelper).DropHelper :
                 null;
 
+        public static Func<object, ISupportReorder> SupportReorder =
+            dc => (dc is ISupportReorder && (dc as ISupportReorder).IsReorderable) ? dc as ISupportReorder :
+                (dc is ISupportReorderHelper && (dc as ISupportReorderHelper).ReorderHelper.IsReorderable) ? (dc as ISupportReorderHelper).ReorderHelper :
+                null;
+
         public static T GetDataContext<T>(ParameterDic pm, Func<object, T> filter = null)
         {
             FrameworkElement ele;
@@ -170,7 +175,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
-
+            var isr = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportReorder);
 
             if (ic != null && isd != null)
                 if (ic.GetValue(AttachedProperties.StartDraggingItemProperty) != null)

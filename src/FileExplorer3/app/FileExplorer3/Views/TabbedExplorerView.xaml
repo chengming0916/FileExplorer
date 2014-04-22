@@ -39,8 +39,8 @@
                         <KeyBinding Command="def:ExplorerCommands.CloseTab" Key="F4" Modifiers="Control" />
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
-                <bc:DragDropLiteEventProcessor EnableDrag="False" EnableDrop="True" />
-                <bc:DragDropEventProcessor EnableDrag="False" EnableDrop="True" />
+                <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" />
+                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
             </bc:UIEventAdapter.Processors>
         </uc:TabControlEx>
     </Grid>

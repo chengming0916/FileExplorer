@@ -21,4 +21,34 @@ namespace FileExplorer.ViewModels.Helpers
         IDataObject GetDataObject(IEnumerable<IDraggable> draggables);        
         void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect);
     }
+
+    public class NullSupportDrag : ISupportDrag
+    {
+        public static ISupportDrag Instance = new NullSupportDrag();
+
+        public bool HasDraggables
+        {
+            get { return false ; }
+        }
+
+        public IEnumerable<IDraggable> GetDraggables()
+        {
+            return new List<IDraggable>();
+        }
+
+        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        {
+            return DragDropEffects.None;
+        }
+
+        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
+        {
+            return null;
+        }
+
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
+        {
+            
+        }
+    }
 }

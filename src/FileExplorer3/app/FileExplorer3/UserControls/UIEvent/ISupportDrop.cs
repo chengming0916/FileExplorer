@@ -52,8 +52,8 @@ namespace FileExplorer.ViewModels.Helpers
     {
         public static ISupportDrop Instance = new NullSupportDrop();
         public bool IsDraggingOver { set { } }
-        public bool IsDroppable { get { return false; }}
-        public string DropTargetLabel { get { return null; }}
+        public bool IsDroppable { get { return false; } }
+        public string DropTargetLabel { get { return null; } }
         public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
             return QueryDropResult.None;
@@ -69,4 +69,7 @@ namespace FileExplorer.ViewModels.Helpers
             return DragDropEffects.None;
         }
     }
+
+
+
 }
