@@ -14,5 +14,8 @@ namespace FileExplorer.ViewModels
     {
         void OpenTab(IEntryModel model = null);
         void CloseTab(IExplorerViewModel evm);
+
+        int GetTabIndex(IExplorerViewModel evm);
+        void InsertTab(IExplorerViewModel evm, int idx);
     }
 }

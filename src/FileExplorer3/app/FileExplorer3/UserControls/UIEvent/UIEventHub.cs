@@ -49,7 +49,8 @@ namespace FileExplorer.BaseControls
     {
         #region Constructor
 
-        public UIEventHub(IScriptRunner runner, UIElement control, bool startIsEnabled = true, params UIEventProcessorBase[] eventProcessors)
+        public UIEventHub(IScriptRunner runner, UIElement control, 
+            bool startIsEnabled = true, params UIEventProcessorBase[] eventProcessors)
         {
             Control = control;
             _eventProcessors = new List<UIEventProcessorBase>(eventProcessors);
