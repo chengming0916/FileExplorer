@@ -643,7 +643,7 @@
                              ItemsSource="{Binding Items}" >
                 <uc:TabControlEx.ItemContainerStyle>
                     <Style TargetType="{x:Type uc:TabItemEx}" BasedOn="{StaticResource TabItemExStyle}">
-                        <Setter Property="ShowPlaceHolder" Value="{Binding ShowPlaceHolder}" />
+                        <Setter Property="ShowPlaceHolder" Value="{Binding DropHelper.ShowPlaceHolder}" />
                         <Setter Property="HeaderOpacity" Value="{Binding HeaderOpacity}" />
                     </Style>
                 </uc:TabControlEx.ItemContainerStyle>
