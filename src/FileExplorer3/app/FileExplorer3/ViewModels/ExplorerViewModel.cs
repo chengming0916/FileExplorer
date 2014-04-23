@@ -227,6 +227,7 @@ namespace FileExplorer.ViewModels
         private float _uiScale = 1.0f;
 
         private IEntryViewModel _currentDirectoryViewModel;
+        private bool _isDragging = false;
 
         #endregion
 
@@ -252,7 +253,9 @@ namespace FileExplorer.ViewModels
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
         public ISupportDrop DropHelper { get; set; }
-        
+
+        //For TabExplorer
+        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; NotifyOfPropertyChange(() => IsDragging); } }
 
         #endregion
     }

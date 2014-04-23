@@ -189,6 +189,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         }
     }
 
+
     public class BeginDrag : ScriptCommandBase
     {
         public BeginDrag() : base("BeginDrag", "EventArgs") { }
@@ -433,12 +434,20 @@ namespace FileExplorer.BaseControls.DragnDrop
             _dataObj.SetData(typeof(ISupportDrag), _isd);
             //Determine and set the desired drag method. (Normal, Menu)
             setDragMethod();
+            foreach (var d in draggables) d.IsDragging = true;
 
-            //Start the DragDrop.
-            DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic, _dataObj, effect);
-
-            System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));
-            Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
+            DragDropEffects resultEffect;
+            try
+            {
+                //Start the DragDrop.
+                resultEffect = System.Windows.DragDrop.DoDragDrop(_ic, _dataObj, effect);
+            }
+            finally
+            {
+                foreach (var d in draggables) d.IsDragging = false;
+                System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+                //Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
+            }
             var dataObj = _dataObj;
             _dataObj = null;
             return new NotifyDropCompleted(_isd, draggables, dataObj, resultEffect);
