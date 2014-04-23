@@ -147,6 +147,7 @@ namespace TestTemplate.WPF
         private bool _isSelected = false;
         private ObservableCollection<DragDropItemViewModel> _items = new ObservableCollection<DragDropItemViewModel>();
         private bool _isDraggingOver;
+        private bool _isDragging = false;
 
         #endregion
 
@@ -171,6 +172,9 @@ namespace TestTemplate.WPF
         {
             get { return Value.ToString(); }
         }
+
+        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; NotifyOfPropertyChanged(() => IsDragging); } }
+
 
         #endregion
 

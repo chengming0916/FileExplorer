@@ -62,6 +62,7 @@ namespace FileExplorer.ViewModels
 
         IReportSelected<IEntryViewModel> _reportSelected;
 
+
         #endregion
 
         #region Public Properties

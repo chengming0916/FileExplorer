@@ -17,7 +17,20 @@ namespace FileExplorer.BaseControls.DragnDrop
     public static class DragLiteParameters
     {
         public static DragMode DragMode = DragMode.None;
-        public static IEnumerable<IDraggable> DraggingItems = null;
+        private static IEnumerable<IDraggable> _draggingItems = null;
+        public static IEnumerable<IDraggable> DraggingItems
+        {
+            get { return _draggingItems; }
+            set
+            {
+                if (_draggingItems != null)
+                    foreach (var d in _draggingItems) d.IsDragging = false;
+                _draggingItems = value;
+                if (_draggingItems != null)
+                    foreach (var d in _draggingItems) d.IsDragging = true;
+            }
+        }
+
         public static UIInputType DragInputType = UIInputType.None;
         public static ISupportDrag DragSource = null;
         public static DragDropEffects Effects;
@@ -58,7 +71,7 @@ namespace FileExplorer.BaseControls.DragnDrop
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-           
+
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
             //if (DragLiteParameters.DragMode == DragMode.Lite)
@@ -166,7 +179,7 @@ namespace FileExplorer.BaseControls.DragnDrop
 
     public class ContinueDragLite : ScriptCommandBase
     {
-      
+
 
         private bool _enableDrop;
         private bool _enableDrag;
@@ -207,14 +220,14 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
 
-           
+
 
             if (pd.EventArgs.Handled)
                 return ResultCommand.NoError;
 
             if (DragLiteParameters.DragMode != DragMode.Lite)
             {
-              
+
                 return ResultCommand.NoError;
             }
             //if (DragLiteParameters.DragInputType != pd.Input.InputType)

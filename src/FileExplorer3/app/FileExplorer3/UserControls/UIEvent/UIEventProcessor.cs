@@ -45,7 +45,7 @@ namespace FileExplorer.BaseControls
                     {
                         IUIInput input = pm.AsUIParameterDic().Input;
                         object sender = input.Sender;
-                        InputEventArgs eventArgs = input.EventArgs as InputEventArgs;
+                        RoutedEventArgs eventArgs = input.EventArgs as RoutedEventArgs;
 
                         if (String.IsNullOrEmpty(targetName) || UITools.FindAncestor<FrameworkElement>(
                                                eventArgs.OriginalSource as DependencyObject,

@@ -37,9 +37,9 @@ namespace FileExplorer.BaseControls
             else if (ic is TabControl)
             {
                 var panel = ic.Template.FindName("HeaderPanel", ic) as Panel;
-                if (panel != null)
-                    return UITools.GetItemByPosition<Control, Panel>
-                        (panel, position);
+                foreach (TabItem item in panel.Children)
+                    if (item.IsMouseOver)
+                        return item;
             }
 
             else if (ic is ItemsControl)
