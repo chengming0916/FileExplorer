@@ -22,28 +22,95 @@ namespace FileExplorer.ViewModels
 
         #region ExplorerDrag/DropHelper
 
-        private class TabArrangeDropHelpper : ISupportDrop
+        private class TabArrangeDropHelpper : ISupportDrag, ISupportDrop
         {
-            private IExplorerViewModel _evm;
-            private ITabbedExplorerViewModel _tevm;
+
+            #region Constructors
+
             public TabArrangeDropHelpper(ITabbedExplorerViewModel tevm, IExplorerViewModel evm)
             {
                 _tevm = tevm;
                 _evm = evm;
             }
 
-            public bool IsDraggingOver
+            #endregion
+
+            #region Methods
+
+            private static IExplorerViewModel getExplorerViewModel(IEnumerable<IDraggable> draggables)
             {
-                set
-                {
-                    if (!(_tevm.ActiveItem.Equals(_evm)))
-                        _tevm.ActivateItem(_evm);
-                }
+                if (draggables.Count() == 1)
+                    return draggables.FirstOrDefault() as IExplorerViewModel;
+                return null;
             }
-            public bool IsDroppable
+
+            public IEnumerable<IDraggable> GetDraggables()
             {
-                get { return true; }
+                return new List<IDraggable>() { _evm };
             }
+
+            public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+            {
+                return DragDropEffects.Move;
+            }
+
+            public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
+            {
+                var expVM = getExplorerViewModel(draggables);
+                return expVM == _evm ? new DataObject(typeof(IExplorerViewModel), expVM) : null;
+            }
+
+            public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
+            {
+                var expVM = getExplorerViewModel(draggables);
+                if (expVM == _evm)
+                    _tevm.CloseTab(_evm);
+            }
+
+
+
+            public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+            {
+                if (!(_tevm.ActiveItem.Equals(_evm)))
+                    _tevm.ActivateItem(_evm);
+                return QueryDropResult.None;
+            }
+
+            public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
+            {
+                if (da.GetDataPresent(typeof(IExplorerViewModel)))
+                    return new List<IDraggable>() { da.GetData(typeof(IExplorerViewModel)) as IExplorerViewModel };
+                else
+                    return new List<IDraggable>();
+            }
+
+
+            public DragDropEffects Drop(IEnumerable<IDraggable> draggables,
+                IDataObject da, DragDropEffects allowedEffects)
+            {
+                var expVM = getExplorerViewModel(draggables);
+                if (expVM != null)
+                    return DragDropEffects.Move;
+
+                return DragDropEffects.None;
+            }
+
+
+            #endregion
+
+            #region Data
+            private IExplorerViewModel _evm;
+            private ITabbedExplorerViewModel _tevm;
+
+            #endregion
+
+            #region Public Properties
+
+            public bool HasDraggables { get { return true; } }
+
+            public bool IsDraggingOver { get; set; }
+            public bool IsDroppable { get { return true; } }
+
             public string DropTargetLabel
             {
                 get
@@ -53,22 +120,23 @@ namespace FileExplorer.ViewModels
                 }
             }
 
-            public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
-            {
-                return QueryDropResult.None;
-            }
 
-            public IEnumerable<IDraggable> QueryDropDraggables(System.Windows.IDataObject da)
-            {
-                Debug.WriteLine("QueryDropDraggables " + DropTargetLabel);
-                return new List<IDraggable>();
-            }
+            #endregion
 
-            public DragDropEffects Drop(IEnumerable<IDraggable> draggables,
-                IDataObject da, DragDropEffects allowedEffects)
-            {
-                return DragDropEffects.None;
-            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
         #endregion
@@ -152,5 +220,16 @@ namespace FileExplorer.ViewModels
 
 
 
+
+
+        public int GetTabIndex(IExplorerViewModel evm)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertTab(IExplorerViewModel evm, int idx)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

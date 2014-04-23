@@ -28,8 +28,8 @@ namespace FileExplorer.Models
 
             if (selectedModels.Count() == 1)
             {
-                var itemModel = selectedModels.First() as GoogleDriveItemModel;
-                if (itemModel.Metadata.ImageMediaMetadata != null)
+                var itemModel = selectedModels.FirstOrDefault() as GoogleDriveItemModel;
+                if (itemModel != null && itemModel.Metadata.ImageMediaMetadata != null)
                 {
                     if (itemModel.Metadata.ImageMediaMetadata.Width.HasValue &&
                         itemModel.Metadata.ImageMediaMetadata.Height.HasValue)

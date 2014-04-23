@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using FileExplorer.Models;
 using Caliburn.Micro;
 using FileExplorer.Defines;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IExplorerViewModel : ISupportCommandManager, IScreen
+    public interface IExplorerViewModel : ISupportCommandManager, IScreen, IDraggable
     {
         IEntryModel[] RootModels { get; set; }
 

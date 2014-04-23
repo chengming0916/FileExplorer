@@ -33,7 +33,7 @@ namespace FileExplorer.BaseControls
              );
         }
 
-        public override IScriptCommand OnEvent(RoutedEvent eventId)
+        protected override IScriptCommand onEvent(RoutedEvent eventId)
         {
             switch (eventId.Name)
             {
@@ -65,7 +65,7 @@ namespace FileExplorer.BaseControls
             }
 
 
-            return base.OnEvent(eventId);
+            return base.onEvent(eventId);
         }
 
         public static DependencyProperty EnableMouseProperty =

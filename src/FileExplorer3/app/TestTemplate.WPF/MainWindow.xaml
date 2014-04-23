@@ -641,6 +641,11 @@
                 <uc:TabControlEx.LayoutTransform>
                     <ScaleTransform ScaleX="1" ScaleY="1" />
                 </uc:TabControlEx.LayoutTransform>
+                <bc:UIEventAdapter.Processors>
+                    <bc:DragDropLiteEventProcessor EnableMouse="False" EnableTouch="True" 
+                                               EnableDrag="True" EnableDrop="True" />
+                    <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" TargetName="HeaderPanel" />
+                </bc:UIEventAdapter.Processors>
             </uc:TabControlEx>
         </TabItem>
     </TabControl>
