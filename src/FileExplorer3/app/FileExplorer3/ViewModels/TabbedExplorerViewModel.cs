@@ -95,7 +95,6 @@ namespace FileExplorer.ViewModels
                 return DragDropEffects.None;
             }
 
-
             #endregion
 
             #region Data
@@ -122,21 +121,6 @@ namespace FileExplorer.ViewModels
 
 
             #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
         #endregion
@@ -198,6 +182,24 @@ namespace FileExplorer.ViewModels
             //OpenTab();
         }
 
+        public int GetTabIndex(IExplorerViewModel evm)
+        {
+            return Items.IndexOf(evm);
+        }
+
+        public void MoveTab(int srcIdx, int targetIdx)
+        {
+            if (srcIdx < Items.Count() - 1)
+            {
+                IExplorerViewModel srcTab = Items[srcIdx] as IExplorerViewModel;
+                if (srcTab != null)
+                {
+                    Items.RemoveAt(srcIdx);
+                    Items.Insert(targetIdx, srcTab);
+                }
+            }
+        }
+
         #endregion
 
         #region Data
@@ -215,6 +217,18 @@ namespace FileExplorer.ViewModels
         //public ITabItemViewModel SelectedTab { get { return _selectedTab; } 
         //    set { _selectedTab = value; NotifyOfPropertyChange(() => SelectedTab); } }
 
+        public int SelectedIndex
+        {
+            get { return Items.IndexOf(ActiveItem); }
+            set { ActivateItem(Items[value]); NotifyOfPropertyChange(() => SelectedIndex); NotifyOfPropertyChange(() => SelectedItem); }
+        }
+
+        public IExplorerViewModel SelectedItem
+        {
+            get { return ActiveItem as IExplorerViewModel; }
+            set { ActivateItem(ActiveItem); NotifyOfPropertyChange(() => SelectedIndex); NotifyOfPropertyChange(() => SelectedItem); }
+        }
+
         #endregion
 
 
@@ -222,14 +236,7 @@ namespace FileExplorer.ViewModels
 
 
 
-        public int GetTabIndex(IExplorerViewModel evm)
-        {
-            throw new NotImplementedException();
-        }
 
-        public void InsertTab(IExplorerViewModel evm, int idx)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

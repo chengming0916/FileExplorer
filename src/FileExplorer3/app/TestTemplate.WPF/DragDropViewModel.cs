@@ -173,6 +173,13 @@ namespace TestTemplate.WPF
             get { return Value.ToString(); }
         }
 
+        public string DisplayName
+        {
+            get { return Value.ToString(); }
+        }
+
+
+
         public bool IsDragging { get { return _isDragging; } set { _isDragging = value; NotifyOfPropertyChanged(() => IsDragging); } }
 
 

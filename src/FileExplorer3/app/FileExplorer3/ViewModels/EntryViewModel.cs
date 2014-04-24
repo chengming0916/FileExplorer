@@ -133,6 +133,8 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
+        public string DisplayName { get { return EntryModel.Label; } }
+
         public bool IsRenaming
         {
             get { return _isRenaming; }
