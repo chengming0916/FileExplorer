@@ -83,22 +83,22 @@ namespace FileExplorer.BaseControls
                 });
         }
 
-        public override IScriptCommand OnEvent(RoutedEvent eventId)
+        protected override IScriptCommand onEvent(RoutedEvent eventId)
         {
             return new QueryInputBindings(this, TargetName);
         }
 
-        /// <summary>
-        /// If set, only event came from (originalSouce) element 
-        /// under element with the specified name will trigger the bindings. 
-        /// </summary>
-        public static DependencyProperty TargetNameProperty =
-             DependencyProperty.Register("TargetName", typeof(string), typeof(InputBindingsEventProcessor));
-        public string TargetName
-        {
-            get { return (string)GetValue(TargetNameProperty); }
-            set { SetValue(TargetNameProperty, value); }
-        }
+        ///// <summary>
+        ///// If set, only event came from (originalSouce) element 
+        ///// under element with the specified name will trigger the bindings. 
+        ///// </summary>
+        //public static DependencyProperty TargetNameProperty =
+        //     DependencyProperty.Register("TargetName", typeof(string), typeof(InputBindingsEventProcessor));
+        //public string TargetName
+        //{
+        //    get { return (string)GetValue(TargetNameProperty); }
+        //    set { SetValue(TargetNameProperty, value); }
+        //}
 
         public static DependencyProperty InputBindingsProperty =
             DependencyProperty.Register("InputBindings", typeof(InputBindingCollection), typeof(InputBindingsEventProcessor),

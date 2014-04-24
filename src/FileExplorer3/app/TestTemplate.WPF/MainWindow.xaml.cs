@@ -237,9 +237,11 @@ namespace TestTemplate.WPF
 
         private void setupTabControl()
         {
-            for (int i = 1; i < 20; i++)
-                tabControl1.Items.Add(new TabItemEx() { Header = "Tab "  + i.ToString(), 
-                    Content = String.Format("This is page {0}", i) });
+            
+            tabControl1.DataContext = new TabControlViewModel();
+            //for (int i = 1; i < 20; i++)
+            //    tabControl1.Items.Add(new TabItemEx() { Header = "Tab "  + i.ToString(), 
+            //        Content = String.Format("This is page {0}", i) });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

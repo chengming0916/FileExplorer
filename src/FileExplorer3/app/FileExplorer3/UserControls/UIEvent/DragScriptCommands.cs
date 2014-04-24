@@ -33,11 +33,6 @@ namespace FileExplorer.BaseControls.DragnDrop
                 (dc is ISupportDropHelper && (dc as ISupportDropHelper).DropHelper.IsDroppable) ? (dc as ISupportDropHelper).DropHelper :
                 null;
 
-        public static Func<object, ISupportReorder> SupportReorder =
-            dc => (dc is ISupportReorder && (dc as ISupportReorder).IsReorderable) ? dc as ISupportReorder :
-                (dc is ISupportReorderHelper && (dc as ISupportReorderHelper).ReorderHelper.IsReorderable) ? (dc as ISupportReorderHelper).ReorderHelper :
-                null;
-
         public static T GetDataContext<T>(ParameterDic pm, Func<object, T> filter = null)
         {
             FrameworkElement ele;
@@ -175,7 +170,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrag);
-            var isr = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportReorder);
+
 
             if (ic != null && isd != null)
                 if (ic.GetValue(AttachedProperties.StartDraggingItemProperty) != null)
@@ -193,6 +188,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             return _otherwiseCmd;
         }
     }
+
 
     public class BeginDrag : ScriptCommandBase
     {
@@ -438,12 +434,20 @@ namespace FileExplorer.BaseControls.DragnDrop
             _dataObj.SetData(typeof(ISupportDrag), _isd);
             //Determine and set the desired drag method. (Normal, Menu)
             setDragMethod();
+            foreach (var d in draggables) d.IsDragging = true;
 
-            //Start the DragDrop.
-            DragDropEffects resultEffect = System.Windows.DragDrop.DoDragDrop(_ic, _dataObj, effect);
-
-            System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));
-            Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
+            DragDropEffects resultEffect;
+            try
+            {
+                //Start the DragDrop.
+                resultEffect = System.Windows.DragDrop.DoDragDrop(_ic, _dataObj, effect);
+            }
+            finally
+            {
+                foreach (var d in draggables) d.IsDragging = false;
+                System.Windows.DragDrop.RemoveQueryContinueDragHandler(_ic, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+                //Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
+            }
             var dataObj = _dataObj;
             _dataObj = null;
             return new NotifyDropCompleted(_isd, draggables, dataObj, resultEffect);

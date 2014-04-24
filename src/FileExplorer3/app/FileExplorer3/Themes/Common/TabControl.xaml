@@ -139,6 +139,8 @@
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+
+        <Setter Property="ItemContainerStyle" Value="{StaticResource TabItemExStyle}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabControl}">
@@ -170,7 +172,8 @@
                                                         AnimationTimeSpan="0:0:0.25" 
                                                         LineScrollPixelCount="100" 
                                                         KeyboardNavigation.TabIndex="1"/>-->
-                                <StackPanel IsItemsHost="True" Margin="{StaticResource TabItemPanel_Padding}" 
+                                <StackPanel x:Name="HeaderPanel"
+                                            IsItemsHost="True" Margin="{StaticResource TabItemPanel_Padding}" 
                                             FocusManager.IsFocusScope="False"
                                             Orientation="Horizontal" />
                             </ScrollViewer>

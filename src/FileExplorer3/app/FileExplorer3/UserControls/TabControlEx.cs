@@ -80,7 +80,7 @@ namespace FileExplorer.UserControls
         public TabItemEx()
         {
 
-
+           
         }
 
 
@@ -99,7 +99,23 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
+        public static DependencyProperty ShowPlaceHolderProperty = DependencyProperty.Register("ShowPlaceHolder",
+            typeof(bool), typeof(TabItemEx), new PropertyMetadata(false));
 
+        public bool ShowPlaceHolder
+        {
+            get { return (bool)GetValue(ShowPlaceHolderProperty); }
+            set { SetValue(ShowPlaceHolderProperty, value); }
+        }
+
+        public static DependencyProperty HeaderOpacityProperty = DependencyProperty.Register("HeaderOpacity",
+           typeof(float), typeof(TabItemEx), new PropertyMetadata(1.0f));
+
+        public float HeaderOpacity
+        {
+            get { return (float)GetValue(HeaderOpacityProperty); }
+            set { SetValue(HeaderOpacityProperty, value); }
+        }
 
         #endregion
     }

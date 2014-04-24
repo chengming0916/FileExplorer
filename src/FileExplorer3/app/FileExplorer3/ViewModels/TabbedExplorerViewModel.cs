@@ -16,62 +16,9 @@ using System.Windows.Threading;
 namespace FileExplorer.ViewModels
 {
 
-    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, ITabbedExplorerViewModel
+    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, 
+        ITabbedExplorerViewModel, ISupportDragHelper
     {
-
-
-        #region ExplorerDrag/DropHelper
-
-        private class TabArrangeDropHelpper : ISupportDrop
-        {
-            private IExplorerViewModel _evm;
-            private ITabbedExplorerViewModel _tevm;
-            public TabArrangeDropHelpper(ITabbedExplorerViewModel tevm, IExplorerViewModel evm)
-            {
-                _tevm = tevm;
-                _evm = evm;
-            }
-
-            public bool IsDraggingOver
-            {
-                set
-                {
-                    if (!(_tevm.ActiveItem.Equals(_evm)))
-                        _tevm.ActivateItem(_evm);
-                }
-            }
-            public bool IsDroppable
-            {
-                get { return true; }
-            }
-            public string DropTargetLabel
-            {
-                get
-                {
-                    return _evm.CurrentDirectory == null ? "" :
-                        _evm.CurrentDirectory.EntryModel.Label;
-                }
-            }
-
-            public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
-            {
-                return QueryDropResult.None;
-            }
-
-            public IEnumerable<IDraggable> QueryDropDraggables(System.Windows.IDataObject da)
-            {
-                Debug.WriteLine("QueryDropDraggables " + DropTargetLabel);
-                return new List<IDraggable>();
-            }
-
-            public DragDropEffects Drop(IEnumerable<IDraggable> draggables,
-                IDataObject da, DragDropEffects allowedEffects)
-            {
-                return DragDropEffects.None;
-            }
-        }
-
-        #endregion
 
 
         #region Constructors
@@ -80,7 +27,7 @@ namespace FileExplorer.ViewModels
         {
             _initializer = initializer.Clone();
             Commands = new TabbedExplorerCommandManager(this, initializer.Events);
-
+            DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
             ////_tabs = new ObservableCollection<ITabItemViewModel>();
         }
 
@@ -94,7 +41,7 @@ namespace FileExplorer.ViewModels
             if (model != null)
                 initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
             ExplorerViewModel expvm = new ExplorerViewModel(initializer);
-            expvm.DropHelper = new TabArrangeDropHelpper(this, expvm);
+            expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
             expvm.Commands.ScriptCommands.CloseTab =
                 ScriptCommands.AssignVariableToParameter("Explorer", TabbedExplorer.CloseTab(this));
@@ -130,6 +77,24 @@ namespace FileExplorer.ViewModels
             //OpenTab();
         }
 
+        public int GetTabIndex(IExplorerViewModel evm)
+        {
+            return Items.IndexOf(evm);
+        }
+
+        public void MoveTab(int srcIdx, int targetIdx)
+        {
+            if (srcIdx < Items.Count())
+            {
+                IExplorerViewModel srcTab = Items[srcIdx] as IExplorerViewModel;
+                if (srcTab != null)
+                {
+                    Items.RemoveAt(srcIdx);
+                    Items.Insert(targetIdx, srcTab);
+                }
+            }
+        }
+
         #endregion
 
         #region Data
@@ -144,13 +109,24 @@ namespace FileExplorer.ViewModels
 
         //public ObservableCollection<ITabItemViewModel> Tabs { get { return _tabs; } }
         public ICommandManager Commands { get; private set; }
+
+        public ISupportDrag DragHelper { get; private set; }
         //public ITabItemViewModel SelectedTab { get { return _selectedTab; } 
         //    set { _selectedTab = value; NotifyOfPropertyChange(() => SelectedTab); } }
 
+        public int SelectedIndex
+        {
+            get { return Items.IndexOf(ActiveItem); }
+            set { ActivateItem(Items[value]); NotifyOfPropertyChange(() => SelectedIndex); NotifyOfPropertyChange(() => SelectedItem); }
+        }
+
+        public IExplorerViewModel SelectedItem
+        {
+            get { return ActiveItem as IExplorerViewModel; }
+            set { ActivateItem(value); NotifyOfPropertyChange(() => SelectedIndex); NotifyOfPropertyChange(() => SelectedItem); }
+        }
+
         #endregion
-
-
-
 
     }
 }

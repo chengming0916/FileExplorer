@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels
         IHandle<EntryChangedEvent>,
         IHandle<RootChangedEvent>,
         IHandle<BroadcastEvent>, 
-        ISupportDragHelper, ISupportDropHelper //For Tab switching and re-arrangement.
+        ISupportDragHelper, ISupportDropHelper
     {
 
        
@@ -48,6 +48,7 @@ namespace FileExplorer.ViewModels
             FileList = new FileListViewModel(_internalEvents, Sidebar);
             DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
+
             DragHelper = NullSupportDrag.Instance;
             DropHelper = NullSupportDrop.Instance;
 
@@ -228,6 +229,7 @@ namespace FileExplorer.ViewModels
         private float _uiScale = 1.0f;
 
         private IEntryViewModel _currentDirectoryViewModel;
+        private bool _isDragging = false;
 
         #endregion
 
@@ -252,8 +254,12 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
-        public ISupportDrop DropHelper { get; set; }
+
         public ISupportDrag DragHelper { get; set; }
+        public ISupportDrop DropHelper { get; set; }
+
+        //For TabExplorer
+        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; NotifyOfPropertyChange(() => IsDragging); } }
 
         #endregion
     }
