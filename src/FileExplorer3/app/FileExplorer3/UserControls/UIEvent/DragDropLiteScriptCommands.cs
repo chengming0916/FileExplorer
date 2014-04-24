@@ -255,7 +255,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             da.SetData(typeof(AttachedProperties.DragMethod), AttachedProperties.DragMethod.Menu);
             da.SetData(typeof(ISupportDrag), DragLiteParameters.DragSource);
             pd.Input = new DragInput(pd.Input, da, queryEffs, (eff) => { });
-
+            DragLiteParameters.DraggingItems = null;
             return CapturePointer.Release(new BeginDrop());
             //return CapturePointer.Release(new DetachAdorner());
         }
