@@ -140,6 +140,8 @@
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
+    <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
+    <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
     <Compile Include="ViewModels\ExplorerInitializers.cs" />
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
     <Compile Include="UserControls\InputProcesor\IUIDragInput.cs" />
