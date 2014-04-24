@@ -9,8 +9,8 @@ namespace FileExplorer.ViewModels.Helpers
 {
     public interface IDraggable
     {
-        //bool IsSelected { get; }
-        
+        string DisplayName { get; }
+        bool IsDragging { get;  set; }
     }
 
 }

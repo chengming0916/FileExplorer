@@ -26,7 +26,7 @@
 
 
 
-    <Style TargetType="{x:Type uc:TabItemEx}">
+    <Style x:Key="TabItemExStyle" TargetType="{x:Type uc:TabItemEx}">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
@@ -35,8 +35,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type uc:TabItemEx}">
-                    <Grid VerticalAlignment="Bottom" >
-                        <Border Name="Border"
+                    <StackPanel Orientation="Horizontal" >
+                        <Rectangle x:Name="PlaceHolder" 
+                                   Visibility="Collapsed"
+                            Width="2" Fill="Gray" />
+                        <Border Name="Border" VerticalAlignment="Bottom"  
+                             Opacity="{Binding HeaderOpacity, RelativeSource={RelativeSource TemplatedParent}}"
                              Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"
                              BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
                              Margin="{StaticResource TabItemMargin_Selected}"
@@ -66,7 +70,7 @@
 
                         </Border>
 
-                    </Grid>
+                    </StackPanel>
                     <ControlTemplate.Triggers>
                         <!-- The appearance of a TabItem when it's inactive/unselected -->
                         <Trigger Property="IsSelected" Value="False">
@@ -76,7 +80,11 @@
                             <Setter TargetName="Border" Property="BorderThickness" 
                                     Value="1"/>
                         </Trigger>
-
+                        <Trigger Property="ShowPlaceHolder" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="110" />
+                            <Setter TargetName="PlaceHolder" Property="Visibility" 
+                                    Value="Visible"/>
+                        </Trigger>
                         <!--
                         The appearance of a TabItem when it's disabled
                         (in addition to Selected=False)

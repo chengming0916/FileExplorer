@@ -20,14 +20,14 @@ namespace FileExplorer.BaseControls
              );
         }
 
-        public override Cofe.Core.Script.IScriptCommand OnEvent(RoutedEvent eventId)
+        protected override Cofe.Core.Script.IScriptCommand onEvent(RoutedEvent eventId)
         {
             switch (eventId.Name)
             {
                 case "MouseRightButtonUp": return new ShowContextMenu(ContextMenu);
             }
 
-            return base.OnEvent(eventId);
+            return base.onEvent(eventId);
 
         }
 

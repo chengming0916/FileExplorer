@@ -11,6 +11,7 @@ using FileExplorer.ViewModels;
 using Cofe.Core;
 using System.Windows.Input;
 using FileExplorer.Defines;
+using FileExplorer.UserControls.InputProcesor;
 
 namespace FileExplorer.BaseControls
 {
@@ -21,6 +22,7 @@ namespace FileExplorer.BaseControls
     public interface IUIEventProcessor
     {
         int Priority { get; }
+        string TargetName { get; set; }
         IScriptCommand OnEvent(RoutedEvent eventId);
         IEnumerable<RoutedEvent> ProcessEvents { get; }
     }
@@ -36,7 +38,31 @@ namespace FileExplorer.BaseControls
 
         }
 
-        public virtual IScriptCommand OnEvent(RoutedEvent eventId)
+        public class CheckTargetName : IfScriptCommand
+        {
+            public CheckTargetName(string targetName, IScriptCommand trueCommand, IScriptCommand falseCommand)
+                : base(pm =>
+                    {
+                        IUIInput input = pm.AsUIParameterDic().Input;
+                        object sender = input.Sender;
+                        RoutedEventArgs eventArgs = input.EventArgs as RoutedEventArgs;
+
+                        if (String.IsNullOrEmpty(targetName) || UITools.FindAncestor<FrameworkElement>(
+                                               eventArgs.OriginalSource as DependencyObject,
+                                               (ele) => ele.Name == targetName) != null)
+                            return true;
+                        return false;
+                    }
+                    , trueCommand, falseCommand)
+            {
+            }
+        }
+        public IScriptCommand OnEvent(RoutedEvent eventId)
+        {
+            return new CheckTargetName(TargetName, onEvent(eventId), ResultCommand.NoError);
+        }
+
+        protected virtual IScriptCommand onEvent(RoutedEvent eventId)
         {
             return ResultCommand.NoError;
         }
@@ -44,6 +70,14 @@ namespace FileExplorer.BaseControls
         protected override Freezable CreateInstanceCore()
         {
             throw new NotImplementedException();
+        }
+
+        public static DependencyProperty TargetNameProperty =
+            DependencyProperty.Register("TargetName", typeof(string), typeof(UIEventProcessorBase));
+        public string TargetName
+        {
+            get { return (string)GetValue(TargetNameProperty); }
+            set { SetValue(TargetNameProperty, value); }
         }
     }
 
@@ -56,7 +90,7 @@ namespace FileExplorer.BaseControls
         #region Methods
 
 
-        public override IScriptCommand OnEvent(RoutedEvent eventId)
+        protected override IScriptCommand onEvent(RoutedEvent eventId)
         {
             if (_processEvents.ContainsKey(eventId))
                 return _processEvents[eventId];
@@ -98,7 +132,7 @@ namespace FileExplorer.BaseControls
     {
         public static DebugUIEventProcessor Instance = new DebugUIEventProcessor();
 
-        public override IScriptCommand OnEvent(RoutedEvent eventId)
+        protected override IScriptCommand onEvent(RoutedEvent eventId)
         {
             switch (eventId.Name)
             {

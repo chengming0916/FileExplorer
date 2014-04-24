@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/DropDown.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/ListView.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/BreadcrumbTree.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TabItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="{x:Type TabControl}" TargetType="{x:Type TabControl}">
@@ -637,10 +638,33 @@
             </StackPanel>
         </TabItem>
         <TabItem Header="TabControl" IsSelected="True" >
-            <uc:TabControlEx x:Name="tabControl1" Margin="5">
+            <uc:TabControlEx x:Name="tabControl1" Margin="5" 
+                             SelectedIndex="{Binding SelectedIndex}"
+                             ItemsSource="{Binding Items}" >
+                <uc:TabControlEx.ItemContainerStyle>
+                    <Style TargetType="{x:Type uc:TabItemEx}" BasedOn="{StaticResource TabItemExStyle}">
+                        <Setter Property="ShowPlaceHolder" Value="{Binding DropHelper.ShowPlaceHolder}" />
+                        <Setter Property="HeaderOpacity" Value="{Binding HeaderOpacity}" />
+                    </Style>
+                </uc:TabControlEx.ItemContainerStyle>
+                <uc:TabControlEx.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock x:Name="tb" Text="{Binding Header}" AllowDrop="True" />
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsDraggingOver}" Value="True">
+                                <Setter TargetName="tb" Property="Foreground" Value="Blue" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </uc:TabControlEx.ItemTemplate>
                 <uc:TabControlEx.LayoutTransform>
                     <ScaleTransform ScaleX="1" ScaleY="1" />
                 </uc:TabControlEx.LayoutTransform>
+                <bc:UIEventAdapter.Processors>
+                    <bc:DragDropLiteEventProcessor EnableMouse="False" EnableTouch="True" 
+                                               EnableDrag="True" EnableDrop="True" />
+                    <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" TargetName="HeaderPanel" />
+                </bc:UIEventAdapter.Processors>
             </uc:TabControlEx>
         </TabItem>
     </TabControl>

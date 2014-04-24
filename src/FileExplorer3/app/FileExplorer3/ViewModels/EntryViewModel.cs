@@ -127,10 +127,13 @@ namespace FileExplorer.ViewModels
         bool _isSelected = false, _isRenaming = false, _isRenamable = false, _isIconLoaded = false;
         private ImageSource _icon = null;
         private IEnumerable<IEntryModelIconExtractor> _iconExtractSequences;
+        private bool _isDragging = false;
 
         #endregion
 
         #region Public Properties
+
+        public string DisplayName { get { return EntryModel.Label; } }
 
         public bool IsRenaming
         {
@@ -173,6 +176,8 @@ namespace FileExplorer.ViewModels
             get { return _isSelected; } 
             set { if (_isSelected != value) { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); } 
             } }
+
+        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; NotifyOfPropertyChange(() => IsDragging); } }
 
         #endregion
     }

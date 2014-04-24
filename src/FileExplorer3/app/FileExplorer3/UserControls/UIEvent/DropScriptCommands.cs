@@ -164,16 +164,20 @@ namespace FileExplorer.BaseControls.DragnDrop
             var isd = DataContextFinder.GetDataContext(pm, DataContextFinder.SupportDrop);
             if (isd != null)
             {
+                isd.IsDraggingOver = false;
                 QueryDropResult queryDropResult = isd.QueryDrop(inp.Data, inp.AllowedEffects);
                 DragDropEffects supportedEffects = inp.AllowedEffects & queryDropResult.SupportedEffects;
-                if (supportedEffects != DragDropEffects.None && !_overrideDragDropEffect.HasValue &&
-                    dragMethod == AttachedProperties.DragMethod.Menu && inp.Data.GetDataPresent(typeof(ISupportDrag)))
-                {
-                    inp.Effects = DragDropEffects.None;
-                    inp.EventArgs.Handled = true;
-                    ISupportDrag isDrag = inp.Data.GetData(typeof(ISupportDrag)) as ISupportDrag;
-                    return new ShowAdornerContextMenu(supportedEffects, queryDropResult.PreferredEffect, isDrag, isd, inp.Data);
-                }
+               //Do not show ContextMenu if only one supported effects.
+                if (supportedEffects != DragDropEffects.Copy && supportedEffects != DragDropEffects.Link &&
+                    supportedEffects != DragDropEffects.Move)
+                    if (supportedEffects != DragDropEffects.None && !_overrideDragDropEffect.HasValue &&
+                        dragMethod == AttachedProperties.DragMethod.Menu && inp.Data.GetDataPresent(typeof(ISupportDrag)))
+                    {
+                        inp.Effects = DragDropEffects.None;
+                        inp.EventArgs.Handled = true;
+                        ISupportDrag isDrag = inp.Data.GetData(typeof(ISupportDrag)) as ISupportDrag;
+                        return new ShowAdornerContextMenu(supportedEffects, queryDropResult.PreferredEffect, isDrag, isd, inp.Data);
+                    }
 
                 //If OverrideDragDropEffect is set, use it instead.
                 supportedEffects = _overrideDragDropEffect.HasValue ? _overrideDragDropEffect.Value : supportedEffects;

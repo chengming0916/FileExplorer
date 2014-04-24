@@ -24,12 +24,8 @@ namespace FileExplorer.ViewModels.Helpers
 
     public class NullSupportDrag : ISupportDrag
     {
-        public static ISupportDrag Instance = new NullSupportDrag();
-
-        public bool HasDraggables
-        {
-            get { return false ; }
-        }
+        public static NullSupportDrag Instance = new NullSupportDrag();
+        public bool HasDraggables { get { return false; } }
 
         public IEnumerable<IDraggable> GetDraggables()
         {
@@ -48,7 +44,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
         {
-            
+           
         }
     }
 }

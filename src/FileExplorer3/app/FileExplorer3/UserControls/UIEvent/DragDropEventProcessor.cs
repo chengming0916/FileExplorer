@@ -35,7 +35,7 @@ namespace FileExplorer.BaseControls
              );
         }
 
-        public override Cofe.Core.Script.IScriptCommand OnEvent(RoutedEvent eventId)
+        protected override Cofe.Core.Script.IScriptCommand onEvent(RoutedEvent eventId)
         {
             if (EnableDrag)
                 switch (eventId.Name)
@@ -59,7 +59,7 @@ namespace FileExplorer.BaseControls
                     case "Drop": return new BeginDrop();
                 }
 
-            return base.OnEvent(eventId);
+            return base.onEvent(eventId);
         }
 
 

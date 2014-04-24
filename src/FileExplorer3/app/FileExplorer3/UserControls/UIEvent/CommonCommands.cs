@@ -33,10 +33,25 @@ namespace FileExplorer.BaseControls
                 return null;
             }
             else if (ic is TreeView)
+                return UITools.GetItemByPosition<TreeViewItem, TreeView>(ic as TreeView, position);
+            else if (ic is TabControl)
             {
-                return UITools.GetTreeViewItem(ic as TreeView, position);
+                var panel = ic.Template.FindName("HeaderPanel", ic) as Panel;
+                foreach (TabItem item in panel.Children)
+                    if (item.IsMouseOver)
+                        return item;
             }
-            else throw new NotSupportedException();
+
+            else if (ic is ItemsControl)
+                return UITools.GetItemByPosition<Control, ItemsControl>(ic as ItemsControl, position);
+
+            return null;
+
+            //else if (ic is TreeView)
+            //{
+            //    return UITools.GetTreeViewItem(ic as TreeView, position);
+            //}
+            return UITools.GetItemByPosition<Selector, Control>(ic, position);
         }
 
         public static void SetItemUnderMouseToAttachedProperty(ItemsControl ic, Point position, DependencyProperty property)
@@ -51,7 +66,7 @@ namespace FileExplorer.BaseControls
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            var pd = pm.AsUIParameterDic();            
+            var pd = pm.AsUIParameterDic();
             pd.EventArgs.Handled = true;
 
             return ResultCommand.NoError;
