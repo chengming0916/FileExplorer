@@ -25,7 +25,7 @@ namespace FileExplorer.ViewModels
         IHandle<EntryChangedEvent>,
         IHandle<RootChangedEvent>,
         IHandle<BroadcastEvent>, 
-        ISupportDropHelper
+        ISupportDragHelper, ISupportDropHelper
     {
 
        
@@ -48,6 +48,8 @@ namespace FileExplorer.ViewModels
             FileList = new FileListViewModel(_internalEvents, Sidebar);
             DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
+
+            DragHelper = NullSupportDrag.Instance;
             DropHelper = NullSupportDrop.Instance;
 
             Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation);
@@ -252,6 +254,8 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
+
+        public ISupportDrag DragHelper { get; set; }
         public ISupportDrop DropHelper { get; set; }
 
         //For TabExplorer

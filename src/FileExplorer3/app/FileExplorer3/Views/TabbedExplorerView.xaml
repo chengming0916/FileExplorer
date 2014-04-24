@@ -23,6 +23,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!--<Button x:Name="OpenTab"  Grid.Row="1"  Content="Add" />-->
+        <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.RowSpan="2" />
         <uc:TabControlEx x:Name="Items" >
             <uc:TabControlEx.ItemTemplate>
                 <DataTemplate>
@@ -39,9 +40,9 @@
                         <KeyBinding Command="def:ExplorerCommands.CloseTab" Key="F4" Modifiers="Control" />
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
-                <!--<bc:DragDropLiteEventProcessor EnableMouse="False" EnableTouch="True" 
+                <bc:DragDropLiteEventProcessor EnableMouse="False" EnableTouch="True" 
                                                EnableDrag="True" EnableDrop="True" />
-                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />-->
+                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
             </bc:UIEventAdapter.Processors>
             
             
