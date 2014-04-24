@@ -75,7 +75,7 @@ namespace FileExplorer.ViewModels.Helpers
             return da.GetDataPresent(typeof(T)) ? (T)da.GetData(typeof(T)) : default(T);
         }
 
-        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+        public virtual QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
             if (getTabViewModel(da) != null)
                 return QueryDropResult.CreateNew(DragDropEffects.Move);
@@ -105,34 +105,47 @@ namespace FileExplorer.ViewModels.Helpers
         #region Constructors
 
         public TabDropHelper(T tvm, ITabControlViewModel<T> tcvm)
-            : base(tvm, () => tvm.IsDragging, () => tvm.DisplayName, 
+            : base(tvm, () => tvm.IsDragging, () => tvm.DisplayName,
             (sourceDraggable, disTvm) =>
+            {
+                var sourceVM = sourceDraggable.FirstOrDefault() as T;
+                if (sourceVM != null)
                 {
-                    var sourceVM = sourceDraggable.FirstOrDefault() as T;
-                    if (sourceVM != null)
+                    int thisIdx = tcvm.GetTabIndex(disTvm);
+                    int srcIdx = tcvm.GetTabIndex(sourceVM);
+                    if (srcIdx != -1 && thisIdx != -1)
                     {
-                        int thisIdx = tcvm.GetTabIndex(disTvm);
-                        int srcIdx = tcvm.GetTabIndex(sourceVM);
-                        if (srcIdx != -1 && thisIdx != -1)
-                        {
-                            int destIdx = thisIdx > srcIdx ? thisIdx - 1 : thisIdx;
-                            tcvm.MoveTab(srcIdx, destIdx);
-                            return DragDropEffects.Move;
-                        }
+                        int destIdx = thisIdx > srcIdx ? thisIdx - 1 : thisIdx;
+                        tcvm.MoveTab(srcIdx, destIdx);
+                        return DragDropEffects.Move;
                     }
-                    return DragDropEffects.None;
-                })
+                }
+                return DragDropEffects.None;
+            })
         {
-
+            _tvm = tvm;
+            _tcvm = tcvm;
         }
 
         #endregion
 
         #region Methods
 
+        public override QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+        {
+            var baseResult = base.QueryDrop(da, allowedEffects);
+            if (baseResult == QueryDropResult.None) //If not T (ViewModel for tab)
+                _tcvm.SelectedItem = _tvm;          //Select current tab.
+            return baseResult;
+        }
+
         #endregion
 
         #region Data
+
+        private ITabControlViewModel<T> _tcvm;
+        private T _tvm;
+
 
         #endregion
 

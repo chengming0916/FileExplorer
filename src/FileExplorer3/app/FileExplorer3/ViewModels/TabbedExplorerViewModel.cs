@@ -16,114 +16,9 @@ using System.Windows.Threading;
 namespace FileExplorer.ViewModels
 {
 
-    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, ITabbedExplorerViewModel
+    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, 
+        ITabbedExplorerViewModel, ISupportDragHelper
     {
-
-
-        #region ExplorerDrag/DropHelper
-
-        private class TabArrangeDropHelpper : ISupportDrag, ISupportDrop
-        {
-
-            #region Constructors
-
-            public TabArrangeDropHelpper(ITabbedExplorerViewModel tevm, IExplorerViewModel evm)
-            {
-                _tevm = tevm;
-                _evm = evm;
-            }
-
-            #endregion
-
-            #region Methods
-
-            private static IExplorerViewModel getExplorerViewModel(IEnumerable<IDraggable> draggables)
-            {
-                if (draggables.Count() == 1)
-                    return draggables.FirstOrDefault() as IExplorerViewModel;
-                return null;
-            }
-
-            public IEnumerable<IDraggable> GetDraggables()
-            {
-                return new List<IDraggable>() { _evm };
-            }
-
-            public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
-            {
-                return DragDropEffects.Move;
-            }
-
-            public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
-            {
-                var expVM = getExplorerViewModel(draggables);
-                return expVM == _evm ? new DataObject(typeof(IExplorerViewModel), expVM) : null;
-            }
-
-            public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
-            {
-                var expVM = getExplorerViewModel(draggables);
-                if (expVM == _evm)
-                    _tevm.CloseTab(_evm);
-            }
-
-
-
-            public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
-            {
-                if (!(_tevm.ActiveItem.Equals(_evm)))
-                    _tevm.ActivateItem(_evm);
-                return QueryDropResult.None;
-            }
-
-            public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
-            {
-                if (da.GetDataPresent(typeof(IExplorerViewModel)))
-                    return new List<IDraggable>() { da.GetData(typeof(IExplorerViewModel)) as IExplorerViewModel };
-                else
-                    return new List<IDraggable>();
-            }
-
-
-            public DragDropEffects Drop(IEnumerable<IDraggable> draggables,
-                IDataObject da, DragDropEffects allowedEffects)
-            {
-                var expVM = getExplorerViewModel(draggables);
-                if (expVM != null)
-                    return DragDropEffects.Move;
-
-                return DragDropEffects.None;
-            }
-
-            #endregion
-
-            #region Data
-            private IExplorerViewModel _evm;
-            private ITabbedExplorerViewModel _tevm;
-
-            #endregion
-
-            #region Public Properties
-
-            public bool HasDraggables { get { return true; } }
-
-            public bool IsDraggingOver { get; set; }
-            public bool IsDroppable { get { return true; } }
-
-            public string DropTargetLabel
-            {
-                get
-                {
-                    return _evm.CurrentDirectory == null ? "" :
-                        _evm.CurrentDirectory.EntryModel.Label;
-                }
-            }
-
-
-            #endregion
-        }
-
-        #endregion
 
 
         #region Constructors
@@ -132,7 +27,7 @@ namespace FileExplorer.ViewModels
         {
             _initializer = initializer.Clone();
             Commands = new TabbedExplorerCommandManager(this, initializer.Events);
-
+            DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
             ////_tabs = new ObservableCollection<ITabItemViewModel>();
         }
 
@@ -146,7 +41,7 @@ namespace FileExplorer.ViewModels
             if (model != null)
                 initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
             ExplorerViewModel expvm = new ExplorerViewModel(initializer);
-            expvm.DropHelper = new TabArrangeDropHelpper(this, expvm);
+            expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
             expvm.Commands.ScriptCommands.CloseTab =
                 ScriptCommands.AssignVariableToParameter("Explorer", TabbedExplorer.CloseTab(this));
@@ -189,7 +84,7 @@ namespace FileExplorer.ViewModels
 
         public void MoveTab(int srcIdx, int targetIdx)
         {
-            if (srcIdx < Items.Count() - 1)
+            if (srcIdx < Items.Count())
             {
                 IExplorerViewModel srcTab = Items[srcIdx] as IExplorerViewModel;
                 if (srcTab != null)
@@ -214,6 +109,8 @@ namespace FileExplorer.ViewModels
 
         //public ObservableCollection<ITabItemViewModel> Tabs { get { return _tabs; } }
         public ICommandManager Commands { get; private set; }
+
+        public ISupportDrag DragHelper { get; private set; }
         //public ITabItemViewModel SelectedTab { get { return _selectedTab; } 
         //    set { _selectedTab = value; NotifyOfPropertyChange(() => SelectedTab); } }
 
@@ -226,17 +123,10 @@ namespace FileExplorer.ViewModels
         public IExplorerViewModel SelectedItem
         {
             get { return ActiveItem as IExplorerViewModel; }
-            set { ActivateItem(ActiveItem); NotifyOfPropertyChange(() => SelectedIndex); NotifyOfPropertyChange(() => SelectedItem); }
+            set { ActivateItem(value); NotifyOfPropertyChange(() => SelectedIndex); NotifyOfPropertyChange(() => SelectedItem); }
         }
 
         #endregion
 
-
-
-
-
-
-
-        
     }
 }
