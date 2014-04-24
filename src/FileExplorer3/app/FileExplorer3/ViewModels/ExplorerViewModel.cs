@@ -257,9 +257,14 @@ namespace FileExplorer.ViewModels
 
         public ISupportDrag DragHelper { get; set; }
         public ISupportDrop DropHelper { get; set; }
-
+       
         //For TabExplorer
-        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; NotifyOfPropertyChange(() => IsDragging); } }
+        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; 
+            NotifyOfPropertyChange(() => IsDragging);
+            NotifyOfPropertyChange(() => HeaderOpacity); 
+        } }
+        public float HeaderOpacity { get { return _isDragging ? 0.5f : 1f; } }
+
 
         #endregion
     }
