@@ -13,6 +13,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Buttons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/TabItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -33,6 +34,12 @@
                     </StackPanel>
                 </DataTemplate>
             </uc:TabControlEx.ItemTemplate>
+            <uc:TabControlEx.ItemContainerStyle>
+                <Style TargetType="{x:Type uc:TabItemEx}" BasedOn="{StaticResource TabItemExStyle}">
+                    <Setter Property="ShowPlaceHolder" Value="{Binding DropHelper.ShowPlaceHolder}" />
+                    <Setter Property="HeaderOpacity" Value="{Binding HeaderOpacity}" />
+                </Style>
+            </uc:TabControlEx.ItemContainerStyle>
             <bc:UIEventAdapter.Processors>
                 <bc:InputBindingsEventProcessor >
                     <bc:InputBindingsEventProcessor.InputBindings>
