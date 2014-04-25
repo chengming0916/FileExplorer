@@ -154,7 +154,7 @@
                                    Height="1" VerticalAlignment="Bottom" />
 
                         <Border Grid.Row="0" >
-                            <ScrollViewer Grid.Row="0" ScrollViewer.PanningMode="HorizontalOnly"
+                            <ScrollViewer x:Name="HeaderPanelScrollViewer" Grid.Row="0" ScrollViewer.PanningMode="HorizontalOnly"
                                           Style="{StaticResource TabPanelScrollViewerStyle}"
                                 VerticalScrollBarVisibility="Disabled"
                                 CanContentScroll="True" 
