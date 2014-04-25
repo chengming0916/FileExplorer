@@ -599,7 +599,7 @@ namespace FileExplorer.ViewModels
         {
             nextCommand = nextCommand ?? ResultCommand.NoError;
             float offset = (float)(mode == ZoomMode.ZoomIn ? 0.1 : -0.1) * multiplier;
-            return Do(evm => { evm.UIScale += offset; return nextCommand; });
+            return Do(evm => { evm.Parameters.UIScale += offset; return nextCommand; });
         }
 
         //public static IScriptCommand GoTo(string path, IScriptCommand thenCommand = null)

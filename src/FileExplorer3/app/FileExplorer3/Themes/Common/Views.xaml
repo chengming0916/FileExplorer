@@ -30,11 +30,11 @@
                              
                              ItemTemplate="{DynamicResource IconItemTemplate}"
                              ItemContainerStyle="{StaticResource IconItemContainerStyle}"
-                             ItemHeight="{Binding ItemSize}"
-                             ItemWidth="{Binding ItemSize}" 
+                             ItemHeight="{Binding Parameters.ItemSize}"
+                             ItemWidth="{Binding Parameters.ItemSize}" 
                              HorizontalContentAlignment="Left" >       
     </uc:VirtualWrapPanelView>
-    <!--ItemWidth="{Binding RelativeSource={RelativeSource AncestorType=uc:FileList}, Path=ItemSize, Mode=OneWay}"-->
+    <!--ItemWidth="{Binding RelativeSource={RelativeSource AncestorType=uc:FileList}, Path=Parameters.ItemSize, Mode=OneWay}"-->
     
     <!-- Small Icon View -->
 

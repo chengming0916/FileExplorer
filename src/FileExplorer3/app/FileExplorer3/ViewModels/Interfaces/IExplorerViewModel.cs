@@ -10,16 +10,18 @@ using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.ViewModels
 {
-    public interface IExplorerViewModel : ISupportCommandManager, IScreen, IDraggable
+    public interface IExplorerViewModel : ISupportCommandManager, 
+        IScreen, IDraggable
     {
         IEntryModel[] RootModels { get; set; }
-
+       
         IDirectoryTreeViewModel DirectoryTree { get; }
         IFileListViewModel FileList { get; }
         IStatusbarViewModel Statusbar { get; }
         ISidebarViewModel Sidebar { get; }
 
-        float UIScale { get; set; }
+        IExplorerParameters Parameters { get; set; }
+
         IEntryViewModel CurrentDirectory { get; }
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);

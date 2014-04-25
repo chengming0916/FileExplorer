@@ -269,7 +269,8 @@ namespace TestApp
             };
 
             var initializer = getInitializer(_windowManager, _events, RootModels.ToArray(),
-                ExplorerInitializers.ViewMode("Icon", 100),
+                ExplorerInitializers.Parameter(new FileListParameters() { ViewMode = "Icon", ItemSize = 100 }),
+                ExplorerInitializers.Parameter(new ExplorerParameters() { UIScale = 1.1f, FileListSize = "3*", NavigationSize = 45 }),
                 new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
                 new ColumnInitializers(),
                 new ScriptCommandsInitializers(_windowManager, _events, profiles),

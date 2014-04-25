@@ -35,11 +35,11 @@
 
         <uc:ListViewEx Background="LightBlue"  x:Name="ProcessedItems"       
                      ItemsSource="{Binding ProcessedEntries.All}"   BorderBrush="Transparent"
-                     ViewMode="{Binding ViewMode}"  
+                     ViewMode="{Binding Parameters.ViewMode}"  
                      Columns="{Binding Columns.ColumnList}"
                      ColumnFilters ="{Binding Columns.ColumnFilters}"
                      ColumnsVisibility="Visible"
-                     ItemSize="{Binding ItemSize}"
+                     ItemSize="{Binding Parameters.ItemSize}"
                      ItemAnimationDuration="00:00:00" 
                      IsCheckBoxVisible="{Binding IsCheckBoxVisible, Mode=OneWay}"
                      SortDirection="{Binding Columns.SortDirection}"

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using FileExplorer.Defines;
 using FileExplorer.Models;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace FileExplorer.ViewModels
             : this(initializer.WindowManager, initializer.Events, initializer.RootModels,
             initializer.Initializers.ToArray())
         {
-       
+
         }
 
         #endregion
@@ -60,11 +61,10 @@ namespace FileExplorer.ViewModels
         public IEventAggregator Events { get; set; }
         public IWindowManager WindowManager { get; set; }
         public IEntryModel[] RootModels { get; set; }
+        public IParameters Parameters { get; set; }
         public List<IViewModelInitializer<IExplorerViewModel>> Initializers { get; set; }
 
         #endregion
-
-
 
     }
 }

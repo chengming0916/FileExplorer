@@ -24,11 +24,11 @@ namespace FileExplorer.ViewModels
         IHandle<DirectoryChangedEvent>,
         IHandle<EntryChangedEvent>,
         IHandle<RootChangedEvent>,
-        IHandle<BroadcastEvent>, 
+        IHandle<BroadcastEvent>,
         ISupportDragHelper, ISupportDropHelper
     {
 
-       
+
 
         #region Cosntructor
 
@@ -81,6 +81,11 @@ namespace FileExplorer.ViewModels
                 var uiEle = view as System.Windows.UIElement;
                 this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
 
+                //uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
+                //    {
+               
+                //    }), System.Windows.Threading.DispatcherPriority.Loaded);
+
                 _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(null));
                 _initializer.Initializers.EnsureOneStartupDirectoryOnly();
                 _initializer.Initializers.InitalizeAsync(this);
@@ -128,7 +133,7 @@ namespace FileExplorer.ViewModels
 
         public void ChangeView(string viewMode)
         {
-            FileList.ViewMode = viewMode;
+            FileList.Parameters.ViewMode = viewMode;
         }
 
         private void setRootModels(IEntryModel[] rootModels)
@@ -226,7 +231,7 @@ namespace FileExplorer.ViewModels
         protected IWindowManager _windowManager = new WindowManager();
         private IProfile[] _rootProfiles = new IProfile[] { };
         private IExplorerInitializer _initializer;
-        private float _uiScale = 1.0f;
+        private IExplorerParameters _parameters = new ExplorerParameters();
 
         private IEntryViewModel _currentDirectoryViewModel;
         private bool _isDragging = false;
@@ -237,11 +242,19 @@ namespace FileExplorer.ViewModels
 
 
         public IExplorerInitializer Initializer { get; private set; }
+        public IExplorerParameters Parameters
+        {
+            get { return _parameters; }
+            set
+            {
+                _parameters = value;
+                NotifyOfPropertyChange(() => Parameters);
+            }
+        }
 
         public string WindowTitleMask { get; set; }
         public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; } }
 
-        public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChange(() => UIScale); } }
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 
@@ -257,12 +270,18 @@ namespace FileExplorer.ViewModels
 
         public ISupportDrag DragHelper { get; set; }
         public ISupportDrop DropHelper { get; set; }
-       
+
         //For TabExplorer
-        public bool IsDragging { get { return _isDragging; } set { _isDragging = value; 
-            NotifyOfPropertyChange(() => IsDragging);
-            NotifyOfPropertyChange(() => HeaderOpacity); 
-        } }
+        public bool IsDragging
+        {
+            get { return _isDragging; }
+            set
+            {
+                _isDragging = value;
+                NotifyOfPropertyChange(() => IsDragging);
+                NotifyOfPropertyChange(() => HeaderOpacity);
+            }
+        }
         public float HeaderOpacity { get { return _isDragging ? 0.5f : 1f; } }
 
 
