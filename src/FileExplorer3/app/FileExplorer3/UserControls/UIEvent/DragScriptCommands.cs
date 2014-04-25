@@ -139,7 +139,7 @@ namespace FileExplorer.BaseControls.DragnDrop
             var eventArgs = pd.Input.EventArgs as InputEventArgs;
             var scp = ControlUtils.GetScrollContentPresenter(ic);
 
-            if (UITools.FindAncestor<ToggleButton>(eventArgs.OriginalSource as DependencyObject) != null)
+            if (UITools.FindAncestor<Button>(eventArgs.OriginalSource as DependencyObject) != null)
                 return ResultCommand.NoError;
 
             if (isd != null)
