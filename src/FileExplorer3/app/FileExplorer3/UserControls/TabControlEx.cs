@@ -13,7 +13,7 @@ namespace FileExplorer.UserControls
 {
     public class TabControlEx : TabControl
     {
-       
+
         #region Constructors
 
         static TabControlEx()
@@ -36,7 +36,7 @@ namespace FileExplorer.UserControls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _ancestorWindow = UITools.FindAncestor<Window>(this); 
+            _ancestorWindow = UITools.FindAncestor<Window>(this);
             //_titlebar = this.Template.FindName("PART_TitleBar", this) as Titlebar;
         }
 
@@ -47,11 +47,13 @@ namespace FileExplorer.UserControls
             var parentButton =
                 UITools.FindAncestor<Button>(e.OriginalSource as System.Windows.DependencyObject, null);
 
-            if (parentTabItem == null && parentButton == null &&
-                _ancestorWindow.WindowState == WindowState.Maximized)
-                _ancestorWindow.WindowState = WindowState.Normal;
-            else
-                base.OnMouseDoubleClick(e);
+            if ((e.OriginalSource as FrameworkElement).Name ==
+                "HeaderPanelScrollViewer")
+                if (parentTabItem == null && parentButton == null &&
+                    _ancestorWindow.WindowState == WindowState.Maximized)
+                    _ancestorWindow.WindowState = WindowState.Normal;
+                else
+                    base.OnMouseDoubleClick(e);
         }
 
         #endregion
@@ -80,7 +82,7 @@ namespace FileExplorer.UserControls
         public TabItemEx()
         {
 
-           
+
         }
 
 
