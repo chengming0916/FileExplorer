@@ -8,6 +8,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <bc:UIEventAdapter.Processors>
             <bc:InputBindingsEventProcessor >
@@ -21,17 +28,21 @@
             <bc:DragDropLiteEventProcessor />
         </bc:UIEventAdapter.Processors>
         <Grid.LayoutTransform>
-            <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="{Binding UIScale}" ScaleY="{Binding UIScale}" />
+            <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="{Binding Parameters.UIScale}" ScaleY="{Binding Parameters.UIScale}" />
         </Grid.LayoutTransform>
-        <Grid Background="White">
+        <Grid x:Name="baseGrid" Background="White">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition  Width="{Binding Parameters.DirectoryTreeSize, Mode=TwoWay,
+                    Converter={StaticResource glv}}" />
+                <ColumnDefinition Width="{Binding Parameters.FileListSize, Mode=TwoWay,
+                    Converter={StaticResource glv}}" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" MinHeight="30" MaxHeight="100" />
+                <RowDefinition Height="{Binding Parameters.NavigationSize, Mode=TwoWay,
+                    Converter={StaticResource glv}}" MinHeight="30" MaxHeight="100" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="30" MinHeight="30" />
+                <RowDefinition Height="{Binding Parameters.StatusbarSize, Mode=TwoWay,
+                    Converter={StaticResource glv}}" MinHeight="30" />
             </Grid.RowDefinitions>
 
             <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Margin="0,0,0,5" >

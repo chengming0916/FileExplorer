@@ -13,8 +13,14 @@ namespace FileExplorer.ViewModels
         public static IViewModelInitializer<IExplorerViewModel> StartupDirectory(IEntryModel startupDir)
         { return new StartupDirInitializer(startupDir); }
 
-        public static IViewModelInitializer<IExplorerViewModel> ViewMode(string viewMode, int itemSize)
-        { return Do(evm => { evm.FileList.ViewMode = viewMode; evm.FileList.ItemSize = itemSize; }); }
+        public static IViewModelInitializer<IExplorerViewModel> Parameter(IExplorerParameters parameter)
+        { return Do(evm => { evm.Parameters = parameter; }); }
+
+        public static IViewModelInitializer<IExplorerViewModel> Parameter(IFileListParameters parameter)
+        { return Do(evm => { evm.FileList.Parameters = parameter; }); }
+
+        //public static IViewModelInitializer<IExplorerViewModel> ViewMode(string viewMode, int itemSize)
+        //{ return Do(evm => { evm.FileList.Parameters.ViewMode = viewMode; evm.FileList.Parameters.ItemSize = itemSize; }); }
 
 
         public static IViewModelInitializer<IExplorerViewModel> Do(Action<IExplorerViewModel> action)

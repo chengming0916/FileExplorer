@@ -93,6 +93,7 @@
     <Compile Include="Defines\Cofe3\Defines\Attributes\MIMETypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\RegistryUtils.cs" />
+    <Compile Include="Defines\Converters\PercentageConverter.cs" />
     <Compile Include="Defines\Converters\ScrollBarConverters.cs" />
     <Compile Include="Defines\Converters\TimeElapsedConverter.cs" />
     <Compile Include="Defines\Converters\UriToImageSourceConverter.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="ViewModels\CommandViewModel.cs" />
     <Compile Include="ViewModels\DirectoryTreeCommandManager.cs" />
     <Compile Include="ViewModels\ExplorerCommandManager.cs" />
+    <Compile Include="Defines\Parameters.cs" />
     <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
     <Compile Include="ViewModels\FileListCommandManager.cs" />
     <Compile Include="ViewModels\Helpers\IScriptCommandManager.cs" />

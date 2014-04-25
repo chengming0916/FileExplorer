@@ -34,14 +34,13 @@ namespace FileExplorer.ViewModels
         /// </summary>
         IEntryModel CurrentDirectory { get; set; }
 
-        string ViewMode { get; set; }
-        int ItemSize { get; set; }
-
         bool EnableDrag { get; set; }
         bool EnableDrop { get; set; }
         bool EnableMultiSelect { get; set; }
 
         bool IsCheckBoxVisible { get; set; }
+
+        IFileListParameters Parameters { get; set; }
 
         //bool IsContextMenuVisible { get; set; }
 

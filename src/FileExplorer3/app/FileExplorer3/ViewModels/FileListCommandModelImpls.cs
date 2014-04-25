@@ -109,24 +109,24 @@ namespace FileExplorer.ViewModels
             IsVisibleOnMenu = true; IsVisibleOnToolbar = true;
             _flvm = flvm;
             IsHeaderVisible = false;
-            SliderValue = flvm.ItemSize;
+            SliderValue = flvm.Parameters.ItemSize;
         }
 
         internal static void updateViewMode(IFileListViewModel flvm, string viewMode, int step)
         {
-            flvm.ItemSize = step;
+            flvm.Parameters.ItemSize = step;
             switch (viewMode)
             {
                 case "ExtraLargeIcon":
                 case "LargeIcon":
-                    flvm.ViewMode = "Icon";
+                    flvm.Parameters.ViewMode = "Icon";
                     break;
                 //case "Grid":
                 //    AsyncUtils.RunSync(() => flvm.ProcessedEntries.EntriesHelper.UnloadAsync());
                 //    flvm.ViewMode = viewMode;
                 //    break;
                 default:
-                    flvm.ViewMode = viewMode;
+                    flvm.Parameters.ViewMode = viewMode;
                     break;
             }
         }
@@ -149,7 +149,7 @@ namespace FileExplorer.ViewModels
                     if (commandModel != null)
                         this.HeaderIcon = commandModel.HeaderIcon;
 
-                    if (_flvm.ItemSize != SliderValue)
+                    if (_flvm.Parameters.ItemSize != SliderValue)
                     {
                         updateViewMode(_flvm, commandModel.Header, SliderValue);
                         //Debug.WriteLine(commandModel.Header + SliderValue.ToString());                            

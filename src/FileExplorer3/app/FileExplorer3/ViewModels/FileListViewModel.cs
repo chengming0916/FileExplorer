@@ -151,7 +151,7 @@ namespace FileExplorer.ViewModels
         public void Handle(ViewChangedEvent message)
         {
             if (!(message.Sender.Equals(this)))
-                this.ViewMode = message.ViewMode;
+                Parameters.ViewMode = message.ViewMode;
         }
 
         public void Handle(DirectoryChangedEvent message)
@@ -166,11 +166,11 @@ namespace FileExplorer.ViewModels
         #region Data
 
         private IEntryModel _currentDirVM = null;
-        private int _itemSize = 60;
-        private string _viewMode = "Icon";
+
         private IToolbarViewModel _toolbar = null;
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
+        private IFileListParameters _parameters = new FileListParameters();
 
         #endregion
 
@@ -214,25 +214,11 @@ namespace FileExplorer.ViewModels
             set { _isContextMenuVisible = value; NotifyOfPropertyChange(() => IsContextMenuVisible); }
         }
 
-        public string ViewMode
-        {
-            get { return _viewMode; }
-            set
-            {
-                _viewMode = value;
-                NotifyOfPropertyChange(() => ViewMode);
-            }
-        }
 
-        public int ItemSize
-        {
-            get { return _itemSize; }
-            set
-            {
-                _itemSize = value;
-                NotifyOfPropertyChange(() => ItemSize);
-            }
-        }
+
+        public IFileListParameters Parameters { get { return _parameters; } 
+            set { _parameters = value; NotifyOfPropertyChange(() => Parameters); } }
+
 
 
 

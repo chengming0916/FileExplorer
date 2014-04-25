@@ -122,7 +122,7 @@ namespace FileExplorer.ViewModels
         {
             var viewModeWoSeparator = ViewModeCommand.ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
 
-            int curIdx = ViewModeCommand.findViewMode(viewModeWoSeparator, _flvm.ItemSize);
+            int curIdx = ViewModeCommand.findViewMode(viewModeWoSeparator, _flvm.Parameters.ItemSize);
             int nextIdx = curIdx + 1;
             if (nextIdx >= viewModeWoSeparator.Count()) nextIdx = 0;
 
