@@ -35,7 +35,7 @@ namespace FileExplorer.Models
             UniqueId = d.id;
             this.IsDirectory = d.type == "folder" || d.type == "album";
             if (!IsDirectory)
-                this.Size = d.size;
+                this.Size = d.size != null ? d.size : 0;
             this.CreationTimeUtc = d.created_time != null ? DateTime.Parse(d.created_time) : this.CreationTimeUtc;
             this.LastUpdateTimeUtc = d.updated_tie != null ? DateTime.Parse(d.updated_time) : this.LastUpdateTimeUtc;
 
