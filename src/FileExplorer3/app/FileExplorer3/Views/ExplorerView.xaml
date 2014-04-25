@@ -12,6 +12,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Splitter.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -34,37 +35,43 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition  Width="{Binding Parameters.DirectoryTreeSize, Mode=TwoWay,
                     Converter={StaticResource glv}}" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="{Binding Parameters.FileListSize, Mode=TwoWay,
                     Converter={StaticResource glv}}" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="{Binding Parameters.NavigationSize, Mode=TwoWay,
                     Converter={StaticResource glv}}" MinHeight="30" MaxHeight="100" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="{Binding Parameters.StatusbarSize, Mode=TwoWay,
-                    Converter={StaticResource glv}}" MinHeight="30" />
+                    Converter={StaticResource glv}}" MinHeight="30" SharedSizeGroup="Statusbar" />
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Margin="0,0,0,5" >
+            <GridSplitter Grid.Row="2" Grid.Column="1" ResizeDirection="Columns" Width="10"  Margin="0,5"
+                          ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
+            <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" ResizeDirection="Rows"  Height="10"  Margin="5,0"
+                          HorizontalAlignment="Stretch"  />
+            <GridSplitter Grid.Row="3" Grid.ColumnSpan="3" ResizeDirection="Rows" Height="10" Margin="5,0" 
+                          ResizeBehavior="PreviousAndNext"
+                          HorizontalAlignment="Stretch"   />
+            
+            <DockPanel Grid.ColumnSpan="3" Grid.Row="0" Margin="0,0,0,5" >
                 <Viewbox DockPanel.Dock="Left" >
                     <ContentControl Name="Navigation" />
                 </Viewbox>
                 <ContentControl Name="Breadcrumb" />
             </DockPanel>
 
-            <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="2" Grid.RowSpan="3" />
-            <ContentControl Grid.Column="0" Grid.Row="1"  Name="DirectoryTree" Margin="2" />
-            <ContentControl  Name="FileList" Grid.Column="1" Grid.Row="1" Margin="2" />
+            <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="3" Grid.RowSpan="5" />
+            <ContentControl Grid.Column="0" Grid.Row="2"  Name="DirectoryTree" Margin="2" />
+            <ContentControl  Name="FileList" Grid.Column="2" Grid.Row="2" Margin="2" />
         
 
-            <ContentControl Grid.ColumnSpan="2" Grid.Row="2"  Name="Statusbar" Margin="0,5,0,0" />
+            <ContentControl Grid.ColumnSpan="3" Grid.Row="4"  Name="Statusbar" Margin="0,5,0,0" />
 
-            <GridSplitter Grid.Row="1" Grid.Column="0" ResizeDirection="Columns" Width="1"  Margin="0,5"
-                          HorizontalAlignment="Right" VerticalAlignment="Stretch" />
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1"  Margin="5,0"
-                          HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-            <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" ResizeDirection="Rows" Height="1" Margin="5,0"
-                          HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+            
         </Grid>
     </Grid>
 </UserControl>
