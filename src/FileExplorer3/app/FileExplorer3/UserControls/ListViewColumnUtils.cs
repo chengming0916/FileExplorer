@@ -38,7 +38,8 @@ namespace FileExplorer.UserControls
             {
                 Header = colInfo.Header,
                 CellTemplate = dt,
-                Width = colInfo.Width,
+                
+                ColumnWidth = colInfo.Width,
                 //ColumnFilters = colInfo.Filters.ToArray()
             };
         }

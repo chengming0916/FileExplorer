@@ -48,11 +48,18 @@ namespace TestApp
             explorerModel.FileList.Columns.ColumnList = new ColumnInfo[] 
                 {
                     ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
-                    ColumnInfo.FromBindings("Description", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
-                    ColumnInfo.FromTemplate("FSI.Size", "GridSizeTemplate", "", 
+                    ColumnInfo.FromBindings("Type", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
+                    
+                    ColumnInfo.FromBindings("Time", "EntryModel.LastUpdateTimeUtc", "", 
+                        new ValueComparer<IEntryModel>(p => 
+                            (p is DiskEntryModelBase) ? (p as DiskEntryModelBase).LastUpdateTimeUtc
+                            : DateTime.MinValue), 200), 
+        
+                    ColumnInfo.FromTemplate("Size", "GridSizeTemplate", "", 
                     new ValueComparer<IEntryModel>(p => 
-                        (p is FileSystemInfoModel) ? (p as FileSystemInfoExModel).Size
+                        (p is DiskEntryModelBase) ? (p as DiskEntryModelBase).Size
                         : 0), 200),  
+
                     ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 
                         new ValueComparer<IEntryModel>(p => 
                             (p is FileSystemInfoModel) ? (p as FileSystemInfoModel).Attributes
@@ -66,6 +73,21 @@ namespace TestApp
                     ColumnFilter.CreateNew("I - P", "EntryModel.Label", e => Regex.Match(e.Label, "^[I-Pi-i]").Success),
                     ColumnFilter.CreateNew("Q - Z", "EntryModel.Label", e => Regex.Match(e.Label, "^[Q-Zq-z]").Success),
                     ColumnFilter.CreateNew("The rest", "EntryModel.Label", e => Regex.Match(e.Label, "^[^A-Za-z0-9]").Success),
+                    ColumnFilter.CreateNew("Today", "EntryModel.LastUpdateTimeUtc", e => 
+                        {
+                            DateTime dt = DateTime.UtcNow;
+                            return e.LastUpdateTimeUtc.Year == dt.Year && e.LastUpdateTimeUtc.Month == dt.Month && e.LastUpdateTimeUtc.Day == dt.Day;
+                        }),
+                    ColumnFilter.CreateNew("This month", "EntryModel.LastUpdateTimeUtc", e => 
+                        {
+                            DateTime dt = DateTime.UtcNow;
+                            return e.LastUpdateTimeUtc.Year == dt.Year && e.LastUpdateTimeUtc.Month == dt.Month;
+                        }),
+                     ColumnFilter.CreateNew("This year", "EntryModel.LastUpdateTimeUtc", e => 
+                        {
+                            DateTime dt = DateTime.UtcNow;
+                            return e.LastUpdateTimeUtc.Year == dt.Year;
+                        }),    
                     ColumnFilter.CreateNew("Directories", "EntryModel.Description", e => e.IsDirectory),
                     ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory)
                 };

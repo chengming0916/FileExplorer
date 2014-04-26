@@ -14,7 +14,7 @@
     <!--Grid View-->
     
     <GridView x:Key="GridView"  
-        ColumnHeaderContainerStyle="{StaticResource ListViewExColumnHeaderContainerStyle}" >
+        ColumnHeaderContainerStyle="{StaticResource ListViewExGridColumnHeaderContainerStyle}" >
     </GridView>
 
     <!--Icon View-->
