@@ -113,7 +113,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Path x:Name="PART_SortSymbol" Grid.Row="0" Grid.RowSpan="2" Margin="0, -3,0,0"
                                       Fill="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Top" />
-                                <ContentPresenter x:Name="HeaderContent" Grid.RowSpan="2" Grid.Row="0" Margin="10,4,0,4"
+                                <ContentPresenter x:Name="HeaderContent" Grid.RowSpan="2" Grid.Row="0" Margin="10,4,4,4"
                                                   RecognizesAccessKey="True" 
                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

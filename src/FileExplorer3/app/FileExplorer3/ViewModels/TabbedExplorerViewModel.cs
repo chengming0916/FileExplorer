@@ -67,7 +67,7 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Application);
-            uiEle.Dispatcher.BeginInvoke(DispatcherPriority.Background, new System.Action(() => OpenTab()));
+            uiEle.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new System.Action(() => OpenTab()));
 
             //uiEle.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, 
             //    delegate () =>
