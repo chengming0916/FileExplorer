@@ -150,6 +150,12 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ListViewExGridColumnHeaderContainerStyle" 
+           BasedOn="{StaticResource ListViewExColumnHeaderContainerStyle}"
+           TargetType="GridViewColumnHeader">
+        <Setter Property="Width" Value="{Binding ColumnWidth, RelativeSource={RelativeSource TemplatedParent}}" />
+    </Style>
+
     <Style x:Key="ListViewExGridViewScrollViewerStyle" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
         <Setter Property="Focusable" Value="false"/>
         <Setter Property="Template">

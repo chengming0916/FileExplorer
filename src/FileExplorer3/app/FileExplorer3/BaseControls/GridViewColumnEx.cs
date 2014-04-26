@@ -38,6 +38,14 @@ namespace FileExplorer.UserControls
             set { SetValue(ColumnIdProperty, value); }
         }
 
+        public static readonly DependencyProperty ColumnWidthProperty =
+           DependencyProperty.Register("ColumnWidth", typeof(double), typeof(GridViewColumnEx));
+        public double ColumnWidth
+        {
+            get { return (double)GetValue(ColumnWidthProperty); }
+            set { SetValue(ColumnWidthProperty, value); }
+        }
+
         //public static readonly DependencyProperty ColumnFiltersProperty =
         //   DependencyProperty.Register("ColumnFilters", typeof(ColumnFilter[]), typeof(GridViewColumnEx),
         //   new PropertyMetadata(new ColumnFilter[] { }));
