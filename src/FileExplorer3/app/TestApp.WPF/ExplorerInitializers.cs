@@ -78,15 +78,20 @@ namespace TestApp
                             DateTime dt = DateTime.UtcNow;
                             return e.LastUpdateTimeUtc.Year == dt.Year && e.LastUpdateTimeUtc.Month == dt.Month && e.LastUpdateTimeUtc.Day == dt.Day;
                         }),
-                    ColumnFilter.CreateNew("This month", "EntryModel.LastUpdateTimeUtc", e => 
+                    ColumnFilter.CreateNew("Earlier this month", "EntryModel.LastUpdateTimeUtc", e => 
                         {
                             DateTime dt = DateTime.UtcNow;
                             return e.LastUpdateTimeUtc.Year == dt.Year && e.LastUpdateTimeUtc.Month == dt.Month;
                         }),
-                     ColumnFilter.CreateNew("This year", "EntryModel.LastUpdateTimeUtc", e => 
+                     ColumnFilter.CreateNew("Earlier this year", "EntryModel.LastUpdateTimeUtc", e => 
                         {
                             DateTime dt = DateTime.UtcNow;
                             return e.LastUpdateTimeUtc.Year == dt.Year;
+                        }), 
+                    ColumnFilter.CreateNew("A long time ago", "EntryModel.LastUpdateTimeUtc", e => 
+                        {
+                            DateTime dt = DateTime.UtcNow;
+                            return e.LastUpdateTimeUtc.Year != dt.Year;
                         }),    
                     ColumnFilter.CreateNew("Directories", "EntryModel.Description", e => e.IsDirectory),
                     ColumnFilter.CreateNew("Files", "EntryModel.Description", e => !e.IsDirectory)
