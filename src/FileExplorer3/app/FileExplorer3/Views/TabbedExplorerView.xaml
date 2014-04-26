@@ -52,7 +52,19 @@
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
             </bc:UIEventAdapter.Processors>
             
-            
+            <uc:TabControlEx.RightTabHeaderContent>
+                <StackPanel Orientation="Horizontal">
+                    <Button Template="{StaticResource BaseButton}"  
+                                    Command="def:ExplorerCommands.NewTab">
+                        <TextBlock Text="&#xE109;" />
+                    </Button>
+
+                    <uc:Titlebar x:Name="PART_TitleBar" 
+                                         VisibilityWhenNormal="Collapsed" 
+                                         WindowStyleWhenMaximized="None"
+                                         />
+                </StackPanel>
+            </uc:TabControlEx.RightTabHeaderContent>
         </uc:TabControlEx>
     </Grid>
 </UserControl>

@@ -66,6 +66,25 @@ namespace FileExplorer.UserControls
 
         #region Public Properties
 
+
+        public static DependencyProperty LeftTabHeaderContentProperty = DependencyProperty.Register(
+            "LeftTabHeaderContent", typeof(object), typeof(TabControlEx));
+
+        public object LeftTabHeaderContent
+        {
+            get { return GetValue(LeftTabHeaderContentProperty); }
+            set { SetValue(LeftTabHeaderContentProperty, value); }
+        }
+
+        public static DependencyProperty RightTabHeaderContentProperty = DependencyProperty.Register(
+            "RightTabHeaderContent", typeof(object), typeof(TabControlEx));
+
+        public object RightTabHeaderContent
+        {
+            get { return GetValue(RightTabHeaderContentProperty); }
+            set { SetValue(RightTabHeaderContentProperty, value); }
+        }
+
         #endregion
     }
 
