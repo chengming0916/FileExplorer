@@ -35,6 +35,14 @@ namespace FileExplorer.ViewModels.Helpers
         /// <param name="viewModels"></param>
         void SetEntries(params VM[] viewModels);
 
+        void Insert(int idx, params VM[] viewModels);     
+
+        void Add(params VM[] viewModels);
+        
+        void Remove(VM viewModel);
+
+        void RemoveAt(int idx);
+
         /// <summary>
         /// Load when expand the first time.
         /// </summary>

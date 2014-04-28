@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Utils;
+using System.Diagnostics;
 
 namespace FileExplorer.ViewModels.Helpers
 {
@@ -94,15 +95,47 @@ namespace FileExplorer.ViewModels.Helpers
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
             all.Clear();
-            //all.NotifyChanges();
-            //foreach (var vm in viewModels)
-            //    All.Add(vm);
             all.AddItems(viewModels);
             all.NotifyChanges();
 
             if (EntriesChanged != null)
                 EntriesChanged(this, EventArgs.Empty);
             //_isExpanded = true;
+        }
+
+        public void Insert(int idx, params VM[] viewModels)
+        {
+            FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
+            all.SuspendCollectionChangeNotification();
+            all.Clear();
+            foreach (var vm in viewModels)
+                all.Insert(idx++, vm);
+            all.NotifyChanges();
+
+            if (EntriesChanged != null)
+                EntriesChanged(this, EventArgs.Empty);
+        }
+
+        public void Add(params VM[] viewModels)
+        {
+            Insert(All.Count() - 1, viewModels);
+        }
+
+        public void Remove(VM viewModel)
+        {
+            int idx = All.IndexOf(viewModel);
+            if (idx != -1)
+                RemoveAt(idx);
+            else Debug.WriteLine("EntriesHelper: {0} not found.", viewModel);
+        }
+
+        public void RemoveAt(int idx)
+        {
+            FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
+            all.RemoveAt(idx);
+
+            if (EntriesChanged != null)
+                EntriesChanged(this, EventArgs.Empty);
         }
 
         #endregion

@@ -13,6 +13,9 @@ namespace FileExplorer.ViewModels
         public static IViewModelInitializer<IExplorerViewModel> StartupDirectory(IEntryModel startupDir)
         { return new StartupDirInitializer(startupDir); }
 
+        public static IViewModelInitializer<IExplorerViewModel> Configuration(IConfiguration configuration)
+        { return Do(evm => { evm.Parameters = configuration.Explorer; evm.FileList.Parameters = configuration.FileList; }); }
+
         public static IViewModelInitializer<IExplorerViewModel> Parameter(IExplorerParameters parameter)
         { return Do(evm => { evm.Parameters = parameter; }); }
 

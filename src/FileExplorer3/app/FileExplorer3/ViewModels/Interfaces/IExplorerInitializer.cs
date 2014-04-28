@@ -61,7 +61,7 @@ namespace FileExplorer.ViewModels
         public IEventAggregator Events { get; set; }
         public IWindowManager WindowManager { get; set; }
         public IEntryModel[] RootModels { get; set; }
-        public IParameters Parameters { get; set; }
+        public IConfiguration Parameters { get; set; }
         public List<IViewModelInitializer<IExplorerViewModel>> Initializers { get; set; }
 
         #endregion
