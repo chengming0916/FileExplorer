@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Cofe.Core.Script;
+using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
@@ -23,21 +24,26 @@ namespace FileExplorer.ViewModels
 
         #region Constructors
 
-        public TabbedExplorerViewModel(IExplorerInitializer initializer)
+        public TabbedExplorerViewModel(IExplorerInitializer initializer, 
+            IConfiguration defaultConfig,
+            params IConfiguration[] otherConfigs)
         {
+            _defaultConfig = defaultConfig;
+            _otherConfigs = otherConfigs;
             _initializer = initializer.Clone();
             Commands = new TabbedExplorerCommandManager(this, initializer.Events);
             DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
-            ////_tabs = new ObservableCollection<ITabItemViewModel>();
         }
 
         #endregion
 
         #region Methods
 
-        public void OpenTab(IEntryModel model = null)
+        public void OpenTab(IEntryModel model = null, IConfiguration configuration = null)
         {
             var initializer = _initializer.Clone();
+            initializer.Initializers.Add(ExplorerInitializers.Configuration(
+                configuration ?? _defaultConfig));
             if (model != null)
                 initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
             ExplorerViewModel expvm = new ExplorerViewModel(initializer);
@@ -99,20 +105,17 @@ namespace FileExplorer.ViewModels
 
         #region Data
 
-        //private ObservableCollection<ITabItemViewModel> _tabs;
-        //private ITabItemViewModel _selectedTab;
         private IExplorerInitializer _initializer;
+        private IConfiguration _defaultConfig;
+        private IConfiguration[] _otherConfigs;
 
         #endregion
 
         #region Public Properties
 
-        //public ObservableCollection<ITabItemViewModel> Tabs { get { return _tabs; } }
         public ICommandManager Commands { get; private set; }
 
         public ISupportDrag DragHelper { get; private set; }
-        //public ITabItemViewModel SelectedTab { get { return _selectedTab; } 
-        //    set { _selectedTab = value; NotifyOfPropertyChange(() => SelectedTab); } }
 
         public int SelectedIndex
         {

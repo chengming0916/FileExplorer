@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Defines
 {
-    public interface IParameters : INotifyPropertyChanged
+    public interface IConfiguration : INotifyPropertyChanged
     {
         IExplorerParameters Explorer { get; set; }
         IFileListParameters FileList { get; set; }
@@ -50,14 +50,18 @@ namespace FileExplorer.Defines
         string ViewMode { get; set; }
     }
 
-    public class Parameters : NotifyPropertyChanged, IParameters
+    public class Configuration : NotifyPropertyChanged, IConfiguration
     {
-        public Parameters()
+        private string _name = "Unnamed";
+
+        public Configuration(string name, IExplorerParameters explorer, IFileListParameters fileList)
         {
-            Explorer = new ExplorerParameters();
-            FileList = new FileListParameters();
+            Name = name;
+            Explorer = explorer ?? new ExplorerParameters();
+            FileList = fileList ?? new FileListParameters();
         }
 
+        public string Name { get { return _name; } set { _name = value; NotifyOfPropertyChanged(() => Name); } }
         public IExplorerParameters Explorer { get; set; }
         public IFileListParameters FileList { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.ViewModels.Helpers;
 using System;
@@ -24,7 +25,7 @@ namespace FileExplorer.ViewModels
     public interface ITabbedExplorerViewModel : ITabControlViewModel<IExplorerViewModel>,
         IConductor, IConductActiveItem, IParent<IScreen>
     {
-        void OpenTab(IEntryModel model = null);
+        void OpenTab(IEntryModel model = null, IConfiguration config = null);
         void CloseTab(IExplorerViewModel evm);
     }
 }
