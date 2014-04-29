@@ -141,8 +141,11 @@
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
+    <Compile Include="UnitTests\ConfigurationTest.cs" />
     <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
     <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
+    <Compile Include="Utils\UnclosableMemoryStream.cs" />
+    <Compile Include="ViewModels\ConfigurationViewModel.cs" />
     <Compile Include="ViewModels\ExplorerInitializers.cs" />
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
     <Compile Include="UserControls\InputProcesor\IUIDragInput.cs" />
@@ -181,9 +184,12 @@
     <Compile Include="Defines\Parameters.cs" />
     <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
     <Compile Include="ViewModels\FileListCommandManager.cs" />
+    <Compile Include="ViewModels\Helpers\ConfigurationHelper.cs" />
     <Compile Include="ViewModels\Helpers\IScriptCommandManager.cs" />
     <Compile Include="ViewModels\Helpers\TabbedWindowManager.cs" />
     <Compile Include="ViewModels\Interfaces\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\Helpers\IConfigurationProcessor.cs" />
+    <Compile Include="ViewModels\Interfaces\IConfigurationViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IExplorerInitializer.cs" />
     <Compile Include="ViewModels\Interfaces\ISidebarViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\ITabbedExplorerViewModel.cs" />
