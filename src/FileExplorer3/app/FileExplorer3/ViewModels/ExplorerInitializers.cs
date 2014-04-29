@@ -16,10 +16,10 @@ namespace FileExplorer.ViewModels
         public static IViewModelInitializer<IExplorerViewModel> Configuration(IConfiguration configuration)
         { return Do(evm => { evm.Parameters = configuration.Explorer; evm.FileList.Parameters = configuration.FileList; }); }
 
-        public static IViewModelInitializer<IExplorerViewModel> Parameter(IExplorerParameters parameter)
+        public static IViewModelInitializer<IExplorerViewModel> Parameter(IExplorerConfiguration parameter)
         { return Do(evm => { evm.Parameters = parameter; }); }
 
-        public static IViewModelInitializer<IExplorerViewModel> Parameter(IFileListParameters parameter)
+        public static IViewModelInitializer<IExplorerViewModel> Parameter(IFileListConfiguration parameter)
         { return Do(evm => { evm.FileList.Parameters = parameter; }); }
 
         //public static IViewModelInitializer<IExplorerViewModel> ViewMode(string viewMode, int itemSize)

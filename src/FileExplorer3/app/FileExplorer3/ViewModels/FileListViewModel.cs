@@ -170,7 +170,7 @@ namespace FileExplorer.ViewModels
         private IToolbarViewModel _toolbar = null;
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
-        private IFileListParameters _parameters = new FileListParameters();
+        private IFileListConfiguration _parameters = new FileListConfiguration();
 
         #endregion
 
@@ -216,7 +216,7 @@ namespace FileExplorer.ViewModels
 
 
 
-        public IFileListParameters Parameters { get { return _parameters; } 
+        public IFileListConfiguration Parameters { get { return _parameters; } 
             set { _parameters = value; NotifyOfPropertyChange(() => Parameters); } }
 
 

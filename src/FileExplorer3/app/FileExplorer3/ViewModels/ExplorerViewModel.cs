@@ -231,7 +231,7 @@ namespace FileExplorer.ViewModels
         protected IWindowManager _windowManager = new WindowManager();
         private IProfile[] _rootProfiles = new IProfile[] { };
         private IExplorerInitializer _initializer;
-        private IExplorerParameters _parameters = new ExplorerParameters();
+        private IExplorerConfiguration _parameters = new ExplorerConfiguration();
 
         private IEntryViewModel _currentDirectoryViewModel;
         private bool _isDragging = false;
@@ -242,7 +242,7 @@ namespace FileExplorer.ViewModels
 
 
         public IExplorerInitializer Initializer { get; private set; }
-        public IExplorerParameters Parameters
+        public IExplorerConfiguration Parameters
         {
             get { return _parameters; }
             set

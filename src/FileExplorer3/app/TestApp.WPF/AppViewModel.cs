@@ -24,6 +24,9 @@ using System.Threading;
 using Cofe.Core;
 using DropNet;
 using DropNet.Models;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Diagnostics;
 
 namespace TestApp
 {
@@ -35,6 +38,8 @@ namespace TestApp
         [ImportingConstructor]
         public AppViewModel(IEventAggregator events, IWindowManager windowManager)
         {
+            FileExplorer.UnitTests.ConfigurationTest.FullConfigurationTest();
+
             _windowManager = windowManager;
             _events = events;
 
@@ -275,8 +280,8 @@ namespace TestApp
                 new ToolbarCommandsInitializers(_windowManager));
 
             var defaultConfiguration = new FileExplorer.Defines.Configuration("Default",
-                new ExplorerParameters() { UIScale = 1.1f, FileListSize = "3*", NavigationSize = 45 },
-                new FileListParameters() { ViewMode = "Icon", ItemSize = 100 }
+                new ExplorerConfiguration() { UIScale = 1.1f, FileListSize = "3*", NavigationSize = 45 },
+                new FileListConfiguration() { ViewMode = "Icon", ItemSize = 100 }
                 );
 
             var tabVM = new TabbedExplorerViewModel(initializer, defaultConfiguration);
