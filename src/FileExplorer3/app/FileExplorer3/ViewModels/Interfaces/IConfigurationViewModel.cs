@@ -10,6 +10,6 @@ namespace FileExplorer.ViewModels
 {
     public interface IConfigurationViewModel : INotifyPropertyChanged
     {
-        Configuration Configuration { get; }
+        IConfiguration Configuration { get; }
     }
 }

@@ -40,7 +40,7 @@ namespace FileExplorer.ViewModels
 
         bool IsCheckBoxVisible { get; set; }
 
-        IFileListConfiguration Parameters { get; set; }
+        IFileListParameters Parameters { get; set; }
 
         //bool IsContextMenuVisible { get; set; }
 

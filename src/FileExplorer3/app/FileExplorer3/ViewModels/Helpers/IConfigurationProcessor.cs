@@ -11,10 +11,12 @@ namespace FileExplorer.ViewModels
 {
     public interface IConfigurationHelper
     {
+        IConfigurationViewModel SelectedConfiguration { get;  }
+        int SelectedIndex { get; set; }
         EntriesHelper<IConfigurationViewModel> Configurations { get; }
         Task LoadAsync(Stream stream);
         Task SaveAsync(Stream stream);
-        IConfigurationViewModel Insert(IConfiguration configuration);
+        IConfigurationViewModel Add(IConfiguration configuration);
         void Remove(string name);
     }
 }

@@ -12,11 +12,12 @@ namespace FileExplorer.Defines
 {
     public interface IConfiguration : INotifyPropertyChanged
     {
-        ExplorerConfiguration Explorer { get; set; }
-        FileListConfiguration FileList { get; set; }
+        string Name { get; }
+        IExplorerParameters Explorer { get; set; }
+        IFileListParameters FileList { get; set; }
     }
 
-    public interface IExplorerConfiguration : INotifyPropertyChanged
+    public interface IExplorerParameters : INotifyPropertyChanged
     {
         /// <summary>
         /// Default is 1.
@@ -46,35 +47,50 @@ namespace FileExplorer.Defines
     }
 
 
-    public interface IFileListConfiguration : INotifyPropertyChanged
+    public interface IFileListParameters : INotifyPropertyChanged
     {
         int ItemSize { get; set; }
         string ViewMode { get; set; }
     }
 
-     [XmlRoot("Configuration")]
+    [XmlRoot("Configuration")]
     public class Configuration : NotifyPropertyChanged, IConfiguration
     {
         private string _name = "Unnamed";
 
         public Configuration() { }
-        public Configuration(string name, ExplorerConfiguration explorer = null, 
-            FileListConfiguration fileList = null)
+        public Configuration(string name, ExplorerParameters explorer = null,
+            FileListParameters fileList = null)
         {
             Name = name ?? "Unnamed";
-            Explorer = explorer ?? new ExplorerConfiguration();
-            FileList = fileList ?? new FileListConfiguration();
+            Explorer = explorer ?? new ExplorerParameters();
+            FileList = fileList ?? new FileListParameters();
         }
 
         public string Name { get { return _name; } set { _name = value; NotifyOfPropertyChanged(() => Name); } }
-        public ExplorerConfiguration Explorer { get; set; }
-        public FileListConfiguration FileList { get; set; }
+        [XmlIgnore]
+        public IExplorerParameters Explorer { get; set; }
+        [XmlIgnore]
+        public IFileListParameters FileList { get; set; }
+       
+        [XmlElement("Explorer")]
+        public ExplorerParameters ExplorerSerialized
+        {
+            get { return Explorer as ExplorerParameters; }
+            set { Explorer = value; }
+        }
 
-      
+        [XmlElement("FileList")]
+        public FileListParameters FileListSerialized
+        {
+            get { return FileList as FileListParameters; }
+            set { FileList = value; }
+        }
+
     }
 
-     [XmlRoot("Explorer")]
-    public class ExplorerConfiguration : NotifyPropertyChanged, IExplorerConfiguration
+    [XmlRoot("Explorer")]
+    public class ExplorerParameters : NotifyPropertyChanged, IExplorerParameters
     {
         private float _uiScale = 1f;
         private string _directoryTreeSize = "*";
@@ -88,19 +104,19 @@ namespace FileExplorer.Defines
 
         public int NavigationSize { get { return _navigationSize; } set { _navigationSize = value; NotifyOfPropertyChanged(() => NavigationSize); } }
         public int StatusbarSize { get { return _statusbarSize; } set { _statusbarSize = value; NotifyOfPropertyChanged(() => StatusbarSize); } }
-       
+
         //public float SidebarSize { get { return _sidebarSize; } set { _sidebarSize = value; NotifyOfPropertyChanged(() => SidebarSize); } } 
     }
 
     [XmlRoot("FileList")]
-    public class FileListConfiguration: NotifyPropertyChanged, IFileListConfiguration
+    public class FileListParameters : NotifyPropertyChanged, IFileListParameters
     {
         private int _itemSize = 60;
         private string _viewMode = "Icon";
         public int ItemSize { get { return _itemSize; } set { _itemSize = value; NotifyOfPropertyChanged(() => ItemSize); } }
         public string ViewMode { get { return _viewMode; } set { _viewMode = value; NotifyOfPropertyChanged(() => ViewMode); } }
-        
-     
-    
+
+
+
     }
 }

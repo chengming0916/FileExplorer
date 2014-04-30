@@ -17,27 +17,51 @@ using System.Windows.Threading;
 namespace FileExplorer.ViewModels
 {
 
-    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, 
-        ITabbedExplorerViewModel, ISupportDragHelper
+    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive,
+        ITabbedExplorerViewModel, ISupportDragHelper, IHandle<RootChangedEvent>
     {
 
 
         #region Constructors
 
-        public TabbedExplorerViewModel(IExplorerInitializer initializer, 
-            IConfiguration defaultConfig,
-            params IConfiguration[] otherConfigs)
+        public TabbedExplorerViewModel(IExplorerInitializer initializer,
+            IConfiguration defaultConfig)
         {
             _defaultConfig = defaultConfig;
-            _otherConfigs = otherConfigs;
             _initializer = initializer.Clone();
             Commands = new TabbedExplorerCommandManager(this, initializer.Events);
             DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
+            ConfigurationHelper = new ConfigurationHelper();
+            _initializer.Events.Subscribe(this);
         }
 
         #endregion
 
         #region Methods
+
+        public async Task LoadConfiguration()
+        {
+            if (_initializer.ConfigurationPath != null &&
+                System.IO.File.Exists(_initializer.ConfigurationPath))
+                using (var fs = System.IO.File.OpenRead(_initializer.ConfigurationPath))
+                    await ConfigurationHelper.LoadAsync(fs);
+
+            if (ConfigurationHelper.Configurations.AllNonBindable.Count() == 0)
+            {
+                ConfigurationHelper.Add(_defaultConfig);
+                await SaveConfiguration();
+            }
+        }
+
+        public async Task SaveConfiguration()
+        {
+            if (_initializer.ConfigurationPath != null &&
+                ConfigurationHelper.Configurations.AllNonBindable.Count() >= 0)
+            {
+                using (var fs = System.IO.File.OpenWrite(_initializer.ConfigurationPath))
+                    await ConfigurationHelper.SaveAsync(fs);
+            }
+        }
 
         public void OpenTab(IEntryModel model = null, IConfiguration configuration = null)
         {
@@ -73,6 +97,8 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Application);
+
+            LoadConfiguration();
             uiEle.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new System.Action(() => OpenTab()));
 
             //uiEle.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, 
@@ -101,13 +127,34 @@ namespace FileExplorer.ViewModels
             }
         }
 
+        public void Handle(RootChangedEvent message)
+        {
+            switch (message.ChangeType)
+            {
+                case ChangeType.Changed :
+                    _initializer.RootModels = message.AppliedRootDirectories;
+                    break;
+                case ChangeType.Created :
+                    List<IEntryModel> rootModels = _initializer.RootModels.ToList();
+                    rootModels.AddRange(message.AppliedRootDirectories);
+                    _initializer.RootModels = rootModels.ToArray();
+                    break;
+                case ChangeType.Deleted : 
+                    List<IEntryModel> rootModels2 = _initializer.RootModels.ToList();
+                    foreach (var d in message.AppliedRootDirectories)
+                        if (rootModels2.Contains(d))
+                            rootModels2.Remove(d);
+                    _initializer.RootModels = rootModels2.ToArray();
+                    break;
+            }
+        }
+
         #endregion
 
         #region Data
 
         private IExplorerInitializer _initializer;
         private IConfiguration _defaultConfig;
-        private IConfiguration[] _otherConfigs;
 
         #endregion
 
@@ -116,6 +163,7 @@ namespace FileExplorer.ViewModels
         public ICommandManager Commands { get; private set; }
 
         public ISupportDrag DragHelper { get; private set; }
+        public IConfigurationHelper ConfigurationHelper { get; private set; }
 
         public int SelectedIndex
         {
@@ -131,5 +179,7 @@ namespace FileExplorer.ViewModels
 
         #endregion
 
+
+       
     }
 }
