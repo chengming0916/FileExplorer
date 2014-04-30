@@ -87,6 +87,21 @@ namespace FileExplorer.Defines
             set { FileList = value; }
         }
 
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is Configuration) && Name.Equals((obj as Configuration).Name, 
+                StringComparison.CurrentCultureIgnoreCase); 
+        }
+
+        public override string ToString()
+        {
+            return "Configuration - " + Name;
+        }
     }
 
     [XmlRoot("Explorer")]

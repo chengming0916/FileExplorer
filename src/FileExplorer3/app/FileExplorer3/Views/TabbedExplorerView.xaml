@@ -57,7 +57,8 @@
 
                     <bc:DropDownList
                               ItemsSource="{Binding ConfigurationHelper.Configurations.All}" 
-                              SelectedIndex ="{Binding ConfigurationHelper.SelectedIndex}"
+                              SelectedValuePath="Configuration"
+                              SelectedValue="{Binding SelectedItem.Configuration, Mode=TwoWay}"
                               DisplayMemberPath="Configuration.Name">
                         <bc:DropDownList.Header>
                             <TextBlock Text="&#xE13C;" />

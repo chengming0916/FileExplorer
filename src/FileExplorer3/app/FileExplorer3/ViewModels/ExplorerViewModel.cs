@@ -83,7 +83,7 @@ namespace FileExplorer.ViewModels
 
                 //uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
                 //    {
-               
+
                 //    }), System.Windows.Threading.DispatcherPriority.Loaded);
 
                 _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(null));
@@ -232,6 +232,7 @@ namespace FileExplorer.ViewModels
         private IProfile[] _rootProfiles = new IProfile[] { };
         private IExplorerInitializer _initializer;
         private IExplorerParameters _parameters = new ExplorerParameters();
+        private IConfiguration _configuration = null;
 
         private IEntryViewModel _currentDirectoryViewModel;
         private bool _isDragging = false;
@@ -249,6 +250,18 @@ namespace FileExplorer.ViewModels
             {
                 _parameters = value;
                 NotifyOfPropertyChange(() => Parameters);
+            }
+        }
+
+        public IConfiguration Configuration
+        {
+            get { return _configuration; }
+            set
+            {
+                _configuration = value;
+                Parameters = _configuration.Explorer;
+                FileList.Parameters = _configuration.FileList;
+                NotifyOfPropertyChange(() => Configuration);
             }
         }
 
