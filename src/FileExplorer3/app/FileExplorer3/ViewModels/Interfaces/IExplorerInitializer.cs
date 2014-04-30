@@ -14,6 +14,7 @@ namespace FileExplorer.ViewModels
         IEventAggregator Events { get; set; }
         IWindowManager WindowManager { get; set; }
         IEntryModel[] RootModels { get; set; }
+        string ConfigurationPath { get; set; }
 
         IExplorerInitializer Clone();
 
@@ -25,16 +26,19 @@ namespace FileExplorer.ViewModels
         #region Constructors
 
         public ExplorerInitializer(IWindowManager wm, IEventAggregator events, IEntryModel[] rootModels,
+            string configurationPath = null,
             params IViewModelInitializer<IExplorerViewModel>[] initializers)
         {
             WindowManager = wm;
             Events = events;
             RootModels = rootModels;
             Initializers = new List<IViewModelInitializer<IExplorerViewModel>>(initializers);
+            ConfigurationPath = configurationPath;
         }
 
         protected ExplorerInitializer(IExplorerInitializer initializer)
-            : this(initializer.WindowManager, initializer.Events, initializer.RootModels,
+            : this(initializer.WindowManager, initializer.Events, initializer.RootModels, 
+            initializer.ConfigurationPath,
             initializer.Initializers.ToArray())
         {
 
@@ -46,7 +50,7 @@ namespace FileExplorer.ViewModels
 
         public IExplorerInitializer Clone()
         {
-            return new ExplorerInitializer(WindowManager, Events, RootModels, Initializers.ToArray());
+            return new ExplorerInitializer(WindowManager, Events, RootModels, ConfigurationPath, Initializers.ToArray());
         }
 
 
@@ -63,8 +67,12 @@ namespace FileExplorer.ViewModels
         public IEntryModel[] RootModels { get; set; }
         public IConfiguration Parameters { get; set; }
         public List<IViewModelInitializer<IExplorerViewModel>> Initializers { get; set; }
+        public string ConfigurationPath { get; set; }
 
         #endregion
 
+
+
+      
     }
 }

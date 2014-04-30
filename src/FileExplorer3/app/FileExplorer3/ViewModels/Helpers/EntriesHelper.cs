@@ -39,7 +39,7 @@ namespace FileExplorer.ViewModels.Helpers
         {
             _isLoaded = true;
             All = new FastObservableCollection<VM>();
-            _subItemList = entries;
+            _subItemList = new List<VM>(entries);
             (All as FastObservableCollection<VM>).AddItems(entries);
             //foreach (var entry in entries)
             //    All.Add(entry);
@@ -90,7 +90,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void SetEntries(params VM[] viewModels)
         {
-            _subItemList = viewModels.ToList();
+            _subItemList = new List<VM>(viewModels);
 
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
@@ -107,9 +107,11 @@ namespace FileExplorer.ViewModels.Helpers
         {
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
-            all.Clear();
             foreach (var vm in viewModels)
+            {
+                _subItemList.Insert(idx, vm);
                 all.Insert(idx++, vm);
+            }
             all.NotifyChanges();
 
             if (EntriesChanged != null)
@@ -118,7 +120,7 @@ namespace FileExplorer.ViewModels.Helpers
 
         public void Add(params VM[] viewModels)
         {
-            Insert(All.Count() - 1, viewModels);
+            Insert(All.Count(), viewModels);
         }
 
         public void Remove(VM viewModel)
@@ -132,6 +134,8 @@ namespace FileExplorer.ViewModels.Helpers
         public void RemoveAt(int idx)
         {
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
+
+            _subItemList.RemoveAt(idx);
             all.RemoveAt(idx);
 
             if (EntriesChanged != null)
@@ -148,7 +152,7 @@ namespace FileExplorer.ViewModels.Helpers
         //private bool _isLoading = false;
         private bool _isLoaded = false;
         private bool _isExpanded = false;
-        private IEnumerable<VM> _subItemList = new List<VM>();
+        private IList<VM> _subItemList = new List<VM>();
         protected Func<bool, object, Task<IEnumerable<VM>>> _loadSubEntryFunc;
         private ObservableCollection<VM> _subItems;
         private DateTime _lastRefreshTimeUtc = DateTime.MinValue;

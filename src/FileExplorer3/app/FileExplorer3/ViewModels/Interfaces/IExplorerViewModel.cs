@@ -20,7 +20,7 @@ namespace FileExplorer.ViewModels
         IStatusbarViewModel Statusbar { get; }
         ISidebarViewModel Sidebar { get; }
 
-        IExplorerConfiguration Parameters { get; set; }
+        IExplorerParameters Parameters { get; set; }
 
         IEntryViewModel CurrentDirectory { get; }
         Task GoAsync(string gotoPath);

@@ -38,7 +38,7 @@ namespace TestApp
         [ImportingConstructor]
         public AppViewModel(IEventAggregator events, IWindowManager windowManager)
         {
-            FileExplorer.UnitTests.ConfigurationTest.FullConfigurationTest();
+            FileExplorer.UnitTests.ConfigurationTest.Test();
 
             _windowManager = windowManager;
             _events = events;
@@ -95,7 +95,7 @@ namespace TestApp
         public static IExplorerInitializer getInitializer(IWindowManager windowManager,
             IEventAggregator events, IEntryModel[] rootModels, params IViewModelInitializer<IExplorerViewModel>[] initalizers)
         {
-            var retVal = new ExplorerInitializer(windowManager, events, rootModels);
+            var retVal = new ExplorerInitializer(windowManager, events, rootModels, "FileExplorer.config.xml");
             retVal.Initializers.AddRange(initalizers);
             return retVal;
         }
@@ -280,8 +280,8 @@ namespace TestApp
                 new ToolbarCommandsInitializers(_windowManager));
 
             var defaultConfiguration = new FileExplorer.Defines.Configuration("Default",
-                new ExplorerConfiguration() { UIScale = 1.1f, FileListSize = "3*", NavigationSize = 45 },
-                new FileListConfiguration() { ViewMode = "Icon", ItemSize = 100 }
+                new ExplorerParameters() { UIScale = 1.1f, FileListSize = "3*", NavigationSize = 45 },
+                new FileListParameters() { ViewMode = "Icon", ItemSize = 100 }
                 );
 
             var tabVM = new TabbedExplorerViewModel(initializer, defaultConfiguration);
