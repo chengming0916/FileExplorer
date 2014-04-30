@@ -97,8 +97,11 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Application);
+            
+            //LoadConfiguration();
+            ConfigurationHelper.Add(_defaultConfig);
+            ConfigurationHelper.Add(new Configuration("Test"));
 
-            LoadConfiguration();
             uiEle.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new System.Action(() => OpenTab()));
 
             //uiEle.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, 
@@ -147,6 +150,16 @@ namespace FileExplorer.ViewModels
                     _initializer.RootModels = rootModels2.ToArray();
                     break;
             }
+        }
+
+        public override void NotifyOfPropertyChange(string propertyName = "")
+        {
+            if (propertyName == "ActiveItem")
+            {
+                NotifyOfPropertyChange(() => SelectedIndex); 
+                NotifyOfPropertyChange(() => SelectedItem);
+            }
+            base.NotifyOfPropertyChange(propertyName);
         }
 
         #endregion
