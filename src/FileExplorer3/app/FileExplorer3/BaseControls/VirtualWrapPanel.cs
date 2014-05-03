@@ -607,7 +607,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty ItemWidthProperty
            = DependencyProperty.Register("ItemWidth", typeof(double), typeof(VirtualWrapPanel),
-              new FrameworkPropertyMetadata(200.0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
+              new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
               FrameworkPropertyMetadataOptions.AffectsArrange));
 
         // Accessor for the child size dependency property
@@ -619,7 +619,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty ItemHeightProperty
            = DependencyProperty.Register("ItemHeight", typeof(double), typeof(VirtualWrapPanel),
-              new FrameworkPropertyMetadata(200.0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
+              new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
               FrameworkPropertyMetadataOptions.AffectsArrange));
 
         // Accessor for the child size dependency property
@@ -630,7 +630,13 @@ namespace FileExplorer.UserControls
         }
 
         public Size ItemSize
-        { get { return new Size(ItemWidth, ItemHeight); } }
+        {
+            get
+            {
+                return new Size(ItemWidth == 0 ? Width : ItemWidth,
+                ItemHeight == 0 ? Height : ItemHeight);
+            }
+        }
 
         public static readonly DependencyProperty OrientationProperty
            = DependencyProperty.Register("Orientation", typeof(Orientation), typeof(VirtualWrapPanel),

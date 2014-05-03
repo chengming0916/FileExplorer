@@ -346,7 +346,7 @@ namespace FileExplorer.UserControls
 
             if (Orientation == Orientation.Horizontal)
                 SetHorizontalOffset(this.HorizontalOffset - yChanges);
-            else SetVerticalOffset(this.VerticalOffset- xChanges);
+            else SetVerticalOffset(this.VerticalOffset - xChanges);
         }
 
         public void PageUp()
@@ -490,7 +490,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty ItemWidthProperty
            = DependencyProperty.Register("ItemWidth", typeof(double), typeof(VirtualStackPanel),
-              new FrameworkPropertyMetadata(200.0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
+              new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
               FrameworkPropertyMetadataOptions.AffectsArrange));
 
         // Accessor for the child size dependency property
@@ -502,7 +502,7 @@ namespace FileExplorer.UserControls
 
         public static readonly DependencyProperty ItemHeightProperty
            = DependencyProperty.Register("ItemHeight", typeof(double), typeof(VirtualStackPanel),
-              new FrameworkPropertyMetadata(200.0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
+              new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
               FrameworkPropertyMetadataOptions.AffectsArrange));
 
         // Accessor for the child size dependency property
@@ -513,7 +513,13 @@ namespace FileExplorer.UserControls
         }
 
         public Size ChildSize
-        { get { return new Size(ItemWidth, ItemHeight); } }
+        {
+            get
+            {
+                return new Size(ItemWidth == 0 ? Width : ItemWidth,
+                ItemHeight == 0 ? Height : ItemHeight);
+            }
+        }
 
         public static readonly DependencyProperty OrientationProperty
            = DependencyProperty.Register("Orientation", typeof(Orientation), typeof(VirtualStackPanel),
