@@ -143,6 +143,12 @@ namespace FileExplorer.Models
         {
             string fileName = PathEx.GetFileName(destDir.FullPath);
             if (fileName == null) fileName = destDir.FullPath;
+
+            if (entries.Count() == 0)
+                return DragDropEffects.None;
+            if (entries.Any(e => e.Equals(destDir)))
+                return DragDropEffects.None;
+
             if (MessageBox.Show(
                 String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
                 entries.Count(), fileName, allowedEffects), "FileBasedDragDropHandler.OnDropCompleted", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
