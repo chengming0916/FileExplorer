@@ -157,11 +157,11 @@ namespace Cofe.Core.Utils
             return MatchFileMask(fileName, fileMask, false);
         }
 
-        public static bool MatchFileMasks(string fileName, string fileMasks)
+        public static bool MatchFileMasks(string fileName, string fileMasks, string appendFileMask = "")
         {
             string[] fileMaskList = fileMasks.Split(new char[] { ',', ';' });
             foreach (string fileMask in fileMaskList)
-                if (MatchFileMask(fileName, fileMask))
+                if (MatchFileMask(fileName, fileMask + appendFileMask))
                     return true;
             return false;
         }
