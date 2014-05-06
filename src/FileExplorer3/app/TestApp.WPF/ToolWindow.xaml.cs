@@ -1,4 +1,5 @@
-﻿using FileExplorer.Models;
+﻿using Cofe.Core.Utils;
+using FileExplorer.Models;
 using FileExplorer.ViewModels;
 using FileExplorer.ViewModels.Helpers;
 using System;
@@ -14,6 +15,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using FileExplorer;
+using Cofe.Core.Script;
 
 namespace TestApp
 {
@@ -46,6 +49,8 @@ namespace TestApp
             exp.ViewModel.FileList.EnableMultiSelect = false;
             testDroppable.DataContext = new TestDroppableViewModel();
             
+            exp.ViewModel.GoAsync("C:\\");
+            //or exp.ViewModel.Commands.ExecuteAsync(new IScriptCommand[] { Explorer.GoTo("C:\\") });
         }
     }
 

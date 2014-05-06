@@ -88,9 +88,9 @@ namespace FileExplorer.ViewModels
 
                 _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(null));
                 _initializer.Initializers.EnsureOneStartupDirectoryOnly();
-                _initializer.Initializers.InitalizeAsync(this);
 
                 _attachedView = true;
+                _initializer.Initializers.InitalizeAsync(this);
             }
 
             //if (_rootModels != null && _rootModels.Length > 0)
@@ -110,9 +110,16 @@ namespace FileExplorer.ViewModels
             entryModel = entryModel ?? RootModels.FirstOrDefault();
             if (entryModel != null)
             {
-                await DirectoryTree.SelectAsync(entryModel);
-                FileList.CurrentDirectory = entryModel;
-                await Breadcrumb.Selection.AsRoot().SelectAsync(entryModel);
+                if (!_attachedView)
+                {
+                    _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(entryModel));
+                }
+                else
+                {
+                    await DirectoryTree.SelectAsync(entryModel);
+                    FileList.CurrentDirectory = entryModel;
+                    await Breadcrumb.Selection.AsRoot().SelectAsync(entryModel);
+                }
             }
 
         }
