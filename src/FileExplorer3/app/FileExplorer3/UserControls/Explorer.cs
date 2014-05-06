@@ -45,7 +45,7 @@ namespace FileExplorer.UserControls
                         new IScriptCommand[] 
                     { 
                         FileExplorer.ViewModels.Explorer.ChangeRoot(ChangeType.Changed, newRootDirs),
-                        FileExplorer.ViewModels.Explorer.GoTo(newRootDirs.First())
+                        //FileExplorer.ViewModels.Explorer.GoTo(newRootDirs.First())
                     }
                         );
             }

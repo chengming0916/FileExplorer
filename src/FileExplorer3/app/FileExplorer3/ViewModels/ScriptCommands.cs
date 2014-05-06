@@ -594,6 +594,10 @@ namespace FileExplorer.ViewModels
             return new GotoDirectory(dir, thenCommand);
         }
 
+        public static IScriptCommand GoTo(string path, IScriptCommand thenCommand = null)
+        {
+            return new GotoDirectory(path, thenCommand);
+        }
 
         public static IScriptCommand Zoom(ZoomMode mode, int multiplier = 1, IScriptCommand nextCommand = null)
         {
@@ -870,6 +874,7 @@ namespace FileExplorer.ViewModels
     internal class GotoDirectory : ScriptCommandBase
     {
         private IEntryModel _dir = null;
+        private string _dirPath = null;
 
         internal GotoDirectory(IScriptCommand thenCommand)
             : base("GoToDirectory", thenCommand, "Directory")
@@ -882,15 +887,26 @@ namespace FileExplorer.ViewModels
             _dir = dir;
         }
 
+        public GotoDirectory(string dirPath, IScriptCommand thenCommand)
+            : this(thenCommand)
+        {
+            _dirPath = dirPath;
+        }
+
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
             IEventAggregator events = pm["Events"] as IEventAggregator;
             if (evm != null)
             {
-                _dir = _dir ?? (pm.ContainsKey("Directory") ? (IEntryModel)pm["Directory"] : null);
-                if (_dir != null)
-                    await evm.GoAsync(_dir);
+                if (_dirPath != null)
+                    await evm.GoAsync(_dirPath);
+                else
+                {
+                    _dir = _dir ?? (pm.ContainsKey("Directory") ? (IEntryModel)pm["Directory"] : null);
+                    if (_dir != null)
+                        await evm.GoAsync(_dir);
+                }
                 return _nextCommand ?? ResultCommand.NoError;
             }
             return ResultCommand.Error(new ArgumentException("Explorer"));
