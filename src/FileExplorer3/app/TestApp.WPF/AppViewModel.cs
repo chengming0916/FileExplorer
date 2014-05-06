@@ -96,18 +96,24 @@ namespace TestApp
         }
 
 
-        public void OpenWindow()
+        public void OpenWindow(object context = null)
         {
             var profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
             };
-            var sr = new ScriptRunner();
-            sr.Run(Explorer.NewWindow(
-                getInitializer(_windowManager, _events, RootModels.ToArray(),
+            var initializer = getInitializer(_windowManager, _events, RootModels.ToArray(),
                  new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
                  new ColumnInitializers(),
                  new ScriptCommandsInitializers(_windowManager, _events, profiles),
-                 new ToolbarCommandsInitializers(_windowManager))), new ParameterDic());
+                 new ToolbarCommandsInitializers(_windowManager));
+
+            var sr = new ScriptRunner();
+            sr.Run(Explorer.NewWindow(initializer, context, null), new ParameterDic());
+        }
+
+        public void OpenToolWindow()
+        {
+            new TestApp.ToolWindowTest(RootModels.ToArray()).Show();
         }
 
 

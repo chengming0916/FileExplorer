@@ -35,9 +35,9 @@
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.1.5.2\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlTextBlock">
+    <Reference Include="HtmlTextBlock, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.1.1309.1617\lib\net40\Moq.dll</HintPath>
@@ -93,6 +93,7 @@
     <Compile Include="Defines\Cofe3\Defines\Attributes\MIMETypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\RegistryUtils.cs" />
+    <Compile Include="Defines\Converters\EntryModelToStringConverter.cs" />
     <Compile Include="Defines\Converters\PercentageConverter.cs" />
     <Compile Include="Defines\Converters\ScrollBarConverters.cs" />
     <Compile Include="Defines\Converters\TimeElapsedConverter.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
+    <Compile Include="UserControls\Explorer.cs" />
     <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
     <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
     <Compile Include="ViewModels\ExplorerInitializers.cs" />
@@ -213,6 +215,13 @@
     <Compile Include="Views\AddDirectoryView.xaml.cs">
       <DependentUpon>AddDirectoryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Explorer.ToolWindow.xaml.cs">
+      <DependentUpon>Explorer.ToolWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExplorerView.xaml.cs">
+      <DependentUpon>ExplorerView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Views\FilePickerView.xaml.cs">
       <DependentUpon>FilePickerView.xaml</DependentUpon>
     </Compile>
@@ -224,6 +233,9 @@
     </Compile>
     <Compile Include="Views\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Navigation.ToolWindow.xaml.cs">
+      <DependentUpon>Navigation.ToolWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SidebarView.xaml.cs">
       <DependentUpon>SidebarView.xaml</DependentUpon>
@@ -442,9 +454,6 @@
     </Compile>
     <Compile Include="Views\EntryIconView.xaml.cs">
       <DependentUpon>EntryIconView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ExplorerView.xaml.cs">
-      <DependentUpon>ExplorerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
@@ -695,6 +704,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Explorer.ToolWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FilePickerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -711,10 +728,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ExplorerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\FileListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -726,6 +739,10 @@
     <Page Include="Views\MessageDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Navigation.ToolWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\NavigationView.xaml">
       <SubType>Designer</SubType>

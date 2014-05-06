@@ -52,6 +52,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button x:Name="OpenWindow"  Content="Open new Explorer Window" />
+            <Button x:Name="OpenToolWindow"  Content="Open Tool Window" />
             <!--<Button x:Name="UpdateWindow" Content="Update Previous Opened Window" />-->
         </StackPanel>
         <StackPanel Orientation="Horizontal">

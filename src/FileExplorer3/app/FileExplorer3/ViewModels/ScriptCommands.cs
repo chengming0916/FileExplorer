@@ -607,30 +607,39 @@ namespace FileExplorer.ViewModels
         //    return new GotoDirectory(path, thenCommand);
         //}
 
-        public static IScriptCommand NewWindow(IExplorerInitializer initializer,
-            string selectedDirectoryPath, bool openIfNotFound = true)
-        {
-            return ScriptCommands.ParsePath(initializer.RootModels.GetProfiles(), selectedDirectoryPath,
-                dirM => Explorer.NewWindow(initializer, dirM),
-                openIfNotFound ? Explorer.NewWindow(initializer) :
-                ResultCommand.Error(new System.IO.FileNotFoundException(selectedDirectoryPath)));
-        }
+        //public static IScriptCommand NewWindow(IExplorerInitializer initializer,
+        //    string selectedDirectoryPath, bool openIfNotFound = true)
+        //{
+        //    return ScriptCommands.ParsePath(initializer.RootModels.GetProfiles(), selectedDirectoryPath,
+        //        dirM => Explorer.NewWindow(initializer, dirM),
+        //        openIfNotFound ? Explorer.NewWindow(initializer) :
+        //        ResultCommand.Error(new System.IO.FileNotFoundException(selectedDirectoryPath)));
+        //}
 
         public static IScriptCommand NewWindow(IExplorerInitializer initializer)
         {
             return NewWindow(initializer, (IEntryModel)null);
         }
 
-        public static IScriptCommand NewWindow(IExplorerInitializer initializer, IEntryModel selectedDirectory)
+        public static IScriptCommand NewWindow(IExplorerInitializer initializer,
+            IEntryModel startupDirectory)
         {
-            return new ShowNewExplorer(initializer, selectedDirectory);
+            return NewWindow(initializer, null, startupDirectory);
         }
 
-        public static IScriptCommand NewWindow(IExplorerInitializer initializer,
-            Func<ParameterDic, IEntryModel[]> getSelectedDirectryFunc)
+        public static IScriptCommand NewWindow(IExplorerInitializer initializer, object context,
+            IEntryModel startupDirectory)
         {
-            return new OpenInNewWindowCommand(initializer, getSelectedDirectryFunc);
+            var dic = startupDirectory == null ? null :
+                new Dictionary<string, object>() { { "StartupDirectory", startupDirectory } };
+            return new ShowNewExplorer(initializer, null, dic);
         }
+
+        //public static IScriptCommand NewWindow(IExplorerInitializer initializer,
+        //    Func<ParameterDic, IEntryModel[]> getSelectedDirectryFunc)
+        //{
+        //    return new OpenInNewWindowCommand(initializer, getSelectedDirectryFunc);
+        //}
 
         public static IScriptCommand PickDirectory(IExplorerInitializer initializer,
           IProfile[] rootProfiles, Func<IEntryModel, IScriptCommand> nextCommandFunc, IScriptCommand cancelCommand = null)
@@ -897,24 +906,27 @@ namespace FileExplorer.ViewModels
 
     public class ShowNewExplorer : ScriptCommandBase
     {
-
-        private IEntryModel _selectedDirectory;
         private IExplorerInitializer _initializer;
+        private object _context;
+        private IDictionary<string, object> _settings;
 
-        internal ShowNewExplorer(IExplorerInitializer initializer, IEntryModel selectedDirectory = null)
+        internal ShowNewExplorer(IExplorerInitializer initializer,  
+            object context = null, IDictionary<string, object> settings = null)
             : base("NewWindow")
         {
+            _context = context;
+            _settings = settings;
             _initializer = initializer;
-            _selectedDirectory = selectedDirectory;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var evm = new ExplorerViewModel(_initializer);
             pm["Explorer"] = evm;
-            _initializer.WindowManager.ShowWindow(evm);
-            if (_selectedDirectory != null)
-                return Explorer.GoTo(_selectedDirectory);
+            _initializer.WindowManager.ShowWindow(evm, _context, _settings);
+            if (_settings != null && _settings.ContainsKey("StartupDirectory") &&
+                _settings["StartupDirectory"] is IEntryModel)
+                return Explorer.GoTo(_settings["StartupDirectory"] as IEntryModel);
             return ResultCommand.NoError;
         }
     }
