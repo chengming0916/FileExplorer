@@ -284,16 +284,23 @@ namespace FileExplorer.BaseControls.MultiSelect
             var c = pd.Sender as Control;
             var scp = ControlUtils.GetScrollContentPresenter(c);
 
-            var contentBelowHeader = (c is ListViewEx) ? (c as ListViewEx).OuterTopContent as FrameworkElement : null;
+            var contentBelowHeader = (c is ListViewEx) &&
+                (c as ListViewEx).OuterTopContent is DependencyObject &&
+                DockableScrollViewer.GetIsContentVisible((c as ListViewEx)
+                    .OuterTopContent as DependencyObject)
+                ?
+                (c as ListViewEx).OuterTopContent as FrameworkElement : null;
+
             pd["ContentBelowHeaderSize"] =
                contentBelowHeader == null ? new Size(0, 0) :
                    new Size(contentBelowHeader.ActualWidth, contentBelowHeader.ActualHeight);
 
-            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
-            pd["GridViewHeaderSize"] =
-                             gvhrp == null ? new Size(0, 0) :
-                    new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
-
+            var gvhrp = 
+                c is ListViewEx && (c as ListViewEx).ColumnsVisibility == Visibility.Collapsed ? 
+                null : 
+                UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
+            pd["GridViewHeaderSize"] = gvhrp == null ?
+                                 new Size(0, 0) : new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
 
 
             if (!(pd.ContainsKey("StartPosition")))

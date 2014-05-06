@@ -215,6 +215,7 @@
                                                    bc:DockableScrollViewer.IsResizable=
                                                    "{Binding OuterTopContent.(bc:DockableScrollViewer.IsResizable), RelativeSource={RelativeSource  TemplatedParent}}"  >
                                 <ScrollViewer DockPanel.Dock="Top" Focusable="false" 
+                                              Visibility="{Binding ColumnsVisibility, RelativeSource={RelativeSource TemplatedParent}}"
                                                     HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
                                     <GridViewHeaderRowPresenter 
                                     AllowsColumnReorder="{Binding View.AllowsColumnReorder, RelativeSource={RelativeSource TemplatedParent}}" 

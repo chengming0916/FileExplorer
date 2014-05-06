@@ -33,7 +33,7 @@ namespace FileExplorer.Models
             //PathMapper = NullDiskPatheMapper.Instance;
 
             DragDrop = new NullDragDropHandler();
-            Events = events;
+            Events = events ?? new EventAggregator();
 
         }
 

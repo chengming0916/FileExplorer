@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -21,6 +22,8 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("1a768716-4371-4213-8764-1e87fb84a523")]
+
+[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.UserControls")]
 
 // Version information for an assembly consists of the following four values:
 //

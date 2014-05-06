@@ -10,7 +10,7 @@
   <Class Name="FileExplorer.Models.EntryModelBase">
     <Position X="0.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAIAAAEEAgAAAEgAAQQAQAAIAAAAAAADABAAAAAAg=</HashCode>
+      <HashCode>CAACIAABEEAgAAAEgAAQQAQQAIAAAAAAADABAAAAAAg=</HashCode>
       <FileName>Models\EntryModelBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -18,34 +18,43 @@
   <Class Name="FileExplorer.ViewModels.EntryViewModel">
     <Position X="5.25" Y="1.25" Width="1.5" />
     <Members>
+      <Field Name="_icon" Hidden="true" />
+      <Field Name="_iconExtractSequences" Hidden="true" />
+      <Field Name="_isDragging" Hidden="true" />
+      <Field Name="_isIconLoaded" Hidden="true" />
+      <Field Name="_isRenamable" Hidden="true" />
+      <Field Name="_isRenaming" Hidden="true" />
+      <Field Name="_isSelected" Hidden="true" />
+      <Field Name="DummyNode" Hidden="true" />
       <Method Name="EntryViewModel" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAIAQBAAEAAkgAAAIACAAgAgAACAAgABIAEAABI=</HashCode>
+      <HashCode>AAAAEAIBABAAEAgEgAAQAACAAAAgABCAAiQBIAEAABI=</HashCode>
       <FileName>ViewModels\EntryViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="FileExplorer.ViewModels.FileListViewModel">
+  <Class Name="FileExplorer.ViewModels.FileListViewModel" Collapsed="true">
     <Position X="7.5" Y="1.25" Width="1.5" />
-    <Members>
-      <Field Name="_colFilters" Hidden="true" />
-      <Field Name="_colList" Hidden="true" />
-      <Field Name="_items" Hidden="true" />
-      <Field Name="_itemSize" Hidden="true" />
-      <Field Name="_processedVms" Hidden="true" />
-      <Field Name="_selectedVms" Hidden="true" />
-      <Field Name="_sortBy" Hidden="true" />
-      <Field Name="_sortDirection" Hidden="true" />
-      <Field Name="_viewMode" Hidden="true" />
-    </Members>
+    <NestedTypes>
+      <Class Name="FileExplorer.ViewModels.FileListViewModel.FileListDropHelper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModels\FileListViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="FileExplorer.ViewModels.FileListViewModel.FileListDragHelper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModels\FileListViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAACEAkgAhCKABEAhACAAAIE3AgoAIAADkQACACAAA=</HashCode>
+      <HashCode>QEAAAgCgEBBGAkAEAAAAAAAGApIAAAKACIAggBgAQCg=</HashCode>
       <FileName>ViewModels\FileListViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="FileExplorer.ViewModels.DirectoryNodeViewModel">
+  <Class Name="FileExplorer.ViewModels.DirectoryNodeViewModel" Collapsed="true">
     <Position X="11" Y="2.75" Width="3.25" />
     <Members>
       <Field Name="DummyNode" Hidden="true" />
@@ -56,36 +65,115 @@
           <NewMemberFileName>ViewModels\DirectoryNodeViewModel.cs</NewMemberFileName>
         </TypeIdentifier>
       </Enum>
+      <Class Name="FileExplorer.ViewModels.DirectoryNodeViewModel.DirectoryNodeDropHelper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModels\DirectoryNodeViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AEAAAAAAABCAACAEAAAAAAAAAAAAAAkAAAAAAAQAQAg=</HashCode>
+      <HashCode>QEAAAAAAABCAACAAAAAAAAAAAAAAAAkAAAAAAAQAQAg=</HashCode>
       <FileName>ViewModels\DirectoryNodeViewModel.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FileExplorer.ViewModels.DirectoryTreeViewModel">
-    <Position X="15" Y="2.75" Width="2.75" />
+    <Position X="16.25" Y="2.75" Width="2.75" />
     <Members>
       <Field Name="_events" Hidden="true" />
     </Members>
+    <NestedTypes>
+      <Class Name="FileExplorer.ViewModels.DirectoryTreeViewModel.DirectoryTreeDragHelper" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewModels\DirectoryTreeViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AGAAAAAAAACAACAIAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <HashCode>AGAAAkAgAACCAmAIAAAAAAAAAJAAAEIgBAAAAAAAQSA=</HashCode>
       <FileName>ViewModels\DirectoryTreeViewModel.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.ExplorerViewModel" Collapsed="true">
+    <Position X="9.5" Y="5.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>QEEACkAAACAEAggFABAAABiCAAKAEHIApIAAIAAARSA=</HashCode>
+      <FileName>ViewModels\ExplorerViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FileExplorer.ViewModels.TabbedExplorerViewModel">
+    <Position X="3.5" Y="6.5" Width="2.25" />
+    <Members>
+      <Field Name="_initializer" Hidden="true" />
+      <Method Name="TabbedExplorerViewModel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAACAAAggAIAAABAAAAAAACAAAAJAAAAAAACA=</HashCode>
+      <FileName>ViewModels\TabbedExplorerViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SelectedItem" />
+    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Interface Name="FileExplorer.Models.IEntryModel">
     <Position X="0.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAAAAEAAgAAAAAAAQQAAAAIAAAAAAABAAAAAAAAA=</HashCode>
+      <HashCode>CAACAAABEAAgAAAAAAAQQAQAAIAAAAAAABAAAAAAAAA=</HashCode>
       <FileName>Models\IEntryModel.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="FileExplorer.Models.IProfile">
     <Position X="2.75" Y="1.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAEBAAAAACAAAAAAAQAAAAAAAIAACAQAAAAAAgAI=</HashCode>
+      <HashCode>EAAAAUBAAAAAAAIAAAAAQAAAAgAAIAACgwQAAAAAAAA=</HashCode>
       <FileName>Models\IProfile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FileExplorer.ViewModels.IExplorerViewModel">
+    <Position X="7" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAACAAAKAAAAApIAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Interfaces\IExplorerViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DirectoryTree" />
+      <Property Name="FileList" />
+      <Property Name="Sidebar" />
+      <Property Name="Statusbar" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FileExplorer.ViewModels.IDirectoryTreeViewModel" Collapsed="true">
+    <Position X="9.75" Y="6.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAkAIAAAAAAAAAAAAAAAgBAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Interfaces\IDirectoryTreeViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FileExplorer.ViewModels.IFileListViewModel" Collapsed="true">
+    <Position X="9.75" Y="7.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAEAACAkAEAAAAAAAAAAIAAAAACIAAgAgAQAA=</HashCode>
+      <FileName>ViewModels\Interfaces\IFileListViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Sidebar" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="FileExplorer.ViewModels.ISidebarViewModel" Collapsed="true">
+    <Position X="14" Y="8.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Interfaces\ISidebarViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FileExplorer.ViewModels.IStatusbarViewModel" Collapsed="true">
+    <Position X="9.75" Y="9.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Interfaces\IStatusbarViewModel.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

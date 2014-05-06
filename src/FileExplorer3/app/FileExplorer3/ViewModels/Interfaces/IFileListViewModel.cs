@@ -37,10 +37,15 @@ namespace FileExplorer.ViewModels
         bool EnableDrag { get; set; }
         bool EnableDrop { get; set; }
         bool EnableMultiSelect { get; set; }
+        bool ShowToolbar { get; set; }
+        bool ShowSidebar { get; set; }
+        bool ShowGridHeader { get; set; }
 
         bool IsCheckBoxVisible { get; set; }
 
         IFileListParameters Parameters { get; set; }
+
+        string Mask { get; set; }
 
         //bool IsContextMenuVisible { get; set; }
 
@@ -48,6 +53,8 @@ namespace FileExplorer.ViewModels
 
         ISidebarViewModel Sidebar { get; }
 
-        IProfile[] Profiles { set; }        
+        IProfile[] Profiles { set; }    
+    
+
     }
 }

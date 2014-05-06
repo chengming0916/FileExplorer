@@ -86,6 +86,11 @@ namespace FileExplorer.ViewModels
                 events.Subscribe(this);
 
             Sidebar = sidebar ?? new SidebarViewModel(events);
+            Sidebar.PropertyChanged += (o, e) =>
+                {
+                    if (e.PropertyName == "IsVisible")
+                        NotifyOfPropertyChange(() => ShowSidebar);
+                };
             Commands = new FileListCommandManager(this, events, Selection, Sidebar.Commands);        
         }
 
@@ -167,7 +172,9 @@ namespace FileExplorer.ViewModels
 
         private IEntryModel _currentDirVM = null;
 
-        private IToolbarViewModel _toolbar = null;
+        //private IToolbarViewModel _toolbar = null;
+        private string _fNameMask = null;
+        private bool _showToolbar = true, _showGridHeader= true;
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
         private IFileListParameters _parameters = new FileListParameters();
@@ -177,6 +184,10 @@ namespace FileExplorer.ViewModels
         #region Public Properties
         public IProfile[] Profiles { set { setProfiles(value); } }
 
+        
+        public bool ShowGridHeader { get { return _showGridHeader; } set { _showGridHeader = value; NotifyOfPropertyChange(() => ShowGridHeader); } }
+        public bool ShowToolbar { get { return _showToolbar; } set { _showToolbar = value; NotifyOfPropertyChange(() => ShowToolbar); } }
+        public bool ShowSidebar { get { return Sidebar.IsVisible; } set { Sidebar.IsVisible = value; } }
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
@@ -191,16 +202,13 @@ namespace FileExplorer.ViewModels
 
         public ISidebarViewModel Sidebar { get; private set; }
 
-        public IToolbarViewModel Toolbar { get { return _toolbar; } set { _toolbar = value; NotifyOfPropertyChange(() => Toolbar); } }
+        //public IToolbarViewModel Toolbar { get { return _toolbar; } set { _toolbar = value; NotifyOfPropertyChange(() => Toolbar); } }
 
         public IEntryModel CurrentDirectory
         {
             get { return _currentDirVM; }
             set { SetCurrentDirectoryAsync(value); }
         }
-
-
-        #region ViewMode, ItemSize
 
         public bool IsCheckBoxVisible
         {
@@ -214,15 +222,23 @@ namespace FileExplorer.ViewModels
             set { _isContextMenuVisible = value; NotifyOfPropertyChange(() => IsContextMenuVisible); }
         }
 
+        public string Mask
+        {
+            get { return _fNameMask; }
+            set
+            {
+                _fNameMask = value;
+                ProcessedEntries.CustomFilter = (e =>
+                    {
+                        var em = (e as IEntryViewModel).EntryModel;
+                        return em.IsDirectory || StringUtils.MatchFileMasks(em.Label, _fNameMask);
+                    });
+            }
+        }
 
 
         public IFileListParameters Parameters { get { return _parameters; } 
             set { _parameters = value; NotifyOfPropertyChange(() => Parameters); } }
-
-
-
-
-        #endregion
 
 
         #endregion

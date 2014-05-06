@@ -38,7 +38,7 @@
                      ViewMode="{Binding Parameters.ViewMode}"  
                      Columns="{Binding Columns.ColumnList}"
                      ColumnFilters ="{Binding Columns.ColumnFilters}"
-                     ColumnsVisibility="Visible"
+                     ColumnsVisibility="{Binding ShowGridHeader, Converter={StaticResource btvc}}"
                      ItemSize="{Binding Parameters.ItemSize}"
                      ItemAnimationDuration="00:00:00" 
                      IsCheckBoxVisible="{Binding IsCheckBoxVisible, Mode=OneWay}"
@@ -93,7 +93,9 @@
             </i:Interaction.Triggers>-->
 
             <uc:ListViewEx.OuterTopContent>
-                <Border Margin="2" bc:DockableScrollViewer.IsResizable="True" >
+                <Border Margin="2" bc:DockableScrollViewer.IsResizable="True"
+                         bc:DockableScrollViewer.IsContentVisible="{Binding ShowToolbar}"
+                        >
                     <uc:ToolbarEx ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All, Mode=OneTime}"                                  
                                   def:AttachedProperties.SkipLookup="True" VerticalAlignment="Top" >
                         <uc:ToolbarEx.Resources>
@@ -108,12 +110,10 @@
                                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                                 bc:DockableScrollViewer.IsResizable="True"
                                 bc:DockableScrollViewer.ContentSize="150.0"
-                                bc:DockableScrollViewer.IsContentVisible="{Binding Sidebar.IsVisible}" />
+                                bc:DockableScrollViewer.IsContentVisible="{Binding ShowSidebar}" />
             </uc:ListViewEx.OuterRightContent>
 
-            <uc:ListViewEx.BottomContent>
-                <Rectangle />
-            </uc:ListViewEx.BottomContent>
+           
             <!--<uc:FileList.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>

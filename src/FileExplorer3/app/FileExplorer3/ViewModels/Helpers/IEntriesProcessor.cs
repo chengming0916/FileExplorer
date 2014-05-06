@@ -12,9 +12,12 @@ namespace FileExplorer.ViewModels.Helpers
     public interface IEntriesProcessor
     {
         void Sort(IComparer comparer, string groupDescription);
-        void ClearFilters();
-        void AppendFilters(params ColumnFilter[] filters);
         void SetFilters(params ColumnFilter[] filters);
+        
+        /// <summary>
+        /// Specify additional filter 
+        /// </summary>
+        Func<object, bool> CustomFilter { get; set; }
 
         ListCollectionView All { get; }
     }

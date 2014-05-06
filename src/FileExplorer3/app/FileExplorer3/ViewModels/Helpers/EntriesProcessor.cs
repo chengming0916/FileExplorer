@@ -32,25 +32,22 @@ namespace FileExplorer.ViewModels.Helpers
         }
       
 
-        public void ClearFilters()
-        {
-            All.Filter = null;
-        }
-
-        public void AppendFilters(params ColumnFilter[] filters)
-        {
-            if (All.Filter == null)
-                All.Filter = (e) => e != null && ColumnFilter.Match(filters, (e as IEntryViewModel).EntryModel);
-            else
-                All.Filter = (e) =>
-                    All.Filter(e) &&
-                    ColumnFilter.Match(filters, (e as IEntryViewModel).EntryModel);
+        void updateFilters()
+        {         
+            //if (All.Filter == null)
+                All.Filter = (e) => e != null &&
+                    CustomFilter(e) &&
+                    ColumnFilter.Match(_colFilters, (e as IEntryViewModel).EntryModel);
+            //else
+            //    All.Filter = (e) =>
+            //        All.Filter(e) && CustomFilter(e) &&
+            //        ColumnFilter.Match(_colFilters, (e as IEntryViewModel).EntryModel);
         }
 
         public void SetFilters(params ColumnFilter[] filters)
         {
-            ClearFilters();
-            AppendFilters(filters);
+            _colFilters = filters;
+            updateFilters();
         }
 
 
@@ -60,11 +57,19 @@ namespace FileExplorer.ViewModels.Helpers
         #region Data
 
         ListCollectionView _processedItems = null;
+        private ColumnFilter[] _colFilters = new ColumnFilter[] { };
+        private Func<object, bool> _customFilter = e => true;
      
 
         #endregion
 
         #region Public Properties
+
+        public Func<object, bool> CustomFilter
+        {
+            get { return _customFilter; }
+            set { _customFilter = value ?? (e => true); updateFilters(); }
+        }
 
         public ListCollectionView All
         {
