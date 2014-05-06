@@ -16,18 +16,7 @@ using vms = FileExplorer.ViewModels;
 
 namespace FileExplorer.ViewModels
 {
-    public class FileNameFilter
-    {
-        public string Description { get; set; }
-        public string Filter { get; set; }
-
-        public FileNameFilter(string descdription, string filter)
-        {
-            Description = descdription;
-            Filter = filter;
-        }
-    }
-
+   
     public enum FilePickerMode { Open, Save }
 
     public interface IEntryModelInfo
@@ -44,6 +33,7 @@ namespace FileExplorer.ViewModels
             FilePickerMode mode = FilePickerMode.Open)
             : base(initializer)
         {
+            FilterStr = filterStr;
             WindowTitleMask = Enum.GetName(typeof(FilePickerMode), mode);
             _mode = mode;
             _tryCloseCommand = new SimpleScriptCommand("TryClose", pd => { TryClose(true); return ResultCommand.NoError; });
@@ -74,11 +64,7 @@ namespace FileExplorer.ViewModels
                     FileName = newFileName;
             };
 
-            _filterStr = filterStr;
-            Filters = new EntriesHelper<FileNameFilter>(loadFiltersTask);
-            Filters.SetEntries(getFilters(filterStr).ToArray());
-
-            FileList.EnableDrag = false;
+                      FileList.EnableDrag = false;
             FileList.EnableDrop = false;
             FileList.EnableMultiSelect = false;
         }
@@ -94,30 +80,7 @@ namespace FileExplorer.ViewModels
 
         #region Methods
 
-        IEnumerable<FileNameFilter> getFilters(string filterStr)
-        {
-            string[] filterSplit = filterStr.Split('|');
-            List<FileNameFilter> ff = new List<FileNameFilter>();
-            for (int i = 0; i < filterSplit.Count() / 2; i++)
-                ff.Add(new FileNameFilter(filterSplit[i * 2], filterSplit[(i * 2) + 1]));
-
-            return ff;
-        }
-
-        Task<IEnumerable<FileNameFilter>> loadFiltersTask()
-        {
-            return Task.Run(() =>
-                {
-                    string[] filterSplit = _filterStr.Split('|');
-                    List<FileNameFilter> ff = new List<FileNameFilter>();
-                    for (int i = 0; i < filterSplit.Count() / 2; i++)
-                        ff.Add(new FileNameFilter(filterSplit[i * 2], filterSplit[(i * 2) + 1]));
-
-                    return ff as IEnumerable<FileNameFilter>;
-                });
-
-
-        }
+       
 
         protected override void OnViewAttached(object view, object context)
         {
@@ -207,16 +170,7 @@ namespace FileExplorer.ViewModels
             TryClose(false);
         }
 
-        private void setFilter(string value)
-        {
-            _selectedFilter = value;
-
-            base.FileList.ProcessedEntries.SetFilters(
-                ColumnFilter.CreateNew(value, "FullPath",
-                e => e.IsDirectory || PathFE.MatchFileMasks(e.Profile.Path.GetFileName(e.FullPath), value)));
-            NotifyOfPropertyChange(() => SelectedFilter);
-        }
-
+       
 
         private void setFileName(string value)
         {
@@ -242,8 +196,8 @@ namespace FileExplorer.ViewModels
 
         #region Public Properties
 
-        public IEntriesHelper<FileNameFilter> Filters { get; set; }
-        public string SelectedFilter { get { return _selectedFilter; } set { setFilter(value); } }
+        
+        
         public string FileName { get { return _selectedFileName; } set { setFileName(value); } }
         public IProfile Profile { get; private set; }
 

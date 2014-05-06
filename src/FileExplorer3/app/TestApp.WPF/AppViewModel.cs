@@ -113,7 +113,7 @@ namespace TestApp
 
         public void OpenToolWindow()
         {
-            new TestApp.ToolWindowTest(RootModels.ToArray()).Show();
+            new TestApp.ToolWindowTest(RootModels.ToArray(), FileFilter, "c:\\").Show();
         }
 
 

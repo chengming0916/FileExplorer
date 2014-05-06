@@ -83,7 +83,7 @@ namespace FileExplorer.ViewModels
 
                 //uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
                 //    {
-               
+
                 //    }), System.Windows.Threading.DispatcherPriority.Loaded);
 
                 _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(null));
@@ -227,6 +227,46 @@ namespace FileExplorer.ViewModels
             Commands.ExecuteAsync(cmds.ToArray());
         }
 
+        #region FileNameFilter
+
+        IEnumerable<FileNameFilter> getFilters(string filterStr)
+        {
+            string[] filterSplit = filterStr.Split('|');
+            List<FileNameFilter> ff = new List<FileNameFilter>();
+            for (int i = 0; i < filterSplit.Count() / 2; i++)
+                ff.Add(new FileNameFilter(filterSplit[i * 2], filterSplit[(i * 2) + 1]));
+
+            return ff;
+        }
+
+        private void setFilter(string value)
+        {
+            _selectedFilter = value;
+
+            FileList.ProcessedEntries.SetFilters(
+                ColumnFilter.CreateNew(value, "FullPath",
+                e => e.IsDirectory || PathFE.MatchFileMasks(e.Profile.Path.GetFileName(e.FullPath), value)));
+            NotifyOfPropertyChange(() => SelectedFilter);
+        }
+
+
+        Task<IEnumerable<FileNameFilter>> loadFiltersTask()
+        {
+            return Task.Run(() =>
+            {
+                string[] filterSplit = _filterStr.Split('|');
+                List<FileNameFilter> ff = new List<FileNameFilter>();
+                for (int i = 0; i < filterSplit.Count() / 2; i++)
+                    ff.Add(new FileNameFilter(filterSplit[i * 2], filterSplit[(i * 2) + 1]));
+
+                return ff as IEnumerable<FileNameFilter>;
+            });
+
+
+        }
+
+        #endregion
+
         #endregion
 
         #region Data
@@ -242,6 +282,8 @@ namespace FileExplorer.ViewModels
 
         private IEntryViewModel _currentDirectoryViewModel;
         private bool _isDragging = false;
+        private string _filterStr;
+        private string _selectedFilter = null;
 
         #endregion
 
@@ -274,6 +316,25 @@ namespace FileExplorer.ViewModels
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
         public IToolbarViewModel Toolbar { get; private set; }
+
+        public IEntriesHelper<FileNameFilter> Filters { get; set; }
+        public string FilterStr
+        {
+            get { return _filterStr; }
+            set
+            {
+                _filterStr = value;
+                if (_filterStr != null)
+                {
+                    Filters = new EntriesHelper<FileNameFilter>(loadFiltersTask);
+                    var filters = getFilters(_filterStr).ToArray();
+                    Filters.SetEntries(filters);
+                    if (filters.Length > 0)
+                        SelectedFilter = filters.First().Filter;
+                }
+            }
+        }
+        public string SelectedFilter { get { return _selectedFilter; } set { setFilter(value); } }
 
         public ISupportDrag DragHelper { get; set; }
         public ISupportDrop DropHelper { get; set; }

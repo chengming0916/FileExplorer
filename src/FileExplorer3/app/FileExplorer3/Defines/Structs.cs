@@ -289,4 +289,17 @@ namespace FileExplorer.Defines
             return base.GetHashCode();
         }
     }
+
+    public class FileNameFilter
+    {
+        public string Description { get; set; }
+        public string Filter { get; set; }
+
+        public FileNameFilter(string descdription, string filter)
+        {
+            Description = descdription;
+            Filter = filter;
+        }
+    }
+
 }

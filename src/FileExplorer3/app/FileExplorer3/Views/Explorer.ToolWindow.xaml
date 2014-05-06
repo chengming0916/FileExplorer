@@ -38,7 +38,10 @@
         <ContentControl Name="Breadcrumb" Grid.Row="0" />
         <DockPanel Grid.Row="1">
             <ContentControl Name="Navigation" DockPanel.Dock="Left" cal:View.Context="ToolWindow" />
-            <TextBox Text="{Binding FileList.Mask, UpdateSourceTrigger=PropertyChanged}"  />
+            <ComboBox ItemsSource="{Binding Filters.All}" SelectedValuePath="Filter" 
+                          SelectedIndex="0" DisplayMemberPath="Description"
+                          SelectedValue="{Binding SelectedFilter}" />
+            <!--<TextBox Text="{Binding FileList.Mask, UpdateSourceTrigger=PropertyChanged}"  />-->
         </DockPanel>
         <ContentControl  Name="FileList"  Grid.Row="2" />
     </Grid>
