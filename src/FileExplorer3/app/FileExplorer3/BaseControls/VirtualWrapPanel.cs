@@ -633,8 +633,8 @@ namespace FileExplorer.UserControls
         {
             get
             {
-                return new Size(ItemWidth == 0 ? Width : ItemWidth,
-                ItemHeight == 0 ? Height : ItemHeight);
+                return new Size(ItemWidth == double.NaN ? Width : ItemWidth,
+                ItemHeight == double.NaN ? Height : ItemHeight);
             }
         }
 

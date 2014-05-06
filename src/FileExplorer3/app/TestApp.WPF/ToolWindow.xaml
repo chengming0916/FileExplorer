@@ -16,16 +16,19 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+       
         
         
-        <!--<e:ToolWindow x:Name="ToolWindow" Grid.Column="0" cal:View.Context="ToolWindow" >
-            
-        </e:ToolWindow>-->
+        <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="3" />
+
         <uc:Explorer x:Name="explorer" Mode="ToolWindow" />
         <GridSplitter ResizeDirection="Columns" 
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       ResizeBehavior="PreviousAndNext" Grid.Column="1" />
-        <StackPanel Orientation="Vertical" Grid.Column="2">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" Grid.Column="2">
+            <bc:UIEventAdapter.Processors>
+                <bc:DragDropLiteEventProcessor />
+            </bc:UIEventAdapter.Processors>
             <TextBlock Text="CurrentDirectory" FontWeight="Bold" />
             <!--ViewModel.FileList.Selection.SelectedItems is IEntryModel-->
             <TextBlock Text="{Binding ViewModel.FileList.CurrentDirectory, 

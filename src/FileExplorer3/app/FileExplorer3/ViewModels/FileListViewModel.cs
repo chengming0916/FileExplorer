@@ -231,7 +231,7 @@ namespace FileExplorer.ViewModels
                 ProcessedEntries.CustomFilter = (e =>
                     {
                         var em = (e as IEntryViewModel).EntryModel;
-                        return em.IsDirectory || StringUtils.MatchFileMasks(em.Label, _fNameMask);
+                        return em.IsDirectory || StringUtils.MatchFileMasks(em.Label, _fNameMask, "*");
                     });
             }
         }

@@ -34,7 +34,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
+        
         <ContentControl Name="Breadcrumb" Grid.Row="0" />
         <DockPanel Grid.Row="1">
             <ContentControl Name="Navigation" DockPanel.Dock="Left" cal:View.Context="ToolWindow" />
