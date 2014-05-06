@@ -45,7 +45,6 @@ namespace FileExplorer.ViewModels
 
         IFileListParameters Parameters { get; set; }
 
-        string Mask { get; set; }
 
         //bool IsContextMenuVisible { get; set; }
 

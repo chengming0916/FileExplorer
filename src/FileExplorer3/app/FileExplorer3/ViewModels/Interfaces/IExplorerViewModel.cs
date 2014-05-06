@@ -21,7 +21,7 @@ namespace FileExplorer.ViewModels
         ISidebarViewModel Sidebar { get; }
 
         IExplorerParameters Parameters { get; set; }
-
+        string FilterStr { get; set; }
         IEntryViewModel CurrentDirectory { get; }
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);

@@ -173,7 +173,6 @@ namespace FileExplorer.ViewModels
         private IEntryModel _currentDirVM = null;
 
         //private IToolbarViewModel _toolbar = null;
-        private string _fNameMask = null;
         private bool _showToolbar = true, _showGridHeader= true;
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
@@ -222,20 +221,7 @@ namespace FileExplorer.ViewModels
             set { _isContextMenuVisible = value; NotifyOfPropertyChange(() => IsContextMenuVisible); }
         }
 
-        public string Mask
-        {
-            get { return _fNameMask; }
-            set
-            {
-                _fNameMask = value;
-                ProcessedEntries.CustomFilter = (e =>
-                    {
-                        var em = (e as IEntryViewModel).EntryModel;
-                        return em.IsDirectory || StringUtils.MatchFileMasks(em.Label, _fNameMask, "*");
-                    });
-            }
-        }
-
+      
 
         public IFileListParameters Parameters { get { return _parameters; } 
             set { _parameters = value; NotifyOfPropertyChange(() => Parameters); } }

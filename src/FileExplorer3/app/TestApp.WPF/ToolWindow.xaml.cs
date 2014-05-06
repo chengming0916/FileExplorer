@@ -26,13 +26,15 @@ namespace TestApp
     public partial class ToolWindowTest : Window
     {
         private IEntryModel[] _rootDirs;
-        private IEntryModel _selectedDir;
+        private string _mask;
+        private string _selectedPath;
 
-        public ToolWindowTest(IEntryModel[] rootDirs, IEntryModel selectedDir = null)
+        public ToolWindowTest(IEntryModel[] rootDirs, string mask, string selectedPath = "c:\\")
         {
             InitializeComponent();
             _rootDirs = rootDirs;
-            _selectedDir = selectedDir;
+            _mask = mask;
+            _selectedPath = selectedPath;
         }
 
         public override void OnApplyTemplate()
@@ -47,16 +49,18 @@ namespace TestApp
             exp.ViewModel.FileList.EnableDrag = true;
             exp.ViewModel.FileList.EnableDrop = false;
             exp.ViewModel.FileList.EnableMultiSelect = false;
+            exp.ViewModel.FilterStr = _mask;
             testDroppable.DataContext = new TestDroppableViewModel();
-            
-            exp.ViewModel.GoAsync("C:\\");
+
+            if (_selectedPath != null)
+                exp.ViewModel.GoAsync(_selectedPath);
             //or exp.ViewModel.Commands.ExecuteAsync(new IScriptCommand[] { Explorer.GoTo("C:\\") });
         }
     }
 
     public class TestDroppableViewModel : NotifyPropertyChanged, ISupportDropHelper
     {
-        
+
         #region Constructors
 
         public TestDroppableViewModel()
@@ -64,10 +68,10 @@ namespace TestApp
             IProfile exProfile = new FileSystemInfoExProfile(null, null);
             DropHelper = new DropHelper<IEntryModel>(
                  () => "Test Droppable",
-                 (ems, eff) => 
+                 (ems, eff) =>
                      QueryDropResult.CreateNew(DragDropEffects.Copy),
-                da => 
-                    exProfile.DragDrop.GetEntryModels(da), 
+                da =>
+                    exProfile.DragDrop.GetEntryModels(da),
                 (ems, da, eff) =>
                 {
                     if (ems.Count() > 1)
