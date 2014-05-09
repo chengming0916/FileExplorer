@@ -516,10 +516,11 @@ namespace FileExplorer.UserControls
         {
             get
             {
-                return new Size(ItemWidth == 0 ? Width : ItemWidth,
-                ItemHeight == 0 ? Height : ItemHeight);
+                return new Size(ItemWidth == 0 && !Width.Equals(double.NaN) ? Width : ItemWidth,
+                    ItemHeight == 0 && !Height.Equals(double.NaN) ? Height : ItemHeight);
             }
         }
+
 
         public static readonly DependencyProperty OrientationProperty
            = DependencyProperty.Register("Orientation", typeof(Orientation), typeof(VirtualStackPanel),

@@ -47,14 +47,14 @@ namespace FileExplorer.UserControls
             if (Orientation == Orientation.Horizontal)
             {
                 int childPerRow = CalculateChildrenPerRow(availableSize);
-                return new Size(childPerRow * this.ItemSize.Width,
-                    this.ItemSize.Height * Math.Ceiling((double)itemCount / childPerRow));
+                return new Size(childPerRow * this.ChildSize.Width,
+                    this.ChildSize.Height * Math.Ceiling((double)itemCount / childPerRow));
             }
             else
             {
                 int childPerCol = CalculateChildrenPerCol(availableSize);
-                return new Size(this.ItemSize.Width * Math.Ceiling((double)itemCount / childPerCol),
-                    childPerCol * this.ItemSize.Height);
+                return new Size(this.ChildSize.Width * Math.Ceiling((double)itemCount / childPerCol),
+                    childPerCol * this.ChildSize.Height);
             }
         }
 
@@ -69,8 +69,8 @@ namespace FileExplorer.UserControls
             {
                 int childPerRow = CalculateChildrenPerRow(_extent);
 
-                firstVisibleItemIndex = (int)Math.Floor(_offset.Y / this.ItemSize.Height) * childPerRow;
-                lastVisibleItemIndex = (int)Math.Ceiling((_offset.Y + _viewport.Height) / this.ItemSize.Height) * childPerRow - 1;
+                firstVisibleItemIndex = (int)Math.Floor(_offset.Y / this.ChildSize.Height) * childPerRow;
+                lastVisibleItemIndex = (int)Math.Ceiling((_offset.Y + _viewport.Height) / this.ChildSize.Height) * childPerRow - 1;
 
                 firstVisibleItemIndex -= CacheItemCount;
                 if (firstVisibleItemIndex < 0) firstVisibleItemIndex = 0;
@@ -85,8 +85,8 @@ namespace FileExplorer.UserControls
             {
                 int childPerCol = CalculateChildrenPerCol(_extent);
 
-                firstVisibleItemIndex = (int)Math.Floor(_offset.X / this.ItemSize.Width) * childPerCol;
-                lastVisibleItemIndex = (int)Math.Ceiling((_offset.X + _viewport.Width) / this.ItemSize.Width) * childPerCol - 1;
+                firstVisibleItemIndex = (int)Math.Floor(_offset.X / this.ChildSize.Width) * childPerCol;
+                lastVisibleItemIndex = (int)Math.Ceiling((_offset.X + _viewport.Width) / this.ChildSize.Width) * childPerCol - 1;
 
                 ItemsControl itemsControl = ItemsControl.GetItemsOwner(this);
                 int itemCount = itemsControl.HasItems ? itemsControl.Items.Count : 0;
@@ -105,7 +105,7 @@ namespace FileExplorer.UserControls
                 int row = itemIndex / childPerRow;
                 int column = itemIndex % childPerRow;
 
-                return new Rect(column * this.ItemSize.Width, row * this.ItemSize.Height, this.ItemSize.Width, this.ItemSize.Height);
+                return new Rect(column * this.ChildSize.Width, row * this.ChildSize.Height, this.ChildSize.Width, this.ChildSize.Height);
             }
             else
             {
@@ -114,7 +114,7 @@ namespace FileExplorer.UserControls
                 int column = itemIndex / childPerCol;
                 int row = itemIndex % childPerCol;
 
-                return new Rect(column * this.ItemSize.Width, row * this.ItemSize.Height, this.ItemSize.Width, this.ItemSize.Height);
+                return new Rect(column * this.ChildSize.Width, row * this.ChildSize.Height, this.ChildSize.Width, this.ChildSize.Height);
             }
         }
 
@@ -218,7 +218,7 @@ namespace FileExplorer.UserControls
             if (availableSize.Width == Double.PositiveInfinity)
                 childrenPerRow = this.Children.Count;
             else
-                childrenPerRow = Math.Max(1, (int)Math.Floor(availableSize.Width / this.ItemSize.Width));
+                childrenPerRow = Math.Max(1, (int)Math.Floor(availableSize.Width / this.ChildSize.Width));
             return childrenPerRow;
         }
 
@@ -233,7 +233,7 @@ namespace FileExplorer.UserControls
             if (availableSize.Height == Double.PositiveInfinity)
                 return this.Children.Count;
             else
-                return Math.Max(1, (int)Math.Floor(availableSize.Height / this.ItemSize.Height));
+                return Math.Max(1, (int)Math.Floor(availableSize.Height / this.ChildSize.Height));
         }
 
         #endregion
@@ -293,7 +293,7 @@ namespace FileExplorer.UserControls
                     }
 
                     // Measurements will depend on layout algorithm
-                    child.Measure(ItemSize);
+                    child.Measure(ChildSize);
                 }
             }
 
@@ -629,12 +629,12 @@ namespace FileExplorer.UserControls
             set { SetValue(ItemHeightProperty, value); }
         }
 
-        public Size ItemSize
+        public Size ChildSize
         {
             get
             {
-                return new Size(ItemWidth == double.NaN ? Width : ItemWidth,
-                ItemHeight == double.NaN ? Height : ItemHeight);
+                return new Size(ItemWidth == 0 && !Width.Equals(double.NaN) ? Width : ItemWidth,
+                    ItemHeight == 0 && !Height.Equals(double.NaN) ? Height : ItemHeight);
             }
         }
 

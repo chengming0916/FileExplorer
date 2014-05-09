@@ -51,7 +51,7 @@ namespace TestApp
             exp.ViewModel.FileList.EnableMultiSelect = false;
             exp.ViewModel.FilterStr = _mask;
             testDroppable.DataContext = new TestDroppableViewModel();
-
+            
             if (_selectedPath != null)
                 exp.ViewModel.GoAsync(_selectedPath);
             //or exp.ViewModel.Commands.ExecuteAsync(new IScriptCommand[] { Explorer.GoTo("C:\\") });
