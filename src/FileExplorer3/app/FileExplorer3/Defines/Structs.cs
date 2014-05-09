@@ -92,6 +92,17 @@ namespace FileExplorer.Defines
         public ColumnFilter Filter { get; set; }
     }
 
+    public class CopyOfFilterChangedEventArgs : RoutedEventArgs
+    {
+        public CopyOfFilterChangedEventArgs(object source)
+            : base(ListViewEx.FilterChangedEvent)
+        {
+
+        }
+        public ColumnInfo ColumnInfo { get; set; }
+        public ColumnFilter Filter { get; set; }
+    }
+
     public static class ListViewColumnInfoExtension
     {
         public static ColumnInfo Find(this ColumnInfo[] cols, string valuePath)
@@ -100,6 +111,56 @@ namespace FileExplorer.Defines
                 if (col.ValuePath.Equals(valuePath) || col.Header.Equals(valuePath))
                     return col;
             return null;
+        }
+    }
+
+    public class CopyOfTransferProgress
+    {
+        public Int32? TotalEntriesIncrement { get; set; }
+        public Int32? ProcessedEntriesIncrement { get; set; }
+        public short? CurrentProgressPercent { get; set; }
+        public string Source { get; set; }
+        public IPathHelper SourcePathHelper { get; set; }
+        public string Destination { get; set; }
+        public IPathHelper DestinationPathHelper { get; set; }
+
+        public static CopyOfTransferProgress From(string src, IPathHelper srcPathHelper, string dest, IPathHelper destPathHelper)
+        {
+            return new CopyOfTransferProgress()
+            {
+                Source = src,
+                SourcePathHelper = srcPathHelper,
+                Destination = dest,
+                DestinationPathHelper = destPathHelper
+            };
+        }
+
+        public static CopyOfTransferProgress From(string src, IPathHelper pathHelper = null)
+        {
+            return From(src, pathHelper, null, null);
+        }
+
+        public static CopyOfTransferProgress From(string src, string dest)
+        {
+            return From(src, PathHelper.Auto(src), dest, PathHelper.Auto(dest));
+        }
+
+        public static CopyOfTransferProgress To(string dest, IPathHelper pathHelper = null)
+        {
+            return From(null, null, dest, pathHelper);
+        }
+
+        public static CopyOfTransferProgress IncrementTotalEntries(int count = 1)
+        {
+            return new CopyOfTransferProgress() { TotalEntriesIncrement = count };
+        }
+        public static CopyOfTransferProgress IncrementProcessedEntries(int count = 1)
+        {
+            return new CopyOfTransferProgress() { ProcessedEntriesIncrement = count };
+        }
+        public static CopyOfTransferProgress UpdateCurrentProgress(short percent = 1)
+        {
+            return new CopyOfTransferProgress() { CurrentProgressPercent = percent };
         }
     }
     #endregion
@@ -172,6 +233,16 @@ namespace FileExplorer.Defines
         public object EventToBroadcast { get; set; }
 
         public BroadcastEvent(object evnt)
+        {
+            EventToBroadcast = evnt;
+        }
+    }
+
+    public class CopyOfBroadcastEvent
+    {
+        public object EventToBroadcast { get; set; }
+
+        public CopyOfBroadcastEvent(object evnt)
         {
             EventToBroadcast = evnt;
         }

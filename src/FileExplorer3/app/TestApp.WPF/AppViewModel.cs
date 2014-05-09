@@ -41,8 +41,7 @@ namespace TestApp
             _events.Subscribe(this);
             _profile = new FileSystemInfoProfile(_events, windowManager);
             _profileEx = new FileSystemInfoExProfile(events, windowManager);
-
-
+            
             Func<string> loginSkyDrive = () =>
             {
                 var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
@@ -108,6 +107,7 @@ namespace TestApp
                  new ToolbarCommandsInitializers(_windowManager));
 
             var sr = new ScriptRunner();
+            //_windowManager.ShowWindow(new ExplorerViewModel(_events, _windowManager, RootModels.ToArray()));
             sr.Run(Explorer.NewWindow(initializer, context, null), new ParameterDic());
         }
 

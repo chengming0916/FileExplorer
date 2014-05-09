@@ -270,10 +270,16 @@
     <Compile Include="UserControls\BreadcrumbTree.cs" />
     <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
     <Compile Include="BaseControls\DropDownList.cs" />
+    <None Include="Diagrams\DirectoryTree.cd" />
     <None Include="Diagrams\DragDropUIProcessor.cd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Diagrams\Explorer.cd" />
+    <None Include="Diagrams\FileList.cd" />
     <None Include="Diagrams\MultiSelectUIProcessor.cd" />
+    <None Include="Diagrams\OtherControlViewModel.cd" />
+    <None Include="Diagrams\Script.cd" />
+    <None Include="Diagrams\TabbedExplorer.cd" />
     <None Include="Diagrams\Toolbar.cd" />
     <None Include="Diagrams\TreeSelection.cd" />
     <None Include="Obsoluted\OverflowPanel.cs" />

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Cofe.Core.Script;
+using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
 using FileExplorer.ViewModels.Helpers;
@@ -16,8 +17,9 @@ using System.Windows.Threading;
 namespace FileExplorer.ViewModels
 {
 
-    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive, 
-        ITabbedExplorerViewModel, ISupportDragHelper
+    public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive,
+        ITabbedExplorerViewModel, ISupportDragHelper, IHandle<RootChangedEvent>
+
     {
 
 
@@ -26,6 +28,7 @@ namespace FileExplorer.ViewModels
         public TabbedExplorerViewModel(IExplorerInitializer initializer)
         {
             _initializer = initializer.Clone();
+            initializer.Events.Subscribe(this);
             Commands = new TabbedExplorerCommandManager(this, initializer.Events);
             DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
             ////_tabs = new ObservableCollection<ITabItemViewModel>();
@@ -42,17 +45,14 @@ namespace FileExplorer.ViewModels
                 initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
             ExplorerViewModel expvm = new ExplorerViewModel(initializer);
             expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
-            
+
             expvm.Commands.ScriptCommands.CloseTab =
                 ScriptCommands.AssignVariableToParameter("Explorer", TabbedExplorer.CloseTab(this));
             expvm.FileList.Commands.ScriptCommands.OpenTab =
                 FileList.IfSelection(evm => evm.Count() >= 1,
-                    ScriptCommands.RunInSequence(
-                    FileList.AssignSelectionToParameter(TabbedExplorer.OpenTab(this))),
-                    NullScriptCommand.Instance);
+                    FileList.AssignSelectionToParameter(TabbedExplorer.OpenTab(this)), ResultCommand.NoError);
             expvm.DirectoryTree.Commands.ScriptCommands.OpenTab =
-                    ScriptCommands.RunInSequence(
-                    DirectoryTree.AssignSelectionToParameter(TabbedExplorer.OpenTab(this)));
+                    DirectoryTree.AssignSelectionToParameter(TabbedExplorer.OpenTab(this));
 
             ActivateItem(expvm);
         }
@@ -94,6 +94,29 @@ namespace FileExplorer.ViewModels
                 }
             }
         }
+
+        public void Handle(RootChangedEvent message)
+        {
+            switch (message.ChangeType)
+            {
+                case ChangeType.Changed:
+                    _initializer.RootModels = message.AppliedRootDirectories;
+                    break;
+                case ChangeType.Created:
+                    List<IEntryModel> rootModels = _initializer.RootModels.ToList();
+                    rootModels.AddRange(message.AppliedRootDirectories);
+                    _initializer.RootModels = rootModels.ToArray();
+                    break;
+                case ChangeType.Deleted:
+                    List<IEntryModel> rootModels2 = _initializer.RootModels.ToList();
+                    foreach (var d in message.AppliedRootDirectories)
+                        if (rootModels2.Contains(d))
+                            rootModels2.Remove(d);
+                    _initializer.RootModels = rootModels2.ToArray();
+                    break;
+            }
+        }
+
 
         #endregion
 

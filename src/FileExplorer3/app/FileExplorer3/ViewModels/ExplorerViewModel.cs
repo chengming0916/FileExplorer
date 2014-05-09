@@ -315,7 +315,7 @@ namespace FileExplorer.ViewModels
         public ISidebarViewModel Sidebar { get; private set; }
         public IStatusbarViewModel Statusbar { get; private set; }
         public INavigationViewModel Navigation { get; private set; }
-        public IToolbarViewModel Toolbar { get; private set; }
+        //public IToolbarViewModel Toolbar { get; private set; }
 
         public IEntriesHelper<FileNameFilter> Filters { get; set; }
         public string FilterStr
