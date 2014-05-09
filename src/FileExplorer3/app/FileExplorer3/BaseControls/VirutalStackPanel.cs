@@ -516,8 +516,16 @@ namespace FileExplorer.UserControls
         {
             get
             {
-                return new Size(ItemWidth == 0 && !Width.Equals(double.NaN) ? Width : ItemWidth,
-                    ItemHeight == 0 && !Height.Equals(double.NaN) ? Height : ItemHeight);
+                double childWidth = ItemWidth == 0 ? 
+                    Width == 0 || Width.Equals(double.NaN) ? ActualWidth : Width : ItemWidth;
+                double childHeight = ItemHeight == 0 ?
+                    Height == 0 || Height.Equals(double.NaN) ? ActualHeight : Height : ItemHeight;
+                if (childWidth == 0 && Orientation == Orientation.Vertical)
+                    childWidth = 500;
+                if (childHeight == 0 && Orientation == Orientation.Vertical)
+                    childHeight = 500;
+
+                return new Size(childWidth, childHeight);
             }
         }
 

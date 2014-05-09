@@ -490,7 +490,7 @@
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <uc:VirtualStackPanel IsItemsHost="true" Orientation="Vertical" 
-                                                  CacheItemCount="15"
+                                                  CacheItemCount="15" 
                                                   ItemHeight="25" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
