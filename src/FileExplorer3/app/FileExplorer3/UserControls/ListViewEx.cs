@@ -366,7 +366,9 @@ namespace FileExplorer.UserControls
             get { return (bool)GetValue(IsCheckBoxVisibleProperty); }
             set { SetValue(IsCheckBoxVisibleProperty, value); }
         }
-        
+
+
+   
 
         #region SelectionMode property, UnselectAllRequired event.
         public static readonly DependencyProperty SelectionModeExProperty =

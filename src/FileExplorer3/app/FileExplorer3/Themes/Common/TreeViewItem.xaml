@@ -3,6 +3,7 @@
     xmlns:uc="clr-namespace:FileExplorer.UserControls"
     xmlns:bc="clr-namespace:FileExplorer.BaseControls"
     xmlns:def="clr-namespace:FileExplorer.Defines"
+    xmlns:anim="clr-namespace:FileExplorer.Animations"
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Colors.xaml" />
@@ -30,18 +31,24 @@
                          IsDragging="{Binding (def:AttachedProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
                          IsDraggingOver="{Binding (def:AttachedProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"                    
                          IsSelected="{TemplateBinding IsSelected}" FillFullRow="True">
-                <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch"  
+                <StackPanel Orientation="Horizontal">
+                    <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch"  
                                   Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2"
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" 
                                   Margin="{TemplateBinding BorderThickness}"/>
+
+                    <anim:SilverLightMain Grid.Column="4" Visibility="{Binding IsLoading, 
+                            Converter={StaticResource btvc},
+                            RelativeSource={RelativeSource TemplatedParent}}" />
+                </StackPanel>
             </bc:HotTrack>
-            
+
             <ToggleButton x:Name="Expander" ClickMode="Press" 
                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" 
                           Style="{StaticResource ExpandCollapseToggleStyle}"/>
 
-            
-      
+
+
             <ItemsPresenter x:Name="ItemsHost" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1"/>
 
         </Grid>

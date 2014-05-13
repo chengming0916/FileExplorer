@@ -142,6 +142,10 @@
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
+    <Compile Include="Themes\ThirdParty\LoadingAdorner\AdornedControl.cs" />
+    <Compile Include="Themes\ThirdParty\LoadingAdorner\AdornerPlacement.cs" />
+    <Compile Include="Themes\ThirdParty\LoadingAdorner\FrameworkElementAdorner.cs" />
+    <Compile Include="Themes\ThirdParty\LoadingAdorner\LoadingWait.xaml.cs" />
     <Compile Include="UserControls\Explorer.cs" />
     <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
     <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
@@ -184,6 +188,7 @@
     <Compile Include="ViewModels\FileListCommandModelImpls.cs" />
     <Compile Include="ViewModels\FileListCommandManager.cs" />
     <Compile Include="ViewModels\Helpers\IScriptCommandManager.cs" />
+    <Compile Include="ViewModels\Helpers\PropertiesHelper.cs" />
     <Compile Include="ViewModels\Helpers\TabbedWindowManager.cs" />
     <Compile Include="ViewModels\Interfaces\ExtensionMethods.cs" />
     <Compile Include="ViewModels\Interfaces\IExplorerInitializer.cs" />
@@ -579,6 +584,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\ThirdParty\Block.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ThirdParty\LoadingAdorner\LoadingWait.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

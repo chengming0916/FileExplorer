@@ -170,6 +170,7 @@ namespace FileExplorer.Models
 
         public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false)
         {
+            //await Task.Delay(2000);
             if (filter == null)
                 filter = (m) => true;
             List<IEntryModel> retVal = new List<IEntryModel>();

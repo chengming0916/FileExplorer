@@ -47,6 +47,7 @@
             <uc:TreeViewEx.ItemContainerStyle>
                 <Style TargetType="{x:Type uc:TreeViewItemEx}" 
                        BasedOn="{StaticResource TreeViewItemExStyle}" >
+                    <Setter Property="IsLoading" Value="{Binding Entries.IsLoading, Mode=OneWay}"  />
                     <Setter Property="IsExpanded" Value="{Binding Entries.IsExpanded, Mode=TwoWay}"  />
                     <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
                     <Setter Property="IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver, Mode=OneWay}" />

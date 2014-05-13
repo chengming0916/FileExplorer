@@ -233,6 +233,7 @@
 
                         </bc:DockableScrollViewer.OuterTopContent>
                         <ItemsPresenter x:Name="lvItemsPresenter" />
+
                     </bc:DockableScrollViewer>
                     <!--<ScrollViewer Style="{StaticResource ListViewExGridViewScrollViewerStyle}">
                                     <ItemsPresenter />
@@ -244,9 +245,14 @@
             <Trigger Property="IsGrouping" Value="true">
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
             </Trigger>
+
             <Trigger Property="IsEnabled" Value="false">
-                <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"/>
+                <Setter TargetName="Border" Property="Opacity" 
+                        Value="0.5"/>
+                <!--<Setter TargetName="Border" Property="Background" 
+                        Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>-->
             </Trigger>
+
         </ControlTemplate.Triggers>
     </ControlTemplate>
 

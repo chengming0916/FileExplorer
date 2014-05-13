@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Utils;
 using NUnit.Framework;
+using FileExplorer.ViewModels.Helpers;
 
 namespace FileExplorer.UnitTests
 {
@@ -52,6 +53,29 @@ namespace FileExplorer.UnitTests
 
             Assert.IsTrue(cachedA);
             Assert.IsTrue(cachedC);
+        }
+
+        public static void Properties_HelperTest()
+        {
+            dynamic ph = new PropertiesHelper<string>();
+            dynamic ch = new CategoryHelper<string>();
+            ph.abc = "cde";
+            ch.abc.def = "ghi";
+            ch.abc.jkl = "jkl";
+
+            var cde = ph.abc;
+            var ghi = ch.abc.def;
+            var jkl = ch.abc.jkl;
+
+
+            Assert.AreEqual("cde", cde);
+            Assert.AreEqual("ghi", ghi);
+        }
+
+        public static void Test()
+        {
+            PropertyPathHelper_Test();
+            Properties_HelperTest();
         }
     }
 }

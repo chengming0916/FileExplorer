@@ -5,6 +5,7 @@
     xmlns:vm="clr-namespace:FileExplorer.ViewModels"
     xmlns:m="clr-namespace:FileExplorer.Models"
     xmlns:cali ="http://www.caliburnproject.org"
+    xmlns:anim="clr-namespace:FileExplorer.Animations"
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Default/Brushes.xaml" />
@@ -25,6 +26,24 @@
                         Padding="10,0,0,0"
                         />
 
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="TreeItemTemplate" >
+        <StackPanel Orientation="Horizontal">
+            <!--<Image Source="{Binding Icon, Mode=OneWay}" Width="30" Height="30"  />
+
+            <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
+                        ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
+                        IsEditable="{Binding IsRenamable}"        
+                        IsEditing="{Binding IsRenaming, Mode=TwoWay}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Padding="10,0,0,0"
+                        />-->
+
+            <anim:SilverLightMain Visibility="Visible" Height="30" Width="30" />
+            <TextBlock Text="Loading" Visibility="{Binding IsLoading, Converter={StaticResource btvc}}" />
         </StackPanel>
     </DataTemplate>
 
