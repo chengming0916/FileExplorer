@@ -34,7 +34,7 @@ namespace FileExplorer.ViewModels
 #if !WINRT
     [Export(typeof(FileListViewModel))]
 #endif
-    public class FileListViewModel : ViewAware, IFileListViewModel, 
+    public class FileListViewModel : ViewAware, IFileListViewModel,
         IHandle<ViewChangedEvent>, IHandle<DirectoryChangedEvent>, ISupportDragHelper, ISupportDropHelper
     {
 
@@ -91,7 +91,7 @@ namespace FileExplorer.ViewModels
                     if (e.PropertyName == "IsVisible")
                         NotifyOfPropertyChange(() => ShowSidebar);
                 };
-            Commands = new FileListCommandManager(this, events, Selection, Sidebar.Commands);        
+            Commands = new FileListCommandManager(this, events, Selection, Sidebar.Commands);
         }
 
         #endregion
@@ -133,13 +133,13 @@ namespace FileExplorer.ViewModels
         //}
 
 
-        #endregion        
+        #endregion
 
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
-              var uiEle = view as System.Windows.UIElement;
-            Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);            
+            var uiEle = view as System.Windows.UIElement;
+            Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
         }
 
         public void SignalChangeDirectory(IEntryModel newDirectory)
@@ -173,7 +173,7 @@ namespace FileExplorer.ViewModels
         private IEntryModel _currentDirVM = null;
 
         //private IToolbarViewModel _toolbar = null;
-        private bool _showToolbar = true, _showGridHeader= true;
+        private bool _showToolbar = true, _showGridHeader = true;
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
         private IFileListParameters _parameters = new FileListParameters();
@@ -183,7 +183,7 @@ namespace FileExplorer.ViewModels
         #region Public Properties
         public IProfile[] Profiles { set { setProfiles(value); } }
 
-        
+
         public bool ShowGridHeader { get { return _showGridHeader; } set { _showGridHeader = value; NotifyOfPropertyChange(() => ShowGridHeader); } }
         public bool ShowToolbar { get { return _showToolbar; } set { _showToolbar = value; NotifyOfPropertyChange(() => ShowToolbar); } }
         public bool ShowSidebar { get { return Sidebar.IsVisible; } set { Sidebar.IsVisible = value; } }
@@ -191,7 +191,7 @@ namespace FileExplorer.ViewModels
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
 
-        public ICommandManager Commands { get; private set; }        
+        public ICommandManager Commands { get; private set; }
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
         public IColumnsHelper Columns { get; private set; }
         public IEventAggregator Events { get; private set; }
@@ -206,7 +206,11 @@ namespace FileExplorer.ViewModels
         public IEntryModel CurrentDirectory
         {
             get { return _currentDirVM; }
-            set { SetCurrentDirectoryAsync(value); }
+            set
+            {
+                if (!value.Equals(_currentDirVM))
+                    SetCurrentDirectoryAsync(value);
+            }
         }
 
         public bool IsCheckBoxVisible
@@ -221,10 +225,13 @@ namespace FileExplorer.ViewModels
             set { _isContextMenuVisible = value; NotifyOfPropertyChange(() => IsContextMenuVisible); }
         }
 
-      
 
-        public IFileListParameters Parameters { get { return _parameters; } 
-            set { _parameters = value; NotifyOfPropertyChange(() => Parameters); } }
+
+        public IFileListParameters Parameters
+        {
+            get { return _parameters; }
+            set { _parameters = value; NotifyOfPropertyChange(() => Parameters); }
+        }
 
 
         #endregion
