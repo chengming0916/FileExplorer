@@ -165,7 +165,7 @@ namespace QuickZip.UserControls.MVVM
 
         public override string ToString()
         {
-            return "IVM:" + EmbeddedEntryModel == null ? "" : EmbeddedEntryModel.ToString();
+            return "IVM:" + (_embeddedEntryModel == null ? "" : EmbeddedEntryModel.ToString());
         }
         #endregion
 
