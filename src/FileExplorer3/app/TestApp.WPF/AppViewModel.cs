@@ -107,6 +107,7 @@ namespace TestApp
                  new ToolbarCommandsInitializers(_windowManager));
 
             var sr = new ScriptRunner();
+            //_windowManager.ShowWindow(new ExplorerViewModel(_events, _windowManager, RootModels.ToArray()), "ToolWindow");
             //_windowManager.ShowWindow(new ExplorerViewModel(_events, _windowManager, RootModels.ToArray()));
             sr.Run(Explorer.NewWindow(initializer, context, null), new ParameterDic());
         }

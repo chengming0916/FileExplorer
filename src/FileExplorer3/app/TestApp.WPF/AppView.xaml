@@ -30,7 +30,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Orientation="Horizontal">
+        <!--<StackPanel Orientation="Horizontal">
             <Button x:Name="Clear" Content="Clear" />
             <Button x:Name="Remove" Content="Remove" />
         </StackPanel>
@@ -41,7 +41,7 @@
             <Button x:Name="AddGoogleDrive" Content="Add (using GoogleDrive)" ToolTip="Requires gapi_client_secret.json" />
             <Button x:Name="AddDropBox" Content="Add (using DropBox)" />
             <Button x:Name="Add" Content="Add" />
-        </WrapPanel>
+        </WrapPanel>-->
 
         <Rectangle Height="50" />
         <StackPanel Orientation="Horizontal">

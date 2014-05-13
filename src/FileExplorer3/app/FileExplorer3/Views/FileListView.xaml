@@ -41,6 +41,8 @@
                      ColumnsVisibility="{Binding ShowGridHeader, Converter={StaticResource btvc}}"
                      ItemSize="{Binding Parameters.ItemSize}"
                      ItemAnimationDuration="00:00:00" 
+                     IsEnabled="{Binding ProcessedEntries.EntriesHelper.IsLoading, Mode=OneWay, 
+                            Converter={StaticResource fb}}"
                      IsCheckBoxVisible="{Binding IsCheckBoxVisible, Mode=OneWay}"
                      SortDirection="{Binding Columns.SortDirection}"
                      SortBy="{Binding Columns.SortBy}"
@@ -126,5 +128,7 @@
 
 
         </uc:ListViewEx>
+
+     
     </Grid>
 </UserControl>

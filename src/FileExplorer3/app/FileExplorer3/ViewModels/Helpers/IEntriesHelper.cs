@@ -45,6 +45,8 @@ namespace FileExplorer.ViewModels.Helpers
         /// </summary>
         bool IsLoaded { get; set; }
 
+        bool IsLoading { get; set; }
+
         event EventHandler EntriesChanged;
         
         IEnumerable<VM> AllNonBindable { get; }

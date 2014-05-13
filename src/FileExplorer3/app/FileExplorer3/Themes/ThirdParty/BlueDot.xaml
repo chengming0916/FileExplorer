@@ -1,7 +1,7 @@
-﻿<UserControl x:Class="CircularAnimations.Examples.BlueDot"
+﻿<UserControl x:Class="FileExplorer.Animations.BlueDot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local='clr-namespace:CircularAnimations.Examples'
+    xmlns:local='clr-namespace:FileExplorer.Animations'
     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 
     Height="80" Width="80">

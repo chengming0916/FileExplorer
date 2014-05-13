@@ -24,6 +24,8 @@ using FileExplorer.BaseControls.DragnDrop;
 using FileExplorer.BaseControls.MultiSelect;
 using System.Windows.Media.Animation;
 using FileExplorer.UserControls.InputProcesor;
+using FileExplorer.ViewModels.Helpers;
+using FileExplorer.UnitTests;
 
 namespace TestTemplate.WPF
 {
@@ -35,6 +37,7 @@ namespace TestTemplate.WPF
         public MainWindow()
         {
             InitializeComponent();
+           
         }
 
         //private void test(System.Collections.IEnumerable itemSource, HierarchicalDataTemplate dt)

@@ -152,6 +152,16 @@ namespace FileExplorer.UserControls
             DependencyProperty.Register("IsDraggingOver", typeof(bool),
             typeof(TreeViewItemEx), new UIPropertyMetadata(false));
 
+        public bool IsLoading
+        {
+            get { return (bool)GetValue(IsLoadingProperty); }
+            set { SetValue(IsLoadingProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsLoadingProperty =
+            DependencyProperty.Register("IsLoading", typeof(bool),
+            typeof(TreeViewItemEx), new UIPropertyMetadata(false));
+
         public bool ExpandIfDragOver
         {
             get { return (bool)GetValue(ExpandIfDragOverProperty); }

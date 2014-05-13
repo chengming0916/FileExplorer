@@ -72,9 +72,11 @@ namespace FileExplorer.ViewModels.Helpers
                         if (_clearBeforeLoad)
                             All.Clear();
 
+                        IsLoading = true;
                         await _loadSubEntryFunc(_isLoaded, parameter).ContinueWith((prevTask, _) =>
                             {
-                                _isLoaded = true;
+                                IsLoaded = true;
+                                IsLoading = false;
                                 if (!prevTask.IsCanceled && !prevTask.IsFaulted)
                                 {
                                     SetEntries(prevTask.Result.ToArray());
@@ -115,6 +117,7 @@ namespace FileExplorer.ViewModels.Helpers
         //private bool _isLoading = false;
         private bool _isLoaded = false;
         private bool _isExpanded = false;
+        private bool _isLoading = false;
         private IEnumerable<VM> _subItemList = new List<VM>();
         protected Func<bool, object, Task<IEnumerable<VM>>> _loadSubEntryFunc;
         private ObservableCollection<VM> _subItems;
@@ -147,9 +150,16 @@ namespace FileExplorer.ViewModels.Helpers
             set { _isLoaded = value; NotifyOfPropertyChanged(() => IsLoaded); }
         }
 
+         public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { _isLoading = value; NotifyOfPropertyChanged(() => IsLoading); }
+        }
+
         public DateTime LastRefreshTimeUtc { get { return _lastRefreshTimeUtc; } }
 
         public event EventHandler EntriesChanged;
+      
 
         public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }
 
@@ -163,6 +173,9 @@ namespace FileExplorer.ViewModels.Helpers
 
 
 
+
+
+       
     }
 
 }
