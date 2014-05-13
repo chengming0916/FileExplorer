@@ -210,6 +210,7 @@ namespace FileExplorer.ViewModels
             Queue<IScriptCommand> cmds = new Queue<IScriptCommand>();
 
             cmds.Enqueue(Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories));
+            
             if (message.Sender != this)
                 cmds.Enqueue(Explorer.GoTo(CurrentDirectory.EntryModel));
             else

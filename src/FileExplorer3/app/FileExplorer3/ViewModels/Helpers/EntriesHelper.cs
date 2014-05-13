@@ -95,11 +95,20 @@ namespace FileExplorer.ViewModels.Helpers
 
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
-            all.Clear();
+
+            var removeItems = all.Where(vm => !viewModels.Contains(vm)).ToList();
+            var addItems = viewModels.Where(vm => !all.Contains(vm)).ToList();
+
+            foreach (var vm in removeItems)
+                all.Remove(vm);
+            foreach (var vm in addItems)
+                all.Add(vm); 
+
+            //all.Clear();
             //all.NotifyChanges();
             //foreach (var vm in viewModels)
             //    All.Add(vm);
-            all.AddItems(viewModels);
+            //all.AddItems(viewModels);
             all.NotifyChanges();
 
             if (EntriesChanged != null)
