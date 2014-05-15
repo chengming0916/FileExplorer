@@ -48,7 +48,7 @@
                              CacheItemCount="5"  
                              ItemHeight="30"
                              ItemWidth="250"
-                             Orientation="Horizontal"
+                             Orientation="Vertical"
                              ItemTemplate="{DynamicResource SmallIconItemTemplate}"
                              ItemContainerStyle="{StaticResource SmallIconItemContainerStyle}"
                              HorizontalContentAlignment="Left" >
