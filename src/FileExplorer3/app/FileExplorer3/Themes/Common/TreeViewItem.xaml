@@ -43,7 +43,7 @@
                 </StackPanel>
             </bc:HotTrack>
 
-            <ToggleButton x:Name="Expander" ClickMode="Press" 
+            <ToggleButton x:Name="Expander" ClickMode="Press" DataContext="{x:Null}"
                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" 
                           Style="{StaticResource ExpandCollapseToggleStyle}"/>
 

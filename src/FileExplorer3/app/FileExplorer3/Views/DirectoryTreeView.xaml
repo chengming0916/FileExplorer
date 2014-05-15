@@ -63,14 +63,14 @@
                     </bc:InputBindingsEventProcessor.InputBindings>
                 </bc:InputBindingsEventProcessor>
                 <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
-                <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
-                                               EnableMouse="False" EnableTouch="True" />
-                <bc:ContextMenuEventProcessor>
+                <!--<bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
+                                               EnableMouse="False" EnableTouch="True" />-->
+                <!--<bc:ContextMenuEventProcessor>
                     <bc:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                      ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
                     </bc:ContextMenuEventProcessor.ContextMenu>
-                </bc:ContextMenuEventProcessor>
+                </bc:ContextMenuEventProcessor>-->
             </bc:UIEventAdapter.Processors>
             
             <!--<uc:TreeViewEx.BottomContent>
