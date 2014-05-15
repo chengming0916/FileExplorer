@@ -99,26 +99,29 @@ namespace FileExplorer.BaseControls.DragnDrop
             ele = null;
 
             object dataContext = origSource.DataContext;
-            var filterResult = filter(dataContext);
-            if (filterResult != null)
+            if (dataContext != null)
             {
-                ele = GetDataContextOwner(origSource);
-                return filterResult;
-            }
-            else
-            {
-                var ic = UITools.FindAncestor<ItemsControl>(origSource);
-                while (ic != null)
+                var filterResult = filter(dataContext);
+                if (filterResult != null)
                 {
-                    filterResult = filter(ic.DataContext);
-                    if (filterResult != null)
-                    {
-                        ele = GetDataContextOwner(ic);
-                        return filterResult;
-                    }
-                    ic = UITools.FindAncestor<ItemsControl>(VisualTreeHelper.GetParent(ic));
+                    ele = GetDataContextOwner(origSource);
+                    return filterResult;
                 }
+                else
+                {
+                    var ic = UITools.FindAncestor<ItemsControl>(origSource);
+                    while (ic != null)
+                    {
+                        filterResult = filter(ic.DataContext);
+                        if (filterResult != null)
+                        {
+                            ele = GetDataContextOwner(ic);
+                            return filterResult;
+                        }
+                        ic = UITools.FindAncestor<ItemsControl>(VisualTreeHelper.GetParent(ic));
+                    }
 
+                }
             }
             return default(T);
         }
