@@ -37,10 +37,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro, Version=1.5.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\ThirdParty\Caliburn.Micro.1.5.2\bin\WPF45\Debug\Caliburn.Micro.dll</HintPath>
-    </Reference>
     <Reference Include="HtmlTextBlock">
       <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
     </Reference>
