@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3", "FileExplorer3\FileExplorer3.csproj", "{78B3E601-2449-4600-AF48-94AC53FBEE22}"
 EndProject
@@ -16,11 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7A89CE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTemplate.WPF", "TestTemplate.WPF\TestTemplate.WPF.csproj", "{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSkyDrive", "TestSkyDrive\TestSkyDrive.csproj", "{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3.IO", "FileExplorer3.IO\FileExplorer3.IO.csproj", "{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSkyDrive2", "TestSkyDrive2\TestSkyDrive2.csproj", "{26065FDC-2833-447C-B109-44CF2F7DCCB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,16 +60,6 @@ Global
 		{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}.Release|ARM.ActiveCfg = Release|Any CPU
 		{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}.Release|x64.ActiveCfg = Release|Any CPU
 		{9C1FBD8B-3C88-4BC0-B830-93F83A8685E9}.Release|x86.ActiveCfg = Release|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|ARM.ActiveCfg = Release|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|x64.ActiveCfg = Release|Any CPU
-		{F40D2C84-2B0D-407D-8F99-6A9FC688C0E3}.Release|x86.ActiveCfg = Release|Any CPU
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -84,16 +70,6 @@ Global
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|ARM.ActiveCfg = Release|Any CPU
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|x64.ActiveCfg = Release|Any CPU
 		{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}.Release|x86.ActiveCfg = Release|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|ARM.ActiveCfg = Release|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|x64.ActiveCfg = Release|Any CPU
-		{26065FDC-2833-447C-B109-44CF2F7DCCB9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
