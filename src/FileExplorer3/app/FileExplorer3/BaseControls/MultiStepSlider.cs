@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Data;
 using QuickZip.Converters;
+using System.Threading;
 
 namespace FileExplorer.BaseControls
 {
@@ -256,31 +257,35 @@ namespace FileExplorer.BaseControls
 
         private void setupBindings()
         {
-            _embeddedSlider.SetValue(Slider.ValueProperty, valueToSliderValue(this.Value));
-            Binding sliderValueBinding = new Binding("Value");
-            sliderValueBinding.Source = this;
-            sliderValueBinding.Mode = BindingMode.TwoWay;
-            //sliderValueBinding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
-            sliderValueBinding.Delay = 5000;
-            sliderValueBinding.Converter = _valueToSliderValueConverter;            
-            _embeddedSlider.SetBinding(Slider.ValueProperty, sliderValueBinding);
+            //_embeddedSlider.SetValue(Slider.ValueProperty, valueToSliderValue(this.Value));
+            //Binding sliderValueBinding = new Binding("Value");
+            //sliderValueBinding.Source = this;
+            //sliderValueBinding.Mode = BindingMode.TwoWay;
+            ////sliderValueBinding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
+
+            //sliderValueBinding.Converter = _valueToSliderValueConverter;            
+            //_embeddedSlider.SetBinding(Slider.ValueProperty, sliderValueBinding);
 
             UpdateMaximum();
 
 
-            //_embeddedSlider.AddValueChanged(Slider.ValueProperty, (o, e) =>
-            //    {
-            //        if (_embeddedSlider.IsFocused)
-            //            _embeddedSlider.GetBindingExpression(Slider.ValueProperty).UpdateTarget();
-            //    });
+            _embeddedSlider.AddValueChanged(Slider.ValueProperty, (o, e) =>
+                {
+                    if (_embeddedSlider.IsFocused)
+                       Value = sliderValueToValue(_embeddedSlider.Value);
+                        //Value = (double)_valueToSliderValueConverter.ConvertBack(
+                        //    _embeddedSlider.Value, typeof(double), null, 
+                        //    Thread.CurrentThread.CurrentCulture);
+                        ////_embeddedSlider.GetBindingExpression(Slider.ValueProperty).UpdateTarget();
+                });
 
-            //this.AddValueChanged(ValueProperty, (o, e) =>
-            //{
-            //    if (!_embeddedSlider.IsFocused)
-            //        _embeddedSlider.SetValue(Slider.ValueProperty, valueToSliderValue(this.Value));
-            //});
+            this.AddValueChanged(ValueProperty, (o, e) =>
+            {
+                if (!_embeddedSlider.IsFocused)
+                    _embeddedSlider.SetValue(Slider.ValueProperty, valueToSliderValue(this.Value));
+            });
 
-            //_embeddedSlider.Value = valueToSliderValue(Value);
+            _embeddedSlider.Value = valueToSliderValue(Value);
         }
 
 
