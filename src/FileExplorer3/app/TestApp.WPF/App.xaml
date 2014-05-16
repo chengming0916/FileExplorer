@@ -10,7 +10,7 @@
                 <ResourceDictionary>                    
                     <local:AppBootstrapper x:Key="bootstrapper" />
                 </ResourceDictionary>
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/Converters.xaml" />
                 <ResourceDictionary>
                     <DataTemplate x:Key="GridSizeTemplate" >
                         <StackPanel Orientation="Horizontal">

@@ -177,12 +177,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
-      <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
-      <Name>FileExplorer3</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="Diagrams\FileExplorerIO.cd" />
     <None Include="packages.config" />
@@ -201,6 +195,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UserControls\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
+      <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
+      <Name>FileExplorer3.WPF</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

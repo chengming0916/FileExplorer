@@ -104,13 +104,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
-      <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
-      <Name>FileExplorer3</Name>
-    </ProjectReference>
+    <Resource Include="folder.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="folder.ico" />
+    <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
+      <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
+      <Name>FileExplorer3.WPF</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

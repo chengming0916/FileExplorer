@@ -7,7 +7,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer3;component/Themes/Common/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="Button">
