@@ -17,6 +17,9 @@
         <Setter Property="Command" Value="{Binding  CommandBinding.Command, Mode=OneWay}" />
         <Setter Property="CommandParameter" Value="{Binding DataContext.Commands.ToolbarCommands.AppliedModels, 
                                     RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+        <Setter Property="CommandTarget" Value="{Binding Path=PlacementTarget,
+        RelativeSource={RelativeSource
+            AncestorType=ContextMenu}}" />
         <Setter Property="Icon" Value="{Binding Icon, Mode=OneWay}" />
         <Setter Property="IsCheckable" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />
         <Setter Property="IsChecked" Value="{Binding CommandModel.IsChecked, Mode=OneWay}"  />

@@ -177,7 +177,7 @@ namespace FileExplorer.Models
             if (entry.IsDirectory)
             {
                 DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
-                retVal.AddRange(from fsi in di.GetFileSystemInfos()
+                retVal.AddRange(from fsi in di.EnumerateFileSystemInfos()
                                 let m = new FileSystemInfoExModel(this, fsi)
                                 where filter(m)
                                 select m);
