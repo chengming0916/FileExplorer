@@ -82,7 +82,7 @@ namespace FileExplorer.Defines
 
     public class FileListParameters: NotifyPropertyChanged, IFileListParameters
     {
-        private int _itemSize = 60;
+        private int _itemSize = 80;
         private string _viewMode = "Icon";
         public int ItemSize { get { return _itemSize; } set { _itemSize = value; NotifyOfPropertyChanged(() => ItemSize); } }
         public string ViewMode { get { return _viewMode; } set { _viewMode = value; NotifyOfPropertyChanged(() => ViewMode); } }
