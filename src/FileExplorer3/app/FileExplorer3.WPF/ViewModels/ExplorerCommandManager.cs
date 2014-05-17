@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
 using System.Windows.Input;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class ExplorerCommandManager : CommandManagerBase
     {

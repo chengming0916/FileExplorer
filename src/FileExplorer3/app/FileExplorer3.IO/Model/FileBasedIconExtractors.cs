@@ -8,13 +8,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 using QuickZip.Converters;
 using QuickZip.UserControls.Logic.Tools.IconExtractor;
 using ExifLib;
 using System.Windows.Media.Imaging;
 using Cofe.Core.Utils;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
+using FileExplorer.IO.Defines;
 
 namespace FileExplorer.Models
 {
@@ -123,7 +124,7 @@ namespace FileExplorer.Models
                     {
                         var thumbnailBytes = reader.GetJpegThumbnailBytes();
                         if (thumbnailBytes != null && thumbnailBytes.Length > 0)
-                            return ConverterUtils.ToBitmapImage(thumbnailBytes);
+                            return W32ConverterUtils.ToBitmapImage(thumbnailBytes);
                     }
                 }
 

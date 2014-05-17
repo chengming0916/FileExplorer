@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Caliburn.Micro;
-using FileExplorer.Defines;
-using FileExplorer.ViewModels.Helpers;
-//using FileExplorer.UserControls.DragDrop;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF;
+//using FileExplorer.WPF.UserControls.DragDrop;
 
 namespace FileExplorer.Models
 {

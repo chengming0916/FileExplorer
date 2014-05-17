@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     /// <summary>
     /// For random size wrap panel, otherwise use the Virtual one.

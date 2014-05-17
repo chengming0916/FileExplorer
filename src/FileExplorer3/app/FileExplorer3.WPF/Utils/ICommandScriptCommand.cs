@@ -8,7 +8,7 @@ using Cinch;
 using Cofe.Core;
 using Cofe.Core.Script;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     internal class ICommandScriptCommand : ScriptCommandBase
     {

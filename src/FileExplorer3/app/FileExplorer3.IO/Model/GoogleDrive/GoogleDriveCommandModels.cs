@@ -6,9 +6,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels;
 using System.Threading;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

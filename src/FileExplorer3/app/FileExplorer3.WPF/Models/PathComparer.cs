@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class PathComparer : IEntryHierarchyComparer
     {

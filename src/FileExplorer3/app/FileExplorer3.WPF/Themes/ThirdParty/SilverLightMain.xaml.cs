@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FileExplorer.Animations
+namespace FileExplorer.WPF.Animations
 {
     /// <summary>
     /// Interaction logic for SilverLightMain.xaml

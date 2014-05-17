@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     /// <summary>
     /// Load a directory content to context["EntryList"], with format IEnumerable&lt;IEntryModel&gt;

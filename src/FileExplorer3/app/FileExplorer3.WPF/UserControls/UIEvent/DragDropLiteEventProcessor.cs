@@ -1,6 +1,6 @@
 ﻿using Cofe.Core.Script;
-using FileExplorer.BaseControls.DragnDrop;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.BaseControls.DragnDrop;
+using FileExplorer.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class DragDropLiteEventProcessor : UIEventProcessorBase
     {

@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class SidebarViewModel : ViewAware, ISidebarViewModel,
         IHandle<SelectionChangedEvent>, IHandle<ListCompletedEvent>

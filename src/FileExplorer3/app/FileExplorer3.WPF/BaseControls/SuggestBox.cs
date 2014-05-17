@@ -9,9 +9,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using FileExplorer.UserControls;
+using FileExplorer.WPF.UserControls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public interface ISuggestSource
     {

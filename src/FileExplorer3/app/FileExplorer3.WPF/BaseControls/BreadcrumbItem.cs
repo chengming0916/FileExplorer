@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Diagnostics;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class BreadcrumbItem : HeaderedItemsControl
     {

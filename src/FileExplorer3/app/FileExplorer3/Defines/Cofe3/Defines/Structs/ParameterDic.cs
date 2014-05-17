@@ -34,19 +34,19 @@ namespace Cofe.Core
             return retVal;
         }
 
-        public static ParameterDic FromNameValueCollection(NameValueCollection col, string[] paramToFetch)
-        {
-            ParameterDic retVal = new ParameterDic();
+        //public static ParameterDic FromNameValueCollection(NameValueCollection col, string[] paramToFetch)
+        //{
+        //    ParameterDic retVal = new ParameterDic();
 
-            foreach (var key in col.AllKeys)
-            {
-                if (paramToFetch.Contains(key, StringComparer.CurrentCultureIgnoreCase))
-                {
-                    retVal.Add(key, col[key]);
-                }
-            }
-            return retVal;
-        }
+        //    foreach (var key in col.AllKeys)
+        //    {
+        //        if (paramToFetch.Contains(key, StringComparer.CurrentCultureIgnoreCase))
+        //        {
+        //            retVal.Add(key, col[key]);
+        //        }
+        //    }
+        //    return retVal;
+        //}
 
 
         public void AddOrUpdate(string key, object value)

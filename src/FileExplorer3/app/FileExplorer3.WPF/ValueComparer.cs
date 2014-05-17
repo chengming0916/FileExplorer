@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer
+namespace FileExplorer.WPF
 {
     //http://blog.slaks.net/2010/12/simplifying-value-comparison-semantics.html
     ///<summary>

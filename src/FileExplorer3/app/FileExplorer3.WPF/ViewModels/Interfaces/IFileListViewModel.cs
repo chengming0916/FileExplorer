@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using Caliburn.Micro;
-using FileExplorer.Defines;
-using FileExplorer.Models;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public interface IFileListViewModel : ISupportCommandManager
     {        

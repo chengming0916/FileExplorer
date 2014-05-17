@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FileExplorer.Defines
+namespace FileExplorer.WPF.Defines
 {
     public static class Strings
     {

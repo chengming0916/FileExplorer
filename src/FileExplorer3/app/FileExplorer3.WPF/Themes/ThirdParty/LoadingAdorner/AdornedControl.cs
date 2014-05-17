@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Collections;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     //http://www.codeproject.com/Articles/57984/WPF-Loading-Wait-Adorner
     public class AdornedControl : ContentControl

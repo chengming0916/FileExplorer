@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.IO;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 using System.Diagnostics;
-using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.UserControls.DragDrop
+namespace FileExplorer.WPF.UserControls.DragDrop
 {
     public interface INotifyDropped
     {

@@ -12,9 +12,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public static partial class UITools
     {

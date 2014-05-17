@@ -1,8 +1,9 @@
 ﻿using Caliburn.Micro;
 using DropNet;
 using DropNet.Models;
-using FileExplorer.BaseControls;
-using FileExplorer.Utils;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;

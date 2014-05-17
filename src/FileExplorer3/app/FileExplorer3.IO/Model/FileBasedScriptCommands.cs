@@ -11,9 +11,10 @@ using System.Windows;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels;
 
 namespace FileExplorer.Models
 {

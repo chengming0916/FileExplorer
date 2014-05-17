@@ -8,9 +8,9 @@ using System.Windows.Input;
 using Cinch;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public enum ScriptBindingScope { Application, Explorer, Local }
 

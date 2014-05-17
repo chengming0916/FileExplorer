@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Animation;
 
-namespace FileExplorer.Animations
+namespace FileExplorer.WPF.Animations
 {
 	
 	public partial class BlueDot : UserControl

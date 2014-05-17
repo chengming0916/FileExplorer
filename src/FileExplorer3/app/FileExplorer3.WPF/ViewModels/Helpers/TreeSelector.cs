@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Utils;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.ViewModels.Helpers
+namespace FileExplorer.WPF.ViewModels.Helpers
 {
 
 

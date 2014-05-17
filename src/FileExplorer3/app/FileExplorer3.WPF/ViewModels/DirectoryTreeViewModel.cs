@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Cofe.Core.Utils;
-using FileExplorer.Defines;
-using FileExplorer.Models;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
 
 

@@ -5,11 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Defines;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer;
 using System.Windows;
-using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 
 namespace TestTemplate.WPF
 {

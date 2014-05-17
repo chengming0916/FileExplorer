@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using FileExplorer.ViewModels;
-using FileExplorer.UserControls.InputProcesor;
+using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.UserControls.InputProcesor;
 
 namespace Cofe.Core.Script
 {
@@ -31,7 +31,7 @@ namespace Cofe.Core.Script
                     object sender = p2[1];
                     RoutedEventArgs eventArgs = p2[2] as RoutedEventArgs;
 
-                    return new FileExplorer.BaseControls.UIParameterDic()
+                    return new FileExplorer.WPF.BaseControls.UIParameterDic()
                     {
                         Sender = sender,
                         EventName = eventName,
@@ -53,7 +53,7 @@ namespace Cofe.Core.Script
                 IUIInput input = p2[1] as IUIInput;
                 UIInputManager inputProcManager = p2[2] as UIInputManager;
 
-                return new FileExplorer.BaseControls.UIParameterDic()
+                return new FileExplorer.WPF.BaseControls.UIParameterDic()
                 {
                     Sender = input.Sender,
                     EventName = eventName,

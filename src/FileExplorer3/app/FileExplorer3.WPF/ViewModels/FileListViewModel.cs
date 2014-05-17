@@ -11,25 +11,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Caliburn.Micro;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 using System.Diagnostics;
 using System.Windows.Data;
 using System.ComponentModel;
 using System.Windows;
 using System.Collections;
-using FileExplorer.ViewModels.Actions;
-using FileExplorer.Utils;
+using FileExplorer.WPF.ViewModels.Actions;
+using FileExplorer.WPF.Utils;
 using System.Collections.ObjectModel;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.ViewModels.Helpers;
 using Cinch;
 using System.Windows.Input;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 using System.Threading;
 using Cofe.Core.Utils;
 
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
 #if !WINRT
     [Export(typeof(FileListViewModel))]

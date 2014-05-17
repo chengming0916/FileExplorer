@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using Cofe.Core.Script;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class SeparatorCommandModel : CommandModel, ISeparatorModel
     {

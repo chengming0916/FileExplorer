@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class VirtualWrapPanelView : ViewBase
     {

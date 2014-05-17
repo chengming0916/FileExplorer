@@ -9,7 +9,7 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Cinch;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class MessageDialogViewModel : Screen
     {

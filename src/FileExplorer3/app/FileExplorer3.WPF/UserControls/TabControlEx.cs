@@ -1,4 +1,4 @@
-﻿using FileExplorer.BaseControls;
+﻿using FileExplorer.WPF.BaseControls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class TabControlEx : TabControl
     {

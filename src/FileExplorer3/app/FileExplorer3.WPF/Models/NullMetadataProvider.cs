@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class MetadataProviderBase : IMetadataProvider
     {

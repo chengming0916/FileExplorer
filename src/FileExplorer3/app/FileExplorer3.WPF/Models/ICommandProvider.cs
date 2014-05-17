@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofe.Core.Script;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     /// <summary>
     /// Provide CommandModels given entries.

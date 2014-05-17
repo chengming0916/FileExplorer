@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
 using Cofe.Core;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     /// <summary>
     /// Manage script commands for ViewModels

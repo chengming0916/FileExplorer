@@ -18,7 +18,7 @@
   <Comment CommentText="Define IUICommand for use in UI (e.g. ExplorerCommands.NewWindow)">
     <Position X="2.076" Y="10.544" Height="0.594" Width="2.582" />
   </Comment>
-  <Class Name="FileExplorer.Defines.ColumnInfo">
+  <Class Name="FileExplorer.WPF.Defines.ColumnInfo">
     <Position X="9.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BACAAAAAAAAAAAAEgAAAEEAAAQAgAIAAAQAAAAAAAQA=</HashCode>

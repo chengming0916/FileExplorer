@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     //TreeViewEx and TreeViewItemEx
 

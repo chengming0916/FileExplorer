@@ -12,6 +12,7 @@ using System.Windows.Input;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FileExplorer.ViewModels.Helpers
+namespace FileExplorer.WPF.ViewModels.Helpers
 {
 
     public interface ISupportDragHelper

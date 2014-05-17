@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Threading;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     //Thomas Levesque - http://stackoverflow.com/questions/3577802/wpf-getting-a-property-value-from-a-binding-path
     public static class PropertyPathHelper

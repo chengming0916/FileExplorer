@@ -20,7 +20,7 @@ using System.Windows.Threading;
 using System.Windows.Media.Animation;
 using System.Collections.Generic;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class VirtualWrapPanel : AnimatedVirtualizingPanel, IScrollInfo, IChildInfo
     {

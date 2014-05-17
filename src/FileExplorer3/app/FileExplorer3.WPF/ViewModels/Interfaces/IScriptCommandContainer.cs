@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofe.Core.Script;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     /// <summary>
     /// Owned by ViewModel (e.g. IFileListViewModel) for a number of changable IScriptCommands (e.g. Open)

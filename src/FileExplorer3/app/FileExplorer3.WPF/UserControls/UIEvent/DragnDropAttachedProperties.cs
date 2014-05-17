@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.BaseControls;
-using FileExplorer.UserControls;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.Defines
+namespace FileExplorer.WPF.Defines
 {
     public static partial class AttachedProperties
     {

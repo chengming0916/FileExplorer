@@ -1,7 +1,8 @@
 ﻿using Cofe.Core.Utils;
 using ExifLib;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.IO.Defines;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -22,7 +23,7 @@ namespace FileExplorer.Models
             if (selectedModels.Count() == 1)
             {
                 var diskModel = selectedModels.First() as DiskEntryModelBase;
-                if (diskModel.IsFileWithExtension(FileExtensions.ImageExtensions))
+                if (diskModel.IsFileWithExtension(FileExplorer.IO.Defines.FileExtensions.ImageExtensions))
                 {
                     try
                     {
@@ -30,7 +31,7 @@ namespace FileExplorer.Models
                         using (Bitmap bitmap = new Bitmap(stream))
                         {
                             retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
-                                ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
+                                W32ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
 
                         }
                     }
@@ -127,9 +128,9 @@ namespace FileExplorer.Models
                             var thumbnailBytes = reader.GetJpegThumbnailBytes();
                             if (thumbnailBytes != null && thumbnailBytes.Length > 0)
                                 retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
-                                    ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInSidebar = true });
+                                    W32ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInSidebar = true });
                             else retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
-                                    ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
+                                    W32ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
 
                             UInt16 width,height;
                             if (reader.GetTagValue(ExifTags.PixelXDimension, out width) &&

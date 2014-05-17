@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Defines;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
 
     public interface ICompareHierarchy<T>

@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using FileExplorer.BaseControls.MultiSelect;
+using FileExplorer.WPF.BaseControls.MultiSelect;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
 
     public class MultiSelectEventProcessor : UIEventProcessorBase

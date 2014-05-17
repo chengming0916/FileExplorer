@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public static class ShellUtils
     {

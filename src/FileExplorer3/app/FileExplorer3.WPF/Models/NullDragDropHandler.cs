@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class NullDragDropHandler : IDragDropHandler
     {

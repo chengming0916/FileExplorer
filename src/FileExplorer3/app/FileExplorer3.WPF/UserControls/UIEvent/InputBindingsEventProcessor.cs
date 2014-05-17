@@ -7,9 +7,9 @@ using System.Windows;
 using System.Windows.Input;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.UserControls.InputProcesor;
+using FileExplorer.WPF.UserControls.InputProcesor;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
 
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 
-namespace FileExplorer.ViewModels.Actions
+namespace FileExplorer.WPF.ViewModels.Actions
 {
     public class DoSomething : IResult
     {

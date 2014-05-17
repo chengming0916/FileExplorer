@@ -1,8 +1,8 @@
 ﻿using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.Defines;
-using FileExplorer.UserControls.InputProcesor;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.UserControls.InputProcesor;
+using FileExplorer.WPF.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace FileExplorer.BaseControls.DragnDrop
+namespace FileExplorer.WPF.BaseControls.DragnDrop
 {
     public static class DragLiteParameters
     {

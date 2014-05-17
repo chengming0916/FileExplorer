@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.UserControls.DragDrop
+namespace FileExplorer.WPF.UserControls.DragDrop
 {
 
 

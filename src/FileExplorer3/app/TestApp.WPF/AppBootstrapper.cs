@@ -6,8 +6,8 @@ using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using System.Reflection;
 using Caliburn.Micro;
-using FileExplorer.Views;
-using FileExplorer.UserControls;
+using FileExplorer.WPF.Views;
+using FileExplorer.WPF.UserControls;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,7 +52,7 @@ namespace TestApp
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
             var assemblies = base.SelectAssemblies().ToList();
-            assemblies.Add(typeof(FileExplorer.ViewModels.FileListViewModel).GetTypeInfo().Assembly);
+            assemblies.Add(typeof(FileExplorer.WPF.ViewModels.FileListViewModel).GetTypeInfo().Assembly);
 
             return assemblies;
         }

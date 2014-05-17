@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Cofe.Core.Utils;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
 
     public class WebFileStream : MemoryStream

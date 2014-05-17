@@ -10,17 +10,17 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.Models;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels;
 using System.Net.Http;
 using System.Net;
 using System.Threading;
 using Cofe.Core.Utils;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
 
     public static partial class ScriptCommands

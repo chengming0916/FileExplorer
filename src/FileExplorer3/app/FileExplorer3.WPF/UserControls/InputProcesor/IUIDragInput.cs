@@ -1,5 +1,5 @@
-﻿using FileExplorer.Defines;
-using FileExplorer.Utils;
+﻿using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace FileExplorer.UserControls.InputProcesor
+namespace FileExplorer.WPF.UserControls.InputProcesor
 {
 
     public interface IUIDragInput : IUIInput

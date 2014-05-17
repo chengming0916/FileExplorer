@@ -1,8 +1,8 @@
 ﻿using Caliburn.Micro;
-using FileExplorer.Models;
-using FileExplorer.ViewModels;
-using FileExplorer.Views;
-using FileExplorer.Views.Explorer;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.Views;
+using FileExplorer.WPF.Views.Explorer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.ViewModels;
-using FileExplorer.Defines;
+using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.Defines;
 using Cofe.Core.Script;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
 
     public class Explorer : ContentControl
@@ -44,7 +44,7 @@ namespace FileExplorer.UserControls
                     exp._evm.Commands.Execute(
                         new IScriptCommand[] 
                     { 
-                        FileExplorer.ViewModels.Explorer.ChangeRoot(ChangeType.Changed, newRootDirs),
+                        FileExplorer.WPF.ViewModels.Explorer.ChangeRoot(ChangeType.Changed, newRootDirs),
                         //FileExplorer.ViewModels.Explorer.GoTo(newRootDirs.First())
                     }
                         );

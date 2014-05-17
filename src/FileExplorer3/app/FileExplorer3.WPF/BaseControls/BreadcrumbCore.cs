@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Windows.Input;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public interface IHierarchyHelper
     {

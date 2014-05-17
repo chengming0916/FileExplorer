@@ -9,12 +9,12 @@ using System.Windows.Controls;
 using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.BaseControls;
-using FileExplorer.Models;
-using FileExplorer.ViewModels.Helpers;
-using vms = FileExplorer.ViewModels;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels.Helpers;
+using vms = FileExplorer.WPF.ViewModels;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
    
     public enum FilePickerMode { Open, Save }

@@ -1,7 +1,7 @@
 ﻿using Cofe.Core.Utils;
 using DropNet;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,7 +39,7 @@ namespace FileExplorer.Models
                                 DropNet.Models.ThumbnailSize.Large)).RawBytes;
                         if (thumbnailBytes != null && thumbnailBytes.Length > 0)
                             retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
-                                ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInSidebar = true });
+                                W32ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInSidebar = true });
                     }
                 }
             }

@@ -9,9 +9,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class ToolbarEx : Menu
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using System.Windows.Data;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.ViewModels;
 
 namespace TestApp
 {
@@ -16,17 +16,17 @@ namespace TestApp
         {
             Window window = base.EnsureWindow(model, view, isDialog);
 
-            if (model is FileExplorer.ViewModels.ProgressDialogViewModel)
+            if (model is FileExplorer.WPF.ViewModels.ProgressDialogViewModel)
             {
                 window.SizeToContent = SizeToContent.WidthAndHeight;
             }
             else
-                if (model is FileExplorer.ViewModels.MessageDialogViewModel)
+                if (model is FileExplorer.WPF.ViewModels.MessageDialogViewModel)
                 {
                     window.SizeToContent = SizeToContent.Height;
                     window.Width = 300;
                 }
-                else if (model is FileExplorer.ViewModels.AddDirectoryViewModel)
+                else if (model is FileExplorer.WPF.ViewModels.AddDirectoryViewModel)
                 {
                     window.SizeToContent = SizeToContent.Height;
                     window.Width = 300;
@@ -35,12 +35,12 @@ namespace TestApp
                 {
                     window.SizeToContent = SizeToContent.Manual;
 
-                    if (model is FileExplorer.ViewModels.ExplorerViewModel)
+                    if (model is FileExplorer.WPF.ViewModels.ExplorerViewModel)
                     {
                         window.Width = 800; window.Height = 500;
                         window.SetBinding(Window.IconProperty, new Binding("CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
                     }
-                    else if (model is FileExplorer.ViewModels.TabbedExplorerViewModel)
+                    else if (model is FileExplorer.WPF.ViewModels.TabbedExplorerViewModel)
                     {
                         window.Width = 800; window.Height = 500;
                         window.WindowState = WindowState.Maximized;
@@ -48,7 +48,7 @@ namespace TestApp
                         window.SetBinding(Window.IconProperty, new Binding("ActiveItem.CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
                     }
 
-                    else if (model is FileExplorer.ViewModels.LoginViewModel)
+                    else if (model is FileExplorer.WPF.ViewModels.LoginViewModel)
                     {
                         window.Width = 300; window.Height = 350;
                     }

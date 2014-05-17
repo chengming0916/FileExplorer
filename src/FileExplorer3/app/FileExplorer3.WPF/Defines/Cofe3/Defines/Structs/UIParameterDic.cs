@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Cofe.Core;
-using FileExplorer.UserControls.InputProcesor;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.UserControls.InputProcesor;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer
+namespace FileExplorer.WPF
 {
     public static partial class ExtensionMethods
     {
@@ -32,7 +32,7 @@ namespace FileExplorer
     }
 }
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     /// <summary>
     /// Specialized for IUIEventHub uses.

@@ -1,7 +1,7 @@
-﻿using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.UserControls.InputProcesor;
-using FileExplorer.Utils;
+﻿using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.UserControls.InputProcesor;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
-namespace FileExplorer
+namespace FileExplorer.WPF
 {
     public static partial class ExtensionMethods
     {

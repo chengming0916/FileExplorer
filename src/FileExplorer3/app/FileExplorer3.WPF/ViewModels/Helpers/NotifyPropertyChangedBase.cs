@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.ViewModels.Helpers
+namespace FileExplorer.WPF.ViewModels.Helpers
 {
     /// <summary>
     /// Helper use this instead of PropertyChangedBase so it can be port to other framework.

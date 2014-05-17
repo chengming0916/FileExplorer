@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FileExplorer.UserControls.InputProcesor
+namespace FileExplorer.WPF.UserControls.InputProcesor
 {
     public interface IUIInputManager
     {

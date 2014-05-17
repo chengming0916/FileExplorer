@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Cinch;
-using FileExplorer.UserControls;
-using FileExplorer.ViewModels;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.ViewModels.Helpers;
 
 namespace TestTemplate.WPF
 {

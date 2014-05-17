@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 using Microsoft.Live;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

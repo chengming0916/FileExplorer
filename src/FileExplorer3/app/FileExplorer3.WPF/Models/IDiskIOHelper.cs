@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public interface IDiskIOHelper
     {

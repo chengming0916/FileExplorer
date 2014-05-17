@@ -16,12 +16,12 @@ using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
-using FileExplorer.UserControls.InputProcesor;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.UserControls.InputProcesor;
 
-namespace FileExplorer
+namespace FileExplorer.WPF
 {
     public static partial class ExtensionMethods
     {
@@ -32,7 +32,7 @@ namespace FileExplorer
     }
 }
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
 
     public interface IUIEventHub

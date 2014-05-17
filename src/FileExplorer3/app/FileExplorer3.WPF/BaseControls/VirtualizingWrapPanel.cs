@@ -11,7 +11,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 
-namespace FileExplorer.UserControls//MyWinCollection
+namespace FileExplorer.WPF.UserControls//MyWinCollection
 {
     public class VirtualizingWrapPanel : VirtualizingPanel, IScrollInfo
     {

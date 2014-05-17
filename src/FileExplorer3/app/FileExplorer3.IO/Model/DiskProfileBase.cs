@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using FileExplorer.WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

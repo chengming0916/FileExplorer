@@ -14,13 +14,13 @@ using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.UserControls;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels;
 
-namespace FileExplorer.BaseControls.MultiSelect
+namespace FileExplorer.WPF.BaseControls.MultiSelect
 {
     /*           (PreviewMouseDown) --> ObtainPointerPosition --> SetHandledIfNotFocused --> NoError
      * 

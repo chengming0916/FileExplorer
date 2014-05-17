@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cinch;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.ViewModels.Helpers
+namespace FileExplorer.WPF.ViewModels.Helpers
 {
     public class ListSelector<VM, T> : NotifyPropertyChanged, IListSelector<VM, T>
         where VM : ISelectable

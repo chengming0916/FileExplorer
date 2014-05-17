@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using FileExplorer.Utils;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.BaseControls;
 using System.Windows.Input;
-using FileExplorer.ViewModels.Helpers;
-using FileExplorer.Defines;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class TabbedExplorerCommandManager : CommandManagerBase
     {

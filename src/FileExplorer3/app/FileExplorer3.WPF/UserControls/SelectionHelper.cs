@@ -11,9 +11,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows.Threading;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     #region Enums and Interfaces
 

@@ -9,11 +9,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public static class ListViewColumnUtils
     {

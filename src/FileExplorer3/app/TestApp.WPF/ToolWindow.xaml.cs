@@ -1,7 +1,7 @@
 ﻿using Cofe.Core.Utils;
 using FileExplorer.Models;
-using FileExplorer.ViewModels;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using FileExplorer;
 using Cofe.Core.Script;
+using FileExplorer.WPF.Models;
 
 namespace TestApp
 {
@@ -40,7 +41,7 @@ namespace TestApp
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            FileExplorer.UserControls.Explorer exp = explorer as FileExplorer.UserControls.Explorer;
+            FileExplorer.WPF.UserControls.Explorer exp = explorer as FileExplorer.WPF.UserControls.Explorer;
             exp.RootDirectories = _rootDirs;
             exp.ViewModel.FileList.ShowToolbar = false;
             exp.ViewModel.FileList.ShowGridHeader = false;

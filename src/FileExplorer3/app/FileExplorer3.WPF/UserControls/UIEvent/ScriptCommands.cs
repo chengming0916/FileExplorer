@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 using System.Windows.Input;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public static partial class ScriptCommands
     {

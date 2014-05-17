@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Defines
+namespace FileExplorer.WPF.Defines
 {
     public enum HierarchicalResult : int { Parent = 1 << 1,
     Current = 1 << 2,

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
 
 

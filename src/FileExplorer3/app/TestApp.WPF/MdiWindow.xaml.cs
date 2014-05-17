@@ -2,8 +2,9 @@
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.Models;
-using FileExplorer.ViewModels;
-using FileExplorer.Views;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;

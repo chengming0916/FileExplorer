@@ -13,11 +13,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 using Cofe.Core.Script;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
 
     public class UIEventAdapter : DependencyObject

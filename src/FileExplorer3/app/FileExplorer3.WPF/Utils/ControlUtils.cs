@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public static class ControlUtils
     {

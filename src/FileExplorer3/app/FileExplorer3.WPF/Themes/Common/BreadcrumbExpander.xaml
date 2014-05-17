@@ -4,9 +4,9 @@
     xmlns:conv="clr-namespace:QuickZip.Converters"            
     xmlns:sys="clr-namespace:System;assembly=mscorlib" 
     xmlns:lc="clr-namespace:LoadingControl.Control"
-    xmlns:ce="clr-namespace:FileExplorer.Animations"
-    xmlns:bc="clr-namespace:FileExplorer.BaseControls"
-    xmlns:uc="clr-namespace:FileExplorer.UserControls"
+    xmlns:ce="clr-namespace:FileExplorer.WPF.Animations"
+    xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"
+    xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"
     >
 
     <ResourceDictionary.MergedDictionaries>

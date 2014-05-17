@@ -13,13 +13,13 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.BaseControls.DragnDrop
+namespace FileExplorer.WPF.BaseControls.DragnDrop
 {
     public static class DataContextFinder
     {

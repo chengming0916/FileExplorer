@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FileExplorer.Models;
-using FileExplorer.UserControls;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public interface ICommandViewModel : IComparable<ICommandViewModel>, IComparable 
     {

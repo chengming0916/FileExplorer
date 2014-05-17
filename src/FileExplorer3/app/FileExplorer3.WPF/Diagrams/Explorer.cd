@@ -146,7 +146,7 @@
       <FileName>ViewModels\Interfaces\INavigationViewModel.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="FileExplorer.Defines.IExplorerParameters">
+  <Interface Name="FileExplorer.WPF.Defines.IExplorerParameters">
     <Position X="11" Y="4.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAEAAIAAAAEAAAIAAAAAEAAAAAAA=</HashCode>

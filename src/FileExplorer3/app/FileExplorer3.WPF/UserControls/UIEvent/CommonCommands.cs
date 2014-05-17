@@ -13,11 +13,11 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
 
 

@@ -8,13 +8,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Caliburn.Micro;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.Models;
-using FileExplorer.UserControls;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class BreadcrumbViewModel : ViewAware, IBreadcrumbViewModel,
         IHandle<DirectoryChangedEvent>
@@ -53,7 +53,7 @@ namespace FileExplorer.ViewModels
             base.OnViewAttached(view, context);
 
             _sbox = (view as UserControl).FindName("sbox") as SuggestBoxBase;
-            _switch = (view as UserControl).FindName("switch") as FileExplorer.BaseControls.Switch;
+            _switch = (view as UserControl).FindName("switch") as FileExplorer.WPF.BaseControls.Switch;
             _bexp = (view as UserControl).FindName("bexp") as DropDownList;
 
             _bexp.AddValueChanged(ComboBox.SelectedValueProperty, (o, e) =>
@@ -63,7 +63,7 @@ namespace FileExplorer.ViewModels
                     BroadcastDirectoryChanged(evm);
             });
 
-            _switch.AddValueChanged(FileExplorer.BaseControls.Switch.IsSwitchOnProperty, (o, e) =>
+            _switch.AddValueChanged(FileExplorer.WPF.BaseControls.Switch.IsSwitchOnProperty, (o, e) =>
                 {
                     if (!_switch.IsSwitchOn)
                     {
@@ -152,7 +152,7 @@ namespace FileExplorer.ViewModels
         private bool _showBreadcrumb = true;
         private IEnumerable<ISuggestSource> _suggestSources;
         private IEventAggregator _events;
-        private FileExplorer.BaseControls.Switch _switch;
+        private FileExplorer.WPF.BaseControls.Switch _switch;
         private SuggestBoxBase _sbox;
         private DropDownList _bexp;
         //private bool _updatingSuggestBox = false;

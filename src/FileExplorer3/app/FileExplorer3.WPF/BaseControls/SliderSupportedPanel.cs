@@ -11,9 +11,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
-using FileExplorer.UserControls;
+using FileExplorer.WPF.UserControls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class SliderSupportedPanel : Panel
     {

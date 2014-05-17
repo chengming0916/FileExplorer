@@ -8,10 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Cofe.Core.Utils;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v2;
 using Google.Apis.Http;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

@@ -8,7 +8,7 @@ using Microsoft.Win32;
 namespace Cofe.Core.Utils
 {
 #if !NETFX_CORE
-    public static class RegistryUtils
+    public static class W32RegistryUtils
     {        
         /// <summary>
         /// Obtain the File and MIME type from registry.

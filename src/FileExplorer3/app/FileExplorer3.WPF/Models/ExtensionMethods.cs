@@ -7,9 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public static partial class ExtensionMethods
     {

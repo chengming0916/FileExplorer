@@ -16,9 +16,9 @@ using System.Windows.Shapes;
 using System.Windows.Input;
 using System.Diagnostics;
 using System.ComponentModel;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class TitlebarContainer : ContentControl
     {

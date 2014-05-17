@@ -16,7 +16,7 @@ using System.Diagnostics;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class EditBox : Control
     {

@@ -14,18 +14,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FileExplorer.BaseControls;
-using FileExplorer.UserControls;
-using FileExplorer.Utils;
-using FileExplorer;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF;
 using Cofe.Core.Script;
 
-using FileExplorer.BaseControls.DragnDrop;
-using FileExplorer.BaseControls.MultiSelect;
+using FileExplorer.WPF.BaseControls.DragnDrop;
+using FileExplorer.WPF.BaseControls.MultiSelect;
 using System.Windows.Media.Animation;
-using FileExplorer.UserControls.InputProcesor;
-using FileExplorer.ViewModels.Helpers;
-using FileExplorer.UnitTests;
+using FileExplorer.WPF.UserControls.InputProcesor;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.UnitTests;
 
 namespace TestTemplate.WPF
 {
@@ -93,7 +93,7 @@ namespace TestTemplate.WPF
                     IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
                     // e.Handled = true;
                     _inputProcessors.Update(ref input);
-                    if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)
+                    if (input.InputState != FileExplorer.WPF.Defines.UIInputState.NotApplied)
                         inputProcessorOutput.Items.Add(input.ToString());
                     while (inputProcessorOutput.Items.Count > 10)
                         inputProcessorOutput.Items.RemoveAt(0);

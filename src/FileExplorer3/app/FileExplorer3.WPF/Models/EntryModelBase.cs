@@ -8,7 +8,7 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class EntryModelBase : PropertyChangedBase, IEntryModel
     {

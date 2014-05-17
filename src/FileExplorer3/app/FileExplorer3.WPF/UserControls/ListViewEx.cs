@@ -11,11 +11,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using FileExplorer.Defines;
-using FileExplorer.Models;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class ListViewEx : ListView, IVirtualListView
     {

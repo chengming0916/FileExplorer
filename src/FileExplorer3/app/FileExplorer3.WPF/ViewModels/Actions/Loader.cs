@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Controls;
 using System.Windows.Controls;
 #endif
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class Loader : IResult
     {

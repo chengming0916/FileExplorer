@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.ViewModels;
 
-namespace FileExplorer
+namespace FileExplorer.WPF
 {
     public static partial class ExtensionMethods
     {

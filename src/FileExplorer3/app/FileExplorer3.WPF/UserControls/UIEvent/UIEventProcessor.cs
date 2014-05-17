@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core.Script;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.ViewModels;
 using Cofe.Core;
 using System.Windows.Input;
-using FileExplorer.Defines;
-using FileExplorer.UserControls.InputProcesor;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.UserControls.InputProcesor;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
 
     /// <summary>

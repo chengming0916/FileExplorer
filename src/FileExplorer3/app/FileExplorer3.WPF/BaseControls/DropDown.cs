@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     /// <summary>
     /// Display a ToggleButton and when it's clicked, show it's content as a dropdown.

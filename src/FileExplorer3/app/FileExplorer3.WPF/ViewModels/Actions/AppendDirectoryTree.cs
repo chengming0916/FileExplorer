@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.ViewModels.Actions
+namespace FileExplorer.WPF.ViewModels.Actions
 {
     /// <summary>
     /// Append entrylist context["EntryList"] to context.Target (IDirectoryTreeViewModel)'s Subdirectories 
