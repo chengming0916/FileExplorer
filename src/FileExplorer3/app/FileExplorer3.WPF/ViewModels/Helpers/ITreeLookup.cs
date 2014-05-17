@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.ViewModels.Helpers
+namespace FileExplorer.WPF.ViewModels.Helpers
 {
     public interface ITreeLookup<VM, T>
     {

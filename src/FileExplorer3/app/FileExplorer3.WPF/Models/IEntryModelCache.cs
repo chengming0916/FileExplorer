@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public interface IEntryModelCache<M> where M : IEntryModel
     {

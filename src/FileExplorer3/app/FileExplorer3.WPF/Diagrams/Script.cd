@@ -19,7 +19,7 @@
       <FileName>Defines\Cofe3\Defines\Structs\ParameterDic.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.UIParameterDic">
+  <Class Name="FileExplorer.WPF.BaseControls.UIParameterDic">
     <Position X="4.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAAAEAAAAAAEAAAEIAAAAAAAAAAAAAIAAA=</HashCode>

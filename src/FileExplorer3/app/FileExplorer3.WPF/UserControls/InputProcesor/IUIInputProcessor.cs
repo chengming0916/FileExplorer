@@ -1,4 +1,4 @@
-﻿using FileExplorer.Defines;
+﻿using FileExplorer.WPF.Defines;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace FileExplorer.UserControls.InputProcesor
+namespace FileExplorer.WPF.UserControls.InputProcesor
 {
     public interface IUIInputProcessor
     {
@@ -212,7 +212,7 @@ namespace FileExplorer.UserControls.InputProcesor
 
                     //touchPts.First().Action == TouchAction.
                     if (DateTime.UtcNow.Subtract(_lastClickTime).TotalMilliseconds <
-                        FileExplorer.Defines.Defaults.MaximumClickInterval &&
+                        FileExplorer.WPF.Defines.Defaults.MaximumClickInterval &&
                         input.IsWithin(_startInput, Defaults.MaximumTouchClickDragDistance.X,
                         Defaults.MaximumTouchClickDragDistance.Y))
                     {

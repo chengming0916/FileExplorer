@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FileExplorer.Views
+namespace FileExplorer.WPF.Views
 {
     /// <summary>
     /// Interaction logic for EntryView.xaml

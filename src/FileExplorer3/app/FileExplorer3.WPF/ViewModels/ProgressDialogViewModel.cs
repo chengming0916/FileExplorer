@@ -6,10 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class NullProgresViewModel : IProgress<TransferProgress>
     {

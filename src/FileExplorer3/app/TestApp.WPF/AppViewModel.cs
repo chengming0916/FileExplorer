@@ -6,24 +6,25 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.ViewModels;
 using FileExplorer;
-using FileExplorer.Utils;
-using Cofe.Core.Script;
+using FileExplorer.WPF.Utils;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Cofe.Core.Utils;
 using System.Configuration;
 using System.IO;
 using System.Windows.Input;
-using FileExplorer.ViewModels.Helpers;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.BaseControls;
 using System.Threading;
 using Cofe.Core;
 using DropNet;
 using DropNet.Models;
+using Cofe.Core.Script;
+using FileExplorer.WPF.Models;
 
 namespace TestApp
 {

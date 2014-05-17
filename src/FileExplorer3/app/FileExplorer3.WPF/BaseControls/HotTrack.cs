@@ -9,10 +9,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using FileExplorer.UserControls;
-using FileExplorer.Utils;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     [TemplatePart(Name = "hotTrackGrid", Type = typeof(Grid))]
     [TemplatePart(Name = "selected", Type = typeof(Rectangle))]

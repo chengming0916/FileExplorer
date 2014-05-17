@@ -7,7 +7,7 @@ using Caliburn.Micro;
 using Moq.Language;
 using Moq.Language.Flow;
 
-namespace FileExplorer.UnitTests
+namespace FileExplorer.WPF.UnitTests
 {
     public static class UnitTestExtensions
     {

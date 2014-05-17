@@ -10,7 +10,7 @@ using System.Windows.Data;
 using QuickZip.Converters;
 using System.Threading;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class Step : IComparable
     {

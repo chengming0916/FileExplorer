@@ -6,12 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
-using FileExplorer.ViewModels.Helpers;
-using FileExplorer.Utils;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public abstract class ProfileBase : NotifyPropertyChanged, IProfile
     {

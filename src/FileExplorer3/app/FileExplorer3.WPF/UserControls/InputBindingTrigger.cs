@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     //http://www.felicepollano.com/2011/05/02/InputBindingKeyBindingWithCaliburnMicro.aspx
     public class InputBindingTrigger:TriggerBase<FrameworkElement>,ICommand

@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using FileExplorer.Models;
-using FileExplorer.UserControls;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.ViewModels;
 
-namespace FileExplorer.Defines
+namespace FileExplorer.WPF.Defines
 {
     #region UI Events
     public class ViewChangedEvent : ViewModelEvent

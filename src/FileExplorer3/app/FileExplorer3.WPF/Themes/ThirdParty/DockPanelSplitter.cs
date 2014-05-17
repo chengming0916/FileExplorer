@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 //namespace OpenSourceControls
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     /// <summary>
     /// Code Project article

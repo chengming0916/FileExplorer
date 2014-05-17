@@ -13,9 +13,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.ComponentModel;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class TitlebarControlButton : ButtonBase
     {

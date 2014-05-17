@@ -89,10 +89,27 @@
     <Compile Include="BaseControls\DisplayContentControl.cs" />
     <Compile Include="BaseControls\DockableScrollViewer.cs" />
     <Compile Include="BaseControls\ScrollableTabPanel.cs" />
-    <Compile Include="Defines\Cofe3\Defines\Attributes\MediaTypeDecorator.cs" />
-    <Compile Include="Defines\Cofe3\Defines\Attributes\MIMETypeDecorator.cs" />
-    <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
-    <Compile Include="Defines\Cofe3\Utils\RegistryUtils.cs" />
+    <Compile Include="Defines\Cofe3\Defines\Structs\UIParameterDic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Defines\Cofe3\Defines\Structs\VMParameterDic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Defines\Cofe3\Implements\ParameterDicConverters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Defines\Cofe3\Utils\W32ConverterUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Defines\Cofe3\Utils\W32RegistryUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Defines\Cofe3\Utils\W32StreamUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Defines\Cofe3\Utils\W32StringUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Defines\Converters\EntryModelToStringConverter.cs" />
     <Compile Include="Defines\Converters\PercentageConverter.cs" />
     <Compile Include="Defines\Converters\ScrollBarConverters.cs" />
@@ -103,18 +120,6 @@
     <Compile Include="Themes\ThirdParty\DockPanelSplitter.cs" />
     <Compile Include="BaseControls\MultiStepSlider.cs" />
     <Compile Include="BaseControls\SliderSupportedPanel.cs" />
-    <Compile Include="Defines\Cofe3\Defines\Structs\VMParameterDic.cs" />
-    <Compile Include="Defines\Cofe3\Interfaces\ExtensionMethods.cs" />
-    <Compile Include="Defines\Cofe3\Implements\ParameterDicConverters.cs" />
-    <Compile Include="Defines\Cofe3\Implements\ScriptRunnerSource.cs" />
-    <Compile Include="Defines\Cofe3\Interfaces\IScriptRunnerSource.cs" />
-    <Compile Include="Defines\Cofe3\Interfaces\IParameterDicConverter.cs" />
-    <Compile Include="Defines\Cofe3\Utils\AttributeUtils.cs" />
-    <Compile Include="Defines\Cofe3\Utils\CofePath.cs" />
-    <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
-    <Compile Include="Defines\Cofe3\Utils\RegexPatterns.cs" />
-    <Compile Include="Defines\Cofe3\Utils\StreamUtils.cs" />
-    <Compile Include="Defines\Cofe3\Utils\StringUtils.cs" />
     <Compile Include="Defines\Commands\FileListCommands.cs" />
     <Compile Include="Defines\Converters\AddBracketConverter.cs" />
     <Compile Include="Defines\Converters\BorderClipConverter.cs" />
@@ -260,13 +265,6 @@
     <Compile Include="BaseControls\OverflowablePanel.cs" />
     <Compile Include="BaseControls\OverflowableStackPanel.cs" />
     <Compile Include="BaseControls\SelectionAdorner.cs" />
-    <Compile Include="Defines\Cofe3\Implements\ScriptCommandBase.cs" />
-    <Compile Include="Defines\Cofe3\Implements\ScriptCommandImpl.cs" />
-    <Compile Include="Defines\Cofe3\Implements\SimpleScriptCommand.cs" />
-    <Compile Include="Defines\Cofe3\Interfaces\IScriptCommand.cs" />
-    <Compile Include="Defines\Cofe3\Interfaces\IScriptRunner.cs" />
-    <Compile Include="Defines\Cofe3\Defines\Structs\ParameterDic.cs" />
-    <Compile Include="Defines\Cofe3\Implements\ScriptRunner.cs" />
     <Compile Include="Defines\Converters\CsvContainsConverter.cs" />
     <Compile Include="Models\ProfileSuggestionSource.cs" />
     <Compile Include="BaseControls\Switch.cs" />
@@ -275,18 +273,6 @@
     <Compile Include="UserControls\BreadcrumbTree.cs" />
     <Compile Include="UserControls\BreadcrumbTreeItem.cs" />
     <Compile Include="BaseControls\DropDownList.cs" />
-    <None Include="Diagrams\DirectoryTree.cd" />
-    <None Include="Diagrams\DragDropUIProcessor.cd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Diagrams\Explorer.cd" />
-    <None Include="Diagrams\FileList.cd" />
-    <None Include="Diagrams\MultiSelectUIProcessor.cd" />
-    <None Include="Diagrams\OtherControlViewModel.cd" />
-    <None Include="Diagrams\Script.cd" />
-    <None Include="Diagrams\TabbedExplorer.cd" />
-    <None Include="Diagrams\Toolbar.cd" />
-    <None Include="Diagrams\TreeSelection.cd" />
     <None Include="Obsoluted\OverflowPanel.cs" />
     <None Include="Obsoluted\OverflowItem.cs" />
     <Compile Include="BaseControls\SuggestBoxBase.cs" />
@@ -378,7 +364,6 @@
     <Compile Include="UserControls\UIEvent\ScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\UIEventHub.cs" />
     <Compile Include="UserControls\UIEvent\UIEventProcessor.cs" />
-    <Compile Include="Defines\Cofe3\Defines\Structs\UIParameterDic.cs" />
     <Compile Include="UserControls\UIEvent\VirtualDataObject.cs" />
     <Compile Include="UserControls\UITools.cs" />
     <Compile Include="BaseControls\VirtualWrapPanel.cs" />
@@ -387,7 +372,6 @@
     <Compile Include="BaseControls\VirutalWrapPanelView.cs" />
     <Compile Include="BaseControls\WrapPanelView.cs" />
     <Compile Include="Utils\ControlUtils.cs" />
-    <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Utils\BitmapSourceUtils.cs" />
     <Compile Include="UserControls\InputBindingTrigger.cs" />
     <Compile Include="Utils\FastObservableCollection.cs" />
@@ -471,7 +455,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Diagrams\FileExplorer3.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -811,6 +794,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Defines\Script\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
+      <Project>{bd72b62f-6bcf-43d0-ad6a-332decfae4ed}</Project>
+      <Name>FileExplorer3</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

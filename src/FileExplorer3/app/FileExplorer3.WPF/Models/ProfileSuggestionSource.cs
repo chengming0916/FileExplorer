@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FileExplorer.BaseControls;
-using FileExplorer.Models;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class ProfileSuggestionSource : ISuggestSource
     {

@@ -9,14 +9,14 @@ using Windows.UI.Xaml.Media;
 using System.Windows.Media;
 #endif
 using Caliburn.Micro;
-using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Threading;
 using Cofe.Core.Utils;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
 
     public class EntryViewModel : ViewAware, IEntryViewModel

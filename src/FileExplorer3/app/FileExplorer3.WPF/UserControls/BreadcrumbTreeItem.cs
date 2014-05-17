@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     [TemplateVisualState(Name = "ShowCaption", GroupName = "CaptionStates")]
     [TemplateVisualState(Name = "HideCaption", GroupName = "CaptionStates")]

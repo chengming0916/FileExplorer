@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     /// <summary>
     /// Indicate the view model contains a number of ICommands.

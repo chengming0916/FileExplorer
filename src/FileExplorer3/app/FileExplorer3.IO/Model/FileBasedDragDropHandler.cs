@@ -10,9 +10,9 @@ using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
-using FileExplorer.Models;
-using FileExplorer.UserControls.DragDrop;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.UserControls.DragDrop;
+using FileExplorer.WPF.ViewModels.Helpers;
 
 namespace FileExplorer.Models
 {
@@ -67,7 +67,7 @@ namespace FileExplorer.Models
                 new FileSystemInfoProfile(profile.Events, windowManager);
 
             TransferCommand =
-               new FileExplorer.ViewModels.TransferCommand((effect, source, destDir) =>
+               new FileExplorer.WPF.ViewModels.TransferCommand((effect, source, destDir) =>
                    source.Profile is IDiskProfile ?
                        (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
                        : ResultCommand.Error(new NotSupportedException())

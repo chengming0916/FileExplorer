@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 
-namespace FileExplorer.ViewModels.Actions
+namespace FileExplorer.WPF.ViewModels.Actions
 {
     /// <summary>
     /// Wait until value of the specified property changed (INotifyPropertyChanged.PropertyChanged), then call Completed

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     /// <summary>
     /// Take multiple ContentTemplates (ContentTemplate, ContentTemplate2) and render it using the same Content.

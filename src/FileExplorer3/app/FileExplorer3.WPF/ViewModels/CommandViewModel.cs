@@ -11,12 +11,12 @@ using Cinch;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
-using FileExplorer.Models;
-using FileExplorer.UserControls;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class CommandViewModel : PropertyChangedBase, ICommandViewModel
     {

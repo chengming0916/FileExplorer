@@ -10,9 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
 
     public class GetDefaultIcon : IEntryModelIconExtractor

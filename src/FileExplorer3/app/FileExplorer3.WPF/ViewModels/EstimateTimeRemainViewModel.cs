@@ -1,5 +1,5 @@
-﻿using FileExplorer.Defines;
-using FileExplorer.ViewModels.Helpers;
+﻿using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public interface IEstimateTimeRemainViewModel : INotifyPropertyChanged
     {

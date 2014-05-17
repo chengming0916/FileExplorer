@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     /// <summary>
     /// The actual file exists in IO.

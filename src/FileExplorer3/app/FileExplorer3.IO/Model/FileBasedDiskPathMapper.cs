@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using Microsoft.Live;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

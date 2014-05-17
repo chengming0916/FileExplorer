@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class GridViewColumnEx : GridViewColumn
     {

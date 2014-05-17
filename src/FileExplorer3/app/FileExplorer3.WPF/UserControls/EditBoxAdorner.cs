@@ -19,7 +19,7 @@ using System.Threading;
 using System.Windows.Input;
 using System.Diagnostics;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class EditBoxAdorner : Adorner
     {

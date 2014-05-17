@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public static partial class ScriptCommands
     {
@@ -51,7 +51,7 @@ namespace FileExplorer.ViewModels
     }
 }
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class ParsePathCommand : ScriptCommandBase
     {

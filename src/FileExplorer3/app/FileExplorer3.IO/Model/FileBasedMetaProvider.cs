@@ -1,6 +1,6 @@
 ﻿using Cofe.Core.Utils;
-using FileExplorer.Defines;
-using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +50,7 @@ namespace FileExplorer.Models
                     string fileType, mimeType;
                     if (!String.IsNullOrEmpty(extension))
                     {
-                        RegistryUtils.GetTypeInformation(extension, out fileType, out mimeType);
+                        W32RegistryUtils.GetTypeInformation(extension, out fileType, out mimeType);
                         if (fileType != null)
                             retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strCategoryInfo,
                                 MetadataStrings.strFileType, fileType) { IsVisibleInSidebar = true });

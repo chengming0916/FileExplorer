@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class NavigationViewModel : ViewAware, INavigationViewModel,
         IHandle<SelectionChangedEvent>

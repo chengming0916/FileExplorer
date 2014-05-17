@@ -7,7 +7,7 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core.Script;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class CommandModel : PropertyChangedBase, ICommandModel
     {

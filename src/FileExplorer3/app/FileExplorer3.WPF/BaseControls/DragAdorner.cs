@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Diagnostics;
 using System.Collections;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class DragAdorner : Adorner
     {

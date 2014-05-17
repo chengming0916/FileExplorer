@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using FileExplorer.BaseControls;
-using FileExplorer.BaseControls.DragnDrop;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.BaseControls.DragnDrop;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class DragDropEventProcessor : UIEventProcessorBase
     {

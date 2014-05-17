@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.BaseControls;
-using FileExplorer.Defines;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Defines;
 using System.Windows.Media;
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class DisplayTemplateSelector : DataTemplateSelector
     {

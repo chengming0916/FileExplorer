@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using FileExplorer.Models;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.BaseControls;
 using System.Windows.Input;
-using FileExplorer.Defines;
-using vm = FileExplorer.ViewModels;
+using FileExplorer.WPF.Defines;
+using vm = FileExplorer.WPF.ViewModels;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class FileListCommandManager : CommandManagerBase, IExportCommandBindings
     {

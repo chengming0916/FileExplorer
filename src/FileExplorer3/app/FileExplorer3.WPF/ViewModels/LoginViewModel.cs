@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Caliburn.Micro;
-using FileExplorer.Models;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class LoginViewModel : Screen
     {

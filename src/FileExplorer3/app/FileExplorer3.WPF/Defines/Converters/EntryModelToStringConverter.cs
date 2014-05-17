@@ -1,5 +1,5 @@
-﻿using FileExplorer.Models;
-using FileExplorer.ViewModels;
+﻿using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace FileExplorer.Defines.Converters
+namespace FileExplorer.WPF.Defines.Converters
 {
     public class EntryModelToStringConverter : IValueConverter
     {

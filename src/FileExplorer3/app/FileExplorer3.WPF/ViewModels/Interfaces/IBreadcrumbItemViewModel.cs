@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Models;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public interface IBreadcrumbItemViewModel : IEntryViewModel, ISupportTreeSelector<IBreadcrumbItemViewModel, IEntryModel>
     {

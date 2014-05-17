@@ -1,9 +1,9 @@
 ﻿using Caliburn.Micro;
 using Cofe.Core.Script;
 using FileExplorer;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF;
 
 namespace TestApp
 {
@@ -113,10 +115,10 @@ namespace TestApp
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
             explorerModel.DirectoryTree.Commands.ScriptCommands.NewWindow =
-              new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.ExtensionMethods.GetCurrentDirectoryFunc);
+              new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.WPF.ExtensionMethods.GetCurrentDirectoryFunc);
 
             explorerModel.FileList.Commands.ScriptCommands.NewWindow =
-                new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.ExtensionMethods.GetFileListSelectionFunc);
+                new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.WPF.ExtensionMethods.GetFileListSelectionFunc);
         }
     }
 

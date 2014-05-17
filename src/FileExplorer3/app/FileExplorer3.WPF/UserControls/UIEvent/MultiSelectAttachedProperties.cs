@@ -9,10 +9,10 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.BaseControls;
-using FileExplorer.Utils;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.Defines
+namespace FileExplorer.WPF.Defines
 {
 
 

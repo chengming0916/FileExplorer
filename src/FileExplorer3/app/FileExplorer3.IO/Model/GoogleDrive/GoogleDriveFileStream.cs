@@ -7,8 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Cofe.Core.Utils;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using Google.Apis.Drive.v2.Data;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

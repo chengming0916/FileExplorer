@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.Defines;
-using FileExplorer.Models;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
 using Cofe.Core.Utils;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class ExplorerViewModel : Screen, IExplorerViewModel,
         IHandle<DirectoryChangedEvent>,

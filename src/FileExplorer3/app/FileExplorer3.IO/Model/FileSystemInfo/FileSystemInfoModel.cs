@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

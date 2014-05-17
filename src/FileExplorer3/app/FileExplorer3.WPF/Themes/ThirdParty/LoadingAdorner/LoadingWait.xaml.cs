@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     //http://www.codeproject.com/Articles/57984/WPF-Loading-Wait-Adorner
     /// <summary>

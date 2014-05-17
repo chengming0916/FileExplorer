@@ -9,9 +9,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Cofe.Core.Script;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.ViewModels.Helpers;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     /// <summary>
     /// Model for a Command, which is shown as ToolbarExItem in FileExplorer.

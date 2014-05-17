@@ -9,11 +9,11 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
-using FileExplorer.Defines;
-using FileExplorer.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.ViewModels.Helpers
+namespace FileExplorer.WPF.ViewModels.Helpers
 {
     /// <summary>
     /// Populate Commands (CommandViewModel, e.g. ToggleView), and notify the commands when AppliedModels changes.

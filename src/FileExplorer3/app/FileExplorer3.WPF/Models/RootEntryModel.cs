@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class RootEntryModel : EntryModelBase
     {       

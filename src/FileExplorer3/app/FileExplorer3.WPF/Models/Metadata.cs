@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class Metadata : PropertyChangedBase, IMetadata, IEquatable<Metadata>
     {

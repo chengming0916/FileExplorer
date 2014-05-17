@@ -8,9 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.BaseControls.Menu
+namespace FileExplorer.WPF.BaseControls.Menu
 {
     public class ShowContextMenu : ScriptCommandBase
     {

@@ -9,9 +9,9 @@ using System.Windows;
 using System.Windows.Controls;
 using Caliburn.Micro;
 using Cofe.Core;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     /// <summary>
     /// Specialized for ICommand related (IScriptCommandContainer, ICommandHelper)

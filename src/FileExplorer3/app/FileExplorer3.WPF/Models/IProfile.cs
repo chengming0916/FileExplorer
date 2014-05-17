@@ -9,15 +9,15 @@ using Windows.UI.Xaml.Media;
 using System.Windows.Media;
 #endif
 using Caliburn.Micro;
-using FileExplorer.Defines;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.BaseControls;
 using System.Windows;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.ViewModels.Helpers;
 using Cofe.Core.Script;
 using System.Threading;
 using System.ComponentModel;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
    
     public interface IProfile : INotifyPropertyChanged

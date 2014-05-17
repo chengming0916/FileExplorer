@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class EntryViewModelComparer : IComparer<IEntryViewModel>, IComparer
     {

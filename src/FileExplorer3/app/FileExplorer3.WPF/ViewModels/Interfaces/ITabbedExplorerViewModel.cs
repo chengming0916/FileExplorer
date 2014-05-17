@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
-using FileExplorer.Models;
-using FileExplorer.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
 
     public interface ITabControlViewModel<T> 

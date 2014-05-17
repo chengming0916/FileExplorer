@@ -10,10 +10,10 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Diagnostics;
-using FileExplorer.BaseControls;
-using FileExplorer.UserControls;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.UserControls;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class BreadcrumbCorePanel : Panel
     {

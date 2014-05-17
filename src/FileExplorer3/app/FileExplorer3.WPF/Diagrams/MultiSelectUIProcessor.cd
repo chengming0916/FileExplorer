@@ -63,140 +63,140 @@
   <Comment CommentText="-----&gt; Noerror (Already selecting/selected)">
     <Position X="5.673" Y="3.74" Height="0.415" Width="2.698" />
   </Comment>
-  <Class Name="FileExplorer.BaseControls.MultiSelectEventProcessor" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelectEventProcessor" Collapsed="true">
     <Position X="8.75" Y="1.5" Width="5.75" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAQAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectEventProcessor.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.SetHandledIfNotFocused" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.SetHandledIfNotFocused" Collapsed="true">
     <Position X="2" Y="1.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.BeginSelect" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.BeginSelect" Collapsed="true">
     <Position X="2" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.ContinueSelect" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.ContinueSelect" Collapsed="true">
     <Position X="2" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.EndSelect" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.EndSelect" Collapsed="true">
     <Position X="2" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.UpdateIsSelecting" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.UpdateIsSelecting" Collapsed="true">
     <Position X="4" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.CheckIsSelecting" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.CheckIsSelecting" Collapsed="true">
     <Position X="4" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.ObtainPointerPosition" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.ObtainPointerPosition" Collapsed="true">
     <Position X="5.25" Y="5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.FindSelectedItemsUsingIChildInfo" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.FindSelectedItemsUsingIChildInfo" Collapsed="true">
     <Position X="8.75" Y="5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAAAQAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.FindSelectedItemsUsingGridView" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.FindSelectedItemsUsingGridView" Collapsed="true">
     <Position X="8.75" Y="4" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAQQAAABAAAAAAACAAAAAAAAAAAAAQAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.FindSelectedItemsUsingHitTest" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.FindSelectedItemsUsingHitTest" Collapsed="true">
     <Position X="8.75" Y="6" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAABAQAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.FindSelectedItems" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.FindSelectedItems" Collapsed="true">
     <Position X="7" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.HighlightItems" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.HighlightItems" Collapsed="true">
     <Position X="12.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.HighlightItemsByUpdate" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.HighlightItemsByUpdate" Collapsed="true">
     <Position X="12.25" Y="6.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.SelectItemsByUpdate" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.SelectItemsByUpdate" Collapsed="true">
     <Position X="12.25" Y="7" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.SelectItems" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.SelectItems" Collapsed="true">
     <Position X="12.25" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.AttachAdorner" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.AttachAdorner" Collapsed="true">
     <Position X="15.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.UpdateAdorner" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.UpdateAdorner" Collapsed="true">
     <Position X="17" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAAAQAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.DetachAdorner" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.DetachAdorner" Collapsed="true">
     <Position X="15.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\UIEvent\MultiSelectScriptCommands.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FileExplorer.BaseControls.MultiSelect.AutoScroll" Collapsed="true">
+  <Class Name="FileExplorer.WPF.BaseControls.MultiSelect.AutoScroll" Collapsed="true">
     <Position X="19" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>

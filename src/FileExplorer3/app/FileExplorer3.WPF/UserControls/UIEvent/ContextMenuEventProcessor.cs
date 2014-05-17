@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.BaseControls.Menu;
+using FileExplorer.WPF.BaseControls.Menu;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class ContextMenuEventProcessor : UIEventProcessorBase
     {

@@ -17,7 +17,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     public class VirtualStackPanel : VirtualizingPanel, IScrollInfo, IChildInfo
     {

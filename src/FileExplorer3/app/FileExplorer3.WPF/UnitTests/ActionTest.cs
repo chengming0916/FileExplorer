@@ -6,13 +6,13 @@
 //using System.Text;
 //using System.Threading.Tasks;
 //using Caliburn.Micro;
-//using FileExplorer.Models;
-//using FileExplorer.ViewModels;
-//using FileExplorer.ViewModels.Actions;
+//using FileExplorer.WPF.Models;
+//using FileExplorer.WPF.ViewModels;
+//using FileExplorer.WPF.ViewModels.Actions;
 //using Moq;
 //using NUnit.Framework;
 
-//namespace FileExplorer.UnitTests
+//namespace FileExplorer.WPF.UnitTests
 //{
 //    [TestFixture]
 //    public class ActionTest

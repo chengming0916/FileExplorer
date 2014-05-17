@@ -201,6 +201,10 @@
       <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
       <Name>FileExplorer3.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
+      <Project>{bd72b62f-6bcf-43d0-ad6a-332decfae4ed}</Project>
+      <Name>FileExplorer3</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

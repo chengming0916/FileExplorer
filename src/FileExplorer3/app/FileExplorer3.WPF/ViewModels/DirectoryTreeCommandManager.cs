@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using FileExplorer.Defines;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels.Helpers;
-using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Models;
 
-namespace FileExplorer.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
     public class DirectoryTreeCommandManager : CommandManagerBase
     {

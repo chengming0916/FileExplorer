@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public interface IEntryModel : INotifyPropertyChangedEx, IEquatable<IEntryModel>
     {

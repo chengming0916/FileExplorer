@@ -10,7 +10,7 @@ using System.Windows.Input;
 using System.Windows.Navigation;
 using Cofe.Core.Utils;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     internal static class utils
     {

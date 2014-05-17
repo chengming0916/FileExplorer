@@ -13,11 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FileExplorer.BaseControls;
-using FileExplorer.BaseControls.DragnDrop;
-using FileExplorer.BaseControls.MultiSelect;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.BaseControls.DragnDrop;
+using FileExplorer.WPF.BaseControls.MultiSelect;
 
-namespace FileExplorer.Views
+namespace FileExplorer.WPF.Views
 {
     /// <summary>
     /// Interaction logic for FileListView.xaml

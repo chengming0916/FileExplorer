@@ -36,32 +36,7 @@ namespace Cofe.Core.Utils
             return new MemoryStream(byteArray);
         }        
 
-        /// <summary>
-        /// Generate Guid from string, taken from 
-        /// http://geekswithblogs.net/EltonStoneman/archive/2008/06/26/generating-deterministic-guids.aspx
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static Guid GetDeterministicGuid(string input)
-        {
-            byte[] inputBytes = Encoding.Unicode.GetBytes(input);
-            //use MD5 hash to get a 16-byte hash of the string:
-#if NETFX_CORE            
-            HashAlgorithmProvider objAlgProv = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
-            byte[] hashBytes = objAlgProv.HashData(inputBytes.AsBuffer()).ToArray();
-#else
-            var provider = new System.Security.Cryptography.MD5CryptoServiceProvider();
-            byte[] hashBytes = provider.ComputeHash(inputBytes);
-#endif
-            //generate a guid from the hash:
-            Guid hashGuid = new Guid(hashBytes);
-            return hashGuid;
-        }
-
-        public static Guid GetHashGuid(this string input)
-        {
-            return GetDeterministicGuid(input);
-        }
+        
 
         public static string FirstCharToLowercase(this string input)
         {
@@ -242,20 +217,8 @@ namespace Cofe.Core.Utils
 
         #region Methods
 
-        /// <summary>
-        /// Get a Guid based on the input string, unlike non-generic version, this is specialized for a type of entry.
-        /// GuidGeneratorFunc must be set or standard GetDeterministicGuid() would be called.        
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static Guid GetDeterministicGuid(string input)
-        {
-            if (_guidGenFunc != null)
-                return _guidGenFunc(input);
-            return StringUtils.GetDeterministicGuid(input);
-        }
-        #endregion
 
+        #endregion
         #region Data
         private static Func<string, Guid> _guidGenFunc = null;
         #endregion

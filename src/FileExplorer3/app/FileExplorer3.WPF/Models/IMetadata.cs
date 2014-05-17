@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public interface IMetadata : INotifyPropertyChanged
     {

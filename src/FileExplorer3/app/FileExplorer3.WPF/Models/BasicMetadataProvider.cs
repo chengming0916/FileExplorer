@@ -1,4 +1,4 @@
-﻿using FileExplorer.Defines;
+﻿using FileExplorer.WPF.Defines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.WPF.Models
 {
     public class BasicMetadataProvider : MetadataProviderBase
     {

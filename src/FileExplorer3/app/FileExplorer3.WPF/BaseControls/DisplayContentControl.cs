@@ -1,5 +1,5 @@
-﻿using FileExplorer.Defines;
-using FileExplorer.UserControls;
+﻿using FileExplorer.WPF.Defines;
+using FileExplorer.WPF.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     public class DisplayContentControl : ContentControl
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FileExplorer.BaseControls
+namespace FileExplorer.WPF.BaseControls
 {
     //By Daniel Turan on http://social.msdn.microsoft.com/Forums/vstudio/en-US/b39b5d98-d039-4e83-8c65-ca434786d6af/mouse-wheel-input-binding?forum=wpf
     public class MouseWheelGesture : MouseGesture

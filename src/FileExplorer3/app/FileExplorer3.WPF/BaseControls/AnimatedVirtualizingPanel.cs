@@ -10,7 +10,7 @@ using System.Windows.Media.Animation;
 using System.Collections.Generic;
 
 
-namespace FileExplorer.UserControls
+namespace FileExplorer.WPF.UserControls
 {
     //This control is taken from the following web site 
     //http://blogs.msdn.com/b/mcsuksoldev/archive/2011/01/12/an-animated-custom-panel-base-class-for-wpf-and-silverlight.aspx    

@@ -9,11 +9,11 @@ using System.Windows.Media;
 using Cinch;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.Models;
-using FileExplorer.Utils;
-using FileExplorer.ViewModels;
+using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels;
 
-namespace FileExplorer
+namespace FileExplorer.WPF
 {
     public static partial class ExtensionMethods
     {

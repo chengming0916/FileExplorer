@@ -8,11 +8,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Utils;
-using FileExplorer.BaseControls;
+using FileExplorer.WPF.BaseControls;
 using Google.Apis.Drive.v2;
 using Google.Apis.Http;
 using Google.Apis.Services;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {

@@ -16,13 +16,13 @@ using System.Windows.Markup;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.UserControls")]
-[assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.BaseControls")]
-[assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.Defines")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.WPF.UserControls")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.WPF.BaseControls")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.WPF.Defines")]
 [assembly: XmlnsDefinition("http://www.quickzip.org/Converters", "QuickZip.Converters")]
-[assembly: XmlnsDefinition("http://www.quickzip.org/Converters", "FileExplorer.Defines.Converters")]
-[assembly: XmlnsDefinition("http://www.quickzip.org/Views", "FileExplorer.Views")]
-[assembly: XmlnsDefinition("http://www.quickzip.org/Views/Explorer", "FileExplorer.Views.Explorer")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/Converters", "FileExplorer.WPF.Defines.Converters")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/Views", "FileExplorer.WPF.Views")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/Views/Explorer", "FileExplorer.WPF.Views.Explorer")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
