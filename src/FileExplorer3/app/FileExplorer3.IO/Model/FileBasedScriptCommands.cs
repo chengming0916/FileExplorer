@@ -15,6 +15,7 @@ using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;
+using FileExplorer.Defines;
 
 namespace FileExplorer.Models
 {
@@ -180,8 +181,10 @@ namespace FileExplorer.Models
                 ct = ChangeType.Changed;
             }
 
-            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, FileAccess.Read, pm.CancellationToken))
-            using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName, FileAccess.Write, pm.CancellationToken))
+            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, 
+                FileExplorer.Defines.FileAccess.Read, pm.CancellationToken))
+            using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName,
+                FileExplorer.Defines.FileAccess.Write, pm.CancellationToken))
             {
                 _progress.Report(TransferProgress.From(srcFullName, destFullName));
                 await StreamUtils.CopyStreamAsync(srcStream, destStream, false, false, false,
@@ -235,7 +238,7 @@ namespace FileExplorer.Models
                 destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, CancellationToken.None, em =>
                         em.FullPath.Equals(destFullName,
                         StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
-                _destDirModel.Profile.Events.Publish(new EntryChangedEvent(ChangeType.Created, destFullName));
+                _destDirModel.Profile.Events().Publish(new EntryChangedEvent(ChangeType.Created, destFullName));
             }
 
             if (destModel == null)

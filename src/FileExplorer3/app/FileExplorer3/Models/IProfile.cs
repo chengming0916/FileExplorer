@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 #if WINRT
 using Windows.UI.Xaml.Media;
 #else
-using System.Windows.Media;
+//using System.Windows.Media;
 #endif
-using Caliburn.Micro;
-using FileExplorer.WPF.Defines;
-using FileExplorer.WPF.BaseControls;
+//using Caliburn.Micro;
+//using FileExplorer.WPF.BaseControls;
 using System.Windows;
-using FileExplorer.WPF.ViewModels.Helpers;
+//using FileExplorer.WPF.ViewModels.Helpers;
 using Cofe.Core.Script;
 using System.Threading;
 using System.ComponentModel;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {
@@ -47,7 +47,6 @@ namespace FileExplorer.WPF.Models
         /// <returns></returns>
         IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry);
 
-        //IEntryModelIconExtractor GetThumbnailExtractor(IEntryModel entry);
 
         #endregion
 
@@ -65,17 +64,12 @@ namespace FileExplorer.WPF.Models
         IEntryHierarchyComparer HierarchyComparer { get; }
         IMetadataProvider MetadataProvider { get; }
         IEnumerable<ICommandProvider> CommandProviders { get; }
-        ISuggestSource SuggestSource { get; }
-        IDragDropHandler DragDrop { get; }
+        
         //IDiskPathMapper PathMapper { get; }
-
-        IEventAggregator Events { get; }
+        ISuggestSource SuggestSource { get; }
         
         #endregion
     }
 
-    public interface IDiskProfile : IProfile
-    {
-        IDiskIOHelper DiskIO { get; }
-    }
+    
 }

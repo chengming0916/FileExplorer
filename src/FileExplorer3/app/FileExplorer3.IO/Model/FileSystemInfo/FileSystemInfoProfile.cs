@@ -13,11 +13,12 @@ using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF;
+using FileExplorer.Defines;
 //using FileExplorer.WPF.UserControls.DragDrop;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoProfile : DiskProfileBase
+    public class FileSystemInfoProfile : DiskProfileBase, IWPFProfile
     {
         #region Cosntructor
 

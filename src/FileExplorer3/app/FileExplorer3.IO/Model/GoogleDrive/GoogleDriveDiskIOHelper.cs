@@ -28,14 +28,15 @@ namespace FileExplorer.Models
 
         #region Methods
 
-        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct)
+        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel,
+            FileExplorer.Defines.FileAccess access, CancellationToken ct)
         {
             switch (access)
             {
-                case FileAccess.Read: return await GoogleDriveFileStream.OpenReadAsync(entryModel,
+                case FileExplorer.Defines.FileAccess.Read: return await GoogleDriveFileStream.OpenReadAsync(entryModel,
                     () => (entryModel.Profile as GoogleDriveProfile).HttpClientFunc(), ct);
-                case FileAccess.Write: return GoogleDriveFileStream.OpenWrite(entryModel, () => (entryModel.Profile as GoogleDriveProfile).HttpClientFunc());
-                case FileAccess.ReadWrite: return await GoogleDriveFileStream.OpenReadWriteAsync(entryModel,
+                case FileExplorer.Defines.FileAccess.Write: return GoogleDriveFileStream.OpenWrite(entryModel, () => (entryModel.Profile as GoogleDriveProfile).HttpClientFunc());
+                case FileExplorer.Defines.FileAccess.ReadWrite: return await GoogleDriveFileStream.OpenReadWriteAsync(entryModel,
                     () => (entryModel.Profile as GoogleDriveProfile).HttpClientFunc(), ct);
             }
             throw new NotSupportedException();

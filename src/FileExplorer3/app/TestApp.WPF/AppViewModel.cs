@@ -25,6 +25,7 @@ using DropNet;
 using DropNet.Models;
 using Cofe.Core.Script;
 using FileExplorer.WPF.Models;
+using FileExplorer.Defines;
 
 namespace TestApp
 {

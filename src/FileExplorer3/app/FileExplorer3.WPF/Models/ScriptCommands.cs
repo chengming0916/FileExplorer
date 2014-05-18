@@ -7,6 +7,7 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -119,7 +120,7 @@ namespace FileExplorer.WPF.Models
             string newEntryPath = _profile.Path.Combine(_parentPath, fileName);
             var createddModel = await _profile.DiskIO.CreateAsync(newEntryPath, _isFolder, pm.CancellationToken);
 
-            return new NotifyChangedCommand(_profile, newEntryPath, Defines.ChangeType.Created,
+            return new NotifyChangedCommand(_profile, newEntryPath, FileExplorer.Defines.ChangeType.Created,
                 _thenFunc(createddModel));
         }
     }

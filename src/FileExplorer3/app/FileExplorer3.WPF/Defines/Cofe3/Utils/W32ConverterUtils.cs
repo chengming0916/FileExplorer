@@ -61,7 +61,7 @@ namespace Cofe.Core.Utils
 
         public static byte[] ToByteArray(this Image image)
         {
-            return ToByteArray(image, ImageFormat.Jpeg);
+            return ToByteArray(image, ImageFormat.Png);
         }
 
         //http://stackoverflow.com/questions/6597676/bitmapimage-to-byte

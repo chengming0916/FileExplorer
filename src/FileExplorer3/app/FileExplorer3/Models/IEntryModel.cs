@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Caliburn.Micro;
+using System.ComponentModel;
 
+namespace FileExplorer.Models
+{
+    public class Dummy
+    {
+
+    }
+}
 namespace FileExplorer.WPF.Models
 {
-    public interface IEntryModel : INotifyPropertyChangedEx, IEquatable<IEntryModel>
+    public interface IEntryModel : INotifyPropertyChanged, IEquatable<IEntryModel>
     {
         IProfile Profile { get; }
 

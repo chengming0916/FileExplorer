@@ -20,9 +20,9 @@ namespace FileExplorer.WPF.ViewModels
             
             public FileListItemDropHelper(FileListItemViewModel flvm)
                 : base( () => flvm.EntryModel.Label,
-                (ems, eff) => flvm.EntryModel.Profile.DragDrop.QueryDrop(ems, flvm.EntryModel, eff),
-                da => flvm.EntryModel.Profile.DragDrop.GetEntryModels(da),
-                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop.OnDropCompleted(ems, da, flvm.EntryModel, eff), em => EntryViewModel.FromEntryModel(em))
+                (ems, eff) => flvm.EntryModel.Profile.DragDrop().QueryDrop(ems, flvm.EntryModel, eff),
+                da => flvm.EntryModel.Profile.DragDrop().GetEntryModels(da),
+                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop().OnDropCompleted(ems, da, flvm.EntryModel, eff), em => EntryViewModel.FromEntryModel(em))
             {                 
             }
         }
@@ -34,7 +34,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             _reportSelected = reportSelected;
             DropHelper =
-                model.Profile.DragDrop.QueryCanDrop(model) ? (ISupportDrop)new FileListItemDropHelper(this) : NoDropHelper.Instance;
+                model.Profile.DragDrop().QueryCanDrop(model) ? (ISupportDrop)new FileListItemDropHelper(this) : NoDropHelper.Instance;
             
         }
 

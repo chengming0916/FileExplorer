@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Threading;
 using Cofe.Core.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -61,11 +62,13 @@ namespace FileExplorer.WPF.ViewModels
             //var icon = AsyncUtils.RunSync(() => _iconExtractSequences.Last().GetIconForModelAsync(EntryModel, CancellationToken.None));
             //Icon = icon;
 
-            Task loadIconTask = Task.Run(async () => await _iconExtractSequences.Last().GetIconForModelAsync(EntryModel, CancellationToken.None))
+            Task loadIconTask = Task.Run(async () => await _iconExtractSequences.Last().GetIconBytesForModelAsync(EntryModel, CancellationToken.None))
                 .ContinueWith((tsk) =>
                     {
                         if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
-                            Icon = tsk.Result;
+                        {
+                            Icon = BitmapSourceUtils.CreateBitmapSourceFromBitmap(tsk.Result);
+                        };
                     }, TaskScheduler.FromCurrentSynchronizationContext()
                     );
 
@@ -107,7 +110,7 @@ namespace FileExplorer.WPF.ViewModels
                 obj is EntryViewModel &&
                 this.EntryModel.Profile.HierarchyComparer
                 .CompareHierarchy(this.EntryModel, (obj as EntryViewModel).EntryModel)
-                == Defines.HierarchicalResult.Current;
+                == FileExplorer.Defines.HierarchicalResult.Current;
         }
 
         public override object GetView(object context = null)

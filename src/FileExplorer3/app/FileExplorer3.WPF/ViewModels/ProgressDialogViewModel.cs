@@ -6,8 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {

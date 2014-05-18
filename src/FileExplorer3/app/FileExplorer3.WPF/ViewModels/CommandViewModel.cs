@@ -24,12 +24,12 @@ namespace FileExplorer.WPF.ViewModels
 
         public CommandViewModel(ICommandModel commandModel, ICommandViewModel parentCommandViewModel = null)
         {
-            CommandModel = commandModel;
+            CommandModel = commandModel as IRoutedCommandModel;
             _parentCommandViewModel = parentCommandViewModel;
 
             if (CommandModel != null)
-                if (commandModel.RoutedCommand != null)
-                    CommandBinding = ScriptCommandBinding.ForRoutedUICommand(commandModel.RoutedCommand);
+                if (CommandModel.RoutedCommand != null)
+                    CommandBinding = ScriptCommandBinding.ForRoutedUICommand(CommandModel.RoutedCommand);
                 else
                     CommandBinding = ScriptCommandBinding.FromScriptCommand(
                         ApplicationCommands.NotACommand, commandModel, cm => cm.Command,
@@ -126,7 +126,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         private object _icon = null;
-        private ICommandModel _commandModel;
+        private IRoutedCommandModel _commandModel;
         private IScriptCommandBinding _commandBinding;
         private bool _subCommandsLoaded = false;
         private EntriesHelper<ICommandViewModel> _subCommands;
@@ -138,7 +138,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public IEntriesHelper<ICommandViewModel> SubCommands { get; private set; }
 
-        public ICommandModel CommandModel { get { return _commandModel; } set { _commandModel = value; NotifyOfPropertyChange(() => CommandModel); } }
+        public IRoutedCommandModel CommandModel { get { return _commandModel; } set { _commandModel = value; NotifyOfPropertyChange(() => CommandModel); } }
 
         public IScriptCommandBinding CommandBinding { get { return _commandBinding; } set { _commandBinding = value; NotifyOfPropertyChange(() => CommandBinding); } }
 
@@ -162,7 +162,8 @@ namespace FileExplorer.WPF.ViewModels
         {
             get
             {
-                return CommandModel is ISliderStepCommandModel ? (CommandModel as ISliderStepCommandModel).VerticalAlignment :
+                return CommandModel is ISliderStepCommandModel ? 
+                    (CommandModel as ISliderStepCommandModel).VerticalAlignment :
                     VerticalAlignment.Center;
             }
         }

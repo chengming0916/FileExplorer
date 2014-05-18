@@ -14,7 +14,7 @@ namespace FileExplorer.WPF.ViewModels
 {
     public interface ICommandViewModel : IComparable<ICommandViewModel>, IComparable 
     {
-        ICommandModel CommandModel { get; }
+        IRoutedCommandModel CommandModel { get; }
         IScriptCommandBinding CommandBinding { get; }
         ToolbarItemType CommandType { get; }
         IEntriesHelper<ICommandViewModel> SubCommands { get; }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using FileExplorer.WPF.ViewModels;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using Cofe.Core.Script;
 
 namespace FileExplorer.WPF.UserControls

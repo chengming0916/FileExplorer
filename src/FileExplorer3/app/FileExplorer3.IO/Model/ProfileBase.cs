@@ -10,6 +10,7 @@ using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {

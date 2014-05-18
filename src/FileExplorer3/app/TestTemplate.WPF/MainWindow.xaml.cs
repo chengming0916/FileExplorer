@@ -26,6 +26,7 @@ using System.Windows.Media.Animation;
 using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.UnitTests;
+using FileExplorer.WPF.Models;
 
 namespace TestTemplate.WPF
 {
@@ -93,7 +94,7 @@ namespace TestTemplate.WPF
                     IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
                     // e.Handled = true;
                     _inputProcessors.Update(ref input);
-                    if (input.InputState != FileExplorer.WPF.Defines.UIInputState.NotApplied)
+                    if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)
                         inputProcessorOutput.Items.Add(input.ToString());
                     while (inputProcessorOutput.Items.Count > 10)
                         inputProcessorOutput.Items.RemoveAt(0);

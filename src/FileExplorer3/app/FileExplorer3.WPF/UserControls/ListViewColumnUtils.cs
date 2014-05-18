@@ -10,8 +10,9 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.UserControls
 {

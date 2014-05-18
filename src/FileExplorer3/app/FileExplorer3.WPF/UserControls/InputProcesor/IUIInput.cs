@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Defines;
+﻿using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;

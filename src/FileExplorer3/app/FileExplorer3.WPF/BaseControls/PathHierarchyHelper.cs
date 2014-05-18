@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.WPF.BaseControls
 {

@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Defines;
+﻿using FileExplorer.Defines;
+using FileExplorer.WPF.Defines;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -66,15 +67,15 @@ namespace FileExplorer.WPF.UserControls.InputProcesor
                     break;
 
                 case "PreviewTouchUp":
-                    if (DateTime.UtcNow.Subtract(_touchTime).TotalMilliseconds < Defines.Defaults.MaximumFlickTime)
+                    if (DateTime.UtcNow.Subtract(_touchTime).TotalMilliseconds < FileExplorer.WPF.Defines.Defaults.MaximumFlickTime)
                     {
-                        if (Math.Abs(input.Position.X - _touchDownPosition.X) > Defines.Defaults.MinimumFlickThreshold)
+                        if (Math.Abs(input.Position.X - _touchDownPosition.X) > FileExplorer.WPF.Defines.Defaults.MinimumFlickThreshold)
                         {
                             if (input.Position.X > _touchDownPosition.X)
                                 input.TouchGesture = UITouchGesture.FlickRight;
                             else input.TouchGesture = UITouchGesture.FlickLeft;
                         }
-                        else if (Math.Abs(input.Position.Y - _touchDownPosition.Y) > Defines.Defaults.MinimumFlickThreshold)
+                        else if (Math.Abs(input.Position.Y - _touchDownPosition.Y) > FileExplorer.WPF.Defines.Defaults.MinimumFlickThreshold)
                         {
                             if (input.Position.Y > _touchDownPosition.Y)
                                 input.TouchGesture = UITouchGesture.FlickDown;
@@ -278,10 +279,10 @@ namespace FileExplorer.WPF.UserControls.InputProcesor
 
             switch (input.InputState)
             {
-                case Defines.UIInputState.Pressed:
+                case FileExplorer.Defines.UIInputState.Pressed:
                     UpdateInputPressed(input);
                     break;
-                case Defines.UIInputState.Released:
+                case FileExplorer.Defines.UIInputState.Released:
                     UpdatInputReleased(input);
                     break;
                 default:

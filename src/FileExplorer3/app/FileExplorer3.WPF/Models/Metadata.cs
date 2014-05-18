@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Cofe.Core.Utils;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -30,9 +31,9 @@ namespace FileExplorer.WPF.ViewModels
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
                 () => new[] { selection.RootSelector.SelectedViewModel },
-                ems => ems.First().Profile.DragDrop.QueryDrag(ems),
-                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop.GetDataObject(ems)),
-                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)
+                ems => (ems.First().Profile as IWPFProfile). DragDrop.QueryDrag(ems),
+                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop().GetDataObject(ems)),
+                (ems, da, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, da, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

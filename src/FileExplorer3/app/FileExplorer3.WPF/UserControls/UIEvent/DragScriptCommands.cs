@@ -14,10 +14,11 @@ using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.BaseControls.DragnDrop
 {

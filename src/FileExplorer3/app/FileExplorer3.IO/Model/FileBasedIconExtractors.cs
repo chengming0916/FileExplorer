@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.IO.Defines;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {
@@ -23,7 +24,7 @@ namespace FileExplorer.Models
     {
         private IconExtractor _iconExtractor = new ExIconExtractor();
         public static GetFromSystemImageList Instance = new GetFromSystemImageList();
-        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
             if (model != null && !String.IsNullOrEmpty(model.FullPath))
                 using (FileSystemInfoEx fsi = FileSystemInfoEx.FromString(model.FullPath))
@@ -34,14 +35,15 @@ namespace FileExplorer.Models
                         {
                             bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
                                 pidl.Ptr, model.IsDirectory, false);
+                           
                             if (bitmap != null)
-                                return Task.FromResult<ImageSource>(
-                                    Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
-                            else return Task.FromResult<ImageSource>(null);
+                                return Task.FromResult<byte[]>(
+                                    bitmap.ToByteArray());
+                            else return Task.FromResult<byte[]>(null);
                         });
                 }
 
-            return Task.FromResult<ImageSource>(null);
+            return Task.FromResult<byte[]>(null);
         }
     }
 
@@ -56,16 +58,18 @@ namespace FileExplorer.Models
             _fileNameFunc = fileNameFunc == null ? e => e.Label : fileNameFunc;
         }
 
-        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
             return Task<ImageSource>.Run(() =>
                 {
                     if (model != null)
                     {
                         string fname = _fileNameFunc(model);
-                        Bitmap bitmap = _iconExtractor.GetBitmap(IconSize.large, fname, model.IsDirectory, false);
-                        if (bitmap != null)
-                            return (ImageSource)Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap);
+                        using (Bitmap bitmap =
+                            _iconExtractor.GetBitmap(IconSize.large, fname, model.IsDirectory, false))
+                            if (bitmap != null)
+                                return bitmap.ToByteArray();
+                        
                     }
                     return null;
                 });
@@ -78,15 +82,18 @@ namespace FileExplorer.Models
     {
         public static GetImageFromImageExtractor Instance = new GetImageFromImageExtractor();
 
-        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
-            return Task<ImageSource>.Run(() =>
+            return Task<byte[]>.Run(() =>
                 {
                     if (model != null && !String.IsNullOrEmpty(model.FullPath))
                     {
-                        var bitmap = ImageExtractor.ExtractImage(model.FullPath, new Size(120, 90), true);
-                        if (bitmap != null)
-                            return (ImageSource)Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap);
+                        using (Bitmap bitmap =
+                            ImageExtractor.ExtractImage(model.FullPath, new Size(120, 90), true))
+                        {
+                            if (bitmap != null)
+                                return bitmap.ToByteArray();
+                        }
                     }
                     return null;
                 });
@@ -98,33 +105,35 @@ namespace FileExplorer.Models
     {
         public static GetFromIconExtractIcon Instance = new GetFromIconExtractIcon();
 
-        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
             if (model == null || model.IsDirectory)
-                return Task.FromResult<ImageSource>(null);
+                return Task.FromResult<byte[]>(null);
 
             using (var icon = System.Drawing.Icon.ExtractAssociatedIcon(model.FullPath))
             using (var bitmap = icon.ToBitmap())
-                return Task.FromResult<ImageSource>(
-                    Cofe.Core.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bitmap));
+                return Task.FromResult<byte[]>(
+                    bitmap.ToByteArray());
         }
     }
 
 
     public class GetExifThumbnail : IEntryModelIconExtractor
     {
-        public async Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        public async Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
             var diskModel = model as DiskEntryModelBase;
             if (diskModel != null && diskModel.IsFileWithExtension(FileExtensions.ExifExtensions))
             {
-                using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, FileAccess.Read, ct))
+                using (var stream = 
+                    await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, 
+                        FileExplorer.Defines.FileAccess.Read, ct))
                 {
                     using (ExifReader reader = new ExifReader(stream))
                     {
                         var thumbnailBytes = reader.GetJpegThumbnailBytes();
                         if (thumbnailBytes != null && thumbnailBytes.Length > 0)
-                            return W32ConverterUtils.ToBitmapImage(thumbnailBytes);
+                            return thumbnailBytes;
                     }
                 }
 

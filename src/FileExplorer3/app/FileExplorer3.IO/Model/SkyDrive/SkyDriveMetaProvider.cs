@@ -1,4 +1,5 @@
 ﻿using Cofe.Core.Utils;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using System;

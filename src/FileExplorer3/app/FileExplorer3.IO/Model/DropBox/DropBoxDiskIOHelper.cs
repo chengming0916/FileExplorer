@@ -27,13 +27,14 @@ namespace FileExplorer.Models
 
         #region Methods
 
-        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct)
+        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, 
+            FileExplorer.Defines.FileAccess access, CancellationToken ct)
         {
             switch (access)
             {
-                case FileAccess.Read: return await DropBoxFileStream.OpenReadAsync(entryModel, ct);
-                case FileAccess.Write: return DropBoxFileStream.OpenWrite(entryModel);
-                case FileAccess.ReadWrite: return await DropBoxFileStream.OpenReadWriteAsync(entryModel, ct);
+                case FileExplorer.Defines.FileAccess.Read: return await DropBoxFileStream.OpenReadAsync(entryModel, ct);
+                case FileExplorer.Defines.FileAccess.Write: return DropBoxFileStream.OpenWrite(entryModel);
+                case FileExplorer.Defines.FileAccess.ReadWrite: return await DropBoxFileStream.OpenReadWriteAsync(entryModel, ct);
             }
             throw new NotSupportedException();
         }

@@ -13,6 +13,7 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {
@@ -34,8 +35,8 @@ namespace FileExplorer.Models
     }
 
 
-    
-   
+
+
     /// <summary>
     /// Launch a file.
     /// </summary>
@@ -65,7 +66,9 @@ namespace FileExplorer.Models
                 Header = appliedModels[0].IsDirectory ? "Explore" : "Open";
                 var appliedModel = appliedModels[0];
                 HeaderImageFunc = (cm) =>
-                    AsyncUtils.RunSync(() => GetFromSystemImageList.Instance.GetIconForModelAsync(appliedModel, CancellationToken.None));
+                    AsyncUtils.RunSync(() => GetFromSystemImageList.Instance.GetIconForModelAsync(appliedModel,
+                            CancellationToken.None));
+                      
 
                 Task.Run(() =>
                     {

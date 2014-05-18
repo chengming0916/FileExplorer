@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.BaseControls;
+﻿using FileExplorer.Defines;
+using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.Utils;
@@ -49,9 +50,9 @@ namespace FileExplorer.WPF
                  input.Sender.Equals(input2.Sender);
         }
 
-        private static Size getMiniumDragDistance(Defines.UIInputType inputType)
+        private static Size getMiniumDragDistance(FileExplorer.Defines.UIInputType inputType)
         {
-            if (inputType == Defines.UIInputType.Touch)
+            if (inputType == FileExplorer.Defines.UIInputType.Touch)
                 return new Size(5, 5);
             else return new Size(SystemParameters.MinimumHorizontalDragDistance,
                 SystemParameters.MinimumVerticalDragDistance);

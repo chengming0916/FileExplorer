@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {

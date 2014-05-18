@@ -20,23 +20,16 @@ namespace FileExplorer.Models
         }
 
 
-        public async Task<ImageSource>
-            GetIconForModelAsync(IEntryModel model, System.Threading.CancellationToken ct)
+        public async Task<byte[]>
+            GetIconBytesForModelAsync(IEntryModel model, System.Threading.CancellationToken ct)
         {
             var dboxModel = model as DropBoxItemModel;
             if (dboxModel != null && dboxModel.Metadata != null && dboxModel.Metadata.Thumb_Exists)
             {
                 byte[] bytes = (await _clientFunc().GetThumbnailTask(dboxModel.Metadata, 
                     DropNet.Models.ThumbnailSize.Large)).RawBytes;
-                
-                BitmapImage retIcon = new BitmapImage();
 
-                retIcon.BeginInit();
-                retIcon.StreamSource = new MemoryStream(bytes);
-
-                retIcon.EndInit();
-                retIcon.Freeze();
-                return retIcon;
+                return bytes;
             }
             return null;
         }
