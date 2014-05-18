@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Caliburn.Micro;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using System.Diagnostics;
 using System.Windows.Data;
@@ -24,9 +24,10 @@ using System.Collections.ObjectModel;
 using FileExplorer.WPF.ViewModels.Helpers;
 using Cinch;
 using System.Windows.Input;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using System.Threading;
 using Cofe.Core.Utils;
+using FileExplorer.WPF.Defines;
 
 
 namespace FileExplorer.WPF.ViewModels
@@ -43,9 +44,9 @@ namespace FileExplorer.WPF.ViewModels
         {
             public FileListDropHelper(FileListViewModel flvm)
                 : base(() => flvm.CurrentDirectory.Label,
-                (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop.QueryDrop(ems, flvm.CurrentDirectory, eff),
-                    da => flvm.CurrentDirectory.Profile.DragDrop.GetEntryModels(da),
-                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop.OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
+                (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop().QueryDrop(ems, flvm.CurrentDirectory, eff),
+                    da => flvm.CurrentDirectory.Profile.DragDrop().GetEntryModels(da),
+                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop().OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
             { }
 
         }
@@ -54,9 +55,9 @@ namespace FileExplorer.WPF.ViewModels
             public FileListDragHelper(FileListViewModel flvm)
                 : base(
                 () => flvm.Selection.SelectedItems.ToArray(),
-                ems => ems.First().Profile.DragDrop.QueryDrag(ems),
-                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop.GetDataObject(ems)),
-                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)
+                ems => ems.First().Profile.DragDrop().QueryDrag(ems),
+                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop().GetDataObject(ems)),
+                (ems, da, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, da, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

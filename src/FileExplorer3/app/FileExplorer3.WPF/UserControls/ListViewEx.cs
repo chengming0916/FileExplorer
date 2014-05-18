@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.BaseControls;

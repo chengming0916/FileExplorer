@@ -11,31 +11,30 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.Models
 {
 
     public class GetDefaultIcon : IEntryModelIconExtractor
     {
-        private static ImageSource FileIcon { get; set; }
-        private static ImageSource FolderIcon { get; set; }
+        private static byte[] FileIcon { get; set; }
+        private static byte[] FolderIcon { get; set; }
         public static GetDefaultIcon Instance = new GetDefaultIcon();
 
         static GetDefaultIcon()
         {
-            BitmapImage fileIcon = new BitmapImage();
-            fileIcon.BeginInit();
-            fileIcon.UriSource = new Uri("pack://application:,,,/FileExplorer3.WPF;component/Themes/Resources/file.ico");
-            fileIcon.EndInit();
-            FileIcon = fileIcon;
-            BitmapImage folderIcon = new BitmapImage();
-            folderIcon.BeginInit();
-            folderIcon.UriSource = new Uri("pack://application:,,,/FileExplorer3.WPF;component/Themes/Resources/folder.ico");
-            folderIcon.EndInit();
-            FolderIcon = folderIcon;
+            var assembly = System.Reflection.Assembly.GetAssembly(typeof(GetDefaultIcon));
+            string libraryName = assembly.GetName().Name;
+            FileIcon = assembly.GetManifestResourceStream(
+                PathUtils.MakeResourcePath(libraryName, "/Themes/Resources/file.ico")).ToByteArray();
+            FolderIcon = assembly.GetManifestResourceStream(
+                PathUtils.MakeResourcePath(libraryName, "/Themes/Resources/folder.ico")).ToByteArray();
+
+
         }
 
-        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
             if (model.IsDirectory)
                 return Task<ImageSource>.FromResult(FolderIcon);
@@ -43,28 +42,23 @@ namespace FileExplorer.WPF.Models
         }
     }
 
+    
+
     public class GetResourceIcon : IEntryModelIconExtractor
     {
-        private ImageSource IconResource { get; set; }
+        private byte[] IconResource { get; set; }
 
-        public GetResourceIcon(Uri uri)
+        public GetResourceIcon(object sender, string path2Resource)
         {
-            BitmapImage iconResource = new BitmapImage();
-            iconResource.BeginInit();
-            iconResource.UriSource = uri;
-            iconResource.EndInit();
-            IconResource = iconResource;
+            var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
+            string libraryName = assembly.GetName().Name;
+            string resourcePath = PathUtils.MakeResourcePath(libraryName, path2Resource);
 
+            IconResource = assembly.GetManifestResourceStream(resourcePath).ToByteArray();
         }
 
-        public GetResourceIcon(string library, string path2Resource)
-            : this(PathUtils.MakeResourcePath(library, path2Resource))
+        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
-    
-        }
-
-        public Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
-        {            
             return Task<ImageSource>.FromResult(IconResource);
         }
     }
@@ -81,9 +75,7 @@ namespace FileExplorer.WPF.Models
         }
 
 
-
-
-        public async Task<ImageSource> GetIconForModelAsync(IEntryModel model, CancellationToken ct)
+        public async Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
             var response = await _clientFunc().GetAsync(_uriFunc(model).AbsoluteUri, ct);
             if (response.StatusCode == HttpStatusCode.OK)
@@ -91,15 +83,9 @@ namespace FileExplorer.WPF.Models
                 var output = await response.Content.ReadAsByteArrayAsync();
 
                 BitmapImage retIcon = new BitmapImage();
-
-                retIcon.BeginInit();
-                retIcon.StreamSource = new MemoryStream(output);
-
-                retIcon.EndInit();
-                retIcon.Freeze();
-                return retIcon;
+                return new MemoryStream(output).ToArray();
             }
-            return await new GetDefaultIcon().GetIconForModelAsync(model, ct);
+            return await new GetDefaultIcon().GetIconBytesForModelAsync(model, ct);
         }
     }
 }

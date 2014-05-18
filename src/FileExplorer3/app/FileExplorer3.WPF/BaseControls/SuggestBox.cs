@@ -10,13 +10,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.Models;
 
 namespace FileExplorer.WPF.BaseControls
 {
-    public interface ISuggestSource
-    {
-        Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper);
-    }
+  
 
     /// <summary>
     /// Uses ISuggestSource and HierarchyHelper to suggest automatically.

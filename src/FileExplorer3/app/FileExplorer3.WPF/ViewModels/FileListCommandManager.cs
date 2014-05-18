@@ -10,8 +10,9 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.BaseControls;
 using System.Windows.Input;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using vm = FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -67,7 +68,7 @@ namespace FileExplorer.WPF.ViewModels
                     FileList.AssignSelectionToParameter(ClipboardCommands.Paste(ExtensionMethods.GetFileListCurrentDirectoryFunc,
                     (dragDropEffects, src, dest) => new SimpleScriptCommand("Paste", (pm) =>
                         {
-                            dest.Profile.DragDrop.OnDropCompleted(src.ToList(), null, dest, dragDropEffects);
+                            dest.Profile.DragDrop().OnDropCompleted(src.ToList(), null, dest, dragDropEffects);
                             return ResultCommand.NoError;
                         })))
                     )

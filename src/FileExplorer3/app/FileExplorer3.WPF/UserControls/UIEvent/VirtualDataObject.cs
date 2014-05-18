@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.IO;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using System.Diagnostics;
 using FileExplorer.WPF.Models;
 

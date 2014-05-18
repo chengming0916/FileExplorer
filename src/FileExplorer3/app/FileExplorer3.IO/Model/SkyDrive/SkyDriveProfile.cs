@@ -12,7 +12,7 @@ using FileExplorer.WPF.Models;
 
 namespace FileExplorer.Models
 {
-    public class SkyDriveProfile : DiskProfileBase
+    public class SkyDriveProfile : DiskProfileBase, IWPFProfile
     {
         #region Constructor
 
@@ -22,8 +22,8 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "SkyDrive";
-            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/SkyDrive/OneDrive_Logo.png");
-            OneDriveLogo = new GetResourceIcon(ProfileIcon); 
+            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/SkyDrive/OneDrive_Logo.png");
+            OneDriveLogo = new GetResourceIcon(this, "/Model/SkyDrive/OneDrive_Logo.png"); 
             ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, () => Alias, true);
             Alias = "SkyDrive";
             _aliasMask = aliasMask;

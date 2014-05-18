@@ -9,10 +9,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {

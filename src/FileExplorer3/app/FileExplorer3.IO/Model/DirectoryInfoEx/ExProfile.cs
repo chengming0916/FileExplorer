@@ -21,10 +21,11 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF;
+using FileExplorer.Defines;
 
 namespace FileExplorer.Models
 {
-    public class FileSystemInfoExProfile : DiskProfileBase
+    public class FileSystemInfoExProfile : DiskProfileBase, IWPFProfile
     {
         #region Constructor
 
@@ -116,7 +117,7 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "FileSystem (Ex)";
-            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/DirectoryInfoEx/My_Computer.png");
+            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/DirectoryInfoEx/My_Computer.png");
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer();
             MetadataProvider = new ExMetadataProvider();

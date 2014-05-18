@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
+using FileExplorer.Defines;
 
 namespace FileExplorer.Models
 {

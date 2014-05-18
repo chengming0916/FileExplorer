@@ -15,10 +15,11 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.BaseControls.MultiSelect
 {

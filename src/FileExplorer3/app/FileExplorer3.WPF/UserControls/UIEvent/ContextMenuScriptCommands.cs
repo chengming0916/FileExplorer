@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.BaseControls.Menu
 {

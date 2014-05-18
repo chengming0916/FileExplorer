@@ -7,6 +7,7 @@ using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

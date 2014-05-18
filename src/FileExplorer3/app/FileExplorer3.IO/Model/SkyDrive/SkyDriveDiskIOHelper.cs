@@ -28,13 +28,14 @@ namespace FileExplorer.Models
 
         #region Methods
 
-        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct)
+        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel,
+            FileExplorer.Defines.FileAccess access, CancellationToken ct)
         {
             switch (access)
             {
-                case FileAccess.Read: return await SkyDriveFileStream.OpenReadAsync(entryModel, ct);
-                case FileAccess.Write: return SkyDriveFileStream.OpenWrite(entryModel);
-                case FileAccess.ReadWrite: return await SkyDriveFileStream.OpenReadWriteAsync(entryModel, ct);
+                case FileExplorer.Defines.FileAccess.Read: return await SkyDriveFileStream.OpenReadAsync(entryModel, ct);
+                case FileExplorer.Defines.FileAccess.Write: return SkyDriveFileStream.OpenWrite(entryModel);
+                case FileExplorer.Defines.FileAccess.ReadWrite: return await SkyDriveFileStream.OpenReadWriteAsync(entryModel, ct);
             }
             throw new NotSupportedException();
         }

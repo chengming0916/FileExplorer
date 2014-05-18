@@ -64,7 +64,7 @@ namespace FileExplorer.Models
         {
             _profile = profile;
             _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
-                new FileSystemInfoProfile(profile.Events, windowManager);
+                new FileSystemInfoProfile(profile.Events(), windowManager);
 
             TransferCommand =
                new FileExplorer.WPF.ViewModels.TransferCommand((effect, source, destDir) =>

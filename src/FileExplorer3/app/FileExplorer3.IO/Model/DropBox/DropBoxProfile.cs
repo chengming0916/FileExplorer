@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
-    public class DropBoxProfile : DiskProfileBase
+    public class DropBoxProfile : DiskProfileBase, IWPFProfile
     {
 
         #region Constructors
@@ -31,8 +31,8 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "DropBox";
-            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/DropBox/DropBox_Logo.png");
-            DropBoxLogo = new GetResourceIcon(ProfileIcon); 
+            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/DropBox/DropBox_Logo.png");
+            DropBoxLogo = new GetResourceIcon(this, "/Model/DropBox/DropBox_Logo.png"); 
             ModelCache = new EntryModelCache<DropBoxItemModel>(m => m.FullPath, () => Alias, true);
             //_accessToken = accessToken;
             Path = PathHelper.Web;

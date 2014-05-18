@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 
 namespace FileExplorer.WPF.UserControls

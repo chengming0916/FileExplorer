@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Actions;
 using FileExplorer.WPF.ViewModels.Helpers;
@@ -31,7 +31,7 @@ namespace FileExplorer.WPF.ViewModels
                 var profiles = selection.RootSelector.EntryHelper.All.Select(rvm => rvm.EntryModel.Profile);
                 foreach (var p in profiles)
                 {
-                    var retVal = p.DragDrop.GetEntryModels(da);
+                    var retVal = p.DragDrop().GetEntryModels(da);
                     if (retVal != null)
                         return retVal;
                 }
@@ -44,9 +44,9 @@ namespace FileExplorer.WPF.ViewModels
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
                 () => curDir.Label,
-                (ems, eff) => curDir.Profile.DragDrop.QueryDrop(ems, curDir, eff),                
+                (ems, eff) => curDir.Profile.DragDrop().QueryDrop(ems, curDir, eff),                
                 da => dataObjectFunc(da, selection),
-                (ems, da, eff) => curDir.Profile.DragDrop.OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
+                (ems, da, eff) => curDir.Profile.DragDrop().OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
             {
                 
             }

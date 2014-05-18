@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {

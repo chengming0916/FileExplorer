@@ -20,7 +20,7 @@ namespace FileExplorer.WPF.ViewModels
         public static MetadataViewModel FromText(string header, string category, string value, bool isHeader = false)
         {
             return FromMetadata(
-                new Metadata(Defines.DisplayType.Text, category, header, value) { IsHeader = isHeader });
+                new Metadata(FileExplorer.Defines.DisplayType.Text, category, header, value) { IsHeader = isHeader });
         }
 
         #endregion

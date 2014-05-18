@@ -10,7 +10,7 @@ using Cofe.Core.Script;
 using FileExplorer.WPF.ViewModels;
 using Cofe.Core;
 using System.Windows.Input;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.UserControls.InputProcesor;
 
 namespace FileExplorer.WPF.BaseControls

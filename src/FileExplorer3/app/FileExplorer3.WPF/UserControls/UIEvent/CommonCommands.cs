@@ -14,7 +14,7 @@ using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.BaseControls

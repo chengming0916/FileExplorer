@@ -7,12 +7,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
+using Caliburn.Micro;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace FileExplorer.WPF.Models
 {
     public static partial class ExtensionMethods
     {
+        public static IDragDropHandler DragDrop(this IProfile profile)
+        {
+            return (profile as IWPFProfile).DragDrop;
+        }
+
+        public static IEventAggregator Events(this IProfile profile)
+        {
+            return (profile as IWPFProfile).Events;
+        }
+
+
         public static async Task<IEntryModel> ParseAsync(this IProfile[] profiles, string path)
         {
             foreach (var p in profiles)
@@ -50,12 +65,12 @@ namespace FileExplorer.WPF.Models
 
         public static void NotifyEntryChanges(this IProfile profile, object sender, string fullPath, ChangeType changeType, string orgParseName = null)
         {
-            if (profile == null || profile.Events == null)
+            if (profile == null || profile.Events() == null)
                 return;
 
             if (changeType == ChangeType.Moved)
-                profile.Events.Publish(new EntryChangedEvent(fullPath, orgParseName));
-            else profile.Events.Publish(new EntryChangedEvent(changeType, fullPath));
+                profile.Events().Publish(new EntryChangedEvent(fullPath, orgParseName));
+            else profile.Events().Publish(new EntryChangedEvent(changeType, fullPath));
         }
 
 
@@ -75,12 +90,13 @@ namespace FileExplorer.WPF.Models
             return model.Profile.Path.Combine(model.FullPath, paths);
         }
 
-        public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath, FileAccess access, CancellationToken ct)
+        public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath, 
+            FileExplorer.Defines.FileAccess access, CancellationToken ct)
         {
             IEntryModel entryModel = await ioHelper.Profile.ParseAsync(fullPath);
             ct.ThrowIfCancellationRequested();
             if (entryModel == null)
-                if (access == FileAccess.Write)
+                if (access == FileExplorer.Defines.FileAccess.Write)
                     entryModel = await ioHelper.CreateAsync(fullPath, false, ct);
                 else throw new IOException("File not found.");
             ct.ThrowIfCancellationRequested();
@@ -104,7 +120,8 @@ namespace FileExplorer.WPF.Models
                 }
                 else
                 {
-                    using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, System.IO.FileAccess.Read, ct))
+                    using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, 
+                        FileExplorer.Defines.FileAccess.Read, ct))
                     using (var outputStream = System.IO.File.OpenWrite(mapping.IOPath))
                         await StreamUtils.CopyStreamAsync(srcStream, outputStream).ConfigureAwait(false);
                 }
@@ -131,5 +148,20 @@ namespace FileExplorer.WPF.Models
         {
             return entryModels.Select(em => em.Profile).Distinct().ToArray();
         }
+
+        public static async Task<ImageSource> GetIconForModelAsync(this IEntryModelIconExtractor extractor,
+            IEntryModel model, CancellationToken ct)
+        {
+            byte[] bytes = await extractor.GetIconBytesForModelAsync(model, ct);
+            ct.ThrowIfCancellationRequested();
+            return bytes == null ? 
+                new BitmapImage() : 
+                FileExplorer.WPF.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes);
+        }
+            
+    //        public interface IEntryModelIconExtractor
+    //{
+    //    Task<byte[]> GetIconForModelAsync(IEntryModel model, CancellationToken ct);
+    //}
     }
 }

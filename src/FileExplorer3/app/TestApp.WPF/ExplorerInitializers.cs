@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF;
+using FileExplorer.Defines;
 
 namespace TestApp
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Defines
+namespace FileExplorer.Defines
 {
     public enum HierarchicalResult : int { Parent = 1 << 1,
     Current = 1 << 2,
@@ -50,6 +50,11 @@ namespace FileExplorer.WPF.Defines
         Multiple,
         Extended,
         SelectionHelper
+    }
+
+    public enum FileAccess
+    {
+        Read, ReadWrite, Write
     }
 
     public static class ShellClipboardFormats

@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
 using System.Windows.Input;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {

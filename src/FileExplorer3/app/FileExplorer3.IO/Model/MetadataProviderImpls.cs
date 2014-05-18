@@ -1,5 +1,6 @@
 ﻿using Cofe.Core.Utils;
 using ExifLib;
+using FileExplorer.Defines;
 using FileExplorer.IO.Defines;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
@@ -27,7 +28,8 @@ namespace FileExplorer.Models
                 {
                     try
                     {
-                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, FileAccess.Read, CancellationToken.None))
+                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, 
+                            FileExplorer.Defines.FileAccess.Read, CancellationToken.None))
                         using (Bitmap bitmap = new Bitmap(stream))
                         {
                             retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
@@ -122,7 +124,8 @@ namespace FileExplorer.Models
                     var diskModel = selectedModels.First() as DiskEntryModelBase;
                     if (diskModel.IsFileWithExtension(FileExtensions.ExifExtensions))
                     {
-                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, FileAccess.Read, CancellationToken.None))
+                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, 
+                            FileExplorer.Defines.FileAccess.Read, CancellationToken.None))
                         using (ExifReader reader = new ExifReader(stream))
                         {
                             var thumbnailBytes = reader.GetJpegThumbnailBytes();

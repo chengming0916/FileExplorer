@@ -1,15 +1,8 @@
-﻿using System;
+﻿using Cofe.Core.Script;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using Cofe.Core.Script;
-using FileExplorer.WPF.ViewModels.Helpers;
 
 namespace FileExplorer.WPF.Models
 {
@@ -18,7 +11,6 @@ namespace FileExplorer.WPF.Models
     /// </summary>
     public interface ICommandModel : IComparable<ICommandModel>, IComparable, INotifyPropertyChanged
     {        
-        RoutedUICommand RoutedCommand { get; set; }
         IScriptCommand Command { get; set; }
 
         /// <summary>
@@ -27,12 +19,7 @@ namespace FileExplorer.WPF.Models
         /// </summary>
         char? Symbol { get; }
 
-        /// <summary>
-        /// Bitmap Icon.
-        /// </summary>
-        Bitmap HeaderIcon { get; }
-
-        Func<ICommandModel, System.Windows.Media.ImageSource> HeaderImageFunc { get; }
+      
 
         string ToolTip { get; }
 
@@ -70,18 +57,6 @@ namespace FileExplorer.WPF.Models
         bool IsComboBox { get; }
     }
 
-    public interface ISliderCommandModel : IDirectoryCommandModel
-    {
-        int SliderMaximum { get; }
-        int SliderMinimum { get; }
-        int SliderValue { get; set; }
-    }
-
-    public interface ISliderStepCommandModel : ICommandModel
-    {
-        int SliderStep { get; }
-        double? ItemHeight { get; }
-        VerticalAlignment VerticalAlignment { get; }        
-    }
+   
     
 }

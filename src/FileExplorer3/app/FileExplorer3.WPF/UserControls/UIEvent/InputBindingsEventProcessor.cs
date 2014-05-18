@@ -39,7 +39,7 @@ namespace FileExplorer.WPF.BaseControls
                     {
                         bool match = ib.Gesture.Matches(sender, eventArgs);
                         if (!match && ib is MouseBinding &&
-                            input.InputType == Defines.UIInputType.Touch &&
+                            input.InputType == FileExplorer.Defines.UIInputType.Touch &&
                             (ib as MouseBinding).MouseAction == MouseAction.LeftDoubleClick)
                             match = input.ClickCount == 2;
 

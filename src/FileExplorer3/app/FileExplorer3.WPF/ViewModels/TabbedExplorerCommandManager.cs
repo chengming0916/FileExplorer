@@ -9,6 +9,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.BaseControls;
 using System.Windows.Input;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels

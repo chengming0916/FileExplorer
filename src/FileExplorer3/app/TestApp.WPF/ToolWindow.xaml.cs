@@ -72,7 +72,7 @@ namespace TestApp
                  (ems, eff) =>
                      QueryDropResult.CreateNew(DragDropEffects.Copy),
                 da =>
-                    exProfile.DragDrop.GetEntryModels(da),
+                    exProfile.DragDrop().GetEntryModels(da),
                 (ems, da, eff) =>
                 {
                     if (ems.Count() > 1)

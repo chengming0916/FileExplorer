@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.WPF.Utils
 {
 #if !NETFX_CORE
     //http://www.codeproject.com/Articles/104929/Bitmap-to-BitmapSource
@@ -56,7 +56,7 @@ namespace Cofe.Core.Utils
             get { return Application.Current != null && Dispatcher.CurrentDispatcher != Application.Current.Dispatcher; }
         }
 
-        private static BitmapSource CreateBitmapSourceFromBitmap(Stream stream)
+        public static BitmapSource CreateBitmapSourceFromBitmap(Stream stream)
         {
             BitmapDecoder bitmapDecoder = BitmapDecoder.Create(
                 stream,
@@ -69,6 +69,12 @@ namespace Cofe.Core.Utils
 
             return writable;
         }
-    } 
+
+        public static BitmapSource CreateBitmapSourceFromBitmap(byte[] bytes)
+        {
+            using (Bitmap bitmap = new Bitmap(new MemoryStream(bytes)))
+                return CreateBitmapSourceFromBitmap(bitmap);
+        }
+    }
 #endif
 }

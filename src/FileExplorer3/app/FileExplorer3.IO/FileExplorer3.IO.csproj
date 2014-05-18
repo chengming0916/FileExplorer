@@ -7,7 +7,7 @@
     <ProjectGuid>{BCBCAF38-714A-40E4-87EF-F6CF63DD62AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FileExplorer</RootNamespace>
+    <RootNamespace>FileExplorer3.IO</RootNamespace>
     <AssemblyName>FileExplorer3.IO</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -153,6 +153,7 @@
     <Compile Include="Model\GoogleDrive\GoogleDriveFileStream.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMimeTypeManager.cs" />
     <Compile Include="Model\HardDriveDiskIOHelper.cs" />
+    <Compile Include="Model\ProfileBase.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveMetaProvider.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveLogin.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveDiskIOHelper.cs" />
@@ -182,16 +183,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Model\SkyDrive\OneDrive_Logo.png" />
+    <EmbeddedResource Include="Model\SkyDrive\OneDrive_Logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Model\GoogleDrive\GoogleDrive_Logo.png" />
+    <EmbeddedResource Include="Model\GoogleDrive\GoogleDrive_Logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Model\DropBox\DropBox_Logo.png" />
+    <EmbeddedResource Include="Model\DropBox\DropBox_Logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDictionary Include="Model\DirectoryInfoEx\My_Computer.png" />
+    <EmbeddedResource Include="Model\DirectoryInfoEx\My_Computer.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UserControls\" />

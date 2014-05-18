@@ -1,5 +1,6 @@
 ﻿using Cofe.Core;
 using Cofe.Core.Script;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.ViewModels.Helpers;

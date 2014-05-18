@@ -17,7 +17,7 @@ using Cofe.Core;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.UserControls.InputProcesor;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
@@ -19,6 +18,9 @@ using System.Net.Http;
 using System.Net;
 using System.Threading;
 using Cofe.Core.Utils;
+using FileExplorer.Models;
+using System.IO;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -350,7 +352,7 @@ namespace FileExplorer.WPF.ViewModels
            HttpClient httpClient, IScriptCommand nextCommand = null)
             : this(sourceUrl, (ct) =>
                 (entry.Profile as IDiskProfile).DiskIO.OpenStreamAsync(entry,
-                FileAccess.Write, ct), httpClient, nextCommand)
+                FileExplorer.Defines.FileAccess.Write, ct), httpClient, nextCommand)
         {
             _destId = entry.FullPath;
         }
@@ -1571,7 +1573,7 @@ namespace FileExplorer.WPF.ViewModels
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var _srcModels = _srcModelFunc(pm);
-            var da = await _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
+            var da = await _srcModels.First().Profile.DragDrop().GetDataObject(_srcModels);
 
             byte[] moveEffect = _removeOrginal ? preferCut : preferCopy;
             MemoryStream dropEffect = new MemoryStream();
@@ -1607,7 +1609,7 @@ namespace FileExplorer.WPF.ViewModels
                 IDataObject da = Clipboard.GetDataObject();
                 if (da != null)
                 {
-                    var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
+                    var srcModels = currentDirectory.Profile.DragDrop().GetEntryModels(da);
                     if (srcModels != null && srcModels.Count() > 0)
                     {
                         return _transferCommandFunc(DragDropEffects.Copy, srcModels.ToArray(), currentDirectory);
@@ -1624,7 +1626,7 @@ namespace FileExplorer.WPF.ViewModels
             if (currentDirectory != null)
             {
                 IDataObject da = Clipboard.GetDataObject();
-                var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
+                var srcModels = currentDirectory.Profile.DragDrop().GetEntryModels(da);
                 return srcModels != null && srcModels.Count() > 0;
             }
             return false;

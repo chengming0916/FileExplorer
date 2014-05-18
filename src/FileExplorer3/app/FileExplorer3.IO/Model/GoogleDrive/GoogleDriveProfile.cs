@@ -21,7 +21,7 @@ namespace FileExplorer.Models
     //GoogleDrive API - https://developers.google.com/drive/web/file
 
 
-    public class GoogleDriveProfile : DiskProfileBase
+    public class GoogleDriveProfile : DiskProfileBase, IWPFProfile
     {
         #region Constructor
 
@@ -71,8 +71,8 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "GoogleDrive";
-            ProfileIcon = PathUtils.MakeResourcePath("FileExplorer3.IO", "/Model/GoogleDrive/GoogleDrive_Logo.png");
-            GoogleDriveLogo = new GetResourceIcon(ProfileIcon);
+            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/GoogleDrive/GoogleDrive_Logo.png");
+            GoogleDriveLogo = new GetResourceIcon(this, "/Model/GoogleDrive/GoogleDrive_Logo.png");
             _credential = credential;
 
             _aliasMask = aliasMask;

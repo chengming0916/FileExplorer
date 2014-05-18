@@ -9,7 +9,7 @@ using Cofe.Core.Script;
 
 namespace FileExplorer.WPF.Models
 {
-    public class CommandModel : PropertyChangedBase, ICommandModel
+    public class CommandModel : PropertyChangedBase, ICommandModel, IRoutedCommandModel
     {
 
         #region Constructor

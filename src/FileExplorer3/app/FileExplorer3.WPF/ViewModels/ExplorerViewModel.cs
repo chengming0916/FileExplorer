@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
@@ -17,6 +17,7 @@ using Cofe.Core.Utils;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {

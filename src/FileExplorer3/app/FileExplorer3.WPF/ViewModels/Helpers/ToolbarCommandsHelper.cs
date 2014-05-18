@@ -9,9 +9,10 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core.Script;
 using Cofe.Core.Utils;
-using FileExplorer.WPF.Defines;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.Defines;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {

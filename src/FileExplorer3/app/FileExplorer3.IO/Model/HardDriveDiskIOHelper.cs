@@ -34,13 +34,14 @@ namespace FileExplorer.Models
             else File.Delete(entryModel.FullPath);
         }
 
-        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileAccess access, CancellationToken ct)
+        public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel,
+            FileExplorer.Defines.FileAccess access, CancellationToken ct)
         {
             switch (access)
             {
-                case FileAccess.Read: return File.OpenRead(entryModel.FullPath);
-                case FileAccess.Write: return File.OpenWrite(entryModel.FullPath);
-                case FileAccess.ReadWrite: return File.Open(entryModel.FullPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                case FileExplorer.Defines.FileAccess.Read: return File.OpenRead(entryModel.FullPath);
+                case FileExplorer.Defines.FileAccess.Write: return File.OpenWrite(entryModel.FullPath);
+                case FileExplorer.Defines.FileAccess.ReadWrite: return File.Open(entryModel.FullPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             }
             throw new NotImplementedException();
         }

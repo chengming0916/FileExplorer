@@ -10,6 +10,7 @@ using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer;
 using System.Windows;
 using FileExplorer.WPF.Models;
+using FileExplorer.Defines;
 
 namespace TestTemplate.WPF
 {

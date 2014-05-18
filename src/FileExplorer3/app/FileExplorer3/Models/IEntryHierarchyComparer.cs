@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FileExplorer.WPF.Defines;
-using FileExplorer.WPF.ViewModels.Helpers;
+﻿using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {
