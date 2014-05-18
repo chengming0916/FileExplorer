@@ -13,6 +13,7 @@ using System.Windows.Input;
 using FileExplorer.Defines;
 using vm = FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     /// <summary>
     /// Model for a Command, which is shown as ToolbarExItem in FileExplorer.

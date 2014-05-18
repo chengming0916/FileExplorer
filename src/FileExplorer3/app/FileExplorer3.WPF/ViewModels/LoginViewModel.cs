@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using Caliburn.Micro;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {

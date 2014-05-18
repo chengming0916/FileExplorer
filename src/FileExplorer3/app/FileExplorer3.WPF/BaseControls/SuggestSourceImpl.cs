@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Threading;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.BaseControls
 {

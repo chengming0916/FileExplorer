@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Threading;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {

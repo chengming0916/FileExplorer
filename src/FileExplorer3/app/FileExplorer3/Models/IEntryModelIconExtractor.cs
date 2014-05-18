@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     public interface IEntryModelIconExtractor
     {

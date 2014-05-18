@@ -1,6 +1,6 @@
 ﻿using FileExplorer.Defines;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
 
     public interface ICompareHierarchy<T>

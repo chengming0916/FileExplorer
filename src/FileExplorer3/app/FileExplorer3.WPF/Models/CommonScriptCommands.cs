@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cofe.Core;
 using Cofe.Core.Script;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

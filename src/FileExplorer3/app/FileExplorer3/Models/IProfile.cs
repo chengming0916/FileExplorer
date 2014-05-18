@@ -17,7 +17,7 @@ using System.Threading;
 using System.ComponentModel;
 using FileExplorer.Defines;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
    
     public interface IProfile : INotifyPropertyChanged

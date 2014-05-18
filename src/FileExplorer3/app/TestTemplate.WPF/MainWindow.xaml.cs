@@ -27,6 +27,7 @@ using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.UnitTests;
 using FileExplorer.WPF.Models;
+using FileExplorer.Models;
 
 namespace TestTemplate.WPF
 {

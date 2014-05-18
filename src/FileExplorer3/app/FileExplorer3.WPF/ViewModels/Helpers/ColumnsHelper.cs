@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {

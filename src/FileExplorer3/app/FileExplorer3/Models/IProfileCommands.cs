@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofe.Core.Script;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     /// <summary>
     /// Implemented by IProfile for document how to handle when certain action is taken place

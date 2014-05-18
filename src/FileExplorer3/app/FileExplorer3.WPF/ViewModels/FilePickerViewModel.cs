@@ -13,6 +13,7 @@ using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Helpers;
 using vms = FileExplorer.WPF.ViewModels;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {

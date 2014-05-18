@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Models;
+﻿using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
