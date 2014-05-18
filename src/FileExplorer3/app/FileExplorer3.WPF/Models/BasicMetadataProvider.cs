@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Defines;
+using FileExplorer.Models;
 using FileExplorer.WPF.Defines;
 using System;
 using System.Collections.Generic;

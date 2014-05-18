@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Cofe.Core.Utils;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {

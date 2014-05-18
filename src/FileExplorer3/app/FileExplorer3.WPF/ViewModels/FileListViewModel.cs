@@ -28,6 +28,7 @@ using FileExplorer.Defines;
 using System.Threading;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Models;
 
 
 namespace FileExplorer.WPF.ViewModels

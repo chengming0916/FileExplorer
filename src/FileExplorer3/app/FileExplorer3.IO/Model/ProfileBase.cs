@@ -11,6 +11,7 @@ using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Defines;
+using FileExplorer.Models;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.ViewModels;

@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Cofe.Core.Script;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Utils;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

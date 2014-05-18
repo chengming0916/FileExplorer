@@ -12,6 +12,7 @@ using FileExplorer.WPF.Defines;
 using Caliburn.Micro;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

@@ -7,13 +7,6 @@ using System.ComponentModel;
 
 namespace FileExplorer.Models
 {
-    public class Dummy
-    {
-
-    }
-}
-namespace FileExplorer.WPF.Models
-{
     public interface IEntryModel : INotifyPropertyChanged, IEquatable<IEntryModel>
     {
         IProfile Profile { get; }

@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Models;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.BaseControls
 {

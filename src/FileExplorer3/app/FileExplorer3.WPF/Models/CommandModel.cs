@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core.Script;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

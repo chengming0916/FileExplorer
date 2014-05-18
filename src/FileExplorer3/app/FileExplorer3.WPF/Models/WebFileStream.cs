@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

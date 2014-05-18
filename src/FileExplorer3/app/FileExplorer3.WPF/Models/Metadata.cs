@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.Defines;
-using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {

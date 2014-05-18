@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using System;

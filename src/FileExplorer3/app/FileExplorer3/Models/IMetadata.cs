@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Defines;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     public interface IMetadata : INotifyPropertyChanged
     {

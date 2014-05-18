@@ -10,6 +10,7 @@ using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {

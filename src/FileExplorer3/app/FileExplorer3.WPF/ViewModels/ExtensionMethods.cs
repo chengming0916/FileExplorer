@@ -12,6 +12,7 @@ using Cofe.Core.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF
 {

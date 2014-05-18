@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {

@@ -11,6 +11,7 @@ using FileExplorer;
 using System.Windows;
 using FileExplorer.WPF.Models;
 using FileExplorer.Defines;
+using FileExplorer.Models;
 
 namespace TestTemplate.WPF
 {

@@ -12,6 +12,7 @@ using FileExplorer.WPF.ViewModels.Actions;
 using FileExplorer.WPF.ViewModels.Helpers;
 using System.Windows;
 using System.Threading;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {
