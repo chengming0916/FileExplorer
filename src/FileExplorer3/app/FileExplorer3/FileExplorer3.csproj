@@ -38,11 +38,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Defines\Enums.cs" />
+    <Compile Include="Defines\QueryDropResult.cs" />
     <Compile Include="Defines\Structs.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />
     <Compile Include="Models\IDiskPathMapper.cs" />
+    <Compile Include="Models\IDragDropHandler.cs" />
     <Compile Include="Models\IEntryHierarchyComparer.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IEntryModelCache.cs" />

@@ -69,7 +69,7 @@ namespace FileExplorer.WPF.ViewModels
                     FileList.AssignSelectionToParameter(ClipboardCommands.Paste(ExtensionMethods.GetFileListCurrentDirectoryFunc,
                     (dragDropEffects, src, dest) => new SimpleScriptCommand("Paste", (pm) =>
                         {
-                            dest.Profile.DragDrop().OnDropCompleted(src.ToList(), null, dest, dragDropEffects);
+                            dest.Profile.DragDrop().OnDropCompleted(src.ToList(), dest, dragDropEffects);
                             return ResultCommand.NoError;
                         })))
                     )

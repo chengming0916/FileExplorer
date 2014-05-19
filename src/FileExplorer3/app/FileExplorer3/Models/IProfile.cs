@@ -64,6 +64,7 @@ namespace FileExplorer.Models
         IEntryHierarchyComparer HierarchyComparer { get; }
         IMetadataProvider MetadataProvider { get; }
         IEnumerable<ICommandProvider> CommandProviders { get; }
+        IDragDropHandler DragDrop { get; }
         
         //IDiskPathMapper PathMapper { get; }
         ISuggestSource SuggestSource { get; }

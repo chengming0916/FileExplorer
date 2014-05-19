@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,7 +79,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         public virtual QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
             if (getTabViewModel(da) != null)
-                return QueryDropResult.CreateNew(DragDropEffects.Move);
+                return QueryDropResult.CreateNew(DragDropResult.Move);
             return QueryDropResult.None;
         }
 

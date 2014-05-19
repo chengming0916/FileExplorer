@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
+using FileExplorer.Defines;
 using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
@@ -13,6 +13,7 @@ using Cofe.Core.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls.DragDrop;
 using FileExplorer.WPF.ViewModels.Helpers;
+using System.Windows;
 
 namespace FileExplorer.Models
 {
@@ -69,7 +70,7 @@ namespace FileExplorer.Models
             TransferCommand =
                new FileExplorer.WPF.ViewModels.TransferCommand((effect, source, destDir) =>
                    source.Profile is IDiskProfile ?
-                       (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
+                       (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropResult.Move)
                        : ResultCommand.Error(new NotSupportedException())
                    , windowManager);
         }
@@ -86,17 +87,17 @@ namespace FileExplorer.Models
             return retVal;
         }
 
-        public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
+        public DragDropResult QueryDrag(IEnumerable<IEntryModel> entries)
         {
             foreach (var e in entries)
                 if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.Mapper[e].IsVirtual)
-                    return DragDropEffects.Copy;
-            return DragDropEffects.Copy | DragDropEffects.Move;
+                    return DragDropResult.Copy;
+            return DragDropResult.Copy | DragDropResult.Move;
         }
 
-        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)
+        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, DragDropResult effect)
         {
-            //if (effect == DragDropEffects.Move)
+            //if (effect == DragDropResult.Move)
             //    draggables.First().Profile.
         }
 
@@ -131,33 +132,33 @@ namespace FileExplorer.Models
             return destDir.IsDirectory;
         }
 
-        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
+        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropResult allowedEffects)
         {
             if (destDir.IsDirectory)
-                return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
+                return QueryDropResult.CreateNew(DragDropResult.Copy | DragDropResult.Move, DragDropResult.Copy);
             else return QueryDropResult.None;
         }
 
 
-        public DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffects allowedEffects)
+        public DragDropResult OnDropCompleted(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropResult allowedEffects)
         {
             string fileName = PathEx.GetFileName(destDir.FullPath);
             if (fileName == null) fileName = destDir.FullPath;
 
             if (entries.Count() == 0)
-                return DragDropEffects.None;
+                return DragDropResult.None;
             if (entries.Any(e => e.Equals(destDir)))
-                return DragDropEffects.None;
+                return DragDropResult.None;
 
             if (MessageBox.Show(
                 String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
                 entries.Count(), fileName, allowedEffects), "FileBasedDragDropHandler.OnDropCompleted", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                DragDropEffects effect = allowedEffects.HasFlag(DragDropEffects.Copy) ? DragDropEffects.Copy :
-                    allowedEffects.HasFlag(DragDropEffects.Move) ? DragDropEffects.Move : DragDropEffects.None;
+                DragDropResult effect = allowedEffects.HasFlag(DragDropResult.Copy) ? DragDropResult.Copy :
+                    allowedEffects.HasFlag(DragDropResult.Move) ? DragDropResult.Move : DragDropResult.None;
 
-                if (effect == DragDropEffects.None)
-                    return DragDropEffects.None;
+                if (effect == DragDropResult.None)
+                    return DragDropResult.None;
 
                 var sr = new ScriptRunner();
                 sr.RunAsync(
@@ -165,11 +166,11 @@ namespace FileExplorer.Models
                     {
                         { "Source" , entries.ToArray() },
                         { "Dest" , destDir },
-                        {"DragDropEffects", effect }
+                        {"DragDropResult", effect }
                     }, TransferCommand);
                 return effect;
             };
-            return DragDropEffects.None;
+            return DragDropResult.None;
         }
 
 

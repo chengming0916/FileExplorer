@@ -1,9 +1,11 @@
-﻿using FileExplorer.WPF.ViewModels;
+﻿using FileExplorer.Defines;
+using FileExplorer.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace FileExplorer.WPF
@@ -39,6 +41,11 @@ namespace FileExplorer.WPF
                 if (lbm.DataContext is ISelectable)
                     return lbm.DataContext as ISelectable;
                 else return new LBSelectable(lbm);
+        }
+
+        public static DragDropEffects ToDragDropEffects(this DragDropResult ddr)
+        {
+            return (DragDropEffects)(int)ddr;
         }
     }
 }
