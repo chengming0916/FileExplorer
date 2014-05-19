@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.Models;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {
@@ -21,7 +22,7 @@ namespace FileExplorer.WPF.Models
             return DragDropEffects.None;
         }
 
-        public virtual void OnDragCompleted(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffects effect)
+        public virtual void OnDragCompleted(IEnumerable<IEntryModel> entries, DragDropEffects effect)
         {
         }
 
@@ -40,7 +41,7 @@ namespace FileExplorer.WPF.Models
             return QueryDropResult.None;
         }
 
-        public virtual DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest,
+        public virtual DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IEntryModel dest,
             DragDropEffects allowedEffects)
         {
             return DragDropEffects.None;

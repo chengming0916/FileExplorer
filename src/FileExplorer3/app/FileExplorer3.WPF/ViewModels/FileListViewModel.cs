@@ -47,7 +47,7 @@ namespace FileExplorer.WPF.ViewModels
                 : base(() => flvm.CurrentDirectory.Label,
                 (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop().QueryDrop(ems, flvm.CurrentDirectory, eff),
                     da => flvm.CurrentDirectory.Profile.DragDrop().GetEntryModels(da),
-                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop().OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
+                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop().OnDropCompleted(ems, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
             { }
 
         }
@@ -58,7 +58,7 @@ namespace FileExplorer.WPF.ViewModels
                 () => flvm.Selection.SelectedItems.ToArray(),
                 ems => ems.First().Profile.DragDrop().QueryDrag(ems),
                 ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop().GetDataObject(ems)),
-                (ems, da, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, da, eff)
+                (ems, da, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

@@ -47,7 +47,7 @@ namespace FileExplorer.WPF.ViewModels
                 () => curDir.Label,
                 (ems, eff) => curDir.Profile.DragDrop().QueryDrop(ems, curDir, eff),                
                 da => dataObjectFunc(da, selection),
-                (ems, da, eff) => curDir.Profile.DragDrop().OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
+                (ems, da, eff) => curDir.Profile.DragDrop().OnDropCompleted(ems, curDir, eff), em => EntryViewModel.FromEntryModel(em))
             {
                 
             }
