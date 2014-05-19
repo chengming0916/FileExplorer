@@ -69,7 +69,7 @@ namespace FileExplorer.WPF.Models
 
         #region Public Properties
         public string ProfileName { get; protected set; }
-        public Uri ProfileIcon { get; protected set; }
+        public byte[] ProfileIcon { get; protected set; }
         public IPathHelper Path { get; protected set; }
         public ISuggestSource SuggestSource { get; protected set; }
         public IDragDropHandler DragDrop { get; protected set; }

@@ -18,6 +18,7 @@
     <conv:TimeElapsedConverter x:Key="te" />
     <conv:UriToImageSourceConverter x:Key="uti" />
     <conv:GridLengthValueConverter x:Key="glv" />
+    <conv:StreamToImageConverter x:Key="sti" />
     <!--
     
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />

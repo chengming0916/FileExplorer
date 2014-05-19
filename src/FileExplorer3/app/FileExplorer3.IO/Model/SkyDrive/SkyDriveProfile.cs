@@ -9,6 +9,7 @@ using FileExplorer.WPF.BaseControls;
 using Microsoft.Live;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
@@ -22,8 +23,7 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "SkyDrive";
-            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/SkyDrive/OneDrive_Logo.png");
-            OneDriveLogo = new GetResourceIcon(this, "/Model/SkyDrive/OneDrive_Logo.png"); 
+            ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/SkyDrive/OneDrive_Logo.png");
             ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, () => Alias, true);
             Alias = "SkyDrive";
             _aliasMask = aliasMask;
@@ -110,7 +110,7 @@ namespace FileExplorer.Models
         public override async Task<IEntryModel> ParseAsync(string path)
         {
             await checkLoginAsync();
-            
+
             if (Session == null)
                 return null;
 
@@ -198,14 +198,14 @@ namespace FileExplorer.Models
                     yield return GetFromSystemImageListUsingExtension.Instance;
 
             if (model.FullPath == Alias)
-                yield return OneDriveLogo;
+                yield return EntryModelIconExtractors.ProvideValue(ProfileIcon);
         }
 
         #endregion
 
         #region Data
 
-        private static GetResourceIcon OneDriveLogo;
+        //private static GetResourceIcon OneDriveLogo;
         private LiveAuthClient _authClient;
         private string _authCode = null;
         private string _rootAccessPath;
