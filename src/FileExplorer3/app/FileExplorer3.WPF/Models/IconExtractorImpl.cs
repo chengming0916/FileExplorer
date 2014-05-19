@@ -16,6 +16,29 @@ using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {
+    public static class EntryModelIconExtractors
+    {
+        public static IEntryModelIconExtractor ProvideValue(byte[] value)
+        {
+            return new ProvideValueIconExtractor(value);
+        }
+    }
+
+
+    public class ProvideValueIconExtractor : IEntryModelIconExtractor
+    {
+        private static byte[] Value { get; set; }
+
+        public ProvideValueIconExtractor(byte[] value)
+        {
+            Value = value;
+        }
+
+        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
+        {
+            return Task<ImageSource>.FromResult(Value);
+        }
+    }
 
     public class GetDefaultIcon : IEntryModelIconExtractor
     {
@@ -43,7 +66,7 @@ namespace FileExplorer.WPF.Models
         }
     }
 
-    
+
 
     public class GetResourceIcon : IEntryModelIconExtractor
     {
@@ -51,11 +74,7 @@ namespace FileExplorer.WPF.Models
 
         public GetResourceIcon(object sender, string path2Resource)
         {
-            var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
-            string libraryName = assembly.GetName().Name;
-            string resourcePath = PathUtils.MakeResourcePath(libraryName, path2Resource);
-
-            IconResource = assembly.GetManifestResourceStream(resourcePath).ToByteArray();
+            IconResource = ResourceUtils.GetEmbeddedResourceAsByteArray(sender, path2Resource);
         }
 
         public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)

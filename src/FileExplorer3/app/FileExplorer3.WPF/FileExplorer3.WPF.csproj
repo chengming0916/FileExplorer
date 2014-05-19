@@ -110,6 +110,7 @@
     <Compile Include="Defines\Cofe3\Utils\W32StringUtils.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Defines\Converters\ByteArrayToImageConverter.cs" />
     <Compile Include="Defines\Converters\EntryModelToStringConverter.cs" />
     <Compile Include="Defines\Converters\PercentageConverter.cs" />
     <Compile Include="Defines\Converters\ScrollBarConverters.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="UserControls\Explorer.cs" />
     <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
     <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
+    <Compile Include="Utils\ResourceUtils.cs" />
     <Compile Include="ViewModels\ExplorerInitializers.cs" />
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
     <Compile Include="UserControls\InputProcesor\IUIDragInput.cs" />
@@ -183,7 +185,6 @@
     <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\ICommandScriptCommand.cs" />
     <Compile Include="Utils\MouseWheelGesture.cs" />
-    <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\ShellUtils.cs" />
     <Compile Include="Utils\SimpleCommandBinding.cs" />
     <Compile Include="Utils\SimpleRoutedCommand.cs" />

@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using DropNet;
 using DropNet.Models;
+using FileExplorer.Utils;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
@@ -31,8 +32,7 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "DropBox";
-            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/DropBox/DropBox_Logo.png");
-            DropBoxLogo = new GetResourceIcon(this, "/Model/DropBox/DropBox_Logo.png"); 
+            ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/DropBox/DropBox_Logo.png");
             ModelCache = new EntryModelCache<DropBoxItemModel>(m => m.FullPath, () => Alias, true);
             //_accessToken = accessToken;
             Path = PathHelper.Web;
@@ -150,7 +150,7 @@ namespace FileExplorer.Models
                 yield return GetFromSystemImageListUsingExtension.Instance;
 
             if (model.FullPath == Alias)
-                yield return DropBoxLogo;
+                yield return EntryModelIconExtractors.ProvideValue(ProfileIcon);
 
             else if (model.Metadata != null && model.Metadata.Thumb_Exists)
                 yield return _thumbnailExtractor;
@@ -188,7 +188,7 @@ namespace FileExplorer.Models
         #endregion
 
         #region Data
-        private GetResourceIcon DropBoxLogo;
+        //private GetResourceIcon DropBoxLogo;
         private DropBoxModelThumbnailExtractor _thumbnailExtractor;
         private UserLogin _login = null;
         private DropNetClient _client;

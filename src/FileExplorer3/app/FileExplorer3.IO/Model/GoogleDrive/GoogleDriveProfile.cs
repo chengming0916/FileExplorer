@@ -14,6 +14,7 @@ using Google.Apis.Http;
 using Google.Apis.Services;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
@@ -71,8 +72,7 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "GoogleDrive";
-            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/GoogleDrive/GoogleDrive_Logo.png");
-            GoogleDriveLogo = new GetResourceIcon(this, "/Model/GoogleDrive/GoogleDrive_Logo.png");
+            ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/GoogleDrive/GoogleDrive_Logo.png");
             _credential = credential;
 
             _aliasMask = aliasMask;
@@ -173,7 +173,7 @@ namespace FileExplorer.Models
                 yield return GetFromSystemImageListUsingExtension.Instance;
 
             if (entry.FullPath.Equals(Alias))
-                yield return GoogleDriveLogo;
+                yield return EntryModelIconExtractors.ProvideValue(ProfileIcon);
         }
 
         #endregion
@@ -192,7 +192,6 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
-        private GetResourceIcon GoogleDriveLogo;
         private IConfigurableHttpClientInitializer _credential;
         public string Alias { get; protected set; }
         public string RootAccessPath { get { return _rootAccessPath; } }

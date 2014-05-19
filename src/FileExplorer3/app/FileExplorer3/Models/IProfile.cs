@@ -56,7 +56,7 @@ namespace FileExplorer.Models
 
         #region Public Properties
         string ProfileName { get; }
-        Uri ProfileIcon { get; }
+        byte[] ProfileIcon { get; }
 
         string RootDisplayName { get; }
         IPathHelper Path { get; }

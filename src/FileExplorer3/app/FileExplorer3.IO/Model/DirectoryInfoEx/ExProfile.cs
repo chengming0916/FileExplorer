@@ -22,6 +22,7 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF;
 using FileExplorer.Defines;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {
@@ -117,7 +118,8 @@ namespace FileExplorer.Models
             : base(events)
         {
             ProfileName = "FileSystem (Ex)";
-            ProfileIcon = PathUtils.MakeResourceUri("FileExplorer3.IO", "/Model/DirectoryInfoEx/My_Computer.png");
+            ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/DirectoryInfoEx/My_Computer.png");
+          
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer();
             MetadataProvider = new ExMetadataProvider();

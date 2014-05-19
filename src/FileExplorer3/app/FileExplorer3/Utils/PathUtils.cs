@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Utils
+namespace FileExplorer.Utils
 {
     public static class PathUtils
     {
@@ -19,9 +19,9 @@ namespace FileExplorer.WPF.Utils
         }
 
         //Dour High Arch on http://stackoverflow.com/questions/309485/c-sharp-sanitize-file-name
-        public static string SanitizePath(string path, char replaceChar)
+        public static string SanitizePath(string path, char replaceChar, char directorySeparatorChar = '\\')
         {
-            int filenamePos = path.LastIndexOf(Path.DirectorySeparatorChar) + 1;
+            int filenamePos = path.LastIndexOf(directorySeparatorChar) + 1;
             var sb = new System.Text.StringBuilder();
             sb.Append(path.Substring(0, filenamePos));
             for (int i = filenamePos; i < path.Length; i++)
@@ -47,7 +47,7 @@ namespace FileExplorer.WPF.Utils
 
         public static string MakeResourcePath(string library, string path2Resource)
         {
-            if (path2Resource.Contains('\\'))
+            if (path2Resource.Contains("\\"))
                 throw new ArgumentException("path2Resource");
             return String.Format("{0}.{1}", library, path2Resource.TrimStart('/').Replace('/', '.'));
         }
