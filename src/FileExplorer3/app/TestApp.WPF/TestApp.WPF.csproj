@@ -103,10 +103,6 @@
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="AuthorizationKeys.cs" />
-    <None Include="gapi_client_secret.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Copy of AuthorizationKeys.cs" />
     <Compile Include="ExplorerInitializers.cs" />
     <Compile Include="MdiWindow.xaml.cs">
       <DependentUpon>MdiWindow.xaml</DependentUpon>

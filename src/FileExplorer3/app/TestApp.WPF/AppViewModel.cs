@@ -43,7 +43,7 @@ namespace TestApp
             _events.Subscribe(this);
             _profile = new FileSystemInfoProfile(_events, windowManager);
             _profileEx = new FileSystemInfoExProfile(events, windowManager);
-            
+
             Func<string> loginSkyDrive = () =>
             {
                 var login = new SkyDriveLogin(AuthorizationKeys.SkyDrive_Client_Id);
@@ -54,7 +54,8 @@ namespace TestApp
                 return null;
             };
 
-            _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
+            if (AuthorizationKeys.SkyDrive_Client_Secret != null)
+                _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
 
 
             Func<UserLogin> loginDropBox = () =>
@@ -68,10 +69,11 @@ namespace TestApp
                 return null;
             };
 
-            _profileDropBox = new DropBoxProfile(_events, _windowManager,
-                    AuthorizationKeys.DropBox_Client_Id,
-                          AuthorizationKeys.DropBox_Client_Secret,
-                          loginDropBox);
+            if (AuthorizationKeys.DropBox_Client_Secret != null)
+                _profileDropBox = new DropBoxProfile(_events, _windowManager,
+                        AuthorizationKeys.DropBox_Client_Id,
+                              AuthorizationKeys.DropBox_Client_Secret,
+                              loginDropBox);
 
             if (System.IO.File.Exists("gapi_client_secret.json"))
                 using (var gapi_secret_stream = System.IO.File.OpenRead("gapi_client_secret.json")) //For demo only.
@@ -177,14 +179,14 @@ namespace TestApp
         private void pickAndAdd(IEntryModel[] rootModel)
         {
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            if (selectedModel != null)
-                RootModels.Add(selectedModel);
+            //if (selectedModel != null)
+            //    RootModels.Add(selectedModel);
             _events.Publish(new RootChangedEvent(ChangeType.Created, selectedModel));
         }
 
         public void Add()
         {
-            var initializer = getInitializer(_windowManager, _events, null);
+            var initializer = getInitializer(_windowManager, /*_events*/ null, null);
             var profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
             };
@@ -193,8 +195,7 @@ namespace TestApp
                 dir => new SimpleScriptCommand("AddToRootProfile",
                     pd =>
                     {
-                        RootModels.Add(dir);
-                        return Explorer.BroadcastRootChanged(RootChangedEvent.Created(dir));
+                        return ScriptCommands.PublishEvent(RootChangedEvent.Created(dir));
                     })
               , null), new ParameterDic() { { "Events", _events } });
 
@@ -227,6 +228,7 @@ namespace TestApp
             var rootModel = new[] { await _profileSkyDrive.ParseAsync("") };
             pickAndAdd(rootModel);
         }
+        public bool CanAddSkyDrive { get { return _profileSkyDrive != null; } }
 
         public async Task AddGoogleDrive()
         {
@@ -243,6 +245,8 @@ namespace TestApp
             var rootModel = new[] { await _profileDropBox.ParseAsync("") };
             pickAndAdd(rootModel);
         }
+
+        public bool CanAddDropBox { get { return _profileDropBox != null; } }
 
         public void ShowDialog()
         {
@@ -286,10 +290,10 @@ namespace TestApp
                 new ToolbarCommandsInitializers(_windowManager));
 
             var tabVM = new TabbedExplorerViewModel(initializer);
-            
+
             //var windowManager = new TabbedAppWindowManager(tabVM);
-           
-            
+
+
             _windowManager.ShowWindow(tabVM);
         }
 
@@ -304,7 +308,7 @@ namespace TestApp
                     foreach (var root in message.AppliedRootDirectories)
                         RootModels.Add(root);
                     break;
-                case ChangeType.Deleted :
+                case ChangeType.Deleted:
                     foreach (var root in message.AppliedRootDirectories)
                         RootModels.Remove(root);
                     break;

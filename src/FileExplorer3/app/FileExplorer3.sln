@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3.WPF", "FileEx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3", "FileExplorer3\FileExplorer3.csproj", "{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.FileExplorer.WPF", "Nuget.FileExplorer.WPF\Nuget.FileExplorer.WPF.csproj", "{AECC6565-52DA-472D-BA52-2BA43B7E60CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,16 @@ Global
 		{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}.Release|ARM.ActiveCfg = Release|Any CPU
 		{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}.Release|x64.ActiveCfg = Release|Any CPU
 		{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}.Release|x86.ActiveCfg = Release|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|ARM.ActiveCfg = Release|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|x64.ActiveCfg = Release|Any CPU
+		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

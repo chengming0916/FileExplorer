@@ -68,7 +68,9 @@
                 </Button>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10,5" HorizontalAlignment="Right"  >
                     <Label Content="File _name:" Target="{Binding ElementName=tboxFileName}"/>
-                    <TextBox Width="200" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" x:Name="tboxFileName" />
+                    <TextBox Width="200" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalContentAlignment="Center"
+                             x:Name="tboxFileName" />
                 </StackPanel>
                 
                 

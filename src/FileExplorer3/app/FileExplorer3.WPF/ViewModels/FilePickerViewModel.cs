@@ -17,12 +17,12 @@ using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {
-   
+
     public enum FilePickerMode { Open, Save }
 
     public interface IEntryModelInfo
     {
-        string FileName { get;   }
+        string FileName { get; }
         IProfile Profile { get; }
     }
 
@@ -30,8 +30,8 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-          public FilePickerViewModel(IExplorerInitializer initializer, string filterStr,
-            FilePickerMode mode = FilePickerMode.Open)
+        public FilePickerViewModel(IExplorerInitializer initializer, string filterStr,
+          FilePickerMode mode = FilePickerMode.Open)
             : base(initializer)
         {
             FilterStr = filterStr;
@@ -57,15 +57,31 @@ namespace FileExplorer.WPF.ViewModels
 
             FileList.Selection.SelectionChanged += (o1, e1) =>
             {
-                string newFileName = String.Join(",",
-                    FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
-                    .Select(evm => evm.EntryModel.Profile.Path.GetFileName(evm.EntryModel.FullPath)));
+                var firstDir =
+                    FileList.Selection.SelectedItems.FirstOrDefault(evm => evm.EntryModel.IsDirectory);
+                if (firstDir != null)
+                {
+                    setFileName(firstDir.EntryModel.Label, false);
+                }
+                else
+                {
+                    string newFileName = String.Join(",",
+                        FileList.Selection.SelectedItems.Where(evm => !evm.EntryModel.IsDirectory)
+                        .Select(evm => evm.EntryModel.GetName()));
 
-                if (!String.IsNullOrEmpty(newFileName))
-                    FileName = newFileName;
+                    if (!String.IsNullOrEmpty(newFileName))
+                        switch (mode)
+                        {
+                           case FilePickerMode.Save: setFileName(newFileName, 
+                                !newFileName.Contains(',')); break;
+                            default: setFileName(newFileName); break;
+                        }
+                      
+                    
+                }
             };
 
-                      FileList.EnableDrag = false;
+            FileList.EnableDrag = false;
             FileList.EnableDrop = false;
             FileList.EnableMultiSelect = false;
         }
@@ -74,14 +90,14 @@ namespace FileExplorer.WPF.ViewModels
             FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
             : this(new ExplorerInitializer(windowManager, events, rootModels), filterStr, mode)
         {
-            
+
         }
 
         #endregion
 
         #region Methods
 
-       
+
 
         protected override void OnViewAttached(object view, object context)
         {
@@ -115,9 +131,9 @@ namespace FileExplorer.WPF.ViewModels
             //Update FileName in case user does not enter full path name.
             IScriptCommand updateFileName =
                 new SimpleScriptCommand("updateFileName", pd =>
-                { 
+                {
                     FileName = Profile.Path.Combine(FileList.CurrentDirectory.FullPath, FileName);
-                    return ResultCommand.NoError; 
+                    return ResultCommand.NoError;
                 });
 
             //Update SelectedFiles property (if it's exists.")
@@ -171,13 +187,15 @@ namespace FileExplorer.WPF.ViewModels
             TryClose(false);
         }
 
-       
 
-        private void setFileName(string value)
+
+        private void setFileName(string value, bool? canOpen = null)
         {
             _selectedFileName = value;
             NotifyOfPropertyChange(() => FileName);
-            CanOpen = !String.IsNullOrEmpty(value);
+            if (canOpen.HasValue)
+                CanOpen = canOpen.Value;
+            else CanOpen = !String.IsNullOrEmpty(value);
         }
 
         #endregion
@@ -187,9 +205,8 @@ namespace FileExplorer.WPF.ViewModels
         protected IScriptCommand _tryCloseCommand;
         private static ColumnFilter _directoryOnlyFilter = ColumnFilter.CreateNew("DirectoryOnly", "IsDirectory", em => em.IsDirectory);
         IEntryModel[] _selectedFiles;
-        bool _canOpen = false;
-        private string _filterStr;
-        private string _selectedFilter;
+        bool _canOpen = false, _canSave = false;
+
         private string _selectedFileName = "";
         private FilePickerMode _mode;
 
@@ -197,15 +214,25 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Public Properties
 
-        
-        
+
+
         public string FileName { get { return _selectedFileName; } set { setFileName(value); } }
         public IProfile Profile { get; private set; }
 
         public bool IsOpenEnabled { get { return _mode == FilePickerMode.Open; } }
         public bool IsSaveEnabled { get { return _mode == FilePickerMode.Save; } }
 
-        public bool CanOpen { get { return _canOpen; } set { _canOpen = value; NotifyOfPropertyChange(() => CanOpen); } }
+        public bool CanOpen
+        {
+            get { return _canOpen; }
+            set
+            {
+                _canOpen = value;
+                NotifyOfPropertyChange(() => CanSave);
+                NotifyOfPropertyChange(() => CanOpen);
+            }
+        }
+        public bool CanSave { get { return CanOpen; } set { CanOpen = value; } }
         public IEntryModel[] SelectedFiles
         {
             get { return _selectedFiles; }

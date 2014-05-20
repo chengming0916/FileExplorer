@@ -54,7 +54,8 @@ namespace TestApp
                     }
                     else
                     {
-                        window.Width = 500; window.Height = 500;
+
+                        window.Width = 800; window.Height = 500;
                     }
 
                     
