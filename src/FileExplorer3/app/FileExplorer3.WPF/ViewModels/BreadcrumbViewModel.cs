@@ -15,6 +15,7 @@ using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using System.Windows;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -78,6 +79,18 @@ namespace FileExplorer.WPF.ViewModels
 
                     }
                 });
+
+            _sbox.AddHandler(TextBlock.LostFocusEvent, (RoutedEventHandler)((s, e) =>
+            {
+                if (!_switch.IsSwitchOn)
+                {
+                    _switch.Dispatcher.BeginInvoke(new System.Action(() =>
+                        {
+                            _switch.IsSwitchOn = true;
+                        }));
+                }
+
+            }));
         }
 
 

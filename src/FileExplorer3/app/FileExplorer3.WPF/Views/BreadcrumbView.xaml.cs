@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.WPF.BaseControls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,5 +25,7 @@ namespace FileExplorer.WPF.Views
         {
             InitializeComponent();
         }
+
+       
     }
 }
