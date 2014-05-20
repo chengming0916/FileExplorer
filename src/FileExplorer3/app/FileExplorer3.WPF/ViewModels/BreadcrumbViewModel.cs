@@ -134,7 +134,7 @@ namespace FileExplorer.WPF.ViewModels
         void setRootModels(IEntryModel[] rootModels)
         {
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
-            Entries.SetEntries(rootModels
+            Entries.SetEntries(UpdateMode.Update, rootModels
                 .Select(r => new BreadcrumbItemViewModel(_events, this, r, null)).ToArray());
 
         }

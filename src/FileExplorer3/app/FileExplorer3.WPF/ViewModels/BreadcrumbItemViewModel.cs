@@ -24,9 +24,9 @@ namespace FileExplorer.WPF.ViewModels
         {
             _events = events;
             _rootModel = rootModel;
-            
+
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>(loadEntriesTask);
-            Selection = new TreeSelector<IBreadcrumbItemViewModel, IEntryModel>(curDirModel, this, 
+            Selection = new TreeSelector<IBreadcrumbItemViewModel, IEntryModel>(curDirModel, this,
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
         }
 
@@ -55,19 +55,19 @@ namespace FileExplorer.WPF.ViewModels
         bool _showCaption = true; bool _isShown = false;
         private IBreadcrumbViewModel _rootModel;
         private bool _isOverflowed;
-        
+
 
         #endregion
 
         #region Public Properties
-                
+
         public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
 
         public bool IsShown
         {
             get { return _isShown; }
-            set { _isShown = value; if (value) Entries.LoadAsync(false); NotifyOfPropertyChange(() => IsShown); }
+            set { _isShown = value; if (value) Entries.LoadAsync(UpdateMode.Replace, false); NotifyOfPropertyChange(() => IsShown); }
         }
 
         public bool ShowCaption
@@ -84,7 +84,7 @@ namespace FileExplorer.WPF.ViewModels
             {
                 _isOverflowed = value;
                 NotifyOfPropertyChange(() => IsOverflowed);
-                NotifyOfPropertyChange(() => IsOverflowedOrRoot); 
+                NotifyOfPropertyChange(() => IsOverflowedOrRoot);
             }
         }
 

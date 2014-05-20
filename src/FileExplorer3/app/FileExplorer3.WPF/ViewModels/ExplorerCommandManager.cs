@@ -43,8 +43,8 @@ namespace FileExplorer.WPF.ViewModels
             ScriptCommands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
                 IExplorerViewModel elvm = pd.AsVMParameterDic().Explorer;
-                elvm.FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
-                elvm.DirectoryTree.Selection.RootSelector.SelectedViewModel.Entries.LoadAsync(true);
+                elvm.FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Replace, true);
+                elvm.DirectoryTree.Selection.RootSelector.SelectedViewModel.Entries.LoadAsync(UpdateMode.Replace, true);
                 return ResultCommand.NoError;
             });
             

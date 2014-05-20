@@ -173,7 +173,7 @@ namespace FileExplorer.WPF.ViewModels
                         await DirectoryTree.Selection.AsRoot().BroascastAsync(affectedParentEntry);
                         await Breadcrumb.Selection.AsRoot().BroascastAsync(affectedParentEntry);
                         if (FileList.CurrentDirectory.Equals(affectedParentEntry))
-                            await FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                            await FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Replace, true);
                     }
                 }
             }
@@ -331,7 +331,7 @@ namespace FileExplorer.WPF.ViewModels
                 {
                     Filters = new EntriesHelper<FileNameFilter>(loadFiltersTask);
                     var filters = getFilters(_filterStr).ToArray();
-                    Filters.SetEntries(filters);
+                    Filters.SetEntries(UpdateMode.Replace, filters);
                     if (filters.Length > 0)
                         SelectedFilter = filters.First().Filter;
                 }

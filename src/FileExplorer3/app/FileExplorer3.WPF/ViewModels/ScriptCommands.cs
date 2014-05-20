@@ -1273,7 +1273,7 @@ namespace FileExplorer.WPF.ViewModels
             if (!pm.ContainsKey("FileList"))
                 return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
             IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
-            await flvm.ProcessedEntries.EntriesHelper.LoadAsync(_force);
+            await flvm.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Update, _force);
             return _nextCommand;
         }
 

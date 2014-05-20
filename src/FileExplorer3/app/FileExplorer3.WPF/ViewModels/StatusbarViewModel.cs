@@ -49,7 +49,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             SelectionCount = flvm.Selection.SelectedItems.Count();
 
-            Metadata.LoadAsync(true, flvm);
+            Metadata.LoadAsync(UpdateMode.Replace, true, flvm);
             DisplayItems.Clear();
             switch (SelectionCount)
             {

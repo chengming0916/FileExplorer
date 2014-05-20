@@ -16,6 +16,7 @@ using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.Models;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -46,7 +47,7 @@ namespace FileExplorer.WPF.ViewModels
                             RefreshIcon();
                             break;
                         case "SubCommands":
-                            SubCommands.LoadAsync(true);
+                            SubCommands.LoadAsync(UpdateMode.Replace, true);
                             RefreshIcon();
                             break;
                         case "IsEnabled" :
@@ -66,7 +67,7 @@ namespace FileExplorer.WPF.ViewModels
                 SubCommands = new EntriesHelper<ICommandViewModel>(
                     (cts) => Task.Run<IEnumerable<ICommandViewModel>>(
                         () => directoryModel.SubCommands.Select(c => (ICommandViewModel)new CommandViewModel(c, this))));
-                SubCommands.LoadAsync(false);
+                SubCommands.LoadAsync(UpdateMode.Replace, false);
             }
         }
 
