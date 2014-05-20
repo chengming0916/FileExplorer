@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
@@ -59,7 +60,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
             }
         }
 
-        public async Task<IEnumerable<VM>> LoadAsync(bool force = false, object parameter = null)
+        public async Task<IEnumerable<VM>> LoadAsync(UpdateMode updateMode = UpdateMode.Replace, bool force = false, object parameter = null)
         {
             if (_loadSubEntryFunc != null) //Ignore if contructucted using entries but not entries func
             {
@@ -82,7 +83,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                                 IsLoading = false;
                                 if (!prevTask.IsCanceled && !prevTask.IsFaulted)
                                 {
-                                    SetEntries(prevTask.Result.ToArray());
+                                    SetEntries(updateMode, prevTask.Result.ToArray());
                                     _lastRefreshTimeUtc = DateTime.UtcNow;
                                 }
                             }, _lastCancellationToken, scheduler);
@@ -96,9 +97,9 @@ namespace FileExplorer.WPF.ViewModels.Helpers
             return _subItemList;
         }
 
-        public void SetEntries(params VM[] viewModels)
+
+        private void updateEntries(params VM[] viewModels)
         {
-            //_subItemList = viewModels.ToList();
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
 
@@ -107,22 +108,39 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
             foreach (var vm in removeItems)
                 all.Remove(vm);
-            
+
             foreach (var vm in addItems)
                 all.Add(vm);
 
             _subItemList = all.ToArray().ToList();
-
-            //all.Clear();
-            //all.NotifyChanges();
-            //foreach (var vm in viewModels)
-            //    All.Add(vm);
-            //all.AddItems(viewModels);
             all.NotifyChanges();
 
             if (EntriesChanged != null)
                 EntriesChanged(this, EventArgs.Empty);
-            //_isExpanded = true;
+        }
+
+        public void SetEntries(UpdateMode updateMode = UpdateMode.Replace, params VM[] viewModels)
+        {
+           switch (updateMode)
+           {
+               case UpdateMode.Update: updateEntries(viewModels); break;
+               case UpdateMode.Replace: setEntries(viewModels); break;
+               default: throw new NotSupportedException("UpdateMode");
+           }
+        }
+
+        private void setEntries(params VM[] viewModels)
+        {
+            _subItemList = viewModels.ToList();
+            FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
+            all.SuspendCollectionChangeNotification();
+            all.Clear();
+            all.NotifyChanges();
+            all.AddItems(viewModels);
+            all.NotifyChanges();
+
+            if (EntriesChanged != null)
+                EntriesChanged(this, EventArgs.Empty);
         }
 
         #endregion

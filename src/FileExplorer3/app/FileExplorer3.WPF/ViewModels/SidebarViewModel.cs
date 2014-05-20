@@ -43,12 +43,12 @@ namespace FileExplorer.WPF.ViewModels
 
         public void Handle(ListCompletedEvent message)
         {
-            Metadata.LoadAsync(true, message.Sender as IFileListViewModel);
+            Metadata.LoadAsync(UpdateMode.Replace, true, message.Sender as IFileListViewModel);
         }
 
         public void Handle(SelectionChangedEvent message)
         {
-            Metadata.LoadAsync(true, message.Sender as IFileListViewModel);
+            Metadata.LoadAsync(UpdateMode.Replace, true, message.Sender as IFileListViewModel);
         }
 
         #endregion

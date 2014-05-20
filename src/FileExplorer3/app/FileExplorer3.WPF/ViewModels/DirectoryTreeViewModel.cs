@@ -104,7 +104,7 @@ namespace FileExplorer.WPF.ViewModels
             _rootModels = rootModels;
             DirectoryNodeViewModel[] rootViewModels = rootModels
                .Select(r => new DirectoryNodeViewModel(_events, this, r, null)).ToArray();
-            Entries.SetEntries(rootViewModels);
+            Entries.SetEntries(UpdateMode.Update, rootViewModels);
         }
 
         public void ExpandRootEntryModels()

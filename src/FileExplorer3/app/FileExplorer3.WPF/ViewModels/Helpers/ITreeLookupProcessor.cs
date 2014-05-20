@@ -154,7 +154,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         public bool Process(HierarchicalResult hr, ITreeSelector<VM, T> parentSelector, ITreeSelector<VM, T> selector)
         {
             if (_hr.HasFlag(hr))
-               selector.EntryHelper.LoadAsync(true);
+                selector.EntryHelper.LoadAsync(UpdateMode.Replace, true);
             return true;
         }
     }

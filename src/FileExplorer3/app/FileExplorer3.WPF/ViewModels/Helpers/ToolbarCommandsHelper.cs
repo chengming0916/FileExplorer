@@ -76,7 +76,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                         CommandModels.IsLoaded = false; //Reset CommandModels
                     break;
                 case "AppliedModels":
-                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(false));
+                    AsyncUtils.RunSync(() => CommandModels.LoadAsync(UpdateMode.Replace, false));
                     if (AppliedModels != null)
                         foreach (var commandVM in CommandModels.AllNonBindable)
                             commandVM.CommandModel.NotifySelectionChanged(AppliedModels);

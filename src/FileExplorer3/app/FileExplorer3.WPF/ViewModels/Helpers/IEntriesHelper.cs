@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Utils;
+﻿using FileExplorer.Defines;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,15 +26,15 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         /// </summary>
         /// <param name="force">Load sub-entries even if it's already loaded.</param>
         /// <returns></returns>
-        Task<IEnumerable<VM>> LoadAsync(bool force = false, object parameter = null);
+        Task<IEnumerable<VM>> LoadAsync(UpdateMode updateMode = UpdateMode.Replace, bool force = false, object parameter = null);
 
         Task UnloadAsync();
 
         /// <summary>
-        /// Used to preload sub-entries.
+        /// Used to preload sub-entries, fully overwrite entries stored in the helper.
         /// </summary>
         /// <param name="viewModels"></param>
-        void SetEntries(params VM[] viewModels);
+        void SetEntries(UpdateMode updateMode = UpdateMode.Replace, params VM[] viewModels);
 
         /// <summary>
         /// Load when expand the first time.

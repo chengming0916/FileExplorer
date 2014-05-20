@@ -47,7 +47,7 @@ namespace FileExplorer.WPF.ViewModels
 
             ScriptCommands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
-                pd.AsVMParameterDic().FileList.ProcessedEntries.EntriesHelper.LoadAsync(true);
+                pd.AsVMParameterDic().FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Update, true);
                 return ResultCommand.OK;
             });
 

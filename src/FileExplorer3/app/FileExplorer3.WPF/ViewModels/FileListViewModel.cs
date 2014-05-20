@@ -122,7 +122,7 @@ namespace FileExplorer.WPF.ViewModels
             _currentDirVM = em;
 
             ProcessedEntries.EntriesHelper.IsLoaded = false;
-            await ProcessedEntries.EntriesHelper.LoadAsync(false);
+            await ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Replace, false);
 
             Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);
 
