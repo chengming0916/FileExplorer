@@ -8,11 +8,8 @@ using Cofe.Core.Utils;
 
 namespace Cofe.Core.Script
 {
-
     public abstract class ScriptCommandBase : IScriptCommand
     {
-
-
         #region Constructor
 
         protected ScriptCommandBase(string commandKey, params string[] parameters)
@@ -36,7 +33,7 @@ namespace Cofe.Core.Script
 
         public virtual IScriptCommand Execute(ParameterDic pm)
         {
-            return AsyncUtils.RunSync(() => ExecuteAsync(pm));            
+            return AsyncUtils.RunSync(() => ExecuteAsync(pm));
         }
 
         public virtual async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
@@ -60,8 +57,11 @@ namespace Cofe.Core.Script
 
         #region Public Properties
 
-        public bool ContinueOnCaptureContext { get { return _continueOnCaptureContext; } 
-            protected set { _continueOnCaptureContext = value; } }
+        public bool ContinueOnCaptureContext
+        {
+            get { return _continueOnCaptureContext; }
+            protected set { _continueOnCaptureContext = value; }
+        }
         public string CommandKey { get; private set; }
         public string[] CommandParameters { get; private set; }
 
@@ -76,5 +76,5 @@ namespace Cofe.Core.Script
 
     }
 
-    
+
 }

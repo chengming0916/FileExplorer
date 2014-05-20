@@ -33,8 +33,13 @@ namespace FileExplorer.WPF.ViewModels
             if (obj is IMetadataViewModel)
             {
                 var objViewModel = obj as IMetadataViewModel;
-                return objViewModel.MetadataModel.Category == MetadataModel.Category &&
-                    objViewModel.MetadataModel.HeaderText == MetadataModel.HeaderText;
+                if (objViewModel.MetadataModel.Category != MetadataModel.Category)
+                    return false;
+                if (!String.IsNullOrEmpty(objViewModel.MetadataModel.HeaderText))
+                    return objViewModel.MetadataModel.HeaderText == MetadataModel.HeaderText;
+
+                return objViewModel.MetadataModel.Content == null ||
+                    objViewModel.MetadataModel.Content.Equals(MetadataModel.Content);
             }
             return false;
         }
@@ -42,7 +47,7 @@ namespace FileExplorer.WPF.ViewModels
         #endregion
 
         #region Data
-        
+
 
         #endregion
 

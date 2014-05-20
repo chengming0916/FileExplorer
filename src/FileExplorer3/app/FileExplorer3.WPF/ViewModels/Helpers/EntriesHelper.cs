@@ -72,8 +72,11 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                         if (_clearBeforeLoad)
                             All.Clear();
 
-                        IsLoading = true;
-                        await _loadSubEntryFunc(_isLoaded, parameter).ContinueWith((prevTask, _) =>
+                        try
+                        {
+                            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+                            IsLoading = true;
+                            await _loadSubEntryFunc(_isLoaded, parameter).ContinueWith((prevTask, _) =>
                             {
                                 IsLoaded = true;
                                 IsLoading = false;
@@ -82,7 +85,11 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                                     SetEntries(prevTask.Result.ToArray());
                                     _lastRefreshTimeUtc = DateTime.UtcNow;
                                 }
-                            }, _lastCancellationToken, TaskScheduler.FromCurrentSynchronizationContext());
+                            }, _lastCancellationToken, scheduler);
+                        }
+                        catch (InvalidOperationException) { }
+
+
                     }
                 }
             }
@@ -91,8 +98,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
         public void SetEntries(params VM[] viewModels)
         {
-            _subItemList = viewModels.ToList();
-
+            //_subItemList = viewModels.ToList();
             FastObservableCollection<VM> all = All as FastObservableCollection<VM>;
             all.SuspendCollectionChangeNotification();
 
@@ -101,8 +107,11 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
             foreach (var vm in removeItems)
                 all.Remove(vm);
+            
             foreach (var vm in addItems)
-                all.Add(vm); 
+                all.Add(vm);
+
+            _subItemList = all.ToArray().ToList();
 
             //all.Clear();
             //all.NotifyChanges();
@@ -159,7 +168,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
             set { _isLoaded = value; NotifyOfPropertyChanged(() => IsLoaded); }
         }
 
-         public bool IsLoading
+        public bool IsLoading
         {
             get { return _isLoading; }
             set { _isLoading = value; NotifyOfPropertyChanged(() => IsLoading); }
@@ -168,7 +177,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         public DateTime LastRefreshTimeUtc { get { return _lastRefreshTimeUtc; } }
 
         public event EventHandler EntriesChanged;
-      
+
 
         public IEnumerable<VM> AllNonBindable { get { return _subItemList; } }
 
@@ -184,7 +193,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
 
 
-       
+
     }
 
 }
