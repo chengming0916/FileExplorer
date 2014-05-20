@@ -71,6 +71,8 @@ namespace FileExplorer.WPF.ViewModels
         {
             public ViewModeStepCommandModel(string view)
             {
+                IsVisibleOnMenu = true;
+                IsVisibleOnToolbar = true; 
                 Header = view;
                 Stream imgStream = Application.GetResourceStream(
                        new Uri(String.Format(ViewModeViewModel.iconPathMask, view.ToLower()))).Stream;
@@ -167,8 +169,8 @@ namespace FileExplorer.WPF.ViewModels
     {
         public SelectGroupCommand(IFileListViewModel flvm)
             : base(ApplicationCommands.SelectAll,
-            new CommandModel(ApplicationCommands.SelectAll) { Symbol = Convert.ToChar(0xE14E) },
-            new CommandModel(ExplorerCommands.ToggleCheckBox) { Symbol = Convert.ToChar(0xe1ef) })
+            new CommandModel(ApplicationCommands.SelectAll) { Symbol = Convert.ToChar(0xE14E), IsVisibleOnMenu = true, IsVisibleOnToolbar = true },
+            new CommandModel(ExplorerCommands.ToggleCheckBox) { Symbol = Convert.ToChar(0xe1ef), IsVisibleOnMenu = true, IsVisibleOnToolbar = true })
         {
             IsVisibleOnMenu = true; IsVisibleOnToolbar = true;
             Symbol = Convert.ToChar(0xE10B);

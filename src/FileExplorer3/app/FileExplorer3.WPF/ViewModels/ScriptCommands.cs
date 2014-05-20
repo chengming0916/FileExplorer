@@ -1171,6 +1171,7 @@ namespace FileExplorer.WPF.ViewModels
         internal DoFileList(Func<IFileListViewModel, IScriptCommand> commandFunc)
             : base("FileList", commandFunc)
         {
+            ContinueOnCaptureContext = true;
         }
     }
 
@@ -1262,6 +1263,7 @@ namespace FileExplorer.WPF.ViewModels
         internal RefreshFileList(IScriptCommand nextCommand, bool force)
             : base("Refresh", "FileList")
         {
+            ContinueOnCaptureContext = true;
             _nextCommand = nextCommand;
             _force = force;
         }
