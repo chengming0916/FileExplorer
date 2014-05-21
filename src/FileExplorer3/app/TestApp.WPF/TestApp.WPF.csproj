@@ -54,6 +54,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\ExifLib.dll</HintPath>
     </Reference>
+    <Reference Include="FileExplorer3, Version=3.0.5254.22208, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FileExplorer3\bin\Debug\FileExplorer3.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlTextBlock">
       <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
     </Reference>
@@ -157,10 +161,6 @@
     <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
       <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
       <Name>FileExplorer3.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
-      <Project>{bd72b62f-6bcf-43d0-ad6a-332decfae4ed}</Project>
-      <Name>FileExplorer3</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
