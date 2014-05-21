@@ -25,7 +25,7 @@ namespace TestTemplate.WPF
             //Value is based on string
             Selection = new TreeRootSelector<TreeNodeViewModel, string>(Entries) { Comparers = new[] { this } };
 
-            Entries.SetEntries(new TreeNodeViewModel("", "Root", this, null));
+            Entries.SetEntries(UpdateMode.Update, new TreeNodeViewModel("", "Root", this, null));
 
         }
 
