@@ -11,6 +11,7 @@ using FileExplorer.WPF.Models;
 using Cofe.Core.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -50,7 +51,17 @@ namespace FileExplorer.WPF.ViewModels
         //Find ViewMode using a step number  (e.g. 103 return LargeIcon = 2)
         internal static int findViewMode(string[] viewModes, int forStep)
         {
-            int retVal = 0;
+            int retVal = 0; int id = 0;
+            var parsedViewMode = viewModes.Select(vm =>
+                {
+                    string viewMode; int step; int itemHeight;
+                    parseViewMode(vm, out viewMode, out step, out itemHeight);
+                    return new { Id = id++, ViewMode = viewMode, Step = step, ItemHeight = itemHeight, 
+                    StepDifference = Math.Abs(step - forStep) };
+                });
+
+            return parsedViewMode.MinBy(vmInfo => vmInfo.StepDifference).Id;
+
             for (int i = viewModes.Count() - 1; i >= 0; i--)
             {
                 string viewMode; int step; int itemHeight;
