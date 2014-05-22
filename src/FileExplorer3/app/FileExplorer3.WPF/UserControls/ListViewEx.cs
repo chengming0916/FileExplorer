@@ -124,7 +124,9 @@ namespace FileExplorer.WPF.UserControls
         public static void OnViewModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
             ListViewEx fl = (ListViewEx)sender;
-
+            if (args.NewValue == args.OldValue)
+                return;
+            Debug.WriteLine(args.NewValue);
             ViewBase view = fl.View;
             if (args.Property.Equals(ViewModeProperty))
             {
