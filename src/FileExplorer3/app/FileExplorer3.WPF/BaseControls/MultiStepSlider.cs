@@ -92,7 +92,7 @@ namespace FileExplorer.WPF.BaseControls
             Debug.Assert(_embeddedSlider != null);
             _embeddedSlider.SizeChanged += delegate { UpdateMaximum(); };
 
-          
+
         }
 
         bool isWithinStepStop(int idx, double position)
@@ -268,15 +268,16 @@ namespace FileExplorer.WPF.BaseControls
 
             UpdateMaximum();
 
-
             _embeddedSlider.AddValueChanged(Slider.ValueProperty, (o, e) =>
                 {
                     if (_embeddedSlider.IsFocused)
-                       Value = sliderValueToValue(_embeddedSlider.Value);
-                        //Value = (double)_valueToSliderValueConverter.ConvertBack(
-                        //    _embeddedSlider.Value, typeof(double), null, 
-                        //    Thread.CurrentThread.CurrentCulture);
-                        ////_embeddedSlider.GetBindingExpression(Slider.ValueProperty).UpdateTarget();
+                    {
+                        Value = sliderValueToValue(_embeddedSlider.Value);
+                    }
+                    //Value = (double)_valueToSliderValueConverter.ConvertBack(
+                    //    _embeddedSlider.Value, typeof(double), null, 
+                    //    Thread.CurrentThread.CurrentCulture);
+                    ////_embeddedSlider.GetBindingExpression(Slider.ValueProperty).UpdateTarget();
                 });
 
             this.AddValueChanged(ValueProperty, (o, e) =>
