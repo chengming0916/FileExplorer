@@ -160,6 +160,7 @@
     <None Include="Diagrams\Explorer.Model.Metadata.cd" />
     <None Include="Diagrams\Explorer.Model.Entry.cd" />
     <None Include="Diagrams\Explorer.ViewModel.cd" />
+    <None Include="Diagrams\Hierarchy.cd" />
     <None Include="Logic\MVVM\Explorer\ExplorerViewModel.cs.orig" />
     <None Include="Logic\MVVM\Explorer\Viewer\DirectoryViewerVM.cs.orig" />
     <None Include="Logic\MVVM\Explorer\Viewer\MediaViewerVM.cs.orig" />

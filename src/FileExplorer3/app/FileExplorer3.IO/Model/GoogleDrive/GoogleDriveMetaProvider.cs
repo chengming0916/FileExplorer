@@ -16,8 +16,8 @@ namespace FileExplorer.Models
 
     public class GoogleDriveMetadataProvider : MetadataProviderBase
     {
-        public GoogleDriveMetadataProvider()
-            : base(new FileBasedMetadataProvider())
+        public GoogleDriveMetadataProvider(params IMetadataProvider[] metadataProviders)
+            : base(metadataProviders, new FileBasedMetadataProvider())
         {
 
         }

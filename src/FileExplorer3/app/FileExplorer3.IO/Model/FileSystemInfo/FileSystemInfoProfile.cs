@@ -22,13 +22,14 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public FileSystemInfoProfile(IEventAggregator events, IWindowManager windowsManager)
+        public FileSystemInfoProfile(IEventAggregator events, 
+            IWindowManager windowsManager, params IMetadataProvider[] metadataProviders)
             : base(events)
         {
             ProfileName = "FileSystem";
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.LocalDefault;
-            MetadataProvider = new ExMetadataProvider();
+            MetadataProvider = new ExMetadataProvider(metadataProviders);
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = IODiskPatheMapper.Instance;
             DragDrop = new FileBasedDragDropHandler(this, windowsManager);

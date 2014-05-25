@@ -17,7 +17,12 @@ namespace FileExplorer.WPF.Models
             _additionalProvider = additionalProvider;
         }
 
-        
+        public MetadataProviderBase(IMetadataProvider[] additionalProvider1, params IMetadataProvider[] additionalProvider2)
+        {
+            var list = new List<IMetadataProvider>(additionalProvider1);
+            list.AddRange(additionalProvider2);
+            _additionalProvider = list.ToArray();
+        }
 
 
         public async virtual Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels, int modelCount, IEntryModel parentModel)

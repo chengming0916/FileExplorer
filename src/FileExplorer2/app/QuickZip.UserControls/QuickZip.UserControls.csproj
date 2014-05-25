@@ -530,6 +530,7 @@
     <Resource Include="Resources\arrow.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Diagrams\" />
     <Folder Include="Themes\WPFThemes\" />
     <Folder Include="Tools\Interface\" />
     <Folder Include="UserControls\HighlightContentControl\" />
@@ -544,7 +545,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UseGlobalSettings="True" BuildVersion_ConfigurationName="Release" />
+      <UserProperties BuildVersion_ConfigurationName="Release" BuildVersion_UseGlobalSettings="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

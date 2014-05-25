@@ -29,6 +29,25 @@ using FileExplorer.Defines;
 
 namespace TestApp
 {
+    public class DummyMetadataProvider : IMetadataProvider
+    {
+        public async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels,
+            int modelCount, IEntryModel parentModel)
+        {
+            List<IMetadata> retList = new List<IMetadata>();
+
+            if (selectedModels.Count() == 0)
+            {
+                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000) { IsVisibleInSidebar = true });
+                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10) { IsVisibleInSidebar = true });
+                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false) { IsVisibleInSidebar = true });
+            }
+            return retList;
+
+        }
+
+    }
+
     [Export(typeof(IScreen))]
     public class AppViewModel : Screen, IHandle<RootChangedEvent>//, IHandle<SelectionChangedEvent>
     {
@@ -42,7 +61,7 @@ namespace TestApp
 
             _events.Subscribe(this);
             _profile = new FileSystemInfoProfile(_events, windowManager);
-            _profileEx = new FileSystemInfoExProfile(events, windowManager);
+            _profileEx = new FileSystemInfoExProfile(events, windowManager, new DummyMetadataProvider());
 
             Func<string> loginSkyDrive = () =>
             {
