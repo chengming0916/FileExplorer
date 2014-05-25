@@ -11,8 +11,8 @@ namespace FileExplorer.Models
 {
     public class FileSystemInfoMetadataProvider : MetadataProviderBase
     {
-        public FileSystemInfoMetadataProvider()
-            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider(), new ExifMetadataProvider(), new ImageMetadataProvider())
+        public FileSystemInfoMetadataProvider(params IMetadataProvider[] metadataProviders)
+            : base(metadataProviders, new BasicMetadataProvider(), new FileBasedMetadataProvider(), new ExifMetadataProvider(), new ImageMetadataProvider())
         { }
 
         public override async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels,

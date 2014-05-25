@@ -48,9 +48,10 @@ namespace FileExplorer.Models
         public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
                  string clientSecretFile,
                  string aliasMask = "{0}'s GoogleDrive",
-                 string rootAccessPath = "/gdrive")
+                 string rootAccessPath = "/gdrive", 
+                 params IMetadataProvider[] metadataProviders)
             : this(events, windowManager, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretFile)),
-                    aliasMask, rootAccessPath)
+                    aliasMask, rootAccessPath, metadataProviders)
         {
 
         }
@@ -58,9 +59,10 @@ namespace FileExplorer.Models
         public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
                  Stream clientSecretStream,
                  string aliasMask = "{0}'s GoogleDrive",
-                 string rootAccessPath = "/gdrive")
+                 string rootAccessPath = "/gdrive",
+                 params IMetadataProvider[] metadataProviders)
             : this(events, windowManager, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretStream)),
-                    aliasMask, rootAccessPath)
+                    aliasMask, rootAccessPath, metadataProviders)
         {
 
         }
@@ -68,7 +70,7 @@ namespace FileExplorer.Models
         internal GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
                    IConfigurableHttpClientInitializer credential,
                    string aliasMask = "{0}'s GoogleDrive",
-                   string rootAccessPath = "/gdrive")
+                   string rootAccessPath = "/gdrive", params IMetadataProvider[] metadataProviders)
             : base(events)
         {
             ProfileName = "GoogleDrive";
@@ -79,7 +81,7 @@ namespace FileExplorer.Models
             Path = PathHelper.Web;
             DiskIO = new GoogleDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
-            MetadataProvider = new GoogleDriveMetadataProvider();
+            MetadataProvider = new GoogleDriveMetadataProvider(metadataProviders);
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             DragDrop = new FileBasedDragDropHandler(this, windowManager);

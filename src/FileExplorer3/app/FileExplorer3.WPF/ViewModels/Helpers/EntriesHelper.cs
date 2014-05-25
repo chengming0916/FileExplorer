@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
+using System.Diagnostics;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
@@ -88,7 +89,10 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                                 }
                             }, _lastCancellationToken, scheduler);
                         }
-                        catch (InvalidOperationException) { }
+                        catch (InvalidOperationException ex) 
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
 
 
                     }

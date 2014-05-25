@@ -62,18 +62,6 @@ namespace FileExplorer.WPF.ViewModels
 
             return parsedViewMode.MinBy(vmInfo => vmInfo.StepDifference).Id;
 
-            for (int i = viewModes.Count() - 1; i >= 0; i--)
-            {
-                string viewMode; int step; int itemHeight;
-                parseViewMode(viewModes[i], out viewMode, out step, out itemHeight);
-                if (step != -1)
-                    if (forStep >= step)
-                    {
-                        retVal = i;
-                    }
-                    else break;
-            }
-            return retVal;
         }
 
 

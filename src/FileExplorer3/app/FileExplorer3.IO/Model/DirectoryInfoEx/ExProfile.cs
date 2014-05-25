@@ -114,7 +114,8 @@ namespace FileExplorer.Models
             }
         }
 
-        public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager)
+        public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager, 
+            params IMetadataProvider[] metadataProviders)
             : base(events)
         {
             ProfileName = "FileSystem (Ex)";
@@ -122,7 +123,7 @@ namespace FileExplorer.Models
           
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer();
-            MetadataProvider = new ExMetadataProvider();
+            MetadataProvider = new ExMetadataProvider(metadataProviders);
             CommandProviders = new List<ICommandProvider>()
             {
                 new ExCommandProvider(this)

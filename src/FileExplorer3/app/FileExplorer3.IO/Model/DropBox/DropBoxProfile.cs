@@ -28,7 +28,8 @@ namespace FileExplorer.Models
         public DropBoxProfile(IEventAggregator events, IWindowManager windowManager,
             string clientId, string clientSecret,
             Func<UserLogin> loginFunc,
-            string aliasMask = "{0}'s DropBox")
+            string aliasMask = "{0}'s DropBox", 
+            params IMetadataProvider[] metadataProviders)
             : base(events)
         {
             ProfileName = "DropBox";
@@ -46,7 +47,7 @@ namespace FileExplorer.Models
 
             DiskIO = new DropBoxDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
-            MetadataProvider = new DropBoxMetadataProvider(() => GetClient());
+            MetadataProvider = new DropBoxMetadataProvider(() => GetClient(), metadataProviders);
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             //PathMapper = new SkyDriveDiskPathMapper(this, null);

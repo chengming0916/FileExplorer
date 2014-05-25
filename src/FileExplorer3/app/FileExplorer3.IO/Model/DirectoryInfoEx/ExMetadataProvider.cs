@@ -10,8 +10,8 @@ namespace FileExplorer.Models
 {
     public class ExMetadataProvider : MetadataProviderBase
     {
-        public ExMetadataProvider()
-            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider(), new ExifMetadataProvider(), 
+        public ExMetadataProvider(params IMetadataProvider[] metadataProviders)
+            : base(metadataProviders, new BasicMetadataProvider(), new FileBasedMetadataProvider(), new ExifMetadataProvider(), 
                     new ImageMetadataProvider())
         { }
 

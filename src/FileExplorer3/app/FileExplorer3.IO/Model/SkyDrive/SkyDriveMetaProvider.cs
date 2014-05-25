@@ -23,8 +23,8 @@ namespace FileExplorer.Models
             "width", "height"
         };
 
-        public SkyDriveMetadataProvider()
-            : base(new FileBasedMetadataProvider())
+        public SkyDriveMetadataProvider(params IMetadataProvider[] metadataProviders)
+            : base(metadataProviders, new FileBasedMetadataProvider())
         {
 
         }

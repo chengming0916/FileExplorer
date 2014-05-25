@@ -17,9 +17,11 @@ namespace FileExplorer.Models
     {
         #region Constructor
 
-        public SkyDriveProfile(IEventAggregator events, IWindowManager windowManager, string clientId, Func<string> authCodeFunc,
+        public SkyDriveProfile(IEventAggregator events, IWindowManager windowManager, 
+            string clientId, Func<string> authCodeFunc,
             string aliasMask = "{0}'s SkyDrive",
-            string rootAccessPath = "/me/skydrive")
+            string rootAccessPath = "/me/skydrive",
+            params IMetadataProvider[] metadataProviders)
             : base(events)
         {
             ProfileName = "SkyDrive";
@@ -30,7 +32,7 @@ namespace FileExplorer.Models
             Path = PathHelper.Web;
             DiskIO = new SkyDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
-            MetadataProvider = new SkyDriveMetadataProvider();
+            MetadataProvider = new SkyDriveMetadataProvider(metadataProviders);
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             //PathMapper = new SkyDriveDiskPathMapper(this, null);

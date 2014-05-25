@@ -355,6 +355,8 @@ namespace FileExplorer.WPF.ViewModels
         }
         public float HeaderOpacity { get { return _isDragging ? 0.5f : 1f; } }
 
+        public IEventAggregator Events { get { return _events; } }
+        public IWindowManager WindowManager { get { return _windowManager; } }
 
         #endregion
     }
