@@ -56,7 +56,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         private bool _isVisible = false;
-        private IEntriesHelper<IMetadataViewModel> _metadata;
+        private IMetadataHelperViewModel _metadata;
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public bool IsVisible { get { return _isVisible; } set { _isVisible = value; NotifyOfPropertyChange(() => IsVisible);}}
         public ICommandManager Commands { get; private set; }
-        public IEntriesHelper<IMetadataViewModel> Metadata { get { return _metadata; } private set { _metadata = value; } }
+        public IMetadataHelperViewModel Metadata { get { return _metadata; } private set { _metadata = value; } }
 
         #endregion
 

@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    //public interface IMetadataHelperViewModel : 
-    //{
-    //    IObservableCollection<IMetadataViewModel> All { get; }
-    //    Task UpdateMetadaAsync(IFileListViewModel flvm);
-    //}
+    public interface IMetadataHelperViewModel : IEntriesHelper<IMetadataViewModel>
+    {
+       IMetadataProvider[] ExtraMetadataProviders { get; set;}
+    }
 
-    public class MetadataHelperViewModel : EntriesHelper<IMetadataViewModel>
+    public class MetadataHelperViewModel : EntriesHelper<IMetadataViewModel>, IMetadataHelperViewModel
     {
         #region Cosntructor
 
@@ -36,13 +35,22 @@ namespace FileExplorer.WPF.ViewModels
             if (flvm == null)
                 return new List<IMetadataViewModel>();
 
-            return (await flvm.CurrentDirectory.Profile.MetadataProvider.GetMetadataAsync(
+            var retList = new List<IMetadata>();
+            var selectedItems = flvm.Selection.SelectedItems.Select(evm => evm.EntryModel).ToList();
+            var allCount =  flvm.ProcessedEntries.All.Count;
+
+            foreach (var mp in ExtraMetadataProviders)
+                retList.AddRange(await mp.GetMetadataAsync(selectedItems, allCount, 
+                    flvm.CurrentDirectory));
+
+            retList.AddRange(await flvm.CurrentDirectory.Profile.MetadataProvider.GetMetadataAsync(
                     flvm.Selection.SelectedItems.Select(evm => evm.EntryModel),
                     flvm.ProcessedEntries.All.Count,
-                    flvm.CurrentDirectory))
-                    .Where(m => _filter(m))
+                    flvm.CurrentDirectory));
+                    
+            return retList.Where(m => _filter(m))
                     .Distinct()
-                    .Select(m => MetadataViewModel.FromMetadata(m));
+                    .Select(m => MetadataViewModel.FromMetadata(m));;
         }
 
 
@@ -51,12 +59,19 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         private Func<IMetadata, bool> _filter;
+        private IMetadataProvider[] _extraMetadataProviders = new IMetadataProvider[] { };
         //private IFileListViewModel _flvm;
 
 
         #endregion
 
         #region Public Properties
+
+        public IMetadataProvider[] ExtraMetadataProviders
+        {
+            get { return _extraMetadataProviders; }
+            set { _extraMetadataProviders = value; NotifyOfPropertyChanged(() => ExtraMetadataProviders); }
+        }
 
         #endregion
 

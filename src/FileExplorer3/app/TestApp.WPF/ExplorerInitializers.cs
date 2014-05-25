@@ -212,6 +212,27 @@ namespace TestApp
         }
     }
 
+    public class DummyMetadataProvider : IMetadataProvider
+    {
+        public async Task<IEnumerable<IMetadata>> GetMetadataAsync(IEnumerable<IEntryModel> selectedModels,
+            int modelCount, IEntryModel parentModel)
+        {
+            List<IMetadata> retList = new List<IMetadata>();
+
+            if (selectedModels.Count() == 0)
+            {
+                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000) { IsVisibleInSidebar = true });
+                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10) { IsVisibleInSidebar = true });
+                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false) { IsVisibleInSidebar = true });
+            }
+            return retList;
+
+        }
+
+    }
+
+
+
     public class ToolbarCommandsInitializers : IViewModelInitializer<IExplorerViewModel>
     {
         private IWindowManager _windowManager;
@@ -223,6 +244,9 @@ namespace TestApp
 
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
+            explorerModel.Sidebar.Metadata.ExtraMetadataProviders = new [] {
+                new DummyMetadataProvider()
+            };
             explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                
                 new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc

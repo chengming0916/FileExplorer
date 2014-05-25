@@ -8,5 +8,6 @@ namespace FileExplorer.WPF.ViewModels
 {
     public interface IStatusbarViewModel
     {
+        IMetadataHelperViewModel Metadata { get; }
     }
 }

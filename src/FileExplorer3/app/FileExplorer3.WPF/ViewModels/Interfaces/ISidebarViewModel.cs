@@ -15,6 +15,6 @@ namespace FileExplorer.WPF.ViewModels
     public interface ISidebarViewModel :  
         IToggleableVisibility, ISupportCommandManager
     {
-       
+        IMetadataHelperViewModel Metadata { get; }
     }
 }

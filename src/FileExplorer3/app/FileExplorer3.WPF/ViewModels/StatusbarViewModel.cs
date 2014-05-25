@@ -100,7 +100,7 @@ namespace FileExplorer.WPF.ViewModels
         IObservableCollection<IEntryViewModel> _displayItems;
         string _selectedViewMode = "Icon";
         private IEventAggregator _events;
-        private IEntriesHelper<IMetadataViewModel> _metadata;
+        private IMetadataHelperViewModel _metadata;
         
 
         #endregion
@@ -114,7 +114,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public int SelectionCount { get { return _selectionCount; } set { _selectionCount = value; NotifyOfPropertyChange(() => SelectionCount); } }
         public IObservableCollection<IEntryViewModel> DisplayItems { get { return _displayItems; } }
-        public IEntriesHelper<IMetadataViewModel> Metadata { get { return _metadata; } private set { _metadata = value; } }
+        public IMetadataHelperViewModel Metadata { get { return _metadata; } private set { _metadata = value; } }
 
 
         public string Caption { get { return _caption; } set { _caption = value; NotifyOfPropertyChange(() => Caption); } }
