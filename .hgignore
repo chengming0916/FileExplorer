@@ -14,3 +14,6 @@ src/FileExplorer3/app/TestApp.WPF/AuthorizationKeys.cs
 src/FileExplorer3/app/TestSkyDrive2/*
 src/FileExplorer3/app/TestApp.WPF/gapi_client_secret.json
 lib/DotNetOpenAuth*
+src/FileExplorer3/app/*.nuspec
+*.psess
+*.vsp
