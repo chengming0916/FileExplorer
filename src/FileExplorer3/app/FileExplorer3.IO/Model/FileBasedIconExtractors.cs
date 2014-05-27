@@ -13,7 +13,7 @@ using QuickZip.Converters;
 using QuickZip.UserControls.Logic.Tools.IconExtractor;
 using ExifLib;
 using System.Windows.Media.Imaging;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.IO.Defines;
 using FileExplorer.WPF.Utils;

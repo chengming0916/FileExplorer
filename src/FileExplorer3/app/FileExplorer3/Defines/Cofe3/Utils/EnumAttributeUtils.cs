@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
     /// <summary>
     /// Enum related utils.

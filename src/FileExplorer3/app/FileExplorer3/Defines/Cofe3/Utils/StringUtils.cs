@@ -9,7 +9,7 @@ using Windows.Security.Cryptography.Core;
 using System.Runtime.InteropServices.WindowsRuntime;
 #endif
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
     /// <summary>
     /// String related utils.

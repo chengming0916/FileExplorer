@@ -64,8 +64,8 @@ namespace FileExplorer.WPF.Models
         private RoutedUICommand _routedCommand = null;
 
         private char? _symbol;
-        private System.Drawing.Bitmap _headerIcon;
-        private Func<ICommandModel, System.Windows.Media.ImageSource> _headerImageFunc;
+        private byte[] _headerIcon;
+        private Func<ICommandModel, byte[]> _headerImageFunc;
         private string _toolTip;
 
         private string _header;
@@ -84,8 +84,8 @@ namespace FileExplorer.WPF.Models
         /// Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
         /// </summary>
         public char? Symbol { get { return _symbol; } set { _symbol = value; NotifyOfPropertyChange(() => Symbol); } }
-        public System.Drawing.Bitmap HeaderIcon { get { return _headerIcon; } set { _headerIcon = value; NotifyOfPropertyChange(() => HeaderIcon); } }
-        public Func<ICommandModel, System.Windows.Media.ImageSource> HeaderImageFunc
+        public byte[] HeaderIcon { get { return _headerIcon; } set { _headerIcon = value; NotifyOfPropertyChange(() => HeaderIcon); } }
+        public Func<ICommandModel, byte[]> HeaderImageFunc
         {
             get { return _headerImageFunc; }
             set { _headerImageFunc = value; NotifyOfPropertyChange(() => HeaderImageFunc); }

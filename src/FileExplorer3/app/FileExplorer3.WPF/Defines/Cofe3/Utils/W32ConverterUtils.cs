@@ -12,10 +12,11 @@ using Windows.Storage.Streams;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Cofe.Core;
 #endif
 
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
     public static class W32ConverterUtils
     {

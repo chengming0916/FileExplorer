@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
     public static class ConverterUtils
     {

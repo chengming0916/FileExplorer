@@ -74,7 +74,6 @@
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\RegexPatterns.cs" />
-    <Compile Include="Defines\Cofe3\Utils\StreamUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\StringUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\LinqUtils.cs" />

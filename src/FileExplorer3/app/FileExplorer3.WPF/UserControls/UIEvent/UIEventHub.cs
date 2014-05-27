@@ -15,7 +15,7 @@ using System.Windows.Markup;
 using System.Windows.Threading;
 using Cofe.Core;
 using Cofe.Core.Script;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;

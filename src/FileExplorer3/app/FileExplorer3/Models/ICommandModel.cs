@@ -19,7 +19,12 @@ namespace FileExplorer.Models
         /// </summary>
         char? Symbol { get; }
 
-      
+        /// <summary>
+        /// Bitmap Icon.
+        /// </summary>
+        byte[] HeaderIcon { get; }
+
+        Func<ICommandModel, byte[]> HeaderIconFunc { get; }
 
         string ToolTip { get; }
 

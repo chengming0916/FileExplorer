@@ -12,9 +12,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 #else
 //using Fesersoft.Hashing;
 using System.Security.Cryptography;
+using Cofe.Core;
 #endif
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
     /// <summary>
     /// Stream related Utils.

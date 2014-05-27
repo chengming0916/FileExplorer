@@ -5,7 +5,7 @@ using System.Text;
 #if !NETFX_CORE
 using Microsoft.Win32;
 #endif
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
 #if !NETFX_CORE
     public static class W32RegistryUtils

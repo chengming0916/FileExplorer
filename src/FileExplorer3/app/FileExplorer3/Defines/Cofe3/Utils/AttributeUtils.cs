@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
     public static class AttributeUtils
     {

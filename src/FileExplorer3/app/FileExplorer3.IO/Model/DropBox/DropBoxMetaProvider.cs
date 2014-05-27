@@ -1,4 +1,4 @@
-﻿using Cofe.Core.Utils;
+﻿using FileExplorer.Utils;
 using DropNet;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;

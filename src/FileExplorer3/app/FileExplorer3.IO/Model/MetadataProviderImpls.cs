@@ -1,4 +1,4 @@
-﻿using Cofe.Core.Utils;
+﻿using FileExplorer.Utils;
 using ExifLib;
 using FileExplorer.Defines;
 using FileExplorer.IO.Defines;
@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {

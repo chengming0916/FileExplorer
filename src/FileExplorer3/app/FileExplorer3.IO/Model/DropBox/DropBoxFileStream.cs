@@ -7,9 +7,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models
 {

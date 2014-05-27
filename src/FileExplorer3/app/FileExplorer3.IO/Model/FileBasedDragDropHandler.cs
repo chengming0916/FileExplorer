@@ -9,7 +9,7 @@ using System.Windows;
 using Caliburn.Micro;
 using Cofe.Core;
 using Cofe.Core.Script;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls.DragDrop;
 using FileExplorer.WPF.ViewModels.Helpers;

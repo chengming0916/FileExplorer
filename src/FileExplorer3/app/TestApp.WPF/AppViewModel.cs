@@ -13,7 +13,7 @@ using FileExplorer;
 using FileExplorer.WPF.Utils;
 using System.Collections.ObjectModel;
 using System.Windows;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using System.Configuration;
 using System.IO;
 using System.Windows.Input;
