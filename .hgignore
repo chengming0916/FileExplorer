@@ -17,3 +17,5 @@ lib/DotNetOpenAuth*
 src/FileExplorer3/app/*.nuspec
 *.psess
 *.vsp
+*.nuspec
+*.vspx
