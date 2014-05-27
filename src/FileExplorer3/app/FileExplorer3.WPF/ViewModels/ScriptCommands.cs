@@ -17,7 +17,7 @@ using FileExplorer.WPF.ViewModels;
 using System.Net.Http;
 using System.Net;
 using System.Threading;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.Models;
 using System.IO;
 using FileExplorer.WPF.Defines;

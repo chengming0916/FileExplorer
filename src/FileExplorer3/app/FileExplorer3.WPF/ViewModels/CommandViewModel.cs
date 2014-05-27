@@ -10,7 +10,7 @@ using Caliburn.Micro;
 using Cinch;
 using Cofe.Core;
 using Cofe.Core.Script;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Utils;
@@ -81,7 +81,8 @@ namespace FileExplorer.WPF.ViewModels
             if (CommandModel.IsChecked)
                 Icon = null;
             if (CommandModel.HeaderImageFunc != null)
-                Icon = new System.Windows.Controls.Image() { Source = CommandModel.HeaderImageFunc(CommandModel) };
+                Icon = new System.Windows.Controls.Image() { Source = 
+                    BitmapSourceUtils.CreateBitmapSourceFromBitmap(CommandModel.HeaderImageFunc(CommandModel)) };
             if (CommandModel.HeaderIcon != null)
                 Icon = new System.Windows.Controls.Image() { Source = BitmapSourceUtils.CreateBitmapSourceFromBitmap(CommandModel.HeaderIcon) };
         }

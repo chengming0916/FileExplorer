@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Cofe.Core.Script;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 using Caliburn.Micro;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.Models
 {

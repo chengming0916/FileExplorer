@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 
 namespace Cofe.Core
 {

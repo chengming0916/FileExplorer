@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 
 namespace Cofe.Core
 {

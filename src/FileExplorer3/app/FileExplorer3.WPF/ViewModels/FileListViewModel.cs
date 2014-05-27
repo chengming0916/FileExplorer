@@ -26,7 +26,7 @@ using Cinch;
 using System.Windows.Input;
 using FileExplorer.Defines;
 using System.Threading;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
 

@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
 using FileExplorer.Utils;
@@ -88,7 +88,7 @@ namespace FileExplorer.WPF.ViewModels
                 Stream imgStream = Application.GetResourceStream(
                        new Uri(String.Format(ViewModeViewModel.iconPathMask, view.ToLower()))).Stream;
                 if (imgStream != null)
-                    HeaderIcon = new System.Drawing.Bitmap(imgStream);
+                    HeaderIcon = imgStream.ToByteArray();
             }
         }
 

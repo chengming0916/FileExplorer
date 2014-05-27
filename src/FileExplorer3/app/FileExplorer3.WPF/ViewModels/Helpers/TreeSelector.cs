@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 

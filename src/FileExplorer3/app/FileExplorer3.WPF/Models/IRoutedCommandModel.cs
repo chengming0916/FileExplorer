@@ -14,11 +14,6 @@ namespace FileExplorer.WPF.Models
     {
         RoutedUICommand RoutedCommand { get; }
 
-        /// <summary>
-        /// Bitmap Icon.
-        /// </summary>
-        Bitmap HeaderIcon { get; }
-
-        Func<ICommandModel, ImageSource> HeaderImageFunc { get; }
+        
     }
 }

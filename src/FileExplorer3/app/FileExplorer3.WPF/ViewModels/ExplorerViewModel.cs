@@ -13,7 +13,7 @@ using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows;

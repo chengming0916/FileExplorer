@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 
 namespace Cofe.Core
 {

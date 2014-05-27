@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.BaseControls
 {

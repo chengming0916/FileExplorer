@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cofe.Core.Utils
+namespace FileExplorer.Utils
 {
     //http://stackoverflow.com/questions/5095183/how-would-i-run-an-async-taskt-method-synchronously
     public static class AsyncUtils

@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Cofe.Core.Script;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;

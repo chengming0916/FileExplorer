@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Cofe.Core;
 using Cofe.Core.Script;
-using Cofe.Core.Utils;
+using FileExplorer.Utils;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
