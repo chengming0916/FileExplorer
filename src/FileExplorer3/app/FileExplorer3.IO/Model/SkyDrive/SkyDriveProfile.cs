@@ -185,7 +185,7 @@ namespace FileExplorer.Models
             return retList;
         }
 
-        public override IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
+        public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
         {
             foreach (var extractor in base.GetIconExtractSequence(entry))
                 yield return extractor;

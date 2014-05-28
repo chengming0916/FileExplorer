@@ -48,12 +48,12 @@ namespace FileExplorer.WPF.Models
             return column.Comparer;
         }
 
-        public virtual IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
+        public virtual IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
         {
             yield return GetDefaultIcon.Instance;
         }
 
-        //public virtual IEntryModelIconExtractor GetThumbnailExtractor(IEntryModel entry)
+        //public virtual IModelIconExtractor<IEntryModel> GetThumbnailExtractor(IEntryModel entry)
         //{
         //    return null;
         //}

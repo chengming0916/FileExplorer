@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {
-    public interface IEntryModelIconExtractor
+    public interface IModelIconExtractor<T>
     {
-        Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct);
+        Task<byte[]> GetIconBytesForModelAsync(T model, CancellationToken ct);
     }
 
 }

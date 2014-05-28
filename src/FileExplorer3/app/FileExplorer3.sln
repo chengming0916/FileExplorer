@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.FileExplorer.WPF", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3 [WPF]", "FileExplorer3\FileExplorer3 [WPF].csproj", "{B876634C-850C-4678-A1A1-34F6FFEA6D52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontToBitmap", "FontToBitmap\FontToBitmap.csproj", "{A314B99E-4C36-490E-AFA4-6B2001602F30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,16 @@ Global
 		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|ARM.ActiveCfg = Release|Any CPU
 		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|x64.ActiveCfg = Release|Any CPU
 		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|x86.ActiveCfg = Release|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Release|x64.ActiveCfg = Release|Any CPU
+		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

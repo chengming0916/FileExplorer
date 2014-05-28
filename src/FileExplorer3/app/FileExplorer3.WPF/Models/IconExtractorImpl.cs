@@ -18,14 +18,14 @@ namespace FileExplorer.WPF.Models
 {
     public static class EntryModelIconExtractors
     {
-        public static IEntryModelIconExtractor ProvideValue(byte[] value)
+        public static IModelIconExtractor<IEntryModel> ProvideValue(byte[] value)
         {
             return new ProvideValueIconExtractor(value);
         }
     }
 
 
-    public class ProvideValueIconExtractor : IEntryModelIconExtractor
+    public class ProvideValueIconExtractor : IModelIconExtractor<IEntryModel>
     {
         private static byte[] Value { get; set; }
 
@@ -40,7 +40,7 @@ namespace FileExplorer.WPF.Models
         }
     }
 
-    public class GetDefaultIcon : IEntryModelIconExtractor
+    public class GetDefaultIcon : IModelIconExtractor<IEntryModel>
     {
         private static byte[] FileIcon { get; set; }
         private static byte[] FolderIcon { get; set; }
@@ -68,7 +68,7 @@ namespace FileExplorer.WPF.Models
 
 
 
-    public class GetResourceIcon : IEntryModelIconExtractor
+    public class GetResourceIcon : IModelIconExtractor<IEntryModel>
     {
         private byte[] IconResource { get; set; }
 
@@ -83,7 +83,7 @@ namespace FileExplorer.WPF.Models
         }
     }
 
-    public class GetUriIcon : IEntryModelIconExtractor
+    public class GetUriIcon : IModelIconExtractor<IEntryModel>
     {
         private Func<IEntryModel, Uri> _uriFunc;
         private System.Threading.CancellationToken CancellationToken;

@@ -130,7 +130,7 @@ namespace FileExplorer.WPF.ViewModels
 
         bool _isSelected = false, _isRenaming = false, _isRenamable = false, _isIconLoaded = false;
         private ImageSource _icon = null;
-        private IEnumerable<IEntryModelIconExtractor> _iconExtractSequences;
+        private IEnumerable<IModelIconExtractor<IEntryModel>> _iconExtractSequences;
         private bool _isDragging = false;
 
         #endregion

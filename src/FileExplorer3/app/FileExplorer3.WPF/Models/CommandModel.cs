@@ -64,8 +64,7 @@ namespace FileExplorer.WPF.Models
         private RoutedUICommand _routedCommand = null;
 
         private char? _symbol;
-        private byte[] _headerIcon;
-        private Func<ICommandModel, byte[]> _headerImageFunc;
+        private IModelIconExtractor<ICommandModel> _headerIconExtractor;
         private string _toolTip;
 
         private string _header;
@@ -84,12 +83,10 @@ namespace FileExplorer.WPF.Models
         /// Lookup from http://www.adamdawes.com/windows8/win8_segoeuisymbol.html
         /// </summary>
         public char? Symbol { get { return _symbol; } set { _symbol = value; NotifyOfPropertyChange(() => Symbol); } }
-        public byte[] HeaderIcon { get { return _headerIcon; } set { _headerIcon = value; NotifyOfPropertyChange(() => HeaderIcon); } }
-        public Func<ICommandModel, byte[]> HeaderImageFunc
-        {
-            get { return _headerImageFunc; }
-            set { _headerImageFunc = value; NotifyOfPropertyChange(() => HeaderImageFunc); }
+        public IModelIconExtractor<ICommandModel> HeaderIconExtractor { get { return _headerIconExtractor; }
+            set { _headerIconExtractor = value; NotifyOfPropertyChange(() => HeaderIconExtractor); }
         }
+      
         public string ToolTip { get { return _toolTip; } set { _toolTip = value; NotifyOfPropertyChange(() => ToolTip); } }
         public string Header { get { return _header; } set { _header = value; NotifyOfPropertyChange(() => Header); } }
         public bool IsHeaderVisible { get { return _isHeaderVisible; } set { _isHeaderVisible = value; NotifyOfPropertyChange(() => IsHeaderVisible); } }

@@ -17,6 +17,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.Models;
 using FileExplorer.Defines;
+using System.Threading;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -42,15 +43,15 @@ namespace FileExplorer.WPF.ViewModels
                     switch (e.PropertyName)
                     {
                         case "IsChecked":
-                        case "HeaderImage":
-                        case "HeaderIcon":
+                        case "Symbol":
+                        case "HeaderIconExtractor":
                             RefreshIcon();
                             break;
                         case "SubCommands":
                             SubCommands.LoadAsync(UpdateMode.Replace, true);
                             RefreshIcon();
                             break;
-                        case "IsEnabled" :
+                        case "IsEnabled":
                         case "IsVisibleOnMenu":
                         case "IsVisibleOnToolbar":
                             NotifyOfPropertyChange(() => IsVisibleOnMenu);
@@ -80,11 +81,17 @@ namespace FileExplorer.WPF.ViewModels
         {
             if (CommandModel.IsChecked)
                 Icon = null;
-            if (CommandModel.HeaderImageFunc != null)
-                Icon = new System.Windows.Controls.Image() { Source = 
-                    BitmapSourceUtils.CreateBitmapSourceFromBitmap(CommandModel.HeaderImageFunc(CommandModel)) };
-            if (CommandModel.HeaderIcon != null)
-                Icon = new System.Windows.Controls.Image() { Source = BitmapSourceUtils.CreateBitmapSourceFromBitmap(CommandModel.HeaderIcon) };
+            if (CommandModel.HeaderIconExtractor != null)
+            {
+                byte[] bytes = CommandModel.HeaderIconExtractor.GetIconBytesForModelAsync(CommandModel,
+                        CancellationToken.None).Result;
+                if (bytes.Length > 0)
+                    Icon = new System.Windows.Controls.Image()
+                    {
+                        Source =
+                            BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes)
+                    };
+            }
         }
 
         private ToolbarItemType getCommandType()
@@ -165,7 +172,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             get
             {
-                return CommandModel is ISliderStepCommandModel ? 
+                return CommandModel is ISliderStepCommandModel ?
                     (CommandModel as ISliderStepCommandModel).VerticalAlignment :
                     VerticalAlignment.Center;
             }

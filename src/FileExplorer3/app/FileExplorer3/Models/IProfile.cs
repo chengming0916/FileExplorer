@@ -45,7 +45,7 @@ namespace FileExplorer.Models
         /// </summary>
         /// <param name="entry"></param>
         /// <returns></returns>
-        IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry);
+        IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry);
 
 
         #endregion

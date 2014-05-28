@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 
 namespace FileExplorer.Models
 {
-    public class DropBoxModelThumbnailExtractor : IEntryModelIconExtractor
+    public class DropBoxModelThumbnailExtractor : IModelIconExtractor<IEntryModel>
     {
         private Func<DropNetClient> _clientFunc;
         public DropBoxModelThumbnailExtractor(Func<DropNetClient> clientFunc)

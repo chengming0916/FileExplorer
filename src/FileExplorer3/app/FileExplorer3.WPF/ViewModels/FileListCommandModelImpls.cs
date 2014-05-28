@@ -88,7 +88,8 @@ namespace FileExplorer.WPF.ViewModels
                 Stream imgStream = Application.GetResourceStream(
                        new Uri(String.Format(ViewModeViewModel.iconPathMask, view.ToLower()))).Stream;
                 if (imgStream != null)
-                    HeaderIcon = imgStream.ToByteArray();
+                    HeaderIconExtractor = 
+                        ModelIconExtractor<ICommandModel>.FromStream(imgStream);
             }
         }
 
@@ -162,7 +163,7 @@ namespace FileExplorer.WPF.ViewModels
                         .First(c => (c as ViewModeStepCommandModel).SliderStep == step) as ViewModeStepCommandModel;
 
                     if (commandModel != null)
-                        this.HeaderIcon = commandModel.HeaderIcon;
+                        this.HeaderIconExtractor = commandModel.HeaderIconExtractor;
 
                     if (_flvm.Parameters.ItemSize != SliderValue)
                     {
