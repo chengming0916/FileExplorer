@@ -54,7 +54,7 @@ namespace FileExplorer.WPF.Models
             return new ParsePathCommand(new[] { profile }, path, ifFoundFunc, ifNotFound);
         }
 
-        public static IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(this IProfile[] profiles, IEntryModel entry)
+        public static IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(this IProfile[] profiles, IEntryModel entry)
         {
             foreach (var p in profiles)
             {
@@ -62,7 +62,7 @@ namespace FileExplorer.WPF.Models
                 if (result != null)
                     return result;
             }
-            return new List<IEntryModelIconExtractor>();
+            return new List<IModelIconExtractor<IEntryModel>>();
         }
 
         public static void NotifyEntryChanges(this IProfile profile, object sender, string fullPath, ChangeType changeType, string orgParseName = null)
@@ -151,7 +151,7 @@ namespace FileExplorer.WPF.Models
             return entryModels.Select(em => em.Profile).Distinct().ToArray();
         }
 
-        public static async Task<ImageSource> GetIconForModelAsync(this IEntryModelIconExtractor extractor,
+        public static async Task<ImageSource> GetIconForModelAsync(this IModelIconExtractor<IEntryModel> extractor,
             IEntryModel model, CancellationToken ct)
         {
             byte[] bytes = await extractor.GetIconBytesForModelAsync(model, ct);
@@ -161,7 +161,7 @@ namespace FileExplorer.WPF.Models
                 FileExplorer.WPF.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes);
         }
             
-    //        public interface IEntryModelIconExtractor
+    //        public interface IModelIconExtractor<IEntryModel>
     //{
     //    Task<byte[]> GetIconForModelAsync(IEntryModel model, CancellationToken ct);
     //}

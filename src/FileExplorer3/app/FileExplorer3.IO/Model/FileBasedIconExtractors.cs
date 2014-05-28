@@ -20,7 +20,7 @@ using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {
-    public class GetFromSystemImageList : IEntryModelIconExtractor
+    public class GetFromSystemImageList : IModelIconExtractor<IEntryModel>
     {
         private IconExtractor _iconExtractor = new ExIconExtractor();
         public static GetFromSystemImageList Instance = new GetFromSystemImageList();
@@ -47,7 +47,7 @@ namespace FileExplorer.Models
         }
     }
 
-    public class GetFromSystemImageListUsingExtension : IEntryModelIconExtractor
+    public class GetFromSystemImageListUsingExtension : IModelIconExtractor<IEntryModel>
     {
         private IconExtractor _iconExtractor = new IconExtractor();
         private Func<IEntryModel, string> _fileNameFunc;
@@ -78,7 +78,7 @@ namespace FileExplorer.Models
         }
     }
 
-    public class GetImageFromImageExtractor : IEntryModelIconExtractor
+    public class GetImageFromImageExtractor : IModelIconExtractor<IEntryModel>
     {
         public static GetImageFromImageExtractor Instance = new GetImageFromImageExtractor();
 
@@ -101,7 +101,7 @@ namespace FileExplorer.Models
         }
     }
 
-    public class GetFromIconExtractIcon : IEntryModelIconExtractor
+    public class GetFromIconExtractIcon : IModelIconExtractor<IEntryModel>
     {
         public static GetFromIconExtractIcon Instance = new GetFromIconExtractIcon();
 
@@ -118,7 +118,7 @@ namespace FileExplorer.Models
     }
 
 
-    public class GetExifThumbnail : IEntryModelIconExtractor
+    public class GetExifThumbnail : IModelIconExtractor<IEntryModel>
     {
         public async Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {

@@ -57,7 +57,6 @@
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\RegexPatterns.cs" />
-    <Compile Include="Defines\Cofe3\Utils\StreamUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\StringUtils.cs" />
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Structs.cs" />
@@ -68,11 +67,12 @@
     <Compile Include="Models\IEntryHierarchyComparer.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IEntryModelCache.cs" />
-    <Compile Include="Models\IEntryModelIconExtractor.cs" />
     <Compile Include="Models\IHierarchyHelper.cs" />
     <Compile Include="Models\ILoginInfo.cs" />
     <Compile Include="Models\IMetadata.cs" />
     <Compile Include="Models\IMetadataProvider.cs" />
+    <Compile Include="Models\IModelIconExtractor.cs" />
+    <Compile Include="Models\IModelIconExtractorImpl.cs" />
     <Compile Include="Models\IPathHelper.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\IProfileCommands.cs" />

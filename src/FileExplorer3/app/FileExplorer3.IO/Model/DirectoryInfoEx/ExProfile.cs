@@ -192,7 +192,7 @@ namespace FileExplorer.Models
 
         }
 
-        public override IEnumerable<IEntryModelIconExtractor> GetIconExtractSequence(IEntryModel entry)
+        public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
         {
             yield return GetDefaultIcon.Instance;
             yield return GetFromSystemImageList.Instance;

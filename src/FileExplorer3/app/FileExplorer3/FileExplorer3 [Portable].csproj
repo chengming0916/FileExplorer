@@ -46,7 +46,8 @@
     <Compile Include="Models\IEntryHierarchyComparer.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IEntryModelCache.cs" />
-    <Compile Include="Models\IEntryModelIconExtractor.cs" />
+    <Compile Include="Models\IModelIconExtractor.cs" />
+    <Compile Include="Models\IModelIconExtractorImpl.cs" />
     <Compile Include="Models\IHierarchyHelper.cs" />
     <Compile Include="Models\ILoginInfo.cs" />
     <Compile Include="Models\IMetadata.cs" />
