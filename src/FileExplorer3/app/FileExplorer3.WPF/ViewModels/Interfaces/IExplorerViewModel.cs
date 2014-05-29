@@ -27,5 +27,8 @@ namespace FileExplorer.WPF.ViewModels
         IEntryViewModel CurrentDirectory { get; }
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);
+
+        IEventAggregator Events { get; }
+        IWindowManager WindowManager { get; }
     }
 }
