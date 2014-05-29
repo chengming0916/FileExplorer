@@ -14,8 +14,9 @@ namespace FileExplorer.Utils
             var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
             string libraryName = assembly.GetName().Name;
             string resourcePath = PathUtils.MakeResourcePath(libraryName, path2Resource);
-
-            return assembly.GetManifestResourceStream(resourcePath);
+            if (assembly.GetManifestResourceNames().Contains(resourcePath))
+                return assembly.GetManifestResourceStream(resourcePath);
+            else return new MemoryStream();
         }
 
         public static byte[] GetEmbeddedResourceAsByteArray(object sender, string path2Resource)

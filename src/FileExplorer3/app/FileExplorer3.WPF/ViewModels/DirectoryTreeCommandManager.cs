@@ -77,12 +77,14 @@ namespace FileExplorer.WPF.ViewModels
                     new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnMenu = true },
                    
                     new CommandModel(ExplorerCommands.Map)  { 
-                        Symbol = Convert.ToChar(0xE17B), 
+                        HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE17B),
+                        //Symbol = Convert.ToChar(0xE17B), 
                         IsEnabled = true,
                         IsHeaderVisible = false, IsVisibleOnToolbar = true
                     },
 
                     new CommandModel(ExplorerCommands.Unmap)  {
+                        HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE17A),
                      IsVisibleOnToolbar = true, IsVisibleOnMenu = true
                     }
                     )}

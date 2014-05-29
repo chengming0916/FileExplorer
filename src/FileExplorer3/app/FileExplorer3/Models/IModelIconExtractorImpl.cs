@@ -11,21 +11,38 @@ namespace FileExplorer.Models
 {
     public class ModelIconExtractor<T> : IModelIconExtractor<T>
     {
-        Func<T, Task<byte[]>> _retFunc = null;
+        Func<T, Task<byte[]>> _retTask = null;
+        Func<T, byte[]> _retFunc = null;
+        bool _isStatic = false;
+        byte[] _cache = null;
 
-        public static ModelIconExtractor<T> FromTaskFunc(Func<T, Task<byte[]>> taskFunc)
+        public static ModelIconExtractor<T> FromTaskFunc(Func<T, Task<byte[]>> task)
         {
-            return new ModelIconExtractor<T>() { _retFunc = taskFunc };
+            return new ModelIconExtractor<T>() { _retTask = task };
         }
 
-        public static ModelIconExtractor<T> FromTaskFunc(Func<Task<byte[]>> taskFunc)
+        public static ModelIconExtractor<T> FromTaskFunc(Func<Task<byte[]>> task)
         {
-            return FromTaskFunc(t => taskFunc());
+            var retVal = FromTaskFunc(t => task());
+            retVal.IsStatic = true;
+            return retVal;
+        }
+
+        public static ModelIconExtractor<T> FromFunc(Func<T, byte[]> func)
+        {
+            return new ModelIconExtractor<T>() { _retFunc = func };
+        }
+
+        public static ModelIconExtractor<T> FromFunc(Func<byte[]> func)
+        {
+            var retVal = FromFunc(t => func());
+            retVal.IsStatic = true;
+            return retVal;
         }
 
         public static ModelIconExtractor<T> FromBytes(byte[] bytes)
         {
-            return FromTaskFunc(t => Task<byte[]>.FromResult(bytes));
+            return FromTaskFunc(() => Task<byte[]>.FromResult(bytes));
         }
 
         public static ModelIconExtractor<T> FromStream(Stream stream)
@@ -33,11 +50,20 @@ namespace FileExplorer.Models
             return FromBytes(stream.ToByteArray());
         }
 
-        public Task<byte[]> GetIconBytesForModelAsync(T model, CancellationToken ct)
+        public async Task<byte[]> GetIconBytesForModelAsync(T model, CancellationToken ct)
         {
-            if (_retFunc != null)
-                return _retFunc(model);
-            return Task<byte[]>.FromResult(new byte[] {});
+            _retTask = _retTask ?? 
+                (t => Task<byte[]>.FromResult(_retFunc(model)));
+
+            if (_isStatic)
+                if (_cache != null)
+                    return _cache;
+                else
+                    return _cache = await _retTask(model);
+            else
+                return await _retTask(model);
         }
+
+        public bool IsStatic { get { return _isStatic; } set { _isStatic = value; } }
     }
 }
