@@ -165,6 +165,7 @@
     <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
     <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
+    <Compile Include="Utils\FileExplorerBootStrapper.cs" />
     <Compile Include="Utils\ResourceUtils.cs" />
     <Compile Include="ViewModels\ExplorerInitializers.cs" />
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
