@@ -191,7 +191,8 @@ namespace FileExplorer.WPF.ViewModels
                 IsVisibleOnMenu = true, IsVisibleOnToolbar = true })
         {
             IsVisibleOnMenu = true; IsVisibleOnToolbar = true;
-            Symbol = Convert.ToChar(0xE10B);
+            //Symbol = Convert.ToChar(0xE10B);
+            HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE10B);
             Header = Strings.txtSelection;
         }
     }
