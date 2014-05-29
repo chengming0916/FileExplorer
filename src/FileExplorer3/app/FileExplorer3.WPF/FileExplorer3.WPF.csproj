@@ -134,6 +134,7 @@
     <Compile Include="Models\IconExtractorImpl.cs" />
     <Compile Include="Models\IDiskIOHelper.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
+    <Compile Include="Models\IModelIconExtractorImpl.cs" />
     <Compile Include="Models\IRoutedCommandModel.cs" />
     <Compile Include="Models\IWPFProfile.cs" />
     <Compile Include="Models\Metadata.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="UserControls\Explorer.cs" />
     <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
     <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
+    <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\ResourceUtils.cs" />
     <Compile Include="ViewModels\ExplorerInitializers.cs" />
     <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
@@ -780,13 +782,21 @@
   <ItemGroup>
     <Content Include="Themes\Common\BrushUpdate.txt" />
     <Resource Include="Themes\Resources\ViewMode\flip_16.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E10B.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E118.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E14E.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E17A.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E17B.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E188.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E1EF.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E239.png" />
+    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E23A.png" />
     <Content Include="ViewModels\Helpers\Selector.html" />
     <EmbeddedResource Include="Themes\Resources\folder.ico" />
     <EmbeddedResource Include="Themes\Resources\file.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Defines\Script\" />
-    <Folder Include="Themes\Resources\SegoeUISymbols\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

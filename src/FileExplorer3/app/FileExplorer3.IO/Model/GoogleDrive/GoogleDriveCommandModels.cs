@@ -25,7 +25,9 @@ namespace FileExplorer.Models
         public GoogleExportCommandModel(Func<IEntryModel[]> rootModelFunc)
         {
             _rootModelFunc = rootModelFunc;
-            this.Symbol = Convert.ToChar(0xE118);
+            this.HeaderIconExtractor = 
+                ResourceIconExtractor<ICommandModel>
+                    .ForSymbol(0xE118);
             this.Header = "Export";
             this.IsEnabled = false;
         }

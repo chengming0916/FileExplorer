@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Defines;
+using FileExplorer.Models;
 using FileExplorer.WPF.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,8 @@ namespace FileExplorer.WPF.ViewModels
         public ToggleVisibilityCommand(IToggleableVisibility vm, RoutedUICommand routedCommand)
             : base(routedCommand)
         {
-            Symbol = Convert.ToChar(0xE239);
+            //Symbol = Convert.ToChar(0xE239);
+            HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE239);
             IsVisibleOnToolbar = true;
             Header = "";
             IsHeaderAlignRight = true;
@@ -25,7 +27,11 @@ namespace FileExplorer.WPF.ViewModels
               switch (e.PropertyName)
               {
                   case "IsVisible" :
-                      Symbol = vm.IsVisible ? Convert.ToChar(0xE23a) : Convert.ToChar(0xE239);
+                      HeaderIconExtractor =
+                          vm.IsVisible ?
+                          ResourceIconExtractor<ICommandModel>.ForSymbol(0xE23A) :
+                          ResourceIconExtractor<ICommandModel>.ForSymbol(0xE239);
+                      //Symbol = vm.IsVisible ? Convert.ToChar(0xE23a) : Convert.ToChar(0xE239);
                       break;
               }
             });

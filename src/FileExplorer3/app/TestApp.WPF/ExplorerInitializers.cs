@@ -259,7 +259,10 @@ namespace TestApp
                     { IsVisibleOnMenu = true, WindowManager = _windowManager },
                     
                     new SeparatorCommandModel(),
-                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnToolbar = true, Symbol = Convert.ToChar(0xE188) },
+                    new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnToolbar = true, 
+                        HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE188)
+                        //Symbol = Convert.ToChar(0xE188) 
+                    },
                     new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true })
                         { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
                     new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer)
@@ -277,12 +280,13 @@ namespace TestApp
                     new CommandModel(ExplorerCommands.Rename)  { IsVisibleOnMenu = true },
               
                     new CommandModel(ExplorerCommands.Map)  { 
-                        Symbol = Convert.ToChar(0xE17B), 
+                        //Symbol = Convert.ToChar(0xE17B), 
+                        HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE17B),
                         IsEnabled = true,
                         IsHeaderVisible = false, IsVisibleOnToolbar = true
                     },
                     new CommandModel(ExplorerCommands.Unmap)  { 
-                        Symbol = Convert.ToChar(0xE17A),
+                        HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE17A),
                         IsVisibleOnMenu = true,
                         IsVisibleOnToolbar = true
                     }
