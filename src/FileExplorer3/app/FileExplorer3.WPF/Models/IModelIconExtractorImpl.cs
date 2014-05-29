@@ -35,7 +35,7 @@ namespace FileExplorer.WPF.Models
         public static IModelIconExtractor<T> ForSymbol(char symbol)
         {  
             string symbolCode = String.Format("{0:x2}", (UInt32)symbol).ToUpper();
-            string resourcePath = String.Format("/Themes/Resources/SegoeUISymbols/{0}z.png", symbolCode);
+            string resourcePath = String.Format("/Themes/Resources/SegoeUISymbols/{0}.png", symbolCode);
 
             var retVal = ModelIconExtractor<T>.FromFunc(
                 () =>
