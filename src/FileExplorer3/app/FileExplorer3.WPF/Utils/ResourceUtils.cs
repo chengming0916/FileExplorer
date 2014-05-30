@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Resources;
 
 namespace FileExplorer.Utils
 {
@@ -23,5 +25,26 @@ namespace FileExplorer.Utils
         {
             return GetEmbeddedResourceAsStream(sender, path2Resource).ToByteArray();
         }
+
+
+
+        public static Stream GetResourceAsStream(object sender, string path2Resource)
+        {
+            var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
+            string libraryName = assembly.GetName().Name;
+            Uri resourceUri = PathUtils.MakeResourceUri(libraryName, path2Resource);
+            try
+            {
+                StreamResourceInfo info = Application.GetResourceStream(resourceUri);
+                return info.Stream;
+            }
+            catch { return new MemoryStream(); }
+        }
+
+        public static byte[] GetResourceAsByteArray(object sender, string path2Resource)
+        {
+            return GetResourceAsStream(sender, path2Resource).ToByteArray();
+        }
+
     }
 }

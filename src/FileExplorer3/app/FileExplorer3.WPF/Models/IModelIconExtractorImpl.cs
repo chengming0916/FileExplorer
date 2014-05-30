@@ -40,7 +40,7 @@ namespace FileExplorer.WPF.Models
             var retVal = ModelIconExtractor<T>.FromFunc(
                 () =>
                 {
-                    byte[] resource = ResourceUtils.GetEmbeddedResourceAsByteArray(dummy, resourcePath);
+                    byte[] resource = ResourceUtils.GetResourceAsByteArray(dummy, resourcePath);
                     if (resource.Length != 0)
                         return resource;
                     else return BitmapUtils.DrawTextToBitmapStream("Segoe UI Symbol", 24, symbol + "").ToByteArray();

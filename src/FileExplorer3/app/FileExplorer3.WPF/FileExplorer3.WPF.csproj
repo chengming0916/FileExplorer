@@ -783,15 +783,15 @@
   <ItemGroup>
     <Content Include="Themes\Common\BrushUpdate.txt" />
     <Resource Include="Themes\Resources\ViewMode\flip_16.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E10B.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E118.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E14E.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E17A.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E17B.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E188.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E1EF.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E239.png" />
-    <EmbeddedResource Include="Themes\Resources\SegoeUISymbols\E23A.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E10B.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E118.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E14E.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E17A.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E17B.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E188.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E1EF.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E239.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E23A.png" />
     <Content Include="ViewModels\Helpers\Selector.html" />
     <EmbeddedResource Include="Themes\Resources\folder.ico" />
     <EmbeddedResource Include="Themes\Resources\file.ico" />

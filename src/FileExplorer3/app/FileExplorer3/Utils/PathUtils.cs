@@ -40,16 +40,33 @@ namespace FileExplorer.Utils
             return sb.ToString();
         }
 
+        /// <summary>
+        /// For BuildAction = Resource 
+        /// return something like this : 
+        /// pack://application:,,,/FileExplorer3.WPF;component/Themes/Default/Colors.xaml
+        /// </summary>
+        /// <param name="library"></param>
+        /// <param name="path2Resource"></param>
+        /// <returns></returns>
         public static Uri MakeResourceUri(string library, string path2Resource)
         {
-            return new Uri(String.Format("pack://application:,,,/{0};component{1}", library, path2Resource));
+            return new Uri(String.Format("pack://application:,,,/{0};component{1}", library, path2Resource.TrimStart('/')));
         }
 
+        /// <summary>
+        /// For BuildAction = EmbeddedResource
+        /// return something like this :
+        /// FileExplorer.WPF.Themes.Default.Colors.ico
+        /// </summary>
+        /// <param name="library"></param>
+        /// <param name="path2Resource"></param>
+        /// <returns></returns>
         public static string MakeResourcePath(string library, string path2Resource)
         {
             if (path2Resource.Contains("\\"))
                 throw new ArgumentException("path2Resource");
             return String.Format("{0}.{1}", library, path2Resource.TrimStart('/').Replace('/', '.'));
         }
+
     }
 }
