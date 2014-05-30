@@ -27,6 +27,11 @@
                 <Setter Property="FontSize" Value="15" />
                 <Setter Property="FontFamily" Value="Segoe UI Symbol" />
             </Style>
+
+            <Style TargetType="Image" >
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="20" />
+            </Style>
         </Style.Resources>
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
@@ -60,7 +65,8 @@
                                       Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RepeatButton}}}"
                                       Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                       />-->
-                                <TextBlock Text="&#xe239;" />
+                                <!--<TextBlock Text="&#xe239;" />-->
+                                <Image Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Resources/SegoeUISymbols/E239.png" />
                             </RepeatButton>
                         </StackPanel>
 
@@ -75,7 +81,8 @@
                                       Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RepeatButton}}}"
                                       Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                       />-->
-                                    <TextBlock Text="&#xe23a;" />
+                                    <Image Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Resources/SegoeUISymbols/E23A.png" />
+                                    <!--<TextBlock Text="&#xe23a;" />-->
                                 </RepeatButton.Content>
                                 <RepeatButton.IsEnabled>
                                     <MultiBinding Converter="{StaticResource sbofr}">
@@ -92,7 +99,8 @@
                                                 AncestorType={x:Type TabControl}}, Path=SelectedIndex}"
                                              >
                                 <bc:DropDownList.Header>
-                                    <TextBlock Text="&#xE138;" />
+                                    <Image Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Resources/SegoeUISymbols/E138.png" />
+                                    <!--<TextBlock Text="&#xE138;" />-->
                                 </bc:DropDownList.Header>
                                 <bc:DropDownList.ItemContainerStyle>
                                     <Style TargetType="{x:Type ComboBoxItem}">

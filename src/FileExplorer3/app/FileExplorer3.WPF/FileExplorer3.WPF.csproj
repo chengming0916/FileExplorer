@@ -792,6 +792,8 @@
     <Resource Include="Themes\Resources\SegoeUISymbols\E1EF.png" />
     <Resource Include="Themes\Resources\SegoeUISymbols\E239.png" />
     <Resource Include="Themes\Resources\SegoeUISymbols\E23A.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E138.png" />
+    <Resource Include="Themes\Resources\SegoeUISymbols\E109.png" />
     <Content Include="ViewModels\Helpers\Selector.html" />
     <EmbeddedResource Include="Themes\Resources\folder.ico" />
     <EmbeddedResource Include="Themes\Resources\file.ico" />

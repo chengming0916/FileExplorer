@@ -56,7 +56,9 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Template="{StaticResource BaseButton}"  
                                     Command="def:ExplorerCommands.NewTab">
-                        <TextBlock Text="&#xE109;" />
+
+                        <Image Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Resources/SegoeUISymbols/E109.png" />
+                        <!--<TextBlock Text="&#xE109;" />-->
                     </Button>
 
                     <uc:Titlebar x:Name="PART_TitleBar" 
