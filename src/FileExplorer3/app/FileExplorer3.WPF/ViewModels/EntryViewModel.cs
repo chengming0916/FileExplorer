@@ -63,12 +63,21 @@ namespace FileExplorer.WPF.ViewModels
             //var icon = AsyncUtils.RunSync(() => _iconExtractSequences.Last().GetIconForModelAsync(EntryModel, CancellationToken.None));
             //Icon = icon;
 
-            Task loadIconTask = Task.Run(async () => await _iconExtractSequences.Last().GetIconBytesForModelAsync(EntryModel, CancellationToken.None))
+            Task loadIconTask = 
+                Task.Run<BitmapSource>(async () => 
+                    {
+                        byte[] bytes = await _iconExtractSequences.Last()
+                    .GetIconBytesForModelAsync(EntryModel, CancellationToken.None);
+                        if (bytes != null && bytes.Length > 0)
+                            return BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes);
+                        else return null;
+                    })
+          
                 .ContinueWith((tsk) =>
                     {
                         if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
                         {
-                            Icon = BitmapSourceUtils.CreateBitmapSourceFromBitmap(tsk.Result);
+                            Icon = tsk.Result;
                         };
                     }, TaskScheduler.FromCurrentSynchronizationContext()
                     );
