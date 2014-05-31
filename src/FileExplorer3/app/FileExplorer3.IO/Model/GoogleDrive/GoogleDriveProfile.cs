@@ -169,7 +169,7 @@ namespace FileExplorer.Models
             string ext = Path.GetExtension(model.Name);
             if (model.ImageUrl != null && isImage(ext))
                 yield return new GetUriIcon(e => new Uri((e as GoogleDriveItemModel).ImageUrl), HttpClientFunc);
-            else if (model.Name.IndexOf('.') != -1)
+            //else if (model.Name.IndexOf('.') != -1)
                 yield return GetFromSystemImageListUsingExtension.Instance;
 
             if (entry.FullPath.Equals(Alias))

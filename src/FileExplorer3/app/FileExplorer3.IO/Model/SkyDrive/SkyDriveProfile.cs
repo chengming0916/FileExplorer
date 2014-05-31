@@ -194,7 +194,7 @@ namespace FileExplorer.Models
             if (model.ImageUrl != null)
                 yield return new GetUriIcon(e => new Uri((e as SkyDriveItemModel).ImageUrl));
             else
-                if (model.Name.IndexOf('.') != -1)
+                //if (model.Name.IndexOf('.') != -1)
                     yield return GetFromSystemImageListUsingExtension.Instance;
 
             if (model.FullPath == Alias)
