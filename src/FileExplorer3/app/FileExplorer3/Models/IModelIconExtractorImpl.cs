@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Utils;
+using System.Collections.Concurrent;
 
 namespace FileExplorer.Models
 {
@@ -16,43 +17,43 @@ namespace FileExplorer.Models
         bool _isStatic = false;
         byte[] _cache = null;
 
-        public static ModelIconExtractor<T> FromTaskFunc(Func<T, Task<byte[]>> task)
+        public static IModelIconExtractor<T> FromTaskFunc(Func<T, Task<byte[]>> task)
         {
             return new ModelIconExtractor<T>() { _retTask = task };
         }
 
-        public static ModelIconExtractor<T> FromTaskFunc(Func<Task<byte[]>> task)
+        public static IModelIconExtractor<T> FromTaskFunc(Func<Task<byte[]>> task)
         {
-            var retVal = FromTaskFunc(t => task());
+            var retVal = FromTaskFunc(t => task()) as ModelIconExtractor<T>;
             retVal.IsStatic = true;
             return retVal;
         }
 
-        public static ModelIconExtractor<T> FromFunc(Func<T, byte[]> func)
+        public static IModelIconExtractor<T> FromFunc(Func<T, byte[]> func)
         {
             return new ModelIconExtractor<T>() { _retFunc = func };
         }
 
-        public static ModelIconExtractor<T> FromFunc(Func<byte[]> func)
+        public static IModelIconExtractor<T> FromFunc(Func<byte[]> func)
         {
-            var retVal = FromFunc(t => func());
+            var retVal = FromFunc(t => func()) as ModelIconExtractor<T>;
             retVal.IsStatic = true;
             return retVal;
         }
 
-        public static ModelIconExtractor<T> FromBytes(byte[] bytes)
+        public static IModelIconExtractor<T> FromBytes(byte[] bytes)
         {
             return FromTaskFunc(() => Task<byte[]>.FromResult(bytes));
         }
 
-        public static ModelIconExtractor<T> FromStream(Stream stream)
+        public static IModelIconExtractor<T> FromStream(Stream stream)
         {
             return FromBytes(stream.ToByteArray());
         }
 
         public async Task<byte[]> GetIconBytesForModelAsync(T model, CancellationToken ct)
         {
-            _retTask = _retTask ?? 
+            _retTask = _retTask ??
                 (t => Task<byte[]>.FromResult(_retFunc(model)));
 
             if (_isStatic)
@@ -65,5 +66,68 @@ namespace FileExplorer.Models
         }
 
         public bool IsStatic { get { return _isStatic; } set { _isStatic = value; } }
+
+        #region Cachable support
+        private static ConcurrentDictionary<string, byte[]> _cacheDic
+            = new ConcurrentDictionary<string, byte[]>();
+
+        public static IModelIconExtractor<T> FromTaskFuncCachable(
+            Func<T, string> keyFunc,
+            Func<T, Task<byte[]>> task)
+        {
+            return ModelIconExtractor<T>
+                .FromTaskFunc(
+                    async t =>
+                    {
+                        string key = keyFunc(t);
+                        if (!_cacheDic.ContainsKey(key))
+                            return _cacheDic[key] = await task(t);
+                        return _cacheDic[key];
+                    }
+                );
+        }
+
+        public static IModelIconExtractor<T> FromTaskFuncCachable(string key, Func<Task<byte[]>> task)
+        {
+            return ModelIconExtractor<T>
+               .FromTaskFunc(
+                   async () =>
+                   {
+                       if (!_cacheDic.ContainsKey(key))
+                           return _cacheDic[key] = await task();
+                       return _cacheDic[key];
+                   }
+               );
+        }
+
+        public static IModelIconExtractor<T> FromFuncCachable(
+            Func<T, string> keyFunc, Func<T, byte[]> func)
+        {
+            return ModelIconExtractor<T>
+               .FromFunc(
+                   t =>
+                   {
+                       string key = keyFunc(t);
+                       if (!_cacheDic.ContainsKey(key))
+                           return _cacheDic[key] = func(t);
+                       return _cacheDic[key];
+                   }
+               );
+        }
+
+        public static IModelIconExtractor<T> FromFuncCachable(string key, Func<byte[]> func)
+        {
+            return ModelIconExtractor<T>
+              .FromFunc(
+                  () =>
+                  {
+                      if (!_cacheDic.ContainsKey(key))
+                          return _cacheDic[key] = func();
+                      return _cacheDic[key];
+                  }
+              );
+        }
+        #endregion
+
     }
 }
