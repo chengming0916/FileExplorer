@@ -53,8 +53,10 @@ namespace FileExplorer.Models
 
         public async Task<byte[]> GetIconBytesForModelAsync(T model, CancellationToken ct)
         {
-            _retTask = _retTask ??
-                (t => Task<byte[]>.FromResult(_retFunc(model)));
+            if (_retTask == null)
+            {
+                return _retFunc(model);
+            }
 
             if (_isStatic)
                 if (_cache != null)
@@ -80,6 +82,9 @@ namespace FileExplorer.Models
                     async t =>
                     {
                         string key = keyFunc(t);
+                        if (key == null)
+                            return await task(t);
+
                         if (!_cacheDic.ContainsKey(key))
                             return _cacheDic[key] = await task(t);
                         return _cacheDic[key];
@@ -93,6 +98,9 @@ namespace FileExplorer.Models
                .FromTaskFunc(
                    async () =>
                    {
+                       if (key == null)
+                           return await task();
+
                        if (!_cacheDic.ContainsKey(key))
                            return _cacheDic[key] = await task();
                        return _cacheDic[key];
@@ -108,6 +116,9 @@ namespace FileExplorer.Models
                    t =>
                    {
                        string key = keyFunc(t);
+                       if (key == null)
+                           return func(t);
+
                        if (!_cacheDic.ContainsKey(key))
                            return _cacheDic[key] = func(t);
                        return _cacheDic[key];
@@ -121,6 +132,9 @@ namespace FileExplorer.Models
               .FromFunc(
                   () =>
                   {
+                      if (key == null)
+                          return func();
+
                       if (!_cacheDic.ContainsKey(key))
                           return _cacheDic[key] = func();
                       return _cacheDic[key];

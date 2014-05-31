@@ -20,61 +20,118 @@ using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {
-    public class GetFromSystemImageList : IModelIconExtractor<IEntryModel>
+    public class GetFromSystemImageList //: IModelIconExtractor<IEntryModel>
     {
-        private IconExtractor _iconExtractor = new ExIconExtractor();
-        public static GetFromSystemImageList Instance = new GetFromSystemImageList();
-        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
+        private static IconExtractor _iconExtractor = new ExIconExtractor();
+        public static IModelIconExtractor<IEntryModel> Instance = Create();
+        private static string[] excludedExtensions = ".lnk,.exe".Split(',');
+        public static IModelIconExtractor<IEntryModel> Create()
         {
-            if (model != null && !String.IsNullOrEmpty(model.FullPath))
-                using (FileSystemInfoEx fsi = FileSystemInfoEx.FromString(model.FullPath))
+            Func<IEntryModel, string> keyFunc = (m) =>
+            {
+                if (m.IsDirectory)
+                    //if (model.FullPath.StartsWith("::"))
+                    return "GetFromSystemImageList - " + m.FullPath;
+                //else return "GetFromSystemImageList - Directory";
+                else
                 {
-                    Bitmap bitmap = null;
-                    if (fsi != null)
-                        return fsi.RequestPIDL(pidl =>
-                        {
-                            bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
-                                pidl.Ptr, model.IsDirectory, false);
-                           
-                            if (bitmap != null)
-                                return Task.FromResult<byte[]>(
-                                    bitmap.ToByteArray());
-                            else return Task.FromResult<byte[]>(null);
-                        });
-                }
+                    string extension = m.GetExtension().ToLower();
 
-            return Task.FromResult<byte[]>(null);
+                    if (String.IsNullOrEmpty(extension))
+                    {
+                        //Without extension.
+                        if (m.FullPath.StartsWith("::"))
+                            return "GetFromSystemImageList - " + m.FullPath;
+                        else return "GetFromSystemImageList - File";
+                    }
+                    else
+                    {
+                        if (excludedExtensions.Contains(extension))
+                            return "GetFromSystemImageList - " + m.FullPath;
+                        return "GetFromSystemImageList - " + extension;
+                    }
+                }
+            };
+            Func<IEntryModel, byte[]> getIconFunc = em =>
+            {
+                 if (em != null && !String.IsNullOrEmpty(em.FullPath))
+                     using (FileSystemInfoEx fsi = FileSystemInfoEx.FromString(em.FullPath))
+                     {
+                         Bitmap bitmap = null;
+                         if (fsi != null)
+                             return fsi.RequestPIDL(pidl =>
+                             {
+                                 bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
+                                     pidl.Ptr, em.IsDirectory, false);
+
+                                 if (bitmap != null)
+                                     return
+                                         bitmap.ToByteArray();
+                                 else return null;
+                             });
+                     }
+                return null;
+            };
+
+            return ModelIconExtractor<IEntryModel>.FromFuncCachable(
+            keyFunc,
+            (em) => getIconFunc(em)
+            );
         }
     }
 
-    public class GetFromSystemImageListUsingExtension : IModelIconExtractor<IEntryModel>
+    public class GetFromSystemImageListUsingExtension
     {
-        private IconExtractor _iconExtractor = new IconExtractor();
-        private Func<IEntryModel, string> _fileNameFunc;
-        public static GetFromSystemImageListUsingExtension Instance = new GetFromSystemImageListUsingExtension();
-
-        public GetFromSystemImageListUsingExtension(Func<IEntryModel, string> fileNameFunc = null)
+        private static IconExtractor _iconExtractor = new IconExtractor();
+        static GetFromSystemImageListUsingExtension dummy = new GetFromSystemImageListUsingExtension();
+        public static IModelIconExtractor<IEntryModel> Instance = Create();
+        public static IModelIconExtractor<IEntryModel> Create(Func<IEntryModel, string> fnameFunc = null)
         {
-            _fileNameFunc = fileNameFunc == null ? e => e.Label : fileNameFunc;
-        }
-
-        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
-        {
-            return Task<ImageSource>.Run(() =>
+            fnameFunc = fnameFunc == null ? e => e.Label : fnameFunc;
+            Func<IEntryModel, string> keyFunc = (m) =>
                 {
-                    if (model != null)
+                    if (m.IsDirectory)
+                        return "GetFromSystemImageListUsingExtension - Directory";
+                    else
                     {
-                        string fname = _fileNameFunc(model);
+                        string fname = fnameFunc(m);
+                        string extension = m.Profile.Path.GetExtension(fname).ToLower();
+
+                        if (String.IsNullOrEmpty(extension))
+                        {
+                            //Without extension.
+                            return "GetFromSystemImageListUsingExtension - File";
+                        }
+                        else
+                        {
+                            return "GetFromSystemImageListUsingExtension - " + extension;
+                        }
+                    }
+                };
+            Func<IEntryModel, byte[]> getIconFunc = em =>
+                {
+                    if (em.IsDirectory)
+                    {
+                        return ResourceUtils.GetResourceAsByteArray(dummy, "/Themes/Resources/FolderIcon.png");
+                    }
+
+                    if (em != null)
+                    {
+                        string fname = fnameFunc(em);
                         using (Bitmap bitmap =
-                            _iconExtractor.GetBitmap(IconSize.large, fname, model.IsDirectory, false))
+                            _iconExtractor.GetBitmap(IconSize.large, fname, em.IsDirectory, false))
                             if (bitmap != null)
                                 return bitmap.ToByteArray();
-                        
+
                     }
                     return null;
-                });
 
+                };
 
+            return ModelIconExtractor<IEntryModel>.FromFuncCachable(
+            keyFunc,
+            (em) => getIconFunc(em)
+            );
         }
     }
 
@@ -125,8 +182,8 @@ namespace FileExplorer.Models
             var diskModel = model as DiskEntryModelBase;
             if (diskModel != null && diskModel.IsFileWithExtension(FileExtensions.ExifExtensions))
             {
-                using (var stream = 
-                    await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, 
+                using (var stream =
+                    await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel,
                         FileExplorer.Defines.FileAccess.Read, ct))
                 {
                     using (ExifReader reader = new ExifReader(stream))

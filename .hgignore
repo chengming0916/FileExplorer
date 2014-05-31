@@ -19,3 +19,4 @@ src/FileExplorer3/app/*.nuspec
 *.vsp
 *.nuspec
 *.vspx
+*.diagsession

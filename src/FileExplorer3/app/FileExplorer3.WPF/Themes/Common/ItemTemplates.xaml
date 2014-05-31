@@ -59,6 +59,7 @@
                         IsEditable="{Binding IsRenamable}"        
                         IsEditing="{Binding IsRenaming, Mode=TwoWay}"
                         HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
                         DockPanel.Dock="Bottom"
                         />
             <!--<TextBlock x:Name="Label" TextAlignment="Center" 
