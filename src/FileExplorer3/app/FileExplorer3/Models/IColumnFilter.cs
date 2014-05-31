@@ -12,6 +12,6 @@ namespace FileExplorer.Models
         long MatchedCount { get; }
         bool IsChecked { get; set; }
         string ValuePath { get;}
-        Func<IEntryModel, bool> Matches { get; }
+        Func<object, bool> Matches { get; }
     }
 }

@@ -203,7 +203,8 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         protected IScriptCommand _tryCloseCommand;
-        private static ColumnFilter _directoryOnlyFilter = ColumnFilter.CreateNew("DirectoryOnly", "IsDirectory", em => em.IsDirectory);
+        private static ColumnFilter _directoryOnlyFilter = 
+            ColumnFilter.CreateNew<IEntryViewModel>("DirectoryOnly", "IsDirectory", evm => evm.EntryModel.IsDirectory);
         IEntryModel[] _selectedFiles;
         bool _canOpen = false, _canSave = false;
 

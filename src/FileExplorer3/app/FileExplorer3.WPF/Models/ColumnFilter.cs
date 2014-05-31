@@ -12,7 +12,8 @@ namespace FileExplorer.WPF.Models
     {
 
         #region Cosntructor
-        public static ColumnFilter CreateNew(string header, string valuePath, Func<IEntryModel, bool> filter = null)
+        public static ColumnFilter CreateNew(string header, string valuePath, 
+            Func<object, bool> filter = null)
         {
             return new ColumnFilter()
             {
@@ -22,11 +23,33 @@ namespace FileExplorer.WPF.Models
             };
         }
 
+        public static ColumnFilter CreateNew<T>(string header, string valuePath,
+           Func<T, bool> filter = null)
+        {
+            var retVal = new ColumnFilter()
+            {
+                Header = header,
+                ValuePath = valuePath,
+            };
+
+            if (filter == null)
+                retVal.Matches =  e => true;
+            else retVal.Matches = e => filter((T)e);
+
+            return retVal;
+        }
+
         #endregion
 
         #region Methods
 
-        public static bool Match(IColumnFilter[] filters, IEntryModel model)
+        /// <summary>
+        /// Many any filter in a filter group.
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool Match(IColumnFilter[] filters, object model)
         {
             foreach (var filterGroup in filters.GroupBy(f => f.ValuePath))
             {
@@ -39,6 +62,17 @@ namespace FileExplorer.WPF.Models
             return true;
         }
 
+        public static bool MatchAll(IColumnFilter[] filters, object model)
+        {
+            foreach (var filterGroup in filters.GroupBy(f => f.ValuePath))
+            {
+                foreach (var f in filterGroup)
+                    if (!f.Matches(model))
+                        return false;
+            }
+            return true;
+        }
+
         #endregion
 
         #region Data
@@ -46,7 +80,7 @@ namespace FileExplorer.WPF.Models
         private string _header;
         private bool _isChecked = false;
         private string _valuePath = "";
-        private Func<IEntryModel, bool> _match;
+        private Func<object, bool> _match;
         private long _matchCount = 0;
 
         #endregion
@@ -71,7 +105,7 @@ namespace FileExplorer.WPF.Models
             set { _valuePath = value; NotifyOfPropertyChange(() => ValuePath); }
         }
 
-        public Func<IEntryModel, bool> Matches
+        public Func<object, bool> Matches
         {
             get { return _match; }
             set { _match = value; NotifyOfPropertyChange(() => Matches); }

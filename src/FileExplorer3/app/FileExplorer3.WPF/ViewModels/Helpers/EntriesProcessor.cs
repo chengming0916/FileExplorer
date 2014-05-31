@@ -37,7 +37,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
             //if (All.Filter == null)
                 All.Filter = (e) => e != null &&
                     CustomFilter(e) &&
-                    ColumnFilter.Match(_colFilters, (e as IEntryViewModel).EntryModel);
+                    ColumnFilter.Match(_colFilters, e);
             //else
             //    All.Filter = (e) =>
             //        All.Filter(e) && CustomFilter(e) &&

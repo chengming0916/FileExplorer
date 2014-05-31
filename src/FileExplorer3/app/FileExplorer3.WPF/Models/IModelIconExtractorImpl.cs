@@ -37,7 +37,7 @@ namespace FileExplorer.WPF.Models
             string symbolCode = String.Format("{0:x2}", (UInt32)symbol).ToUpper();
             string resourcePath = String.Format("/Themes/Resources/SegoeUISymbols/{0}.png", symbolCode);
 
-            var retVal = ModelIconExtractor<T>.FromFunc(
+            var retVal = ModelIconExtractor<T>.FromFuncCachable("SegoeUI-" + symbol, 
                 () =>
                 {
                     byte[] resource = ResourceUtils.GetResourceAsByteArray(dummy, resourcePath);
