@@ -10,15 +10,17 @@ using FileExplorer.WPF.Models;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
-  
+
 
     public class EntriesProcessor<VM> : IEntriesProcessor<VM>
     {
         #region Constructor
 
-        public EntriesProcessor(IEntriesHelper<VM> entriesHelper)
+        public EntriesProcessor(IEntriesHelper<VM> entriesHelper,
+            Func<VM, object> filterObjectGetter)
         {
             EntriesHelper = entriesHelper;
+            _filterObjectGetter = filterObjectGetter;
         }
 
         #endregion
@@ -30,14 +32,14 @@ namespace FileExplorer.WPF.ViewModels.Helpers
             All.CustomSort = comparer;
             All.GroupDescriptions.Add(new PropertyGroupDescription(groupDescription));
         }
-      
+
 
         void updateFilters()
-        {         
+        {
             //if (All.Filter == null)
-                All.Filter = (e) => e != null &&
-                    CustomFilter(e) &&
-                    ColumnFilter.Match(_colFilters, e);
+            All.Filter = (e) => e != null &&
+                CustomFilter(e) &&
+                ColumnFilter.Match(_colFilters, _filterObjectGetter((VM)e));
             //else
             //    All.Filter = (e) =>
             //        All.Filter(e) && CustomFilter(e) &&
@@ -59,7 +61,8 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         ListCollectionView _processedItems = null;
         private ColumnFilter[] _colFilters = new ColumnFilter[] { };
         private Func<object, bool> _customFilter = e => true;
-     
+        private Func<VM, object> _filterObjectGetter;
+
 
         #endregion
 
@@ -75,18 +78,18 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         {
             get
             {
-                if (_processedItems == null)                
-                    _processedItems = CollectionViewSource.GetDefaultView(EntriesHelper.All) as ListCollectionView;                
+                if (_processedItems == null)
+                    _processedItems = CollectionViewSource.GetDefaultView(EntriesHelper.All) as ListCollectionView;
                 return _processedItems;
             }
         }
         public IEntriesHelper<VM> EntriesHelper { get; private set; }
         public IColumnsHelper ColumnHelper { get; private set; }
 
-      
+
         #endregion
 
 
-     
+
     }
 }

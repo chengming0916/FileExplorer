@@ -247,10 +247,10 @@ namespace FileExplorer.WPF.ViewModels
             _selectedFilter = value;
 
             FileList.ProcessedEntries.SetFilters(
-                ColumnFilter.CreateNew<IEntryViewModel>(value, "FullPath",
-                e => e.EntryModel.IsDirectory || 
+                ColumnFilter.CreateNew<IEntryModel>(value, "FullPath",
+                e => e.IsDirectory || 
                     PathFE.MatchFileMasks(
-                    e.EntryModel.Profile.Path.GetFileName(e.EntryModel.FullPath), value)));
+                    e.Profile.Path.GetFileName(e.FullPath), value)));
             NotifyOfPropertyChange(() => SelectedFilter);
         }
 
