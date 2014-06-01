@@ -70,7 +70,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             Events = events;
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask) { ClearBeforeLoad = false };
-            ProcessedEntries = new EntriesProcessor<IEntryViewModel>(entryHelper);
+            ProcessedEntries = new EntriesProcessor<IEntryViewModel>(entryHelper, evm => evm.EntryModel);
             Columns = new ColumnsHelper(ProcessedEntries,
                 (col, direction) =>
                     new EntryViewModelComparer(
@@ -123,8 +123,10 @@ namespace FileExplorer.WPF.ViewModels
 
             ProcessedEntries.EntriesHelper.IsLoaded = false;
             await ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Replace, false);
-
-            Columns.CalculateColumnHeaderCount(from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel);
+            Task.Run(() =>
+                
+            Columns.CalculateColumnHeaderCount(
+            from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel));
 
             NotifyOfPropertyChange(() => CurrentDirectory);
         }

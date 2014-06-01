@@ -57,7 +57,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         private static ColumnFilter _directoryOnlyFilter =
-             ColumnFilter.CreateNew<IEntryViewModel>("DirectoryOnly", "IsDirectory", evm => evm.EntryModel.IsDirectory);
+             ColumnFilter.CreateNew<IEntryModel>("DirectoryOnly", "IsDirectory", evm => evm.IsDirectory);
         IEntryModel _selectedDirectory;
         bool _canOpen = false;
 

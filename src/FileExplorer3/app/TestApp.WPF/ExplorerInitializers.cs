@@ -71,35 +71,35 @@ namespace TestApp
 
             explorerModel.FileList.Columns.ColumnFilters = new ColumnFilter[]
                 {
-                    ColumnFilter.CreateNew<IEntryViewModel>("0 - 9", "EntryModel.Label", e => Regex.Match(e.EntryModel.Label, "^[0-9]").Success),
-                    ColumnFilter.CreateNew<IEntryViewModel>("A - H", "EntryModel.Label", e => Regex.Match(e.EntryModel.Label, "^[A-Ha-h]").Success),
-                    ColumnFilter.CreateNew<IEntryViewModel>("I - P", "EntryModel.Label", e => Regex.Match(e.EntryModel.Label, "^[I-Pi-i]").Success),
-                    ColumnFilter.CreateNew<IEntryViewModel>("Q - Z", "EntryModel.Label", e => Regex.Match(e.EntryModel.Label, "^[Q-Zq-z]").Success),
-                    ColumnFilter.CreateNew<IEntryViewModel>("The rest", "EntryModel.Label", e => Regex.Match(e.EntryModel.Label, "^[^A-Za-z0-9]").Success),
-                    ColumnFilter.CreateNew<IEntryViewModel>("Today", "EntryModel.LastUpdateTimeUtc", e => 
+                    ColumnFilter.CreateNew<IEntryModel>("0 - 9", "EntryModel.Label", e => Regex.Match(e.Label, "^[0-9]").Success),
+                    ColumnFilter.CreateNew<IEntryModel>("A - H", "EntryModel.Label", e => Regex.Match(e.Label, "^[A-Ha-h]").Success),
+                    ColumnFilter.CreateNew<IEntryModel>("I - P", "EntryModel.Label", e => Regex.Match(e.Label, "^[I-Pi-i]").Success),
+                    ColumnFilter.CreateNew<IEntryModel>("Q - Z", "EntryModel.Label", e => Regex.Match(e.Label, "^[Q-Zq-z]").Success),
+                    ColumnFilter.CreateNew<IEntryModel>("The rest", "EntryModel.Label", e => Regex.Match(e.Label, "^[^A-Za-z0-9]").Success),
+                    ColumnFilter.CreateNew<IEntryModel>("Today", "EntryModel.LastUpdateTimeUtc", e => 
                         {
                             DateTime dt = DateTime.UtcNow;
-                            return e.EntryModel.LastUpdateTimeUtc.Year == dt.Year && 
-                                e.EntryModel.LastUpdateTimeUtc.Month == dt.Month && 
-                                e.EntryModel.LastUpdateTimeUtc.Day == dt.Day;
+                            return e.LastUpdateTimeUtc.Year == dt.Year && 
+                                e.LastUpdateTimeUtc.Month == dt.Month && 
+                                e.LastUpdateTimeUtc.Day == dt.Day;
                         }),
-                    ColumnFilter.CreateNew<IEntryViewModel>("Earlier this month", "EntryModel.LastUpdateTimeUtc", e => 
+                    ColumnFilter.CreateNew<IEntryModel>("Earlier this month", "EntryModel.LastUpdateTimeUtc", e => 
                         {
                             DateTime dt = DateTime.UtcNow;
-                            return e.EntryModel.LastUpdateTimeUtc.Year == dt.Year && e.EntryModel.LastUpdateTimeUtc.Month == dt.Month;
+                            return e.LastUpdateTimeUtc.Year == dt.Year && e.LastUpdateTimeUtc.Month == dt.Month;
                         }),
-                     ColumnFilter.CreateNew<IEntryViewModel>("Earlier this year", "EntryModel.LastUpdateTimeUtc", e => 
+                     ColumnFilter.CreateNew<IEntryModel>("Earlier this year", "EntryModel.LastUpdateTimeUtc", e => 
                         {
                             DateTime dt = DateTime.UtcNow;
-                            return e.EntryModel.LastUpdateTimeUtc.Year == dt.Year;
+                            return e.LastUpdateTimeUtc.Year == dt.Year;
                         }), 
-                    ColumnFilter.CreateNew<IEntryViewModel>("A long time ago", "EntryModel.LastUpdateTimeUtc", e => 
+                    ColumnFilter.CreateNew<IEntryModel>("A long time ago", "EntryModel.LastUpdateTimeUtc", e => 
                         {
                             DateTime dt = DateTime.UtcNow;
-                            return e.EntryModel.LastUpdateTimeUtc.Year != dt.Year;
+                            return e.LastUpdateTimeUtc.Year != dt.Year;
                         }),    
-                    ColumnFilter.CreateNew<IEntryViewModel>("Directories", "EntryModel.Description", e => e.EntryModel.IsDirectory),
-                    ColumnFilter.CreateNew<IEntryViewModel>("Files", "EntryModel.Description", e => !e.EntryModel.IsDirectory)
+                    ColumnFilter.CreateNew<IEntryModel>("Directories", "EntryModel.Description", e => e.IsDirectory),
+                    ColumnFilter.CreateNew<IEntryModel>("Files", "EntryModel.Description", e => !e.IsDirectory)
                 };
         }
     }
