@@ -7,11 +7,11 @@ using System.Windows.Markup;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FileExplorer3")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("FileExplorer.WPF")]
+[assembly: AssemblyDescription("FileExplorer is a WPF control (not metro) that's emulate the Windows Explorer, it supports both FileSystem and non-FileSystem class, as long as they are in the folder-content structure. FileExplorer3 includes TabControl, Breadcrumb, FolderTree, FileList, Sidebar, Toolbar and Statusbar.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FileExplorer3")]
+[assembly: AssemblyCompany("Leung Yat Chun Joseph")]
+[assembly: AssemblyProduct("FileExplorer")]
 [assembly: AssemblyCopyright("Copyright © Leung Yat Chun Joseph 2008 - 2013 under MIT license")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
