@@ -51,6 +51,7 @@ namespace FileExplorer.WPF.ViewModels
         //bool IsContextMenuVisible { get; set; }
 
         void SignalChangeDirectory(IEntryModel newDirectory);
+        Task SetCurrentDirectoryAsync(IEntryModel em);
 
         ISidebarViewModel Sidebar { get; }
 

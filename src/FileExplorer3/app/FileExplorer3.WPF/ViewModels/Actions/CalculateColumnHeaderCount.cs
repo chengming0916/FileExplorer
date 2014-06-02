@@ -24,15 +24,19 @@ namespace FileExplorer.WPF.ViewModels
 
         public void Execute(ActionExecutionContext context)
         {
+            Dictionary<ColumnFilter, int> matchCountDic = new Dictionary<ColumnFilter, int>();
             foreach (var f in _filters)
-                f.MatchedCount = 0;
+                matchCountDic[f] = 0;
 
             var entryModels = context["EntryList"] as IEnumerable<IEntryModel>;
             if (entryModels != null)
                 foreach (var em in entryModels)
-                    foreach (var f in _filters)
+                    foreach (var f in matchCountDic.Keys)
                         if (f.Matches(em))
-                            f.MatchedCount++;
+                            matchCountDic[f]++;
+
+            foreach (var f in matchCountDic.Keys)
+                f.MatchedCount = matchCountDic[f];
         }
 
         #endregion

@@ -57,22 +57,23 @@ namespace FileExplorer.WPF.ViewModels
         #region Methods
 
         private void loadIcon()
-        {            
-            var sequence = _iconExtractSequences.ToList();
+        {
+
 
             //var icon = AsyncUtils.RunSync(() => _iconExtractSequences.Last().GetIconForModelAsync(EntryModel, CancellationToken.None));
             //Icon = icon;
 
-            Task loadIconTask = 
-                Task.Run<BitmapSource>(async () => 
-                    {
-                        byte[] bytes = await _iconExtractSequences.Last()
-                    .GetIconBytesForModelAsync(EntryModel, CancellationToken.None);
-                        if (bytes != null && bytes.Length > 0)
-                            return BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes);
-                        else return null;
-                    })
-          
+            Task loadIconTask =
+                Task.Run<BitmapSource>(async () =>
+                {
+                    var sequence = _iconExtractSequences.ToList();
+                    byte[] bytes = await _iconExtractSequences.Last()
+                        .GetIconBytesForModelAsync(EntryModel, CancellationToken.None);
+                    if (bytes != null && bytes.Length > 0)
+                        return BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes);
+                    else return null;
+                })
+
                 .ContinueWith((tsk) =>
                     {
                         if (tsk.IsCompleted && !tsk.IsFaulted && tsk.Result != null)
@@ -94,7 +95,7 @@ namespace FileExplorer.WPF.ViewModels
             //        );
             //}
 
-        } 
+        }
 
         //private async Task loadIcon()
         //{
@@ -185,10 +186,14 @@ namespace FileExplorer.WPF.ViewModels
             set { _icon = value; NotifyOfPropertyChange(() => Icon); }
         }
 
-        public bool IsSelected {
-            get { return _isSelected; } 
-            set { if (_isSelected != value) { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); } 
-            } }
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                if (_isSelected != value) { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); }
+            }
+        }
 
         public bool IsDragging { get { return _isDragging; } set { _isDragging = value; NotifyOfPropertyChange(() => IsDragging); } }
 

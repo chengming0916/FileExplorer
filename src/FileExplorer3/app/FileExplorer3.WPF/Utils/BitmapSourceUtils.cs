@@ -72,8 +72,16 @@ namespace FileExplorer.WPF.Utils
 
         public static BitmapSource CreateBitmapSourceFromBitmap(byte[] bytes)
         {
-            using (Bitmap bitmap = new Bitmap(new MemoryStream(bytes)))
-                return CreateBitmapSourceFromBitmap(bitmap);
+            MemoryStream stream = new MemoryStream(bytes);
+            stream.Seek(0, SeekOrigin.Begin);
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = stream;
+            image.EndInit();
+            image.Freeze();
+            return image;
+            //using (Bitmap bitmap = new Bitmap(new MemoryStream(bytes)))
+            //    return CreateBitmapSourceFromBitmap(bitmap);
         }
     }
 #endif
