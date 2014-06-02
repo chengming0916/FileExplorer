@@ -781,7 +781,7 @@
     <Resource Include="Themes\Resources\ViewMode\tile_16_2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\Common\BrushUpdate.txt" />
+    <None Include="Themes\Common\BrushUpdate.txt" />
     <Resource Include="Themes\Resources\ViewMode\flip_16.png" />
     <Resource Include="Themes\Resources\SegoeUISymbols\E10B.png" />
     <Resource Include="Themes\Resources\SegoeUISymbols\E118.png" />
@@ -794,7 +794,7 @@
     <Resource Include="Themes\Resources\SegoeUISymbols\E23A.png" />
     <Resource Include="Themes\Resources\SegoeUISymbols\E138.png" />
     <Resource Include="Themes\Resources\SegoeUISymbols\E109.png" />
-    <Content Include="ViewModels\Helpers\Selector.html" />
+    <None Include="ViewModels\Helpers\Selector.html" />
     <EmbeddedResource Include="Themes\Resources\folder.ico" />
     <EmbeddedResource Include="Themes\Resources\file.ico" />
   </ItemGroup>
