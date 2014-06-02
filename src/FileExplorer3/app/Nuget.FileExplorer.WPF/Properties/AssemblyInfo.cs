@@ -8,9 +8,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FileExplorer.WPF")]
-[assembly: AssemblyDescription("FileExplorer is a WPF control (not metro) that's emulate the Windows Explorer, it supports both FIleSystem and non-FileSystem class, as long as they are in the folder-content structure. FileExplorer3 includes TabControl, Breadcrumb, FolderTree, FileList, Sidebar, Toolbar and Statusbar.")]
+[assembly: AssemblyDescription("FileExplorer is a WPF control (not metro) that's emulate the Windows Explorer, it supports both FileSystem and non-FileSystem class, as long as they are in the folder-content structure. FileExplorer3 includes TabControl, Breadcrumb, FolderTree, FileList, Sidebar, Toolbar and Statusbar.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Leung Yat Chun Joseph")]
 [assembly: AssemblyProduct("FileExplorer")]
 [assembly: AssemblyCopyright("Copyright © LYCJ 2009, Released under MIT License")]
 [assembly: AssemblyTrademark("")]
@@ -52,4 +52,4 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("3.0.*")]
-[assembly: AssemblyFileVersion("3.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.*")]

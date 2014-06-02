@@ -37,6 +37,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FileExplorer3, Version=3.0.5262.25269, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FileExplorer3\bin\Debug\FileExplorer3.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlTextBlock">
       <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
     </Reference>

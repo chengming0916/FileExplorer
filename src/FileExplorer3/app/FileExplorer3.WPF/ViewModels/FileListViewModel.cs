@@ -124,9 +124,8 @@ namespace FileExplorer.WPF.ViewModels
             ProcessedEntries.EntriesHelper.IsLoaded = false;
             await ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Replace, false);
             Task.Run(() =>
-                
-            Columns.CalculateColumnHeaderCount(
-            from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel));
+                Columns.CalculateColumnHeaderCount(
+                    from vm in ProcessedEntries.EntriesHelper.AllNonBindable select vm.EntryModel));
 
             NotifyOfPropertyChange(() => CurrentDirectory);
         }
