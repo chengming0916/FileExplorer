@@ -1,0 +1,94 @@
+<project name="FileExplorer3" default="build" basedir="." xmlns="http://nant.sourceforge.net/release/0.90/nant.xsd">
+
+  <include buildfile="local.properties3.xml" />
+  <include buildfile="func/func.msbuild2.xml" />
+  <include buildfile="func/func.nunit.xml" />
+  
+  <property name="nant.settings.currentframework" value="net-4.0"/>
+
+  <target name="init">
+    <call target="getversion" /> <!-- Get version from version3.txt -->
+    
+  </target>
+
+  <target name="clean">
+
+  </target>
+
+  <target name="import">
+  
+  </target>
+  
+  <target name="build">
+    <call target="setversionstring" />
+    <property name="dest.path" value="..\release\v${version}\" />
+    <property name="dest.current.path" value="..\release\current\3.0" />
+    <mkdir dir="${dest.path}" />
+    <mkdir dir="${dest.current.path}" />
+    
+    <property name="msbuild.csproj.path" value="${src.fileexplorer3.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+
+    <property name="msbuild.csproj.path" value="${src.fileexplorer3.wpf.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+    
+    <property name="msbuild.csproj.path" value="${src.fileexplorer3.io.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+
+    <property name="msbuild.csproj.path" value="${src.testapp.wpf.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+
+    <property name="msbuild.csproj.path" value="${src.testtemplate.wpf.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+  </target>
+
+  <target name="build-revision">
+    <call target="incrementrevisionnumber" />
+    <call target="setversion" />
+    <call target="build" />
+  </target>
+
+  <target name="build-patch">
+    <call target="incrementbuildnumber" />
+    <call target="setversion" />
+    <call target="build" />
+  </target>
+  
+    <target name="copy">
+    <echo message="copy.bin: ${dest.current.path} dlls -> ${dest.path}\lib\net45" />
+    <copy todir="${dest.path}\lib\net45">
+      <fileset basedir="${dest.current.path}">
+        <include name="${dest.fileexplorer3.dll}" />
+        <include name="${dest.fileexplorer3.pdb}" />
+        <include name="${dest.fileexplorer3.wpf.dll}" />
+        <include name="${dest.fileexplorer3.wpf.pdb}" />
+        <include name="${dest.fileexplorer3.io.dll}" />
+        <include name="${dest.fileexplorer3.io.pdb}" />
+      </fileset>
+    </copy>
+
+    <echo message="copy.bin: ${dest.current.path} demos -> ${dest.path}\demo\net45" />
+    <copy todir="${dest.path}\demo\net45">
+      <fileset basedir="${dest.current.path}">
+        <include name="${dest.fileexplorer3.dll}" />
+        <include name="${dest.fileexplorer3.pdb}" />
+        <include name="${dest.fileexplorer3.wpf.dll}" />
+        <include name="${dest.fileexplorer3.wpf.pdb}" />
+        <include name="${dest.fileexplorer3.io.dll}" />
+        <include name="${dest.fileexplorer3.io.pdb}" />
+        <include name="${dest.testapp.wpf.exe}" />
+        <include name="${dest.testapp.wpf.pdb}" />
+        <include name="${dest.testtemplate.wpf.exe}" />
+        <include name="${dest.testtemplate.wpf.pdb}" />
+        <include name="*.dll" />
+
+      </fileset>
+    </copy>
+  </target>
+
+</project>
