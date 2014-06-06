@@ -22,3 +22,4 @@ src/FileExplorer3/app/*.nuspec
 *.diagsession
 release/*
 tmp/*
+build/compile.txt
