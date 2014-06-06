@@ -54,9 +54,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\ExifLib.dll</HintPath>
     </Reference>
-    <Reference Include="FileExplorer3, Version=3.0.5254.22208, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FileExplorer3\bin\Debug\FileExplorer3.dll</HintPath>
+    <Reference Include="FileExplorer3">
+      <HintPath>..\FileExplorer3\bin\Release\FileExplorer3.dll</HintPath>
     </Reference>
     <Reference Include="HtmlTextBlock">
       <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
@@ -163,7 +162,6 @@
       <Name>FileExplorer3.WPF</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
