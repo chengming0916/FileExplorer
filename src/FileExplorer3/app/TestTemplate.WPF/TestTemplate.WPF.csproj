@@ -111,6 +111,10 @@
     <Resource Include="folder.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileExplorer3.IO\FileExplorer3.IO.csproj">
+      <Project>{bcbcaf38-714a-40e4-87ef-f6cf63dd62aa}</Project>
+      <Name>FileExplorer3.IO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
       <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
       <Name>FileExplorer3.WPF</Name>
