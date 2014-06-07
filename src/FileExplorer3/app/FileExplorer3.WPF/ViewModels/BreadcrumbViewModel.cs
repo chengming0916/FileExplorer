@@ -48,7 +48,8 @@ namespace FileExplorer.WPF.ViewModels
 
         protected void BroadcastDirectoryChanged(IEntryViewModel viewModel)
         {
-            _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { viewModel }));
+            _events.PublishOnUIThread(new SelectionChangedEvent(
+                this, new IEntryViewModel[] { viewModel }));
         }
 
         protected override void OnViewAttached(object view, object context)

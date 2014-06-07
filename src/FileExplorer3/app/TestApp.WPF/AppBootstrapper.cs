@@ -14,10 +14,19 @@ using System.Windows.Controls;
 
 namespace TestApp
 {
-    public class AppBootstrapper : Bootstrapper<IScreen>
+    public class AppBootstrapper : BootstrapperBase//<IScreen>
     {
         private CompositionContainer container;
 
+        public AppBootstrapper()
+        {
+            Initialize();
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<IScreen>();
+        }
         protected override void Configure()
         {
             container = new CompositionContainer(

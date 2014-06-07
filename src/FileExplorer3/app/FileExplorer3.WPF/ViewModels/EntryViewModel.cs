@@ -124,11 +124,6 @@ namespace FileExplorer.WPF.ViewModels
                 == FileExplorer.Defines.HierarchicalResult.Current;
         }
 
-        public override object GetView(object context = null)
-        {
-            return base.GetView(context);
-        }
-
         public override string ToString()
         {
             return "evm-" + this.EntryModel.ToString();

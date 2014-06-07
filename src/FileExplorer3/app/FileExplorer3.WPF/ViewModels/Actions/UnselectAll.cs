@@ -1,49 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using FileExplorer.WPF.Models;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using Caliburn.Micro;
+//using FileExplorer.WPF.Models;
 
-namespace FileExplorer.WPF.ViewModels
-{
-    /// <summary>
-    /// Append entrylist context["EntryList"] to context.Target (IEntryListViewModel)
-    /// </summary>
-    public class UnselectAll : IResult
-    {
-        #region Cosntructor
+//namespace FileExplorer.WPF.ViewModels
+//{
+//    /// <summary>
+//    /// Append entrylist context["EntryList"] to context.Target (IEntryListViewModel)
+//    /// </summary>
+//    public class UnselectAll : IResult
+//    {
+//        #region Cosntructor
 
-        public UnselectAll(IEnumerable<IEntryViewModel> entries)
-        {
-            _entries = entries;
-        }
+//        public UnselectAll(IEnumerable<IEntryViewModel> entries)
+//        {
+//            _entries = entries;
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Methods
+//        #region Methods
 
-        public event EventHandler<ResultCompletionEventArgs> Completed;
+//        public event EventHandler<ResultCompletionEventArgs> Completed;
 
-        public void Execute(ActionExecutionContext context)
-        {
-            foreach (var e in _entries)
-                e.IsSelected = false;
-            Completed(this, new ResultCompletionEventArgs());
-        }
+//        public void Execute(CoroutineExecutionContext context)
+//        {
+//            foreach (var e in _entries)
+//                e.IsSelected = false;
+//            Completed(this, new ResultCompletionEventArgs());
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Data
+//        #region Data
 
-        private IEnumerable<IEntryViewModel> _entries;
+//        private IEnumerable<IEntryViewModel> _entries;
 
-        #endregion
+//        #endregion
 
-        #region Public Properties
+//        #region Public Properties
 
-        #endregion
+//        #endregion
        
-    }
-}
+//    }
+//}

@@ -82,7 +82,7 @@ namespace FileExplorer.WPF.ViewModels
             DragHelper = new FileListDragHelper(this);
 
             Selection.SelectionChanged += (o, e) =>
-            { Events.Publish(new SelectionChangedEvent(this, Selection.SelectedItems)); };
+            { events.PublishOnUIThread(new SelectionChangedEvent(this, Selection.SelectedItems)); };
 
             if (events != null)
                 events.Subscribe(this);
@@ -147,7 +147,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public void SignalChangeDirectory(IEntryModel newDirectory)
         {
-            Events.Publish(new DirectoryChangedEvent(this,
+            Events.PublishOnUIThread(new DirectoryChangedEvent(this,
                      newDirectory, CurrentDirectory));
         }
 
