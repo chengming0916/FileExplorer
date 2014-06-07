@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Primitives;
 using System.Reflection;
 
 namespace FileExplorer.WPF.UserControls
@@ -16,7 +15,8 @@ namespace FileExplorer.WPF.UserControls
     {
         public FileExplorerBootStrapper()
         {
-            Start();
+            //Start();
+
         }
 
         private CompositionContainer container;

@@ -71,8 +71,8 @@ namespace FileExplorer.WPF.Models
                 return;
 
             if (changeType == ChangeType.Moved)
-                profile.Events().Publish(new EntryChangedEvent(fullPath, orgParseName));
-            else profile.Events().Publish(new EntryChangedEvent(changeType, fullPath));
+                profile.Events().PublishOnUIThread(new EntryChangedEvent(fullPath, orgParseName));
+            else profile.Events().PublishOnUIThread(new EntryChangedEvent(changeType, fullPath));
         }
 
 

@@ -79,7 +79,7 @@ namespace FileExplorer.WPF.ViewModels
 
         protected void BroadcastDirectoryChanged(IEntryViewModel viewModel)
         {
-            _events.Publish(new SelectionChangedEvent(this, new IEntryViewModel[] { viewModel }));
+            _events.PublishOnUIThread(new SelectionChangedEvent(this, new IEntryViewModel[] { viewModel }));
         }
 
         public async Task SelectAsync(IEntryModel value)

@@ -1,50 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using Caliburn.Micro;
 
-namespace FileExplorer.WPF.ViewModels.Actions
-{
-    public class DoSomething : IResult
-    {
-        #region Cosntructor
+//namespace FileExplorer.WPF.ViewModels.Actions
+//{
+//    public class DoSomething : IResult
+//    {
+//        #region Cosntructor
 
-        public DoSomething(System.Action<ActionExecutionContext> action)
-        {
-            _action = action;
-        }
+//        public DoSomething(System.Action<CoroutineExecutionContext> action)
+//        {
+//            _action = action;
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Methods
+//        #region Methods
 
-        public event EventHandler<ResultCompletionEventArgs> Completed;
+//        public event EventHandler<ResultCompletionEventArgs> Completed;
 
-        public void Execute(ActionExecutionContext context)
-        {
-            try
-            {
-                _action(context);
-                Completed(this, new ResultCompletionEventArgs());
-            }
-            catch (Exception ex)
-            {
-                Completed(this, new ResultCompletionEventArgs() { Error = ex });
-            }
-        }
+      
 
-        #endregion
+//        public void Execute(CoroutineExecutionContext context)
+//        {
+//            try
+//            {
+//                _action(context);
+//                Completed(this, new ResultCompletionEventArgs());
+//            }
+//            catch (Exception ex)
+//            {
+//                Completed(this, new ResultCompletionEventArgs() { Error = ex });
+//            }
+//        }
 
-        #region Data
+//        #endregion
 
-        private System.Action<ActionExecutionContext> _action;
+//        #region Data
 
-        #endregion
+//        private System.Action<CoroutineExecutionContext> _action;
 
-        #region Public Properties
+//        #endregion
 
-        #endregion
-    }
-}
+//        #region Public Properties
+
+//        #endregion
+
+
+        
+//    }
+//}

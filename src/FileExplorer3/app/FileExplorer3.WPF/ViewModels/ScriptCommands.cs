@@ -141,6 +141,11 @@ namespace FileExplorer.WPF.ViewModels
             return new ShowProgress(wm, header, nextCommand);
         }
 
+        public static ShowProgress ShowProgress(string header, IScriptCommand nextCommand)
+        {
+            return new ShowProgress(new WindowManager(), header, nextCommand);
+        }
+
         public static ReportProgress ReportProgress(TransferProgress progress, IScriptCommand nextCommand = null)
         {
             return new ReportProgress(progress, nextCommand);
@@ -421,7 +426,7 @@ namespace FileExplorer.WPF.ViewModels
         public override IScriptCommand Execute(ParameterDic pm)
         {
             _events = _events ?? pm.AsVMParameterDic().Events;
-            _events.Publish(_evnt);
+            _events.PublishOnUIThread(_evnt);
             return _nextCommand;
         }
     }
@@ -1365,7 +1370,7 @@ namespace FileExplorer.WPF.ViewModels
             IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
             IEventAggregator events = pm["Events"] as IEventAggregator;
 
-            events.Publish(new DirectoryChangedEvent(flvm,
+            events.PublishOnUIThread(new DirectoryChangedEvent(flvm,
                    selectedItem, flvm.CurrentDirectory));
 
             return ResultCommand.OK;

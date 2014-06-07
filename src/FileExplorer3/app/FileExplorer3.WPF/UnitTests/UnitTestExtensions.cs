@@ -18,7 +18,7 @@ namespace FileExplorer.WPF.UnitTests
             return setup.Returns(Task.FromResult(value));
         }
 
-        public static ResultCompletionEventArgs ExecuteAndWait(this IResult action, ActionExecutionContext context, 
+        public static ResultCompletionEventArgs ExecuteAndWait(this IResult action, CoroutineExecutionContext context, 
             System.Action executeAfterActionStarted = null)
         {
             ResultCompletionEventArgs retVal = null;

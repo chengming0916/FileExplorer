@@ -22,15 +22,15 @@ namespace FileExplorer.WPF.ViewModels
             else continueTask(prevTask);
         }
 
-        public static void Execute(this IEnumerable<IResult> actions, ActionExecutionContext context = null)
-        {
-            new SequentialResult(actions.GetEnumerator()).Execute(context);
-        }
+        //public static void Execute(this IEnumerable<IResult> actions, ActionExecutionContext context = null)
+        //{
+        //    new SequentialResult(actions.GetEnumerator()).Execute(context);
+        //}
 
-        public static async Task ExecuteAsync(this IEnumerable<IResult> actions, ActionExecutionContext context = null)
-        {
-            await new SequentialResult(actions.GetEnumerator()).ExecuteAsync(context);
-        }
+        //public static async Task ExecuteAsync(this IEnumerable<IResult> actions, ActionExecutionContext context = null)
+        //{
+        //    await new SequentialResult(actions.GetEnumerator()).ExecuteAsync(context);
+        //}
 
         public static IEnumerable<IResult> Append(this IEnumerable<IResult> actions, params IResult[] appendActions)
         {

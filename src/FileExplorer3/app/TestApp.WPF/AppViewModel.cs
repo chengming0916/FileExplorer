@@ -164,14 +164,14 @@ namespace TestApp
         public void Clear()
         {
             RootModels.Clear();
-            _events.Publish(new RootChangedEvent(ChangeType.Changed, RootModels.ToArray()));
+            _events.PublishOnUIThread(new RootChangedEvent(ChangeType.Changed, RootModels.ToArray()));
         }
 
         public void Remove()
         {
             if (SelectedRootModel != null)
             {
-                _events.Publish(new RootChangedEvent(ChangeType.Deleted, SelectedRootModel));
+                _events.PublishOnUIThread(new RootChangedEvent(ChangeType.Deleted, SelectedRootModel));
                 RootModels.Remove(SelectedRootModel);
             }
         }
@@ -181,7 +181,7 @@ namespace TestApp
             IEntryModel selectedModel = showDirectoryPicker(rootModel);
             //if (selectedModel != null)
             //    RootModels.Add(selectedModel);
-            _events.Publish(new RootChangedEvent(ChangeType.Created, selectedModel));
+            _events.PublishOnUIThread(new RootChangedEvent(ChangeType.Created, selectedModel));
         }
 
         public void Add()
