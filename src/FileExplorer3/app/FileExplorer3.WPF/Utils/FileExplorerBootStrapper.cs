@@ -8,74 +8,67 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using System.Reflection;
+using System.Windows;
 
 namespace FileExplorer.WPF.UserControls
 {
-    public class FileExplorerBootStrapper : BootstrapperBase 
+    //http://www.andyrace.com/2014/05/caliburn-micro-and-usercontrols.html
+    public class FileExplorerBootStrapper : BootstrapperBase
     {
-        public FileExplorerBootStrapper()
-        {
-            //Start();
-
-        }
-
         private CompositionContainer container;
 
-        protected override void Configure()
+        /// <summary>
+        /// The singleton bootstrapper
+        /// </summary>
+        private static BootstrapperBase bootstrapper;
+
+        /// <summary>
+        /// As assemblies don't have a well known entry point we need to initialise the bootstrapper on view construction AND view-model construction as we don't have control on how the user may access us
+        /// </summary>
+        internal static void Initialise()
         {
-            container = new CompositionContainer(
-                new AggregateCatalog(
-                    AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()
-                        .Concat(new ComposablePartCatalog[] { new DirectoryCatalog(".") }))
-                );
-
-            CompositionBatch batch = new CompositionBatch();
-
-            batch.AddExportedValue<IWindowManager>(new WindowManager());
-            batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-
-            batch.AddExportedValue(container);
-            //Debug.WriteLine(ConventionManager.GetElementConvention(typeof(ListViewEx)));
-
-            //To-Do: https://caliburnmicro.codeplex.com/wikipage?title=All%20About%20Conventions
-            //ConventionManager.AddElementConvention<ListViewEx>(ListViewEx.OuterRightContentProperty, 
-            //    "DataContext", "Loaded").GetBindableProperty =
-            //    delegate(DependencyObject foundControl)
-            //    {
-            //        var element = (ListViewEx)foundControl;
-
-            //        return !(element.OuterRightContent is DependencyObject)
-            //            ? View.ModelProperty
-            //            : ListViewEx.OuterRightContentProperty;
-            //    };
-            container.Compose(batch);
-
+            if (null == bootstrapper)
+            {
+                bootstrapper = new FileExplorerBootStrapper();
+            }
         }
 
+        /// <summary>
+        /// Call through to BootstrapperBase indicating that this isn't an application
+        /// </summary>
+        //[UsedImplicitly]
+        public FileExplorerBootStrapper()
+            : base(false)
+        {
+            this.Initialize();
+        }
+
+        /// <summary>Override this to include this usercontrol assembly</summary>
+        /// <returns>Enumeration of 'Assembly's which include this assembly</returns>
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
-            var assemblies = base.SelectAssemblies().ToList();
-            assemblies.Add(typeof(FileExplorer.WPF.ViewModels.FileListViewModel).GetTypeInfo().Assembly);
-
-            return assemblies;
-        }
-
-        protected override object GetInstance(Type serviceType, string key)
-        {
-            string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
-            var exports = container.GetExportedValues<object>(contract);
-
-            if (exports.Count() > 0)
+            var baseAssemblies = new List<Assembly>(base.SelectAssemblies());
+            var thisAssembly = Assembly.GetAssembly(typeof(FileExplorerBootStrapper));
+            if (!baseAssemblies.Contains(thisAssembly))
             {
-                return exports.First();
+                baseAssemblies.Add(thisAssembly);
             }
 
-            throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+            // If this library is being accessed from a Caliburn enabled app then
+
+            // this assembly may already be 'known' in the AssemblySource.Instance collection.
+            // We need to remove these otherwise we'll get:
+            //  "An item with the same key has already been added." (System.ArgumentException)
+            // which (for my scenario) eventually manifested itself as a:
+            //  "" (System.ComponentModel.Composition.CompositionException)
+            foreach (var assembly in baseAssemblies.ToList().Where(newAssembly => AssemblySource.Instance.Contains(newAssembly)))
+            {
+                baseAssemblies.Remove(assembly);
+            }
+
+
+            return baseAssemblies;
         }
 
-        protected override void BuildUp(object instance)
-        {
-            container.SatisfyImportsOnce(instance);
-        }
     }
 }
