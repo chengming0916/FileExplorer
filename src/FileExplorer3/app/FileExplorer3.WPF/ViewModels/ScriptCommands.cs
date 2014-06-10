@@ -426,7 +426,7 @@ namespace FileExplorer.WPF.ViewModels
         public override IScriptCommand Execute(ParameterDic pm)
         {
             _events = _events ?? pm.AsVMParameterDic().Events;
-            _events.PublishOnUIThread(_evnt);
+            _events.PublishOnUIThreadAsync(_evnt);
             return _nextCommand;
         }
     }
@@ -1370,7 +1370,7 @@ namespace FileExplorer.WPF.ViewModels
             IFileListViewModel flvm = pm["FileList"] as IFileListViewModel;
             IEventAggregator events = pm["Events"] as IEventAggregator;
 
-            events.PublishOnUIThread(new DirectoryChangedEvent(flvm,
+            events.PublishOnUIThreadAsync(new DirectoryChangedEvent(flvm,
                    selectedItem, flvm.CurrentDirectory));
 
             return ResultCommand.OK;
