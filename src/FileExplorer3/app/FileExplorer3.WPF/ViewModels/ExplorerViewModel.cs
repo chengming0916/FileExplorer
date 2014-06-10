@@ -203,7 +203,7 @@ namespace FileExplorer.WPF.ViewModels
             {
                 if (message.EventToBroadcast is ExplorerEvent)
                     (message.EventToBroadcast as ExplorerEvent).Sender = this;
-                _events.PublishOnUIThread(message.EventToBroadcast);
+                _events.PublishOnUIThreadAsync(message.EventToBroadcast);
             }
         }
 

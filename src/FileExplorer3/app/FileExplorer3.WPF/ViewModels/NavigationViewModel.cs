@@ -56,7 +56,7 @@ namespace FileExplorer.WPF.ViewModels
         public void AddAndBroadcast(IEntryViewModel destFolder)
         {
             Add(destFolder);
-            Events.PublishOnUIThread(new DirectoryChangedEvent(this, destFolder, _currentFolder));
+            Events.PublishOnUIThreadAsync(new DirectoryChangedEvent(this, destFolder, _currentFolder));
             _currentFolder = destFolder;
         }
 
@@ -114,7 +114,7 @@ namespace FileExplorer.WPF.ViewModels
                 {
                     if (!_updatingNavigationHistory)
                     {
-                        Events.PublishOnUIThread(new DirectoryChangedEvent(this,
+                        Events.PublishOnUIThreadAsync(new DirectoryChangedEvent(this,
                             NavigationHistory[newPosition], NavigationHistory[orgPosition]));
                         _currentFolder = NavigationHistory[newPosition];
                     }
