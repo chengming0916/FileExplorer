@@ -23,13 +23,16 @@ namespace FileExplorer.WPF.UserControls
         public enum ExplorerMode { Unknown, Normal, ToolWindow }
         #region Constructors
 
+        static Explorer()
+        {
+            new FileExplorerBootStrapper();//.Initialize();
+        }
+
         public Explorer()
         {
             _wm = new WindowManager();
             _events = new EventAggregator();
             _evm = new ExplorerViewModel(new ExplorerInitializer(_wm, _events, new IEntryModel[] { }));
-
-
         }
 
         #endregion
