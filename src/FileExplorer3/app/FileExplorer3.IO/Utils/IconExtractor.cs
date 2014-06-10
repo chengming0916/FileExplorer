@@ -81,8 +81,8 @@ namespace QuickZip.UserControls.Logic.Tools.IconExtractor
 
         #endregion
 
-        SystemImageListCollection sysImgList = new SystemImageListCollection();
-        ReaderWriterLock sysImgListLock = new ReaderWriterLock();
+        static SystemImageListCollection sysImgList = new SystemImageListCollection();
+        static ReaderWriterLock sysImgListLock = new ReaderWriterLock();
 
         #region Public Properties
 
