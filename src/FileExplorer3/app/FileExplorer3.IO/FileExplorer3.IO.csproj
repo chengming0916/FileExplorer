@@ -45,9 +45,9 @@
     <Reference Include="DropNet">
       <HintPath>..\packages\DropNet.1.9.6\lib\net40\DropNet.dll</HintPath>
     </Reference>
-    <Reference Include="ExifLib, Version=1.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ExifLib, Version=1.5.1.0, Culture=neutral, PublicKeyToken=30284005913968db, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\ExifLib.dll</HintPath>
+      <HintPath>..\packages\ExifLib.1.5.1.0\lib\net40\ExifLib.dll</HintPath>
     </Reference>
     <Reference Include="FileExplorer3, Version=3.0.5254.22208, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
