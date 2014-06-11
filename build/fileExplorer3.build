@@ -3,11 +3,14 @@
   <include buildfile="local.properties3.xml" />
   <include buildfile="func/func.msbuild2.xml" />
   <include buildfile="func/func.nunit.xml" />
+  <include buildfile="func/func.nuget.xml" />
 
   <property name="nant.settings.currentframework" value="net-4.0"/>
 
   <target name="init">
     <call target="getversion" />
+    <property name="dest.path" value="..\release\v${version}\" />
+    <property name="dest.current.path" value="..\release\current\3.0" />
     <!-- Get version from version3.txt -->
 
   </target>
