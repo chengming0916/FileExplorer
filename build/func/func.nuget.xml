@@ -42,8 +42,8 @@
       <arg line='"${nuget.tmp.dir}\FileExplorer.nuspec"' />
       <arg line='-Version ${version}' />
       <arg line='-OutputDirectory ${path::get-full-path(nuget.output.dir)}' />
-
-      
     </exec>
+
+    <delete dir='${nuget.tmp.dir}' />
   </target>
 </properties>

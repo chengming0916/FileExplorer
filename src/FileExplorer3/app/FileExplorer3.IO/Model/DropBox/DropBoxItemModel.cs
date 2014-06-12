@@ -69,6 +69,9 @@ namespace FileExplorer.Models
             //this.CreationTimeUtc = DateTime.MinValue;
             this.LastUpdateTimeUtc = metadata.UTCDateModified;
 
+            this.Description = IsDirectory ? "Directory" :
+                System.IO.Tools.FileTypeInfoProvider
+                .GetFileTypeInfo(profile.Path.GetExtension(Name)).FileType;
 
         }
 
