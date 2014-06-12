@@ -34,7 +34,11 @@ namespace FileExplorer.Models
                     new FileSystemInfoExModel(profile,
                         (profile as FileSystemInfoExProfile).createDirectoryInfo(ParentFullPath));
                 };
-            this.Description = fsi.GetType().ToString();
+
+            this.Description = IsDirectory ? "Directory" :
+                System.IO.Tools.FileTypeInfoProvider
+                .GetFileTypeInfo(profile.Path.GetExtension(Name)).FileType;
+                //fsi.GetType().ToString();
 
             this.CreationTimeUtc = fsi.CreationTimeUtc;
             this.LastUpdateTimeUtc = fsi.LastWriteTimeUtc;

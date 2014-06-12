@@ -19,7 +19,7 @@
                         </StackPanel>
                         <DataTemplate.Triggers>
                             <DataTrigger Binding="{Binding EntryModel.IsDirectory}" Value="True">
-                                <Setter TargetName="tb" Property="Text" Value="Directory" />
+                                <Setter TargetName="tb" Property="Text" Value="" />
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
