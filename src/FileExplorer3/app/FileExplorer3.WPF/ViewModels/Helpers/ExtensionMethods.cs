@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.WPF.ViewModels.Helpers;
-using Cofe.Core.Script;
-using Cofe.Core;
+using FileExplorer.Script;
+using FileExplorer;
 using FileExplorer.WPF.ViewModels;
 
 namespace FileExplorer.WPF

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using System.Threading;

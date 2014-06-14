@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofe.Core.Script
+namespace FileExplorer.Script
 {
     public class ScriptRunner : IScriptRunner
     {

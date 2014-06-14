@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
-using Cofe.Core;
+using FileExplorer;
 
 namespace FileExplorer.WPF.ViewModels
 {

@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace Cofe.Core
+namespace FileExplorer
 {
     public class ParameterPair
     {

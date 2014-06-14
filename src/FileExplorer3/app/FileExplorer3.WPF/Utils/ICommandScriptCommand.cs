@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cinch;
-using Cofe.Core;
-using Cofe.Core.Script;
+using FileExplorer;
+using FileExplorer.Script;
 
 namespace FileExplorer.WPF.Utils
 {

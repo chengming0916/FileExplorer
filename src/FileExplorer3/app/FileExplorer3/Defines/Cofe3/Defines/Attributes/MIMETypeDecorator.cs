@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FileExplorer.Utils;
 
-namespace Cofe.Core
+namespace FileExplorer
 {
     /// <summary>
     /// Used to tag MediaType enum, to add MIME information.

@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Cofe.Core;
-using Cofe.Core.Script;
+using FileExplorer;
+using FileExplorer.Script;
 using FileExplorer.WPF.UserControls.InputProcesor;
 
 namespace FileExplorer.WPF.BaseControls

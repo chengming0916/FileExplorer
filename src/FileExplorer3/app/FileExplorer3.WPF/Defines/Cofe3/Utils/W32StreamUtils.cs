@@ -12,7 +12,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 #else
 //using Fesersoft.Hashing;
 using System.Security.Cryptography;
-using Cofe.Core;
+using FileExplorer;
 #endif
 
 namespace FileExplorer.Utils

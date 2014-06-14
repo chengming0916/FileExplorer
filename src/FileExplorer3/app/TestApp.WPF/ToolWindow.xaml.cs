@@ -16,7 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using FileExplorer;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 
 namespace TestApp

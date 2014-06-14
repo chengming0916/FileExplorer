@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using FileExplorer.Utils;
 
-namespace Cofe.Core
+namespace FileExplorer
 {
     //http://blog.riaproject.com/tips/44.html
     public enum MediaType

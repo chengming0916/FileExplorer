@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Cofe.Core;
+using FileExplorer;
 using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.BaseControls;
 

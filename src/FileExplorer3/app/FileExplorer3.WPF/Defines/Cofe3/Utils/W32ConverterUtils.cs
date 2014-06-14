@@ -12,7 +12,7 @@ using Windows.Storage.Streams;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.Drawing.Imaging;
-using Cofe.Core;
+using FileExplorer;
 #endif
 
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using FileExplorer.Utils;
 
-namespace Cofe.Core
+namespace FileExplorer
 {
     /// <summary>
     /// Path related utils.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofe.Core.Script
+namespace FileExplorer.Script
 {
     public class SimpleScriptCommand : ScriptCommandBase
     {
@@ -13,11 +13,12 @@ namespace Cofe.Core.Script
 
         public SimpleScriptCommand(string commandKey,
             Func<ParameterDic, IScriptCommand> executeFunc,
-            Func<ParameterDic, bool> canExecuteFunc = null)
+            Func<ParameterDic, bool> canExecuteFunc = null, bool continueOnCaptureContext = true)
             : base(commandKey)
         {
             _executeFunc = executeFunc;
             _canExecuteFunc = canExecuteFunc;
+            ContinueOnCaptureContext = continueOnCaptureContext;
         }
 
         #endregion
@@ -58,11 +59,12 @@ namespace Cofe.Core.Script
 
         public SimpleScriptCommandAsync(string commandKey,
             Func<ParameterDic, Task<IScriptCommand>> executeFunc,
-            Func<ParameterDic, bool> canExecuteFunc = null)
+            Func<ParameterDic, bool> canExecuteFunc = null, bool continueOnCaptureContext = true)
             : base(commandKey)
         {
             _executeFunc = executeFunc;
             _canExecuteFunc = canExecuteFunc;
+            ContinueOnCaptureContext = continueOnCaptureContext;
         }
 
         #endregion

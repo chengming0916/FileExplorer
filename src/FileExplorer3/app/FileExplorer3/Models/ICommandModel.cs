@@ -1,4 +1,4 @@
-﻿using Cofe.Core.Script;
+﻿using FileExplorer.Script;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

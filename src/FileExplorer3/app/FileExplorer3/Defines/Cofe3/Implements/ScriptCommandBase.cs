@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using FileExplorer.Utils;
 
-namespace Cofe.Core.Script
+namespace FileExplorer.Script
 {
     public abstract class ScriptCommandBase : IScriptCommand
     {
