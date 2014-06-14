@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using Cofe.Core;
+using FileExplorer;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;

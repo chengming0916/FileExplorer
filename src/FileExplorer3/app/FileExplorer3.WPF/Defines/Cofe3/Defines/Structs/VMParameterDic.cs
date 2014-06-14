@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Caliburn.Micro;
-using Cofe.Core;
+using FileExplorer;
 using FileExplorer.WPF.BaseControls;
 
 namespace FileExplorer.WPF.ViewModels

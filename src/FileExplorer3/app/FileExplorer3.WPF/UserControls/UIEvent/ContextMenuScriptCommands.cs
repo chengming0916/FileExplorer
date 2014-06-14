@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Cofe.Core;
-using Cofe.Core.Script;
+using FileExplorer;
+using FileExplorer.Script;
 using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.BaseControls.Menu

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.Utils;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;

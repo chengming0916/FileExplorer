@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Cinch;
-using Cofe.Core;
-using Cofe.Core.Script;
+using FileExplorer;
+using FileExplorer.Script;
 using FileExplorer.WPF.ViewModels.Helpers;
 
 namespace FileExplorer.WPF.Utils

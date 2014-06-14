@@ -7,7 +7,7 @@ using System.Windows;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.UserControls.InputProcesor;
 
-namespace Cofe.Core.Script
+namespace FileExplorer.Script
 {
 
     public static class ParameterDicConverters

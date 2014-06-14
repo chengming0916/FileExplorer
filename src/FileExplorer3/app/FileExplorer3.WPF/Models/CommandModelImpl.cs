@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models

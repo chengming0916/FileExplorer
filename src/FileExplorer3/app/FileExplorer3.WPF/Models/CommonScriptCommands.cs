@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofe.Core;
-using Cofe.Core.Script;
+using FileExplorer;
+using FileExplorer.Script;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 

@@ -20,10 +20,10 @@ using System.Windows.Input;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.BaseControls;
 using System.Threading;
-using Cofe.Core;
+using FileExplorer;
 using DropNet;
 using DropNet.Models;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.Defines;
 

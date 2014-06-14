@@ -7,8 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Threading;
-using Cofe.Core;
-using Cofe.Core.Script;
+using FileExplorer;
+using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Utils;
 

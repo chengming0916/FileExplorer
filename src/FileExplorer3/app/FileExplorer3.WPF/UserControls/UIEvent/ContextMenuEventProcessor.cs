@@ -20,7 +20,7 @@ namespace FileExplorer.WPF.BaseControls
              );
         }
 
-        protected override Cofe.Core.Script.IScriptCommand onEvent(RoutedEvent eventId)
+        protected override FileExplorer.Script.IScriptCommand onEvent(RoutedEvent eventId)
         {
             switch (eventId.Name)
             {

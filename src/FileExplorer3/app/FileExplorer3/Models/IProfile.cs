@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media;
 //using FileExplorer.WPF.BaseControls;
 using System.Windows;
 //using FileExplorer.WPF.ViewModels.Helpers;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using System.Threading;
 using System.ComponentModel;
 using FileExplorer.Defines;

@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;

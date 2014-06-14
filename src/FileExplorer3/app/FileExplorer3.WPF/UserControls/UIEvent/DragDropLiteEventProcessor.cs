@@ -1,4 +1,4 @@
-﻿using Cofe.Core.Script;
+﻿using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls.DragnDrop;
 using FileExplorer.WPF.ViewModels;
 using System;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Caliburn.Micro;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;

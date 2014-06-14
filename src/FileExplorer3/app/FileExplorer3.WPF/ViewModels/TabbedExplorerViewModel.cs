@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using FileExplorer.WPF.Defines;

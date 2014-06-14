@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.Defines;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 using FileExplorer.Models;
 
 namespace FileExplorer.WPF.UserControls

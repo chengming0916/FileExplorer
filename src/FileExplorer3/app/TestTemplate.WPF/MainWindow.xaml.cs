@@ -18,7 +18,7 @@ using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF;
-using Cofe.Core.Script;
+using FileExplorer.Script;
 
 using FileExplorer.WPF.BaseControls.DragnDrop;
 using FileExplorer.WPF.BaseControls.MultiSelect;
