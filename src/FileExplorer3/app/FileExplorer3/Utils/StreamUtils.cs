@@ -77,7 +77,7 @@ namespace FileExplorer.Utils
                 totalBytesCopied += stream.Read(buffer, totalBytesCopied, Convert.ToInt32(stream.Length) - totalBytesCopied);
             return buffer;
         }
-
+        
         ///// <summary>
         ///// Save a iconBitmap to JPEG stream.
         ///// </summary>

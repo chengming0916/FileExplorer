@@ -16,10 +16,6 @@ using FileExplorer.Models;
 namespace FileExplorer.WPF.ViewModels
 {
 
-
-
-
-
     public class DirectoryTreeViewModel : ViewAttached, IDirectoryTreeViewModel,
         IHandle<DirectoryChangedEvent>, ISupportDragHelper
     {
