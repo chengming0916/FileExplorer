@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Structs.cs" />
+    <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />

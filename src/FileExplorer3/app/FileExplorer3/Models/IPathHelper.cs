@@ -12,14 +12,15 @@ namespace FileExplorer.Models
         string GetDirectoryName(string path);
         string GetFileName(string path);
         string GetExtension(string path);
+        char Separator { get; }          
     }
 
  
     public class PathHelper : IPathHelper
     {
-        public static PathHelper Disk = new PathHelper('\\', p => p.Contains(":\\"));
-        public static PathHelper Web = new PathHelper('/', p => p.Contains("://"));
-        public static PathHelper Auto(string path) 
+        public static IPathHelper Disk = new PathHelper('\\', p => p.Contains(":\\"));
+        public static IPathHelper Web = new PathHelper('/', p => p.Contains("://"));
+        public static IPathHelper Auto(string path) 
         { return path.Contains("/") ? Web : Disk; }
         #region Constructor
 
@@ -74,6 +75,8 @@ namespace FileExplorer.Models
         {
             return System.IO.Path.GetExtension(GetFileName(path));
         }
+      
+     
 
         #endregion
 
@@ -86,9 +89,17 @@ namespace FileExplorer.Models
 
         #region Public Properties
 
+        public char Separator
+        {
+            get { return _separator; }
+        }
+
         #endregion
 
 
 
+
+
+       
     }
 }

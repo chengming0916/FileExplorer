@@ -73,4 +73,41 @@ namespace FileExplorer.Defines
         }
     }
 
+
+
+    public class ProgressEventArgs : EventArgs
+    {
+        public string Message { get; private set; }
+
+        /// <summary>
+        /// Return the maximum of the progress, or -1 if not specified.
+        /// </summary>
+        public int TotalProgress { get; private set; }
+
+        /// <summary>
+        /// Return the current progress, or -1 if not specified.
+        /// </summary>
+        public int CurrentProgress { get; private set; }
+
+        /// <summary>
+        /// Returns the current processing file.
+        /// </summary>
+        public string File { get; private set; }
+
+        public bool Cancel { get; set; }
+
+        public ProgressEventArgs(int completed, int total, string file)
+        {
+            this.TotalProgress = total;
+            this.CurrentProgress = completed;
+            this.File = file;
+            this.Message = this.ToString();
+        }
+
+        public override string ToString()
+        {
+            return String.Format("({0}/{1}) {2}", CurrentProgress, TotalProgress, File);
+        }
+    }
+
 }
