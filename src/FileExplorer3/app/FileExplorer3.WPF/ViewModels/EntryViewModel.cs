@@ -119,9 +119,10 @@ namespace FileExplorer.WPF.ViewModels
         {
             return
                 obj is EntryViewModel &&
-                this.EntryModel.Profile.HierarchyComparer
-                .CompareHierarchy(this.EntryModel, (obj as EntryViewModel).EntryModel)
-                == FileExplorer.Defines.HierarchicalResult.Current;
+                (obj as EntryViewModel).EntryModel.FullPath.Equals(this.EntryModel.FullPath);
+                //this.EntryModel.Profile.HierarchyComparer
+                //.CompareHierarchy(this.EntryModel, (obj as EntryViewModel).EntryModel)
+                //== FileExplorer.Defines.HierarchicalResult.Current;
         }
 
         public override string ToString()

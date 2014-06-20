@@ -49,11 +49,10 @@ namespace FileExplorer.Models
 
             public HierarchicalResult CompareHierarchyInner(IEntryModel a, IEntryModel b)
             {
-
                 if (a == null || b == null)
                     return HierarchicalResult.Unrelated;
-                if (!(a is FileSystemInfoExModel) || !(b is FileSystemInfoExModel))
-                    return HierarchicalResult.Unrelated;
+                //if (!(a is FileSystemInfoExModel) || !(b is FileSystemInfoExModel))
+                //    return HierarchicalResult.Unrelated;
 
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);
@@ -130,6 +129,8 @@ namespace FileExplorer.Models
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
             DragDrop = new FileBasedDragDropHandler(this, windowManager);
             //PathMapper = IODiskPatheMapper.Instance;
+
+            _szsProfile = new SzsProfile(events, this);
         }
 
         #endregion
@@ -184,7 +185,7 @@ namespace FileExplorer.Models
             {
                 DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
                 retVal.AddRange(from fsi in di.EnumerateFileSystemInfos()
-                                let m = new FileSystemInfoExModel(this, fsi)
+                                let m = _szsProfile.Convert(new FileSystemInfoExModel(this, fsi))
                                 where filter(m)
                                 select m);
             }
@@ -210,6 +211,8 @@ namespace FileExplorer.Models
 
         private Bitmap _folderBitmap;
         private IconExtractor _iconExtractor = new ExIconExtractor();
+        private SzsProfile _szsProfile;
+
 
         #endregion
 

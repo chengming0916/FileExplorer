@@ -14,7 +14,7 @@ namespace FileExplorer.Models
         bool IsDirectory { get;  }
         IEntryModel Parent { get; }
         string Label { get; }
-        string Name { get; }
+        string Name { get; set; }
         string Description { get; }
         string FullPath { get; }
         bool IsRenamable { get; }
