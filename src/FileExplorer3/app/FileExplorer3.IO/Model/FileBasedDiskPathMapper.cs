@@ -45,7 +45,7 @@ namespace FileExplorer.Models
         {
             get
             {
-                string path = Path.Combine(_tempPath, model.FullPath.Replace('/', '\\').TrimStart('\\'));
+                string path = Path.Combine(_tempPath, model.FullPath.Replace(":\\", "").Replace("/", "\\").TrimStart('\\'));
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
                 bool isCached = _isCachedDictionary.ContainsKey(model.FullPath) && _isCachedDictionary[model.FullPath];
                 string sourceUrl = _urlFunc == null ? null : _urlFunc(model);

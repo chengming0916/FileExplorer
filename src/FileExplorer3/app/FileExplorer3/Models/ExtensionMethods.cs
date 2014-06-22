@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Models
@@ -41,6 +42,21 @@ namespace FileExplorer.Models
             if (input.StartsWith(pathHelper.Separator + "")) { return input; }
             else
             { return pathHelper.Separator + input; }
+        }
+
+        public static async Task<IEntryModel> LookupAsync(this IProfile profile, IEntryModel startEntry, string[] paths, CancellationToken ct, int idx = 0)
+        {
+            if (idx >= paths.Length)
+                return startEntry;
+            else
+            {
+                IEntryModel lookup = (await profile.ListAsync(startEntry, ct, em => 
+                    em.Name.Equals(paths[idx], StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
+                ct.ThrowIfCancellationRequested();
+                if (lookup != null)
+                    return await LookupAsync(profile, lookup, paths, ct, idx+1);
+                else return null;
+            }
         }
     }
 }

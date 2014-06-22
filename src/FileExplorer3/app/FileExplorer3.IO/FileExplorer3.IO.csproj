@@ -133,6 +133,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression\ExtensionMethods.cs" />
     <Compile Include="Defines\FileExtensions.cs" />
     <Compile Include="Compression\CompressionWrapperBase.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExCommandProvider.cs" />
@@ -167,6 +168,8 @@
     <Compile Include="Model\GoogleDrive\GoogleDriveMimeTypeManager.cs" />
     <Compile Include="Model\HardDriveDiskIOHelper.cs" />
     <Compile Include="Model\ProfileBase.cs" />
+    <Compile Include="Model\SevenZipSharp\SzsFileStream.cs" />
+    <Compile Include="Model\SevenZipSharp\SzsDiskIOHelper.cs" />
     <Compile Include="Model\SevenZipSharp\SzsItemModel.cs" />
     <Compile Include="Model\SevenZipSharp\SzsProfile.cs" />
     <Compile Include="Model\SkyDrive\SkyDriveMetaProvider.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="Compression\SevenZipWrapper.cs" />
     <Compile Include="Utils\CompressUtils.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />
+    <Compile Include="Utils\HookableMemoryStream.cs" />
     <Compile Include="Utils\IconExtractor.cs" />
     <Compile Include="Utils\ImageTools.cs" />
     <Compile Include="Utils\SystemImageList.cs" />

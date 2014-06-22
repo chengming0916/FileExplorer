@@ -130,7 +130,7 @@ namespace FileExplorer.Models
             DragDrop = new FileBasedDragDropHandler(this, windowManager);
             //PathMapper = IODiskPatheMapper.Instance;
 
-            _szsProfile = new SzsProfile(events, this);
+            _szsProfile = new FileExplorer.Models.SevenZipSharp.SzsProfile(this, events, windowManager);
         }
 
         #endregion
@@ -167,11 +167,22 @@ namespace FileExplorer.Models
             if (String.IsNullOrEmpty(path))
                 retVal = new FileSystemInfoExModel(this, DirectoryInfoEx.DesktopDirectory);
             else
-                if (DirectoryEx.Exists(path))
-                    retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+                if (path.StartsWith("::"))
+                {
+                    if (DirectoryEx.Exists(path))
+                        retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+                    else
+                        if (FileEx.Exists(path))
+                            retVal = new FileSystemInfoExModel(this, createFileInfo(path));
+                }
                 else
-                    if (FileEx.Exists(path))
-                        retVal = new FileSystemInfoExModel(this, createFileInfo(path));
+                {
+                    if (Directory.Exists(path))
+                        retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+                    else
+                        if (File.Exists(path))
+                            retVal = new FileSystemInfoExModel(this, createFileInfo(path));
+                }
             return Task.FromResult<IEntryModel>(retVal);
         }
 
@@ -211,7 +222,7 @@ namespace FileExplorer.Models
 
         private Bitmap _folderBitmap;
         private IconExtractor _iconExtractor = new ExIconExtractor();
-        private SzsProfile _szsProfile;
+        private FileExplorer.Models.SevenZipSharp.SzsProfile _szsProfile;
 
 
         #endregion

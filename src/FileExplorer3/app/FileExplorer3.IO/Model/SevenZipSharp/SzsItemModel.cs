@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.Models.SevenZipSharp
 {
 
     /// <summary>
@@ -34,7 +34,7 @@ namespace FileExplorer.Models
             ReferencedFile = referencedModel;
 
             IsDirectory = true;
-            IsRenamable = referencedModel.IsRenamable;
+            _isRenamable = referencedModel.IsRenamable;
             Label = referencedModel.Label;
             Description = referencedModel.Description;
             FullPath = referencedModel.FullPath;
@@ -76,11 +76,11 @@ namespace FileExplorer.Models
             : base(root.Profile)
         {
             Root = root;
-            RelativePath = afi.FileName;
+            RelativePath = afi.FileName;            
             base.IsDirectory = afi.IsDirectory;
 
-            IsRenamable = root.IsRenamable;
-            Label = PathHelper.Disk.GetFileName(afi.FileName);
+            _isRenamable = root.IsRenamable;
+            Name = Label = PathHelper.Disk.GetFileName(afi.FileName);
             Description = "";// referencedModel.Description;
             FullPath = PathHelper.Disk.Combine(root.FullPath, afi.FileName);;
             Size = (long)afi.Size;
