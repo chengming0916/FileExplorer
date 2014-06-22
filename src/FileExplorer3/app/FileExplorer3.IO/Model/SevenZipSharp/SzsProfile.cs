@@ -10,17 +10,19 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.Models.SevenZipSharp
 {
     public class SzsProfile : DiskProfileBase, IWPFProfile
     {
 
         #region Constructors
 
-        public SzsProfile(IEventAggregator events, IProfile baseProfile)
+        public SzsProfile(IProfile baseProfile, IEventAggregator events, IWindowManager windowManager)
             : base(events)
         {
             HierarchyComparer = baseProfile.HierarchyComparer;
+            DragDrop = new FileBasedDragDropHandler(this, windowManager);
+            DiskIO = new SzsDiskIOHelper(this);
             _baseProfile = baseProfile;
             _wrapper = new SevenZipWrapper();
         }
@@ -31,7 +33,7 @@ namespace FileExplorer.Models
 
         public IEntryModel Convert(IEntryModel entryModel)
         {
-            if (entryModel.Profile is IDiskProfile && _wrapper.IsArchive(entryModel.Name))
+            if (entryModel != null && entryModel.Profile is IDiskProfile && _wrapper.IsArchive(entryModel.Name))
                 return new SzsRootModel(entryModel, this);
 
             return entryModel;
@@ -68,17 +70,29 @@ namespace FileExplorer.Models
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
-            var retVal = await _baseProfile.ParseAsync(path);
+            string curPath = path;
+            IEntryModel retVal = Convert(await _baseProfile.ParseAsync(path));
+            while (retVal == null && curPath != null)
+            {
+                curPath = _baseProfile.Path.GetDirectoryName(curPath);
+                retVal = Convert(await _baseProfile.ParseAsync(curPath));
+            }
 
-            if (retVal != null)
-                return retVal;
+            if (retVal != null && curPath != path && path.StartsWith(curPath, StringComparison.CurrentCultureIgnoreCase))
+            {                
+                string[] trailingPaths = path.Substring(curPath.Length).Split(new char[] { '\\','/' }, StringSplitOptions.RemoveEmptyEntries );
+                return await this.LookupAsync(retVal, trailingPaths, CancellationToken.None, 0);
+            }
+
+            return retVal;
 
             throw new NotImplementedException();
         }
 
         public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
         {
-            return base.GetIconExtractSequence(entry);
+            yield return GetFromSystemImageListUsingExtension.Instance;
+            //return base.GetIconExtractSequence(entry);
         }
 
         #endregion
@@ -91,6 +105,8 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
+
+        internal SevenZipWrapper Wrapper { get { return _wrapper; } }
 
         #endregion
     }

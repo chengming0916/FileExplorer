@@ -20,7 +20,7 @@ namespace FileExplorer.Models
             this.Attributes = fsi.Attributes;
             this.FullPath = fsi.FullName;
             this.Name = fsi.Name;
-            this.IsRenamable = true;
+            this._isRenamable = true;
             if (fsi is DirectoryInfoEx)
                 this.DirectoryType = (fsi as DirectoryInfoEx).DirectoryType;
             this.IsDirectory = fsi.IsFolder;
