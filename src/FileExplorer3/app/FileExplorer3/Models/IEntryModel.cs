@@ -22,4 +22,9 @@ namespace FileExplorer.Models
         DateTime CreationTimeUtc { get; }
         DateTime LastUpdateTimeUtc { get; }
     }
+
+    public interface IConvertedEntryModel : IEntryModel
+    {
+        IEntryModel OriginalEntryModel { get; }
+    }
 }
