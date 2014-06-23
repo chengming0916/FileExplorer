@@ -48,6 +48,14 @@ namespace FileExplorer.Models
         IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry);
 
 
+        /// <summary>
+        /// Whether a path should be parsed (via ParseAsync) by this profile.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        bool MatchPathPattern(string path);
+
+
         #endregion
 
         #region Data
@@ -55,8 +63,18 @@ namespace FileExplorer.Models
         #endregion
 
         #region Public Properties
+
+        /// <summary>
+        /// If specified (not null), used as Regex to determine if a path should be parsable by this profile.
+        /// </summary>
+        string[] PathPatterns { get; }
         string ProfileName { get; }
         byte[] ProfileIcon { get; }
+
+        /// <summary>
+        /// Convert Entry Model to another type.
+        /// </summary>
+        IConverterProfile[] Converters { get; }
 
         string RootDisplayName { get; }
         IPathHelper Path { get; }
