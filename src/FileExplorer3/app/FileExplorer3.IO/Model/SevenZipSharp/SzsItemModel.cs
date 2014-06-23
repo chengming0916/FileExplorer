@@ -93,6 +93,19 @@ namespace FileExplorer.Models.SevenZipSharp
             Size = (long)afi.Size;
         }
 
+        public SzsChildModel(SzsRootModel root, string relativePath, bool isDirectory)
+            : base(root.Profile)
+        {
+            Root = root;
+            RelativePath = relativePath;
+            base.IsDirectory = isDirectory;
+
+            _isRenamable = root.IsRenamable;
+            Name = Label = PathHelper.Disk.GetFileName(relativePath);
+            Description = "";// referencedModel.Description;
+            FullPath = PathHelper.Disk.Combine(root.FullPath, relativePath); ;
+        }
+
         #endregion
 
         #region Methods

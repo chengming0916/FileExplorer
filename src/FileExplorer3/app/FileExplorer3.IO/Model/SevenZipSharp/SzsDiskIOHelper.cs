@@ -60,7 +60,15 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            string parentPath = Profile.Path.GetDirectoryName(fullPath);
+            string name = Profile.Path.GetFileName(fullPath);
+            ISzsItemModel parentDir = await Profile.ParseAsync(parentPath) as ISzsItemModel;
+            if (parentDir == null)
+                throw new Exception(String.Format("Parent dir {0} not exists.", parentPath));
+            string relativePath = Profile.Path.Combine(parentDir.RelativePath, name);
+
+            return new SzsChildModel(parentDir.Root, relativePath, isDirectory);
+            //throw new NotImplementedException();
             //if (isDirectory)
             //    Directory.CreateDirectory(fullPath);
             //else

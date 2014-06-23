@@ -23,11 +23,11 @@ namespace FileExplorer.Models.SevenZipSharp
             IEntryModel rootModel = entryItemModel.Root.ReferencedFile;
 
             byte[] bytes = new byte[] { };
-            using (Stream stream =  await (rootModel.Profile as IDiskProfile).DiskIO.OpenStreamAsync(rootModel, Defines.FileAccess.Read, ct))
+            using (Stream stream = await (rootModel.Profile as IDiskProfile).DiskIO.OpenStreamAsync(rootModel, Defines.FileAccess.Read, ct))
             {
                 MemoryStream ms = new MemoryStream();
                 if (profile.Wrapper.ExtractOne(stream, entryItemModel.RelativePath, null, ms))
-                    bytes = ms.ToByteArray();                    
+                    bytes = ms.ToByteArray();
             }
 
             return new WebFileStream(entryModel, bytes, null);
@@ -54,7 +54,18 @@ namespace FileExplorer.Models.SevenZipSharp
 
         private static async Task updateSourceAsync(WebFileStream stream)
         {
-            throw new Exception();
+            //throw new Exception();
+
+            var szsProfile = stream.Profile as SzsProfile;
+            var szsModel = stream.EntryModel as ISzsItemModel;
+            var rootReferencedFile = szsModel.Root.ReferencedFile;
+            string type = szsModel.Root.GetExtension();
+
+            using (Stream archiveStream = await (rootReferencedFile.Profile as IDiskProfile).DiskIO.OpenStreamAsync(rootReferencedFile,
+                Defines.FileAccess.ReadWrite, CancellationToken.None))
+            {
+                szsProfile.Wrapper.CompressOne(type, archiveStream, szsModel.RelativePath, stream);
+            }
         }
 
     }
