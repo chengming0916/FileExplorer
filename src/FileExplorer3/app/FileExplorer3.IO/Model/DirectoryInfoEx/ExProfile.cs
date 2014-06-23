@@ -32,9 +32,15 @@ namespace FileExplorer.Models
 
         private class ExHierarchyComparer : IEntryHierarchyComparer
         {
+            public ExHierarchyComparer(FileSystemInfoExProfile profile)
+            {
+                _profile = profile;
+            }
+
             //Store special directories (start with ::{) only.
             private ConcurrentDictionary<string, HierarchicalResult> _hierarchyResultCache
                 = new ConcurrentDictionary<string, HierarchicalResult>();
+            private FileSystemInfoExProfile _profile;
             private bool HasParent(FileSystemInfoEx child, DirectoryInfoEx parent)
             {
                 DirectoryInfoEx current = child.Parent;
@@ -51,8 +57,8 @@ namespace FileExplorer.Models
             {
                 if (a == null || b == null)
                     return HierarchicalResult.Unrelated;
-                //if (!(a is FileSystemInfoExModel) || !(b is FileSystemInfoExModel))
-                //    return HierarchicalResult.Unrelated;
+                if (!_profile.MatchPathPattern(a.FullPath) || !_profile.MatchPathPattern(b.FullPath))
+                    return HierarchicalResult.Unrelated;
 
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);
@@ -120,7 +126,7 @@ namespace FileExplorer.Models
             ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/DirectoryInfoEx/My_Computer.png");
           
             DiskIO = new HardDriveDiskIOHelper(this);
-            HierarchyComparer = new ExHierarchyComparer();
+            HierarchyComparer = new ExHierarchyComparer(this);
             MetadataProvider = new ExMetadataProvider();
             CommandProviders = new List<ICommandProvider>()
             {
@@ -131,7 +137,7 @@ namespace FileExplorer.Models
             //PathMapper = IODiskPatheMapper.Instance;
 
             Converters = new IConverterProfile[] { new FileExplorer.Models.SevenZipSharp.SzsProfile(this) };
-            PathPatterns = new string[] { RegexPatterns.FileSystemGuidPattern, RegexPatterns.ExtendedFileSystemPattern };
+            PathPatterns = new string[] { RegexPatterns.FileSystemGuidPattern, RegexPatterns.FileSystemPattern };
         }
 
         #endregion

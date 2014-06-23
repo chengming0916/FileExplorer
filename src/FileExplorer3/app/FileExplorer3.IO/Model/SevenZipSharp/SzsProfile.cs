@@ -80,6 +80,11 @@ namespace FileExplorer.Models.SevenZipSharp
         public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
         {
             yield return GetFromSystemImageListUsingExtension.Instance;
+
+            if (entry is SzsRootModel)
+                yield return DrawOverlayTextExtractor.Create(GetFromSystemImageListUsingExtension.Instance,
+                    em => em.GetExtension().ToLower(), em => em.GetExtension().ToLower(), System.Drawing.Color.MediumBlue);
+            
             //return base.GetIconExtractSequence(entry);
         }
 

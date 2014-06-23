@@ -15,12 +15,7 @@ namespace FileExplorer.Defines
         /// <summary>
         /// For validate Filesystem path, e.g. c:\temp
         /// </summary>
-        public static string FileSystemPattern = @"^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+$";
-
-        /// <summary>
-        /// For validate Filesystem path, e.g. c:\temp\abc.zip
-        /// </summary>
-        public static string ExtendedFileSystemPattern = @"^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w.]+\\)*\w([\w.])+$";
+        public static string FileSystemPattern = "^(([a-zA-Z]\\:)|(\\\\))(\\\\{1}|((\\\\{1})[^\\\\]([^/:*?<>|\"]*))+)$";
 
         /// <summary>
         /// For santize a filename.
