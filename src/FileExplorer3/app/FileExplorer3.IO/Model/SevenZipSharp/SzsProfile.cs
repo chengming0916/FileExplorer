@@ -12,16 +12,20 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models.SevenZipSharp
 {
-    public class SzsProfile : DiskProfileBase, IWPFProfile
+  
+    /// <summary>
+    /// Convert .zip .7z etc file based entry models to SzsRootModel, which is directories.
+    /// </summary>
+    public class SzsProfile : DiskProfileBase, IConverterProfile, IWPFProfile
     {
 
         #region Constructors
 
-        public SzsProfile(IProfile baseProfile, IEventAggregator events, IWindowManager windowManager)
-            : base(events)
+        public SzsProfile(IProfile baseProfile)
+            : base(baseProfile.Events())
         {
             HierarchyComparer = baseProfile.HierarchyComparer;
-            DragDrop = new FileBasedDragDropHandler(this, windowManager);
+            DragDrop = new FileBasedDragDropHandler(this, null);
             DiskIO = new SzsDiskIOHelper(this);
             _baseProfile = baseProfile;
             _wrapper = new SevenZipWrapper();
@@ -33,7 +37,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public IEntryModel Convert(IEntryModel entryModel)
         {
-            if (entryModel != null && entryModel.Profile is IDiskProfile && _wrapper.IsArchive(entryModel.Name))
+            if (entryModel != null && !entryModel.IsDirectory && entryModel.Profile is IDiskProfile && _wrapper.IsArchive(entryModel.Name))
                 return new SzsRootModel(entryModel, this);
 
             return entryModel;
@@ -70,23 +74,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
-            string curPath = path;
-            IEntryModel retVal = Convert(await _baseProfile.ParseAsync(path));
-            while (retVal == null && curPath != null)
-            {
-                curPath = _baseProfile.Path.GetDirectoryName(curPath);
-                retVal = Convert(await _baseProfile.ParseAsync(curPath));
-            }
-
-            if (retVal != null && curPath != path && path.StartsWith(curPath, StringComparison.CurrentCultureIgnoreCase))
-            {                
-                string[] trailingPaths = path.Substring(curPath.Length).Split(new char[] { '\\','/' }, StringSplitOptions.RemoveEmptyEntries );
-                return await this.LookupAsync(retVal, trailingPaths, CancellationToken.None, 0);
-            }
-
-            return retVal;
-
-            throw new NotImplementedException();
+            return await _baseProfile.LookupAsync(path, CancellationToken.None);          
         }
 
         public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)

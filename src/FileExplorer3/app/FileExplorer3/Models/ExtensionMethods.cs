@@ -57,6 +57,42 @@ namespace FileExplorer.Models
                     return await LookupAsync(profile, lookup, paths, ct, idx+1);
                 else return null;
             }
+        }        
+
+        public static IEntryModel Convert(this IConverterProfile[] converterProfiles, IEntryModel entryModel)
+        {
+            IEntryModel retVal = entryModel;
+            foreach (var p in converterProfiles)
+                retVal = p.Convert(retVal);
+            return retVal;
         }
+
+        public static async Task<IEntryModel> LookupAsync(this IProfile profile, string path, CancellationToken ct)
+        {
+            string curPath = path;
+            IEntryModel retVal = await profile.ParseAsync(path);
+            while (retVal == null && curPath != null)
+            {
+                curPath = profile.Path.GetDirectoryName(curPath);
+                retVal = await profile.ParseAsync(curPath);
+            }
+
+            if (retVal != null && curPath != path && path.StartsWith(curPath, StringComparison.CurrentCultureIgnoreCase))
+            {
+                string[] trailingPaths = path.Substring(curPath.Length).Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+                return await LookupAsync(retVal.Profile, retVal, trailingPaths, CancellationToken.None, 0);
+            }
+
+            return retVal;
+        }
+
+         public static async Task<IEntryModel> ParseThenLookupAsync(this IProfile profile, string path, CancellationToken ct)
+        {
+            IEntryModel retVal = await profile.ParseAsync(path);
+            if (retVal == null)
+                retVal = await profile.LookupAsync(path, ct);
+            return retVal;
+        }
+
     }
 }

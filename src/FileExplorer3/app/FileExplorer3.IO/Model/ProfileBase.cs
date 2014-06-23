@@ -12,6 +12,7 @@ using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
 using FileExplorer.Models;
+using System.Text.RegularExpressions;
 
 namespace FileExplorer.WPF.Models
 {
@@ -25,7 +26,7 @@ namespace FileExplorer.WPF.Models
             ProfileName = "Unspecified";
             ProfileIcon = null;
             RootDisplayName = "Root";
-
+            
             Path = PathHelper.Disk;
             SuggestSource = new ProfileSuggestionSource(this);
 
@@ -36,6 +37,7 @@ namespace FileExplorer.WPF.Models
 
             DragDrop = new NullDragDropHandler();
             Events = events ?? new EventAggregator();
+            Converters = new IConverterProfile[] { };
 
         }
 
@@ -61,13 +63,32 @@ namespace FileExplorer.WPF.Models
         public abstract Task<IEntryModel> ParseAsync(string path);
         public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false);
 
+        public bool MatchPathPattern(string path)
+        {
+            foreach (var pattern in _pathPatterns)
+                if (new Regex(pattern, RegexOptions.IgnoreCase).Match(path).Success)
+                    return true;
+            return false;
+        }
+
         #endregion
 
         #region Data
 
+        string[] _pathPatterns = new string[] { };
+
         #endregion
 
         #region Public Properties
+        public string[] PathPatterns
+        {
+            get { return _pathPatterns; }
+            protected set
+            {
+                _pathPatterns = value;
+            }
+        }
+        
         public string ProfileName { get; protected set; }
         public byte[] ProfileIcon { get; protected set; }
         public IPathHelper Path { get; protected set; }
@@ -79,12 +100,10 @@ namespace FileExplorer.WPF.Models
         public IEnumerable<ICommandProvider> CommandProviders { get; protected set; }
         //public IDiskPathMapper PathMapper { get; protected set; }
         public IEventAggregator Events { get; protected set; }
-
+        public IConverterProfile[] Converters { get; protected set; }
+        
         #endregion
 
-
-
-        
     }
 
 }

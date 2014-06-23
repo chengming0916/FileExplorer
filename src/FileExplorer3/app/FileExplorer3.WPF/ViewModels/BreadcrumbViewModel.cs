@@ -16,6 +16,7 @@ using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
 using System.Windows;
+using System.Threading;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -115,19 +116,20 @@ namespace FileExplorer.WPF.ViewModels
                 Task.Run(async () =>
                     {
                         foreach (var p in _profiles)
-                        {
-                            if (String.IsNullOrEmpty(SuggestedPath) && Entries.AllNonBindable.Count() > 0)
-                                SuggestedPath = Entries.AllNonBindable.First().EntryModel.FullPath;
-
-                            var found = await p.ParseAsync(SuggestedPath);
-                            if (found != null)
+                            if (p.MatchPathPattern(SuggestedPath))
                             {
-                                _sbox.Dispatcher.BeginInvoke(new System.Action(() => { SelectAsync(found); }));
-                                ShowBreadcrumb = true;
-                                BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
+                                if (String.IsNullOrEmpty(SuggestedPath) && Entries.AllNonBindable.Count() > 0)
+                                    SuggestedPath = Entries.AllNonBindable.First().EntryModel.FullPath;
+
+                                var found = await p.ParseThenLookupAsync(SuggestedPath, CancellationToken.None);
+                                if (found != null)
+                                {
+                                    _sbox.Dispatcher.BeginInvoke(new System.Action(() => { SelectAsync(found); }));
+                                    ShowBreadcrumb = true;
+                                    BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
+                                }
+                                //else not found
                             }
-                            //else not found
-                        }
                     });//.Start();
             }
         }

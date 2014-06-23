@@ -130,7 +130,8 @@ namespace FileExplorer.Models
             DragDrop = new FileBasedDragDropHandler(this, windowManager);
             //PathMapper = IODiskPatheMapper.Instance;
 
-            _szsProfile = new FileExplorer.Models.SevenZipSharp.SzsProfile(this, events, windowManager);
+            Converters = new IConverterProfile[] { new FileExplorer.Models.SevenZipSharp.SzsProfile(this) };
+            PathPatterns = new string[] { RegexPatterns.FileSystemGuidPattern, RegexPatterns.ExtendedFileSystemPattern };
         }
 
         #endregion
@@ -160,7 +161,7 @@ namespace FileExplorer.Models
             return new FileInfoEx(path);
         }
 
-        public override Task<IEntryModel> ParseAsync(string path)
+        public override async Task<IEntryModel> ParseAsync(string path)
         {
 
             IEntryModel retVal = null;
@@ -181,9 +182,9 @@ namespace FileExplorer.Models
                         retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
                     else
                         if (File.Exists(path))
-                            retVal = new FileSystemInfoExModel(this, createFileInfo(path));
+                            retVal = new FileSystemInfoExModel(this, createFileInfo(path));                    
                 }
-            return Task.FromResult<IEntryModel>(retVal);
+            return Converters.Convert(retVal);
         }
 
         public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false)
@@ -196,7 +197,7 @@ namespace FileExplorer.Models
             {
                 DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
                 retVal.AddRange(from fsi in di.EnumerateFileSystemInfos()
-                                let m = _szsProfile.Convert(new FileSystemInfoExModel(this, fsi))
+                                let m = Converters.Convert(new FileSystemInfoExModel(this, fsi))
                                 where filter(m)
                                 select m);
             }
@@ -222,7 +223,6 @@ namespace FileExplorer.Models
 
         private Bitmap _folderBitmap;
         private IconExtractor _iconExtractor = new ExIconExtractor();
-        private FileExplorer.Models.SevenZipSharp.SzsProfile _szsProfile;
 
 
         #endregion
