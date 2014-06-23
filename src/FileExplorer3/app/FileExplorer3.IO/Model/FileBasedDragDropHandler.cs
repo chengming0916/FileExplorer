@@ -76,9 +76,11 @@ namespace FileExplorer.Models
 
         public async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
         {
+            entries =
+                entries.Select(m => m is IConvertedEntryModel ? (m as IConvertedEntryModel).OriginalEntryModel : m);
             var retVal = new FileDropDataObject(new HandleFileDropped(entries.ToArray()));
             retVal.SetFileDropData(entries
-                .Where(m => m.Profile is IDiskProfile)
+                .Where(m => m.Profile is IDiskProfile)                
                 .Select(m => new FileDrop((m.Profile as IDiskProfile).DiskIO.Mapper[m].IOPath, m.IsDirectory))
                 .Where(fd => fd.FileSystemPath != null)
                 .ToArray());

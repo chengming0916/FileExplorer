@@ -21,7 +21,7 @@ namespace FileExplorer.Models.SevenZipSharp
     /// <summary>
     /// Model for an Sevenzipsharp archive.
     /// </summary>
-    public class SzsRootModel : DiskEntryModelBase, ISzsItemModel
+    public class SzsRootModel : DiskEntryModelBase, ISzsItemModel, IConvertedEntryModel
     {
 
         #region Constructors
@@ -60,12 +60,19 @@ namespace FileExplorer.Models.SevenZipSharp
         public SzsRootModel Root { get { return this; } }
         public string RelativePath { get { return ""; } }
 
+        public IEntryModel OriginalEntryModel
+        {
+            get { return ReferencedFile; }
+        }
+
         public override string Name
         {
             get { return ReferencedFile.Name; }
             set { ReferencedFile.Name = value; }
         }
         #endregion
+
+        
     }
 
     public class SzsChildModel : DiskEntryModelBase, ISzsItemModel
