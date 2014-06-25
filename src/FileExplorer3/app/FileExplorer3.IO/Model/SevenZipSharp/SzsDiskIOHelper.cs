@@ -66,8 +66,10 @@ namespace FileExplorer.Models.SevenZipSharp
             if (parentDir == null)
                 throw new Exception(String.Format("Parent dir {0} not exists.", parentPath));
             string relativePath = Profile.Path.Combine(parentDir.RelativePath, name);
+            ISzsItemModel retEntryModel = new SzsChildModel(parentDir.Root, relativePath, isDirectory);
 
-            return new SzsChildModel(parentDir.Root, relativePath, isDirectory);
+            (Profile as SzsProfile).VirtualModels.Add(retEntryModel);
+            return retEntryModel;
             //throw new NotImplementedException();
             //if (isDirectory)
             //    Directory.CreateDirectory(fullPath);

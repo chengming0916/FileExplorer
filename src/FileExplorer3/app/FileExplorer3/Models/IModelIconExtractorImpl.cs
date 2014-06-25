@@ -120,7 +120,12 @@ namespace FileExplorer.Models
                            return func(t);
 
                        if (!_cacheDic.ContainsKey(key))
-                           return _cacheDic[key] = func(t);
+                       {
+                           byte[] val = func(t);
+                           if (val.Length > 0)
+                               _cacheDic[key] = val;
+                           return val;                           
+                       }
                        return _cacheDic[key];
                    }
                );
