@@ -32,6 +32,16 @@ namespace FileExplorer.WPF.Models
 
         #region Methods
 
+        public override bool Equals(object obj)
+        {
+            return obj is IEntryModel && Equals(obj as IEntryModel);
+        }
+
+        public override int GetHashCode()
+        {
+            return FullPath.GetHashCode();
+        }
+
         public bool Equals(IEntryModel other)
         {
             if (other == null)

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models.SevenZipSharp
 {
-  
+
     /// <summary>
     /// Convert .zip .7z etc file based entry models to SzsRootModel, which is directories.
     /// </summary>
@@ -63,9 +63,15 @@ namespace FileExplorer.Models.SevenZipSharp
                         foreach (object afi in _wrapper.List(stream, listPattern))
                         {
                             var em = new SzsChildModel(szsRoot, (SevenZip.ArchiveFileInfo)afi);
+                            lock (VirtualModels)
+                                if (VirtualModels.Contains(em))
+                                    VirtualModels.Remove(em);
                             if (filter(em))
                                 retList.Add(em);
                         }
+
+                    retList.AddRange(VirtualModels.Where(sem => 
+                        Path.GetDirectoryName(sem.RelativePath).Equals(szsEntry.RelativePath) && filter(sem)));
                 }
             }
 
@@ -74,7 +80,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
-            return await _baseProfile.LookupAsync(path, CancellationToken.None);          
+            return await _baseProfile.LookupAsync(path, CancellationToken.None);
         }
 
         public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
@@ -84,7 +90,7 @@ namespace FileExplorer.Models.SevenZipSharp
             if (entry is SzsRootModel)
                 yield return DrawOverlayTextExtractor.Create(GetFromSystemImageListUsingExtension.Instance,
                     em => em.GetExtension().ToLower(), em => em.GetExtension().ToLower(), System.Drawing.Color.MediumBlue);
-            
+
             //return base.GetIconExtractSequence(entry);
         }
 
@@ -94,12 +100,14 @@ namespace FileExplorer.Models.SevenZipSharp
 
         private SevenZipWrapper _wrapper;
         private IProfile _baseProfile;
+        private List<ISzsItemModel> _virtualModels = new List<ISzsItemModel>();
 
         #endregion
 
         #region Public Properties
 
         internal SevenZipWrapper Wrapper { get { return _wrapper; } }
+        internal List<ISzsItemModel> VirtualModels { get { return _virtualModels; } }
 
         #endregion
     }
