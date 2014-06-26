@@ -21,9 +21,9 @@ namespace FileExplorer.IO
         public abstract byte[] GetEmptyArchiveBytes(string type);
         public abstract Task<bool> TestAsync(Stream stream);
 
-        protected abstract bool compressMultiple(string type, Stream stream, Dictionary<string, System.IO.Stream> streamDic, 
+        protected abstract Task<bool> compressMultiple(string type, Stream stream, Dictionary<string, System.IO.Stream> streamDic, 
             IProgress<FileExplorer.Defines.ProgressEventArgs> progress);
-        protected abstract bool delete(Stream stream, string delPathOrMask);
+        protected abstract Task<bool> deleteAsync(string type, Stream stream, string delPathOrMask);
         protected abstract IEnumerable<object> list(Stream stream, string pattern, bool listSubdir);
         protected abstract bool exists(Stream stream, string pathOrMask, bool isFolder);
         protected abstract bool extractOne(Stream stream, string fileName, string password, System.IO.Stream outputStream);
@@ -33,15 +33,15 @@ namespace FileExplorer.IO
             return extractOne(stream, fileName, password, outputStream);
         }
        
-        public bool CompressMultiple(string type, Stream stream, Dictionary<string, System.IO.Stream> streamDic, 
+        public Task<bool> CompressMultiple(string type, Stream stream, Dictionary<string, System.IO.Stream> streamDic, 
             IProgress<FileExplorer.Defines.ProgressEventArgs> progress = null)
         {
             return compressMultiple(type, stream, streamDic, progress);
         }
 
-        public bool Delete(Stream stream, string delPathOrMask)
+        public Task<bool> DeleteAsync(string type, Stream stream, string delPathOrMask)
         {
-            return delete(stream, delPathOrMask);
+            return deleteAsync(type, stream, delPathOrMask);
         }
 
         public IEnumerable<object> List(Stream stream, string pattern, bool listSubdir = false)

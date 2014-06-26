@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Utils
+namespace FileExplorer.Utils
 {
     //By - Stephen Toub - MSFT
     //http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10266983.aspx

@@ -64,7 +64,7 @@ namespace FileExplorer.Models.SevenZipSharp
             using (Stream archiveStream = await (rootReferencedFile.Profile as IDiskProfile).DiskIO.OpenStreamAsync(rootReferencedFile,
                 Defines.FileAccess.ReadWrite, CancellationToken.None))
             {
-                szsProfile.Wrapper.CompressOne(type, archiveStream, szsModel.RelativePath, stream);
+                await szsProfile.Wrapper.CompressOne(type, archiveStream, szsModel.RelativePath, stream);
             }
         }
 

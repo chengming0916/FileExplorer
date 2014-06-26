@@ -184,8 +184,6 @@
     <Compile Include="UserControls\UIEvent\DragDropLiteScriptCommands.cs" />
     <Compile Include="UserControls\UIEvent\ExtensionMethods.cs" />
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
-    <Compile Include="Utils\AsyncLock.cs" />
-    <Compile Include="Utils\AsyncSemaphore.cs" />
     <Compile Include="Utils\DynamicDictionary.cs" />
     <Compile Include="Utils\FileNameGenerator.cs" />
     <Compile Include="Utils\ParamStringUtils.cs" />

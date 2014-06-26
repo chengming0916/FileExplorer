@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.IO.Interfaces;
 using FileExplorer.Utils;
+using FileExplorer.Utils;
 
 
 namespace FileExplorer.IO.Compress
@@ -152,69 +153,82 @@ namespace FileExplorer.IO.Compress
 
             List<string> returnedPathList = new List<string>();
 
-
-            lock (_lockObject)
+            return AsyncUtils.RunSync(async () =>
             {
-                List<ArchiveFileInfo> afiList;
-
-                try
+                using (await _updatingLock.LockAsync())
                 {
-                    using (SevenZipExtractor extractor = getExtractor(stream))
-                    {
-                        afiList = new List<ArchiveFileInfo>(extractor.ArchiveFileData);
-                    }
-                }
-                catch { afiList = new List<ArchiveFileInfo>(); }
+                    List<ArchiveFileInfo> retList = new List<ArchiveFileInfo>();
+                    List<ArchiveFileInfo> afiList;
 
-                foreach (ArchiveFileInfo afi in afiList)
-                {
-                    Match match = new Regex(pattern).Match(afi.FileName);
-                    if (match.Success)
+                    try
                     {
-                        string parent = match.Groups["parent"].Value;
-                        string name = match.Groups["name"].Value;
-                        string trail = match.Groups["trail"].Value;
-
-                        if (!afi.IsDirectory && String.IsNullOrEmpty(trail))
+                        using (SevenZipExtractor extractor = getExtractor(stream))
                         {
-                            if (returnedPathList.IndexOf(afi.FileName.ToLower()) == -1)
-                            {
-                                yield return afi;
-                                returnedPathList.Add(afi.FileName.ToLower());
-                            }
+                            afiList = new List<ArchiveFileInfo>(extractor.ArchiveFileData);
                         }
-                        else if (!String.IsNullOrEmpty(trail) || listSubdir)
+                    }
+                    catch { afiList = new List<ArchiveFileInfo>(); }
+
+                    foreach (ArchiveFileInfo afi in afiList)
+                    {
+                        Match match = new Regex(pattern).Match(afi.FileName);
+                        if (match.Success)
                         {
-                            string dirName = PathFE.Combine(parent, name);
-                            if (returnedPathList.IndexOf(dirName.ToLower()) == -1)
+                            string parent = match.Groups["parent"].Value;
+                            string name = match.Groups["name"].Value;
+                            string trail = match.Groups["trail"].Value;
+
+                            if (!afi.IsDirectory && String.IsNullOrEmpty(trail))
                             {
-                                yield return new ArchiveFileInfo()
+                                if (returnedPathList.IndexOf(afi.FileName.ToLower()) == -1)
                                 {
-                                    FileName = dirName,
-                                    IsDirectory = true
-                                };
-                                returnedPathList.Add(dirName.ToLower());
+                                    retList.Add(afi);
+                                    returnedPathList.Add(afi.FileName.ToLower());
+                                }
                             }
+                            else if (!String.IsNullOrEmpty(trail) || listSubdir)
+                            {
+                                string dirName = PathFE.Combine(parent, name);
+                                if (returnedPathList.IndexOf(dirName.ToLower()) == -1)
+                                {
+                                    retList.Add(new ArchiveFileInfo()
+                                    {
+                                        FileName = dirName,
+                                        IsDirectory = true
+                                    });
+                                    returnedPathList.Add(dirName.ToLower());
+                                }
+                            }
+
+
                         }
                     }
+
+                    return retList;
                 }
-            }
+            });
         }
 
 
         public IEnumerable<ArchiveFileInfo> listSimple(Stream stream, string relativePathOrMask)
         {
-            lock (_lockObject)
-                using (SevenZipExtractor extractor = getExtractor(stream))
-                    lock (extractor)
-                    {
-                        foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
+            return AsyncUtils.RunSync(async () =>
+            {
+                using (await _updatingLock.LockAsync())
+                {
+                    List<ArchiveFileInfo> retList = new List<ArchiveFileInfo>();
+                    using (SevenZipExtractor extractor = getExtractor(stream))
+                        lock (extractor)
                         {
-                            if (PathFE.MatchFileMask(afi.FileName, relativePathOrMask, true))
-                                yield return afi;
-
+                            foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
+                            {
+                                if (PathFE.MatchFileMask(afi.FileName, relativePathOrMask, true))
+                                    retList.Add(afi);
+                            }
                         }
-                    }
+                    return retList;
+                }
+            });
         }
 
 
@@ -226,18 +240,26 @@ namespace FileExplorer.IO.Compress
 
         protected override bool exists(Stream stream, string pathOrMask, bool isFolder)
         {
-            lock (_lockObject)
-                using (SevenZipExtractor extractor = getExtractor(stream))
+            return AsyncUtils.RunSync(async () =>
+            {
+                using (await _updatingLock.LockAsync())
                 {
-                    foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
+
+                    using (SevenZipExtractor extractor = getExtractor(stream))
                     {
-                        if (PathFE.MatchFileMask(afi.FileName, pathOrMask) && (afi.IsDirectory == isFolder))
-                            return true;
-                        else if (afi.FileName.StartsWith(pathOrMask, StringComparison.InvariantCultureIgnoreCase))
-                            return true;
+                        foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
+                        {
+                            if (PathFE.MatchFileMask(afi.FileName, pathOrMask) && (afi.IsDirectory == isFolder))
+                                return true;
+                            else if (afi.FileName.StartsWith(pathOrMask, StringComparison.InvariantCultureIgnoreCase))
+                                return true;
+                        }
                     }
+                    return false;
+
                 }
-            return false;
+            });
+
         }
 
 
@@ -333,35 +355,35 @@ namespace FileExplorer.IO.Compress
 
         #region Compress
 
-        public void CompressMultiple(string archivePath, Dictionary<string, Stream> streamDic,
-            IProgress<FileExplorer.Defines.ProgressEventArgs> progress = null)
-        {
-            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat(archivePath);
+        //public void CompressMultiple(string archivePath, Dictionary<string, Stream> streamDic,
+        //    IProgress<FileExplorer.Defines.ProgressEventArgs> progress = null)
+        //{
+        //    OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat(archivePath);
 
-            foreach (var key in streamDic.Keys)
-                Delete(archivePath, key);
+        //    foreach (var key in streamDic.Keys)
+        //        deleteAsync(archiveFormat, archivePath, key);
 
-            SevenZipCompressor compressor = getCompressor(archiveFormat, null, progress);
-            lock (_lockObject)
-            {
-                compressor.CompressStreamDictionary(streamDic, archivePath);
-            }
-        }
-
-
-        public void compressOne(string archivePath, string fileName, Stream fileStream)
-        {
-            CompressMultiple(archivePath, new Dictionary<string, Stream>() { { fileName, fileStream } });
-        }
-
-        public bool CompressOne(string type, Stream stream, string fileName, Stream fileStream)
-        {
-            return CompressMultiple(type, stream, new Dictionary<string, Stream>() { { fileName, fileStream } });
-        }
+        //    SevenZipCompressor compressor = getCompressor(archiveFormat, null, progress);
+        //    lock (_lockObject)
+        //    {
+        //        compressor.CompressStreamDictionary(streamDic, archivePath);
+        //    }
+        //}
 
 
+        //public void compressOne(string archivePath, string fileName, Stream fileStream)
+        //{
+        //    CompressMultiple(archivePath, new Dictionary<string, Stream>() { { fileName, fileStream } });
+        //}
 
-        protected override bool compressMultiple(string type, Stream stream,
+        //public bool CompressOne(string type, Stream stream, string fileName, Stream fileStream)
+        //{
+        //    return CompressMultiple(type, stream, new Dictionary<string, Stream>() { { fileName, fileStream } });
+        //}
+
+
+
+        protected override async Task<bool> compressMultiple(string type, Stream stream,
             Dictionary<string, Stream> streamDic, IProgress<FileExplorer.Defines.ProgressEventArgs> progress = null)
         {
             var arcFormat = getArchiveFormat("abc." + type);
@@ -373,13 +395,18 @@ namespace FileExplorer.IO.Compress
             //    compressor.CompressStreamDictionary(streamDic, container.Stream);
 
             string tempFile = null;
-            lock (_lockObject)
+            using (var releaser = await _updatingLock.LockAsync())
             {
 
                 using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, type))
                     StreamUtils.CopyStream(stream, tempStream, true, true, false);
 
-                CompressMultiple(tempFile, streamDic, progress);
+
+                foreach (var key in streamDic.Keys)
+                    await deleteAsync(arcFormat, tempFile, key);
+                compressor.CompressStreamDictionary(streamDic, tempFile);
+
+                //CompressMultiple(tempFile, streamDic, progress);
 
                 using (var tempStream = new FileStream(tempFile, FileMode.Open))
                     StreamUtils.CopyStream(tempStream, stream, false, true, true);
@@ -392,9 +419,10 @@ namespace FileExplorer.IO.Compress
 
         #region Delete
 
-        public void Delete(string archivePath, string delPathOrMask)
+        private Task<bool> deleteAsync(OutArchiveFormat archiveFormat, string archivePath, string delPathOrMask)
         {
-            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat(archivePath);
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
             foreach (var foundItem in lookup(getExtractor(archivePath, null), delPathOrMask))
@@ -402,16 +430,21 @@ namespace FileExplorer.IO.Compress
 
             if (fileDictionary.Count > 0)
             {
-                lock (_lockObject)
-                {
-                    SevenZipCompressor compressor = getCompressor(archiveFormat);
-                    compressor.ModifyArchive(archivePath, fileDictionary);
-                }
+                SevenZipCompressor compressor = getCompressor(archiveFormat);
+
+                compressor.CompressionFinished += (o, e) =>
+                    {
+                        tcs.SetResult(true);
+                    };
+
+                compressor.BeginModifyArchive(archivePath, fileDictionary);
             }
+            return tcs.Task;
         }
 
-        protected override bool delete(Stream stream, string delPathOrMask)
+        protected override async Task<bool> deleteAsync(string type, Stream stream, string delPathOrMask)
         {
+            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat("abc" + type);
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
             foreach (var foundItem in lookup(getExtractor(stream, null), delPathOrMask))
@@ -420,15 +453,16 @@ namespace FileExplorer.IO.Compress
             if (fileDictionary.Count > 0)
             {
                 string tempFile;
-                lock (_lockObject)
+
+                using (var releaser = await _updatingLock.LockAsync())
                 {
                     using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, "tmp"))
-                        StreamUtils.CopyStream(stream, tempStream, true, true, false);
+                        await StreamUtils.CopyStreamAsync(stream, tempStream, true, true, false);
 
-                    Delete(tempFile, delPathOrMask);
+                    await deleteAsync(archiveFormat, tempFile, delPathOrMask);
 
                     using (var tempStream = new FileStream(tempFile, FileMode.Open))
-                        StreamUtils.CopyStream(tempStream, stream, false, true, true);
+                        await StreamUtils.CopyStreamAsync(tempStream, stream, false, true, true);
                 }
 
                 //SevenZipSharp crash when compressor.ModifyArchive() is used, 
@@ -466,7 +500,7 @@ namespace FileExplorer.IO.Compress
         #region Data
 
         //private StreamContainer _archiveFile;        
-        private static object _lockObject = new object();
+        private AsyncLock _updatingLock = new AsyncLock();
         private static object _globalLockObject = new object();
 
         #endregion
