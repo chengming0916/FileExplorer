@@ -1,0 +1,25 @@
+syntax: glob
+*/obj/*
+*/bin/*
+src/FileExplorer3/app/packages/*
+src/FileExplorer3/release/*
+doc/*.bak
+src/FileExplorer3/app/FileExplorer3/UserControls/Notused/*
+src/FileExplorer3/app/TestSkyDrive/*
+*/Thumbs.db
+Thumbs.db
+*/_UpgradeReport_Files/*
+*/UpgradeLog.*
+src/FileExplorer3/app/TestApp.WPF/AuthorizationKeys.cs
+src/FileExplorer3/app/TestSkyDrive2/*
+src/FileExplorer3/app/TestApp.WPF/gapi_client_secret.json
+lib/DotNetOpenAuth*
+src/FileExplorer3/app/*.nuspec
+*.psess
+*.vsp
+*.nuspec
+*.vspx
+*.diagsession
+release/*
+tmp/*
+build/compile.txt
