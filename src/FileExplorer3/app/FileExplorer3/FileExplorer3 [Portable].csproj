@@ -59,6 +59,8 @@
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
     <Compile Include="Models\ISuggestSource.cs" />
+    <Compile Include="Utils\AsyncLock.cs" />
+    <Compile Include="Utils\AsyncSemaphore.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Defines\Cofe3\Defines\Attributes\MediaTypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Defines\Attributes\MIMETypeDecorator.cs" />

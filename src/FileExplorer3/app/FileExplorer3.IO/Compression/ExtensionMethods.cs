@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.IO
+namespace FileExplorer
 {
     public static partial class ExtensionMethods
     {
-        public static bool CompressOne(this ICompressorWrapper wrapper, string type, Stream stream, string fileName, Stream fileStream)
+        public static Task<bool> CompressOne(this ICompressorWrapper wrapper, string type, Stream stream, string fileName, Stream fileStream)
         {
             return wrapper.CompressMultiple(type, stream, new Dictionary<string, Stream>() { { fileName, fileStream } });
         }
+
     }
 }

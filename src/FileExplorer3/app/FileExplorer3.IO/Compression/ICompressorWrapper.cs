@@ -68,7 +68,7 @@ namespace FileExplorer.IO.Interfaces
         /// <param name="archivePath"></param>
         /// <param name="streamDic"></param>
         /// <param name="progress"></param>
-        bool CompressMultiple(string type, Stream stream, Dictionary<string, Stream> streamDic,
+        Task<bool> CompressMultiple(string type, Stream stream, Dictionary<string, Stream> streamDic,
             IProgress<ProgressEventArgs> progress = null);
 
         /// <summary>
@@ -76,6 +76,6 @@ namespace FileExplorer.IO.Interfaces
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="delPathOrMask"></param>
-        bool Delete(Stream stream, string delPathOrMask);
+        Task<bool> DeleteAsync(string type, Stream stream, string delPathOrMask);
     }
 }

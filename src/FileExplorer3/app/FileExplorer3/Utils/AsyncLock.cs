@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Utils
+namespace FileExplorer.Utils
 {
 
     //By - Stephen Toub - MSFT

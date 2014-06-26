@@ -29,6 +29,7 @@ namespace FileExplorer.Utils
             if (resetOutputStream)
                 output.Seek(0, SeekOrigin.Begin);
 
+            output.SetLength(input.Length);
             byte[] buffer = new byte[32768];
             int read;
             while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
@@ -52,6 +53,7 @@ namespace FileExplorer.Utils
             if (resetOutputStream)
                 output.Seek(0, SeekOrigin.Begin);
 
+            output.SetLength(input.Length);
             byte[] buffer = new byte[32768];
             int read;
             float totalRead = 0;
