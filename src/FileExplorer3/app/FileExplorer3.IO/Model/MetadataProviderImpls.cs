@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.Utils;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {

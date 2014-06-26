@@ -91,25 +91,4 @@ namespace FileExplorer.WPF.Models
         
     }
 
-    public class DiskEntryModelBase : EntryModelBase
-    {
-        public DiskEntryModelBase(IProfile profile)
-            : base(profile)
-        {
-            DiskProfile = profile as IDiskProfile;
-            if (DiskProfile == null)
-                throw new ArgumentException();
-        }
-
-        protected override void OnRenamed(string orgName, string newName)
-        {            
-            //string dirName = this.Profile.Path.GetDirectoryName(this.FullPath);
-            new ScriptRunner().RunAsync(new ParameterDic(), this.Rename(newName));            
-            //Then DiskIO raise NotifyChange, and refresh the ExplorerViewModel.
-        }
-
-        public IDiskProfile DiskProfile { get; private set; }
-        public long Size { get; protected set; }
-
-    }
 }

@@ -21,6 +21,7 @@ using FileExplorer.Utils;
 using FileExplorer.Models;
 using System.IO;
 using FileExplorer.WPF.Defines;
+using FileExplorer.IO;
 
 namespace FileExplorer.WPF.ViewModels
 {

@@ -11,6 +11,7 @@ using FileExplorer.Utils;
 using FileExplorer.WPF.Utils;
 using Microsoft.Live;
 using FileExplorer.WPF.Models;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models.SevenZipSharp
 {
@@ -36,8 +37,19 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public static async Task<WebFileStream> OpenReadWriteAsync(IEntryModel entryModel, CancellationToken ct)
         {
-            var contents = await WebUtils.DownloadToBytesAsync((entryModel as SkyDriveItemModel).SourceUrl, () => new HttpClient(), ct);
-            return new WebFileStream(entryModel, contents, (m, s) =>
+            byte[] bytes = new byte[] { };
+            var profile = entryModel.Profile as SzsProfile;
+            ISzsItemModel entryItemModel = entryModel as ISzsItemModel;
+            IEntryModel rootModel = entryItemModel.Root.ReferencedFile;            
+
+            using (Stream stream = await (rootModel.Profile as IDiskProfile).DiskIO.OpenStreamAsync(rootModel, Defines.FileAccess.Read, ct))
+            {
+                MemoryStream ms = new MemoryStream();
+                if (profile.Wrapper.ExtractOne(stream, entryItemModel.RelativePath, null, ms))
+                    bytes = ms.ToByteArray();
+            }
+
+            return new WebFileStream(entryModel, bytes, (m, s) =>
             {
                 AsyncUtils.RunSync(() => updateSourceAsync(s));
             });

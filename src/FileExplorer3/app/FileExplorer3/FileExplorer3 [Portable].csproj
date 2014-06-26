@@ -45,7 +45,9 @@
     <Compile Include="Models\ICommandModel.cs" />
     <Compile Include="Models\ICommandProvider.cs" />
     <Compile Include="Models\IConverterProfile.cs" />
+    <Compile Include="Models\IDiskIOHelper.cs" />
     <Compile Include="Models\IDiskPathMapper.cs" />
+    <Compile Include="Models\IDiskProfile.cs" />
     <Compile Include="Models\IEntryHierarchyComparer.cs" />
     <Compile Include="Models\IEntryModel.cs" />
     <Compile Include="Models\IEntryModelCache.cs" />

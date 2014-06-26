@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Live;
 using FileExplorer.WPF.Models;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {

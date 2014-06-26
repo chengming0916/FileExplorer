@@ -140,6 +140,9 @@
     <Compile Include="Model\DirectoryInfoEx\ExMetadataProvider.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExModel.cs" />
     <Compile Include="Model\DirectoryInfoEx\ExProfile.cs" />
+    <Compile Include="Model\DiskEntryModelBase.cs" />
+    <Compile Include="Model\DiskIOHelperBase.cs" />
+    <Compile Include="Model\DiskPathMapperImpl.cs" />
     <Compile Include="Model\DiskProfileBase.cs" />
     <Compile Include="Model\DropBox\DropBoxDiskIOHelper.cs" />
     <Compile Include="Model\DropBox\DropBoxModelThumbnailExtractor.cs" />

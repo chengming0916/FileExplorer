@@ -15,8 +15,5 @@ namespace FileExplorer.WPF.Models
         IEventAggregator Events { get; }
     }
 
-    public interface IDiskProfile : IProfile
-    {
-        IDiskIOHelper DiskIO { get; }
-    }
+   
 }

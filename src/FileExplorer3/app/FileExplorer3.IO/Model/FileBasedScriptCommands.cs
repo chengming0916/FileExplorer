@@ -17,6 +17,7 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.Defines;
 using Caliburn.Micro;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {
@@ -301,6 +302,7 @@ namespace FileExplorer.Models
 
                 if (!srcMapping.IsVirtual && !destMapping.IsVirtual && _removeOriginal)
                 {
+                    //Disk based transfer
                     progress.Report(TransferProgress.From(_srcModel.FullPath, destFullName));
                     if (_srcModel.IsDirectory)
                     {

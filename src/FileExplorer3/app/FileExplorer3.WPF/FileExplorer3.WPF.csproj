@@ -127,7 +127,6 @@
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\CommandModelImpl.cs" />
     <Compile Include="Models\CommonScriptCommands.cs" />
-    <Compile Include="Models\DiskPathMapperImpl.cs" />
     <Compile Include="Models\EntryModelBase.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\ICommandModelImpl.cs" />

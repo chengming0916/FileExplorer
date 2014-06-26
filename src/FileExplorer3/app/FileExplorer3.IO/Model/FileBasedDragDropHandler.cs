@@ -13,6 +13,7 @@ using FileExplorer.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls.DragDrop;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {

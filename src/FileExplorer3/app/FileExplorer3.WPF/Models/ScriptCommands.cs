@@ -8,6 +8,7 @@ using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
+using FileExplorer.IO;
 
 namespace FileExplorer.WPF.ViewModels
 {

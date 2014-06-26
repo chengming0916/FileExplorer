@@ -10,6 +10,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using System.Threading;
 using FileExplorer.WPF.Models;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {

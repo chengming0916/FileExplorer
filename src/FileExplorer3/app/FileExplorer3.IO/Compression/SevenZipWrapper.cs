@@ -339,7 +339,7 @@ namespace FileExplorer.IO.Compress
             OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat(archivePath);
 
             foreach (var key in streamDic.Keys)
-                Delete(archivePath, key);
+                Delete(archiveFormat, archivePath, key);
 
             SevenZipCompressor compressor = getCompressor(archiveFormat, null, progress);
             lock (_lockObject)
@@ -392,9 +392,8 @@ namespace FileExplorer.IO.Compress
 
         #region Delete
 
-        public void Delete(string archivePath, string delPathOrMask)
+        public void Delete(OutArchiveFormat archiveFormat, string archivePath, string delPathOrMask)
         {
-            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat(archivePath);
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
             foreach (var foundItem in lookup(getExtractor(archivePath, null), delPathOrMask))
@@ -410,8 +409,9 @@ namespace FileExplorer.IO.Compress
             }
         }
 
-        protected override bool delete(Stream stream, string delPathOrMask)
+        protected override bool delete(string type, Stream stream, string delPathOrMask)
         {
+            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat("abc" + type);            
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
             foreach (var foundItem in lookup(getExtractor(stream, null), delPathOrMask))
@@ -425,7 +425,7 @@ namespace FileExplorer.IO.Compress
                     using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, "tmp"))
                         StreamUtils.CopyStream(stream, tempStream, true, true, false);
 
-                    Delete(tempFile, delPathOrMask);
+                    Delete(archiveFormat, tempFile, delPathOrMask);
 
                     using (var tempStream = new FileStream(tempFile, FileMode.Open))
                         StreamUtils.CopyStream(tempStream, stream, false, true, true);

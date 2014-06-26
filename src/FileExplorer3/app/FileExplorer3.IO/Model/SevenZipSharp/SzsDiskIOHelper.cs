@@ -34,20 +34,36 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public override async Task DeleteAsync(IEntryModel entryModel, CancellationToken ct)
         {
-            throw new NotImplementedException();
-            //if (entryModel.IsDirectory)
-            //    Directory.Delete(entryModel.FullPath, true);
-            //else File.Delete(entryModel.FullPath);
+            SzsProfile profile = Profile as SzsProfile;
+            ISzsItemModel szsEntryModel = entryModel as ISzsItemModel;
+
+            using (var stream = await profile.DiskIO.OpenStreamAsync(szsEntryModel.Root, Defines.FileAccess.ReadWrite, ct))
+            {
+                string type = profile.Path.GetExtension(szsEntryModel.Root.Name);
+
+                profile.Wrapper.Delete(type, stream, szsEntryModel.RelativePath + (szsEntryModel.IsDirectory ? "\\*" : ""));
+
+                lock (profile.VirtualModels)
+                    if (profile.VirtualModels.Contains(szsEntryModel))
+                        profile.VirtualModels.Remove(szsEntryModel);
+            }       
         }
 
         public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel,
             FileExplorer.Defines.FileAccess access, CancellationToken ct)
         {
             //SevenZipWrapper wrapper = (Profile as SzsProfile).Wrapper;
-            //ISzsItemModel itemModel = entryModel as ISzsItemModel;
+            ISzsItemModel entryItemModel = entryModel as ISzsItemModel;
             //IEntryModel rootReferenceModel = itemModel.Root.ReferencedFile;
             //return new CompressMemoryStream(wrapper, rootReferenceModel, itemModel.RelativePath, access, ct);
             //To-DO: save to Profile.DiskIO.Mapper[itemModel].IOPath
+
+
+            if (entryItemModel.Root.Equals(entryItemModel))
+            {
+                IEntryModel referencedFile = entryItemModel.Root.ReferencedFile;
+                return await (referencedFile.Profile as IDiskProfile).DiskIO.OpenStreamAsync(referencedFile, access, ct);
+            }
 
             switch (access)
             {

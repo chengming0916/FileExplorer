@@ -17,6 +17,7 @@ using FileExplorer.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.IO.Defines;
 using FileExplorer.WPF.Utils;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {

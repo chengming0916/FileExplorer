@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FileExplorer;
 using FileExplorer.Utils;
 using FileExplorer.WPF.Models;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {

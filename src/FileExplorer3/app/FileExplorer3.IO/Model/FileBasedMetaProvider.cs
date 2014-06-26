@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {

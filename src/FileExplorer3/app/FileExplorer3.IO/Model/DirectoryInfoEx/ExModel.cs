@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Models;
+using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {
