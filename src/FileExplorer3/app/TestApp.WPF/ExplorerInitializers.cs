@@ -169,7 +169,7 @@ namespace TestApp
                         ScriptCommands.ShowProgress(_windowManager, "Delete",
                                     ScriptCommands.RunInSequence(
                                         FileList.AssignSelectionToParameter(
-                                            DeleteFileBasedEntryCommand.FromParameter),
+                                            IOScriptCommands.DeleteFromParameter),
                                         new HideProgress())),
                         ResultCommand.NoError),
                     NullScriptCommand.Instance);
@@ -196,7 +196,7 @@ namespace TestApp
                                 ScriptCommands.ShowProgress(_windowManager, "Delete",
                                         ScriptCommands.RunInSequence(
                                             DirectoryTree.AssignSelectionToParameter(
-                                                DeleteFileBasedEntryCommand.FromParameter),
+                                                IOScriptCommands.DeleteFromParameter),
                                             new HideProgress())),
                            ResultCommand.NoError);
 
@@ -204,12 +204,13 @@ namespace TestApp
                 explorerModel.DirectoryTree.Commands.ScriptCommands.Map =
                     Explorer.PickDirectory(initilizer, _profiles,
                     dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(dir)), ResultCommand.NoError);
+            
 
             explorerModel.Commands.ScriptCommands.Transfer =
                 TransferCommand =
                 new TransferCommand((effect, source, destDir) =>
                     source.Profile is IDiskProfile ?
-                        (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
+                        IOScriptCommands.Transfer(source, destDir, effect == DragDropEffects.Move)
                         : ResultCommand.Error(new NotSupportedException())
                     , _windowManager);
         }

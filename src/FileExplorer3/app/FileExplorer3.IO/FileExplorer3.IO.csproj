@@ -158,7 +158,7 @@
     <Compile Include="Model\FileBasedCommandProvider.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
     <Compile Include="Model\FileBasedIconExtractors.cs" />
-    <Compile Include="Model\FileBasedScriptCommands.cs" />
+    <Compile Include="Model\IOScriptCommands.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoMetadataProvider.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoModel.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoProfile.cs" />

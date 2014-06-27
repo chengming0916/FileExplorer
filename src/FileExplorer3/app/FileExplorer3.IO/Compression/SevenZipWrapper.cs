@@ -130,10 +130,11 @@ namespace FileExplorer.IO.Compress
 
         protected override IEnumerable<object> list(Stream stream, string pattern, bool listSubdir = false)
         {
-            foreach (var afi in listCore(stream, pattern, listSubdir))
-            {
-                yield return afi;
-            }
+            return listCore(stream, pattern, listSubdir).Cast<object>().ToList();
+            //foreach (var afi in listCore(stream, pattern, listSubdir))
+            //{
+            //    yield return afi;
+            //}
         }
 
         /// <summary>
@@ -153,8 +154,7 @@ namespace FileExplorer.IO.Compress
             List<string> returnedPathList = new List<string>();
 
 
-            lock (_lockObject)
-            {
+            
                 List<ArchiveFileInfo> afiList;
 
                 try
@@ -197,25 +197,25 @@ namespace FileExplorer.IO.Compress
                             }
                         }
                     }
-                }
+                
             }
         }
 
 
-        public IEnumerable<ArchiveFileInfo> listSimple(Stream stream, string relativePathOrMask)
-        {
-            lock (_lockObject)
-                using (SevenZipExtractor extractor = getExtractor(stream))
-                    lock (extractor)
-                    {
-                        foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
-                        {
-                            if (PathFE.MatchFileMask(afi.FileName, relativePathOrMask, true))
-                                yield return afi;
+        //public IEnumerable<ArchiveFileInfo> listSimple(Stream stream, string relativePathOrMask)
+        //{
+        //    lock (_lockObject)
+        //        using (SevenZipExtractor extractor = getExtractor(stream))
+        //            lock (extractor)
+        //            {
+        //                foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
+        //                {
+        //                    if (PathFE.MatchFileMask(afi.FileName, relativePathOrMask, true))
+        //                        yield return afi;
 
-                        }
-                    }
-        }
+        //                }
+        //            }
+        //}
 
 
 
@@ -226,7 +226,7 @@ namespace FileExplorer.IO.Compress
 
         protected override bool exists(Stream stream, string pathOrMask, bool isFolder)
         {
-            lock (_lockObject)
+
                 using (SevenZipExtractor extractor = getExtractor(stream))
                 {
                     foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
@@ -342,22 +342,21 @@ namespace FileExplorer.IO.Compress
                 Delete(archiveFormat, archivePath, key);
 
             SevenZipCompressor compressor = getCompressor(archiveFormat, null, progress);
-            lock (_lockObject)
-            {
+
                 compressor.CompressStreamDictionary(streamDic, archivePath);
-            }
+
         }
 
 
-        public void compressOne(string archivePath, string fileName, Stream fileStream)
-        {
-            CompressMultiple(archivePath, new Dictionary<string, Stream>() { { fileName, fileStream } });
-        }
+        //public void compressOne(string archivePath, string fileName, Stream fileStream)
+        //{
+        //    CompressMultiple(archivePath, new Dictionary<string, Stream>() { { fileName, fileStream } });
+        //}
 
-        public bool CompressOne(string type, Stream stream, string fileName, Stream fileStream)
-        {
-            return CompressMultiple(type, stream, new Dictionary<string, Stream>() { { fileName, fileStream } });
-        }
+        //public bool CompressOne(string type, Stream stream, string fileName, Stream fileStream)
+        //{
+        //    return CompressMultiple(type, stream, new Dictionary<string, Stream>() { { fileName, fileStream } });
+        //}
 
 
 
@@ -373,8 +372,6 @@ namespace FileExplorer.IO.Compress
             //    compressor.CompressStreamDictionary(streamDic, container.Stream);
 
             string tempFile = null;
-            lock (_lockObject)
-            {
 
                 using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, type))
                     StreamUtils.CopyStream(stream, tempStream, true, true, false);
@@ -383,7 +380,7 @@ namespace FileExplorer.IO.Compress
 
                 using (var tempStream = new FileStream(tempFile, FileMode.Open))
                     StreamUtils.CopyStream(tempStream, stream, false, true, true);
-            }
+
 
             return true;
         }
@@ -401,11 +398,10 @@ namespace FileExplorer.IO.Compress
 
             if (fileDictionary.Count > 0)
             {
-                lock (_lockObject)
-                {
+
                     SevenZipCompressor compressor = getCompressor(archiveFormat);
                     compressor.ModifyArchive(archivePath, fileDictionary);
-                }
+                
             }
         }
 
@@ -420,8 +416,7 @@ namespace FileExplorer.IO.Compress
             if (fileDictionary.Count > 0)
             {
                 string tempFile;
-                lock (_lockObject)
-                {
+ 
                     using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, "tmp"))
                         StreamUtils.CopyStream(stream, tempStream, true, true, false);
 
@@ -429,7 +424,7 @@ namespace FileExplorer.IO.Compress
 
                     using (var tempStream = new FileStream(tempFile, FileMode.Open))
                         StreamUtils.CopyStream(tempStream, stream, false, true, true);
-                }
+                
 
                 //SevenZipSharp crash when compressor.ModifyArchive() is used, 
                 //if Compression mode is Append (Create is fine).
@@ -465,9 +460,9 @@ namespace FileExplorer.IO.Compress
 
         #region Data
 
-        //private StreamContainer _archiveFile;        
-        private static object _lockObject = new object();
-        private static object _globalLockObject = new object();
+        //private StreamContainer _archiveFile;                
+        //private static object _lockObject = new object();
+        //private static object _globalLockObject = new object();
 
         #endregion
 
