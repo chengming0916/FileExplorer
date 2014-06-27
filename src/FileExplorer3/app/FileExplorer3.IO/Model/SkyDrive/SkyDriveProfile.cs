@@ -24,7 +24,7 @@ namespace FileExplorer.Models
         {
             ProfileName = "SkyDrive";
             ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/SkyDrive/OneDrive_Logo.png");
-            ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, () => Alias, true);
+            ModelCache = new EntryModelCache<SkyDriveItemModel>(m => m.UniqueId, () => Alias, true);            
             Alias = "SkyDrive";
             _aliasMask = aliasMask;
             Path = PathHelper.Web;
