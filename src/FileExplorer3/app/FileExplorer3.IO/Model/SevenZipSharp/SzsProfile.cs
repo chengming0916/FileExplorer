@@ -3,6 +3,7 @@ using FileExplorer.Defines;
 using FileExplorer.IO;
 using FileExplorer.IO.Compress;
 using FileExplorer.WPF.Models;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,31 +49,34 @@ namespace FileExplorer.Models.SevenZipSharp
         {
             var retList = new List<IEntryModel>();
 
-            if (entry is ISzsItemModel)
+            using (var releaser = await WorkingLock.LockAsync())
             {
-                filter = filter ?? (em => true);
-                var szsEntry = entry as ISzsItemModel;
-                var szsRoot = szsEntry.Root;
-                var referencedEntry = szsRoot.ReferencedFile;
-                var refEntryProfile = referencedEntry.Profile as IDiskProfile;
-                if (refEntryProfile != null && !referencedEntry.IsDirectory)
+                if (entry is ISzsItemModel)
                 {
-                    string listPattern = String.Format(RegexPatterns.CompressionListPattern, Regex.Escape(szsEntry.RelativePath));
+                    filter = filter ?? (em => true);
+                    var szsEntry = entry as ISzsItemModel;
+                    var szsRoot = szsEntry.Root;
+                    var referencedEntry = szsRoot.ReferencedFile;
+                    var refEntryProfile = referencedEntry.Profile as IDiskProfile;
+                    if (refEntryProfile != null && !referencedEntry.IsDirectory)
+                    {
+                        string listPattern = String.Format(RegexPatterns.CompressionListPattern, Regex.Escape(szsEntry.RelativePath));
 
-                    using (var stream = await refEntryProfile.DiskIO.OpenStreamAsync(referencedEntry,
-                        Defines.FileAccess.Read, CancellationToken.None))
-                        foreach (object afi in _wrapper.List(stream, listPattern))
-                        {
-                            var em = new SzsChildModel(szsRoot, (SevenZip.ArchiveFileInfo)afi);
-                            lock (VirtualModels)
-                                if (VirtualModels.Contains(em))
-                                    VirtualModels.Remove(em);
-                            if (filter(em))
-                                retList.Add(em);
-                        }
+                        using (var stream = await refEntryProfile.DiskIO.OpenStreamAsync(referencedEntry,
+                            Defines.FileAccess.Read, CancellationToken.None))
+                            foreach (object afi in _wrapper.List(stream, listPattern))
+                            {
+                                var em = new SzsChildModel(szsRoot, (SevenZip.ArchiveFileInfo)afi);
+                                lock (VirtualModels)
+                                    if (VirtualModels.Contains(em))
+                                        VirtualModels.Remove(em);
+                                if (filter(em))
+                                    retList.Add(em);
+                            }
 
-                    retList.AddRange(VirtualModels.Where(sem => 
-                        Path.GetDirectoryName(sem.RelativePath).Equals(szsEntry.RelativePath) && filter(sem)));
+                        retList.AddRange(VirtualModels.Where(sem =>
+                            Path.GetDirectoryName(sem.RelativePath).Equals(szsEntry.RelativePath) && filter(sem)));
+                    }
                 }
             }
 
@@ -99,6 +103,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
         #region Data
 
+        private AsyncLock _workingLock = new AsyncLock();
         private SevenZipWrapper _wrapper;
         private IProfile _baseProfile;
         private List<ISzsItemModel> _virtualModels = new List<ISzsItemModel>();
@@ -107,6 +112,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
         #region Public Properties
 
+        public AsyncLock WorkingLock { get { return _workingLock; } }
         internal SevenZipWrapper Wrapper { get { return _wrapper; } }
         internal List<ISzsItemModel> VirtualModels { get { return _virtualModels; } }
 

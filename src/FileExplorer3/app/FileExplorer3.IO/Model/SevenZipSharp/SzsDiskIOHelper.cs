@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 namespace FileExplorer.Models.SevenZipSharp
 {
     public class SzsDiskIOHelper : DiskIOHelperBase
-    {        
+    {
         public SzsDiskIOHelper(SzsProfile profile)
             : base(profile)
         {
             this.Mapper = new FileBasedDiskPathMapper(m =>
                 {
                     ISzsItemModel model = m as ISzsItemModel;
-                    return model.Profile.Path.Combine(model.Root.FullPath, model.RelativePath);    
+                    return model.Profile.Path.Combine(model.Root.FullPath, model.RelativePath);
                 });
         }
 
@@ -28,7 +28,7 @@ namespace FileExplorer.Models.SevenZipSharp
             throw new NotImplementedException();
             //SevenZipWrapper wrapper = (Profile as SzsProfile).Wrapper;
             //string destPath =  Profile.Path.Combine(Profile.Path.GetDirectoryName(entryModel.FullPath), newName);
-            
+
             //return await Profile.ParseAsync(destPath);
         }
 
@@ -37,6 +37,7 @@ namespace FileExplorer.Models.SevenZipSharp
             SzsProfile profile = Profile as SzsProfile;
             ISzsItemModel szsEntryModel = entryModel as ISzsItemModel;
 
+            using (var releaser = await profile.WorkingLock.LockAsync())
             using (var stream = await profile.DiskIO.OpenStreamAsync(szsEntryModel.Root, Defines.FileAccess.ReadWrite, ct))
             {
                 string type = profile.Path.GetExtension(szsEntryModel.Root.Name);
@@ -46,7 +47,7 @@ namespace FileExplorer.Models.SevenZipSharp
                 lock (profile.VirtualModels)
                     if (profile.VirtualModels.Contains(szsEntryModel))
                         profile.VirtualModels.Remove(szsEntryModel);
-            }       
+            }
         }
 
         public override async Task<Stream> OpenStreamAsync(IEntryModel entryModel,

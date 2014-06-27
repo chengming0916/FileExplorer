@@ -21,7 +21,32 @@ using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {
-    
+    public static class IOScriptCommands
+    {
+        /// <summary>
+        /// Transfer srcModel to destDirModel using IDiskProfile.DiskIO.GetTransferCommand, which allow to use custom implementation.
+        /// </summary>
+        /// <param name="srcModel"></param>
+        /// <param name="destDirModel"></param>
+        /// <param name="removeOriginal"></param>
+        /// <returns></returns>
+        public static IScriptCommand Transfer(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal = false, 
+            bool allowCustomImplementation = true)
+        {
+            return allowCustomImplementation ? 
+                (destDirModel.Profile as IDiskProfile).DiskIO.GetTransferCommand(srcModel, destDirModel, removeOriginal) :
+                new FileTransferScriptCommand(srcModel, destDirModel, removeOriginal);
+        }
+
+        public static IScriptCommand DeleteFromParameter = new DeleteFileBasedEntryCommand(ScriptCommands.GetEntryModelFromParameter);
+
+        public static IScriptCommand Delete(params IEntryModel[] deleteModels)
+        {
+            return new DeleteFileBasedEntryCommand(pd => deleteModels);
+        }
+
+    }
+
 
 
     /// <summary>
@@ -29,7 +54,7 @@ namespace FileExplorer.Models
     /// </summary>    
     public class OpenWithScriptCommand : ScriptCommandBase
     {
-        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;     
+        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
         OpenWithInfo _info;
 
         /// <summary>
@@ -97,22 +122,23 @@ namespace FileExplorer.Models
             }
             else return ResultCommand.Error(new Exception("Wrong Parameter type or more than one item."));
         }
-       
+
     }
 
-    
+
 
     public class DeleteFileBasedEntryCommand : ScriptCommandBase
-    {        
-        public static DeleteFileBasedEntryCommand FromParameter = 
+    {
+        [Obsolete]
+        public static DeleteFileBasedEntryCommand FromParameter =
             new DeleteFileBasedEntryCommand(ScriptCommands.GetEntryModelFromParameter);
 
-        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;                
+        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
 
         public DeleteFileBasedEntryCommand(Func<ParameterDic, IEntryModel[]> srcModelFunc)
             : base("Delete")
         {
-            _srcModelFunc = srcModelFunc;            
+            _srcModelFunc = srcModelFunc;
         }
 
 
@@ -125,7 +151,7 @@ namespace FileExplorer.Models
             if (_srcModels != null)
             {
                 progress.Report(TransferProgress.IncrementTotalEntries(_srcModels.Count()));
-                Task[] tasks = _srcModels.Select(m => 
+                Task[] tasks = _srcModels.Select(m =>
                     (m.Profile as IDiskProfile).DiskIO.DeleteAsync(m, ct)
                     .ContinueWith(
                         tsk => progress.Report(TransferProgress.IncrementProcessedEntries()))
@@ -142,7 +168,7 @@ namespace FileExplorer.Models
     }
 
 
-    
+
 
     #region FileTransferScriptCommand and it's subcommands
 
@@ -155,7 +181,7 @@ namespace FileExplorer.Models
 
         public StreamFileTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal, IProgress<TransferProgress> progress)
             : base("StreamFileTransfer")
-        {            
+        {
             if (srcModel.Profile is IDiskProfile && destDirModel.Profile is IDiskProfile)
             {
                 _progress = progress;
@@ -183,7 +209,7 @@ namespace FileExplorer.Models
                 ct = ChangeType.Changed;
             }
 
-            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath, 
+            using (var srcStream = await srcProfile.DiskIO.OpenStreamAsync(_srcModel.FullPath,
                 FileExplorer.Defines.FileAccess.Read, pm.CancellationToken))
             using (var destStream = await destProfile.DiskIO.OpenStreamAsync(destFullName,
                 FileExplorer.Defines.FileAccess.Write, pm.CancellationToken))
@@ -197,12 +223,12 @@ namespace FileExplorer.Models
 
             _progress.Report(TransferProgress.IncrementProcessedEntries());
 
-            return new NotifyChangedCommand(_destDirModel.Profile, destFullName, 
+            return new NotifyChangedCommand(_destDirModel.Profile, destFullName,
                 _srcModel.Profile, srcFullName, ct);
         }
 
     }
-   
+
     public class CopyDirectoryTransferCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;
@@ -211,7 +237,7 @@ namespace FileExplorer.Models
         private IProgress<TransferProgress> _progress;
         public CopyDirectoryTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal, IProgress<TransferProgress> progress)
             : base("CopyDirectoryTransfer")
-        {            
+        {
             if (srcModel.Profile is IDiskProfile && destDirModel.Profile is IDiskProfile)
             {
                 _progress = progress;
@@ -251,12 +277,12 @@ namespace FileExplorer.Models
                 _progress.Report(TransferProgress.IncrementProcessedEntries()); //dest directory created
             }
             var srcSubModels = (await _srcModel.Profile.ListAsync(_srcModel, CancellationToken.None)).ToList();
-            
+
             _progress.Report(TransferProgress.IncrementTotalEntries(srcSubModels.Count())); //source entries
 
             var resultCommands = srcSubModels.Select(m =>
                 (IScriptCommand)new FileTransferScriptCommand(m, destModel, _removeOriginal)).ToList();
-            resultCommands.Insert(0, new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
+            resultCommands.Add(new NotifyChangedCommand(_destDirModel.Profile, destFullName, ChangeType.Created));
 
             //if (_removeOriginal)
             //    resultCommands.Add(new DeleteEntryCommand(_srcModel));
@@ -264,6 +290,8 @@ namespace FileExplorer.Models
             return new RunInSequenceScriptCommand(resultCommands.ToArray());
         }
     }
+
+   
 
     public class FileTransferScriptCommand : ScriptCommandBase
     {
@@ -315,10 +343,10 @@ namespace FileExplorer.Models
                     {
                         if (File.Exists(destFullName))
                             File.Delete(destFullName);
-                        File.Move(srcMapping.IOPath, destFullName);                        
+                        File.Move(srcMapping.IOPath, destFullName);
                     }
                     progress.Report(TransferProgress.IncrementProcessedEntries());
-                    return new NotifyChangedCommand(_destDirModel.Profile, destFullName, _srcModel.Profile, 
+                    return new NotifyChangedCommand(_destDirModel.Profile, destFullName, _srcModel.Profile,
                         _srcModel.FullPath, ChangeType.Moved);
                 }
                 else
