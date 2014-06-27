@@ -28,6 +28,7 @@ namespace FileExplorer.Models.SevenZipSharp
         {
             HierarchyComparer = baseProfile.HierarchyComparer;
             DragDrop = new FileBasedDragDropHandler(this, null);
+            MetadataProvider = new SzsMetadataProvider();
             DiskIO = new SzsDiskIOHelper(this);
             _baseProfile = baseProfile;
             _wrapper = new SevenZipWrapper();

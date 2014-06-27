@@ -269,7 +269,8 @@ namespace TestApp
                     },
                     new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true })
                         { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
-                    new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer)
+                    new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer),
+                    //new FileExplorer.Models.SevenZipSharp.ExtractDirectoryCommandModel(null)
                     //new CommandModel(ExplorerCommands.TogglePreviewer) { IsVisibleOnMenu = false, Header = "", IsHeaderAlignRight = true, Symbol = Convert.ToChar(0xE239) }
                     )
             };

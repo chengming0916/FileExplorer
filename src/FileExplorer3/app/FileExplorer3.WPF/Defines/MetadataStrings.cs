@@ -23,6 +23,10 @@ namespace FileExplorer.WPF.Defines
         public static string strThumbnail = "Thumbnail";
         public static string strDimension = "Dimension";
 
+        public static string strArchive = "Archive";
+        public static string strCRC = "CRC";
+        public static string strEncrypted = "Encrypted";
+        public static string strComment = "Comment";
         
     }
 }

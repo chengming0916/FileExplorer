@@ -42,14 +42,13 @@ namespace FileExplorer.Models.SevenZipSharp
         }
 
 
-        private async Task<IScriptCommand> transferAsync(ParameterDic pm, IProgress<TransferProgress> progress, IScriptCommand thenCommand)
-        {
-            List<IEntryModel> retList = (List<IEntryModel>)pm["Result"];
+        private async Task<IScriptCommand> transferAsync(ParameterDic pm, IEntryModel[] ems, IProgress<TransferProgress> progress, IScriptCommand thenCommand)
+        {            
             Dictionary<string, Stream> compressDic = new Dictionary<string,Stream>();
             IDiskProfile srcProfile = _srcModel.Profile as IDiskProfile;
             string srcParentPath = srcProfile.Path.GetDirectoryName(_srcModel.FullPath);
 
-            foreach (var em in retList)
+            foreach (var em in ems)
             {
                 string relativePath = em.FullPath.Replace(srcParentPath, "").TrimStart('\\');
                 compressDic.Add(relativePath, await srcProfile.DiskIO.OpenStreamAsync(em, Defines.FileAccess.Read, pm.CancellationToken));
@@ -83,9 +82,8 @@ namespace FileExplorer.Models.SevenZipSharp
                 if (_srcModel.IsDirectory)
                 {
                     pm["Directory"] = _srcModel;
-                    pm["Recrusive"] = true;
-                    return ScriptCommands.ListFile(
-                        new SimpleScriptCommandAsync("BatchTransfer", pd => transferAsync(pm, progress,                            
+                    return ScriptCommands.List(ScriptCommands.FileOnlyFilter, true, ems =>
+                        new SimpleScriptCommandAsync("BatchTransfer", pd => transferAsync(pm, ems, progress,                            
                              new NotifyChangedCommand(_destDirModel.Profile, destFullName,
                                 _srcModel.Profile, _srcModel.FullPath, Defines.ChangeType.Changed) )));                    
                 }

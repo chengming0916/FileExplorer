@@ -83,6 +83,7 @@ namespace FileExplorer.Models.SevenZipSharp
         public SzsChildModel(SzsRootModel root, SevenZip.ArchiveFileInfo afi)
             : base(root.Profile)
         {
+            _afi = afi;
             Root = root;
             RelativePath = afi.FileName;            
             base.IsDirectory = afi.IsDirectory;
@@ -115,10 +116,13 @@ namespace FileExplorer.Models.SevenZipSharp
 
         #region Data
 
+        internal SevenZip.ArchiveFileInfo _afi;
+
         #endregion
 
         #region Public Properties
 
+        
         public SzsRootModel Root { get; private set; }
         public string RelativePath { get; private set; }
 
