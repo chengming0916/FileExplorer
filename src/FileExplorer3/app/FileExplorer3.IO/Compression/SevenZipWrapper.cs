@@ -154,50 +154,50 @@ namespace FileExplorer.IO.Compress
             List<string> returnedPathList = new List<string>();
 
 
-            
-                List<ArchiveFileInfo> afiList;
 
-                try
+            List<ArchiveFileInfo> afiList;
+
+            try
+            {
+                using (SevenZipExtractor extractor = getExtractor(stream))
                 {
-                    using (SevenZipExtractor extractor = getExtractor(stream))
+                    afiList = new List<ArchiveFileInfo>(extractor.ArchiveFileData);
+                }
+            }
+            catch { afiList = new List<ArchiveFileInfo>(); }
+
+            foreach (ArchiveFileInfo afi in afiList)
+            {
+                Match match = new Regex(pattern).Match(afi.FileName);
+                if (match.Success)
+                {
+                    string parent = match.Groups["parent"].Value;
+                    string name = match.Groups["name"].Value;
+                    string trail = match.Groups["trail"].Value;
+
+                    if (!afi.IsDirectory && String.IsNullOrEmpty(trail))
                     {
-                        afiList = new List<ArchiveFileInfo>(extractor.ArchiveFileData);
+                        if (returnedPathList.IndexOf(afi.FileName.ToLower()) == -1)
+                        {
+                            yield return afi;
+                            returnedPathList.Add(afi.FileName.ToLower());
+                        }
+                    }
+                    else if (!String.IsNullOrEmpty(trail) || listSubdir)
+                    {
+                        string dirName = PathFE.Combine(parent, name);
+                        if (returnedPathList.IndexOf(dirName.ToLower()) == -1)
+                        {
+                            yield return new ArchiveFileInfo()
+                            {
+                                FileName = dirName,
+                                IsDirectory = true
+                            };
+                            returnedPathList.Add(dirName.ToLower());
+                        }
                     }
                 }
-                catch { afiList = new List<ArchiveFileInfo>(); }
 
-                foreach (ArchiveFileInfo afi in afiList)
-                {
-                    Match match = new Regex(pattern).Match(afi.FileName);
-                    if (match.Success)
-                    {
-                        string parent = match.Groups["parent"].Value;
-                        string name = match.Groups["name"].Value;
-                        string trail = match.Groups["trail"].Value;
-
-                        if (!afi.IsDirectory && String.IsNullOrEmpty(trail))
-                        {
-                            if (returnedPathList.IndexOf(afi.FileName.ToLower()) == -1)
-                            {
-                                yield return afi;
-                                returnedPathList.Add(afi.FileName.ToLower());
-                            }
-                        }
-                        else if (!String.IsNullOrEmpty(trail) || listSubdir)
-                        {
-                            string dirName = PathFE.Combine(parent, name);
-                            if (returnedPathList.IndexOf(dirName.ToLower()) == -1)
-                            {
-                                yield return new ArchiveFileInfo()
-                                {
-                                    FileName = dirName,
-                                    IsDirectory = true
-                                };
-                                returnedPathList.Add(dirName.ToLower());
-                            }
-                        }
-                    }
-                
             }
         }
 
@@ -227,16 +227,16 @@ namespace FileExplorer.IO.Compress
         protected override bool exists(Stream stream, string pathOrMask, bool isFolder)
         {
 
-                using (SevenZipExtractor extractor = getExtractor(stream))
+            using (SevenZipExtractor extractor = getExtractor(stream))
+            {
+                foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
                 {
-                    foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
-                    {
-                        if (PathFE.MatchFileMask(afi.FileName, pathOrMask) && (afi.IsDirectory == isFolder))
-                            return true;
-                        else if (afi.FileName.StartsWith(pathOrMask, StringComparison.InvariantCultureIgnoreCase))
-                            return true;
-                    }
+                    if (PathFE.MatchFileMask(afi.FileName, pathOrMask) && (afi.IsDirectory == isFolder))
+                        return true;
+                    else if (afi.FileName.StartsWith(pathOrMask, StringComparison.InvariantCultureIgnoreCase))
+                        return true;
                 }
+            }
             return false;
         }
 
@@ -343,7 +343,7 @@ namespace FileExplorer.IO.Compress
 
             SevenZipCompressor compressor = getCompressor(archiveFormat, null, progress);
 
-                compressor.CompressStreamDictionary(streamDic, archivePath);
+            compressor.CompressStreamDictionary(streamDic, archivePath);
 
         }
 
@@ -373,13 +373,13 @@ namespace FileExplorer.IO.Compress
 
             string tempFile = null;
 
-                using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, type))
-                    StreamUtils.CopyStream(stream, tempStream, true, true, false);
+            using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, type))
+                StreamUtils.CopyStream(stream, tempStream, true, true, false);
 
-                CompressMultiple(tempFile, streamDic, progress);
+            CompressMultiple(tempFile, streamDic, progress);
 
-                using (var tempStream = new FileStream(tempFile, FileMode.Open))
-                    StreamUtils.CopyStream(tempStream, stream, false, true, true);
+            using (var tempStream = new FileStream(tempFile, FileMode.Open))
+                StreamUtils.CopyStream(tempStream, stream, false, true, true);
 
 
             return true;
@@ -399,15 +399,15 @@ namespace FileExplorer.IO.Compress
             if (fileDictionary.Count > 0)
             {
 
-                    SevenZipCompressor compressor = getCompressor(archiveFormat);
-                    compressor.ModifyArchive(archivePath, fileDictionary);
-                
+                SevenZipCompressor compressor = getCompressor(archiveFormat);
+                compressor.ModifyArchive(archivePath, fileDictionary);
+
             }
         }
 
         protected override bool delete(string type, Stream stream, string delPathOrMask)
         {
-            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat("abc" + type);            
+            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat("abc" + type);
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
             foreach (var foundItem in lookup(getExtractor(stream, null), delPathOrMask))
@@ -416,15 +416,15 @@ namespace FileExplorer.IO.Compress
             if (fileDictionary.Count > 0)
             {
                 string tempFile;
- 
-                    using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, "tmp"))
-                        StreamUtils.CopyStream(stream, tempStream, true, true, false);
 
-                    Delete(archiveFormat, tempFile, delPathOrMask);
+                using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, "tmp"))
+                    StreamUtils.CopyStream(stream, tempStream, true, true, false);
 
-                    using (var tempStream = new FileStream(tempFile, FileMode.Open))
-                        StreamUtils.CopyStream(tempStream, stream, false, true, true);
-                
+                Delete(archiveFormat, tempFile, delPathOrMask);
+
+                using (var tempStream = new FileStream(tempFile, FileMode.Open))
+                    StreamUtils.CopyStream(tempStream, stream, false, true, true);
+
 
                 //SevenZipSharp crash when compressor.ModifyArchive() is used, 
                 //if Compression mode is Append (Create is fine).

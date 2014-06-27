@@ -206,13 +206,13 @@ namespace TestApp
                     dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(dir)), ResultCommand.NoError);
             
 
-            explorerModel.Commands.ScriptCommands.Transfer =
-                TransferCommand =
-                new TransferCommand((effect, source, destDir) =>
-                    source.Profile is IDiskProfile ?
-                        IOScriptCommands.Transfer(source, destDir, effect == DragDropEffects.Move)
-                        : ResultCommand.Error(new NotSupportedException())
-                    , _windowManager);
+            //explorerModel.Commands.ScriptCommands.Transfer =
+            //    TransferCommand =
+            //    new TransferCommand((effect, source, destDir) =>
+            //        source.Profile is IDiskProfile ?
+            //            IOScriptCommands.Transfer(source, destDir, effect == DragDropEffects.Move)
+            //            : ResultCommand.Error(new NotSupportedException())
+            //        , _windowManager);
         }
     }
 
