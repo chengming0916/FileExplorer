@@ -9,6 +9,7 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
 using FileExplorer.IO;
+using System.Threading;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -34,6 +35,28 @@ namespace FileExplorer.WPF.ViewModels
                     isFolder, thenFunc);
             }
             return ResultCommand.Error(new NotSupportedException("Profile is not IDiskProfile."));
+        }
+
+        /// <summary>
+        /// List contents (to Result:List of IEntryModel) of the specified Directory.
+        /// Parameter - Directory, Recrusive, Refresh, Mask
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand List(Func<IEntryModel, bool> filter = null, IScriptCommand nextCommand = null)
+        {
+            return new ListDirectoryCommand(filter, nextCommand);
+        }
+
+        public static IScriptCommand ListFile(IScriptCommand nextCommand = null)
+        {
+            return List(em => !em.IsDirectory, nextCommand);
+        }
+
+        public static IScriptCommand ListDirectory(IScriptCommand nextCommand = null)
+        {
+            return List(em => em.IsDirectory, nextCommand);
         }
 
         public static IScriptCommand CreatePath(IEntryModel parentModel, string name, bool isFolder, 
@@ -83,6 +106,60 @@ namespace FileExplorer.WPF.Models
             }
             return _ifNotFound;
         }
+    }
+
+    public class ListDirectoryCommand : ScriptCommandBase
+    {
+        Func<IEntryModel, bool> _filter = em => true;
+
+        public ListDirectoryCommand(Func<IEntryModel, bool> filter = null, IScriptCommand nextCommand = null)
+            : base("List", nextCommand, "Directory", "Mask", "Recrusive", "Refresh")
+        {
+            _filter = filter ?? (em => true);            
+        }
+
+
+        async Task<IList<IEntryModel>> listAsync(IEntryModel dir, CancellationToken ct, 
+            Func<IEntryModel,bool> filter, bool refresh, bool recrusive)
+        {
+            List<IEntryModel> retList = new List<IEntryModel>();
+
+            foreach (var em in await dir.Profile.ListAsync(dir, ct, filter, refresh))
+            {
+                if (filter(em))
+                    retList.Add(em);
+                ct.ThrowIfCancellationRequested();
+                if (recrusive && em.IsDirectory)
+                    retList.AddRange(await listAsync(em, ct, filter, refresh, recrusive));
+            }
+            return retList;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            IEntryModel directory = pm["Directory"] as IEntryModel;
+            if (directory == null)
+                return ResultCommand.Error(new ArgumentException("Directory"));
+
+            Func<IEntryModel, bool> filter;
+            if (pm.ContainsKey("Mask"))
+            {
+                string mask = pm["Mask"] as string;
+                filter = (em => _filter(em) && PathFE.MatchFileMask(em.Name, mask));
+            }
+            else filter = _filter;
+
+            bool recrusive = pm.ContainsKey("Recrusive") && (bool)pm["Recrusive"];
+            bool refresh  = pm.ContainsKey("Refresh") && (bool)pm["Refresh"];
+            
+            pm["Result"] =
+                 (await listAsync(directory, pm.CancellationToken, filter, refresh, recrusive));
+
+
+            return base._nextCommand;
+        }
+
+        
     }
 
     public class DiskCreateCommand : ScriptCommandBase

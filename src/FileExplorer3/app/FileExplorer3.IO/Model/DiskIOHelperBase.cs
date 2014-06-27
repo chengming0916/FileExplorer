@@ -45,7 +45,7 @@ namespace FileExplorer.IO
 
 
 
-        public IScriptCommand GetTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
+        public virtual IScriptCommand GetTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
         {
             return new FileTransferScriptCommand(srcModel, destDirModel, removeOriginal);
         }

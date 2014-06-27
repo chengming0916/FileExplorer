@@ -66,11 +66,11 @@ namespace FileExplorer.Models
             _profile = profile;
             _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
                 new FileSystemInfoProfile(profile.Events(), windowManager);
-
+            
             TransferCommand =
                new FileExplorer.WPF.ViewModels.TransferCommand((effect, source, destDir) =>
                    source.Profile is IDiskProfile ?
-                       (IScriptCommand)new FileTransferScriptCommand(source, destDir, effect == DragDropEffects.Move)
+                       IOScriptCommands.Transfer(source, destDir, effect == DragDropEffects.Move)
                        : ResultCommand.Error(new NotSupportedException())
                    , windowManager);
         }

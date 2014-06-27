@@ -75,6 +75,11 @@ namespace FileExplorer.Models.SevenZipSharp
             throw new NotSupportedException();
         }
 
+        public override Script.IScriptCommand GetTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
+        {
+            return new BatchTransferScriptCommand(srcModel, destDirModel, removeOriginal);                
+        }
+
         public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)
         {
             string parentPath = Profile.Path.GetDirectoryName(fullPath);
@@ -87,14 +92,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
             (Profile as SzsProfile).VirtualModels.Add(retEntryModel);
             return retEntryModel;
-            //throw new NotImplementedException();
-            //if (isDirectory)
-            //    Directory.CreateDirectory(fullPath);
-            //else
-            //    if (!File.Exists(fullPath))
-            //        using (File.Create(fullPath))
-            //        { }
-            //return await Profile.ParseAsync(fullPath);
+
         }
 
     }
