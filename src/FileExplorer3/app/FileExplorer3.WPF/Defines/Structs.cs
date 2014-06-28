@@ -166,6 +166,9 @@ namespace FileExplorer.WPF.Defines
 
     public class TransferProgress
     {
+        public ProgressType Type { get; set; }
+        public Exception Exception { get; set; }
+        public string Action { get; set; }
         public Int32? TotalEntriesIncrement { get; set; }
         public Int32? ProcessedEntriesIncrement { get; set; }
         public short? CurrentProgressPercent { get; set; }
@@ -174,10 +177,36 @@ namespace FileExplorer.WPF.Defines
         public string Destination { get; set; }
         public IPathHelper DestinationPathHelper { get; set; }
 
+        public static TransferProgress SetAction(string action)
+        {
+            return new TransferProgress()
+            {
+                Action = action
+            };
+        }
+
+        public static TransferProgress Error(Exception ex)
+        {
+            return new TransferProgress()
+            {
+                Type = ProgressType.Error,
+                Exception = ex
+            };
+        }
+
+        public static TransferProgress Completed()
+        {
+            return new TransferProgress()
+            {
+                Type = ProgressType.Completed
+            };
+        }
+
         public static TransferProgress From(string src, IPathHelper srcPathHelper, string dest, IPathHelper destPathHelper)
         {
             return new TransferProgress()
             {
+                Type = ProgressType.Running,
                 Source = src,
                 SourcePathHelper = srcPathHelper,
                 Destination = dest,
@@ -202,15 +231,15 @@ namespace FileExplorer.WPF.Defines
 
         public static TransferProgress IncrementTotalEntries(int count = 1)
         {
-            return new TransferProgress() { TotalEntriesIncrement = count };
+            return new TransferProgress() { Type = ProgressType.Running, TotalEntriesIncrement = count };
         }
         public static TransferProgress IncrementProcessedEntries(int count = 1)
         {
-            return new TransferProgress() { ProcessedEntriesIncrement = count };
+            return new TransferProgress() { Type = ProgressType.Running, ProcessedEntriesIncrement = count };
         }
         public static TransferProgress UpdateCurrentProgress(short percent = 1)
         {
-            return new TransferProgress() { CurrentProgressPercent = percent };
+            return new TransferProgress() { Type = ProgressType.Running, CurrentProgressPercent = percent };
         }
     }
 

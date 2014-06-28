@@ -49,7 +49,7 @@ namespace FileExplorer.WPF.BaseControls
     {
         #region Constructor
 
-        public UIEventHub(IScriptRunner runner, UIElement control, 
+        public UIEventHub(IScriptRunner runner, UIElement control,
             bool startIsEnabled = true, params UIEventProcessorBase[] eventProcessors)
         {
             Control = control;
@@ -117,17 +117,16 @@ namespace FileExplorer.WPF.BaseControls
                                     {
                                         var input = UIInputBase.FromEventArgs(o, re);
                                         if (input.IsValid())
-                                            {
-                                            
-                                                _inputProcessors.Update(ref input);
-                                                await executeAsync(_eventProcessors, e, input,
-                                                        pd =>
-                                                        {
-                                                            if (pd.IsHandled)
-                                                                re.Handled = true;
-                                                        }
-                                                    );
-                                            }
+                                        {
+                                            _inputProcessors.Update(ref input);
+                                            await executeAsync(_eventProcessors, e, input,
+                                                    pd =>
+                                                    {
+                                                        if (pd.IsHandled)
+                                                            re.Handled = true;
+                                                    }
+                                                );
+                                        }
 
 
                                     });

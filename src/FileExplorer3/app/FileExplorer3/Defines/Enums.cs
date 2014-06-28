@@ -52,6 +52,8 @@ namespace FileExplorer.Defines
         SelectionHelper
     }
 
+    public enum ProgressType {  Waiting, Running, Error, Completed }
+
     public enum FileAccess
     {
         Read, ReadWrite, Write

@@ -137,19 +137,41 @@ namespace FileExplorer.WPF.ViewModels
             return new DownloadFile(sourceUrl, entry, httpClient, nextCommand);
         }
 
-        public static ShowProgress ShowProgress(IWindowManager wm, string header, IScriptCommand nextCommand)
+        /// <summary>
+        /// Show progress dialog, assign these variables to ParameterDic:
+        /// ProgressHeader (header), Progress (ProgressDialogViewModel), CancellationToken (ProgressDialogViewModel's CancellationToken.)
+        /// </summary>
+        /// <param name="wm"></param>
+        /// <param name="header"></param>
+        /// <param name="nextCommand"></param>
+        /// <param name="handleProgress">If true, run nextCommand inside the script command instead of return it.</param>
+        /// <returns></returns>
+        public static ShowProgress ShowProgress(IWindowManager wm, string header, IScriptCommand nextCommand, bool handleProgress = true)
         {
-            return new ShowProgress(wm, header, nextCommand);
+            return new ShowProgress(wm, header, nextCommand, handleProgress);
         }
 
-        public static ShowProgress ShowProgress(string header, IScriptCommand nextCommand)
+        /// <summary>
+        /// Show progress dialog, assign these variables to ParameterDic:
+        /// ProgressHeader (header), Progress (ProgressDialogViewModel), CancellationToken (ProgressDialogViewModel's CancellationToken.)
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="nextCommand"></param>
+        /// <param name="handleProgress">If true, run nextCommand inside the script command instead of return it.</param>
+        /// <returns></returns>
+        public static ShowProgress ShowProgress(string header, IScriptCommand nextCommand, bool handleProgress = true)
         {
-            return new ShowProgress(new WindowManager(), header, nextCommand);
+            return new ShowProgress(new WindowManager(), header, nextCommand, handleProgress);
         }
 
         public static ReportProgress ReportProgress(TransferProgress progress, IScriptCommand nextCommand = null)
         {
             return new ReportProgress(progress, nextCommand);
+        }
+
+        public static HideProgress HideProgress(IScriptCommand nextCommand = null)
+        {
+            return new HideProgress(nextCommand);
         }
 
         /// <summary>
@@ -275,11 +297,14 @@ namespace FileExplorer.WPF.ViewModels
     {
         private IWindowManager _wm;
         private string _header;
-        internal ShowProgress(IWindowManager wm, string header, IScriptCommand nextCommand)
+        private bool _handleProgress;
+
+        internal ShowProgress(IWindowManager wm, string header, IScriptCommand nextCommand, bool handleProgress)
             : base("ShowProgress", nextCommand)
         {
             _wm = wm;
             _header = header;
+            _handleProgress = handleProgress;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
@@ -290,8 +315,43 @@ namespace FileExplorer.WPF.ViewModels
             pm["CancellationToken"] = pdv.CancellationToken;
 
             _wm.ShowWindow(pdv);
-            return _nextCommand;
+            if (!_handleProgress)
+                return _nextCommand;
+
+            try
+            {
+                new ScriptRunner().Run(_nextCommand, pm);
+            }
+            catch (Exception ex)
+            {
+                return ScriptCommands.ReportProgress(TransferProgress.Error(ex));
+            }
+
+            return ResultCommand.NoError;
         }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            pm["ProgressHeader"] = _header;
+            var pdv = new ProgressDialogViewModel(pm);
+            pm["Progress"] = pdv;
+            pm["CancellationToken"] = pdv.CancellationToken;
+
+            _wm.ShowWindow(pdv);
+            if (!_handleProgress)
+                return _nextCommand;
+
+            try
+            {
+                await new ScriptRunner().RunAsync(pm, _nextCommand);
+            }
+            catch (Exception ex)
+            {
+                return ScriptCommands.ReportProgress(TransferProgress.Error(ex));
+            }
+
+            return ResultCommand.NoError;
+        }       
     }
 
     public class ReportProgress : ScriptCommandBase

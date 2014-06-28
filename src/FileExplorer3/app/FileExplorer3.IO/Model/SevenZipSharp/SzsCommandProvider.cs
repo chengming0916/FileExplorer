@@ -1,4 +1,5 @@
-﻿using FileExplorer.Script;
+﻿using FileExplorer.IO;
+using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;
 using System;
@@ -44,17 +45,48 @@ namespace FileExplorer.Models.SevenZipSharp
             if (appliedModels.Length >= 1)
             {
 
-                if (appliedModels.Length == 1 && appliedModels[0] is SzsRootModel)
+                if (appliedModels.Length >= 1 && appliedModels.All(em => em is SzsRootModel))
                 {
-                    SzsRootModel root = appliedModels[0] as SzsRootModel;
+                    SzsRootModel firstRoot = appliedModels[0] as SzsRootModel;
 
-                    //Extract to parent
+                    IPathHelper path = firstRoot.Profile.Path;
+                    string parentPath = path.GetDirectoryName(firstRoot.FullPath);
+
+                    //Extract to \\
                     subCommands.Add(new CommandModel(
-                        ScriptCommands.List(root, null, true, ems =>
-                        ScriptCommands.ForEach(ems, em => IOScriptCommands.Transfer(em, root.Parent)))) { Header = "Here...", IsEnabled = true });
+                            ScriptCommands.ShowProgress("Extract",
+                            ScriptCommands.ForEach(appliedModels, am =>
+                                 ScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
+                                    path.Combine(parentPath, path.RemoveExtension(am.Name)), true,
+                                    destFolder => 
+                                        IOScriptCommands.TransferChild(am, destFolder, null, false)),
+                                 ScriptCommands.HideProgress()))) { Header = "Here", IsEnabled = true });
+
+                    if (appliedModels.Length == 1)
+                    {
+                        //Extract to \\ArchiveName
+                        subCommands.Add(new CommandModel(
+                            ScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
+                            path.Combine(parentPath, path.RemoveExtension(appliedModels[0].Name)), true,
+                            destFolder =>
+                                ScriptCommands.ShowProgress("Extract",
+                                    IOScriptCommands.TransferChild(appliedModels[0], destFolder, null, false,
+                                      ScriptCommands.HideProgress()))))
+                                      {
+                                          Header = "\\" + path.RemoveExtension(appliedModels[0].Name),
+                                          IsEnabled = true
+                                      });
+                    }
+
+                    //ScriptCommands.List(root, null, false, ems =>
+                    //    ScriptCommands.ReportProgress(WPF.Defines.TransferProgress.IncrementTotalEntries(ems.Length)
+                    //    ScriptCommands.ForEach(ems, em => 
+                    //        IOScriptCommands.Transfer(em, destFolder), 
+                    //            ScriptCommands.HideProgress())))))
+
                 }
 
-                
+
                 SubCommands = subCommands;
             }
 
@@ -75,7 +107,7 @@ namespace FileExplorer.Models.SevenZipSharp
     //        //_destPathFunc = destPathFunc;
     //    }
 
-        
+
 
     //}
 }
