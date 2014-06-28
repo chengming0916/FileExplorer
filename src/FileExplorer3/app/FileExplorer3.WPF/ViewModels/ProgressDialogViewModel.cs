@@ -10,6 +10,7 @@ using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -29,9 +30,11 @@ namespace FileExplorer.WPF.ViewModels
         {
             _pd = pd;
             if (_pd.ContainsKey("ProgressHeader"))
-                Header = _pd["ProgressHeader"] as string;
+                DisplayName = Header = _pd["ProgressHeader"] as string;
             _cts = cts ?? new CancellationTokenSource();
             _timeRemain = new EstimateTimeRemainViewModel();
+            _cancelCommand = new RelayCommand((o) => _cts.Cancel());
+            _closeCommand = new RelayCommand((o) => TryClose());
         }
 
         #endregion
@@ -40,23 +43,40 @@ namespace FileExplorer.WPF.ViewModels
 
         public void Report(TransferProgress value)
         {
-            if (value.Source != null) Source = value.Source;
-            if (value.Destination != null) Destination = value.Destination;
-            if (value.SourcePathHelper != null) SourcePathHelper = value.SourcePathHelper;
-            if (value.DestinationPathHelper != null) DestinationPathHelper = value.DestinationPathHelper;
+            _lastProgress = value;
+            switch (value.Type)
+            {
+                case ProgressType.Running:
+                    if (value.Source != null) Source = value.Source;
+                    if (value.Destination != null) Destination = value.Destination;
+                    if (value.SourcePathHelper != null) SourcePathHelper = value.SourcePathHelper;
+                    if (value.DestinationPathHelper != null) DestinationPathHelper = value.DestinationPathHelper;
 
-            if (value.TotalEntriesIncrement.HasValue)
-            {
-                TotalEntries += value.TotalEntriesIncrement.Value;
-                TimeRemain.TotalItems = TotalEntries;
+                    if (value.TotalEntriesIncrement.HasValue)
+                    {
+                        TotalEntries += value.TotalEntriesIncrement.Value;
+                        TimeRemain.TotalItems = TotalEntries;
+                    }
+                    if (value.ProcessedEntriesIncrement.HasValue)
+                    {
+                        ProcessedEntries += value.ProcessedEntriesIncrement.Value;
+                        TimeRemain.ProcessedItems = ProcessedEntries;
+                    }
+                    if (value.CurrentProgressPercent.HasValue)
+                        CurrentEntryProgress = value.CurrentProgressPercent.Value;
+
+                    string src = Source == null ? null : SourcePathHelper == null ? Source : SourcePathHelper.GetFileName(Source);
+                    string dest = Destination == null ? null : DestinationPathHelper == null ? Destination : DestinationPathHelper.GetDirectoryName(Destination);
+                    Message = String.Format("From [b]{0}[/b] To [b]{1}[/b]", src, dest);
+                    IsCancelEnabled = true;
+                    break;
+                case ProgressType.Error :
+                    if (value.Exception != null)
+                        Message = value.Exception.Message;
+                    IsCancelEnabled = false;
+                    break;
             }
-            if (value.ProcessedEntriesIncrement.HasValue)
-            {
-                ProcessedEntries += value.ProcessedEntriesIncrement.Value;
-                TimeRemain.ProcessedItems = ProcessedEntries;
-            }
-            if (value.CurrentProgressPercent.HasValue)
-                CurrentEntryProgress = value.CurrentProgressPercent.Value;
+            IsCompleted = value.Type == ProgressType.Completed || value.Type == ProgressType.Error;
         }
 
         private short getOverallProgress()
@@ -64,17 +84,20 @@ namespace FileExplorer.WPF.ViewModels
             return (short)(Math.Truncate((_processedEntries * 100.0) / (_totalEntries * 100.0) * 100) + CurrentEntryProgress);
         }
 
-        public string getMessage()
-        {
-            string src = Source == null ? null : SourcePathHelper == null ? Source : SourcePathHelper.GetFileName(Source);
-            string dest = Destination == null ? null : DestinationPathHelper == null ? Destination : DestinationPathHelper.GetDirectoryName(Destination);
-            return String.Format("From [b]{0}[/b] To [b]{1}[/b]", src, dest);
-        }
+        //public string getMessage()
+        //{
+        //    if (_lastProgress == null)
+        //        return "";
+
+
+        //}
 
         #endregion
 
         #region Data
 
+        private TransferProgress _lastProgress = null;
+        private RelayCommand _cancelCommand, _closeCommand;
         private Int32 _totalEntries = 0, _processedEntries = 0;
         private short _currentEntryProgress = 0;
         private CancellationTokenSource _cts;
@@ -83,6 +106,7 @@ namespace FileExplorer.WPF.ViewModels
         private string _source;
         private string _destination;
         private string _message;
+        private bool _isCompleted = false, _isCancelEnabled = false;
         private IPathHelper _sourcePathHelper;
         private IPathHelper _destinationPathHelper;
         private IEstimateTimeRemainViewModel _timeRemain;
@@ -91,9 +115,11 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Public Properties
 
+        public RelayCommand CancelCommand { get { return _cancelCommand; } }
+        public RelayCommand CloseCommand { get { return _closeCommand; } }
         public IEstimateTimeRemainViewModel TimeRemain { get { return _timeRemain; } set { _timeRemain = value; NotifyOfPropertyChange(() => TimeRemain); } }
         public string Header { get { return _header; } set { _header = value; NotifyOfPropertyChange(() => Header); } }
-        public string Message { get { return getMessage(); } }
+        public string Message { get { return _message; } set { _message = value; NotifyOfPropertyChange(() => Message); } }
 
         public string Source
         {
@@ -166,6 +192,8 @@ namespace FileExplorer.WPF.ViewModels
         public CancellationToken CancellationToken { get { return _cts.Token; } }
         public CancellationTokenSource CancellationTokenSource { get { return _cts; } }
 
+        public bool IsCompleted { get { return _isCompleted; } set { if (_isCompleted != value) { _isCompleted = value; NotifyOfPropertyChange(() => IsCompleted); } } }
+        public bool IsCancelEnabled { get { return _isCancelEnabled; } set { if (_isCancelEnabled != value) { _isCancelEnabled = value; NotifyOfPropertyChange(() => IsCancelEnabled); } } }
 
         #endregion
 

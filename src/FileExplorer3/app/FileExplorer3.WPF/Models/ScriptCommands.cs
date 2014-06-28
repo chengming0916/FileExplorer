@@ -120,6 +120,7 @@ namespace FileExplorer.WPF.Models
             bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
             : base("List", "Directory", "Mask", "Refresh")
         {
+            _directory = directory;
             _filter = filter ?? (em => true);
             _recrusive = recrusive;
             _nextCommandFunc = nextCommandFunc ?? (ems => ResultCommand.NoError) ;
@@ -149,7 +150,7 @@ namespace FileExplorer.WPF.Models
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            IEntryModel directory = _directory ?? pm["Directory"] as IEntryModel;
+            IEntryModel directory = _directory ?? (pm.ContainsKey("Directory") ? pm["Directory"] as IEntryModel : null);
             if (directory == null)
                 return ResultCommand.Error(new ArgumentException("Directory"));
 

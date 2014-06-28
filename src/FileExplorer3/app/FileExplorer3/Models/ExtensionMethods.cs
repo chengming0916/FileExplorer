@@ -44,6 +44,14 @@ namespace FileExplorer.Models
             { return pathHelper.Separator + input; }
         }
 
+        public static string RemoveExtension(this IPathHelper pathHelper, string input)
+        {
+            string extenion = pathHelper.GetExtension(input);
+            if (!String.IsNullOrEmpty(extenion))
+                return input.Substring(0, input.LastIndexOf(extenion));
+            else return input;
+        }
+
         public static async Task<IEntryModel> LookupAsync(this IProfile profile, IEntryModel startEntry, string[] paths, CancellationToken ct, int idx = 0)
         {
             if (idx >= paths.Length)

@@ -31,11 +31,25 @@ namespace FileExplorer.Models
         /// <param name="removeOriginal"></param>
         /// <returns></returns>
         public static IScriptCommand Transfer(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal = false, 
-            bool allowCustomImplementation = true)
+            bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
-            return allowCustomImplementation ? 
+            IScriptCommand retCommand = allowCustomImplementation ? 
                 (destDirModel.Profile as IDiskProfile).DiskIO.GetTransferCommand(srcModel, destDirModel, removeOriginal) :
                 new FileTransferScriptCommand(srcModel, destDirModel, removeOriginal);
+
+            return nextCommand == null ? retCommand : ScriptCommands.RunInSequence(retCommand, nextCommand);
+        }
+
+        public static IScriptCommand TransferChild(IEntryModel srcModel, IEntryModel destDirModel, 
+            Func<IEntryModel, bool> filterFunc = null, bool recrusive = false, IScriptCommand nextCommand = null)
+        {
+            return ScriptCommands.List(srcModel, filterFunc, recrusive, ems =>
+                         ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(ems.Length),
+                               ScriptCommands.ForEach(ems, em =>
+                                     ScriptCommands.RunInSequence(
+                                            IOScriptCommands.Transfer(em, destDirModel),
+                                            ScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries())), 
+                                                  nextCommand)));
         }
 
         public static IScriptCommand DeleteFromParameter = new DeleteFileBasedEntryCommand(ScriptCommands.GetEntryModelFromParameter);

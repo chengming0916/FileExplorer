@@ -54,9 +54,9 @@ namespace FileExplorer.WPF.ViewModels
         }
 
 
-        public static IScriptCommand ForEach<T>(T[] source, Func<T, IScriptCommand> commandFunc)
+        public static IScriptCommand ForEach<T>(T[] source, Func<T, IScriptCommand> commandFunc, IScriptCommand nextCommand = null)
         {
-            return new ForEachCommand<T>(source, commandFunc);
+            return new ForEachCommand<T>(source, commandFunc, nextCommand);
         }
     }
 
@@ -111,8 +111,8 @@ namespace FileExplorer.WPF.ViewModels
     {
         private T[] _source;
         private Func<T, IScriptCommand> _commandFunc;
-        public ForEachCommand(T[] source, Func<T, IScriptCommand> commandFunc)
-            : base("ForEach")
+        public ForEachCommand(T[] source, Func<T, IScriptCommand> commandFunc, IScriptCommand nextCommand)
+            : base("ForEach", nextCommand)
         {
             _source = source;
             _commandFunc = commandFunc;
@@ -130,7 +130,24 @@ namespace FileExplorer.WPF.ViewModels
                 if (outputCommand != ResultCommand.NoError && outputCommand != ResultCommand.OK)
                     outputCommands.Add(outputCommand);
             }
-            return new RunInSequenceScriptCommand(outputCommands.ToArray());
+            return new RunInSequenceScriptCommand(outputCommands.ToArray(), _nextCommand);
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            List<IScriptCommand> outputCommands = new List<IScriptCommand>();
+            foreach (var s in _source)
+            {
+                var outputCommand = await _commandFunc(s).ExecuteAsync(pm);
+                if (pm.Error != null)
+                    return outputCommand;
+
+                if (outputCommand != ResultCommand.NoError && outputCommand != ResultCommand.OK)
+                    outputCommands.Add(outputCommand);
+            }
+             return outputCommands.Count() == 0 ?
+                 _nextCommand :
+                 new RunInSequenceScriptCommand(outputCommands.ToArray(), _nextCommand);
         }
 
         public virtual bool CanExecute(ParameterDic pm)
@@ -145,8 +162,8 @@ namespace FileExplorer.WPF.ViewModels
         private IScriptCommand _nextCommand = ResultCommand.NoError;
         public IScriptCommand[] ScriptCommands { get { return _scriptCommands; } }
         public RunInSequenceScriptCommand(params IScriptCommand[] scriptCommands)
-        { 
-            if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands; 
+        {
+            if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands;
         }
 
         public RunInSequenceScriptCommand(IScriptCommand[] scriptCommands, IScriptCommand nextCommand)
@@ -177,7 +194,7 @@ namespace FileExplorer.WPF.ViewModels
         public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var sr = new ScriptRunner();
-            await sr.RunAsync(new Queue<IScriptCommand>(ScriptCommands), pm).ConfigureAwait(false);
+            await sr.RunAsync(new Queue<IScriptCommand>(ScriptCommands), pm).ConfigureAwait(true);
             if (pm.Error != null)
                 return ResultCommand.Error(pm.Error);
             else return _nextCommand;
@@ -253,7 +270,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             return Execute(pm);
         }
-        public bool ContinueOnCaptureContext { get { return false; }}
+        public bool ContinueOnCaptureContext { get { return false; } }
 
     }
 

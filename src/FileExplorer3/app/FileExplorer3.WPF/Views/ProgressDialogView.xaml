@@ -7,7 +7,7 @@
              xmlns:def="clr-namespace:FileExplorer.WPF.Defines"
              xmlns:conv="clr-namespace:QuickZip.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -128,10 +128,11 @@
             <!-- Bottom -->
             <DockPanel Grid.Row="2" Margin="25,8" LastChildFill="False">
                 <Button DockPanel.Dock="Right" Margin="5,0"  Width="80" x:Name="btnClose"  
-                        Content="{x:Static def:Strings.strClose}" Command="ApplicationCommands.Close"
+                        Content="{x:Static def:Strings.strClose}" Command="{Binding CloseCommand}"
                             Visibility="{Binding IsCompleted, Converter={StaticResource btv}}"                             
                              />
                 <Button DockPanel.Dock="Right" Margin="5,0"  Width="80" x:Name="btnCancel" 
+                            Command="{Binding CancelCommand}"
                             Content="{x:Static def:Strings.strCancel}"
                             Visibility="{Binding IsCancelEnabled, Converter={StaticResource btv}}"                             
                              />

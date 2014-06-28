@@ -69,7 +69,8 @@ namespace FileExplorer.WPF.Models
 
         private string _header;
         private int _priority;
-        private bool _isChecked, _isEnabled, _isHeaderVisible = true, _isHeaderAlignRight;
+        private bool _isChecked, _isHeaderVisible = true, _isHeaderAlignRight;
+        private bool? _isEnabled;
         private object _parameter;
         private bool _isVisibleOnToolbar = false, _isVisibleOnMenu = false;
 
@@ -92,7 +93,9 @@ namespace FileExplorer.WPF.Models
         public bool IsHeaderVisible { get { return _isHeaderVisible; } set { _isHeaderVisible = value; NotifyOfPropertyChange(() => IsHeaderVisible); } }
         public bool IsHeaderAlignRight { get { return _isHeaderAlignRight; } set { _isHeaderAlignRight = value; NotifyOfPropertyChange(() => IsHeaderAlignRight); } }
         public bool IsChecked { get { return _isChecked; } set { _isChecked = value; NotifyOfPropertyChange(() => IsChecked); } }
-        public bool IsEnabled { get { return _isEnabled; } set { _isEnabled = value; NotifyOfPropertyChange(() => IsEnabled); } }
+        public bool IsEnabled { get { return _isEnabled.HasValue ? _isEnabled.Value :
+            (Command != null && Command.CanExecute(new ParameterDic() { { "Parameter", _parameter } })); } 
+            set { _isEnabled = value; NotifyOfPropertyChange(() => IsEnabled); } }
 
         public bool IsVisibleOnToolbar { get { return _isVisibleOnToolbar; } set { _isVisibleOnToolbar = value; NotifyOfPropertyChange(() => IsVisibleOnToolbar); } }
         public bool IsVisibleOnMenu { get { return _isVisibleOnMenu; } set { _isVisibleOnMenu = value; NotifyOfPropertyChange(() => IsVisibleOnMenu); } }

@@ -46,11 +46,14 @@ namespace FileExplorer.Script
             while (cmds.Any())
             {
                 var current = cmds.Dequeue();
+
                 if (current.CanExecute(pd))
                 {
                     pd.CommandHistory.Add(current.CommandKey);
+                    Debug.WriteLine("ScriptRunner:" + current.CommandKey);
                     var retCmd = await current.ExecuteAsync(pd)
-                        .ConfigureAwait(current.ContinueOnCaptureContext);
+                        .ConfigureAwait(current.ContinueOnCaptureContext);                    
+                    
                     if (retCmd != null)
                     {
                         if (pd.Error != null)
@@ -59,6 +62,9 @@ namespace FileExplorer.Script
                     }
                 }
                 else throw new Exception(String.Format("Cannot execute {0}", current));
+
+
+
             }
         }
 
