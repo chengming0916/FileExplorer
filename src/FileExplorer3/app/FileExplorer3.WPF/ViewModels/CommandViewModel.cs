@@ -25,7 +25,7 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-        public CommandViewModel(ICommandModel commandModel, ICommandViewModel parentCommandViewModel = null)
+        public CommandViewModel(ICommandModel commandModel, IParameterDicConverter parameterDicConverter, ICommandViewModel parentCommandViewModel = null)
         {
             CommandModel = commandModel as IRoutedCommandModel;
             _parentCommandViewModel = parentCommandViewModel;
@@ -36,7 +36,7 @@ namespace FileExplorer.WPF.ViewModels
                 else
                     CommandBinding = ScriptCommandBinding.FromScriptCommand(
                         ApplicationCommands.NotACommand, commandModel, cm => cm.Command,
-                        ParameterDicConverters.ConvertUIParameter, ScriptBindingScope.Local);
+                        parameterDicConverter, /*ParameterDicConverters.ConvertUIParameter, */ScriptBindingScope.Local);
 
             CommandModel.PropertyChanged += (o, e) =>
                 {
@@ -67,7 +67,7 @@ namespace FileExplorer.WPF.ViewModels
                 IDirectoryCommandModel directoryModel = CommandModel as IDirectoryCommandModel;
                 SubCommands = new EntriesHelper<ICommandViewModel>(
                     (cts) => Task.Run<IEnumerable<ICommandViewModel>>(
-                        () => directoryModel.SubCommands.Select(c => (ICommandViewModel)new CommandViewModel(c, this))));
+                        () => directoryModel.SubCommands.Select(c => (ICommandViewModel)new CommandViewModel(c, parameterDicConverter, this))));
                 SubCommands.LoadAsync(UpdateMode.Replace, false);
             }
         }

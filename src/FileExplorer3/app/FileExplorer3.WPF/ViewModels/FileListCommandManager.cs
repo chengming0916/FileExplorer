@@ -106,7 +106,7 @@ namespace FileExplorer.WPF.ViewModels
             _exportBindingSource = exportBindingSource.ToArray();
 
             IEntryModel _currentDirectoryModel = null;
-            ToolbarCommands = new ToolbarCommandsHelper(events,
+            ToolbarCommands = new ToolbarCommandsHelper(events, ParameterDicConverter, 
                 message => { _currentDirectoryModel = message.NewModel; return new IEntryModel[] { _currentDirectoryModel }; },
                 message => message.SelectedModels.Count() == 0 ? new IEntryModel[] { _currentDirectoryModel } : message.SelectedModels.ToArray())
                 {

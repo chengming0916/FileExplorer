@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Models.SevenZipSharp
 {
@@ -23,19 +24,27 @@ namespace FileExplorer.Models.SevenZipSharp
 
     }
 
+    public class SzsNewArchiveCommandModel : CommandModel
+    {
+
+    }
+
+
     /// <summary>
     /// Transfer from a folder (Source:IEntryModel) to dest folder (from destPathFunc)
     /// </summary>
-    public class ExtractDirectoryCommandModel : DirectoryCommandModel
+    public class SzsCommandModel : DirectoryCommandModel
     {
-        private Func<IEntryModel, string> _destPathFunc;
-        public ExtractDirectoryCommandModel(Func<ParameterDic, IEntryModel[]> srcModelFunc)
+        //private Func<IEntryModel, string> _destPathFunc;
+        public SzsCommandModel(Func<ParameterDic, IEntryModel[]> srcModelFunc)
             : base(ResultCommand.NoError)
         {
+            HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE188);
             IsHeaderVisible = true;
-            Header = "Extract";
+            Header = "Archive";
             //Func<IEntryModel, string> destPathFunc, 
             //_destPathFunc = destPathFunc;
+            IsVisibleOnMenu = true;
         }
 
         public override void NotifySelectionChanged(IEntryModel[] appliedModels)
@@ -45,22 +54,23 @@ namespace FileExplorer.Models.SevenZipSharp
             if (appliedModels.Length >= 1)
             {
 
+                #region Decompress
                 if (appliedModels.Length >= 1 && appliedModels.All(em => em is SzsRootModel))
                 {
                     SzsRootModel firstRoot = appliedModels[0] as SzsRootModel;
 
                     IPathHelper path = firstRoot.Profile.Path;
+                    Header = path.GetExtension(firstRoot.Name).TrimStart('.').FirstCharToUppercase();
                     string parentPath = path.GetDirectoryName(firstRoot.FullPath);
+
 
                     //Extract to \\
                     subCommands.Add(new CommandModel(
-                            ScriptCommands.ShowProgress("Extract",
-                            ScriptCommands.ForEach(appliedModels, am =>
-                                 ScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
-                                    path.Combine(parentPath, path.RemoveExtension(am.Name)), true,
-                                    destFolder => 
-                                        IOScriptCommands.TransferChild(am, destFolder, null, false)),
-                                 ScriptCommands.HideProgress()))) { Header = "Here", IsEnabled = true });
+                           ScriptCommands.ShowProgress("Extract",
+                           ScriptCommands.ForEach(appliedModels, am =>
+                                       IOScriptCommands.TransferChild(am, firstRoot.Parent, null, false),
+                                ScriptCommands.HideProgress()))) { Header = "Extract Here", IsEnabled = true, IsVisibleOnMenu = true });
+
 
                     if (appliedModels.Length == 1)
                     {
@@ -73,24 +83,38 @@ namespace FileExplorer.Models.SevenZipSharp
                                     IOScriptCommands.TransferChild(appliedModels[0], destFolder, null, false,
                                       ScriptCommands.HideProgress()))))
                                       {
-                                          Header = "\\" + path.RemoveExtension(appliedModels[0].Name),
-                                          IsEnabled = true
+                                          Header = "Extract to \\" + path.RemoveExtension(appliedModels[0].Name),
+                                          IsEnabled = true,
+                                          IsVisibleOnMenu = true
                                       });
                     }
+                    else
+                        subCommands.Add(new CommandModel(
+                                ScriptCommands.ShowProgress("Extract",
+                                ScriptCommands.ForEach(appliedModels, am =>
+                                     ScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
+                                        path.Combine(parentPath, path.RemoveExtension(am.Name)), true,
+                                        destFolder =>
+                                            IOScriptCommands.TransferChild(am, destFolder, null, false)),
+                                     ScriptCommands.HideProgress()))) { Header = "Extract to {ArchiveName}\\", IsEnabled = true, IsVisibleOnMenu = true });
 
-                    //ScriptCommands.List(root, null, false, ems =>
-                    //    ScriptCommands.ReportProgress(WPF.Defines.TransferProgress.IncrementTotalEntries(ems.Length)
-                    //    ScriptCommands.ForEach(ems, em => 
-                    //        IOScriptCommands.Transfer(em, destFolder), 
-                    //            ScriptCommands.HideProgress())))))
+                }
+                #endregion
+
+
+                #region Compress
+
+                if (appliedModels.Length >= 1)
+                {
 
                 }
 
+                #endregion
 
                 SubCommands = subCommands;
             }
 
-            IsVisibleOnToolbar = IsEnabled = SubCommands.Count > 0;
+
         }
 
 

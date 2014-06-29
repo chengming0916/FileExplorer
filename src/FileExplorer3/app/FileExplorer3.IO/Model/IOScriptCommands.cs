@@ -21,7 +21,7 @@ using FileExplorer.IO;
 
 namespace FileExplorer.Models
 {
-    public static class IOScriptCommands
+    public static partial class IOScriptCommands
     {
         /// <summary>
         /// Transfer srcModel to destDirModel using IDiskProfile.DiskIO.GetTransferCommand, which allow to use custom implementation.

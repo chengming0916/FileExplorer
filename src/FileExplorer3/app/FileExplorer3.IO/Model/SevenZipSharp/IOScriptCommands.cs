@@ -1,4 +1,6 @@
 ﻿using FileExplorer.IO;
+using FileExplorer.IO.Compress;
+using FileExplorer.Models.SevenZipSharp;
 using FileExplorer.Script;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
@@ -10,9 +12,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models.SevenZipSharp
+namespace FileExplorer.Models
 {
-    
+    public static partial class IOScriptCommands
+    {
+        public static IScriptCommand CreateArchive(IEntryModel entryModel, string name, bool renameIfExists,
+            Func<IEntryModel, IScriptCommand> thenFunc)
+        {
+            string type = entryModel.Profile.Path.GetExtension(name).ToLower();
+            byte[] bytes = SevenZipWrapper.GetArchiveBytes(type);
+
+            if (bytes == null)
+                return ResultCommand.Error(new ArgumentException(type + " is not recognized type."));
+
+            return ScriptCommands.CreatePath(entryModel, name, false, renameIfExists,
+                em => ScriptCommands.WriteBytes(em, bytes, thenFunc));
+        }
+    }
 
     /// <summary>
     /// Uses SevenZipWrapper.CompressMultiple thus quicker then FileTransferScriptCommand which move one file at a time.    
@@ -43,8 +59,8 @@ namespace FileExplorer.Models.SevenZipSharp
 
 
         private async Task<IScriptCommand> transferAsync(ParameterDic pm, IEntryModel[] ems, IProgress<TransferProgress> progress, IScriptCommand thenCommand)
-        {            
-            Dictionary<string, Stream> compressDic = new Dictionary<string,Stream>();
+        {
+            Dictionary<string, Stream> compressDic = new Dictionary<string, Stream>();
             IDiskProfile srcProfile = _srcModel.Profile as IDiskProfile;
             string srcParentPath = srcProfile.Path.GetDirectoryName(_srcModel.FullPath);
 
@@ -56,7 +72,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
             var destProfile = _destDirModel.Profile as SzsProfile;
             string archiveType = destProfile.Path.GetExtension(_destDirModel.Name);
-            
+
             using (await destProfile.WorkingLock.LockAsync())
             using (var stream = await destProfile.DiskIO.OpenStreamAsync(_destDirModel, Defines.FileAccess.ReadWrite, pm.CancellationToken))
                 destProfile.Wrapper.CompressMultiple(archiveType, stream, compressDic, null);
@@ -83,9 +99,9 @@ namespace FileExplorer.Models.SevenZipSharp
                 {
                     pm["Directory"] = _srcModel;
                     return ScriptCommands.List(ScriptCommands.FileOnlyFilter, true, ems =>
-                        new SimpleScriptCommandAsync("BatchTransfer", pd => transferAsync(pm, ems, progress,                            
+                        new SimpleScriptCommandAsync("BatchTransfer", pd => transferAsync(pm, ems, progress,
                              new NotifyChangedCommand(_destDirModel.Profile, destFullName,
-                                _srcModel.Profile, _srcModel.FullPath, Defines.ChangeType.Changed) )));                    
+                                _srcModel.Profile, _srcModel.FullPath, Defines.ChangeType.Changed))));
                 }
                 else
                     return new StreamFileTransferCommand(_srcModel, _destDirModel, _removeOriginal, progress);

@@ -56,19 +56,19 @@ namespace FileExplorer.Utils
             return GetDeterministicGuid(input);
         }
 
-        public static string FirstCharToLowercase(this string input)
-        {
-            if (input.Length > 0)
-                return input.Substring(0, 1).ToLower() + input.Substring(1);
-            return input;
-        }
+        //public static string FirstCharToLowercase(this string input)
+        //{
+        //    if (input.Length > 0)
+        //        return input.Substring(0, 1).ToLower() + input.Substring(1);
+        //    return input;
+        //}
 
-        public static string FirstCharToUppercase(this string input)
-        {
-            if (input.Length > 0)
-                return input.Substring(0, 1).ToUpper() + input.Substring(1);
-            return input;
-        }
+        //public static string FirstCharToUppercase(this string input)
+        //{
+        //    if (input.Length > 0)
+        //        return input.Substring(0, 1).ToUpper() + input.Substring(1);
+        //    return input;
+        //}
 
 
         //public static string DicToParamString(Dictionary<string, string> dic)
@@ -160,44 +160,44 @@ namespace FileExplorer.Utils
         }
         #endregion
 
-        //http://www.codeproject.com/KB/string/fastestcscaseinsstringrep.aspx        
-        static public string Replace(this string original, string pattern, string replacement, StringComparison comparisonType)
-        {
-            return Replace(original, pattern, replacement, comparisonType, -1);
-        }
+        ////http://www.codeproject.com/KB/string/fastestcscaseinsstringrep.aspx        
+        //static public string Replace(this string original, string pattern, string replacement, StringComparison comparisonType)
+        //{
+        //    return Replace(original, pattern, replacement, comparisonType, -1);
+        //}
 
-        static public string Replace(this string original, string pattern, string replacement, StringComparison comparisonType, int stringBuilderInitialSize)
-        {
-            if (original == null)
-            {
-                return null;
-            }
+        //static public string Replace(this string original, string pattern, string replacement, StringComparison comparisonType, int stringBuilderInitialSize)
+        //{
+        //    if (original == null)
+        //    {
+        //        return null;
+        //    }
 
-            if (String.IsNullOrEmpty(pattern))
-            {
-                return original;
-            }
+        //    if (String.IsNullOrEmpty(pattern))
+        //    {
+        //        return original;
+        //    }
 
 
-            int posCurrent = 0;
-            int lenPattern = pattern.Length;
-            int idxNext = original.IndexOf(pattern, comparisonType);
-            StringBuilder result = new StringBuilder(stringBuilderInitialSize < 0 ? Math.Min(4096, original.Length) : stringBuilderInitialSize);
+        //    int posCurrent = 0;
+        //    int lenPattern = pattern.Length;
+        //    int idxNext = original.IndexOf(pattern, comparisonType);
+        //    StringBuilder result = new StringBuilder(stringBuilderInitialSize < 0 ? Math.Min(4096, original.Length) : stringBuilderInitialSize);
 
-            while (idxNext >= 0)
-            {
-                result.Append(original, posCurrent, idxNext - posCurrent);
-                result.Append(replacement);
+        //    while (idxNext >= 0)
+        //    {
+        //        result.Append(original, posCurrent, idxNext - posCurrent);
+        //        result.Append(replacement);
 
-                posCurrent = idxNext + lenPattern;
+        //        posCurrent = idxNext + lenPattern;
 
-                idxNext = original.IndexOf(pattern, posCurrent, comparisonType);
-            }
+        //        idxNext = original.IndexOf(pattern, posCurrent, comparisonType);
+        //    }
 
-            result.Append(original, posCurrent, original.Length - posCurrent);
+        //    result.Append(original, posCurrent, original.Length - posCurrent);
 
-            return result.ToString();
-        }
+        //    return result.ToString();
+        //}
 
         #region Random string
         //http://stackoverflow.com/questions/1122483/c-sharp-random-string-generator
@@ -217,12 +217,12 @@ namespace FileExplorer.Utils
         #endregion
 
 
-        public static string ConvertToHex(uint input)
-        {
-            if (input == 0)
-                return "00000000";
-            else return String.Format("{0:x2}", input).ToUpper();
-        }
+        //public static string ConvertToHex(uint input)
+        //{
+        //    if (input == 0)
+        //        return "00000000";
+        //    else return String.Format("{0:x2}", input).ToUpper();
+        //}
     }
 
 

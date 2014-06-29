@@ -56,7 +56,7 @@ namespace FileExplorer.WPF.Utils
         {
             string retVal;
             if (_id == 0)
-                retVal = _fileName;
+                retVal = _fileName + _ext;
             else
                 retVal = String.Format(_syntax, _fileName, _ext, _id);
             _id++;

@@ -251,6 +251,12 @@ namespace TestApp
             explorerModel.Sidebar.Metadata.ExtraMetadataProviders = new [] {
                 new DummyMetadataProvider()
             };
+
+            IScriptCommand newZip = FileList.Do(flvm =>
+                 IOScriptCommands.CreateArchive(flvm.CurrentDirectory, "NewArchive.zip", true, 
+                        em => FileList.Refresh(FileList.Select(fm => fm.Equals(em), ResultCommand.OK), true)));
+                      
+
             explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                
                 new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
@@ -267,10 +273,13 @@ namespace TestApp
                         HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE188)
                         //Symbol = Convert.ToChar(0xE188) 
                     },
-                    new DirectoryCommandModel(new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true })
+                    new DirectoryCommandModel(
+                        new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true },
+                        new CommandModel(newZip) { Header = "Zip", IsVisibleOnMenu = true }                        
+                        )
                         { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
                     new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer),
-                    new FileExplorer.Models.SevenZipSharp.ExtractDirectoryCommandModel(null)
+                    new FileExplorer.Models.SevenZipSharp.SzsCommandModel(null)
                     //new CommandModel(ExplorerCommands.TogglePreviewer) { IsVisibleOnMenu = false, Header = "", IsHeaderAlignRight = true, Symbol = Convert.ToChar(0xE239) }
                     )
             };
