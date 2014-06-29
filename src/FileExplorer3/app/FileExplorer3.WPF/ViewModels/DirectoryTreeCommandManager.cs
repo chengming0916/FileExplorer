@@ -65,7 +65,7 @@ namespace FileExplorer.WPF.ViewModels
 
             _exportBindingSource = exportBindingSource.ToArray();
 
-             ToolbarCommands = new ToolbarCommandsHelper(events,
+             ToolbarCommands = new ToolbarCommandsHelper(events, ParameterDicConverter,
                 message => new[] { message.NewModel },
                 null)
                 {

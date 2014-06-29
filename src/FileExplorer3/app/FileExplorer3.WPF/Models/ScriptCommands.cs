@@ -10,6 +10,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
 using FileExplorer.IO;
 using System.Threading;
+using System.IO;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -74,6 +75,24 @@ namespace FileExplorer.WPF.ViewModels
             return ScriptCommands.ParsePath(new[] { profile }, path, thenFunc,
                 ScriptCommands.CreatePath(profile, path, isFolder, false, thenFunc));
         }
+
+        public static IScriptCommand OpenFileStream(IEntryModel entryModel, FileExplorer.Defines.FileAccess access, 
+            Func<IEntryModel, Stream, IScriptCommand> streamFunc, Func<IEntryModel, IScriptCommand> thenCommandFunc)
+        {
+            return new OpenStreamCommand(entryModel, access, streamFunc, thenCommandFunc(entryModel));           
+        }
+
+        public static IScriptCommand WriteBytes(IEntryModel entryModel, byte[] bytes, 
+            Func<IEntryModel, IScriptCommand> nextCommandFunc)
+        {
+            return OpenFileStream(entryModel, FileExplorer.Defines.FileAccess.Write, 
+                (em,s) => new SimpleScriptCommand("WriteBytes", pd => 
+                    {
+                        s.Write(bytes, 0, bytes.Length);
+                        return ResultCommand.NoError;
+                    }), nextCommandFunc);
+                    
+        }
     }
 }
 
@@ -106,6 +125,42 @@ namespace FileExplorer.WPF.Models
                     return _ifFoundFunc(result);
             }
             return _ifNotFound;
+        }
+    }
+
+    /// <summary>
+    /// Open a file (which profile is IDiskProfile), the stream is closed when streamFunc is finished.
+    /// </summary>
+    public class OpenStreamCommand : ScriptCommandBase
+    {
+        private IEntryModel _entryModel;
+        private FileExplorer.Defines.FileAccess _access;
+        private Func<IEntryModel, Stream, IScriptCommand> _streamFunc;
+        public OpenStreamCommand(IEntryModel entryModel, FileExplorer.Defines.FileAccess access,
+            Func<IEntryModel, Stream, IScriptCommand> streamFunc, IScriptCommand thenCommand)
+            : base("OpenStream", thenCommand)
+        {
+            if (!(entryModel.Profile is IDiskProfile))
+                throw new ArgumentException("Profile isnt IDiskProfile.");
+            _entryModel = entryModel;
+            _access = access;
+            _streamFunc = streamFunc;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            IDiskProfile profile = _entryModel.Profile as IDiskProfile;
+            using (var stream = profile.DiskIO.OpenStreamAsync(_entryModel, _access, pm.CancellationToken).Result)
+                 new ScriptRunner().Run(pm, _streamFunc(_entryModel, stream));
+            return _nextCommand;
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            IDiskProfile profile = _entryModel.Profile as IDiskProfile;
+            using (var stream = await profile.DiskIO.OpenStreamAsync(_entryModel, _access, pm.CancellationToken))
+                await new ScriptRunner().RunAsync(pm, _streamFunc(_entryModel, stream));
+            return _nextCommand;
         }
     }
 

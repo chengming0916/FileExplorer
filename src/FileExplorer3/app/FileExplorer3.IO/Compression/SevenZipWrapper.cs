@@ -446,14 +446,20 @@ namespace FileExplorer.IO.Compress
             return CompressionUtils.IsArchive(fileName);
         }
 
-        public override byte[] GetEmptyArchiveBytes(string type)
+        public static byte[] GetArchiveBytes(string type)
         {
-            switch (type)
+            switch (type.TrimStart('.').ToLower())
             {
                 case "zip": return CompressionUtils.EmptyZip;
                 case "7z": return CompressionUtils.Empty7z;
             }
             return null;
+        }
+
+
+        public override byte[] GetEmptyArchiveBytes(string type)
+        {
+            return SevenZipWrapper.GetArchiveBytes(type);
         }
 
         #endregion

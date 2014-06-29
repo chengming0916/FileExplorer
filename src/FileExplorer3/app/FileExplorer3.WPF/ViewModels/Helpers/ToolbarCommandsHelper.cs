@@ -43,11 +43,12 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         }
 
         public ToolbarCommandsHelper(
-            IEventAggregator events,
+            IEventAggregator events, IParameterDicConverter parameterDicConverter,
             Func<DirectoryChangedEvent, IEntryModel[]> whenDirectoryChanged = null,
             Func<SelectionChangedEvent, IEntryModel[]> whenSelectionChanged = null,
             IProfile[] rootProfiles = null, params ICommandProvider[] extraCommandProviders)
         {
+            _parameterDicConverter = parameterDicConverter;
             _extraCommandProviders = extraCommandProviders;
 
             _whenDirectoryChanged = whenDirectoryChanged;
@@ -95,7 +96,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                 foreach (var cp in _rootProfiles.SelectMany(p => p.CommandProviders))
                     cmList.AddRange(cp.GetCommandModels());
 
-            return cmList.Select(cm => new CommandViewModel(cm)).ToArray();
+            return cmList.Select(cm => new CommandViewModel(cm, _parameterDicConverter)).ToArray();
         }
 
         public void Handle(SelectionChangedEvent message)
@@ -129,6 +130,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         //protected List<IScriptCommandBinding> _exportedCommandBindings = new List<IScriptCommandBinding>(); //Remove
         private Func<DirectoryChangedEvent, IEntryModel[]> _whenDirectoryChanged;
         private Func<SelectionChangedEvent, IEntryModel[]> _whenSelectionChanged;
+        private IParameterDicConverter _parameterDicConverter;
 
         #endregion
 

@@ -11,42 +11,42 @@ using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    public class ToolbarViewModel : PropertyChangedBase, IToolbarViewModel
-    {
-        #region Constructor
+    //public class ToolbarViewModel : PropertyChangedBase, IToolbarViewModel
+    //{
+    //    #region Constructor
 
-        public ToolbarViewModel(IEventAggregator events)
-        {
-            List<ICommandModel> cmList = new List<ICommandModel>()
-            {
-                new CommandModel() { Header = "Test" }
-            };
+    //    public ToolbarViewModel(IEventAggregator events)
+    //    {
+    //        List<ICommandModel> cmList = new List<ICommandModel>()
+    //        {
+    //            new CommandModel() { Header = "Test" }
+    //        };
 
-            Commands = new EntriesHelper<ICommandViewModel>(cmList.Select(cm => new CommandViewModel(cm)).ToArray());
-            //NotifyOfPropertyChange(() => Commands);
-            //Commands = new EntriesHelper<ICommandViewModel>(loadCommands);
+    //        Commands = new EntriesHelper<ICommandViewModel>(cmList.Select(cm => new CommandViewModel(cm)).ToArray());
+    //        //NotifyOfPropertyChange(() => Commands);
+    //        //Commands = new EntriesHelper<ICommandViewModel>(loadCommands);
             
-        }
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Methods
+    //    #region Methods
 
-        //private async Task<IEnumerable<ICommandViewModel>> loadCommands()
-        //{
+    //    //private async Task<IEnumerable<ICommandViewModel>> loadCommands()
+    //    //{
           
-        //}
+    //    //}
 
-        #endregion
+    //    #endregion
 
-        #region Data
+    //    #region Data
 
-        #endregion
+    //    #endregion
 
-        #region Public Properties
+    //    #region Public Properties
 
-        public EntriesHelper<ICommandViewModel> Commands { get; private set; }
+    //    public EntriesHelper<ICommandViewModel> Commands { get; private set; }
 
-        #endregion
-    }
+    //    #endregion
+    //}
 }
