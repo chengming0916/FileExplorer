@@ -76,6 +76,6 @@ namespace FileExplorer.IO.Interfaces
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="delPathOrMask"></param>
-        bool Delete(string type, Stream stream, string delPathOrMask);
+        bool Delete(string type, Stream stream, Func<string, bool> filter);
     }
 }

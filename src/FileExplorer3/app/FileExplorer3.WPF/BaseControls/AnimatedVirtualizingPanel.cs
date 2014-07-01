@@ -31,7 +31,7 @@ namespace FileExplorer.WPF.UserControls
         }
 
         public static readonly DependencyProperty DurationProperty =
-            DependencyProperty.Register("Duration", typeof(TimeSpan), typeof(AnimatedVirtualizingPanel), new UIPropertyMetadata(TimeSpan.FromMilliseconds(500)));
+            DependencyProperty.Register("Duration", typeof(TimeSpan), typeof(AnimatedVirtualizingPanel), new UIPropertyMetadata(TimeSpan.FromMilliseconds(0)));
 
         protected override Size ArrangeOverride(Size finalSize)
         {

@@ -23,7 +23,7 @@ namespace FileExplorer.IO
 
         protected abstract bool compressMultiple(string type, Stream stream, Dictionary<string, System.IO.Stream> streamDic, 
             IProgress<FileExplorer.Defines.ProgressEventArgs> progress);
-        protected abstract bool delete(string type, Stream stream, string delPathOrMask);
+        protected abstract bool delete(string type, Stream stream, Func<string, bool> filter);
         protected abstract IEnumerable<object> list(Stream stream, string pattern, bool listSubdir);
         protected abstract bool exists(Stream stream, string pathOrMask, bool isFolder);
         protected abstract bool extractOne(Stream stream, string fileName, string password, System.IO.Stream outputStream);
@@ -39,9 +39,9 @@ namespace FileExplorer.IO
             return compressMultiple(type, stream, streamDic, progress);
         }
 
-        public bool Delete(string type, Stream stream, string delPathOrMask)
+        public bool Delete(string type, Stream stream, Func<string, bool> filter)
         {
-            return delete(type, stream, delPathOrMask);
+            return delete(type, stream, filter);
         }
 
         public IEnumerable<object> List(Stream stream, string pattern, bool listSubdir = false)

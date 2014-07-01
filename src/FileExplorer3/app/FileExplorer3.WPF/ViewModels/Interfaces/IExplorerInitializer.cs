@@ -29,10 +29,17 @@ namespace FileExplorer.WPF.ViewModels
         public ExplorerInitializer(IWindowManager wm, IEventAggregator events, IEntryModel[] rootModels,
             params IViewModelInitializer<IExplorerViewModel>[] initializers)
         {
-            WindowManager = wm;
-            Events = events;
+            WindowManager = wm ?? new WindowManager();
+            Events = events ?? new EventAggregator();
             RootModels = rootModels;
             Initializers = new List<IViewModelInitializer<IExplorerViewModel>>(initializers);
+        }
+
+        public ExplorerInitializer(IEntryModel[] rootModels,
+          params IViewModelInitializer<IExplorerViewModel>[] initializers)
+            : this(null, null, rootModels, initializers)
+        {
+
         }
 
         protected ExplorerInitializer(IExplorerInitializer initializer)

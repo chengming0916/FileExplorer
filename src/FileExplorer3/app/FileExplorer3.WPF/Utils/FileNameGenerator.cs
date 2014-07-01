@@ -45,7 +45,7 @@ namespace FileExplorer.WPF.Utils
         private string _fileName, _ext;
         private int _id = 0;
         private string _syntax;
-        public IterateFileNameGenerator(string baseFileName, string syntax = "{0} ({2}).{1}")
+        public IterateFileNameGenerator(string baseFileName, string syntax = "{0} ({2}){1}")
         {
             _fileName = System.IO.Path.GetFileNameWithoutExtension(baseFileName);
             _ext = System.IO.Path.GetExtension(baseFileName);

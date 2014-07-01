@@ -108,7 +108,7 @@ namespace FileExplorer.WPF.ViewModels
             IEntryModel _currentDirectoryModel = null;
             ToolbarCommands = new ToolbarCommandsHelper(events, ParameterDicConverter, 
                 message => { _currentDirectoryModel = message.NewModel; return new IEntryModel[] { _currentDirectoryModel }; },
-                message => message.SelectedModels.Count() == 0 ? new IEntryModel[] { _currentDirectoryModel } : message.SelectedModels.ToArray())
+                message => message.SelectedModels.Count() == 0 && _currentDirectoryModel != null ? new IEntryModel[] { _currentDirectoryModel } : message.SelectedModels.ToArray())
                 {
                     ExtraCommandProviders = new[] { 
                         new StaticCommandProvider(new SelectGroupCommand(flvm), new ViewModeCommand(flvm), new SeparatorCommandModel()) 

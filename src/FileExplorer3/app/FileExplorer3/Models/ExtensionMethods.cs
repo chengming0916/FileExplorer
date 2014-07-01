@@ -24,7 +24,7 @@ namespace FileExplorer.Models
             return input.Substring(startIndex, idx - startIndex);
         }
 
-         /// <summary>
+        /// <summary>
         /// Add a slash "\" to end of input if not exists.
         /// </summary>
         public static string AppendSlash(this IPathHelper pathHelper, string input)
@@ -52,20 +52,26 @@ namespace FileExplorer.Models
             else return input;
         }
 
+        public static string ChangeExtension(this IPathHelper pathHelper, string input, string extension)
+        {
+            extension = "." + extension.TrimStart('.');
+            return RemoveExtension(pathHelper, input) + extension;
+        }
+
         public static async Task<IEntryModel> LookupAsync(this IProfile profile, IEntryModel startEntry, string[] paths, CancellationToken ct, int idx = 0)
         {
             if (idx >= paths.Length)
                 return startEntry;
             else
             {
-                IEntryModel lookup = (await profile.ListAsync(startEntry, ct, em => 
+                IEntryModel lookup = (await profile.ListAsync(startEntry, ct, em =>
                     em.Name.Equals(paths[idx], StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
                 ct.ThrowIfCancellationRequested();
                 if (lookup != null)
-                    return await LookupAsync(profile, lookup, paths, ct, idx+1);
+                    return await LookupAsync(profile, lookup, paths, ct, idx + 1);
                 else return null;
             }
-        }        
+        }
 
         public static IEntryModel Convert(this IConverterProfile[] converterProfiles, IEntryModel entryModel)
         {
@@ -94,7 +100,7 @@ namespace FileExplorer.Models
             return retVal;
         }
 
-         public static async Task<IEntryModel> ParseThenLookupAsync(this IProfile profile, string path, CancellationToken ct)
+        public static async Task<IEntryModel> ParseThenLookupAsync(this IProfile profile, string path, CancellationToken ct)
         {
             IEntryModel retVal = await profile.ParseAsync(path);
             if (retVal == null)

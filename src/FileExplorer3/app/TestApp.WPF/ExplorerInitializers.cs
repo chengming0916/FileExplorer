@@ -257,11 +257,11 @@ namespace TestApp
                         em => FileList.Refresh(FileList.Select(fm => fm.Equals(em), ResultCommand.OK), true)));
                       
 
-            explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
-               
-                new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc
+            explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] {                               
+                new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc                 
                 new StaticCommandProvider(
                      //new CommandModel(ExplorerCommands.CloseTab) { IsEnabled = true, Header="CloseTab", IsVisibleOnToolbar = true },
+                    new FileExplorer.Models.SevenZipSharp.SzsCommandModel(explorerModel.Initializer),
                     new SeparatorCommandModel(),
                     new SelectGroupCommand( explorerModel.FileList),    
                     new ViewModeCommand( explorerModel.FileList),
@@ -278,8 +278,7 @@ namespace TestApp
                         new CommandModel(newZip) { Header = "Zip", IsVisibleOnMenu = true }                        
                         )
                         { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
-                    new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer),
-                    new FileExplorer.Models.SevenZipSharp.SzsCommandModel(null)
+                    new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer)                    
                     //new CommandModel(ExplorerCommands.TogglePreviewer) { IsVisibleOnMenu = false, Header = "", IsHeaderAlignRight = true, Symbol = Convert.ToChar(0xE239) }
                     )
             };

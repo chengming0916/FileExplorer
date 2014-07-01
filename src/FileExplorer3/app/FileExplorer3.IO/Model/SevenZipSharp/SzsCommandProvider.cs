@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Utils;
+using Caliburn.Micro;
 
 namespace FileExplorer.Models.SevenZipSharp
 {
@@ -34,14 +35,16 @@ namespace FileExplorer.Models.SevenZipSharp
     /// Transfer from a folder (Source:IEntryModel) to dest folder (from destPathFunc)
     /// </summary>
     public class SzsCommandModel : DirectoryCommandModel
-    {
+    {        
+        private IExplorerInitializer _initializer;
         //private Func<IEntryModel, string> _destPathFunc;
-        public SzsCommandModel(Func<ParameterDic, IEntryModel[]> srcModelFunc)
+        public SzsCommandModel(IExplorerInitializer initializer)
             : base(ResultCommand.NoError)
         {
+            _initializer = initializer;     
             HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE188);
             IsHeaderVisible = true;
-            Header = "Archive";
+            Header = "Compress";
             //Func<IEntryModel, string> destPathFunc, 
             //_destPathFunc = destPathFunc;
             IsVisibleOnMenu = true;
@@ -54,8 +57,8 @@ namespace FileExplorer.Models.SevenZipSharp
             if (appliedModels.Length >= 1)
             {
 
-                #region Decompress
-                if (appliedModels.Length >= 1 && appliedModels.All(em => em is SzsRootModel))
+                #region Decompress - When selected archive.
+                if (appliedModels.All(em => em is SzsRootModel))
                 {
                     SzsRootModel firstRoot = appliedModels[0] as SzsRootModel;
 
@@ -64,7 +67,17 @@ namespace FileExplorer.Models.SevenZipSharp
                     string parentPath = path.GetDirectoryName(firstRoot.FullPath);
 
 
-                    //Extract to \\
+                    //Extract to ...
+                    subCommands.Add(new CommandModel(
+                        ScriptCommands.ShowDirectoryPicker(_initializer, null,
+                        dm =>
+                         ScriptCommands.ShowProgress("Extract",
+                         ScriptCommands.ForEach(appliedModels, am =>
+                                     IOScriptCommands.TransferChild(am, dm, null, false),
+                              ScriptCommands.HideProgress())),
+                              ResultCommand.NoError)) { Header = "Extract to ...", IsEnabled = true, IsVisibleOnMenu = true });
+
+                    //Extract Here
                     subCommands.Add(new CommandModel(
                            ScriptCommands.ShowProgress("Extract",
                            ScriptCommands.ForEach(appliedModels, am =>
@@ -104,11 +117,60 @@ namespace FileExplorer.Models.SevenZipSharp
 
                 #region Compress
 
-                if (appliedModels.Length >= 1)
+                if (!appliedModels.Any(em => em is SzsChildModel) && !(appliedModels.Length == 1 && appliedModels[0] is SzsRootModel))
                 {
+                    Header = "Compress";
+                    IEntryModel firstEntry = appliedModels[0];
+                    IDiskProfile firstProfile = firstEntry.Profile as IDiskProfile;
 
+                    if (firstProfile != null && !firstEntry.FullPath.StartsWith("::{"))
+                    {
+                        IPathHelper path = firstEntry.Profile.Path;
+                        //Header = path.GetExtension(firstEntry.Name).TrimStart('.').FirstCharToUppercase();
+                        string parentPath = path.GetDirectoryName(firstEntry.FullPath);
+
+                        //e.g. C:\temp\abc.txt => C:\temp\temp.zip
+                        string parentArchiveName = path.ChangeExtension(firstEntry.Parent.Name, ".zip");
+                        string parentArchivePath = path.Combine(firstEntry.Parent.FullPath, parentArchiveName);
+
+                        string firstArchiveName = path.ChangeExtension(firstEntry.Name, ".zip");
+                        string firstArchivePath = path.Combine(firstEntry.Parent.FullPath, firstArchiveName);
+
+
+                        subCommands.Add(new CommandModel(
+                          ScriptCommands.SaveFilePicker(_initializer, "Zip archives (.zip)|*.zip|7z archives (.7z)", firstArchivePath,
+                              pmi => ScriptCommands.ShowProgress("Compress",
+                                  IOScriptCommands.ParseOrCreateArchive(pmi.Profile as IDiskProfile, pmi.FileName,
+                               pm => ScriptCommands.ForEach(appliedModels,
+                                  am => IOScriptCommands.Transfer(am, pm, false, true),
+                                      ScriptCommands.HideProgress()))),
+                                        ResultCommand.NoError))
+                        {
+                            Header = "Compress to ...",
+                            IsEnabled = true,
+                            IsVisibleOnMenu = true
+                        });
+
+                        Action<string, string> addCompressToPath = (destName, destPath) =>
+                            {
+                                subCommands.Add(new CommandModel(
+                                    ScriptCommands.ShowProgress("Compress",
+                                        IOScriptCommands.ParseOrCreateArchive(firstProfile, destPath,
+                                            pm => ScriptCommands.ForEach(appliedModels,
+                                                am => IOScriptCommands.Transfer(am, pm, false, true,
+                                            null), ScriptCommands.HideProgress()))))
+                                {
+                                    Header = "Compress to " + destName,
+                                    IsEnabled = true,
+                                    IsVisibleOnMenu = true
+                                });
+                            };
+
+                        addCompressToPath(firstArchiveName, firstArchivePath);
+                        addCompressToPath(parentArchiveName, parentArchivePath);
+
+                    }
                 }
-
                 #endregion
 
                 SubCommands = subCommands;

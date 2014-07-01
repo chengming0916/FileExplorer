@@ -295,7 +295,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Public Properties
 
 
-        public IExplorerInitializer Initializer { get; private set; }
+        public IExplorerInitializer Initializer { get { return _initializer; } }
         public IExplorerParameters Parameters
         {
             get { return _parameters; }

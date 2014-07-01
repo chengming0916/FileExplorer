@@ -121,8 +121,13 @@ namespace FileExplorer.IO.Compress
 
         private IEnumerable<tuple<int, string>> lookup(SevenZipExtractor extractor, string pathOrMask)
         {
+            return lookup(extractor, p => PathFE.MatchFileMask(p, pathOrMask));
+        }
+
+        private IEnumerable<tuple<int, string>> lookup(SevenZipExtractor extractor, Func<string, bool> filter)
+        {
             foreach (ArchiveFileInfo afi in extractor.ArchiveFileData)
-                if (PathFE.MatchFileMask(afi.FileName, pathOrMask))
+                if (filter(afi.FileName))
                 {
                     yield return new tuple<int, string>(afi.Index, afi.FileName);
                 }
@@ -164,7 +169,7 @@ namespace FileExplorer.IO.Compress
                     afiList = new List<ArchiveFileInfo>(extractor.ArchiveFileData);
                 }
             }
-            catch { afiList = new List<ArchiveFileInfo>(); }
+            catch (Exception ex) { afiList = new List<ArchiveFileInfo>(); }
 
             foreach (ArchiveFileInfo afi in afiList)
             {
@@ -338,8 +343,7 @@ namespace FileExplorer.IO.Compress
         {
             OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat(archivePath);
 
-            foreach (var key in streamDic.Keys)
-                Delete(archiveFormat, archivePath, key);
+            Delete(archiveFormat, archivePath, p => streamDic.Keys.Contains(p));
 
             SevenZipCompressor compressor = getCompressor(archiveFormat, null, progress);
 
@@ -389,11 +393,11 @@ namespace FileExplorer.IO.Compress
 
         #region Delete
 
-        public void Delete(OutArchiveFormat archiveFormat, string archivePath, string delPathOrMask)
+        private void Delete(OutArchiveFormat archiveFormat, string archivePath, Func<string, bool> filter)
         {
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
-            foreach (var foundItem in lookup(getExtractor(archivePath, null), delPathOrMask))
+            foreach (var foundItem in lookup(getExtractor(archivePath, null), filter))
                 fileDictionary.Add(foundItem.Value1, null);
 
             if (fileDictionary.Count > 0)
@@ -405,13 +409,13 @@ namespace FileExplorer.IO.Compress
             }
         }
 
-        protected override bool delete(string type, Stream stream, string delPathOrMask)
+        protected override bool delete(string type, Stream stream, Func<string, bool> filter)
         {
             OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat("abc" + type);
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
-            foreach (var foundItem in lookup(getExtractor(stream, null), delPathOrMask))
-                fileDictionary.Add(foundItem.Value1, null);
+            //foreach (var foundItem in lookup(getExtractor(stream, null), filter))
+            //    fileDictionary.Add(foundItem.Value1, null);
 
             if (fileDictionary.Count > 0)
             {
@@ -420,7 +424,7 @@ namespace FileExplorer.IO.Compress
                 using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, "tmp"))
                     StreamUtils.CopyStream(stream, tempStream, true, true, false);
 
-                Delete(archiveFormat, tempFile, delPathOrMask);
+                Delete(archiveFormat, tempFile, filter);
 
                 using (var tempStream = new FileStream(tempFile, FileMode.Open))
                     StreamUtils.CopyStream(tempStream, stream, false, true, true);

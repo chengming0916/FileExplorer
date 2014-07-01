@@ -15,6 +15,8 @@ namespace FileExplorer.WPF.ViewModels
     public interface IExplorerViewModel : ISupportCommandManager, 
         IScreen, IDraggable
     {
+        IExplorerInitializer Initializer { get; }
+
         IEntryModel[] RootModels { get; set; }
        
         IDirectoryTreeViewModel DirectoryTree { get; }

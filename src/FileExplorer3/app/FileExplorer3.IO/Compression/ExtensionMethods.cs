@@ -14,5 +14,10 @@ namespace FileExplorer.IO
         {
             return wrapper.CompressMultiple(type, stream, new Dictionary<string, Stream>() { { fileName, fileStream } });
         }
+
+        public static bool Delete(this ICompressorWrapper wrapper, string type, Stream stream, string path)
+        {
+            return wrapper.Delete(type, stream, (p) => PathFE.MatchFileMask(p, path));
+        }
     }
 }

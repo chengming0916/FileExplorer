@@ -78,7 +78,7 @@ namespace FileExplorer.WPF.ViewModels
             IScriptCommand cancelCommand)
         { return new IfOkCancel(wm, captionFunc, messageFunc, okCommand, cancelCommand); }
 
-        public static ShowFilePicker SaveFile(IExplorerInitializer initializer, string filter, string defaultFileName,
+        public static ShowFilePicker SaveFilePicker(IExplorerInitializer initializer, string filter, string defaultFileName,
           Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
             return new ShowFilePicker(initializer, FilePickerMode.Save, filter, defaultFileName,
@@ -86,7 +86,7 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         [Obsolete]
-        public static ShowFilePicker SaveFile(IWindowManager wm, IEventAggregator events,
+        public static ShowFilePicker SaveFilePicker(IWindowManager wm, IEventAggregator events,
             IEntryModel[] rootDirModels, string filter, string defaultFileName,
             Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
@@ -96,14 +96,20 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         [Obsolete]
-        public static ShowFilePicker SaveFile(IEntryModel[] rootDirModels, string filter, string defaultFileName,
+        public static ShowFilePicker SaveFilePicker(IEntryModel[] rootDirModels, string filter, string defaultFileName,
            Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
-            return SaveFile(null, null, rootDirModels, filter, defaultFileName,
+            return SaveFilePicker(null, null, rootDirModels, filter, defaultFileName,
                 successCommand, cancelCommand);
         }
 
-        public static ShowFilePicker OpenFile(IExplorerInitializer initializer, string filter, string defaultFileName,
+        public static ShowDirectoryPicker ShowDirectoryPicker(IExplorerInitializer initializer, IProfile[] rootProfiles, 
+            Func<IEntryModel, IScriptCommand> nextCommandFunc, IScriptCommand cancelCommand)
+        {            
+            return new ShowDirectoryPicker(initializer, rootProfiles, nextCommandFunc, cancelCommand);
+        }
+
+        public static ShowFilePicker OpenFileDialog(IExplorerInitializer initializer, string filter, string defaultFileName,
          Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
             return new ShowFilePicker(initializer, FilePickerMode.Open, filter, defaultFileName,
@@ -111,7 +117,7 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         [Obsolete]
-        public static ShowFilePicker OpenFile(IWindowManager wm, IEventAggregator events,
+        public static ShowFilePicker OpenFileDialog(IWindowManager wm, IEventAggregator events,
             IEntryModel[] rootDirModels, string filter, string defaultFileName,
             Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
@@ -120,10 +126,10 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         [Obsolete]
-        public static ShowFilePicker OpenFile(IEntryModel[] rootDirModels, string filter, string defaultFileName,
+        public static ShowFilePicker OpenFileDialog(IEntryModel[] rootDirModels, string filter, string defaultFileName,
          Func<IEntryModelInfo, IScriptCommand> successCommand, IScriptCommand cancelCommand)
         {
-            return OpenFile(new WindowManager(), null, rootDirModels, filter, defaultFileName, successCommand, cancelCommand);
+            return OpenFileDialog(new WindowManager(), null, rootDirModels, filter, defaultFileName, successCommand, cancelCommand);
         }
 
         public static ShowMessageBox MessageBox(IWindowManager wm, string caption, string message)
@@ -220,8 +226,6 @@ namespace FileExplorer.WPF.ViewModels
         }
     }
 
-
-
     public class ShowFilePicker : ScriptCommandBase
     {
 
@@ -270,6 +274,8 @@ namespace FileExplorer.WPF.ViewModels
             else return _cancelFunc;
         }
     }
+
+  
 
     public class ShowMessageBox : ScriptCommandBase
     {
@@ -365,8 +371,11 @@ namespace FileExplorer.WPF.ViewModels
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            var pdv = pm["Progress"] as ProgressDialogViewModel;
-            pdv.Report(_progress);
+            if (pm.ContainsKey("Progress"))
+            {
+                var pdv = pm["Progress"] as ProgressDialogViewModel;
+                pdv.Report(_progress);
+            }
             return _nextCommand;
         }
     }
@@ -381,8 +390,11 @@ namespace FileExplorer.WPF.ViewModels
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            var pdv = pm["Progress"] as ProgressDialogViewModel;
-            pdv.TryClose();
+            if (pm.ContainsKey("Progress"))
+            {
+                var pdv = pm["Progress"] as ProgressDialogViewModel;
+                pdv.TryClose();
+            }
             return _nextCommand;
         }
     }
@@ -1027,7 +1039,7 @@ namespace FileExplorer.WPF.ViewModels
             : base("PickDirectory")
         {
             _initializer = initializer;
-            _rootProfiles = rootProfiles;
+            _rootProfiles = rootProfiles ?? initializer.RootModels.Select(em => em.Profile).Distinct().ToArray(); 
             _nextCommandFunc = nextCommandFunc;
             _cancelCommand = cancelCommand;
         }
