@@ -28,6 +28,18 @@ namespace FileExplorer.Models
             return ScriptCommands.CreatePath(entryModel, name, false, renameIfExists,
                 em => ScriptCommands.WriteBytes(em, bytes, thenFunc));
         }
+
+        public static IScriptCommand ParseOrCreateArchive(IDiskProfile profile, string path, Func<IEntryModel, IScriptCommand> thenFunc)
+        {
+            string type = profile.Path.GetExtension(path).ToLower();
+            byte[] bytes = SevenZipWrapper.GetArchiveBytes(type);
+
+            if (bytes == null)
+                return ResultCommand.Error(new ArgumentException(type + " is not recognized type."));
+
+            return ScriptCommands.ParseOrCreatePath(profile, path, false,
+                em => ScriptCommands.WriteBytes(em, bytes, thenFunc));
+        }
     }
 
     /// <summary>
@@ -58,6 +70,7 @@ namespace FileExplorer.Models
         }
 
 
+
         private async Task<IScriptCommand> transferAsync(ParameterDic pm, IEntryModel[] ems, IProgress<TransferProgress> progress, IScriptCommand thenCommand)
         {
             Dictionary<string, Stream> compressDic = new Dictionary<string, Stream>();
@@ -74,8 +87,11 @@ namespace FileExplorer.Models
             string archiveType = destProfile.Path.GetExtension(_destDirModel.Name);
 
             using (await destProfile.WorkingLock.LockAsync())
-            using (var stream = await destProfile.DiskIO.OpenStreamAsync(_destDirModel, Defines.FileAccess.ReadWrite, pm.CancellationToken))
-                destProfile.Wrapper.CompressMultiple(archiveType, stream, compressDic, null);
+                await Task.Run(async () =>
+                    {
+                        using (var stream = await destProfile.DiskIO.OpenStreamAsync(_destDirModel, Defines.FileAccess.ReadWrite, pm.CancellationToken))
+                            destProfile.Wrapper.CompressMultiple(archiveType, stream, compressDic, null);
+                    });
 
             return thenCommand;
         }
@@ -96,9 +112,10 @@ namespace FileExplorer.Models
 
 
                 if (_srcModel.IsDirectory)
-                {
-                    pm["Directory"] = _srcModel;
-                    return ScriptCommands.List(ScriptCommands.FileOnlyFilter, true, ems =>
+                {                    
+                    Func<IEntryModel, bool> filter = em => !em.IsDirectory || (em is SzsRootModel);
+                    Func<IEntryModel, bool> lookupFilter = em => em.IsDirectory && !(em is  SzsRootModel);
+                    return ScriptCommands.List(_srcModel, filter, lookupFilter, true, ems =>
                         new SimpleScriptCommandAsync("BatchTransfer", pd => transferAsync(pm, ems, progress,
                              new NotifyChangedCommand(_destDirModel.Profile, destFullName,
                                 _srcModel.Profile, _srcModel.FullPath, Defines.ChangeType.Changed))));

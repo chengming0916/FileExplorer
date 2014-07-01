@@ -62,7 +62,7 @@ namespace FileExplorer.Models
                                 new CommandModel(
                                     //SaveFile --> ParseOrCreatePath -> ShowProgress -> Download -> HideProgress
                                     //         --> OK (If cancel)
-                                    ScriptCommands.SaveFile(WindowManager, Events, 
+                                    ScriptCommands.SaveFilePicker(WindowManager, Events, 
                                      _rootModelFunc(), filter, defaultName,
                                      (fi) => ScriptCommands.ParseOrCreatePath(fi.Profile as IDiskProfile, 
                                          fi.FileName, false, 

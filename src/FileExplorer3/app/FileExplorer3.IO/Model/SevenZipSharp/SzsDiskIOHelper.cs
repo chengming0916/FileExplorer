@@ -37,6 +37,14 @@ namespace FileExplorer.Models.SevenZipSharp
             SzsProfile profile = Profile as SzsProfile;
             ISzsItemModel szsEntryModel = entryModel as ISzsItemModel;
 
+            if (szsEntryModel is SzsRootModel)
+            {
+                IEntryModel rootFile = (szsEntryModel as SzsRootModel).ReferencedFile;
+                await (rootFile.Profile as IDiskProfile)
+                    .DiskIO.DeleteAsync(rootFile, ct);
+                return;
+            }
+
             using (var releaser = await profile.WorkingLock.LockAsync())
             using (var stream = await profile.DiskIO.OpenStreamAsync(szsEntryModel.Root, Defines.FileAccess.ReadWrite, ct))
             {

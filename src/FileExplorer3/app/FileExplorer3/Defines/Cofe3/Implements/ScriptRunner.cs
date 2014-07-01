@@ -15,22 +15,32 @@ namespace FileExplorer.Script
 
             while (cmds.Any())
             {
-                var current = cmds.Dequeue();
-                //Debug.WriteLine("ScriptRunner:" + current.CommandKey);
-                if (current.CanExecute(pd))
+                try
                 {
-                    pd.CommandHistory.Add(current.CommandKey);
-                    var retCmd = current.Execute(pd);
-                    if (retCmd != null)
+                    var current = cmds.Dequeue();
+                    //Debug.WriteLine("ScriptRunner:" + current.CommandKey);
+                    if (current.CanExecute(pd))
                     {
-                        if (pd.Error != null)
-                            return;
-                        cmds.Enqueue(retCmd);
+
+                        pd.CommandHistory.Add(current.CommandKey);
+                        var retCmd = current.Execute(pd);
+                        if (retCmd != null)
+                        {
+                            if (pd.Error != null)
+                                return;
+                            cmds.Enqueue(retCmd);
+                        }
+
                     }
+                    else
+                        if (!(current is NullScriptCommand))
+                            throw new Exception(String.Format("Cannot execute {0}", current));
                 }
-                else
-                    if (!(current is NullScriptCommand))
-                        throw new Exception(String.Format("Cannot execute {0}", current));
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
             }
         }
 
@@ -45,25 +55,32 @@ namespace FileExplorer.Script
 
             while (cmds.Any())
             {
-                var current = cmds.Dequeue();
 
-                if (current.CanExecute(pd))
+                try
                 {
-                    pd.CommandHistory.Add(current.CommandKey);
-                    Debug.WriteLine("ScriptRunner:" + current.CommandKey);
-                    var retCmd = await current.ExecuteAsync(pd)
-                        .ConfigureAwait(current.ContinueOnCaptureContext);                    
-                    
-                    if (retCmd != null)
+                    var current = cmds.Dequeue();
+
+                    if (current.CanExecute(pd))
                     {
-                        if (pd.Error != null)
-                            return;
-                        cmds.Enqueue(retCmd);
+                        pd.CommandHistory.Add(current.CommandKey);
+                        Debug.WriteLine("ScriptRunner:" + current.CommandKey);
+                        var retCmd = await current.ExecuteAsync(pd)
+                            .ConfigureAwait(current.ContinueOnCaptureContext);
+
+                        if (retCmd != null)
+                        {
+                            if (pd.Error != null)
+                                return;
+                            cmds.Enqueue(retCmd);
+                        }
                     }
+                    else throw new Exception(String.Format("Cannot execute {0}", current));
+
                 }
-                else throw new Exception(String.Format("Cannot execute {0}", current));
-
-
+                catch (Exception ex)
+                {
+                    throw;
+                }
 
             }
         }

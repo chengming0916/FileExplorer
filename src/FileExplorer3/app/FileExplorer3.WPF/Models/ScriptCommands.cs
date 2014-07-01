@@ -30,14 +30,14 @@ namespace FileExplorer.WPF.ViewModels
                 string parentPath = profile.Path.GetDirectoryName(path);
                 string name = profile.Path.GetFileName(path);
 
-                return new DiskCreateCommand(profile as IDiskProfile, 
+                return new DiskCreateCommand(profile as IDiskProfile,
                     parentPath,
-                    renameIfExists ? FileNameGenerator.Rename(name) : FileNameGenerator.NoRename(name), 
+                    renameIfExists ? FileNameGenerator.Rename(name) : FileNameGenerator.NoRename(name),
                     isFolder, thenFunc);
             }
             return ResultCommand.Error(new NotSupportedException("Profile is not IDiskProfile."));
         }
-        
+
         public static Func<IEntryModel, bool> FileOnlyFilter = em => !em.IsDirectory;
         public static Func<IEntryModel, bool> DirectoryOnlyFilter = em => em.IsDirectory;
 
@@ -48,20 +48,26 @@ namespace FileExplorer.WPF.ViewModels
         /// <param name="filter"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand List(Func<IEntryModel, bool> filter = null, 
+        public static IScriptCommand List(IEntryModel[] directories, Func<IEntryModel, bool> filter = null, Func<IEntryModel, bool> lookupFilter = null,
             bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
         {
-            return new ListDirectoryCommand(filter, recrusive, nextCommandFunc);
+            return new ListDirectoryCommand(directories, filter, lookupFilter, recrusive, nextCommandFunc);
         }
 
-        public static IScriptCommand List(IEntryModel directory, Func<IEntryModel, bool> filter = null,
-            bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
+        public static IScriptCommand List(IEntryModel directory, Func<IEntryModel, bool> filter = null, Func<IEntryModel, bool> lookupFilter = null,
+           bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
         {
-            return new ListDirectoryCommand(directory, filter, recrusive, nextCommandFunc);
+            return List(new IEntryModel[] { directory }, filter, lookupFilter, recrusive, nextCommandFunc);
         }
-       
 
-        public static IScriptCommand CreatePath(IEntryModel parentModel, string name, bool isFolder, 
+        //public static IScriptCommand List(IEntryModel directory, Func<IEntryModel, bool> filter = null,
+        //    bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
+        //{
+        //    return new ListDirectoryCommand(directory, DirectoryOnlyFilter, filter, recrusive, nextCommandFunc);
+        //}
+
+
+        public static IScriptCommand CreatePath(IEntryModel parentModel, string name, bool isFolder,
             bool renameIfExists,
             Func<IEntryModel, IScriptCommand> thenFunc)
         {
@@ -76,22 +82,22 @@ namespace FileExplorer.WPF.ViewModels
                 ScriptCommands.CreatePath(profile, path, isFolder, false, thenFunc));
         }
 
-        public static IScriptCommand OpenFileStream(IEntryModel entryModel, FileExplorer.Defines.FileAccess access, 
+        public static IScriptCommand OpenFileStream(IEntryModel entryModel, FileExplorer.Defines.FileAccess access,
             Func<IEntryModel, Stream, IScriptCommand> streamFunc, Func<IEntryModel, IScriptCommand> thenCommandFunc)
         {
-            return new OpenStreamCommand(entryModel, access, streamFunc, thenCommandFunc(entryModel));           
+            return new OpenStreamCommand(entryModel, access, streamFunc, thenCommandFunc(entryModel));
         }
 
-        public static IScriptCommand WriteBytes(IEntryModel entryModel, byte[] bytes, 
+        public static IScriptCommand WriteBytes(IEntryModel entryModel, byte[] bytes,
             Func<IEntryModel, IScriptCommand> nextCommandFunc)
         {
-            return OpenFileStream(entryModel, FileExplorer.Defines.FileAccess.Write, 
-                (em,s) => new SimpleScriptCommand("WriteBytes", pd => 
+            return OpenFileStream(entryModel, FileExplorer.Defines.FileAccess.Write,
+                (em, s) => new SimpleScriptCommand("WriteBytes", pd =>
                     {
                         s.Write(bytes, 0, bytes.Length);
                         return ResultCommand.NoError;
                     }), nextCommandFunc);
-                    
+
         }
     }
 }
@@ -151,7 +157,7 @@ namespace FileExplorer.WPF.Models
         {
             IDiskProfile profile = _entryModel.Profile as IDiskProfile;
             using (var stream = profile.DiskIO.OpenStreamAsync(_entryModel, _access, pm.CancellationToken).Result)
-                 new ScriptRunner().Run(pm, _streamFunc(_entryModel, stream));
+                new ScriptRunner().Run(pm, _streamFunc(_entryModel, stream));
             return _nextCommand;
         }
 
@@ -168,46 +174,48 @@ namespace FileExplorer.WPF.Models
     {
         Func<IEntryModel, bool> _filter = em => true;
         bool _recrusive = false;
-        IEntryModel _directory = null;
+        IEntryModel[] _directories = null;
         private Func<IEntryModel[], IScriptCommand> _nextCommandFunc;
+        private Func<IEntryModel, bool> _lookupFilter;
 
-        public ListDirectoryCommand(IEntryModel directory, Func<IEntryModel, bool> filter = null,
+        public ListDirectoryCommand(IEntryModel[] directories,
+            Func<IEntryModel, bool> filter = null, Func<IEntryModel, bool> lookupFilter = null,
             bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
             : base("List", "Directory", "Mask", "Refresh")
         {
-            _directory = directory;
+            _directories = directories;
+            _lookupFilter = lookupFilter;
             _filter = filter ?? (em => true);
             _recrusive = recrusive;
-            _nextCommandFunc = nextCommandFunc ?? (ems => ResultCommand.NoError) ;
+            _nextCommandFunc = nextCommandFunc ?? (ems => ResultCommand.NoError);
         }
 
-        public ListDirectoryCommand(Func<IEntryModel, bool> filter = null, bool recrusive = false, 
-            Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
-           : this(null, filter, recrusive, nextCommandFunc)
+        public ListDirectoryCommand(IEntryModel directory,
+            Func<IEntryModel, bool> filter = null, Func<IEntryModel, bool> lookupFilter = null,
+            bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
+            : this(new IEntryModel[] { directory }, filter, lookupFilter, recrusive, nextCommandFunc)
         {
         }
 
-        async Task<IList<IEntryModel>> listAsync(IEntryModel dir, CancellationToken ct, 
-            Func<IEntryModel,bool> filter, bool refresh)
+        async Task<IList<IEntryModel>> listAsync(IEntryModel dir, CancellationToken ct,
+            Func<IEntryModel, bool> filter, Func<IEntryModel, bool> lookupFilter, bool refresh)
         {
             List<IEntryModel> retList = new List<IEntryModel>();
 
-            foreach (var em in await dir.Profile.ListAsync(dir, ct, filter, refresh))
-            {
-                if (filter(em))
-                    retList.Add(em);
-                ct.ThrowIfCancellationRequested();
-                if (_recrusive && em.IsDirectory)
-                    retList.AddRange(await listAsync(em, ct, filter, refresh));
-            }
+            if (lookupFilter(dir))
+                foreach (var em in await dir.Profile.ListAsync(dir, ct, em => filter(em) || lookupFilter(em), refresh))
+                {
+                    if (filter(em))
+                        retList.Add(em);
+                    ct.ThrowIfCancellationRequested();
+                    if (_recrusive && em.IsDirectory && lookupFilter(em))
+                        retList.AddRange(await listAsync(em, ct, filter, lookupFilter, refresh));
+                }
             return retList;
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {
-            IEntryModel directory = _directory ?? (pm.ContainsKey("Directory") ? pm["Directory"] as IEntryModel : null);
-            if (directory == null)
-                return ResultCommand.Error(new ArgumentException("Directory"));
+        {            
 
             Func<IEntryModel, bool> filter;
             if (pm.ContainsKey("Mask"))
@@ -216,14 +224,18 @@ namespace FileExplorer.WPF.Models
                 filter = (em => _filter(em) && PathFE.MatchFileMask(em.Name, mask));
             }
             else filter = _filter;
+            _lookupFilter = _lookupFilter ?? (em => em.IsDirectory);
 
-            bool refresh  = pm.ContainsKey("Refresh") && (bool)pm["Refresh"];
+            bool refresh = pm.ContainsKey("Refresh") && (bool)pm["Refresh"];
 
-            IEntryModel[] result = (await listAsync(directory, pm.CancellationToken, filter, refresh)).ToArray();
+            List<IEntryModel> result = new List<IEntryModel>();
+            foreach (var directory in _directories)
+            {
+                result.AddRange(await listAsync(directory, pm.CancellationToken, filter, _lookupFilter, refresh));
+            }
 
-
-            return _nextCommandFunc(result);
-        }        
+            return _nextCommandFunc(result.ToArray());
+        }
     }
 
     public class DiskCreateCommand : ScriptCommandBase
@@ -234,7 +246,7 @@ namespace FileExplorer.WPF.Models
         private string _parentPath;
         private IFileNameGenerator _fileNameGenerator;
 
-        public DiskCreateCommand(IDiskProfile profile, string parentPath, IFileNameGenerator fileNameGenerator, bool isFolder, 
+        public DiskCreateCommand(IDiskProfile profile, string parentPath, IFileNameGenerator fileNameGenerator, bool isFolder,
             Func<IEntryModel, IScriptCommand> thenFunc)
             : base("ParsePath")
         {
@@ -252,8 +264,8 @@ namespace FileExplorer.WPF.Models
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            string fileName = _fileNameGenerator.Generate(); 
-            while (fileName != null && 
+            string fileName = _fileNameGenerator.Generate();
+            while (fileName != null &&
                 await _profile.ParseAsync(_profile.Path.Combine(_parentPath, fileName)) != null)
                 fileName = _fileNameGenerator.Generate();
             if (fileName == null)

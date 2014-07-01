@@ -29,6 +29,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             CommandModel = commandModel as IRoutedCommandModel;
             _parentCommandViewModel = parentCommandViewModel;
+            _parameterDicConverter = parameterDicConverter;
 
             if (CommandModel != null)
                 if (CommandModel.RoutedCommand != null)
@@ -142,6 +143,7 @@ namespace FileExplorer.WPF.ViewModels
         private bool _subCommandsLoaded = false;
         private EntriesHelper<ICommandViewModel> _subCommands;
         private ICommandViewModel _parentCommandViewModel;
+        private IParameterDicConverter _parameterDicConverter;
 
         #endregion
 

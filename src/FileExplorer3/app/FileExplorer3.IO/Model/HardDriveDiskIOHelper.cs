@@ -30,7 +30,7 @@ namespace FileExplorer.Models
 
         public override async Task DeleteAsync(IEntryModel entryModel, CancellationToken ct)
         {
-            if (entryModel.IsDirectory)
+            if (Directory.Exists(entryModel.FullPath))
                 Directory.Delete(entryModel.FullPath, true);
             else File.Delete(entryModel.FullPath);
         }

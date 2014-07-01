@@ -43,7 +43,7 @@ namespace FileExplorer.Models
         public static IScriptCommand TransferChild(IEntryModel srcModel, IEntryModel destDirModel, 
             Func<IEntryModel, bool> filterFunc = null, bool recrusive = false, IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.List(srcModel, filterFunc, recrusive, ems =>
+            return ScriptCommands.List(srcModel, filterFunc, null, recrusive, ems =>
                          ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(ems.Length),
                                ScriptCommands.ForEach(ems, em =>
                                      ScriptCommands.RunInSequence(

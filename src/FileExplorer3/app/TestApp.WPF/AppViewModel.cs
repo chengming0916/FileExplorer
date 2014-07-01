@@ -125,7 +125,7 @@ namespace TestApp
         public void PickFiles()
         {
             new ScriptRunner().Run(new ParameterDic(),
-                ScriptCommands.OpenFile(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
+                ScriptCommands.OpenFileDialog(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
                     (fpvm) => ScriptCommands.MessageBox(_windowManager, "Open", fpvm.FileName), ResultCommand.OK));
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
             //updateExplorerModel(initExplorerModel(filePicker));
@@ -138,7 +138,7 @@ namespace TestApp
         public void SaveFile()
         {
             new ScriptRunner().Run(new ParameterDic(),
-               ScriptCommands.SaveFile(_windowManager, null, RootModels.ToArray(), FileFilter, "demo.txt",
+               ScriptCommands.SaveFilePicker(_windowManager, null, RootModels.ToArray(), FileFilter, "demo.txt",
                    (fpvm) => ScriptCommands.MessageBox(_windowManager, "Save", fpvm.FileName), ResultCommand.OK));
 
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Save, RootModels.ToArray());
