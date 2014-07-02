@@ -167,7 +167,7 @@ namespace FileExplorer.WPF.Defines
     public class TransferProgress
     {
         public ProgressType Type { get; set; }
-        public Exception Exception { get; set; }
+        public string Message { get; set; }
         public string Action { get; set; }
         public Int32? TotalEntriesIncrement { get; set; }
         public Int32? ProcessedEntriesIncrement { get; set; }
@@ -190,9 +190,19 @@ namespace FileExplorer.WPF.Defines
             return new TransferProgress()
             {
                 Type = ProgressType.Error,
-                Exception = ex
+                Message = ex.Message
             };
         }
+
+        public static TransferProgress SetMessage(ProgressType type, string message)
+        {
+            return new TransferProgress()
+            {
+                Type = type,
+                Message = message
+            };
+        }
+
 
         public static TransferProgress Completed()
         {
