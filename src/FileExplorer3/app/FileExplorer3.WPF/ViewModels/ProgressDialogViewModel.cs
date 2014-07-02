@@ -71,8 +71,8 @@ namespace FileExplorer.WPF.ViewModels
                     IsCancelEnabled = true;
                     break;
                 case ProgressType.Error :
-                    if (value.Exception != null)
-                        Message = value.Exception.Message;
+                    if (value.Message != null)
+                        Message = value.Message;
                     IsCancelEnabled = false;
                     break;
             }

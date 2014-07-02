@@ -251,10 +251,7 @@ namespace TestApp
             explorerModel.Sidebar.Metadata.ExtraMetadataProviders = new [] {
                 new DummyMetadataProvider()
             };
-
-            IScriptCommand newZip = FileList.Do(flvm =>
-                 IOScriptCommands.CreateArchive(flvm.CurrentDirectory, "NewArchive.zip", true, 
-                        em => FileList.Refresh(FileList.Select(fm => fm.Equals(em), ResultCommand.OK), true)));
+          
                       
 
             explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] {                               
@@ -275,7 +272,8 @@ namespace TestApp
                     },
                     new DirectoryCommandModel(
                         new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true },
-                        new CommandModel(newZip) { Header = "Zip", IsVisibleOnMenu = true }                        
+                        new CommandModel(FileExplorer.Models.SevenZipSharp.SzsCommandProvider.NewZip) { Header = "Zip", IsVisibleOnMenu = true },
+                        new CommandModel(FileExplorer.Models.SevenZipSharp.SzsCommandProvider.New7z) { Header = "7z", IsVisibleOnMenu = true }
                         )
                         { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
                     new ToggleVisibilityCommand(explorerModel.FileList.Sidebar, ExplorerCommands.TogglePreviewer)                    

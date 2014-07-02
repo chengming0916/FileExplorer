@@ -2,6 +2,7 @@
 using FileExplorer.IO.Compress;
 using FileExplorer.Models.SevenZipSharp;
 using FileExplorer.Script;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;
@@ -71,7 +72,8 @@ namespace FileExplorer.Models
 
 
 
-        private async Task<IScriptCommand> transferAsync(ParameterDic pm, IEntryModel[] ems, IProgress<TransferProgress> progress, IScriptCommand thenCommand)
+        private async Task<IScriptCommand> transferAsync(ParameterDic pm, IEntryModel[] ems,
+            IProgress<TransferProgress> progress, IScriptCommand thenCommand)
         {
             Dictionary<string, Stream> compressDic = new Dictionary<string, Stream>();
             IDiskProfile srcProfile = _srcModel.Profile as IDiskProfile;
@@ -89,8 +91,21 @@ namespace FileExplorer.Models
             using (await destProfile.WorkingLock.LockAsync())
                 await Task.Run(async () =>
                     {
+                        Progress<Defines.ProgressEventArgs> progress1 = new Progress<Defines.ProgressEventArgs>(
+                            (pea) =>
+                            {
+                                if (!String.IsNullOrEmpty(pea.Message))
+                                    progress.Report(TransferProgress.SetMessage(Defines.ProgressType.Running, pea.Message));
+                                if (!String.IsNullOrEmpty(pea.File))
+                                    progress.Report(TransferProgress.From(pea.File));
+                                if (pea.CurrentProgress != -1 && pea.TotalProgress != -1)
+                                    progress.Report(TransferProgress.UpdateCurrentProgress((short)((float)pea.CurrentProgress / (float)pea.TotalProgress * 100.0)));
+                            }
+                            );
+
+                        progress.Report(TransferProgress.To(_destDirModel.Name));
                         using (var stream = await destProfile.DiskIO.OpenStreamAsync(_destDirModel, Defines.FileAccess.ReadWrite, pm.CancellationToken))
-                            destProfile.Wrapper.CompressMultiple(archiveType, stream, compressDic, null);
+                            destProfile.Wrapper.CompressMultiple(archiveType, stream, compressDic, progress1);
                     });
 
             return thenCommand;
@@ -112,9 +127,9 @@ namespace FileExplorer.Models
 
 
                 if (_srcModel.IsDirectory)
-                {                    
+                {
                     Func<IEntryModel, bool> filter = em => !em.IsDirectory || (em is SzsRootModel);
-                    Func<IEntryModel, bool> lookupFilter = em => em.IsDirectory && !(em is  SzsRootModel);
+                    Func<IEntryModel, bool> lookupFilter = em => em.IsDirectory && !(em is SzsRootModel);
                     return ScriptCommands.List(_srcModel, filter, lookupFilter, true, ems =>
                         new SimpleScriptCommandAsync("BatchTransfer", pd => transferAsync(pm, ems, progress,
                              new NotifyChangedCommand(_destDirModel.Profile, destFullName,
