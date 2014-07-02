@@ -42,7 +42,7 @@
                         Padding="10,0,0,0"
                         />-->
 
-            <anim:SilverLightMain Visibility="Visible" Height="30" Width="30" />
+            <!--<anim:SilverLightMain Visibility="Visible" Height="30" Width="30"  />-->
             <TextBlock Text="Loading" Visibility="{Binding IsLoading, Converter={StaticResource btvc}}" />
         </StackPanel>
     </DataTemplate>

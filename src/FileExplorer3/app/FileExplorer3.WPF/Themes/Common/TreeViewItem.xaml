@@ -37,9 +37,9 @@
                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="Header" 
                                   Margin="{TemplateBinding BorderThickness}"/>
 
-                    <anim:SilverLightMain Grid.Column="4" Visibility="{Binding IsLoading, 
+                    <!--<anim:SilverLightMain Grid.Column="4" Visibility="{Binding IsLoading, 
                             Converter={StaticResource btvc},
-                            RelativeSource={RelativeSource TemplatedParent}}" />
+                            RelativeSource={RelativeSource TemplatedParent}}" />-->
                 </StackPanel>
             </bc:HotTrack>
 
