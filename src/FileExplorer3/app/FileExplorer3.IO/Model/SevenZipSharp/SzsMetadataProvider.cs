@@ -14,7 +14,7 @@ namespace FileExplorer.Models.SevenZipSharp
     public class SzsMetadataProvider : MetadataProviderBase
     {
         public SzsMetadataProvider()
-            : base(new FileBasedMetadataProvider())
+            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider())
         {
 
         }

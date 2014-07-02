@@ -19,7 +19,7 @@ namespace FileExplorer.Models
     {
         private Func<DropNetClient> _clientFunc;
         public DropBoxMetadataProvider(Func<DropNetClient> clientFunc)
-            : base(new FileBasedMetadataProvider())
+            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider())
         {
             _clientFunc = clientFunc;
         }
