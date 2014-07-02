@@ -24,7 +24,7 @@ namespace FileExplorer.Models
         };
 
         public SkyDriveMetadataProvider()
-            : base(new FileBasedMetadataProvider())
+            : base(new BasicMetadataProvider(), new FileBasedMetadataProvider())
         {
 
         }
