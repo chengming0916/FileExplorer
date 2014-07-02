@@ -169,46 +169,50 @@ namespace FileExplorer.Models
 
         public override async Task<IEntryModel> ParseAsync(string path)
         {
-
-            IEntryModel retVal = null;
-            if (String.IsNullOrEmpty(path))
-                retVal = new FileSystemInfoExModel(this, DirectoryInfoEx.DesktopDirectory);
-            else
-                if (path.StartsWith("::"))
+            return await Task<IEntryModel>.Factory.StartNew(() =>
                 {
-                    if (DirectoryEx.Exists(path))
-                        retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+                    IEntryModel retVal = null;
+                    if (String.IsNullOrEmpty(path))
+                        retVal = new FileSystemInfoExModel(this, DirectoryInfoEx.DesktopDirectory);
                     else
-                        if (FileEx.Exists(path))
-                            retVal = new FileSystemInfoExModel(this, createFileInfo(path));
-                }
-                else
-                {
-                    if (Directory.Exists(path))
-                        retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
-                    else
-                        if (File.Exists(path))
-                            retVal = new FileSystemInfoExModel(this, createFileInfo(path));                    
-                }
-            return Converters.Convert(retVal);
+                        if (path.StartsWith("::"))
+                        {
+                            if (DirectoryEx.Exists(path))
+                                retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+                            else
+                                if (FileEx.Exists(path))
+                                    retVal = new FileSystemInfoExModel(this, createFileInfo(path));
+                        }
+                        else
+                        {
+                            if (Directory.Exists(path))
+                                retVal = new FileSystemInfoExModel(this, createDirectoryInfo(path));
+                            else
+                                if (File.Exists(path))
+                                    retVal = new FileSystemInfoExModel(this, createFileInfo(path));
+                        }
+                    return Converters.Convert(retVal);
+                });
         }
 
         public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false)
         {
-            //await Task.Delay(2000);
-            if (filter == null)
-                filter = (m) => true;
-            List<IEntryModel> retVal = new List<IEntryModel>();
-            if (entry.IsDirectory)
-            {
-                DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
-                retVal.AddRange(from fsi in di.EnumerateFileSystemInfos()
-                                let m = Converters.Convert(new FileSystemInfoExModel(this, fsi))
-                                where filter(m)
-                                select m);
-            }
-            return (IList<IEntryModel>)retVal;
-
+            return await Task<IEntryModel>.Run(() =>
+                {
+                    //await Task.Delay(2000);
+                    if (filter == null)
+                        filter = (m) => true;
+                    List<IEntryModel> retVal = new List<IEntryModel>();
+                    if (entry.IsDirectory)
+                    {
+                        DirectoryInfoEx di = createDirectoryInfo(entry.FullPath);
+                        retVal.AddRange(from fsi in di.EnumerateFileSystemInfos()
+                                        let m = Converters.Convert(new FileSystemInfoExModel(this, fsi))
+                                        where filter(m)
+                                        select m);
+                    }
+                    return (IList<IEntryModel>)retVal;
+                });
         }
 
         public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)

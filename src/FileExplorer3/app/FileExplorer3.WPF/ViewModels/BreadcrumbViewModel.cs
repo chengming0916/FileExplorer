@@ -66,6 +66,11 @@ namespace FileExplorer.WPF.ViewModels
                 IEntryViewModel evm = _bexp.SelectedItem as IEntryViewModel;
                 if (evm != null)
                     BroadcastDirectoryChanged(evm);
+
+                _switch.Dispatcher.BeginInvoke(new System.Action(() =>
+                {
+                    _switch.IsSwitchOn = true;
+                }));
             });
 
             _switch.AddValueChanged(FileExplorer.WPF.BaseControls.Switch.IsSwitchOnProperty, (o, e) =>

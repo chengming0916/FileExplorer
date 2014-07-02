@@ -118,9 +118,10 @@ namespace FileExplorer.WPF.ViewModels
                 }
                 else
                 {
-                    await FileList.SetCurrentDirectoryAsync(entryModel);
-                    await DirectoryTree.SelectAsync(entryModel);
-                    await Breadcrumb.Selection.AsRoot().SelectAsync(entryModel);
+                    await Task.WhenAll(
+                        FileList.SetCurrentDirectoryAsync(entryModel),
+                        DirectoryTree.SelectAsync(entryModel),
+                        Breadcrumb.Selection.AsRoot().SelectAsync(entryModel));
                 }
             }
 
