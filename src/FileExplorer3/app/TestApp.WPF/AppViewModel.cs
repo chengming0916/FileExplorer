@@ -42,7 +42,7 @@ namespace TestApp
 
             _events.Subscribe(this);
             _profile = new FileSystemInfoProfile(_events, windowManager);
-            _profileEx = new FileSystemInfoExProfile(events, windowManager);
+            _profileEx = new FileSystemInfoExProfile(events, windowManager, new FileExplorer.Models.SevenZipSharp.SzsProfile());
 
             Func<string> loginSkyDrive = () =>
             {

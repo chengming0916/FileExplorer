@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace FileExplorer
             
             FileExplorer.Models.FileSystemInfoExProfile profile =
                 new FileExplorer.Models.FileSystemInfoExProfile(null, null);
-            var desktopDir = profile.ParseAsync("").Result;
+            var desktopDir = AsyncUtils.RunSync(() => profile.ParseAsync(""));
             explorer.RootDirectories = new FileExplorer.Models.IEntryModel[] { desktopDir };
         }
     }

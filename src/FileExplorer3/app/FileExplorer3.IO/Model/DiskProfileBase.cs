@@ -13,8 +13,8 @@ namespace FileExplorer.Models
     public abstract class DiskProfileBase : ProfileBase, IDiskProfile
     {
 
-        public DiskProfileBase(IEventAggregator events)
-            : base(events)
+        public DiskProfileBase(IEventAggregator events, params IConverterProfile[] converters)
+            : base(events, converters)
         {
             MetadataProvider = new MetadataProviderBase(new BasicMetadataProvider(), new FileBasedMetadataProvider());
         }

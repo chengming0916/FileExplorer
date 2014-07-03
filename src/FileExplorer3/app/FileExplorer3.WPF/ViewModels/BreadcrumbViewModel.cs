@@ -87,17 +87,17 @@ namespace FileExplorer.WPF.ViewModels
                     }
                 });
 
-            _sbox.AddHandler(TextBlock.LostFocusEvent, (RoutedEventHandler)((s, e) =>
-            {
-                if (!_switch.IsSwitchOn)
-                {
-                    _switch.Dispatcher.BeginInvoke(new System.Action(() =>
-                        {
-                            _switch.IsSwitchOn = true;
-                        }));
-                }
+            //_sbox.AddHandler(TextBlock.LostFocusEvent, (RoutedEventHandler)((s, e) =>
+            //{
+            //    if (!_switch.IsSwitchOn)
+            //    {
+            //        _switch.Dispatcher.BeginInvoke(new System.Action(() =>
+            //            {
+            //                _switch.IsSwitchOn = true;
+            //            }));
+            //    }
 
-            }));
+            //}));
         }
 
 

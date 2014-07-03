@@ -21,12 +21,12 @@ namespace FileExplorer.WPF.Models
 
         #region Constructor
 
-        public ProfileBase(IEventAggregator events)
+        public ProfileBase(IEventAggregator events, params IConverterProfile[] converters)
         {
             ProfileName = "Unspecified";
             ProfileIcon = null;
             RootDisplayName = "Root";
-            
+
             Path = PathHelper.Disk;
             SuggestSource = new ProfileSuggestionSource(this);
 
@@ -37,7 +37,7 @@ namespace FileExplorer.WPF.Models
 
             DragDrop = new NullDragDropHandler();
             Events = events ?? new EventAggregator();
-            Converters = new IConverterProfile[] { };
+            Converters = converters;
 
         }
 
@@ -71,11 +71,23 @@ namespace FileExplorer.WPF.Models
             return false;
         }
 
+        private void setConverters(IConverterProfile[] converters)
+        {
+            _converters = converters ?? new IConverterProfile[] { };
+            foreach (var conv in _converters)
+                conv.SetOwner(this);
+            _mSuggestSource = new MultiSuggestSource(_suggestSource, Converters.Select(c => c.SuggestSource).ToArray());
+        }
+
+
         #endregion
 
         #region Data
 
         string[] _pathPatterns = new string[] { };
+        private IConverterProfile[] _converters = new IConverterProfile[] {};
+        private ISuggestSource _suggestSource = new NullSuggestSource();
+        private ISuggestSource _mSuggestSource = new NullSuggestSource();
 
         #endregion
 
@@ -88,11 +100,19 @@ namespace FileExplorer.WPF.Models
                 _pathPatterns = value;
             }
         }
-        
+
         public string ProfileName { get; protected set; }
         public byte[] ProfileIcon { get; protected set; }
         public IPathHelper Path { get; protected set; }
-        public ISuggestSource SuggestSource { get; protected set; }
+        public ISuggestSource SuggestSource
+        {
+            get { return _mSuggestSource; }
+            protected set
+            {
+                _suggestSource = value;
+                _mSuggestSource = new MultiSuggestSource(value, Converters.Select(c => c.SuggestSource).ToArray());
+            }
+        }
         public IDragDropHandler DragDrop { get; protected set; }
         public string RootDisplayName { get; protected set; }
         public IEntryHierarchyComparer HierarchyComparer { get; protected set; }
@@ -100,8 +120,9 @@ namespace FileExplorer.WPF.Models
         public IEnumerable<ICommandProvider> CommandProviders { get; protected set; }
         //public IDiskPathMapper PathMapper { get; protected set; }
         public IEventAggregator Events { get; protected set; }
-        public IConverterProfile[] Converters { get; protected set; }
-        
+        public IConverterProfile[] Converters { get { return _converters; } set { setConverters(value); } }
+
+
         #endregion
 
     }
