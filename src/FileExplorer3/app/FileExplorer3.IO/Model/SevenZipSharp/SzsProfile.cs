@@ -23,14 +23,12 @@ namespace FileExplorer.Models.SevenZipSharp
 
         #region Constructors
 
-        public SzsProfile(IProfile baseProfile)
-            : base(baseProfile.Events())
-        {
-            HierarchyComparer = baseProfile.HierarchyComparer;
+        public SzsProfile()
+            : base(null)
+        {            
             DragDrop = new FileBasedDragDropHandler(this, null);
             MetadataProvider = new SzsMetadataProvider();
-            DiskIO = new SzsDiskIOHelper(this);
-            _baseProfile = baseProfile;
+            DiskIO = new SzsDiskIOHelper(this);            
             _wrapper = new SevenZipWrapper();
         }
 
@@ -100,6 +98,13 @@ namespace FileExplorer.Models.SevenZipSharp
             //return base.GetIconExtractSequence(entry);
         }
 
+        public void SetOwner(IProfile profile)
+        {
+            _baseProfile = profile;
+            base.HierarchyComparer = profile.HierarchyComparer;
+            base.Events = profile.Events();
+        }
+
         #endregion
 
         #region Data
@@ -118,5 +123,7 @@ namespace FileExplorer.Models.SevenZipSharp
         internal List<ISzsItemModel> VirtualModels { get { return _virtualModels; } }
 
         #endregion
+
+       
     }
 }

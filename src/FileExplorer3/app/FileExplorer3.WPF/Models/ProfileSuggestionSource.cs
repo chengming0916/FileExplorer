@@ -12,7 +12,7 @@ namespace FileExplorer.WPF.Models
 {
     public class ProfileSuggestionSource : ISuggestSource
     {
-       
+
         #region Constructor
 
         public ProfileSuggestionSource(IProfile profile)
@@ -25,30 +25,15 @@ namespace FileExplorer.WPF.Models
 
         #region Methods
 
-        public static string GetDirectoryName(string path)
-        {
-            int idx = path.LastIndexOf('\\');
-            if (idx == -1)
-                return "";
-            return path.Substring(0, idx);
-        }
-
-        public static string GetFileName(string path)
-        {
-            int idx = path.LastIndexOf('\\');
-            if (idx == -1)
-                return path;
-            return path.Substring(idx + 1);
-        }
-
         public async Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
         {
-            string dir = GetDirectoryName(input);
-            string searchStr = GetFileName(input);
-            if (String.IsNullOrEmpty(searchStr) && input.EndsWith("\\"))
-                searchStr += "\\";
+            string dir = input.EndsWith(_profile.Path.Separator + "") ? input : _profile.Path.GetDirectoryName(input);
+            string searchStr = _profile.Path.GetFileName(input);
 
-            if (dir == "" && input.EndsWith("\\"))
+            if (String.IsNullOrEmpty(searchStr) && input.EndsWith(_profile.Path.Separator + ""))
+                searchStr += _profile.Path.Separator;
+
+            if (dir == "" && input.EndsWith(_profile.Path.Separator + ""))
                 dir = searchStr;
             var found = await _profile.ParseAsync(dir);
             List<object> retVal = new List<object>();
@@ -57,15 +42,19 @@ namespace FileExplorer.WPF.Models
             {
                 if (_cts != null)
                     _cts.Cancel();
-                _cts = new CancellationTokenSource();
+                var cts = _cts = new CancellationTokenSource();
                 foreach (var item in await _profile.ListAsync(found, _cts.Token, em => em.IsDirectory))
                 {
+                    if (cts.IsCancellationRequested)
+                        break;
                     if (item.FullPath.StartsWith(input, StringComparison.CurrentCultureIgnoreCase) &&
                         !item.FullPath.Equals(input, StringComparison.CurrentCultureIgnoreCase))
                         retVal.Add(item);
                 }
+                if (cts.IsCancellationRequested)
+                    return new List<object>();
             }
-
+            
             return retVal;
         }
 

@@ -11,6 +11,11 @@ namespace FileExplorer.Models
     /// </summary>
     public interface IConverterProfile : IProfile
     {
+        /// <summary>
+        /// This is set in ProfileBase.
+        /// </summary>
+        /// <param name="profile"></param>
+        void SetOwner(IProfile profile);
         IEntryModel Convert(IEntryModel entryModel);
     }
   

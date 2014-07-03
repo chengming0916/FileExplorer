@@ -82,4 +82,26 @@ namespace FileExplorer.WPF.BaseControls
             return Task.Run<IList<object>>(() => new List<object>() );
         }
     }
+
+    public class MultiSuggestSource : ISuggestSource
+    {
+        private ISuggestSource[] _suggestSources;
+        public MultiSuggestSource(params ISuggestSource[] suggestSources)
+        {
+            _suggestSources = suggestSources;
+        }
+
+        public MultiSuggestSource(ISuggestSource source1, params ISuggestSource[] moreSources)
+        {
+            _suggestSources = (new ISuggestSource[] { source1 }).Concat(moreSources).ToArray();
+        }
+
+        public async Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
+        {
+            List<object> retVal = new List<object>();
+            foreach (var ss in _suggestSources)
+                retVal.AddRange(await ss.SuggestAsync(data, input, helper));
+            return retVal;
+        }
+    }
 }

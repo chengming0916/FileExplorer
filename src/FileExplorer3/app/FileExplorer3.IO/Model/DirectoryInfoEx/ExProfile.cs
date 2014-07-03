@@ -119,8 +119,8 @@ namespace FileExplorer.Models
             }
         }
 
-        public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager)
-            : base(events)
+        public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager, params IConverterProfile[] converters)
+            : base(events, converters)
         {
             ProfileName = "FileSystem (Ex)";
             ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/DirectoryInfoEx/My_Computer.png");
@@ -135,8 +135,7 @@ namespace FileExplorer.Models
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
             DragDrop = new FileBasedDragDropHandler(this, windowManager);
             //PathMapper = IODiskPatheMapper.Instance;
-
-            Converters = new IConverterProfile[] { new FileExplorer.Models.SevenZipSharp.SzsProfile(this) };
+            
             PathPatterns = new string[] { RegexPatterns.FileSystemGuidPattern, RegexPatterns.FileSystemPattern };
         }
 

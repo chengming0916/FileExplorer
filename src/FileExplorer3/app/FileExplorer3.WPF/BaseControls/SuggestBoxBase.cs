@@ -130,8 +130,8 @@ namespace FileExplorer.WPF.BaseControls
                 return;
 
             if (txtBindingExpr != null)
-                    txtBindingExpr.UpdateSource();
-                RaiseEvent(new RoutedEventArgs(ValueChangedEvent));                            
+                txtBindingExpr.UpdateSource();
+            RaiseEvent(new RoutedEventArgs(ValueChangedEvent));
         }
 
         #endregion
@@ -182,7 +182,8 @@ namespace FileExplorer.WPF.BaseControls
                         _itemList.SelectedIndex = 0;
                         ListBoxItem lbi = _itemList.ItemContainerGenerator
                             .ContainerFromIndex(0) as ListBoxItem;
-                        lbi.Focus();
+                        if (lbi != null)
+                            lbi.Focus();
                         e.Handled = true;
                     }
                     break;
@@ -209,7 +210,7 @@ namespace FileExplorer.WPF.BaseControls
 
             }
 
-        }       
+        }
 
         protected static void OnSuggestionsChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
@@ -266,7 +267,7 @@ namespace FileExplorer.WPF.BaseControls
             get { return (string)GetValue(ValuePathProperty); }
             set { SetValue(ValuePathProperty, value); }
         }
-     
+
         #endregion
 
         #region Suggestions
@@ -279,7 +280,7 @@ namespace FileExplorer.WPF.BaseControls
             get { return (IList<object>)GetValue(SuggestionsProperty); }
             set { SetValue(SuggestionsProperty, value); }
         }
-        
+
         #endregion
 
         #region HeaderTemplate

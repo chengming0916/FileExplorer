@@ -16,7 +16,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using FileExplorer;
-using Cofe.Core.Script;
 using FileExplorer.WPF.Models;
 
 namespace FileExplorer
@@ -37,7 +36,7 @@ namespace FileExplorer
 
             FileExplorer.Models.FileSystemInfoExProfile profile =
                 new FileExplorer.Models.FileSystemInfoExProfile(null, null);
-            var desktopDir = profile.ParseAsync("").Result;
+            var desktopDir = AsyncUtils.RunSync(() => profile.ParseAsync(""));
             _rootDirs = new FileExplorer.Models.IEntryModel[] { desktopDir };
             _mask = "Texts (.txt)|*.txt|Pictures (.jpg, .png)|*.jpg,*.png|Songs (.mp3)|*.mp3|All Files (*.*)|*.*";
             _selectedPath = "c:\\";
