@@ -12,6 +12,7 @@ using FileExplorer;
 using System.Windows.Input;
 using FileExplorer.Defines;
 using FileExplorer.WPF.UserControls.InputProcesor;
+using FileExplorer.Script;
 
 namespace FileExplorer.WPF.BaseControls
 {

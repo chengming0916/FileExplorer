@@ -12,7 +12,7 @@ using FileExplorer.IO;
 using System.Threading;
 using System.IO;
 
-namespace FileExplorer.WPF.ViewModels
+namespace FileExplorer.Script
 {
     public static partial class ScriptCommands
     {

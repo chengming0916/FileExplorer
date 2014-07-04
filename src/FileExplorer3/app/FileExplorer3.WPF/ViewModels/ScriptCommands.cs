@@ -23,7 +23,7 @@ using System.IO;
 using FileExplorer.WPF.Defines;
 using FileExplorer.IO;
 
-namespace FileExplorer.WPF.ViewModels
+namespace FileExplorer.Script
 {
 
     public static partial class ScriptCommands

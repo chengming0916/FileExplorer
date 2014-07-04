@@ -8,6 +8,7 @@ using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Script;
 
 namespace FileExplorer.WPF.ViewModels
 {

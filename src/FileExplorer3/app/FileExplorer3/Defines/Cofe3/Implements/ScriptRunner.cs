@@ -6,9 +6,26 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Script
-{
+{   
     public class ScriptRunner : IScriptRunner
     {
+
+        public static Task RunScriptAsync(ParameterDic initialParameters, params IScriptCommand[] commands)
+        {
+            return new ScriptRunner().RunAsync(new Queue<IScriptCommand>(commands), initialParameters);
+        }
+
+        public static void RunScript(ParameterDic initialParameters, params IScriptCommand[] commands)
+        {
+            new ScriptRunner().Run(new Queue<IScriptCommand>(commands), initialParameters);
+        }
+        
+        public ScriptRunner()
+        {
+
+        }
+
+
         public void Run(Queue<IScriptCommand> cmds, ParameterDic initialParameters)
         {
             ParameterDic pd = initialParameters;

@@ -18,8 +18,9 @@ using FileExplorer.WPF.ViewModels;
 using FileExplorer.Defines;
 using Caliburn.Micro;
 using FileExplorer.IO;
+using FileExplorer.Models;
 
-namespace FileExplorer.Models
+namespace FileExplorer.Script
 {
     public static partial class IOScriptCommands
     {

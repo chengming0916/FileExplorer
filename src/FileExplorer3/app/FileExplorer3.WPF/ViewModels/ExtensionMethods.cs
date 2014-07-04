@@ -14,7 +14,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.Models;
 
-namespace FileExplorer.WPF
+namespace FileExplorer.Script
 {
     public static partial class ExtensionMethods
     {

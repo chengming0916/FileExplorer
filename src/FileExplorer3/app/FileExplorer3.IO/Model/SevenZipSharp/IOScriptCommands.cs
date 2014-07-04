@@ -1,5 +1,6 @@
 ﻿using FileExplorer.IO;
 using FileExplorer.IO.Compress;
+using FileExplorer.Models;
 using FileExplorer.Models.SevenZipSharp;
 using FileExplorer.Script;
 using FileExplorer.Utils;
@@ -13,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Models
+namespace FileExplorer.Script
 {
     public static partial class IOScriptCommands
     {

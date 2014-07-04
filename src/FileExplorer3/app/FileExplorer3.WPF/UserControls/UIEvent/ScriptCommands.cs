@@ -11,10 +11,12 @@ using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using System.Windows.Input;
 
-namespace FileExplorer.WPF.ViewModels
+namespace FileExplorer.Script
 {
     public static partial class ScriptCommands
     {
+
+
         public static DebugScriptCommand PrintSourceDC = new DebugScriptCommand(DebugScriptCommand.HandleType.printOrgSource);
         public static DebugScriptCommand PrintSelectedDC = new DebugScriptCommand(DebugScriptCommand.HandleType.printSelector);
         public static DebugScriptCommand PrepareDrag = new DebugScriptCommand(DebugScriptCommand.HandleType.prepareDataObject);

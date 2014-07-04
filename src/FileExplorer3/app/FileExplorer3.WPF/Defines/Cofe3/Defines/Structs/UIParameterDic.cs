@@ -10,7 +10,7 @@ using FileExplorer;
 using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.BaseControls;
 
-namespace FileExplorer.WPF
+namespace FileExplorer.Script
 {
     public static partial class ExtensionMethods
     {

@@ -1,5 +1,6 @@
 ﻿using FileExplorer.IO;
 using FileExplorer.IO.Compress;
+using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 using System;
 using System.Collections.Generic;

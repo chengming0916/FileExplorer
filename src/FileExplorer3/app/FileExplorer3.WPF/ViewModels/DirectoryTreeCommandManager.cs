@@ -40,12 +40,12 @@ namespace FileExplorer.WPF.ViewModels
             ScriptCommands.NewWindow = NullScriptCommand.Instance;
             ScriptCommands.Map = NullScriptCommand.Instance;
             ScriptCommands.Unmap = Explorer.DoSelection(ems =>
-                ViewModels.ScriptCommands.If(pd => (ems.First() as IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
-                        ViewModels.ScriptCommands.IfOkCancel(windowManager, pd => "Unmap",  
+                Script.ScriptCommands.If(pd => (ems.First() as IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
+                        Script.ScriptCommands.IfOkCancel(windowManager, pd => "Unmap",  
                             pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label), 
                             Explorer.BroadcastRootChanged(RootChangedEvent.Deleted(ems.Select(em => em.EntryModel).ToArray())),
                             ResultCommand.OK),
-                        ViewModels.ScriptCommands.NoCommand), ViewModels.ScriptCommands.NoCommand); 
+                        Script.ScriptCommands.NoCommand), Script.ScriptCommands.NoCommand); 
 
             #endregion
 
