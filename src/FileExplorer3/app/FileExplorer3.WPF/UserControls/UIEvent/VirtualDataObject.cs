@@ -24,6 +24,7 @@ namespace FileExplorer.WPF.UserControls.DragDrop
         public VirtualDataObject(INotifyDropped notifyDropped)
         {
             _notifyDropped = notifyDropped;
+            IsVirtual = true;
         }
 
         #endregion
@@ -36,9 +37,9 @@ namespace FileExplorer.WPF.UserControls.DragDrop
         /// <param name="format"></param>
         /// <returns></returns>
         public override object GetData(String format, bool autoConvert)
-        {            
-            Object obj = base.GetData(format, autoConvert);            
-            if (!inDragLoop() && !_notifyDropCalled && format.Equals(DataFormats.FileDrop))
+        {
+            Object obj = base.GetData(format, autoConvert);
+            if (IsVirtual && !inDragLoop() && !_notifyDropCalled && format.Equals(DataFormats.FileDrop))
             {
                 string s;
                 try
@@ -61,7 +62,7 @@ namespace FileExplorer.WPF.UserControls.DragDrop
         /// </summary>
         /// <returns></returns>
         private bool inDragLoop()
-        {            
+        {
             return (0 != (int)base.GetData(ShellClipboardFormats.CFSTR_INDRAGLOOP, true));
         }
 
@@ -75,6 +76,8 @@ namespace FileExplorer.WPF.UserControls.DragDrop
         #endregion
 
         #region Public Properties
+
+        public bool IsVirtual { get; protected set; }
 
         #endregion
 
@@ -104,11 +107,14 @@ namespace FileExplorer.WPF.UserControls.DragDrop
         public void SetFileDropData(IFileDropItem[] fileDrops, DragDropEffects effects = DragDropEffects.Copy)
         {
             _fileDrops = fileDrops;
+
             string[] _fileNames = (from fd in _fileDrops select fd.FileSystemPath).ToArray();
 
             SetData(DataFormats.FileDrop, _fileNames);
             SetData(ShellClipboardFormats.CFSTR_PREFERREDDROPEFFECT, effects);
-            SetData(ShellClipboardFormats.CFSTR_INDRAGLOOP, 1);
+            IsVirtual = fileDrops.Any(fd => fd.IsVirtual);
+            if (IsVirtual)
+                SetData(ShellClipboardFormats.CFSTR_INDRAGLOOP, 1);
         }
 
 
@@ -122,7 +128,7 @@ namespace FileExplorer.WPF.UserControls.DragDrop
 
         #region Public Properties
 
-        public IFileDropItem[] FileDrops { get { return _fileDrops; } }        
+        public IFileDropItem[] FileDrops { get { return _fileDrops; } }
 
         #endregion
 

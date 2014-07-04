@@ -61,12 +61,15 @@ namespace FileExplorer.Models
         public IScriptCommand TransferCommand { get; set; }
 
         private IProfile _profile;
-        public FileBasedDragDropHandler(IProfile profile, IWindowManager windowManager)
+        private Func<IEntryModel, bool> _getIsVirtualFunc;
+
+        public FileBasedDragDropHandler(IProfile profile, IWindowManager windowManager, Func<IEntryModel, bool> getIsVirtualFunc = null)
         {
             _profile = profile;
             _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
                 new FileSystemInfoProfile(profile.Events(), windowManager);
-            
+            _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);
+
             TransferCommand =
                new FileExplorer.WPF.ViewModels.TransferCommand((effect, source, destDir) =>
                    source.Profile is IDiskProfile ?
@@ -75,18 +78,28 @@ namespace FileExplorer.Models
                    , windowManager);
         }
 
-        public async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
+        public virtual async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
         {
             entries =
                 entries.Select(m => m is IConvertedEntryModel ? (m as IConvertedEntryModel).OriginalEntryModel : m);
+
+            //if (entries.Any(e => _getIsVirtualFunc(e)))
+            //{
             var retVal = new FileDropDataObject(new HandleFileDropped(entries.ToArray()));
             retVal.SetFileDropData(entries
-                .Where(m => m.Profile is IDiskProfile)                
-                .Select(m => new FileDrop((m.Profile as IDiskProfile).DiskIO.Mapper[m].IOPath, m.IsDirectory))
+                .Where(m => m.Profile is IDiskProfile)
+                .Select(m =>
+                    _getIsVirtualFunc(m) ?
+                    (IFileDropItem)new VirtualFileDrop((m.Profile as IDiskProfile).DiskIO.Mapper[m].IOPath, m.IsDirectory) :
+                    new FileDrop((m.Profile as IDiskProfile).DiskIO.Mapper[m].IOPath, m.IsDirectory))
                 .Where(fd => fd.FileSystemPath != null)
                 .ToArray());
 
             return retVal;
+            //}
+            //else return new DataObject(DataFormats.FileDrop,
+            //    entries.Select(e => (e.Profile as IDiskProfile).DiskIO.Mapper[e].IOPath).ToArray()
+            //    );
         }
 
         public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)

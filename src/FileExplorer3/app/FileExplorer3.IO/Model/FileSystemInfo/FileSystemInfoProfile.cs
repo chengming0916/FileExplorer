@@ -31,7 +31,7 @@ namespace FileExplorer.Models
             MetadataProvider = new ExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = IODiskPatheMapper.Instance;
-            DragDrop = new FileBasedDragDropHandler(this, windowsManager);
+            DragDrop = new FileBasedDragDropHandler(this, windowsManager, em => false);
         }
 
         #endregion
