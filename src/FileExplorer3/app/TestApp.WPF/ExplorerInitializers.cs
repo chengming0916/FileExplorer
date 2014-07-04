@@ -119,10 +119,10 @@ namespace TestApp
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
             explorerModel.DirectoryTree.Commands.ScriptCommands.NewWindow =
-              new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.WPF.ExtensionMethods.GetCurrentDirectoryFunc);
+              new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.Script.ExtensionMethods.GetCurrentDirectoryFunc);
 
             explorerModel.FileList.Commands.ScriptCommands.NewWindow =
-                new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.WPF.ExtensionMethods.GetFileListSelectionFunc);
+                new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.Script.ExtensionMethods.GetFileListSelectionFunc);
         }
     }
 

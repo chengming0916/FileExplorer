@@ -71,7 +71,7 @@ namespace FileExplorer.Models
             _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);
 
             TransferCommand =
-               new FileExplorer.WPF.ViewModels.TransferCommand((effect, source, destDir) =>
+               new FileExplorer.Script.TransferCommand((effect, source, destDir) =>
                    source.Profile is IDiskProfile ?
                        IOScriptCommands.Transfer(source, destDir, effect == DragDropEffects.Move)
                        : ResultCommand.Error(new NotSupportedException())
@@ -176,7 +176,7 @@ namespace FileExplorer.Models
                     return DragDropEffects.None;
 
                 var sr = new ScriptRunner();
-                sr.RunAsync(
+                ScriptRunner.RunScriptAsync(
                     new ParameterDic()
                     {
                         { "Source" , entries.ToArray() },

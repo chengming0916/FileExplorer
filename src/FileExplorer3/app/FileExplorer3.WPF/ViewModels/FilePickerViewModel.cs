@@ -8,12 +8,12 @@ using System.Windows;
 using System.Windows.Controls;
 using Caliburn.Micro;
 using FileExplorer;
-using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Helpers;
-using vms = FileExplorer.WPF.ViewModels;
+using FileExplorer.Script;
 using FileExplorer.Models;
+
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -39,8 +39,8 @@ namespace FileExplorer.WPF.ViewModels
             _mode = mode;
             _tryCloseCommand = new SimpleScriptCommand("TryClose", pd => { TryClose(true); return ResultCommand.NoError; });
 
-            FileList.Commands.ScriptCommands.Open = vms.FileList.IfSelection(evm => evm.Count() == 1,
-                   vms.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
+            FileList.Commands.ScriptCommands.Open = FileExplorer.Script.FileList.IfSelection(evm => evm.Count() == 1,
+                   FileExplorer.Script.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        OpenSelectedDirectory.FromFileList,  //Selected directory
                        new SimpleScriptCommand("", (pd) =>
                        {
@@ -72,12 +72,12 @@ namespace FileExplorer.WPF.ViewModels
                     if (!String.IsNullOrEmpty(newFileName))
                         switch (mode)
                         {
-                           case FilePickerMode.Save: setFileName(newFileName, 
-                                !newFileName.Contains(',')); break;
+                            case FilePickerMode.Save: setFileName(newFileName,
+                                 !newFileName.Contains(',')); break;
                             default: setFileName(newFileName); break;
                         }
-                      
-                    
+
+
                 }
             };
 
@@ -152,7 +152,7 @@ namespace FileExplorer.WPF.ViewModels
 
             new ScriptRunner().Run(pm,
                 ScriptCommands.RunInSequence(
-                     ViewModels.FileList.Lookup(
+                     Script.FileList.Lookup(
                                m => m.FullPath.Equals(FileName) || m.Profile.Path.GetFileName(m.FullPath).Equals(FileName),
                                queryOverwrite,
                                FileList.CurrentDirectory.Profile.Parse(FileName, queryOverwrite,
@@ -172,7 +172,7 @@ namespace FileExplorer.WPF.ViewModels
             ScriptCommands.RunInSequence(
                 ScriptCommands.ForEach(
                     FileName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),
-                    f => ViewModels.FileList.Lookup(
+                    f => Script.FileList.Lookup(
                             m => m.FullPath.Equals(f) || m.Profile.Path.GetFileName(m.FullPath).Equals(f),
                             addToSelectedFiles,
                             FileList.CurrentDirectory.Profile.Parse(f, addToSelectedFiles,
@@ -203,7 +203,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         protected IScriptCommand _tryCloseCommand;
-        private static ColumnFilter _directoryOnlyFilter = 
+        private static ColumnFilter _directoryOnlyFilter =
             ColumnFilter.CreateNew<IEntryModel>("DirectoryOnly", "IsDirectory", evm => evm.IsDirectory);
         IEntryModel[] _selectedFiles;
         bool _canOpen = false, _canSave = false;

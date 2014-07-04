@@ -50,7 +50,7 @@ namespace FileExplorer.WPF.UserControls
                     exp._evm.Commands.Execute(
                         new IScriptCommand[] 
                     { 
-                        FileExplorer.WPF.ViewModels.Explorer.ChangeRoot(ChangeType.Changed, newRootDirs),
+                        FileExplorer.Script.Explorer.ChangeRoot(ChangeType.Changed, newRootDirs),
                         //FileExplorer.ViewModels.Explorer.GoTo(newRootDirs.First())
                     }
                         );

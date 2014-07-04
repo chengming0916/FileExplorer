@@ -19,6 +19,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Script;
 
 namespace FileExplorer.WPF.BaseControls.DragnDrop
 {

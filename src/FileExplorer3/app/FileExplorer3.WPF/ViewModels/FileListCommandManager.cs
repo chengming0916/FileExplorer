@@ -11,7 +11,6 @@ using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.BaseControls;
 using System.Windows.Input;
 using FileExplorer.Defines;
-using vm = FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
 
@@ -56,17 +55,18 @@ namespace FileExplorer.WPF.ViewModels
 
             ScriptCommands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,
-                    vm.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
+                    FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
                     NullScriptCommand.Instance);
 
             ScriptCommands.Cut =
                  FileList.IfSelection(evm => evm.Count() >= 1,
-                    vm.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
+                    FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
                     NullScriptCommand.Instance);
 
-            ScriptCommands.Paste = vm.ScriptCommands.RunInSequence(
+            ScriptCommands.Paste = FileExplorer.Script.ScriptCommands.RunInSequence(
                 FileList.AssignCurrentDirectoryToDestination(
-                    FileList.AssignSelectionToParameter(ClipboardCommands.Paste(ExtensionMethods.GetFileListCurrentDirectoryFunc,
+                    FileList.AssignSelectionToParameter(ClipboardCommands.Paste(
+                    FileExplorer.Script.ExtensionMethods.GetFileListCurrentDirectoryFunc,
                     (dragDropEffects, src, dest) => new SimpleScriptCommand("Paste", (pm) =>
                         {
                             dest.Profile.DragDrop().OnDropCompleted(src.ToList(), null, dest, dragDropEffects);
