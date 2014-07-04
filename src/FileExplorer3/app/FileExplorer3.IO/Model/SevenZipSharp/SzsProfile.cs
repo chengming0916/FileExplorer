@@ -26,7 +26,7 @@ namespace FileExplorer.Models.SevenZipSharp
         public SzsProfile()
             : base(null)
         {            
-            DragDrop = new FileBasedDragDropHandler(this, null);
+            DragDrop = new FileBasedDragDropHandler(this, null, em => !(em is SzsRootModel));
             MetadataProvider = new SzsMetadataProvider();
             DiskIO = new SzsDiskIOHelper(this);            
             _wrapper = new SevenZipWrapper();

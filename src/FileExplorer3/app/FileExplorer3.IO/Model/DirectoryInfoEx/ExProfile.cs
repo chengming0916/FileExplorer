@@ -133,7 +133,7 @@ namespace FileExplorer.Models
                 new ExCommandProvider(this)
             };
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
-            DragDrop = new FileBasedDragDropHandler(this, windowManager);
+            DragDrop = new FileBasedDragDropHandler(this, windowManager, em => false);
             //PathMapper = IODiskPatheMapper.Instance;
             
             PathPatterns = new string[] { RegexPatterns.FileSystemGuidPattern, RegexPatterns.FileSystemPattern };
