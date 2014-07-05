@@ -102,8 +102,7 @@ namespace FileExplorer.WPF.Utils
             {
                 CanExecuteDelegate = (p) => 
                     ScriptCommand.CanExecute(ParameterDicConverter.Convert(p)),
-                ExecuteDelegate = (p) => ScriptRunnerSources.Default.GetScriptRunner().RunAsync(
-                    new Queue<IScriptCommand>(new[] { ScriptCommand }), ParameterDicConverter.Convert(p))
+                ExecuteDelegate = (p) => ScriptRunner.RunScriptAsync(ParameterDicConverter.Convert(p), ScriptCommand)
             };
         }
 

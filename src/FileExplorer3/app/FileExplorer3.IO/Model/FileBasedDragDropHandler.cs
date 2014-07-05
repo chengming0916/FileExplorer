@@ -174,8 +174,7 @@ namespace FileExplorer.Models
 
                 if (effect == DragDropEffects.None)
                     return DragDropEffects.None;
-
-                var sr = new ScriptRunner();
+                
                 ScriptRunner.RunScriptAsync(
                     new ParameterDic()
                     {

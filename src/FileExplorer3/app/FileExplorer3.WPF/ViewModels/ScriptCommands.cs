@@ -326,7 +326,7 @@ namespace FileExplorer.Script
 
             try
             {
-                new ScriptRunner().Run(_nextCommand, pm);
+                ScriptRunner.RunScript(pm, _nextCommand);
             }
             catch (Exception ex)
             {
@@ -349,7 +349,7 @@ namespace FileExplorer.Script
 
             try
             {
-                await new ScriptRunner().RunAsync(pm, _nextCommand);
+                await ScriptRunner.RunScriptAsync(pm, _nextCommand);
             }
             catch (Exception ex)
             {

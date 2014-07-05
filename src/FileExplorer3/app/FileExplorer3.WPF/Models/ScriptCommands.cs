@@ -157,7 +157,7 @@ namespace FileExplorer.WPF.Models
         {
             IDiskProfile profile = _entryModel.Profile as IDiskProfile;
             using (var stream = profile.DiskIO.OpenStreamAsync(_entryModel, _access, pm.CancellationToken).Result)
-                new ScriptRunner().Run(pm, _streamFunc(_entryModel, stream));
+                ScriptRunner.RunScript(pm, _streamFunc(_entryModel, stream));                
             return _nextCommand;
         }
 
@@ -165,7 +165,7 @@ namespace FileExplorer.WPF.Models
         {
             IDiskProfile profile = _entryModel.Profile as IDiskProfile;
             using (var stream = await profile.DiskIO.OpenStreamAsync(_entryModel, _access, pm.CancellationToken))
-                await new ScriptRunner().RunAsync(pm, _streamFunc(_entryModel, stream));
+                await ScriptRunner.RunScriptAsync(pm, _streamFunc(_entryModel, stream));
             return _nextCommand;
         }
     }

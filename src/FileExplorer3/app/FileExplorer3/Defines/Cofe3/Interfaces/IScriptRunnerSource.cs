@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Script
 {
-    public interface IScriptRunnerSource
-    {
-        ScriptRunner GetScriptRunner();
-    }
+    //public interface IScriptRunnerSource
+    //{
+    //    ScriptRunner GetScriptRunner();
+    //}
 }

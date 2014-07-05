@@ -181,8 +181,7 @@ namespace FileExplorer.Script
 
         public virtual IScriptCommand Execute(ParameterDic pm)
         {
-            var sr = new ScriptRunner();
-            sr.Run(new Queue<IScriptCommand>(ScriptCommands), pm);
+            ScriptRunner.RunScript(pm, ScriptCommands);            
             if (pm.Error != null)
                 return ResultCommand.Error(pm.Error);
             else return _nextCommand;
@@ -195,8 +194,7 @@ namespace FileExplorer.Script
 
         public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            var sr = new ScriptRunner();
-            await sr.RunAsync(new Queue<IScriptCommand>(ScriptCommands), pm).ConfigureAwait(true);
+            await ScriptRunner.RunScriptAsync(pm, ScriptCommands);
             if (pm.Error != null)
                 return ResultCommand.Error(pm.Error);
             else return _nextCommand;
