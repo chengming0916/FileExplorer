@@ -123,7 +123,7 @@ namespace FileExplorer.WPF.ViewModels
 
         //}
 
-        public void Save()
+        public async Task Save()
         {
             var pm = FileList.Commands.ParameterDicConverter.Convert(new ParameterDic());
             Profile = FileList.CurrentDirectory.Profile;
@@ -150,7 +150,7 @@ namespace FileExplorer.WPF.ViewModels
                         pd => "Overwrite " + Profile.Path.GetFileName(FileName),
                         setSelectedFiles(m), ResultCommand.Error(new Exception("User cancel")) /* Cancel if user press cancel. */);
 
-            new ScriptRunner().Run(pm,
+            await ScriptRunner.RunScriptAsync(pm,
                 ScriptCommands.RunInSequence(
                      Script.FileList.Lookup(
                                m => m.FullPath.Equals(FileName) || m.Profile.Path.GetFileName(m.FullPath).Equals(FileName),
@@ -161,14 +161,14 @@ namespace FileExplorer.WPF.ViewModels
                 );
         }
 
-        public void Open()
+        public async Task Open()
         {
             List<IEntryModel> selectedFiles = new List<IEntryModel>();
             Profile = FileList.CurrentDirectory.Profile;
             Func<IEntryModel, IScriptCommand> addToSelectedFiles =
                 m => new SimpleScriptCommand("AddToSelectedFiles", pd => { selectedFiles.Add(m); return ResultCommand.NoError; });
             var pm = FileList.Commands.ParameterDicConverter.Convert(new ParameterDic());
-            new ScriptRunner().Run(pm,
+            await ScriptRunner.RunScriptAsync(pm,
             ScriptCommands.RunInSequence(
                 ScriptCommands.ForEach(
                     FileName.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries),

@@ -109,11 +109,10 @@ namespace TestApp
                  new ColumnInitializers(),
                  new ScriptCommandsInitializers(_windowManager, _events, profiles),
                  new ToolbarCommandsInitializers(_windowManager));
-
-            var sr = new ScriptRunner();
+            
             //_windowManager.ShowWindow(new ExplorerViewModel(_events, _windowManager, RootModels.ToArray()), "ToolWindow");
             //_windowManager.ShowWindow(new ExplorerViewModel(_events, _windowManager, RootModels.ToArray()));
-            sr.Run(Explorer.NewWindow(initializer, context, null), new ParameterDic());
+            ScriptRunner.RunScriptAsync(Explorer.NewWindow(initializer, context, null));
         }
 
         public void OpenToolWindow()
@@ -124,7 +123,7 @@ namespace TestApp
 
         public void PickFiles()
         {
-            new ScriptRunner().Run(new ParameterDic(),
+            ScriptRunner.RunScriptAsync(
                 ScriptCommands.OpenFileDialog(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
                     (fpvm) => ScriptCommands.MessageBox(_windowManager, "Open", fpvm.FileName), ResultCommand.OK));
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
@@ -137,7 +136,7 @@ namespace TestApp
 
         public void SaveFile()
         {
-            new ScriptRunner().Run(new ParameterDic(),
+            ScriptRunner.RunScriptAsync(
                ScriptCommands.SaveFilePicker(_windowManager, null, RootModels.ToArray(), FileFilter, "demo.txt",
                    (fpvm) => ScriptCommands.MessageBox(_windowManager, "Save", fpvm.FileName), ResultCommand.OK));
 
@@ -184,20 +183,20 @@ namespace TestApp
             _events.PublishOnUIThread(new RootChangedEvent(ChangeType.Created, selectedModel));
         }
 
-        public void Add()
+        public async Task Add()
         {
             var initializer = getInitializer(_windowManager, /*_events*/ null, null);
             var profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
             };
-            new ScriptRunner().Run(
+            await ScriptRunner.RunScriptAsync(new ParameterDic() { { "Events", _events } }, 
               Explorer.PickDirectory(initializer, profiles,
                 dir => new SimpleScriptCommand("AddToRootProfile",
                     pd =>
                     {
                         return ScriptCommands.PublishEvent(RootChangedEvent.Created(dir));
                     })
-              , null), new ParameterDic() { { "Events", _events } });
+              , null));
 
 
             //var advm = new AddDirectoryViewModel(initializer, profiles);
@@ -256,13 +255,13 @@ namespace TestApp
 
         public void ProgressDialog()
         {
-            new ScriptRunner().Run(
+            ScriptRunner.RunScript(
                 ScriptCommands.ShowProgress(_windowManager, "Testing",
                     ScriptCommands.ReportProgress(TransferProgress.From("C:\\Demo\\FileExplorer3.txt", "http://fileexplorer.codeplex.com/FileExplorer3.txt"),
                     ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(100),
                     ScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries(20),
-                    ScriptCommands.ReportProgress(TransferProgress.UpdateCurrentProgress(50)))))),
-                new ParameterDic());
+                    ScriptCommands.ReportProgress(TransferProgress.UpdateCurrentProgress(50))))))
+                );
             //_windowManager.ShowDialog(new ProgressDialogViewModel(new ParameterDic() 
             //{
 

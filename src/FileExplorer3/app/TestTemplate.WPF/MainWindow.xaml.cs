@@ -121,7 +121,7 @@ namespace TestTemplate.WPF
 
         private void setupDragAndDrop()
         {
-            ScriptRunner runner = new ScriptRunner();
+            //ScriptRunner runner = new ScriptRunner();
 
             DragDropItemViewModel vm0, vm1, vm2, vm3, vm4;
 

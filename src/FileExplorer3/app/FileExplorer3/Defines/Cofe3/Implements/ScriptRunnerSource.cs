@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Script
 {
-    public static class ScriptRunnerSources
-    {
-        public static IScriptRunnerSource Default = new NullScriptRunnerSource();
-    }
+    //public static class ScriptRunnerSources
+    //{
+    //    public static IScriptRunnerSource Default = new NullScriptRunnerSource();
+    //}
 
-    public class NullScriptRunnerSource : IScriptRunnerSource
-    {
-        public ScriptRunner GetScriptRunner()
-        {
-            return new ScriptRunner();
-        }
-    }
+    //public class NullScriptRunnerSource : IScriptRunnerSource
+    //{
+    //    public ScriptRunner GetScriptRunner()
+    //    {
+    //        return new ScriptRunner();
+    //    }
+    //}
 }

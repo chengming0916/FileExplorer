@@ -118,11 +118,10 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
                     {
                         _dragAdorner.ContextMenu.RemoveHandler(ContextMenu.ClosedEvent, (RoutedEventHandler)ContextMenu_Closed);
 
-                        new ScriptRunner().Run(new Queue<IScriptCommand>(
-                        new IScriptCommand[] {
+                        ScriptRunner.RunScriptAsync(pm, 
                             new BeginDrop(_dragAdorner.DragDropEffect),
                             new NotifyDropCompleted(_isDrag, _isDrop.QueryDropDraggables(_dataObject), _dataObject, _dragAdorner.DragDropEffect)
-                        }), pm);
+                        );
                     };
 
                 _dragAdorner.SetSupportedDragDropEffects(_supportedEffects, _defaultEffect);

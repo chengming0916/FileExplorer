@@ -63,7 +63,15 @@ namespace FileExplorer.Models
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);
 
-                // if (a.FullPath.StartsWith("::") && b.FullPath.StartsWith("::"))
+                if (a.FullPath.Equals(b.FullPath))
+                    return HierarchicalResult.Current;                
+
+                while (a != null && !(a is FileSystemInfoExModel))
+                    a = a.Parent;
+                while (b != null && !(b is FileSystemInfoExModel))
+                    b = b.Parent;
+
+                if (a is FileSystemInfoExModel && b is FileSystemInfoExModel)
                 {
                     string key = String.Format("{0}-compare-{1}", a.FullPath, b.FullPath);
                     if (_hierarchyResultCache.ContainsKey(key))
@@ -82,6 +90,7 @@ namespace FileExplorer.Models
                     return _hierarchyResultCache[key];
                 }
 
+                return HierarchicalResult.Unrelated;
 
 
                 //if (fsia is DirectoryInfoEx && HasParent(fsib, fsia as DirectoryInfoEx))

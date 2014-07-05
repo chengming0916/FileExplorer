@@ -9,15 +9,48 @@ namespace FileExplorer.Script
 {   
     public class ScriptRunner : IScriptRunner
     {
+        public static ScriptRunner Instance = new ScriptRunner();
+
+        public static Task RunScriptAsync(ParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
+        {
+            if (cloneParameters)
+                initialParameters = initialParameters.Clone();
+
+            IScriptRunner runner = Instance;
+            if (initialParameters.ContainsKey("ScriptRunner") && initialParameters["ScriptRunner"] is IScriptRunner)
+                runner = (initialParameters["ScriptRunner"] as IScriptRunner);            
+            return runner.RunAsync(new Queue<IScriptCommand>(commands), initialParameters);
+        }
+
+        public static void RunScript(ParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
+        {
+            if (cloneParameters)
+                initialParameters = initialParameters.Clone();
+
+            IScriptRunner runner = Instance;
+            if (initialParameters.ContainsKey("ScriptRunner") && initialParameters["ScriptRunner"] is IScriptRunner)
+                runner = (initialParameters["ScriptRunner"] as IScriptRunner);            
+            runner.Run(new Queue<IScriptCommand>(commands), initialParameters);
+        }
 
         public static Task RunScriptAsync(ParameterDic initialParameters, params IScriptCommand[] commands)
         {
-            return new ScriptRunner().RunAsync(new Queue<IScriptCommand>(commands), initialParameters);
+            return RunScriptAsync(initialParameters, false, commands);
         }
 
         public static void RunScript(ParameterDic initialParameters, params IScriptCommand[] commands)
         {
-            new ScriptRunner().Run(new Queue<IScriptCommand>(commands), initialParameters);
+            RunScript(initialParameters, commands);
+        }
+
+        public static Task RunScriptAsync(params IScriptCommand[] commands)
+        {
+            return RunScriptAsync(new ParameterDic(), commands);
+        }
+
+        public static void RunScript(params IScriptCommand[] commands)
+        {
+            RunScript(new ParameterDic(), commands);
         }
         
         public ScriptRunner()
@@ -29,6 +62,7 @@ namespace FileExplorer.Script
         public void Run(Queue<IScriptCommand> cmds, ParameterDic initialParameters)
         {
             ParameterDic pd = initialParameters;
+            pd["ScriptRunner"] = this;
 
             while (cmds.Any())
             {
@@ -69,6 +103,7 @@ namespace FileExplorer.Script
         public async Task RunAsync(Queue<IScriptCommand> cmds, ParameterDic initialParameters)
         {
             ParameterDic pd = initialParameters;
+            pd["ScriptRunner"] = this;
 
             while (cmds.Any())
             {
