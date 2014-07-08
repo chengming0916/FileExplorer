@@ -38,7 +38,7 @@ namespace FileExplorer.WPF.BaseControls
             switch (eventId.Name)
             {
                 case "KeyDown":
-                    return ScriptCommands.IfKeyPressed(System.Windows.Input.Key.Escape, 
+                    return WPFScriptCommands.IfKeyPressed(System.Windows.Input.Key.Escape, 
                         SetDragLiteState.Reset(ResultCommand.OK), null);
 
                 case "PreviewTouchDown":

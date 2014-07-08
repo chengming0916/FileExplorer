@@ -124,8 +124,8 @@ namespace TestApp
         public void PickFiles()
         {
             ScriptRunner.RunScriptAsync(
-                ScriptCommands.OpenFileDialog(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
-                    (fpvm) => ScriptCommands.MessageBox(_windowManager, "Open", fpvm.FileName), ResultCommand.OK));
+                WPFScriptCommands.OpenFileDialog(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
+                    (fpvm) => WPFScriptCommands.MessageBox(_windowManager, "Open", fpvm.FileName), ResultCommand.OK));
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
             //updateExplorerModel(initExplorerModel(filePicker));
             //if (_windowManager.ShowDialog(filePicker).Value)
@@ -137,8 +137,8 @@ namespace TestApp
         public void SaveFile()
         {
             ScriptRunner.RunScriptAsync(
-               ScriptCommands.SaveFilePicker(_windowManager, null, RootModels.ToArray(), FileFilter, "demo.txt",
-                   (fpvm) => ScriptCommands.MessageBox(_windowManager, "Save", fpvm.FileName), ResultCommand.OK));
+               WPFScriptCommands.SaveFilePicker(_windowManager, null, RootModels.ToArray(), FileFilter, "demo.txt",
+                   (fpvm) => WPFScriptCommands.MessageBox(_windowManager, "Save", fpvm.FileName), ResultCommand.OK));
 
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Save, RootModels.ToArray());
             //updateExplorerModel(initExplorerModel(filePicker));
@@ -194,7 +194,7 @@ namespace TestApp
                 dir => new SimpleScriptCommand("AddToRootProfile",
                     pd =>
                     {
-                        return ScriptCommands.PublishEvent(RootChangedEvent.Created(dir));
+                        return WPFScriptCommands.PublishEvent(RootChangedEvent.Created(dir));
                     })
               , null));
 
@@ -256,11 +256,11 @@ namespace TestApp
         public void ProgressDialog()
         {
             ScriptRunner.RunScript(
-                ScriptCommands.ShowProgress(_windowManager, "Testing",
-                    ScriptCommands.ReportProgress(TransferProgress.From("C:\\Demo\\FileExplorer3.txt", "http://fileexplorer.codeplex.com/FileExplorer3.txt"),
-                    ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(100),
-                    ScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries(20),
-                    ScriptCommands.ReportProgress(TransferProgress.UpdateCurrentProgress(50))))))
+                WPFScriptCommands.ShowProgress(_windowManager, "Testing",
+                    WPFScriptCommands.ReportProgress(TransferProgress.From("C:\\Demo\\FileExplorer3.txt", "http://fileexplorer.codeplex.com/FileExplorer3.txt"),
+                    WPFScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(100),
+                    WPFScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries(20),
+                    WPFScriptCommands.ReportProgress(TransferProgress.UpdateCurrentProgress(50))))))
                 );
             //_windowManager.ShowDialog(new ProgressDialogViewModel(new ParameterDic() 
             //{

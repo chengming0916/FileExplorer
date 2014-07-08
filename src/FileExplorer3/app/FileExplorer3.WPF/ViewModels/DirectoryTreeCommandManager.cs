@@ -41,7 +41,7 @@ namespace FileExplorer.WPF.ViewModels
             ScriptCommands.Map = NullScriptCommand.Instance;
             ScriptCommands.Unmap = Explorer.DoSelection(ems =>
                 Script.ScriptCommands.If(pd => (ems.First() as IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
-                        Script.ScriptCommands.IfOkCancel(windowManager, pd => "Unmap",  
+                        Script.WPFScriptCommands.IfOkCancel(windowManager, pd => "Unmap",  
                             pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label), 
                             Explorer.BroadcastRootChanged(RootChangedEvent.Deleted(ems.Select(em => em.EntryModel).ToArray())),
                             ResultCommand.OK),

@@ -1,4 +1,5 @@
-﻿using FileExplorer.IO;
+﻿using FileExplorer.Defines;
+using FileExplorer.IO;
 using FileExplorer.IO.Compress;
 using FileExplorer.Models;
 using FileExplorer.Models.SevenZipSharp;
@@ -27,8 +28,8 @@ namespace FileExplorer.Script
             if (bytes == null)
                 return ResultCommand.Error(new ArgumentException(type + " is not recognized type."));
 
-            return ScriptCommands.CreatePath(entryModel, name, false, renameIfExists,
-                em => ScriptCommands.WriteBytes(em, bytes, thenFunc));
+            return WPFScriptCommands.CreatePath(entryModel, name, false, renameIfExists,
+                em => WPFScriptCommands.WriteBytes(em, bytes, thenFunc));
         }
 
         public static IScriptCommand ParseOrCreateArchive(IDiskProfile profile, string path, Func<IEntryModel, IScriptCommand> thenFunc)
@@ -39,8 +40,8 @@ namespace FileExplorer.Script
             if (bytes == null)
                 return ResultCommand.Error(new ArgumentException(type + " is not recognized type."));
 
-            return ScriptCommands.ParseOrCreatePath(profile, path, false,
-                em => ScriptCommands.WriteBytes(em, bytes, thenFunc));
+            return WPFScriptCommands.ParseOrCreatePath(profile, path, false,
+                em => WPFScriptCommands.WriteBytes(em, bytes, thenFunc));
         }
     }
 
@@ -131,7 +132,7 @@ namespace FileExplorer.Script
                 {
                     Func<IEntryModel, bool> filter = em => !em.IsDirectory || (em is SzsRootModel);
                     Func<IEntryModel, bool> lookupFilter = em => em.IsDirectory && !(em is SzsRootModel);
-                    return ScriptCommands.List(_srcModel, filter, lookupFilter, true, ems =>
+                    return WPFScriptCommands.List(_srcModel, filter, lookupFilter, true, ems =>
                         new SimpleScriptCommandAsync("BatchTransfer", pd => transferAsync(pm, ems, progress,
                              new NotifyChangedCommand(_destDirModel.Profile, destFullName,
                                 _srcModel.Profile, _srcModel.FullPath, Defines.ChangeType.Changed))));

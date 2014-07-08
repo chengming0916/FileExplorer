@@ -16,6 +16,7 @@ using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
+using System.ComponentModel;
 
 namespace FileExplorer.WPF.BaseControls
 {
@@ -60,9 +61,11 @@ namespace FileExplorer.WPF.BaseControls
         }
     }
 
+    //Serializable
     public class MarkEventHandled : ScriptCommandBase
     {
         public MarkEventHandled() : base("MarkEventHandled") { }
+        public MarkEventHandled(IScriptCommand nextCommand) : base("MarkEventHandle", nextCommand) { }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -101,36 +104,48 @@ namespace FileExplorer.WPF.BaseControls
         }
     }
 
+    //Serializable
     public class SetEventIsHandled : ScriptCommandBase
     {
-        public SetEventIsHandled(bool toVal = true, IScriptCommand nextCommand = null) :
-            base("SetIsHandled")
-        { _nextCommand = nextCommand; _toVal = toVal; }
+        /// <summary>
+        /// Used by serializer only.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public SetEventIsHandled() { }
 
-        private IScriptCommand _nextCommand;
-        private bool _toVal;
+        public SetEventIsHandled(bool toVal = true, IScriptCommand nextCommand = null) :
+            base("SetIsHandled", nextCommand)
+        { ToValue = toVal; }
+
+        public bool ToValue { get; set; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
-            pd.EventArgs.Handled = _toVal;
+            if (pd.EventArgs != null)
+                pd.EventArgs.Handled = ToValue;
             return _nextCommand == null ? ResultCommand.NoError : _nextCommand;
         }
     }
-
+    //Serializable
     public class SetIsHandled : ScriptCommandBase
     {
-        public SetIsHandled(IScriptCommand nextCommand = null, bool toVal = true) :
-            base("SetIsHandled")
-        { _nextCommand = nextCommand; _toVal = toVal; }
+        /// <summary>
+        /// Used by serializer only.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public SetIsHandled() { }
 
-        private IScriptCommand _nextCommand;
-        private bool _toVal;
+        public SetIsHandled(IScriptCommand nextCommand = null, bool toVal = true) :
+            base("SetIsHandled", nextCommand)
+        { ToValue = toVal; }
+
+        private bool ToValue { get; set; }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            pm.IsHandled = _toVal;
-            return _nextCommand == null ? ResultCommand.NoError : _nextCommand;
+            pm.IsHandled = ToValue;
+            return NextCommand == null ? ResultCommand.NoError : NextCommand;
         }
     }
 

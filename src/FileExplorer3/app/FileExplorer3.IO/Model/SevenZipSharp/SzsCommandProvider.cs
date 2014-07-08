@@ -71,9 +71,9 @@ namespace FileExplorer.Models.SevenZipSharp
 
                     //Extract to ...
                     subCommands.Add(new CommandModel(
-                        ScriptCommands.ShowDirectoryPicker(_initializer, null,
+                        WPFScriptCommands.ShowDirectoryPicker(_initializer, null,
                         dm =>
-                         ScriptCommands.ShowProgress("Extract", transferCommandFunc(dm, ScriptCommands.HideProgress())),
+                         WPFScriptCommands.ShowProgress("Extract", transferCommandFunc(dm, WPFScriptCommands.HideProgress())),
                               ResultCommand.NoError)) { Header = "Extract to ...", IsEnabled = true, IsVisibleOnMenu = true });
 
                     if (isRoot)
@@ -86,17 +86,17 @@ namespace FileExplorer.Models.SevenZipSharp
 
                         //Extract Here
                         subCommands.Add(new CommandModel(
-                               ScriptCommands.ShowProgress("Extract",
-                               transferCommandFunc(firstRoot.Parent, ScriptCommands.HideProgress()))) { Header = "Extract Here", IsEnabled = true, IsVisibleOnMenu = true });
+                               WPFScriptCommands.ShowProgress("Extract",
+                               transferCommandFunc(firstRoot.Parent, WPFScriptCommands.HideProgress()))) { Header = "Extract Here", IsEnabled = true, IsVisibleOnMenu = true });
 
 
                         if (appliedModels.Length == 1)
                         {
                             //Extract to \\ArchiveName
                             subCommands.Add(new CommandModel(
-                                ScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
+                                WPFScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
                                 path.Combine(parentPath, path.RemoveExtension(appliedModels[0].Name)), true,
-                                destFolder => transferCommandFunc(destFolder, ScriptCommands.HideProgress())))
+                                destFolder => transferCommandFunc(destFolder, WPFScriptCommands.HideProgress())))
                             {
                                 Header = "Extract to \\" + path.RemoveExtension(appliedModels[0].Name),
                                 IsEnabled = true,
@@ -105,11 +105,11 @@ namespace FileExplorer.Models.SevenZipSharp
                         }
                         else
                             subCommands.Add(new CommandModel(
-                                    ScriptCommands.ShowProgress("Extract",
+                                    WPFScriptCommands.ShowProgress("Extract",
                                     ScriptCommands.ForEach(appliedModels, am =>
-                                         ScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
+                                         WPFScriptCommands.ParseOrCreatePath(firstRoot.Parent.Profile as IDiskProfile,
                                             path.Combine(parentPath, path.RemoveExtension(am.Name)), true,
-                                            destFolder => transferCommandFunc(destFolder, ScriptCommands.HideProgress()))))) { Header = "Extract to {ArchiveName}\\", IsEnabled = true, IsVisibleOnMenu = true });
+                                            destFolder => transferCommandFunc(destFolder, WPFScriptCommands.HideProgress()))))) { Header = "Extract to {ArchiveName}\\", IsEnabled = true, IsVisibleOnMenu = true });
 
                     }
                 }
@@ -194,12 +194,12 @@ namespace FileExplorer.Models.SevenZipSharp
 
 
                         subCommands.Add(new CommandModel(
-                          ScriptCommands.SaveFilePicker(_initializer, "Zip archives (.zip)|*.zip|7z archives (.7z)|*.7z", firstArchivePath,
-                              pmi => ScriptCommands.ShowProgress("Compress",
+                          WPFScriptCommands.SaveFilePicker(_initializer, "Zip archives (.zip)|*.zip|7z archives (.7z)|*.7z", firstArchivePath,
+                              pmi => WPFScriptCommands.ShowProgress("Compress",
                                   IOScriptCommands.ParseOrCreateArchive(pmi.Profile as IDiskProfile, pmi.FileName,
                                pm => ScriptCommands.ForEach(appliedModels,
                                   am => IOScriptCommands.Transfer(am, pm, false, true),
-                                      ScriptCommands.HideProgress()))),
+                                      WPFScriptCommands.HideProgress()))),
                                         ResultCommand.NoError))
                         {
                             Header = "Compress to ...",
@@ -210,11 +210,11 @@ namespace FileExplorer.Models.SevenZipSharp
                         Action<string, string> addCompressToPath = (destName, destPath) =>
                             {
                                 subCommands.Add(new CommandModel(
-                                    ScriptCommands.ShowProgress("Compress",
+                                    WPFScriptCommands.ShowProgress("Compress",
                                         IOScriptCommands.ParseOrCreateArchive(firstProfile, destPath,
                                             pm => ScriptCommands.ForEach(appliedModels,
                                                 am => IOScriptCommands.Transfer(am, pm, false, true,
-                                            null), ScriptCommands.HideProgress()))))
+                                            null), WPFScriptCommands.HideProgress()))))
                                 {
                                     Header = "Compress to " + destName,
                                     IsEnabled = true,
