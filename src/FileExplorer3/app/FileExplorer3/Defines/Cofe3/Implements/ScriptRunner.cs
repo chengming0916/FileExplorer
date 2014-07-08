@@ -40,7 +40,7 @@ namespace FileExplorer.Script
 
         public static void RunScript(ParameterDic initialParameters, params IScriptCommand[] commands)
         {
-            RunScript(initialParameters, commands);
+            RunScript(initialParameters, false, commands);
         }
 
         public static Task RunScriptAsync(params IScriptCommand[] commands)

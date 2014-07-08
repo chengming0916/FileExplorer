@@ -44,16 +44,16 @@ namespace FileExplorer.Script
         public static IScriptCommand TransferChild(IEntryModel srcModel, IEntryModel destDirModel, 
             Func<IEntryModel, bool> filterFunc = null, bool recrusive = false, IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.List(srcModel, filterFunc, null, recrusive, ems =>
-                         ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(ems.Length),
+            return WPFScriptCommands.List(srcModel, filterFunc, null, recrusive, ems =>
+                         WPFScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(ems.Length),
                                ScriptCommands.ForEach(ems, em =>
                                      ScriptCommands.RunInSequence(
                                             IOScriptCommands.Transfer(em, destDirModel),
-                                            ScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries())), 
+                                            WPFScriptCommands.ReportProgress(TransferProgress.IncrementProcessedEntries())), 
                                                   nextCommand)));
         }
 
-        public static IScriptCommand DeleteFromParameter = new DeleteFileBasedEntryCommand(ScriptCommands.GetEntryModelFromParameter);
+        public static IScriptCommand DeleteFromParameter = new DeleteFileBasedEntryCommand(WPFScriptCommands.GetEntryModelFromParameter);
 
         public static IScriptCommand Delete(params IEntryModel[] deleteModels)
         {
@@ -80,7 +80,7 @@ namespace FileExplorer.Script
             : base("OpenWith")
         {
             _info = info;
-            _srcModelFunc = srcModelFunc ?? ScriptCommands.GetEntryModelFromParameter;
+            _srcModelFunc = srcModelFunc ?? WPFScriptCommands.GetEntryModelFromParameter;
         }
 
         public override bool CanExecute(ParameterDic pm)
@@ -146,7 +146,7 @@ namespace FileExplorer.Script
     {
         [Obsolete]
         public static DeleteFileBasedEntryCommand FromParameter =
-            new DeleteFileBasedEntryCommand(ScriptCommands.GetEntryModelFromParameter);
+            new DeleteFileBasedEntryCommand(WPFScriptCommands.GetEntryModelFromParameter);
 
         private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
 

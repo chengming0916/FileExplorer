@@ -5,13 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FileExplorer.Utils;
+using System.Xml.Serialization;
+using System.Xml;
+using System.ComponentModel;
 
 namespace FileExplorer.Script
-{
+{        
     public abstract class ScriptCommandBase : IScriptCommand
     {
         #region Constructor
 
+        /// <summary>
+        /// Used by serializer only.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public ScriptCommandBase()
+        {
+
+        }
+        
         protected ScriptCommandBase(string commandKey, params string[] parameters)
         {
             CommandKey = commandKey;
@@ -60,20 +72,74 @@ namespace FileExplorer.Script
         public bool ContinueOnCaptureContext
         {
             get { return _continueOnCaptureContext; }
-            protected set { _continueOnCaptureContext = value; }
+            set { _continueOnCaptureContext = value; }
         }
-        public string CommandKey { get; private set; }
-        public string[] CommandParameters { get; private set; }
+        public string CommandKey { get; set; }
+        [XmlIgnore]
+        public string[] CommandParameters { get; set; }
+        public ScriptCommandBase NextCommand { get { return (ScriptCommandBase)_nextCommand; } set { _nextCommand = value; } }
+
 
         #endregion
+    }
 
+    public abstract class ScriptCommandBase<T> : ScriptCommandBase
+    {
+        #region Constructor
 
+        /// <summary>
+        /// Used by serializer only.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public ScriptCommandBase()
+            : base ()
+        {
 
+        }
 
+        protected ScriptCommandBase(string commandKey, params string[] parameters)
+            : base(commandKey, parameters)
+        {
+            CommandKey = commandKey;
+            CommandParameters = parameters;
+            _nextCommandConstructor = ScriptCommandConstructor<T>.ReturnCommand(ResultCommand.NoError);
+        }
 
+        protected ScriptCommandBase(string commandKey, IScriptCommand nextCommand, params string[] parameters)
+            : base(commandKey, parameters)
+        {
+            CommandKey = commandKey;
+            CommandParameters = parameters;
 
+            _nextCommandConstructor = ScriptCommandConstructor<T>.ReturnCommand(nextCommand ?? ResultCommand.NoError);
+        }
 
+        protected ScriptCommandBase(string commandKey, IScriptCmdCtor<T> nextCommandConstructor, params string[] parameters)
+            : base(commandKey, parameters)
+        {
+            CommandKey = commandKey;
+            CommandParameters = parameters;
 
+            _nextCommandConstructor = nextCommandConstructor ?? ScriptCommandConstructor<T>.ReturnCommand(ResultCommand.NoError);
+        }
+        
+        #endregion
+
+        #region Methods
+        
+        #endregion
+
+        #region Data
+
+        private IScriptCmdCtor<T> _nextCommandConstructor;
+        
+        #endregion
+
+        #region Public Properties
+
+        public new ScriptCommandConstructor<T> NextCommand { get { return (ScriptCommandConstructor<T>)_nextCommandConstructor; } set { _nextCommandConstructor = value; } }
+
+        #endregion       
     }
 
 

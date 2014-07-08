@@ -22,11 +22,12 @@ using FileExplorer.Models;
 using System.IO;
 using FileExplorer.WPF.Defines;
 using FileExplorer.IO;
+using System.ComponentModel;
 
 namespace FileExplorer.Script
 {
 
-    public static partial class ScriptCommands
+    public static partial class WPFScriptCommands
     {
         /// <summary>
         /// Return pd["Parameter"] as IEntryModel[]
@@ -71,7 +72,7 @@ namespace FileExplorer.Script
 
     #region MessageBox
 
-    public static partial class ScriptCommands
+    public static partial class WPFScriptCommands
     {
         public static IfOkCancel IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
             Func<ParameterDic, string> messageFunc, IScriptCommand okCommand,
@@ -103,9 +104,9 @@ namespace FileExplorer.Script
                 successCommand, cancelCommand);
         }
 
-        public static ShowDirectoryPicker ShowDirectoryPicker(IExplorerInitializer initializer, IProfile[] rootProfiles, 
+        public static ShowDirectoryPicker ShowDirectoryPicker(IExplorerInitializer initializer, IProfile[] rootProfiles,
             Func<IEntryModel, IScriptCommand> nextCommandFunc, IScriptCommand cancelCommand)
-        {            
+        {
             return new ShowDirectoryPicker(initializer, rootProfiles, nextCommandFunc, cancelCommand);
         }
 
@@ -132,15 +133,20 @@ namespace FileExplorer.Script
             return OpenFileDialog(new WindowManager(), null, rootDirModels, filter, defaultFileName, successCommand, cancelCommand);
         }
 
-        public static ShowMessageBox MessageBox(IWindowManager wm, string caption, string message)
+        public static ShowMessageBox MessageBox(string caption, string message)
         {
-            return new ShowMessageBox(wm, caption, message);
+            return new ShowMessageBox(caption, message);
         }
 
         public static DownloadFile Download(string sourceUrl, IEntryModel entry,
            HttpClient httpClient, IScriptCommand nextCommand = null)
         {
             return new DownloadFile(sourceUrl, entry, httpClient, nextCommand);
+        }        
+
+        public static IScriptCommand Download(string sourceUrl, IEntryModel entry, IScriptCommand nextCommand = null)
+        {
+            return new DownloadFile(sourceUrl, entry, null, nextCommand);
         }
 
         /// <summary>
@@ -275,24 +281,36 @@ namespace FileExplorer.Script
         }
     }
 
-  
 
+    //Serializable
     public class ShowMessageBox : ScriptCommandBase
     {
-        private IWindowManager _wm;
-        private string _caption;
-        private string _message;
-        internal ShowMessageBox(IWindowManager wm, string caption, string message)
+        public string Caption { get; set; }
+        public string Message { get; set; }
+
+
+        /// <summary>
+        /// Used by serializer only.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public ShowMessageBox()
             : base("ShowMessageBox")
         {
-            _wm = wm;
-            _caption = caption;
-            _message = message;
+
+        }
+
+        internal ShowMessageBox(string caption, string message)
+            : base("ShowMessageBox")
+        {
+            Caption = caption;
+            Message = message;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            var mdv = new MessageDialogViewModel(_caption, _message,
+            IWindowManager _wm = pm.ContainsKey("WindowManager") && pm["WindowManager"] is IWindowManager ?
+                (IWindowManager)pm["WindowManager"] : new WindowManager();
+            var mdv = new MessageDialogViewModel(Caption, Message,
                                  MessageDialogViewModel.DialogButtons.OK);
             _wm.ShowDialog(mdv);
             return ResultCommand.NoError;
@@ -330,7 +348,7 @@ namespace FileExplorer.Script
             }
             catch (Exception ex)
             {
-                return ScriptCommands.ReportProgress(TransferProgress.Error(ex));
+                return WPFScriptCommands.ReportProgress(TransferProgress.Error(ex));
             }
 
             return ResultCommand.NoError;
@@ -353,11 +371,11 @@ namespace FileExplorer.Script
             }
             catch (Exception ex)
             {
-                return ScriptCommands.ReportProgress(TransferProgress.Error(ex));
+                return WPFScriptCommands.ReportProgress(TransferProgress.Error(ex));
             }
 
             return ResultCommand.NoError;
-        }       
+        }
     }
 
     public class ReportProgress : ScriptCommandBase
@@ -398,6 +416,80 @@ namespace FileExplorer.Script
             return _nextCommand;
         }
     }
+    
+    /// <summary>
+    /// Serializable, Download source Url to "Stream" property,
+    /// 
+    /// Variable in ParameterDic:
+    /// Progress :  IProgress[TransferProgress] (Optional)
+    /// HttpClientFunc : Func[HttpClient] (Optional)
+    /// Stream : MemoryStream (Output)
+    /// </summary>
+    public class DownloadFile2 : ScriptCommandBase
+    {
+        public string SourceUrl { get; set; }
+        public string Destination { get; set; }        
+
+        public DownloadFile2(IScriptCommand nextCommand) : base("Download2", nextCommand, "Progress", "HttpClientFunc", "Stream")
+        {
+
+        }
+
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            var pdv = pm.ContainsKey("Progress") && pm["Progress"] is IProgress<TransferProgress>
+                ? pm["Progress"] as IProgress<TransferProgress> :
+                NullProgresViewModel.Instance;
+
+            try
+            {
+                using (var httpClient =
+                    pm.ContainsKey("HttpClientFunc") && pm["HttpClientFunc"] is Func<HttpClient> ? ((Func<HttpClient>)pm["HttpClientFunc"])() :
+                    new HttpClient())
+                {
+                    var response = await httpClient.GetAsync(SourceUrl, HttpCompletionOption.ResponseHeadersRead, pm.CancellationToken);
+                    if (!response.IsSuccessStatusCode)
+                        throw new WebException(String.Format("{0} when downloading {1}", response.StatusCode, SourceUrl));
+
+                    MemoryStream destStream;
+                    pm["Stream"] = destStream = new MemoryStream();
+
+                    using (Stream srcStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        pdv.Report(TransferProgress.From(SourceUrl, Destination));
+                        byte[] buffer = new byte[1024];
+                        ulong totalBytesRead = 0;
+                        ulong totalBytes = 0;
+                        try { totalBytes = (ulong)srcStream.Length; }
+                        catch (NotSupportedException) { }
+
+                        int byteRead = await srcStream.ReadAsync(buffer, 0, buffer.Length, pm.CancellationToken);
+                        while (byteRead > 0)
+                        {
+                            await destStream.WriteAsync(buffer, 0, byteRead, pm.CancellationToken);
+                            totalBytesRead = totalBytesRead + (uint)byteRead;
+                            short percentCompleted = (short)((float)totalBytesRead / (float)totalBytes * 100.0f);
+                            pdv.Report(TransferProgress.UpdateCurrentProgress(percentCompleted));
+
+                            byteRead = await srcStream.ReadAsync(buffer, 0, buffer.Length, pm.CancellationToken);
+
+                        }
+                        await destStream.FlushAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResultCommand.Error(ex);
+            }
+
+
+            return _nextCommand;
+        }
+
+    }
+
 
     public class DownloadFile : ScriptCommandBase
     {
@@ -866,7 +958,7 @@ namespace FileExplorer.Script
         {
             _events = _events ?? pm["Events"] as IEventAggregator;
             if (_events != null)
-                return ScriptCommands.BroadcastEvent(_evnt, _nextCommand, _events);
+                return WPFScriptCommands.BroadcastEvent(_evnt, _nextCommand, _events);
 
             return ResultCommand.Error(new ArgumentException("Events"));
         }
@@ -1006,7 +1098,7 @@ namespace FileExplorer.Script
         private object _context;
         private IDictionary<string, object> _settings;
 
-        internal ShowNewExplorer(IExplorerInitializer initializer,  
+        internal ShowNewExplorer(IExplorerInitializer initializer,
             object context = null, IDictionary<string, object> settings = null)
             : base("NewWindow")
         {
@@ -1039,7 +1131,7 @@ namespace FileExplorer.Script
             : base("PickDirectory")
         {
             _initializer = initializer;
-            _rootProfiles = rootProfiles ?? initializer.RootModels.Select(em => em.Profile).Distinct().ToArray(); 
+            _rootProfiles = rootProfiles ?? initializer.RootModels.Select(em => em.Profile).Distinct().ToArray();
             _nextCommandFunc = nextCommandFunc;
             _cancelCommand = cancelCommand;
         }
@@ -1623,9 +1715,9 @@ namespace FileExplorer.Script
     public static class ClipboardCommands
     {
         public static CopyToClipboardCommand Copy =
-         new CopyToClipboardCommand(ScriptCommands.GetEntryModelFromParameter, false);
+         new CopyToClipboardCommand(WPFScriptCommands.GetEntryModelFromParameter, false);
         public static CopyToClipboardCommand Cut =
-            new CopyToClipboardCommand(ScriptCommands.GetEntryModelFromParameter, true);
+            new CopyToClipboardCommand(WPFScriptCommands.GetEntryModelFromParameter, true);
 
         public static PasteFromClipboardCommand Paste(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc,
             Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
@@ -1763,8 +1855,8 @@ namespace FileExplorer.Script
                 return ResultCommand.Error(new ArgumentException("Not all items are transferrable."));
 
             if (_windowManager != null)
-                return ScriptCommands.ShowProgress(_windowManager, effects.ToString(),
-                            ScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(source.Length),
+                return WPFScriptCommands.ShowProgress(_windowManager, effects.ToString(),
+                            WPFScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(source.Length),
                                 new RunInSequenceScriptCommand(transferCommands, new HideProgress())));
             else return new RunInSequenceScriptCommand(transferCommands);
         }

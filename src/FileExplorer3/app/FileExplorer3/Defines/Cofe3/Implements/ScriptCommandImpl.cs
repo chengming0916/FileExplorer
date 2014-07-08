@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,18 +26,39 @@ namespace FileExplorer.Script
         public static ResultCommand Error(Exception ex) { return new ResultCommand(ex); }
 
         Action<ParameterDic> _executeFunc = (pm) => { };
+
+        /// <summary>
+        /// Used by serializer only.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public ResultCommand() { }
+
+
         private ResultCommand(Exception ex = null, bool markHandled = true)
             : base( ex == null ? "OK" : "FAIL")
         {
-            if (ex == null)
-                _executeFunc = (pm) => { if (markHandled) pm.IsHandled = true; };
-            else _executeFunc = (pm) => { pm.Error = ex; };
+
+            MarkHandled = markHandled;
+            _exception = ex;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            _executeFunc(pm);
-            return null;
+            if (_exception != null)
+            {
+                if (MarkHandled)
+                    pm.IsHandled = true;
+            }
+            else pm.Error = _exception;
+            return NextCommand;
+        }
+
+        public bool MarkHandled { get; set; }
+        private Exception _exception = null;
+        public string ErrorMessage
+        {
+            get { return _exception == null ? "" : _exception.Message; }
+            set { _exception = new Exception(value); }
         }
         
     }

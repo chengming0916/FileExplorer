@@ -37,6 +37,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defines\Cofe3\Interfaces\IScriptCommandConstructor.cs" />
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs.cs" />
@@ -61,6 +62,8 @@
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
     <Compile Include="Models\ISuggestSource.cs" />
+    <Compile Include="Script\BasicScriptCommands.cs" />
+    <Compile Include="Script\ScriptCommands.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Defines\Cofe3\Defines\Attributes\MediaTypeDecorator.cs" />
     <Compile Include="Defines\Cofe3\Defines\Attributes\MIMETypeDecorator.cs" />

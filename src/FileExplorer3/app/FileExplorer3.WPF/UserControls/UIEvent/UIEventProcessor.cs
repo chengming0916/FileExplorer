@@ -137,10 +137,10 @@ namespace FileExplorer.WPF.BaseControls
         {
             switch (eventId.Name)
             {
-                case "OnPreviewMouseDown": return ScriptCommands.PrintSourceDC;
-                case "OnMouseDrag": return ScriptCommands.PrepareDrag;
-                case "OnMouseUp": return ScriptCommands.PrintSourceDC;
-                case "OnMouseDrop": return ScriptCommands.PrintSourceDC;
+                case "OnPreviewMouseDown": return WPFScriptCommands.PrintSourceDC;
+                case "OnMouseDrag": return WPFScriptCommands.PrepareDrag;
+                case "OnMouseUp": return WPFScriptCommands.PrintSourceDC;
+                case "OnMouseDrop": return WPFScriptCommands.PrintSourceDC;
             }
 
             return base.OnEvent(eventId);

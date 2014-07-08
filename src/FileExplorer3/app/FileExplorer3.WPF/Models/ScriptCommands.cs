@@ -14,7 +14,7 @@ using System.IO;
 
 namespace FileExplorer.Script
 {
-    public static partial class ScriptCommands
+    public static partial class WPFScriptCommands
     {
         public static IScriptCommand ParsePath(IProfile[] profiles, string path, Func<IEntryModel, IScriptCommand> ifFoundFunc,
             IScriptCommand ifNotFound)
@@ -78,8 +78,8 @@ namespace FileExplorer.Script
         public static IScriptCommand ParseOrCreatePath(IDiskProfile profile, string path,
             bool isFolder, Func<IEntryModel, IScriptCommand> thenFunc)
         {
-            return ScriptCommands.ParsePath(new[] { profile }, path, thenFunc,
-                ScriptCommands.CreatePath(profile, path, isFolder, false, thenFunc));
+            return WPFScriptCommands.ParsePath(new[] { profile }, path, thenFunc,
+                WPFScriptCommands.CreatePath(profile, path, isFolder, false, thenFunc));
         }
 
         public static IScriptCommand OpenFileStream(IEntryModel entryModel, FileExplorer.Defines.FileAccess access,

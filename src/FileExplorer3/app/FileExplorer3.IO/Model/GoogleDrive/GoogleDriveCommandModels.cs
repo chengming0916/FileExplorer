@@ -62,12 +62,12 @@ namespace FileExplorer.Models
                                 new CommandModel(
                                     //SaveFile --> ParseOrCreatePath -> ShowProgress -> Download -> HideProgress
                                     //         --> OK (If cancel)
-                                    ScriptCommands.SaveFilePicker(WindowManager, Events, 
+                                    WPFScriptCommands.SaveFilePicker(WindowManager, Events, 
                                      _rootModelFunc(), filter, defaultName,
-                                     (fi) => ScriptCommands.ParseOrCreatePath(fi.Profile as IDiskProfile, 
+                                     (fi) => WPFScriptCommands.ParseOrCreatePath(fi.Profile as IDiskProfile, 
                                          fi.FileName, false, 
-                                         (m) => ScriptCommands.ShowProgress(WindowManager, "Saving", 
-                                                    ScriptCommands.Download(url, m, 
+                                         (m) => WPFScriptCommands.ShowProgress(WindowManager, "Saving", 
+                                                    WPFScriptCommands.Download(url, m, 
                                                     (appliedModels[0].Profile as GoogleDriveProfile)
                                                     .HttpClientFunc(), 
                                                     new HideProgress()))), 

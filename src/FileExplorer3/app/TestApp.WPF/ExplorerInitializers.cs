@@ -158,7 +158,7 @@ namespace TestApp
                  );
 
             explorerModel.FileList.Commands.ScriptCommands.NewFolder =
-                FileList.Do(flvm => ScriptCommands.CreatePath(
+                FileList.Do(flvm => WPFScriptCommands.CreatePath(
                         flvm.CurrentDirectory, "NewFolder", true, true,
                         m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
 
@@ -166,7 +166,7 @@ namespace TestApp
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                        ScriptCommands.ShowProgress(_windowManager, "Delete",
+                        WPFScriptCommands.ShowProgress(_windowManager, "Delete",
                                     ScriptCommands.RunInSequence(
                                         FileList.AssignSelectionToParameter(
                                             IOScriptCommands.DeleteFromParameter),
@@ -193,7 +193,7 @@ namespace TestApp
             explorerModel.DirectoryTree.Commands.ScriptCommands.Delete =
                        ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                            pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
-                                ScriptCommands.ShowProgress(_windowManager, "Delete",
+                                WPFScriptCommands.ShowProgress(_windowManager, "Delete",
                                         ScriptCommands.RunInSequence(
                                             DirectoryTree.AssignSelectionToParameter(
                                                 IOScriptCommands.DeleteFromParameter),
