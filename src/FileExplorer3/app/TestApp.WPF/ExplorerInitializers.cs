@@ -164,7 +164,7 @@ namespace TestApp
 
             explorerModel.FileList.Commands.ScriptCommands.Delete =
                  FileList.IfSelection(evm => evm.Count() >= 1,
-                    ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
+                    WPFScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                         WPFScriptCommands.ShowProgress(_windowManager, "Delete",
                                     ScriptCommands.RunInSequence(
@@ -176,7 +176,7 @@ namespace TestApp
 
             explorerModel.FileList.Commands.ScriptCommands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,
-                   ScriptCommands.IfOkCancel(_windowManager, pd => "Copy",
+                   WPFScriptCommands.IfOkCancel(_windowManager, pd => "Copy",
                         pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                             ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
                             ResultCommand.NoError),
@@ -184,14 +184,14 @@ namespace TestApp
 
             explorerModel.FileList.Commands.ScriptCommands.Cut =
                   FileList.IfSelection(evm => evm.Count() >= 1,
-                   ScriptCommands.IfOkCancel(_windowManager, pd => "Cut",
+                   WPFScriptCommands.IfOkCancel(_windowManager, pd => "Cut",
                         pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                             ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
                             ResultCommand.NoError),
                     NullScriptCommand.Instance);
 
             explorerModel.DirectoryTree.Commands.ScriptCommands.Delete =
-                       ScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
+                       WPFScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                            pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
                                 WPFScriptCommands.ShowProgress(_windowManager, "Delete",
                                         ScriptCommands.RunInSequence(

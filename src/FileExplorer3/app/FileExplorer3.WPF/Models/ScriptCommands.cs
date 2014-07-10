@@ -11,6 +11,7 @@ using FileExplorer.Models;
 using FileExplorer.IO;
 using System.Threading;
 using System.IO;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Script
 {

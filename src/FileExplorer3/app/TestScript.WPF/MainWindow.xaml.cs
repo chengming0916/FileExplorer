@@ -1,7 +1,11 @@
-﻿using FileExplorer;
+﻿using Caliburn.Micro;
+using FileExplorer;
+using FileExplorer.Models;
 using FileExplorer.Script;
+using FileExplorer.UnitTests;
 using FileExplorer.Utils;
 using FileExplorer.WPF.BaseControls;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -37,44 +41,17 @@ namespace TestScript.WPF
         public MainWindow()
         {
             InitializeComponent();
-           
+           //WPFScriptCommands.ParseOrCreatePath
 
-        }
+        }       
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            IScriptCommand testCommand1 = new SetEventIsHandled(true, FileExplorer.Script.WPFScriptCommands.MessageBox("Abc", "Cde"));
+            //AsyncUtils.RunSync(() => ScriptCommandTests.UnitTest());
 
+            AsyncUtils.RunSync(() => ScriptCommandTests.Test_DownloadFile());           
 
-            XmlSerializer mySerializer = new XmlSerializer(typeof(ScriptCommandBase),
-                new Type[] { 
-                    typeof(ResultCommand),
-
-                    // FileExplorer.WPF.BaseControls.CommonCommands
-                    typeof(MarkEventHandled),
-                    typeof(SetEventIsHandled),
-                    typeof(SetIsHandled),
-
-                    //FileExplorer.Script (in FileExplorer.WPF)
-                    typeof(ShowMessageBox)
-                });
-            MemoryStream ms = new MemoryStream();
-            StreamWriter myWriter = new StreamWriter(ms);
-            mySerializer.Serialize(myWriter, testCommand1);
-
-            ms.Seek(0, SeekOrigin.Begin);
-
-            var sr = new StreamReader(ms);
-            Debug.WriteLine(sr.ReadToEnd());
-
-            ms.Seek(0, SeekOrigin.Begin);
-            testCommand1 = mySerializer.Deserialize(ms) as ScriptCommandBase;
-
-
-            ScriptRunner.RunScript(testCommand1);
-            //using (var sr = new StreamReader(ms))
-            //    Debug.WriteLine(sr.ReadToEnd());
-
+            
         }
 
         

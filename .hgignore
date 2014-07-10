@@ -24,3 +24,5 @@ release/*
 tmp/*
 build/compile.txt
 src/FileExplorer3/app/FileExplorer3.UnitTest/*
+src/FileExplorer3/app/Nuget.FileExplorer.WPF/*
+*.nant.csproj

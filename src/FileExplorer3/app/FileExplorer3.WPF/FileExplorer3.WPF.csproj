@@ -186,7 +186,6 @@
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
     <Compile Include="Utils\DynamicDictionary.cs" />
-    <Compile Include="Utils\FileNameGenerator.cs" />
     <Compile Include="Utils\ParamStringUtils.cs" />
     <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\ICommandScriptCommand.cs" />
