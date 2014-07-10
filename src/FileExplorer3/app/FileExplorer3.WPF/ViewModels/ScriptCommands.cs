@@ -138,6 +138,7 @@ namespace FileExplorer.Script
             return new ShowMessageBox(caption, message);
         }
 
+        
         public static DownloadFile Download(string sourceUrl, IEntryModel entry,
            HttpClient httpClient, IScriptCommand nextCommand = null)
         {

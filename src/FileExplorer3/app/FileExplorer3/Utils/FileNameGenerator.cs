@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Utils
+namespace FileExplorer.Utils
 {
     public interface IFileNameGenerator
     {
@@ -13,6 +14,16 @@ namespace FileExplorer.WPF.Utils
 
     public static class FileNameGenerator
     {
+        public static IFileNameGenerator FromNameGenerationMode(NameGenerationMode mode, string fileName)
+        {
+            switch (mode)
+            {
+                case NameGenerationMode.NoRename: return NoRename(fileName);
+                case NameGenerationMode.Rename: return Rename(fileName);
+                default: throw new NotSupportedException(mode.ToString());
+            }
+        }
+
         public static IFileNameGenerator NoRename(string fileName)
         {
             return new OneNameFileNameGenerator(fileName);

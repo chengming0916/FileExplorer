@@ -82,6 +82,7 @@
     <Compile Include="Defines\Cofe3\Utils\CofePath.cs" />
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
+    <Compile Include="Utils\FileNameGenerator.cs" />
     <Compile Include="Utils\ProgressConverter.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

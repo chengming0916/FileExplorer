@@ -15,6 +15,11 @@ namespace FileExplorer.Defines
     
     public enum TransferMode { Copy, Move, Rename, Link }
 
+    /// <summary>
+    /// If a file already exists, change name... use IFileNameGenerator
+    /// </summary>
+    public enum NameGenerationMode { NoRename, Rename }
+
     //ToAdd a template, you have to update DisplayTemplateSelector.cs
     public enum DisplayType { Auto, Text, Number, Link, DateTime, TimeElapsed, Kb, Percent, Filename, Boolean, Image }
     public enum UpdateMode { Replace, Update }
