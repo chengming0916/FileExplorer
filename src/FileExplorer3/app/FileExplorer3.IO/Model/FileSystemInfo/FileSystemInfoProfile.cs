@@ -22,7 +22,7 @@ namespace FileExplorer.Models
     {
         #region Cosntructor
 
-        public FileSystemInfoProfile(IEventAggregator events, IWindowManager windowsManager)
+        public FileSystemInfoProfile(IEventAggregator events)
             : base(events)
         {
             ProfileName = "FileSystem";
@@ -31,7 +31,7 @@ namespace FileExplorer.Models
             MetadataProvider = new ExMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = IODiskPatheMapper.Instance;
-            DragDrop = new FileBasedDragDropHandler(this, windowsManager, em => false);
+            DragDrop = new FileBasedDragDropHandler(this, em => false);
         }
 
         #endregion

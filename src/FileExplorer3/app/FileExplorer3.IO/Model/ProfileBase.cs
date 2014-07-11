@@ -13,6 +13,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using System.Text.RegularExpressions;
+using System.ComponentModel.Composition;
 
 namespace FileExplorer.WPF.Models
 {
@@ -37,8 +38,7 @@ namespace FileExplorer.WPF.Models
 
             DragDrop = new NullDragDropHandler();
             Events = events ?? new EventAggregator();
-            Converters = converters;
-
+            Converters = converters;            
         }
 
         #endregion

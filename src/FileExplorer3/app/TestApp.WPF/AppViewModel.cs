@@ -41,7 +41,7 @@ namespace TestApp
             _events = events;
 
             _events.Subscribe(this);
-            _profile = new FileSystemInfoProfile(_events, windowManager);
+            _profile = new FileSystemInfoProfile(_events);
             _profileEx = new FileSystemInfoExProfile(events, windowManager, new FileExplorer.Models.SevenZipSharp.SzsProfile());
 
             Func<string> loginSkyDrive = () =>
@@ -55,7 +55,7 @@ namespace TestApp
             };
 
             if (AuthorizationKeys.SkyDrive_Client_Secret != null)
-                _profileSkyDrive = new SkyDriveProfile(_events, _windowManager, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
+                _profileSkyDrive = new SkyDriveProfile(_events, AuthorizationKeys.SkyDrive_Client_Id, loginSkyDrive, skyDriveAliasMask);
 
 
             Func<UserLogin> loginDropBox = () =>
@@ -70,7 +70,7 @@ namespace TestApp
             };
 
             if (AuthorizationKeys.DropBox_Client_Secret != null)
-                _profileDropBox = new DropBoxProfile(_events, _windowManager,
+                _profileDropBox = new DropBoxProfile(_events, 
                         AuthorizationKeys.DropBox_Client_Id,
                               AuthorizationKeys.DropBox_Client_Secret,
                               loginDropBox);
@@ -78,7 +78,7 @@ namespace TestApp
             if (System.IO.File.Exists("gapi_client_secret.json"))
                 using (var gapi_secret_stream = System.IO.File.OpenRead("gapi_client_secret.json")) //For demo only.
                 {
-                    _profileGoogleDrive = new GoogleDriveProfile(_events, _windowManager, gapi_secret_stream);
+                    _profileGoogleDrive = new GoogleDriveProfile(_events, gapi_secret_stream);
                 }
 
 

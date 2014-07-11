@@ -155,7 +155,7 @@ namespace FileExplorer.Script
                ScriptCommands.DiskParseOrCreateFile(destinationFileVariable, "Destination",
                ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
                ScriptCommands.CopyStream("DownloadStream", "DestinationStream", nextCommand))));
-        }
+        }        
     }
 
 

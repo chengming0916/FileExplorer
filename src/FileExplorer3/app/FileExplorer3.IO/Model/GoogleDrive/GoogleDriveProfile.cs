@@ -45,27 +45,27 @@ namespace FileExplorer.Models
             return credential;
         }
 
-        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
+        public GoogleDriveProfile(IEventAggregator events, 
                  string clientSecretFile,
                  string aliasMask = "{0}'s GoogleDrive",
                  string rootAccessPath = "/gdrive")
-            : this(events, windowManager, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretFile)),
+            : this(events, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretFile)),
                     aliasMask, rootAccessPath)
         {
 
         }
 
-        public GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
+        public GoogleDriveProfile(IEventAggregator events, 
                  Stream clientSecretStream,
                  string aliasMask = "{0}'s GoogleDrive",
                  string rootAccessPath = "/gdrive")
-            : this(events, windowManager, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretStream)),
+            : this(events, AsyncUtils.RunSync(() => GoogleDriveProfile.GetCredentialAsync(clientSecretStream)),
                     aliasMask, rootAccessPath)
         {
 
         }
 
-        internal GoogleDriveProfile(IEventAggregator events, IWindowManager windowManager,
+        internal GoogleDriveProfile(IEventAggregator events, 
                    IConfigurableHttpClientInitializer credential,
                    string aliasMask = "{0}'s GoogleDrive",
                    string rootAccessPath = "/gdrive")
@@ -82,7 +82,7 @@ namespace FileExplorer.Models
             MetadataProvider = new GoogleDriveMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
-            DragDrop = new FileBasedDragDropHandler(this, windowManager);
+            DragDrop = new FileBasedDragDropHandler(this);
             _rootAccessPath = rootAccessPath;
 
         }

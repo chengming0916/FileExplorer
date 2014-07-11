@@ -138,12 +138,12 @@ namespace FileExplorer.Script
             return new ShowMessageBox(caption, message);
         }
 
-        
+
         public static DownloadFile Download(string sourceUrl, IEntryModel entry,
            HttpClient httpClient, IScriptCommand nextCommand = null)
         {
             return new DownloadFile(sourceUrl, entry, httpClient, nextCommand);
-        }        
+        }
 
         public static IScriptCommand Download(string sourceUrl, IEntryModel entry, IScriptCommand nextCommand = null)
         {
@@ -417,7 +417,7 @@ namespace FileExplorer.Script
             return _nextCommand;
         }
     }
-    
+
     /// <summary>
     /// Serializable, Download source Url to "Stream" property,
     /// 
@@ -429,9 +429,10 @@ namespace FileExplorer.Script
     public class DownloadFile2 : ScriptCommandBase
     {
         public string SourceUrl { get; set; }
-        public string Destination { get; set; }        
+        public string Destination { get; set; }
 
-        public DownloadFile2(IScriptCommand nextCommand) : base("Download2", nextCommand, "Progress", "HttpClientFunc", "Stream")
+        public DownloadFile2(IScriptCommand nextCommand)
+            : base("Download2", nextCommand, "Progress", "HttpClientFunc", "Stream")
         {
 
         }
@@ -1818,10 +1819,9 @@ namespace FileExplorer.Script
     {
         #region Constructor
 
-        public TransferCommand(Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> transferOneFunc, IWindowManager windowManager = null)
+        public TransferCommand(Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> transferOneFunc)
             : base("Transfer", "Source", "Dest", "DragDropEffects")
-        {
-            _windowManager = windowManager;
+        {            
             _transferOneFunc = transferOneFunc;
         }
 
@@ -1846,6 +1846,7 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+
             var source = pm["Source"] as IEntryModel[];
             var dest = pm["Dest"] as IEntryModel;
             DragDropEffects effects = pm.ContainsKey("DragDropEffects") && pm["DragDropEffects"] is DragDropEffects ?
@@ -1855,11 +1856,10 @@ namespace FileExplorer.Script
             if (transferCommands.Any(c => c == null || !c.CanExecute(pm)))
                 return ResultCommand.Error(new ArgumentException("Not all items are transferrable."));
 
-            if (_windowManager != null)
-                return WPFScriptCommands.ShowProgress(_windowManager, effects.ToString(),
-                            WPFScriptCommands.ReportProgress(TransferProgress.IncrementTotalEntries(source.Length),
-                                new RunInSequenceScriptCommand(transferCommands, new HideProgress())));
-            else return new RunInSequenceScriptCommand(transferCommands);
+            return WPFScriptCommands.ReportProgress(
+                TransferProgress.IncrementTotalEntries(source.Length),
+                ScriptCommands.RunInSequence(transferCommands)
+                );          
         }
 
         #endregion
@@ -1867,7 +1867,6 @@ namespace FileExplorer.Script
         #region Data
 
         private Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> _transferOneFunc;
-        private IWindowManager _windowManager;
 
         #endregion
 
