@@ -63,11 +63,11 @@ namespace FileExplorer.Models
         private IProfile _profile;
         private Func<IEntryModel, bool> _getIsVirtualFunc;
 
-        public FileBasedDragDropHandler(IProfile profile, IWindowManager windowManager, Func<IEntryModel, bool> getIsVirtualFunc = null)
+        public FileBasedDragDropHandler(IProfile profile, Func<IEntryModel, bool> getIsVirtualFunc = null)
         {
             _profile = profile;
             _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
-                new FileSystemInfoProfile(profile.Events(), windowManager);
+                new FileSystemInfoProfile(profile.Events());
             _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);
 
             TransferCommand =
@@ -75,7 +75,7 @@ namespace FileExplorer.Models
                    source.Profile is IDiskProfile ?
                        IOScriptCommands.Transfer(source, destDir, effect == DragDropEffects.Move)
                        : ResultCommand.Error(new NotSupportedException())
-                   , windowManager);
+                   );
         }
 
         public virtual async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)

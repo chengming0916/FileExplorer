@@ -28,6 +28,8 @@ namespace FileExplorer.Models
 {
     public class FileSystemInfoExProfile : DiskProfileBase, IWPFProfile
     {
+        
+
         #region Constructor
 
         private class ExHierarchyComparer : IEntryHierarchyComparer
@@ -128,6 +130,12 @@ namespace FileExplorer.Models
             }
         }
 
+        public static FileSystemInfoExProfile Instance = CreateNew();
+        public static FileSystemInfoExProfile CreateNew(params IConverterProfile[] converters)
+        {
+            return new FileSystemInfoExProfile(null, null, converters);
+        }
+
         public FileSystemInfoExProfile(IEventAggregator events, IWindowManager windowManager, params IConverterProfile[] converters)
             : base(events, converters)
         {
@@ -142,7 +150,7 @@ namespace FileExplorer.Models
                 new ExCommandProvider(this)
             };
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
-            DragDrop = new FileBasedDragDropHandler(this, windowManager, em => false);
+            DragDrop = new FileBasedDragDropHandler(this, em => false);
             //PathMapper = IODiskPatheMapper.Instance;
             
             PathPatterns = new string[] { RegexPatterns.FileSystemGuidPattern, RegexPatterns.FileSystemPattern };

@@ -25,7 +25,7 @@ namespace FileExplorer.Models
         /// </summary>
         /// <param name="events"></param>
         /// <param name="requestToken"></param>
-        public DropBoxProfile(IEventAggregator events, IWindowManager windowManager,
+        public DropBoxProfile(IEventAggregator events, 
             string clientId, string clientSecret,
             Func<UserLogin> loginFunc,
             string aliasMask = "{0}'s DropBox")
@@ -50,7 +50,7 @@ namespace FileExplorer.Models
             CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             //PathMapper = new SkyDriveDiskPathMapper(this, null);
-            DragDrop = new FileBasedDragDropHandler(this, windowManager);
+            DragDrop = new FileBasedDragDropHandler(this);
 
 
         }

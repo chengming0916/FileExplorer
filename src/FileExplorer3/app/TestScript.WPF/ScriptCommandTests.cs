@@ -15,14 +15,15 @@ namespace FileExplorer.UnitTests
 {
     public static class ScriptCommandTests
     {
+        private static ScriptCommandSerializer serializer = new ScriptCommandSerializer(typeof(FileExplorer3Commands));
         private static IScriptCommand serializeAndDeserializeCommand(IScriptCommand command)
         {
-            var stream = ScriptCommandSerializer.SerializeScriptCommand(command);
+            var stream = serializer.SerializeScriptCommand(command);
 
             Console.WriteLine(new StreamReader(stream).ReadToEnd());
-            stream.Seek(0, SeekOrigin.Begin);            
+            stream.Seek(0, SeekOrigin.Begin);
 
-            return ScriptCommandSerializer.DeserializeScriptCommand(stream);
+            return serializer.DeserializeScriptCommand(stream);
         }
 
         public static async Task UnitTest()
@@ -177,7 +178,7 @@ namespace FileExplorer.UnitTests
                ScriptCommands.OpenStream("Source", "SourceStream", FileExplorer.Defines.FileAccess.Read,
                ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
                ScriptCommands.CopyStream("SourceStream", "DestinationStream"))))
-               , FileExplorer.Script.WPFScriptCommands.MessageBox("Not Found", "Not Found " + srcFile)
+               , ResultCommand.Error(new FileNotFoundException(srcFile))
                 );
 
             //copyCommand = ScriptCommands.CopyFile("SourceFile", "DestinationFile");
