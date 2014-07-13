@@ -56,7 +56,7 @@ namespace FileExplorer.Script
         public virtual bool CanExecute(ParameterDic pm)
         {
             return true;
-        }
+        }      
 
         #endregion
 

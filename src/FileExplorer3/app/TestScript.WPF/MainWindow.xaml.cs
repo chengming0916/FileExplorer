@@ -49,6 +49,7 @@ namespace TestScript.WPF
         {
             //AsyncUtils.RunSync(() => ScriptCommandTests.UnitTest());
 
+
             AsyncUtils.RunSync(() => ScriptCommandTests.Test_DownloadFile());           
 
             

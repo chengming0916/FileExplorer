@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Models;
+using MetroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -205,6 +206,7 @@ namespace FileExplorer.Defines
         public void Report(TransferProgress value)
         {
         }
-    }
+    }    
+    
 
 }

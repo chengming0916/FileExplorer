@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroLog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace FileExplorer.Script
 {   
     public class ScriptRunner : IScriptRunner
     {
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ScriptRunner>();
         public static ScriptRunner Instance = new ScriptRunner();
 
         public static Task RunScriptAsync(ParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
@@ -69,7 +71,7 @@ namespace FileExplorer.Script
                 try
                 {
                     var current = cmds.Dequeue();
-                    //Debug.WriteLine("ScriptRunner:" + current.CommandKey);
+                    //logger.Info("Running " + current.CommandKey);
                     if (current.CanExecute(pd))
                     {
 
@@ -84,13 +86,14 @@ namespace FileExplorer.Script
 
                     }
                     else
-                        if (!(current is NullScriptCommand))
+                        if (!(current is NullScriptCommand))                        
                             throw new Exception(String.Format("Cannot execute {0}", current));
                 }
                 catch (Exception ex)
                 {
-
-                    throw;
+                    pd.Error = ex;
+                    logger.Error("Error when running script", ex);
+                    throw ex;
                 }
             }
         }
@@ -115,7 +118,7 @@ namespace FileExplorer.Script
                     if (current.CanExecute(pd))
                     {
                         pd.CommandHistory.Add(current.CommandKey);
-                        Debug.WriteLine("ScriptRunner:" + current.CommandKey);
+                        //logger.Info("Running " + current.CommandKey);
                         var retCmd = await current.ExecuteAsync(pd)
                             .ConfigureAwait(current.ContinueOnCaptureContext);
 
@@ -131,7 +134,9 @@ namespace FileExplorer.Script
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    pd.Error = ex;
+                    logger.Error("Error when running script", ex);
+                    throw ex;
                 }
 
             }

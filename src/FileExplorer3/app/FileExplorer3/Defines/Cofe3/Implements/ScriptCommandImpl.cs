@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroLog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace FileExplorer.Script
 
         Action<ParameterDic> _executeFunc = (pm) => { };
 
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ResultCommand>();
+
         /// <summary>
         /// Used by serializer only.
         /// </summary>
@@ -44,12 +47,17 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            if (_exception != null)
+            if (_exception == null)
             {
                 if (MarkHandled)
                     pm.IsHandled = true;
+                logger.Info("OK");
             }
-            else pm.Error = _exception;
+            else
+            {
+                logger.Error(_exception.Message, _exception);
+                pm.Error = _exception;
+            }
             return NextCommand;
         }
 

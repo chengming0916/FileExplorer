@@ -16,22 +16,19 @@
   <Namespace>System.Collections</Namespace>
 </Query>
 
+//Download a image to c:\temp\output.png
 
+LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Debug, LogLevel.Fatal, new ConsoleTarget());
 LogManagerFactory.DefaultConfiguration.IsEnabled = true;
+string tempDirectory = "C:\\Temp";
 
-IScriptCommand downloadCommand =
-              ScriptCommands.Download("Url", "Stream",
-                ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-                ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-                ScriptCommands.CopyStream("Stream", "DestinationStream"))));
-
-IScriptCommand copyCommand =
-               ScriptCommands.ParsePath("SourceFile", "Source",
-               ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-               ScriptCommands.OpenStream("Source", "SourceStream", FileExplorer.Defines.FileAccess.Read,
-               ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-               ScriptCommands.CopyStream("SourceStream", "DestinationStream")))),
-               ResultCommand.Error(new FileNotFoundException()));				
-				
-var stream = new ScriptCommandSerializer(new Type[] {typeof(FileExplorer3Commands)}).SerializeScriptCommand(copyCommand );
-XDocument.Load(stream).Dump();
+IScriptCommand listCommand =
+              ScriptCommands.ParsePath(tempDirectory, "Parent",			  
+			    ScriptCommands.List("Parent", "Children", "*", FileExplorer.Defines.ListOptions.File, 
+				ScriptCommands.ForEach("Children", "Child", 
+				  ScriptCommands.PrintLogger("{Child}"))));
+                
+			
+await ScriptRunner.RunScriptAsync(new ParameterDic() {  
+                { "Profile", FileSystemInfoExProfile.CreateNew() }                             
+            }, listCommand);
