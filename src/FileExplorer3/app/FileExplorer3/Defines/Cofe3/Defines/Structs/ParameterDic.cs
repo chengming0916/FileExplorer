@@ -1,8 +1,10 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +16,26 @@ namespace FileExplorer
         public string Key { get; set; }
         public object Value { get; set; }
         public ParameterPair(string key, object value) { Key = key; Value = value; }
+    }
+
+    public static partial class ExtensionMethods
+    {
+        public static string ReplaceVariableInsideBracketed(this ParameterDic pd, string variableKey)
+        {
+            Regex regex = new Regex("{(?<TextInsideBrackets>\\w+)}");
+            string value = variableKey;
+
+            Match match = regex.Match(value);
+
+            while (match.Success)
+            {
+                string key = match.Groups["TextInsideBrackets"].Value;
+                value = value.Replace("{" + key + "}", pd.ContainsKey(key) ? pd[key].ToString() : "");
+                match = regex.Match(value);
+            }
+
+            return value;
+        }
     }
 
     public class ParameterDic : Dictionary<string, object>
@@ -32,6 +54,14 @@ namespace FileExplorer
             foreach (var ppair in ppairs)
                 retVal.Add(ppair.Key, ppair.Value);
             return retVal;
+        }        
+
+        public T GetVariable<T>(string variableKey, T defaultValue)
+        {
+            if (this.ContainsKey(variableKey) && this[variableKey] is T)
+                return (T)this[variableKey];
+
+            return defaultValue;
         }
 
         //public static ParameterDic FromNameValueCollection(NameValueCollection col, string[] paramToFetch)
@@ -87,6 +117,16 @@ namespace FileExplorer
             get { return this.ContainsKey("CancellationToken") && this["CancellationToken"] is CancellationToken ? 
                 (CancellationToken)this["CancellationToken"] : CancellationToken.None; }
             set { if (this.ContainsKey("CancellationToken")) this["CancellationToken"] = value; else this.Add("CancellationToken", value); }
+        }
+
+        public IProgress<TransferProgress> Progress
+        {
+            get
+            {
+                return this.ContainsKey("Progress") && this["Progress"] is IProgress<TransferProgress> ?
+                    (IProgress<TransferProgress>)this["Progress"] : NullTransferProgress.Instance;
+            }
+            set { if (this.ContainsKey("Progress")) this["Progress"] = value; else this.Add("Progress", value); }
         }
 
         /// <summary>

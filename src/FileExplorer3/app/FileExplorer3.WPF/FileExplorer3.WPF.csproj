@@ -43,6 +43,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\HtmlTextBlock.dll</HintPath>
     </Reference>
+    <Reference Include="MetroLog, Version=0.8.6.0, Culture=neutral, PublicKeyToken=ba4ace74c3b410f3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MetroLog.0.8.6\lib\net45\MetroLog.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroLog.Platform">
+      <HintPath>..\packages\MetroLog.0.8.6\lib\net45\MetroLog.Platform.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.1.1309.1617\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -164,6 +171,7 @@
     <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
     <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
+    <Compile Include="Utils\ConsoleTarget.cs" />
     <Compile Include="Utils\FileExplorerBootStrapper.cs" />
     <Compile Include="Utils\ResourceUtils.cs" />
     <Compile Include="ViewModels\ExplorerInitializers.cs" />

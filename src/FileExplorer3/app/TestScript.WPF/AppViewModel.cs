@@ -9,6 +9,8 @@ using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.Collections.ObjectModel;
 using FileExplorer.Utils;
+using MetroLog;
+using FileExplorer.UnitTests;
 
 namespace TestScript.WPF
 {
@@ -18,7 +20,14 @@ namespace TestScript.WPF
         #region Constructor
 
         public AppViewModel()
-        {            
+        {
+
+            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Debug, LogLevel.Fatal, new ConsoleTarget());
+            LogManagerFactory.DefaultConfiguration.IsEnabled = true;
+            
+            LogManagerFactory.DefaultLogManager.GetLogger<AppViewModel>().Log(LogLevel.Debug, "Test");
+            AsyncUtils.RunSync(() => ScriptCommandTests.Test_DownloadFile());      
+            
         }
 
         #endregion

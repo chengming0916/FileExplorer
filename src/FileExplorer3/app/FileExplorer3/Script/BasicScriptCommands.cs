@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MetroLog;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,6 +13,7 @@ namespace FileExplorer.Script
     public static partial class ScriptCommands
     {
         public static NoScriptCommand NoCommand = new NoScriptCommand();
+
 
         public static IScriptCommand If(Func<ParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise)
         {
@@ -33,7 +36,149 @@ namespace FileExplorer.Script
         {
             return new ForEachCommand<T>(source, commandFunc, nextCommand);
         }
+
+        /// <summary>
+        /// Serializable, print content of a variable to debug.
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand PrintDebug(string variable, IScriptCommand nextCommand = null)
+        {
+            return new Print()
+            {
+                DestinationType = Print.PrintDestinationType.Debug,
+                VariableKey = variable,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
+
+        /// <summary>
+        /// Serializable, print content of a variable to logger.
+        /// </summary>
+        /// <param name="variable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand PrintLogger(string variable, IScriptCommand nextCommand = null)
+        {
+            return new Print()
+            {
+                DestinationType = Print.PrintDestinationType.Logger,
+                VariableKey = variable,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
+
+        public static IScriptCommand ForEach(string ItemsVariable = "Items", string currentItemVariable = "CurrentItem", 
+            IScriptCommand doCommand = null, IScriptCommand thenCommand = null)
+        {
+            return new ForEach()
+            {
+                ItemsKey = ItemsVariable, CurrentItemKey = currentItemVariable,
+                NextCommand = (ScriptCommandBase)doCommand,
+                ThenCommand = (ScriptCommandBase)thenCommand
+            };
+        }
     }
+
+    /// <summary>
+    /// Serializable, print content of a variable to debug.
+    /// </summary>
+    public class Print : ScriptCommandBase
+    {
+        [Flags]
+        public enum PrintDestinationType { Logger = 1 << 0, Debug = 1 << 1  }
+
+        /// <summary>
+        /// Variable to print.
+        /// </summary>
+        public string VariableKey { get; set; }
+
+        /// <summary>
+        /// Where to print to.
+        /// </summary>
+        public PrintDestinationType DestinationType { get; set; }
+
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<Print>();
+
+        public Print()
+            : base("Print")
+        {
+            DestinationType = PrintDestinationType.Logger;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            string variable =
+                VariableKey.Contains("{") && VariableKey.Contains("}") ? pm.ReplaceVariableInsideBracketed(VariableKey) :                
+                pm.ContainsKey(VariableKey) ? pm[VariableKey].ToString() : "";
+             
+
+            if (DestinationType.HasFlag(PrintDestinationType.Debug))
+                Debug.WriteLine(variable);
+            if (DestinationType.HasFlag(PrintDestinationType.Logger))
+                logger.Info(variable);
+
+            return NextCommand;
+        }
+
+    }
+
+
+    public class ForEach : ScriptCommandBase
+    {
+        /// <summary>
+        /// Array of item to be iterated, support IEnumerable or Array, Default=Items
+        /// </summary>
+        public string ItemsKey { get; set; }
+        /// <summary>
+        /// When iterating item (e.g. i in foreach (var i in array)), the current item will be stored in this key.
+        /// Default = CurrentItem
+        /// </summary>
+        public string CurrentItemKey { get; set; }
+
+        /// <summary>
+        /// Iteration command is run in NextCommand, when all iteration complete ThenCommand is run.
+        /// </summary>
+        public ScriptCommandBase ThenCommand { get; set; }
+
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ForEach>();
+
+        public ForEach()
+            : base("ForEach")
+        {
+            CurrentItemKey = "CurrentItem";
+            ItemsKey = "Items";
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            if (!(pm.ContainsKey(ItemsKey)))
+                return ResultCommand.Error(new KeyNotFoundException(ItemsKey));
+
+            IEnumerable e = pm[ItemsKey] as IEnumerable;
+            if (e == null)
+                return ResultCommand.Error(new ArgumentException(ItemsKey));
+
+            uint counter = 0;
+            foreach (var item in e)
+            {
+                counter++;
+                pm[CurrentItemKey] = item;
+                await ScriptRunner.RunScriptAsync(pm, NextCommand);
+                if (pm.Error != null)
+                {
+                    pm[CurrentItemKey] = null;
+                    return ResultCommand.Error(pm.Error);
+                }
+            }
+            logger.Info("Looped {0} items", counter);
+            pm[CurrentItemKey] = null;
+
+            return ThenCommand;
+        }
+    }
+
 
 
     public class IfScriptCommand : IScriptCommand
@@ -177,7 +322,7 @@ namespace FileExplorer.Script
         }
     }
 
-    
+
 
     public class NoScriptCommand : IScriptCommand
     {

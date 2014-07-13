@@ -16,14 +16,15 @@
   <Namespace>System.Collections</Namespace>
 </Query>
 
-
+//Copy from c:\temp\file1.txt to file2.txt
 LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 
-IScriptCommand downloadCommand =
-              ScriptCommands.Download("Url", "Stream",
-                ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-                ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-                ScriptCommands.CopyStream("Stream", "DestinationStream"))));
+string tempDirectory = "C:\\Temp";
+string srcFile = System.IO.Path.Combine(tempDirectory, "file1.txt");  
+string destFile = System.IO.Path.Combine(tempDirectory, "file2.txt");  
+
+using (var sw = File.CreateText(srcFile))
+	sw.WriteLine(DateTime.Now.ToString());
 
 IScriptCommand copyCommand =
                ScriptCommands.ParsePath("SourceFile", "Source",
@@ -32,6 +33,9 @@ IScriptCommand copyCommand =
                ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
                ScriptCommands.CopyStream("SourceStream", "DestinationStream")))),
                ResultCommand.Error(new FileNotFoundException()));				
-				
-var stream = new ScriptCommandSerializer(new Type[] {typeof(FileExplorer3Commands)}).SerializeScriptCommand(copyCommand );
-XDocument.Load(stream).Dump();
+			
+await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                { "Profile", FileSystemInfoExProfile.CreateNew() },
+                { "SourceFile", srcFile },
+                { "DestinationFile", destFile }
+            }, copyCommand);
