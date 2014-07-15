@@ -16,22 +16,30 @@
   <Namespace>System.Collections</Namespace>
 </Query>
 
-
 LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 
-IScriptCommand downloadCommand =
-              ScriptCommands.Download("Url", "Stream",
-                ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-                ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-                ScriptCommands.CopyStream("Stream", "DestinationStream"))));
+IScriptCommand downloadCommand =             
+              ScriptCommands.Download("{Url}", "{Stream}",
+                ScriptCommands.DiskParseOrCreateFile("{DestinationFile}", "{Destination}",
+                ScriptCommands.OpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+                ScriptCommands.CopyStream("{Stream}", "{DestinationStream}"))));
 
 IScriptCommand copyCommand =
-               ScriptCommands.ParsePath("SourceFile", "Source",
-               ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-               ScriptCommands.OpenStream("Source", "SourceStream", FileExplorer.Defines.FileAccess.Read,
-               ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-               ScriptCommands.CopyStream("SourceStream", "DestinationStream")))),
-               ResultCommand.Error(new FileNotFoundException()));				
+               ScriptCommands.ParsePath("{SourceFile}", "{Source}",
+               ScriptCommands.DiskParseOrCreateFile("{DestinationFile}", "{Destination}",
+               ScriptCommands.OpenStream("{Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
+               ScriptCommands.OpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+               ScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}")))),
+               ResultCommand.Error(new FileNotFoundException()));			
+			   
+IScriptCommand iterateCommand =
+              ScriptCommands.ForEach("{Items}", "{Current}", 
+			    ScriptCommands.PrintDebug("{Current}"), ScriptCommands.Reset(null, "{Items}"));			   
 				
-var stream = new ScriptCommandSerializer(new Type[] {typeof(FileExplorer3Commands)}).SerializeScriptCommand(copyCommand );
+Func<IScriptCommand, Stream> serialize = (cmd) =>				
+				new ScriptCommandSerializer(new Type[] {typeof(FileExplorer3Commands)}).SerializeScriptCommand(cmd );
+				
+var stream = serialize(downloadCommand);
+stream = serialize(copyCommand);
+stream = serialize(iterateCommand);
 XDocument.Load(stream).Dump();

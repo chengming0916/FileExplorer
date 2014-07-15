@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Defines;
+using MetroLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -22,7 +23,7 @@ namespace FileExplorer
     {
         public static string ReplaceVariableInsideBracketed(this ParameterDic pd, string variableKey)
         {
-            Regex regex = new Regex("{(?<TextInsideBrackets>\\w+)}");
+            Regex regex = new Regex("{(?<TextInsideBrackets>.+)}");
             string value = variableKey;
 
             Match match = regex.Match(value);
@@ -40,6 +41,7 @@ namespace FileExplorer
 
     public class ParameterDic : Dictionary<string, object>
     {
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ParameterDic>();
         public static ParameterDic Empty = new ParameterDic();
 
         public ParameterDic()
@@ -56,14 +58,59 @@ namespace FileExplorer
             return retVal;
         }        
 
-        public T GetVariable<T>(string variableKey, T defaultValue)
+        private static string getVariable(string variableKey)
         {
-            if (this.ContainsKey(variableKey) && this[variableKey] is T)
-                return (T)this[variableKey];
+            if (!variableKey.StartsWith("{") && variableKey.EndsWith("}"))
+                throw new ArgumentException(variableKey);
+            return variableKey.TrimStart('{').TrimEnd('}');
+        }
+
+        public T GetValue<T>(string variableKey, T defaultValue)
+        {
+            string variable = getVariable(variableKey);
+               
+            if (this.ContainsKey(variable) && this[variable] is T)
+                return (T)this[variable];
 
             return defaultValue;
         }
 
+        public T GetValue<T>(string variableKey)
+        {
+            return GetValue<T>(variableKey, default(T));
+        }
+
+        public object GetValue(string variableKey)
+        {
+            return GetValue<Object>(variableKey);
+        }
+
+        public bool SetValue<T>(string variableKey, T value, bool skipIfExists = false)
+        {
+            string variable = getVariable(variableKey);
+            if (this.ContainsKey(variable))
+            {
+                if (!skipIfExists)
+                {
+                    this[variable] = value;
+                    return true;
+                    
+                }
+                else
+                {
+                    
+                    return false;
+                }
+            }
+            else
+            {
+                this.Add(variable, value);
+                return true;
+                
+            }
+        }
+
+        
         //public static ParameterDic FromNameValueCollection(NameValueCollection col, string[] paramToFetch)
         //{
         //    ParameterDic retVal = new ParameterDic();

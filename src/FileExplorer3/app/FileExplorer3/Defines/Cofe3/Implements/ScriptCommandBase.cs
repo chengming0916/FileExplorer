@@ -74,6 +74,8 @@ namespace FileExplorer.Script
             get { return _continueOnCaptureContext; }
             set { _continueOnCaptureContext = value; }
         }
+        
+        [XmlIgnore]
         public string CommandKey { get; set; }
         [XmlIgnore]
         public string[] CommandParameters { get; set; }

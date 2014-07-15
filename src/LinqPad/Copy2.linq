@@ -16,22 +16,22 @@
   <Namespace>System.Collections</Namespace>
 </Query>
 
-//Download a image to c:\temp\output.png
+//Copy from c:\temp\file1.txt to file2.txt
 LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 
-string downloadUrl = "http://www.quickzip.org/logo2.png";
 string tempDirectory = "C:\\Temp";
-string destFile = System.IO.Path.Combine(tempDirectory, "output.png");  
+string destDirectory = "C:\\Temp\\Destination1";
+string srcFile = System.IO.Path.Combine(tempDirectory, "file1.txt");  
+string destFile = System.IO.Path.Combine(destDirectory, "file2.txt");  
 
-IScriptCommand downloadCommand =
-              ScriptCommands.Download("{Url}", "{Stream}",
-                ScriptCommands.DiskParseOrCreateFile("{DestinationFile}", "{Destination}",				
-                ScriptCommands.OpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
-                ScriptCommands.CopyStream("{Stream}", "{DestinationStream}"))));		
-			
+using (var sw = File.CreateText(srcFile))
+	sw.WriteLine(DateTime.Now.ToString());
+		   
+IScriptCommand diskTransferCommand = 
+	ScriptCommands.ParsePath(srcFile, "{Source}",
+    ScriptCommands.DiskParseOrCreateFolder(destDirectory, "{Destination}",
+    IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
+	
 await ScriptRunner.RunScriptAsync(new ParameterDic() { 
-	            { "Progress", new ConsoleProgress() },
-                { "Profile", FileSystemInfoExProfile.CreateNew() },
-                { "Url", downloadUrl },
-                { "DestinationFile", destFile },                
-            }, downloadCommand);
+                { "Profile", FileSystemInfoExProfile.CreateNew() }
+            }, diskTransferCommand);			
