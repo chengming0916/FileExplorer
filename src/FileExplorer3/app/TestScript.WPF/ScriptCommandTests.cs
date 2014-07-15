@@ -99,7 +99,7 @@ namespace FileExplorer.UnitTests
             //Prepare
             var streamCmd = new Mock<ScriptCommandBase>();  
             var thenCmd = new Mock<ScriptCommandBase>();  
-            OpenStream openStream = new OpenStream() { NextCommand = streamCmd.Object, ThenCommand = thenCmd.Object };
+            DiskOpenStream openStream = new DiskOpenStream() { NextCommand = streamCmd.Object, ThenCommand = thenCmd.Object };
             var mockProfile = new Mock<IDiskProfile>();
             var mockModel = new Mock<IEntryModel>();
 

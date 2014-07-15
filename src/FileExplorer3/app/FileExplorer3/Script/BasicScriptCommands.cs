@@ -20,18 +20,20 @@ namespace FileExplorer.Script
             return new IfScriptCommand(condition, ifTrue, otherwise);
         }
 
+        [Obsolete("Use RunCommands")]
         public static IScriptCommand RunInSequence(params IScriptCommand[] scriptCommands)
         {
             return new RunInSequenceScriptCommand(scriptCommands);
         }
 
-
+        [Obsolete("Use RunCommands")]
         public static IScriptCommand RunInSequence(IScriptCommand[] scriptCommands, IScriptCommand nextCommand)
         {
             return new RunInSequenceScriptCommand(scriptCommands, nextCommand);
         }
 
 
+        [Obsolete("Use ForEach(NonGeneric)")]
         public static IScriptCommand ForEach<T>(T[] source, Func<T, IScriptCommand> commandFunc, IScriptCommand nextCommand = null)
         {
             return new ForEachCommand<T>(source, commandFunc, nextCommand);
@@ -69,14 +71,41 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand ForEach(string ItemsVariable = "Items", string currentItemVariable = "CurrentItem", 
+        /// <summary>
+        /// Serializable, given an array, iterate it with NextCommand, then run ThenCommand when all iteration is finished.
+        /// </summary>
+        /// <param name="ItemsVariable"></param>
+        /// <param name="currentItemVariable"></param>
+        /// <param name="doCommand"></param>
+        /// <param name="thenCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand ForEach(string ItemsVariable = "{Items}", string currentItemVariable = "{CurrentItem}",
             IScriptCommand doCommand = null, IScriptCommand thenCommand = null)
         {
             return new ForEach()
             {
-                ItemsKey = ItemsVariable, CurrentItemKey = currentItemVariable,
+                ItemsKey = ItemsVariable,
+                CurrentItemKey = currentItemVariable,
                 NextCommand = (ScriptCommandBase)doCommand,
                 ThenCommand = (ScriptCommandBase)thenCommand
+            };
+        }
+
+        /// <summary>
+        /// Serializable, run commands in sequences or in parallel (if async).
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="thenCommand"></param>
+        /// <param name="commands"></param>
+        /// <returns></returns>
+        public static IScriptCommand RunCommands(RunCommands.RunMode mode = Script.RunCommands.RunMode.Sequence,
+            IScriptCommand thenCommand = null, params IScriptCommand[] commands)
+        {
+            return new RunCommands()
+            {
+                Mode = mode,
+                NextCommand = (ScriptCommandBase)thenCommand,
+                ScriptCommands = commands.Cast<ScriptCommandBase>().ToArray()
             };
         }
     }
@@ -87,7 +116,7 @@ namespace FileExplorer.Script
     public class Print : ScriptCommandBase
     {
         [Flags]
-        public enum PrintDestinationType { Logger = 1 << 0, Debug = 1 << 1  }
+        public enum PrintDestinationType { Logger = 1 << 0, Debug = 1 << 1 }
 
         /// <summary>
         /// Variable to print.
@@ -109,10 +138,7 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            string variable =
-                VariableKey.Contains("{") && VariableKey.Contains("}") ? pm.ReplaceVariableInsideBracketed(VariableKey) :                
-                pm.ContainsKey(VariableKey) ? pm[VariableKey].ToString() : "";
-             
+            string variable = pm.ReplaceVariableInsideBracketed(VariableKey);
 
             if (DestinationType.HasFlag(PrintDestinationType.Debug))
                 Debug.WriteLine(variable);
@@ -125,6 +151,9 @@ namespace FileExplorer.Script
     }
 
 
+    /// <summary>
+    /// Serializable, given an array, iterate it with NextCommand, then run ThenCommand when all iteration is finished.
+    /// </summary>
     public class ForEach : ScriptCommandBase
     {
         /// <summary>
@@ -147,16 +176,13 @@ namespace FileExplorer.Script
         public ForEach()
             : base("ForEach")
         {
-            CurrentItemKey = "CurrentItem";
-            ItemsKey = "Items";
+            CurrentItemKey = "{CurrentItem}";
+            ItemsKey = "{Items}";
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {
-            if (!(pm.ContainsKey(ItemsKey)))
-                return ResultCommand.Error(new KeyNotFoundException(ItemsKey));
-
-            IEnumerable e = pm[ItemsKey] as IEnumerable;
+        {            
+            IEnumerable e = pm.GetValue<IEnumerable>(ItemsKey);
             if (e == null)
                 return ResultCommand.Error(new ArgumentException(ItemsKey));
 
@@ -164,16 +190,16 @@ namespace FileExplorer.Script
             foreach (var item in e)
             {
                 counter++;
-                pm[CurrentItemKey] = item;
+                pm.SetValue(CurrentItemKey, item);
                 await ScriptRunner.RunScriptAsync(pm, NextCommand);
                 if (pm.Error != null)
                 {
-                    pm[CurrentItemKey] = null;
+                    pm.SetValue<Object>(CurrentItemKey, null);
                     return ResultCommand.Error(pm.Error);
                 }
             }
             logger.Info("Looped {0} items", counter);
-            pm[CurrentItemKey] = null;
+            pm.SetValue<Object>(CurrentItemKey, null);
 
             return ThenCommand;
         }
@@ -274,6 +300,78 @@ namespace FileExplorer.Script
         }
     }
 
+
+    /// <summary>
+    /// Serializable, run a number of ScriptCommand in a sequence.
+    /// </summary>
+    public class RunCommands : ScriptCommandBase
+    {
+        public enum RunMode { Sequence, Parallel }
+
+        /// <summary>
+        /// A list of ScriptCommands to run.
+        /// </summary>
+        public ScriptCommandBase[] ScriptCommands { get; set; }
+
+        /// <summary>
+        /// How to run commands, default = Sequence
+        /// </summary>
+        public RunMode Mode { get; set; }
+
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<RunCommands>();
+
+
+
+        public RunCommands()
+            : base("RunCommands")
+        {
+            Mode = RunMode.Sequence;
+        }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            ScriptRunner.RunScript(pm, ScriptCommands);
+            if (pm.Error != null)
+                return ResultCommand.Error(pm.Error);
+            else return NextCommand;
+        }
+
+        public override bool CanExecute(ParameterDic pm)
+        {
+            return ScriptCommands.First().CanExecute(pm);
+        }
+
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        {
+            switch (Mode)
+            {
+                case RunMode.Parallel:
+                    await ScriptRunner.RunScriptAsync(pm, ScriptCommands);
+                    break;
+                case RunMode.Sequence:
+                    await Task.WhenAll(ScriptCommands.Select(cmd => ScriptRunner.RunScriptAsync(pm.Clone(), cmd)));
+                    break;
+                default:
+                    return ResultCommand.Error(new NotSupportedException(Mode.ToString()));
+            }
+
+            if (pm.Error != null)
+                return ResultCommand.Error(pm.Error);
+            else return NextCommand;
+        }
+
+        public new bool ContinueOnCaptureContext
+        {
+            get { return ScriptCommands.Any(c => c.ContinueOnCaptureContext); }
+            set { }
+        }
+    }
+
+
+    /// <summary>
+    /// Run a number of ScriptCommand in a sequence.
+    /// </summary>
+    [Obsolete]
     public class RunInSequenceScriptCommand : IScriptCommand
     {
         private IScriptCommand[] _scriptCommands;
@@ -321,6 +419,9 @@ namespace FileExplorer.Script
             get { return _scriptCommands.Any(c => c.ContinueOnCaptureContext); }
         }
     }
+
+
+
 
 
 

@@ -20,22 +20,25 @@
 LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 
 string tempDirectory = "C:\\Temp";
+string destDirectory = "C:\\Temp\\Destination1";
 string srcFile = System.IO.Path.Combine(tempDirectory, "file1.txt");  
-string destFile = System.IO.Path.Combine(tempDirectory, "file2.txt");  
+string destFile = System.IO.Path.Combine(destDirectory, "file2.txt");  
 
 using (var sw = File.CreateText(srcFile))
 	sw.WriteLine(DateTime.Now.ToString());
 
 IScriptCommand copyCommand =
-               ScriptCommands.ParsePath("SourceFile", "Source",
-               ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-               ScriptCommands.OpenStream("Source", "SourceStream", FileExplorer.Defines.FileAccess.Read,
-               ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-               ScriptCommands.CopyStream("SourceStream", "DestinationStream")))),
-               ResultCommand.Error(new FileNotFoundException()));				
-			
+               ScriptCommands.ParsePath("{SourceFile}", "{Source}",
+               ScriptCommands.DiskParseOrCreateFile("{DestinationFile}", "{Destination}",
+               ScriptCommands.OpenStream("{Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
+               ScriptCommands.OpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+               ScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}")))),
+               ResultCommand.Error(new FileNotFoundException()));
+			   
+		
 await ScriptRunner.RunScriptAsync(new ParameterDic() { 
                 { "Profile", FileSystemInfoExProfile.CreateNew() },
                 { "SourceFile", srcFile },
                 { "DestinationFile", destFile }
             }, copyCommand);
+			

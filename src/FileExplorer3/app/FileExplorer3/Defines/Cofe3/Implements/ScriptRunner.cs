@@ -80,7 +80,7 @@ namespace FileExplorer.Script
                         if (retCmd != null)
                         {
                             if (pd.Error != null)
-                                return;
+                                throw pd.Error;
                             cmds.Enqueue(retCmd);
                         }
 

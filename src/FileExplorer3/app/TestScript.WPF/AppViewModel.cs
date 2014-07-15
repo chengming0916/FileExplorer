@@ -11,6 +11,8 @@ using System.Collections.ObjectModel;
 using FileExplorer.Utils;
 using MetroLog;
 using FileExplorer.UnitTests;
+using FileExplorer.Script;
+using FileExplorer;
 
 namespace TestScript.WPF
 {
@@ -26,7 +28,32 @@ namespace TestScript.WPF
             LogManagerFactory.DefaultConfiguration.IsEnabled = true;
             
             LogManagerFactory.DefaultLogManager.GetLogger<AppViewModel>().Log(LogLevel.Debug, "Test");
-            AsyncUtils.RunSync(() => ScriptCommandTests.Test_DownloadFile());      
+            //AsyncUtils.RunSync(() => ScriptCommandTests.Test_DownloadFile());      
+
+
+            IScriptCommand diskTransferCommand =
+    ScriptCommands.ParsePath("{SourceFile}", "{Source}",
+    ScriptCommands.DiskParseOrCreateFolder("{DestinationDirectory}", "{Destination}",
+    IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
+
+            //await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+            //                { "Profile", FileSystemInfoExProfile.CreateNew() },
+            //                { "SourceFile", srcFile },
+            //                { "DestinationFile", destFile }
+            //            }, copyCommand);
+
+
+            string tempDirectory = "C:\\Temp";
+            string destDirectory = "C:\\Temp\\Destination1";
+            string srcFile = System.IO.Path.Combine(tempDirectory, "file1.txt");
+            string destFile = System.IO.Path.Combine(destDirectory, "file2.txt");
+
+            AsyncUtils.RunSync(() => ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                { "Profile", FileExplorer.Models.FileSystemInfoExProfile.CreateNew() },
+                { "SourceFile", srcFile },
+                { "DestinationDirectory", destDirectory }
+            }, diskTransferCommand));			
+
             
         }
 

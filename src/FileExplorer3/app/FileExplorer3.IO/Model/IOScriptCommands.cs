@@ -31,6 +31,7 @@ namespace FileExplorer.Script
         /// <param name="destDirModel"></param>
         /// <param name="removeOriginal"></param>
         /// <returns></returns>
+        [Obsolete("Use DiskTransfer")]
         public static IScriptCommand Transfer(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal = false, 
             bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
