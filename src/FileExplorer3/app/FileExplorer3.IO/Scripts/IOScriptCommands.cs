@@ -23,15 +23,15 @@ namespace FileExplorer.Script
         /// <param name="allowCustomImplementation"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-         public static IScriptCommand DiskTransfer(string srcEntryVariable = "Source", string destDirectoryVariable = "Destination", bool removeOriginal = false, 
-            bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
+        public static IScriptCommand DiskTransfer(string srcEntryVariable = "Source", string destDirectoryVariable = "Destination", bool removeOriginal = false,
+           bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
             return new DiskTransfer()
             {
                 SourceEntryKey = srcEntryVariable,
                 DestinationDirectoryEntryKey = destDirectoryVariable,
                 RemoveOriginal = removeOriginal,
-                AllowCustomImplementation = allowCustomImplementation, 
+                AllowCustomImplementation = allowCustomImplementation,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
@@ -45,14 +45,31 @@ namespace FileExplorer.Script
         /// <param name="allowCustomImplementation"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-         public static IScriptCommand DiskTransfer(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal = false,
-             bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
-         {
-             return ScriptCommands.Assign("SourceDiskTransferEntry", srcModel, false,
-                 ScriptCommands.Assign("DestinationDiskTransferEntry", destDirModel, false,
-                 DiskTransfer("SourceDiskTransferEntry", "DestinationDiskTransferEntry", 
-                 removeOriginal, allowCustomImplementation, nextCommand)));
-         }
+        public static IScriptCommand DiskTransfer(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal = false,
+            bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
+        {
+            return ScriptCommands.Assign("SourceDiskTransferEntry", srcModel, false,
+                ScriptCommands.Assign("DestinationDiskTransferEntry", destDirModel, false,
+                DiskTransfer("SourceDiskTransferEntry", "DestinationDiskTransferEntry",
+                removeOriginal, allowCustomImplementation, nextCommand)));
+        }
+
+        public static IScriptCommand DiskTransferChild(string srcDirectoryVariable = "Source",
+           string destDirectoryVariable = "Destination",
+            string mask = "*", ListOptions listOptions = ListOptions.File | ListOptions.Folder,
+            bool removeOriginal = false, bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
+        {
+            return ScriptCommands.List(srcDirectoryVariable, "{DTC-ItemToTransfer}", mask, listOptions,
+                       ScriptCommands.ForEach("{DTC-ItemToTransfer}", "{DTC-CurrentItem}",
+                           IOScriptCommands.DiskTransfer("{DTC-CurrentItem}", destDirectoryVariable, removeOriginal, allowCustomImplementation),
+                                    ScriptCommands.Reset(nextCommand, "{DTC-DestDirectory}", "{DTC-SrcDirectory}")));
+        }
+
+        public static IScriptCommand DiskTransferChild(string srcDirectoryVariable = "Source",
+           string destDirectoryVariable = "Destination", bool removeOriginal = false, bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
+        {
+            return DiskTransferChild(srcDirectoryVariable, destDirectoryVariable, "*", ListOptions.File | ListOptions.Folder, removeOriginal, allowCustomImplementation, nextCommand);
+        }
     }
 
 
@@ -142,19 +159,24 @@ namespace FileExplorer.Script
                 else
                 {
                     log("ScriptCommands");
-                                        
+                    //DiskParseOrCreateFolder -> List -> ForEach -> DiskTransfer
                     IScriptCommand cmd2Run;
                     if (srcEntry.IsDirectory)
-                        cmd2Run = new CopyDirectoryTransferCommand(srcEntry, destEntry, RemoveOriginal, progress);
+                        cmd2Run =
+                            ScriptCommands.Assign("{DT-SrcDirectory}", srcEntry, false,
+                                ScriptCommands.Assign("{Profile}", destEntry.Profile, true,
+                                   ScriptCommands.DiskParseOrCreateFolder(destFullName, "{DT-DestDirectory}",
+                                    IOScriptCommands.DiskTransferChild("{DT-SrcDirectory}", "{DT-DestDirectory}", RemoveOriginal, AllowCustomImplementation,
+                                    ScriptCommands.Reset(ResultCommand.NoError, "{DT-DestDirectory}", "{DT-SrcDirectory}")))));
                     else
                     {
                         cmd2Run =
-                            ScriptCommands.Assign("DiskTransfer-SrcFile", srcEntry, false,
-                                ScriptCommands.DiskParseOrCreateFile(destFullName, "DiskTransfer-DestFile",
-                                    ScriptCommands.DiskCopyFile("{DiskTransfer-SrcFile}", "{DiskTransfer-DestFile}",
-                                    ScriptCommands.Reset(ResultCommand.NoError, "DiskTransfer-SrcFile", "DiskTransfer-DestFile"))));
+                            ScriptCommands.Assign("{DT-SrcFile}", srcEntry, false,
+                                ScriptCommands.DiskParseOrCreateFile(destFullName, "{DT-DestFile}",
+                                    ScriptCommands.DiskCopyFile("{DT-SrcFile}", "{DT-DestFile}",
+                                    ScriptCommands.Reset(ResultCommand.NoError, "{DT-SrcFile}", "{DT-DestFile}"))));
                     }
-        
+
                     await ScriptRunner.RunScriptAsync(pm, cmd2Run);
 
                 }

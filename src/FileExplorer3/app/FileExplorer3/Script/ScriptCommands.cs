@@ -353,7 +353,7 @@ namespace FileExplorer.Script
                 if (retVal != null)
                 {
                     logger.Info(String.Format("{0} = {1}", DestinationKey, retVal));
-                    pm.SetValue<IEntryModel>(DestinationKey, retVal);                    
+                    pm.SetValue<IEntryModel>(DestinationKey, retVal);
                     break;
                 }
             }
@@ -426,7 +426,7 @@ namespace FileExplorer.Script
                 createFilter(ListOptions, masks))).ToArray();
 
             logger.Info(String.Format("{0} = IEntryModel[{1}]", DestinationKey, listItems.Length));
-            pm.SetValue(DestinationKey, listItems);            
+            pm.SetValue(DestinationKey, listItems);
 
             return NextCommand;
         }
@@ -544,7 +544,7 @@ namespace FileExplorer.Script
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            IEntryModel entryModel = pm.GetValue<IEntryModel>(EntryKey); 
+            IEntryModel entryModel = pm.GetValue<IEntryModel>(EntryKey);
             if (entryModel == null)
                 return ResultCommand.Error(new ArgumentException(EntryKey + " is not found or not IEntryModel"));
 
@@ -590,7 +590,7 @@ namespace FileExplorer.Script
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {            
+        {
             byte[] srcStreamAsByte = pm.GetValue<byte[]>(SourceKey);
             Stream srcStream = srcStreamAsByte != null ? new MemoryStream(srcStreamAsByte) :
                 pm.GetValue<Stream>(SourceKey);
@@ -730,9 +730,10 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            if (pm.SetValue<Object>(VariableKey, Value, SkipIfExists))
-                logger.Info(String.Format("{0} = {1}", VariableKey, Value));
-            else logger.Warn(String.Format("Skipped {0}, already exists.", VariableKey));
+            if (Value != null)
+                if (pm.SetValue<Object>(VariableKey, Value, SkipIfExists))
+                    logger.Info(String.Format("{0} = {1}", VariableKey, Value));
+                else logger.Warn(String.Format("Skipped {0}, already exists.", VariableKey));
 
             return NextCommand;
         }
