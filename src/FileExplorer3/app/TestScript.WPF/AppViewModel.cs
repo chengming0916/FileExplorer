@@ -13,6 +13,7 @@ using MetroLog;
 using FileExplorer.UnitTests;
 using FileExplorer.Script;
 using FileExplorer;
+using FileExplorer.Models;
 
 namespace TestScript.WPF
 {
@@ -31,10 +32,10 @@ namespace TestScript.WPF
             //AsyncUtils.RunSync(() => ScriptCommandTests.Test_DownloadFile());      
 
 
-            IScriptCommand diskTransferCommand =
-    ScriptCommands.ParsePath("{SourceFile}", "{Source}",
-    ScriptCommands.DiskParseOrCreateFolder("{DestinationDirectory}", "{Destination}",
-    IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
+    //        IScriptCommand diskTransferCommand =
+    //ScriptCommands.ParsePath("{SourceFile}", "{Source}",
+    //ScriptCommands.DiskParseOrCreateFolder("{DestinationDirectory}", "{Destination}",
+    //IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
 
             //await ScriptRunner.RunScriptAsync(new ParameterDic() { 
             //                { "Profile", FileSystemInfoExProfile.CreateNew() },
@@ -43,16 +44,30 @@ namespace TestScript.WPF
             //            }, copyCommand);
 
 
+            //string tempDirectory = "C:\\Temp";
+            //string destDirectory = "C:\\Temp\\Destination1";
+            //string srcFile = System.IO.Path.Combine(tempDirectory, "file1.txt");
+            //string destFile = System.IO.Path.Combine(destDirectory, "file2.txt");
+
+            //AsyncUtils.RunSync(() => ScriptRunner.RunScriptAsync(new ParameterDic() { 
+            //    { "Profile", FileExplorer.Models.FileSystemInfoExProfile.CreateNew() },
+            //    { "SourceFile", srcFile },
+            //    { "DestinationDirectory", destDirectory }
+            //}, diskTransferCommand));			
+
             string tempDirectory = "C:\\Temp";
-            string destDirectory = "C:\\Temp\\Destination1";
-            string srcFile = System.IO.Path.Combine(tempDirectory, "file1.txt");
-            string destFile = System.IO.Path.Combine(destDirectory, "file2.txt");
+            string destDirectory = "C:\\Temp\\Debug2";
+            string srcDirectory = "C:\\Temp\\aaaaa";
+
+
+            IScriptCommand diskTransferCommand =
+                ScriptCommands.ParsePath(srcDirectory, "{Source}",
+                ScriptCommands.DiskParseOrCreateFolder(destDirectory, "{Destination}",
+                IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
 
             AsyncUtils.RunSync(() => ScriptRunner.RunScriptAsync(new ParameterDic() { 
-                { "Profile", FileExplorer.Models.FileSystemInfoExProfile.CreateNew() },
-                { "SourceFile", srcFile },
-                { "DestinationDirectory", destDirectory }
-            }, diskTransferCommand));			
+                { "Profile", FileSystemInfoExProfile.CreateNew() }
+            }, diskTransferCommand));
 
             
         }

@@ -98,7 +98,7 @@ namespace FileExplorer.Script
         /// <param name="thenCommand"></param>
         /// <param name="commands"></param>
         /// <returns></returns>
-        public static IScriptCommand RunCommands(RunCommands.RunMode mode = Script.RunCommands.RunMode.Sequence,
+        public static IScriptCommand RunCommands(RunCommands.RunMode mode = Script.RunCommands.RunMode.Queue,
             IScriptCommand thenCommand = null, params IScriptCommand[] commands)
         {
             return new RunCommands()
@@ -181,7 +181,7 @@ namespace FileExplorer.Script
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
-        {            
+        {
             IEnumerable e = pm.GetValue<IEnumerable>(ItemsKey);
             if (e == null)
                 return ResultCommand.Error(new ArgumentException(ItemsKey));
@@ -191,7 +191,7 @@ namespace FileExplorer.Script
             {
                 counter++;
                 pm.SetValue(CurrentItemKey, item);
-                await ScriptRunner.RunScriptAsync(pm, NextCommand);
+                await ScriptRunner.RunScriptAsync(pm.Clone(), NextCommand);
                 if (pm.Error != null)
                 {
                     pm.SetValue<Object>(CurrentItemKey, null);
@@ -306,7 +306,21 @@ namespace FileExplorer.Script
     /// </summary>
     public class RunCommands : ScriptCommandBase
     {
-        public enum RunMode { Sequence, Parallel }
+        public enum RunMode
+        {
+            /// <summary>
+            /// Run ScriptCommands one by one, when it returns a command, it's queued. (Default)
+            /// </summary>
+            Queue,
+            /// <summary>
+            /// Run all command together, ParameterDic are cloned per instance. (async only)
+            /// </summary>
+            Parallel, 
+            /// <summary>
+            /// Run ScriptCommands one by one, when it returns a command, it run it next.
+            /// </summary>
+            Sequence
+        }
 
         /// <summary>
         /// A list of ScriptCommands to run.
@@ -314,7 +328,7 @@ namespace FileExplorer.Script
         public ScriptCommandBase[] ScriptCommands { get; set; }
 
         /// <summary>
-        /// How to run commands, default = Sequence
+        /// How to run commands, default = Queue
         /// </summary>
         public RunMode Mode { get; set; }
 
@@ -325,12 +339,29 @@ namespace FileExplorer.Script
         public RunCommands()
             : base("RunCommands")
         {
-            Mode = RunMode.Sequence;
+            Mode = RunMode.Queue;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            ScriptRunner.RunScript(pm, ScriptCommands);
+            switch (Mode)
+            {
+                case RunMode.Parallel:
+                case RunMode.Queue:
+                    ScriptRunner.RunScript(pm, ScriptCommands);
+                    break;
+                case RunMode.Sequence:
+                    foreach (var cmd in ScriptCommands)
+                    {
+                        ScriptRunner.RunScript(pm, cmd);
+                        if (pm.Error != null)
+                            return ResultCommand.Error(pm.Error);
+                    }
+                    break;
+                default:
+                    return ResultCommand.Error(new NotSupportedException(Mode.ToString()));
+            }
+           
             if (pm.Error != null)
                 return ResultCommand.Error(pm.Error);
             else return NextCommand;
@@ -346,10 +377,18 @@ namespace FileExplorer.Script
             switch (Mode)
             {
                 case RunMode.Parallel:
+                    await Task.WhenAll(ScriptCommands.Select(cmd => ScriptRunner.RunScriptAsync(pm.Clone(), cmd)));
+                    break;
+                case RunMode.Queue:
                     await ScriptRunner.RunScriptAsync(pm, ScriptCommands);
                     break;
                 case RunMode.Sequence:
-                    await Task.WhenAll(ScriptCommands.Select(cmd => ScriptRunner.RunScriptAsync(pm.Clone(), cmd)));
+                    foreach (var cmd in ScriptCommands)
+                    {
+                        await ScriptRunner.RunScriptAsync(pm, cmd);
+                        if (pm.Error != null)
+                            return ResultCommand.Error(pm.Error);
+                    }
                     break;
                 default:
                     return ResultCommand.Error(new NotSupportedException(Mode.ToString()));

@@ -92,20 +92,21 @@ namespace FileExplorer.Defines
         public static string CFSTR_TARGETCLSID = "TargetCLSID";        
     }
 
+    [Flags]
     public enum ListOptions
     {
         /// <summary>
         /// List folder 
         /// </summary>
-        Folder,
+        Folder = 1 << 0,
         /// <summary>
         /// List file
         /// </summary>
-        File,        
+        File = 1 << 1,        
         /// <summary>
         /// Include items in sub-folder.
         /// </summary>
-        Recrusive
+        Recrusive = 1 << 2
     }
 
 }
