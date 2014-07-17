@@ -40,6 +40,7 @@
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs.cs" />
+    <Compile Include="Script\FileExplorer3Commands.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
     <Compile Include="Models\ICommandModel.cs" />
@@ -91,6 +92,9 @@
     <Compile Include="Utils\StreamUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Caliburn.Micro">
+      <HintPath>..\packages\Caliburn.Micro.Core.2.0.0\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.dll</HintPath>
+    </Reference>
     <Reference Include="MetroLog">
       <HintPath>..\packages\MetroLog.0.8.6\lib\portable-net45+wp8+win8+wpa81\MetroLog.dll</HintPath>
     </Reference>

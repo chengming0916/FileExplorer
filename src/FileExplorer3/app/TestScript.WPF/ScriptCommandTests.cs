@@ -173,11 +173,11 @@ namespace FileExplorer.UnitTests
 
 
             IScriptCommand copyCommand =
-               ScriptCommands.ParsePath("SourceFile", "Source",
-               ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-               ScriptCommands.OpenStream("Source", "SourceStream", FileExplorer.Defines.FileAccess.Read,
-               ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-               ScriptCommands.CopyStream("SourceStream", "DestinationStream"))))
+               ScriptCommands.ParsePath("{Profile}", "{SourceFile}", "{Source}",
+               ScriptCommands.DiskParseOrCreateFile("{Profile}", "{DestinationFile}", "{Destination}",
+               ScriptCommands.DiskOpenStream("{Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
+               ScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+               ScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}"))))
                , ResultCommand.Error(new FileNotFoundException(srcFile))
                 );
 
@@ -207,9 +207,9 @@ namespace FileExplorer.UnitTests
 
             IScriptCommand downloadCommand =
               ScriptCommands.Download("Url", "Stream",
-                ScriptCommands.DiskParseOrCreateFile("DestinationFile", "Destination",
-                ScriptCommands.OpenStream("Destination", "DestinationStream", FileExplorer.Defines.FileAccess.Write,
-                ScriptCommands.CopyStream("Stream", "DestinationStream"))));
+                ScriptCommands.DiskParseOrCreateFile("{Profile}", "{DestinationFile}", "{Destination}",
+                ScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+                ScriptCommands.CopyStream("{Stream}", "{DestinationStream}"))));
             
             //downloadCommand = ScriptCommands.DownloadFile("Url", "DestinationFile");
 

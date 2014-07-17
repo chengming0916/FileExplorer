@@ -20,15 +20,21 @@
 LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 
 string tempDirectory = "C:\\Temp";
-string destDirectory = "C:\\Temp\\Debug1";
+string destDirectory = "C:\\Temp\\Debug2";
 string srcDirectory = "C:\\Temp\\aaaaa";
 
 		   
 IScriptCommand diskTransferCommand = 
-	ScriptCommands.ParsePath(srcDirectory, "{Source}",
-    ScriptCommands.DiskParseOrCreateFolder(destDirectory, "{Destination}",
+	ScriptCommands.ParsePath("{Profile}", srcDirectory, "{Source}",
+    ScriptCommands.DiskParseOrCreateFolder("{Profile}", destDirectory, "{Destination}",
     IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
 	
-await ScriptRunner.RunScriptAsync(new ParameterDic() { 
-                { "Profile", FileSystemInfoExProfile.CreateNew() }
-            }, diskTransferCommand);
+//await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+//                { "Profile", FileSystemInfoExProfile.CreateNew() }
+//            }, diskTransferCommand);
+//			
+//			Func<IScriptCommand, Stream> serialize = (cmd) =>				
+//				new ScriptCommandSerializer(new Type[] {typeof(FileExplorer3Commands), typeof(FileExplorer3IOCommands)}).SerializeScriptCommand(cmd );
+//				
+var stream = serialize(diskTransferCommand);
+XDocument.Load(stream).Dump();

@@ -162,7 +162,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             try
             {
-                string[] paths = message.ParseNames.Select(p => p.Contains('\\') ?
+                string[] paths = message.ParseNames.Select(p => p != null && p.Contains('\\') ?
                         PathHelper.Disk.GetDirectoryName(p) : PathHelper.Web.GetDirectoryName(p))
                         .Distinct().ToArray();
 
@@ -195,7 +195,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public void Handle(EntryChangedEvent message)
         {
-            BroascastAsync(message);
+            Application.Current.Dispatcher.InvokeAsync(() => BroascastAsync(message));
         }
 
         public void Handle(BroadcastEvent message)

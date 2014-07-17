@@ -164,17 +164,19 @@ namespace FileExplorer.Script
                     if (srcEntry.IsDirectory)
                         cmd2Run =
                             ScriptCommands.Assign("{DT-SrcDirectory}", srcEntry, false,
-                                ScriptCommands.Assign("{Profile}", destEntry.Profile, true,
-                                   ScriptCommands.DiskParseOrCreateFolder(destFullName, "{DT-DestDirectory}",
+                                ScriptCommands.Assign("{DT-DestProfile}", destEntry.Profile, false,
+                                   ScriptCommands.DiskParseOrCreateFolder("{DT-DestProfile}", destFullName, "{DT-DestDirectory}",
                                     IOScriptCommands.DiskTransferChild("{DT-SrcDirectory}", "{DT-DestDirectory}", RemoveOriginal, AllowCustomImplementation,
                                     ScriptCommands.Reset(ResultCommand.NoError, "{DT-DestDirectory}", "{DT-SrcDirectory}")))));
                     else
                     {
                         cmd2Run =
                             ScriptCommands.Assign("{DT-SrcFile}", srcEntry, false,
-                                ScriptCommands.DiskParseOrCreateFile(destFullName, "{DT-DestFile}",
-                                    ScriptCommands.DiskCopyFile("{DT-SrcFile}", "{DT-DestFile}",
-                                    ScriptCommands.Reset(ResultCommand.NoError, "{DT-SrcFile}", "{DT-DestFile}"))));
+                             ScriptCommands.Assign("{DT-SrcProfile}", srcEntry.Profile, false,
+                             ScriptCommands.Assign("{DT-DestProfile}", destEntry.Profile, false,
+                                ScriptCommands.DiskParseOrCreateFile("{DT-DestProfile}", destFullName, "{DT-DestFile}",
+                                    ScriptCommands.DiskCopyFile("{DT-SrcProfile}", "{DT-SrcFile}", "{DT-DestProfile}", "{DT-DestFile}",
+                                    ScriptCommands.Reset(ResultCommand.NoError, "{DT-SrcFile}", "{DT-DestFile}"))))));
                     }
 
                     await ScriptRunner.RunScriptAsync(pm, cmd2Run);

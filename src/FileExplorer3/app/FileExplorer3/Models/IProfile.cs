@@ -16,6 +16,7 @@ using FileExplorer.Script;
 using System.Threading;
 using System.ComponentModel;
 using FileExplorer.Defines;
+using Caliburn.Micro;
 
 namespace FileExplorer.Models
 {
@@ -82,8 +83,8 @@ namespace FileExplorer.Models
         IEntryHierarchyComparer HierarchyComparer { get; }
         IMetadataProvider MetadataProvider { get; }
         IEnumerable<ICommandProvider> CommandProviders { get; }
-        
-        //IDiskPathMapper PathMapper { get; }
+                
+        IEventAggregator Events { get; }
         ISuggestSource SuggestSource { get; }
         
         #endregion

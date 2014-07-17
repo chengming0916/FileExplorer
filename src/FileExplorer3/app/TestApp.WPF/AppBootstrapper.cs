@@ -11,6 +11,7 @@ using FileExplorer.WPF.UserControls;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using MetroLog;
 
 namespace TestApp
 {
@@ -25,6 +26,8 @@ namespace TestApp
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Info, LogLevel.Fatal, new ConsoleTarget());
+            LogManagerFactory.DefaultConfiguration.IsEnabled = true;
             DisplayRootViewFor<IScreen>();
         }
         protected override void Configure()

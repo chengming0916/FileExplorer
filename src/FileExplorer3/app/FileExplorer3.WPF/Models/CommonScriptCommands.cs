@@ -21,7 +21,7 @@ namespace FileExplorer.WPF.Models
 
         public NotifyChangedCommand(IProfile destProfile, string destParseName, ChangeType changeType,
              IScriptCommand nextCommand = null)
-            : base("NotifyChanges")
+            : base("NotifyChanged")
         {
             _destProfile = destProfile;
             _destParseName = destParseName;

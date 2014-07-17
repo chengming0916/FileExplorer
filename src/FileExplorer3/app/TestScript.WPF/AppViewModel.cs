@@ -25,7 +25,7 @@ namespace TestScript.WPF
         public AppViewModel()
         {
 
-            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Debug, LogLevel.Fatal, new ConsoleTarget());
+            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Info, LogLevel.Fatal, new ConsoleTarget());
             LogManagerFactory.DefaultConfiguration.IsEnabled = true;
             
             LogManagerFactory.DefaultLogManager.GetLogger<AppViewModel>().Log(LogLevel.Debug, "Test");
@@ -61,8 +61,8 @@ namespace TestScript.WPF
 
 
             IScriptCommand diskTransferCommand =
-                ScriptCommands.ParsePath(srcDirectory, "{Source}",
-                ScriptCommands.DiskParseOrCreateFolder(destDirectory, "{Destination}",
+                ScriptCommands.ParsePath("{Profile}", srcDirectory, "{Source}",
+                ScriptCommands.DiskParseOrCreateFolder("{Profile}", destDirectory, "{Destination}",
                 IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
 
             AsyncUtils.RunSync(() => ScriptRunner.RunScriptAsync(new ParameterDic() { 

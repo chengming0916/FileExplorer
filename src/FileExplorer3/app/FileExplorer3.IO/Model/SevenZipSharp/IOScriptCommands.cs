@@ -138,8 +138,7 @@ namespace FileExplorer.Script
                                 _srcModel.Profile, _srcModel.FullPath, Defines.ChangeType.Changed))));
                 }
                 else
-                    return new StreamFileTransferCommand(_srcModel, _destDirModel, _removeOriginal, progress);
-
+                    return IOScriptCommands.DiskTransfer(_srcModel, _destDirModel, _removeOriginal);                                         
 
                 return ResultCommand.NoError;
             }
