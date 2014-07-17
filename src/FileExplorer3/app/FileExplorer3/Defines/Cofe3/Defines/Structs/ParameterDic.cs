@@ -23,6 +23,9 @@ namespace FileExplorer
     {
         public static string ReplaceVariableInsideBracketed(this ParameterDic pd, string variableKey)
         {
+            if (variableKey == null)
+                return null;
+
             Regex regex = new Regex("{(?<TextInsideBrackets>.+)}");
             string value = variableKey;
 
@@ -67,6 +70,9 @@ namespace FileExplorer
 
         public T GetValue<T>(string variableKey, T defaultValue)
         {
+            if (variableKey == null)
+                return defaultValue;
+
             string variable = getVariable(variableKey);
                
             if (this.ContainsKey(variable) && this[variable] is T)
@@ -91,9 +97,13 @@ namespace FileExplorer
             if (this.ContainsKey(variable))
             {
                 if (!skipIfExists)
-                {
-                    this[variable] = value;
-                    return true;
+                {                    
+                    if (!(this[variable] is T) || !(this[variable].Equals(value)))
+                    {
+                        this[variable] = value;
+                        return true;
+                    }
+                    else return false;
                     
                 }
                 else

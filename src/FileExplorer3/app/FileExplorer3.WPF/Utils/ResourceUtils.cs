@@ -11,39 +11,46 @@ namespace FileExplorer.Utils
 {
     public static class ResourceUtils
     {
+        static Object lockObj = new object();
         public static Stream GetEmbeddedResourceAsStream(object sender, string path2Resource)
         {
-            var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
-            string libraryName = assembly.GetName().Name;
-            string resourcePath = PathUtils.MakeResourcePath(libraryName, path2Resource);
-            if (assembly.GetManifestResourceNames().Contains(resourcePath))
-                return assembly.GetManifestResourceStream(resourcePath);
-            else return new MemoryStream();
+            lock (lockObj)
+            {
+                var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
+                string libraryName = assembly.GetName().Name;
+                string resourcePath = PathUtils.MakeResourcePath(libraryName, path2Resource);
+                if (assembly.GetManifestResourceNames().Contains(resourcePath))
+                    return assembly.GetManifestResourceStream(resourcePath);
+                else return new MemoryStream();
+            }
         }
 
         public static byte[] GetEmbeddedResourceAsByteArray(object sender, string path2Resource)
         {
-            return GetEmbeddedResourceAsStream(sender, path2Resource).ToByteArray();
+            return GetEmbeddedResourceAsStream(sender, path2Resource).ToByteArray(true);
         }
 
 
 
         public static Stream GetResourceAsStream(object sender, string path2Resource)
         {
-            var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
-            string libraryName = assembly.GetName().Name;
-            Uri resourceUri = PathUtils.MakeResourceUri(libraryName, path2Resource);
-            try
+            lock (lockObj)
             {
-                StreamResourceInfo info = Application.GetResourceStream(resourceUri);
-                return info.Stream;
+                var assembly = System.Reflection.Assembly.GetAssembly(sender.GetType());
+                string libraryName = assembly.GetName().Name;
+                Uri resourceUri = PathUtils.MakeResourceUri(libraryName, path2Resource);
+                try
+                {
+                    StreamResourceInfo info = Application.GetResourceStream(resourceUri);
+                    return info.Stream;
+                }
+                catch { return new MemoryStream(); }
             }
-            catch { return new MemoryStream(); }
         }
 
         public static byte[] GetResourceAsByteArray(object sender, string path2Resource)
         {
-            return GetResourceAsStream(sender, path2Resource).ToByteArray();
+            return GetResourceAsStream(sender, path2Resource).ToByteArray(true);
         }
 
     }

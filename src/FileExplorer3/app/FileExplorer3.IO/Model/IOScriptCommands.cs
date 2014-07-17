@@ -188,8 +188,9 @@ namespace FileExplorer.Script
 
     #region FileTransferScriptCommand and it's subcommands
 
+    [Obsolete("Use IOScriptCommands.DiskTransfer")]
     public class StreamFileTransferCommand : ScriptCommandBase
-    {
+    {        
         private IEntryModel _srcModel;
         private IEntryModel _destDirModel;
         private bool _removeOriginal;
@@ -245,6 +246,7 @@ namespace FileExplorer.Script
 
     }
 
+    [Obsolete("Use IOScriptCommands.DiskTransferChild.")]
     public class CopyDirectoryTransferCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;
@@ -308,7 +310,7 @@ namespace FileExplorer.Script
     }
 
    
-
+    [Obsolete("Use IOScriptCommands.DiskTransfer instead")]
     public class FileTransferScriptCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;

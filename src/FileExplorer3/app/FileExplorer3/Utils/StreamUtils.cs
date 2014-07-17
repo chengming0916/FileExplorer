@@ -71,12 +71,14 @@ namespace FileExplorer.Utils
         }
 
         //http://stackoverflow.com/questions/11266141/c-sharp-convert-system-io-stream-to-byte
-        public static byte[] ToByteArray(this Stream stream)
+        public static byte[] ToByteArray(this Stream stream, bool disposeStream = false)
         {
             stream.Position = 0;
             byte[] buffer = new byte[stream.Length];
             for (int totalBytesCopied = 0; totalBytesCopied < stream.Length; )
                 totalBytesCopied += stream.Read(buffer, totalBytesCopied, Convert.ToInt32(stream.Length) - totalBytesCopied);
+            if (disposeStream)
+                stream.Dispose();
             return buffer;
         }
         

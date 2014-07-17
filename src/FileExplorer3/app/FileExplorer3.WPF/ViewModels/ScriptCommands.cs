@@ -1858,7 +1858,7 @@ namespace FileExplorer.Script
 
             return WPFScriptCommands.ReportProgress(
                 TransferProgress.IncrementTotalEntries(source.Length),
-                ScriptCommands.RunInSequence(transferCommands)
+                ScriptCommands.RunCommands(RunCommands.RunMode.Sequence, null, transferCommands)
                 );          
         }
 

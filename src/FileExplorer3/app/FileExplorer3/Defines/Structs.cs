@@ -206,7 +206,38 @@ namespace FileExplorer.Defines
         public void Report(TransferProgress value)
         {
         }
-    }    
+    }
+
+    public class EntryChangedEvent 
+    {
+        public EntryChangedEvent(ChangeType changeType, params string[] parseNames)
+            : base()
+        {
+            ChangeType = changeType;
+            ParseNames = parseNames;
+        }
+
+        public EntryChangedEvent(Dictionary<string, string> renamedParseNames)
+            : this(ChangeType.Moved, renamedParseNames.Keys.ToArray())
+        {
+            _renamedParseNames = renamedParseNames ?? _renamedParseNames;
+        }
+
+        public EntryChangedEvent(string parseName, string orgParseName)
+            : this(new Dictionary<string, string>() { { parseName, orgParseName } })
+        {
+        }
+
+        public string GetOrgParseName(string parseName)
+        {
+            return _renamedParseNames[parseName];
+        }
+
+        private Dictionary<string, string> _renamedParseNames = new Dictionary<string, string>();
+
+        public ChangeType ChangeType { get; private set; }
+        public string[] ParseNames { get; private set; }
+    }
     
 
 }

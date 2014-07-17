@@ -196,6 +196,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compression\ICompressorWrapper.cs" />
     <Compile Include="Compression\SevenZipWrapper.cs" />
+    <Compile Include="Scripts\FileExplorer3IOCommands.cs" />
     <Compile Include="Scripts\IOScriptCommands.cs" />
     <Compile Include="Utils\CompressUtils.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />
