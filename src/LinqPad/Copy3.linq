@@ -29,12 +29,12 @@ IScriptCommand diskTransferCommand =
     ScriptCommands.DiskParseOrCreateFolder("{Profile}", destDirectory, "{Destination}",
     IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
 	
-//await ScriptRunner.RunScriptAsync(new ParameterDic() { 
-//                { "Profile", FileSystemInfoExProfile.CreateNew() }
-//            }, diskTransferCommand);
-//			
-//			Func<IScriptCommand, Stream> serialize = (cmd) =>				
-//				new ScriptCommandSerializer(new Type[] {typeof(FileExplorer3Commands), typeof(FileExplorer3IOCommands)}).SerializeScriptCommand(cmd );
-//				
+await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                { "Profile", FileSystemInfoExProfile.CreateNew() }
+            }, diskTransferCommand);
+			
+			Func<IScriptCommand, Stream> serialize = (cmd) =>				
+				new ScriptCommandSerializer(new Type[] {typeof(FileExplorer3Commands), typeof(FileExplorer3IOCommands)}).SerializeScriptCommand(cmd );
+				
 var stream = serialize(diskTransferCommand);
 XDocument.Load(stream).Dump();

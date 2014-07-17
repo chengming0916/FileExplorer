@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using FileExplorer.Utils;
+﻿using FileExplorer.Utils;
+using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
 using Microsoft.Live;
-using FileExplorer.WPF.Models;
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileExplorer.Models
 {

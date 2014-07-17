@@ -41,5 +41,5 @@ Func<IScriptCommand, Stream> serialize = (cmd) =>
 				
 var stream = serialize(downloadCommand);
 stream = serialize(copyCommand);
-stream = serialize(iterateCommand);
+//stream = serialize(iterateCommand);
 XDocument.Load(stream).Dump();

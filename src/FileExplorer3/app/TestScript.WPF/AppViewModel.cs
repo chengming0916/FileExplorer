@@ -57,7 +57,7 @@ namespace TestScript.WPF
 
             string tempDirectory = "C:\\Temp";
             string destDirectory = "C:\\Temp\\Debug2";
-            string srcDirectory = "C:\\Temp\\aaaaa";
+            string srcDirectory = "C:\\Temp\\aaaaabc";
 
 
             IScriptCommand diskTransferCommand =
