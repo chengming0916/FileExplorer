@@ -92,7 +92,7 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
-        /// Serializable, run commands in sequences or in parallel (if async).
+        /// Serializable, run commands in queue, sequences or in parallel (if async).
         /// </summary>
         /// <param name="mode"></param>
         /// <param name="thenCommand"></param>
