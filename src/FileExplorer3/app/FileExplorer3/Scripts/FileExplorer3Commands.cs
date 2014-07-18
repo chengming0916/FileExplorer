@@ -6,18 +6,14 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace FileExplorer.Script
-{
-    [XmlInclude(typeof(Assign))]
-    [XmlInclude(typeof(RunCommands))]
-    [XmlInclude(typeof(ResultCommand))]
+{    
     [XmlInclude(typeof(ParsePath))]
     [XmlInclude(typeof(DiskCreatePath))]
     [XmlInclude(typeof(DiskOpenStream))]
     [XmlInclude(typeof(CopyStream))]
-    [XmlInclude(typeof(Download))]
-    [XmlInclude(typeof(Print))]
-    [XmlInclude(typeof(ForEach))]
+    [XmlInclude(typeof(Download))]    
     [XmlInclude(typeof(NotifyChanged))]
+    [XmlInclude(typeof(BaseScriptCommands))]
     public class FileExplorer3Commands
     {
 

@@ -12,7 +12,7 @@ namespace FileExplorer.Script
     [XmlInclude(typeof(ResultCommand))]    
     [XmlInclude(typeof(Print))]
     [XmlInclude(typeof(ForEach))]
-    public class BasicCommands
+    public class BaseScriptCommands
     {
 
     }

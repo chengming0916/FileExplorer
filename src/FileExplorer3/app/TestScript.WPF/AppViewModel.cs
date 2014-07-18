@@ -61,8 +61,8 @@ namespace TestScript.WPF
 
 
             IScriptCommand diskTransferCommand =
-                ScriptCommands.ParsePath("{Profile}", srcDirectory, "{Source}",
-                ScriptCommands.DiskParseOrCreateFolder("{Profile}", destDirectory, "{Destination}",
+                CoreScriptCommands.ParsePath("{Profile}", srcDirectory, "{Source}",
+                CoreScriptCommands.DiskParseOrCreateFolder("{Profile}", destDirectory, "{Destination}",
                 IOScriptCommands.DiskTransfer("{Source}", "{Destination}", false, false)));
 
             AsyncUtils.RunSync(() => ScriptRunner.RunScriptAsync(new ParameterDic() { 

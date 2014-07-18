@@ -30,6 +30,10 @@
     <mkdir dir="${dest.path}" />
     <mkdir dir="${dest.current.path}" />
 
+    <property name="msbuild.csproj.path" value="${src.fileexplorer.scripting.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+    
     <property name="msbuild.csproj.path" value="${src.fileexplorer3.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
@@ -73,6 +77,8 @@
     <echo message="copy.bin: ${dest.current.path} dlls -> ${dest.path}\lib\net45" />
     <copy todir="${dest.path}\lib\net45">
       <fileset basedir="${dest.current.path}">
+        <include name="${dest.fileexplorer.scripting.dll}" />
+        <include name="${dest.fileexplorer.scripting.pdb}" />
         <include name="${dest.fileexplorer3.dll}" />
         <include name="${dest.fileexplorer3.pdb}" />
         <include name="${dest.fileexplorer3.wpf.dll}" />
@@ -157,6 +163,8 @@
     <echo message="copy.bin: demos -> ${dest.path}\demo\net45\bin" />
     <copy todir="${dest.path}\demo\net45\bin">
       <fileset basedir="${dest.current.path}">
+        <include name="${dest.fileexplorer.scripting.dll}" />
+        <include name="${dest.fileexplorer.scripting.pdb}" />        
         <include name="${dest.fileexplorer3.dll}" />
         <include name="${dest.fileexplorer3.pdb}" />
         <include name="${dest.fileexplorer3.wpf.dll}" />

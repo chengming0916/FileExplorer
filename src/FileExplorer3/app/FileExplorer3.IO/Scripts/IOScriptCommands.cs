@@ -59,7 +59,7 @@ namespace FileExplorer.Script
             string mask = "*", ListOptions listOptions = ListOptions.File | ListOptions.Folder,
             bool removeOriginal = false, bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.List(srcDirectoryVariable, "{DTC-ItemToTransfer}", mask, listOptions,
+            return CoreScriptCommands.List(srcDirectoryVariable, "{DTC-ItemToTransfer}", mask, listOptions,
                        ScriptCommands.ForEach("{DTC-ItemToTransfer}", "{DTC-CurrentItem}",
                            IOScriptCommands.DiskTransfer("{DTC-CurrentItem}", destDirectoryVariable, removeOriginal, allowCustomImplementation),
                                     ScriptCommands.Reset(nextCommand, "{DTC-DestDirectory}", "{DTC-SrcDirectory}")));
@@ -165,7 +165,7 @@ namespace FileExplorer.Script
                         cmd2Run =
                             ScriptCommands.Assign("{DT-SrcDirectory}", srcEntry, false,
                                 ScriptCommands.Assign("{DT-DestProfile}", destEntry.Profile, false,
-                                   ScriptCommands.DiskParseOrCreateFolder("{DT-DestProfile}", destFullName, "{DT-DestDirectory}",
+                                   CoreScriptCommands.DiskParseOrCreateFolder("{DT-DestProfile}", destFullName, "{DT-DestDirectory}",
                                     IOScriptCommands.DiskTransferChild("{DT-SrcDirectory}", "{DT-DestDirectory}", RemoveOriginal, AllowCustomImplementation,
                                     ScriptCommands.Reset(ResultCommand.NoError, "{DT-DestDirectory}", "{DT-SrcDirectory}")))));
                     else
@@ -174,8 +174,8 @@ namespace FileExplorer.Script
                             ScriptCommands.Assign("{DT-SrcFile}", srcEntry, false,
                              ScriptCommands.Assign("{DT-SrcProfile}", srcEntry.Profile, false,
                              ScriptCommands.Assign("{DT-DestProfile}", destEntry.Profile, false,
-                                ScriptCommands.DiskParseOrCreateFile("{DT-DestProfile}", destFullName, "{DT-DestFile}",
-                                    ScriptCommands.DiskCopyFile("{DT-SrcProfile}", "{DT-SrcFile}", "{DT-DestProfile}", "{DT-DestFile}",
+                                CoreScriptCommands.DiskParseOrCreateFile("{DT-DestProfile}", destFullName, "{DT-DestFile}",
+                                    CoreScriptCommands.DiskCopyFile("{DT-SrcProfile}", "{DT-SrcFile}", "{DT-DestProfile}", "{DT-DestFile}",
                                     ScriptCommands.Reset(ResultCommand.NoError, "{DT-SrcFile}", "{DT-DestFile}"))))));
                     }
 

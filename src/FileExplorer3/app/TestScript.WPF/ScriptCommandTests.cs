@@ -173,11 +173,11 @@ namespace FileExplorer.UnitTests
 
 
             IScriptCommand copyCommand =
-               ScriptCommands.ParsePath("{Profile}", "{SourceFile}", "{Source}",
-               ScriptCommands.DiskParseOrCreateFile("{Profile}", "{DestinationFile}", "{Destination}",
-               ScriptCommands.DiskOpenStream("{Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
-               ScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
-               ScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}"))))
+               CoreScriptCommands.ParsePath("{Profile}", "{SourceFile}", "{Source}",
+               CoreScriptCommands.DiskParseOrCreateFile("{Profile}", "{DestinationFile}", "{Destination}",
+               CoreScriptCommands.DiskOpenStream("{Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
+               CoreScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+               CoreScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}"))))
                , ResultCommand.Error(new FileNotFoundException(srcFile))
                 );
 
@@ -206,10 +206,10 @@ namespace FileExplorer.UnitTests
             string destFile = System.IO.Path.Combine(tempDirectory, "output.png");            
 
             IScriptCommand downloadCommand =
-              ScriptCommands.Download("Url", "Stream",
-                ScriptCommands.DiskParseOrCreateFile("{Profile}", "{DestinationFile}", "{Destination}",
-                ScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
-                ScriptCommands.CopyStream("{Stream}", "{DestinationStream}"))));
+              CoreScriptCommands.Download("Url", "Stream",
+                CoreScriptCommands.DiskParseOrCreateFile("{Profile}", "{DestinationFile}", "{Destination}",
+                CoreScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+                CoreScriptCommands.CopyStream("{Stream}", "{DestinationStream}"))));
             
             //downloadCommand = ScriptCommands.DownloadFile("Url", "DestinationFile");
 

@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3.IO", "FileExp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3.WPF", "FileExplorer3.WPF\FileExplorer3.WPF.csproj", "{78B3E601-2449-4600-AF48-94AC53FBEE22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3 [Portable]", "FileExplorer3\FileExplorer3 [Portable].csproj", "{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3", "FileExplorer3\FileExplorer3.csproj", "{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.FileExplorer.WPF", "Nuget.FileExplorer.WPF\Nuget.FileExplorer.WPF.csproj", "{AECC6565-52DA-472D-BA52-2BA43B7E60CC}"
 EndProject
@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTemplate.WPF", "TestTem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestScript.WPF", "TestScript.WPF\TestScript.WPF.csproj", "{5B7BB78D-DB99-4C36-8D3D-DF84E5433138}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer.Scripting [Portable]", "FileExplorer.Scripting\FileExplorer.Scripting [Portable].csproj", "{ECABBC13-1922-4500-908B-CD865E91E4C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer.Scripting", "FileExplorer.Scripting\FileExplorer.Scripting.csproj", "{ECABBC13-1922-4500-908B-CD865E91E4C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
