@@ -15,7 +15,7 @@ namespace FileExplorer.Script
     public static partial class IOScriptCommands
     {
         /// <summary>
-        /// Serializable, transfer source entries 
+        /// Serializable, transfer source entry (file or directory) to destination directory.
         /// </summary>
         /// <param name="srcEntryVariable">Entry to transfer(IEntryModel)</param>
         /// <param name="destDirectoryVariable">Destination of transfer (Directory IEntryModel)</param>
