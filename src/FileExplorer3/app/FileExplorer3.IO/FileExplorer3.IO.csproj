@@ -237,13 +237,17 @@
     <Folder Include="UserControls\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting.csproj">
+      <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
+      <Name>FileExplorer.Scripting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
       <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
       <Name>FileExplorer3.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileExplorer3\FileExplorer3 [Portable].csproj">
+    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
       <Project>{bd72b62f-6bcf-43d0-ad6a-332decfae4ed}</Project>
-      <Name>FileExplorer3 [Portable]</Name>
+      <Name>FileExplorer3</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

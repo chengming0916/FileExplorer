@@ -32,8 +32,6 @@
   <property name="build.projects.txt" value="projects3.txt" />
   <call target="parseProjectProps" />
   <echo message="src.fileexplorer3.path = ${src.fileexplorer3.path}"/>
-  <property name="src.fileexplorer3.csproj" value="${src.fileexplorer3.path}\FileExplorer3 [Portable].csproj" />
-  <echo message="src.fileexplorer3.csproj = ${src.fileexplorer3.csproj}"/>
   <!-- Get Project names from project3.txt -->
 
   <!-- Msbuild -->
