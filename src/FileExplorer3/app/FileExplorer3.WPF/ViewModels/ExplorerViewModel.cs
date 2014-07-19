@@ -47,14 +47,14 @@ namespace FileExplorer.WPF.ViewModels
             Breadcrumb = new BreadcrumbViewModel(_internalEvents);
             Statusbar = new StatusbarViewModel(_internalEvents);
             Sidebar = new SidebarViewModel(_internalEvents);
-            FileList = new FileListViewModel(_internalEvents, Sidebar);
+            FileList = new FileListViewModel(_windowManager, _internalEvents, Sidebar);
             DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
             Navigation = new NavigationViewModel(_internalEvents);
 
             DragHelper = NullSupportDrag.Instance;
             DropHelper = NullSupportDrop.Instance;
 
-            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation);
+            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation, Breadcrumb);
             setRootModels(_rootModels);
 
             if (_events != null)

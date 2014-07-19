@@ -33,5 +33,8 @@ namespace FileExplorer.WPF.Defines
 
         public static RoutedUICommand Rename = new RoutedUICommand(Strings.strRename, "Rename", typeof(ExplorerCommands),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F2) }));
+
+        public static RoutedUICommand ToggleBreadcrumb = new RoutedUICommand("", "ToggleBreadcrumb", typeof(ExplorerCommands),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.D, ModifierKeys.Alt) }));
     }
 }

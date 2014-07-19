@@ -28,20 +28,20 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            ScriptCommands = new DynamicDictionary<IScriptCommand>();
-            ScriptCommands.Back = new SimpleScriptCommand("GoBack", (pd) =>
+            Commands = new DynamicDictionary<IScriptCommand>();
+            Commands.Back = new SimpleScriptCommand("GoBack", (pd) =>
             {
                 pd.AsVMParameterDic().Navigation.GoBack();
                 return ResultCommand.OK;
             }, pd => pd.AsVMParameterDic().Navigation.CanGoBack);
 
-            ScriptCommands.Next = new SimpleScriptCommand("GoNext", (pd) =>
+            Commands.Next = new SimpleScriptCommand("GoNext", (pd) =>
             {
                 pd.AsVMParameterDic().Navigation.GoNext();
                 return ResultCommand.OK;
             }, pd => pd.AsVMParameterDic().Navigation.CanGoNext);
 
-            ScriptCommands.Up = new SimpleScriptCommand("GoUp", (pd) =>
+            Commands.Up = new SimpleScriptCommand("GoUp", (pd) =>
             {
                 pd.AsVMParameterDic().Navigation.GoUp();
                 return ResultCommand.OK;
@@ -54,9 +54,9 @@ namespace FileExplorer.WPF.ViewModels
             exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(                    
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseBack, this, (ch) => ch.ScriptCommands.Back, ParameterDicConverter, ScriptBindingScope.Explorer),
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseForward, this, (ch) => ch.ScriptCommands.Next, ParameterDicConverter, ScriptBindingScope.Explorer),
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseHome, this, (ch) => ch.ScriptCommands.Up, ParameterDicConverter, ScriptBindingScope.Explorer)
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseBack, this, (ch) => ch.Commands.Back, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseForward, this, (ch) => ch.Commands.Next, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseHome, this, (ch) => ch.Commands.Up, ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();

@@ -145,12 +145,13 @@ namespace FileExplorer.Script
     /// Run a number of ScriptCommand in a sequence.
     /// </summary>
     [Obsolete]
-    public class RunInSequenceScriptCommand : IScriptCommand
+    public class RunInSequenceScriptCommand : ScriptCommandBase //IScriptCommand
     {
         private IScriptCommand[] _scriptCommands;
         private IScriptCommand _nextCommand = ResultCommand.NoError;
         public IScriptCommand[] ScriptCommands { get { return _scriptCommands; } }
         public RunInSequenceScriptCommand(params IScriptCommand[] scriptCommands)
+            : base("RunInSequence")
         {
             if (scriptCommands.Length == 0) throw new ArgumentException(); _scriptCommands = scriptCommands;
         }
@@ -166,7 +167,7 @@ namespace FileExplorer.Script
             get { return String.Join(",", _scriptCommands.Select(c => c.CommandKey)); }
         }
 
-        public virtual IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             ScriptRunner.RunScript(pm, ScriptCommands);
             if (pm.Error != null)
@@ -179,7 +180,7 @@ namespace FileExplorer.Script
             return _scriptCommands.First().CanExecute(pm);
         }
 
-        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             await ScriptRunner.RunScriptAsync(pm, ScriptCommands);
             if (pm.Error != null)

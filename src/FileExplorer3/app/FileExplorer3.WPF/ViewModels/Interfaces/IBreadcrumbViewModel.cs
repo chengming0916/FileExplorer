@@ -9,10 +9,12 @@ using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    public interface IBreadcrumbViewModel : ISupportTreeSelector<IBreadcrumbItemViewModel, IEntryModel>
+    public interface IBreadcrumbViewModel : ISupportTreeSelector<IBreadcrumbItemViewModel, IEntryModel>, ISupportCommandManager
     {
         IEntryModel[] RootModels { set; }
         IProfile[] Profiles { set; }
+
+        bool ShowBreadcrumb { get; set; }
 
         Task SelectAsync(IEntryModel value);
     }

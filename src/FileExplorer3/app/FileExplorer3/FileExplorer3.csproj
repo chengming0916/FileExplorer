@@ -57,7 +57,6 @@
     <Compile Include="Models\ILoginInfo.cs" />
     <Compile Include="Models\IMetadata.cs" />
     <Compile Include="Models\IMetadataProvider.cs" />
-    <Compile Include="Models\IPathHelper.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
     <Compile Include="Models\ISuggestSource.cs" />
@@ -71,6 +70,7 @@
     <Compile Include="Scripts\v2\CopyStream.cs" />
     <Compile Include="Scripts\v2\DiskCopyFile.cs" />
     <Compile Include="Scripts\v2\DiskCreatePath.cs" />
+    <Compile Include="Scripts\v2\DiskDelete.cs" />
     <Compile Include="Scripts\v2\DiskOpenStream.cs" />
     <Compile Include="Scripts\v2\DiskParseOrCreatePath.cs" />
     <Compile Include="Scripts\v2\Download.cs" />

@@ -15,12 +15,14 @@ using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using FileExplorer.Script;
 using System.Windows;
 using System.Threading;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    public class BreadcrumbViewModel : ViewAware, IBreadcrumbViewModel,
+    public class BreadcrumbViewModel : ViewAttached, IBreadcrumbViewModel,
         IHandle<DirectoryChangedEvent>
     {
         #region Constructor
@@ -39,7 +41,7 @@ namespace FileExplorer.WPF.ViewModels
                     BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(selection.SelectedValue));
                 };
             Selection = selection;
-
+            Commands = new BreadcrumbCommandManager(this, events);
 
         }
 
@@ -54,39 +56,44 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         protected override void OnViewAttached(object view, object context)
-        {
-            base.OnViewAttached(view, context);
-
-            _sbox = (view as UserControl).FindName("sbox") as SuggestBoxBase;
-            _switch = (view as UserControl).FindName("switch") as FileExplorer.WPF.BaseControls.Switch;
-            _bexp = (view as UserControl).FindName("bexp") as DropDownList;
-
-            _bexp.AddValueChanged(ComboBox.SelectedValueProperty, (o, e) =>
+        {            
+            if (!IsViewAttached)
             {
-                IEntryViewModel evm = _bexp.SelectedItem as IEntryViewModel;
-                if (evm != null)
-                    BroadcastDirectoryChanged(evm);
+                _sbox = (view as UserControl).FindName("sbox") as SuggestBoxBase;
+                _switch = (view as UserControl).FindName("switch") as FileExplorer.WPF.BaseControls.Switch;
+                _bexp = (view as UserControl).FindName("bexp") as DropDownList;
 
-                _switch.Dispatcher.BeginInvoke(new System.Action(() =>
+                _bexp.AddValueChanged(ComboBox.SelectedValueProperty, (o, e) =>
                 {
-                    _switch.IsSwitchOn = true;
-                }));
-            });
+                    IEntryViewModel evm = _bexp.SelectedItem as IEntryViewModel;
+                    if (evm != null)
+                        BroadcastDirectoryChanged(evm);
 
-            _switch.AddValueChanged(FileExplorer.WPF.BaseControls.Switch.IsSwitchOnProperty, (o, e) =>
-                {
-                    if (!_switch.IsSwitchOn)
+                    _switch.Dispatcher.BeginInvoke(new System.Action(() =>
                     {
-                        _sbox.Dispatcher.BeginInvoke(new System.Action(() =>
-                            {
-                                Keyboard.Focus(_sbox);
-                                _sbox.Focus();
-                                _sbox.SelectAll();
-                            }), System.Windows.Threading.DispatcherPriority.Background);
-
-                    }
+                        _switch.IsSwitchOn = true;
+                    }));
                 });
 
+                _switch.AddValueChanged(FileExplorer.WPF.BaseControls.Switch.IsSwitchOnProperty, (o, e) =>
+                    {
+                        if (!_switch.IsSwitchOn)
+                        {
+                            _sbox.Dispatcher.BeginInvoke(new System.Action(() =>
+                                {
+                                    Keyboard.Focus(_sbox);
+                                    _sbox.Focus();
+                                    _sbox.SelectAll();
+                                }), System.Windows.Threading.DispatcherPriority.Background);
+
+                        }
+                    });
+
+
+                var uiEle = view as System.Windows.UIElement;
+                this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Local);
+            }
+            base.OnViewAttached(view, context);
             //_sbox.AddHandler(TextBlock.LostFocusEvent, (RoutedEventHandler)((s, e) =>
             //{
             //    if (!_switch.IsSwitchOn)
@@ -186,6 +193,8 @@ namespace FileExplorer.WPF.ViewModels
         #endregion
 
         #region Public Properties
+
+        public ICommandManager Commands { get; private set; }
 
         public IEntryModel[] RootModels { set { setRootModels(value); } }
         public IProfile[] Profiles { set { setProfiles(value); } }

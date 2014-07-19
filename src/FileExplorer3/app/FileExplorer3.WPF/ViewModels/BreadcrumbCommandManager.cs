@@ -1,10 +1,7 @@
 ﻿using Caliburn.Micro;
 using FileExplorer.Script;
-using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
-using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
-using FileExplorer.WPF.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,60 +10,55 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    public class SidebarCommandManager: CommandManagerBase
+    public class BreadcrumbCommandManager : CommandManagerBase
     {
+        
         #region Constructor
 
-        public SidebarCommandManager(ISidebarViewModel svm, IEventAggregator events,
+        public BreadcrumbCommandManager(IBreadcrumbViewModel bvm, IEventAggregator events,
              params IExportCommandBindings[] additionalBindingExportSource)
         {
-            _svm = svm;
+            _bvm = bvm;
 
             ParameterDicConverter =
              ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("Sidebar", _svm),
+                 new Tuple<string, object>("Breadcrumb", _bvm),
                  new Tuple<string, object>("Events", events));
 
             #region Set ScriptCommands
 
             Commands = new DynamicDictionary<IScriptCommand>();
-
-            Commands.TogglePreviewer = Sidebar.Toggle();
+            Commands.ToggleBreadcrumb = new SimpleScriptCommand("ToggleBreadcrumb", 
+                pd => { IBreadcrumbViewModel bread = pd["Breadcrumb"] as IBreadcrumbViewModel; 
+                    bread.ShowBreadcrumb = !bread.ShowBreadcrumb; return ResultCommand.NoError; });
 
             #endregion
 
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
-            exportBindingSource.Add(
-              new ExportCommandBindings(
-                  ScriptCommandBinding.FromScriptCommand(ExplorerCommands.TogglePreviewer, this, (ch) => ch.Commands.TogglePreviewer, ParameterDicConverter, ScriptBindingScope.Explorer)
-              ));
             exportBindingSource.AddRange(additionalBindingExportSource);
-          
+            exportBindingSource.Add(
+                new ExportCommandBindings(                                        
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.ToggleBreadcrumb, this, (ch) => ch.Commands.ToggleBreadcrumb, ParameterDicConverter, ScriptBindingScope.Explorer)
+                ));
 
-            _exportBindingSource = exportBindingSource.ToArray();
-
-             ToolbarCommands = new ToolbarCommandsHelper(events,
-                null,
-                null)
-                {
-                    
-                };
+            _exportBindingSource = exportBindingSource.ToArray();             
         }
-        
+
         #endregion
 
         #region Methods
-        
+
         #endregion
 
         #region Data
 
-        ISidebarViewModel _svm;
-        
+        private IBreadcrumbViewModel _bvm;
+
         #endregion
 
         #region Public Properties
-        
+
         #endregion
+
     }
 }

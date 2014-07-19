@@ -47,7 +47,8 @@ namespace FileExplorer.WPF.ViewModels
 
         public async Task InitalizeAsync(IExplorerViewModel viewModel)
         {
-            await viewModel.GoAsync(_entryModel);
+            if (viewModel != null)
+                await viewModel.GoAsync(_entryModel);
         }
 
 

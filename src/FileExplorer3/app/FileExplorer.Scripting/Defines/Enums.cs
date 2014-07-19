@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Defines
 {
-    
+    public enum ProgressType { Waiting, Running, Error, Completed }
+
 
 }

@@ -352,7 +352,7 @@ namespace FileExplorer.Script
                 return WPFScriptCommands.ReportProgress(TransferProgress.Error(ex));
             }
 
-            return ResultCommand.NoError;
+            return new HideProgress();
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
@@ -375,7 +375,7 @@ namespace FileExplorer.Script
                 return WPFScriptCommands.ReportProgress(TransferProgress.Error(ex));
             }
 
-            return ResultCommand.NoError;
+            return new HideProgress();
         }
     }
 
@@ -751,7 +751,7 @@ namespace FileExplorer.Script
         public static IScriptCommand DoSelection(Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
            IScriptCommand noSelectionCommand = null)
         {
-            return new DoSelection("DoSelectionExplorer", ExtensionMethods.GetCurrentDirectoryVMFunc,
+            return new DoSelection("DoSelectionExplorer", WPFExtensionMethods.GetCurrentDirectoryVMFunc,
                 nextCommandFunc, noSelectionCommand);
         }
 
@@ -1168,15 +1168,15 @@ namespace FileExplorer.Script
     public static class DirectoryTree
     {
         public static IScriptCommand ToggleRename =
-          new ToggleRenameCommand(ExtensionMethods.GetCurrentDirectoryVMFunc);
+          new ToggleRenameCommand(WPFExtensionMethods.GetCurrentDirectoryVMFunc);
 
         public static IScriptCommand ExpandSelected =
-            new ExpandSelectedDirectory(ExtensionMethods.GetCurrentDirectoryVMFunc);
+            new ExpandSelectedDirectory(WPFExtensionMethods.GetCurrentDirectoryVMFunc);
 
         public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand)
         {
             return new AssignSelectionToVariable(
-                ExtensionMethods.GetCurrentDirectoryFunc, "Parameter", thenCommand);
+                WPFExtensionMethods.GetCurrentDirectoryFunc, "Parameter", thenCommand);
         }
 
         public static IScriptCommand Do(Func<IDirectoryTreeViewModel, IScriptCommand> commandFunc)
@@ -1277,26 +1277,26 @@ namespace FileExplorer.Script
 
         public static IScriptCommand AssignSelectionToParameter(IScriptCommand thenCommand, string variableName = "Parameter")
         {
-            return new AssignSelectionToVariable(ExtensionMethods.GetFileListSelectionFunc,
+            return new AssignSelectionToVariable(WPFExtensionMethods.GetFileListSelectionFunc,
                 variableName, thenCommand);
         }
 
         public static IScriptCommand AssignCurrentDirectoryToDestination(IScriptCommand thenCommand, string variableName = "Destination")
         {
-            return new AssignSelectionToVariable(ExtensionMethods.GetFileListCurrentDirectoryFunc,
+            return new AssignSelectionToVariable(WPFExtensionMethods.GetFileListCurrentDirectoryFunc,
                 variableName, thenCommand);
         }
 
         public static IScriptCommand OpenSelectedDirectory =
-            new OpenSelectedDirectory(ExtensionMethods.GetFileListSelectionFunc);
+            new OpenSelectedDirectory(WPFExtensionMethods.GetFileListSelectionFunc);
 
         public static IScriptCommand ToggleRename =
-            new ToggleRenameCommand(ExtensionMethods.GetFileListSelectionVMFunc);
+            new ToggleRenameCommand(WPFExtensionMethods.GetFileListSelectionVMFunc);
 
         public static IScriptCommand Lookup(Func<IEntryModel, bool> lookupFunc,
             Func<IEntryModel, IScriptCommand> foundCommandFunc, IScriptCommand notFoundCommand)
         {
-            return new LookupEntryCommand(lookupFunc, foundCommandFunc, notFoundCommand, ExtensionMethods.GetFileListItemsFunc);
+            return new LookupEntryCommand(lookupFunc, foundCommandFunc, notFoundCommand, WPFExtensionMethods.GetFileListItemsFunc);
         }
 
         /// <summary>
@@ -1512,7 +1512,7 @@ namespace FileExplorer.Script
     /// </summary>
     internal class OpenSelectedDirectory : ScriptCommandBase
     {
-        public static OpenSelectedDirectory FromFileList = new OpenSelectedDirectory(ExtensionMethods.GetFileListSelectionFunc);
+        public static OpenSelectedDirectory FromFileList = new OpenSelectedDirectory(WPFExtensionMethods.GetFileListSelectionFunc);
         private Func<ParameterDic, IEntryModel[]> _getSelectionFunc;
 
         /// <summary>
@@ -1578,7 +1578,7 @@ namespace FileExplorer.Script
 
     internal class ToggleRenameCommand : ScriptCommandBase
     {
-        public static ToggleRenameCommand ForSelectedItem = new ToggleRenameCommand(ExtensionMethods.GetFileListSelectionVMFunc);
+        public static ToggleRenameCommand ForSelectedItem = new ToggleRenameCommand(WPFExtensionMethods.GetFileListSelectionVMFunc);
         private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
 
         /// <summary>
@@ -1656,7 +1656,7 @@ namespace FileExplorer.Script
             )
             : base("LookupEntry")
         {
-            _getItemsFunc = getItemsFunc ?? ExtensionMethods.GetFileListItemsFunc;
+            _getItemsFunc = getItemsFunc ?? WPFExtensionMethods.GetFileListItemsFunc;
             _lookupFunc = lookupFunc;
             _foundCommandFunc = foundCommandFunc;
             _notFoundCommand = notFoundCommand;

@@ -63,10 +63,10 @@ namespace FileExplorer.Models.SevenZipSharp
                     bool isRoot = appliedModels.All(em => em is SzsRootModel);
                     Func<IEntryModel, IScriptCommand, IScriptCommand> transferCommandFunc =
                         (destModel, thenCommand) => ScriptCommands.ForEach(appliedModels, am =>
-                                     isRoot ? 
-                                        IOScriptCommands.TransferChild(am, destModel, null, false) :
-                                        IOScriptCommands.Transfer(am, destModel),
-                              thenCommand);
+                                     isRoot ?                                                         
+                                        IOScriptCommands.DiskTransferChild(am, destModel, false, true) :
+                                        IOScriptCommands.DiskTransfer(am, destModel),
+                                        thenCommand);
 
 
                     //Extract to ...
@@ -198,7 +198,7 @@ namespace FileExplorer.Models.SevenZipSharp
                               pmi => WPFScriptCommands.ShowProgress("Compress",
                                   IOScriptCommands.ParseOrCreateArchive(pmi.Profile as IDiskProfile, pmi.FileName,
                                pm => ScriptCommands.ForEach(appliedModels,
-                                  am => IOScriptCommands.Transfer(am, pm, false, true),
+                                  am => IOScriptCommands.DiskTransfer(am, pm, false, true),
                                       WPFScriptCommands.HideProgress()))),
                                         ResultCommand.NoError))
                         {
@@ -213,7 +213,7 @@ namespace FileExplorer.Models.SevenZipSharp
                                     WPFScriptCommands.ShowProgress("Compress",
                                         IOScriptCommands.ParseOrCreateArchive(firstProfile, destPath,
                                             pm => ScriptCommands.ForEach(appliedModels,
-                                                am => IOScriptCommands.Transfer(am, pm, false, true,
+                                                am => IOScriptCommands.DiskTransfer(am, pm, false, true,
                                             null), WPFScriptCommands.HideProgress()))))
                                 {
                                     Header = "Compress to " + destName,

@@ -23,12 +23,12 @@ namespace FileExplorer.Models
             foreach (var m in await base.GetMetadataAsync(selectedModels, modelCount, parentModel))
                 retList.Add(m);
 
-            if (selectedModels.Count() == 0)
-            {
-                retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000) { IsVisibleInSidebar = true });
-                retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10) { IsVisibleInSidebar = true });
-                retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false) { IsVisibleInSidebar = true });
-            }
+            //if (selectedModels.Count() == 0)
+            //{
+            //    retList.Add(new Metadata(DisplayType.Number, MetadataStrings.strCategoryTest, "Number", 10000) { IsVisibleInSidebar = true });
+            //    retList.Add(new Metadata(DisplayType.Percent, MetadataStrings.strCategoryTest, "Percent", 10) { IsVisibleInSidebar = true });
+            //    retList.Add(new Metadata(DisplayType.Boolean, MetadataStrings.strCategoryTest, "Boolean", true, false) { IsVisibleInSidebar = true });
+            //}
             return retList;
 
         }

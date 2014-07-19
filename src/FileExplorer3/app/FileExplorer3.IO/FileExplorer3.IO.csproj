@@ -163,10 +163,8 @@
     <Compile Include="Model\FileBasedMetaProvider.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMetaProvider.cs" />
     <Compile Include="Model\MetadataProviderImpls.cs" />
-    <Compile Include="Model\FileBasedCommandProvider.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
     <Compile Include="Model\FileBasedIconExtractors.cs" />
-    <Compile Include="Model\IOScriptCommands.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoMetadataProvider.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoModel.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoProfile.cs" />
@@ -198,6 +196,7 @@
     <Compile Include="Compression\SevenZipWrapper.cs" />
     <Compile Include="Scripts\FileExplorer3IOCommands.cs" />
     <Compile Include="Scripts\IOScriptCommands.cs" />
+    <Compile Include="Scripts\v2\DiskTransfer.cs" />
     <Compile Include="Utils\CompressUtils.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />
     <Compile Include="Utils\HookableMemoryStream.cs" />

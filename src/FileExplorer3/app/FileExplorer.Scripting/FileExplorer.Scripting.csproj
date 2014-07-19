@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Defines\Interfaces\IPathHelper.cs" />
+    <Compile Include="Defines\Structs\TransferProgress.cs" />
+    <Compile Include="Implements\PathHelper.cs" />
+    <Compile Include="Scripts\ExtensionMethods.cs" />
     <Compile Include="Scripts\ScriptCommandsv1.cs" />
     <Compile Include="Implements\ScriptCommandSerializer.cs" />
     <Compile Include="Scripts\FileExplorer3Commands.cs" />

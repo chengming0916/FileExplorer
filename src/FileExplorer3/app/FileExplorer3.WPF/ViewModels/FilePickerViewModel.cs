@@ -39,7 +39,7 @@ namespace FileExplorer.WPF.ViewModels
             _mode = mode;
             _tryCloseCommand = new SimpleScriptCommand("TryClose", pd => { TryClose(true); return ResultCommand.NoError; });
 
-            FileList.Commands.ScriptCommands.Open = FileExplorer.Script.FileList.IfSelection(evm => evm.Count() == 1,
+            FileList.Commands.Commands.Open = FileExplorer.Script.FileList.IfSelection(evm => evm.Count() == 1,
                    FileExplorer.Script.FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        OpenSelectedDirectory.FromFileList,  //Selected directory
                        new SimpleScriptCommand("", (pd) =>

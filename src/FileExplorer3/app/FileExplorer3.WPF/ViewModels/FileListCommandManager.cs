@@ -18,9 +18,9 @@ namespace FileExplorer.WPF.ViewModels
 {
     public class FileListCommandManager : CommandManagerBase, IExportCommandBindings
     {
-        #region Constructor
+        #region Constructor        
 
-        public FileListCommandManager(IFileListViewModel flvm, IEventAggregator events,
+        public FileListCommandManager(IFileListViewModel flvm, IWindowManager windowManager, IEventAggregator events,
             params IExportCommandBindings[] additionalBindingExportSource)
         {
             _flvm = flvm;
@@ -30,43 +30,55 @@ namespace FileExplorer.WPF.ViewModels
                  new Tuple<string, object>("FileList", flvm),
                  new Tuple<string, object>("Events", events));
 
+           
+
             #region Set ScriptCommands
 
-            ScriptCommands = new DynamicDictionary<IScriptCommand>();
-            ScriptCommands.Open = FileList.IfSelection(evm => evm.Count() == 1,
+            Commands = new DynamicDictionary<IScriptCommand>();
+            Commands.Open = FileList.IfSelection(evm => evm.Count() == 1,
                    FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        FileList.OpenSelectedDirectory,  //Selected directory
                        ResultCommand.NoError),   //Selected non-directory
                    ResultCommand.NoError //Selected more than one item.                   
                    );
 
-            ScriptCommands.Delete = NullScriptCommand.Instance;
 
-            ScriptCommands.NewFolder = NullScriptCommand.Instance;
 
-            ScriptCommands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
+            Commands.Delete = FileList.IfSelection(evm => evm.Count() >= 1,
+                    WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
+                        pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+                        WPFScriptCommands.ShowProgress(windowManager, "Delete",
+                            ScriptCommands.RunCommands(RunCommands.RunMode.Queue, new HideProgress(),
+                               FileList.AssignSelectionToParameter(
+                                 CoreScriptCommands.DiskDeleteMultiple("Parameter"))), true), 
+                     ResultCommand.NoError),
+                     NullScriptCommand.Instance);
+
+            Commands.NewFolder = NullScriptCommand.Instance;
+
+            Commands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
                 pd.AsVMParameterDic().FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Update, true);
                 return ResultCommand.OK;
             });
 
-            ScriptCommands.ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
+            Commands.ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
                 FileList.ToggleRename, NullScriptCommand.Instance);
 
-            ScriptCommands.Copy =
+            Commands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
                     NullScriptCommand.Instance);
 
-            ScriptCommands.Cut =
+            Commands.Cut =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
                     NullScriptCommand.Instance);
 
-            ScriptCommands.Paste = FileExplorer.Script.ScriptCommands.RunInSequence(
+            Commands.Paste = FileExplorer.Script.ScriptCommands.RunInSequence(
                 FileList.AssignCurrentDirectoryToDestination(
                     FileList.AssignSelectionToParameter(ClipboardCommands.Paste(
-                    FileExplorer.Script.ExtensionMethods.GetFileListCurrentDirectoryFunc,
+                    FileExplorer.Script.WPFExtensionMethods.GetFileListCurrentDirectoryFunc,
                     (dragDropEffects, src, dest) => new SimpleScriptCommand("Paste", (pm) =>
                         {
                             dest.Profile.DragDrop().OnDropCompleted(src.ToList(), null, dest, dragDropEffects);
@@ -75,11 +87,11 @@ namespace FileExplorer.WPF.ViewModels
                     )
             );
 
-            ScriptCommands.OpenTab = NullScriptCommand.Instance;
-            ScriptCommands.NewWindow = NullScriptCommand.Instance;
+            Commands.OpenTab = NullScriptCommand.Instance;
+            Commands.NewWindow = NullScriptCommand.Instance;
 
-            ScriptCommands.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
-            ScriptCommands.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
+            Commands.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
+            Commands.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
 
             #endregion
 
@@ -87,18 +99,18 @@ namespace FileExplorer.WPF.ViewModels
             exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(
-                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.ScriptCommands.Open, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewFolder, this, (ch) => ch.ScriptCommands.NewFolder, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.ScriptCommands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Cut, this, (ch) => ch.ScriptCommands.Cut, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Copy, this, (ch) => ch.ScriptCommands.Copy, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Paste, this, (ch) => ch.ScriptCommands.Paste, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.ScriptCommands.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.ScriptCommands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.ScriptCommands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Commands.Open, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewFolder, this, (ch) => ch.Commands.NewFolder, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.Commands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.Commands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.Commands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Cut, this, (ch) => ch.Commands.Cut, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Copy, this, (ch) => ch.Commands.Copy, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Paste, this, (ch) => ch.Commands.Paste, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.Commands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.Commands.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.Commands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.Commands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Local),
                 new ScriptCommandBinding(ExplorerCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), ParameterDicConverter, ScriptBindingScope.Explorer),
                 new ScriptCommandBinding(ExplorerCommands.ToggleViewMode, p => true, p => ToggleViewMode(), ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));
@@ -106,22 +118,33 @@ namespace FileExplorer.WPF.ViewModels
             _exportBindingSource = exportBindingSource.ToArray();
 
             IEntryModel _currentDirectoryModel = null;
-            ToolbarCommands = new ToolbarCommandsHelper(events, ParameterDicConverter, 
+            ToolbarCommands = new ToolbarCommandsHelper(events, ParameterDicConverter,
                 message => { _currentDirectoryModel = message.NewModel; return new IEntryModel[] { _currentDirectoryModel }; },
                 message => message.SelectedModels.Count() == 0 && _currentDirectoryModel != null ? new IEntryModel[] { _currentDirectoryModel } : message.SelectedModels.ToArray())
                 {
                     ExtraCommandProviders = new[] { 
-                        new StaticCommandProvider(new SelectGroupCommand(flvm), new ViewModeCommand(flvm), new SeparatorCommandModel()) 
+                        new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc    
+                        new StaticCommandProvider(new SelectGroupCommand(flvm), 
+                            new ViewModeCommand(flvm),                             
+                            new SeparatorCommandModel(),
+                            new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnToolbar = true, 
+                                HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE188)                        
+                            },
+                            new DirectoryCommandModel(
+                                new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true }) 
+                                { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
+                            new ToggleVisibilityCommand(flvm.Sidebar, ExplorerCommands.TogglePreviewer)  
+                            ) 
                     }
                 };
         }
 
         #endregion
 
-        #region Methods
+        #region Methods        
 
         public void ToggleViewMode()
-        {
+        {            
             var viewModeWoSeparator = ViewModeCommand.ViewModes.Where(vm => vm.IndexOf(",-1") == -1).ToArray();
 
             int curIdx = ViewModeCommand.findViewMode(viewModeWoSeparator, _flvm.Parameters.ItemSize);
