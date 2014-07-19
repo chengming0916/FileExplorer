@@ -1,5 +1,6 @@
 ﻿using FileExplorer.Defines;
 using FileExplorer.IO;
+using FileExplorer.Models;
 using FileExplorer.Utils;
 using MetroLog;
 using System;
@@ -61,6 +62,14 @@ namespace FileExplorer.Script
            NameGenerationMode nameGenerationMode = NameGenerationMode.Rename, IScriptCommand nextCommand = null)
         {
             return DiskCreatePath(profileVariable, pathVariable, true, destVariable, nameGenerationMode, nextCommand);
+        }
+
+        public static IScriptCommand DiskCreateFolder(IEntryModel parentFolder, string folderName, string destVariable = "{Entry}",
+           NameGenerationMode nameGenerationMode = NameGenerationMode.Rename, IScriptCommand nextCommand = null)
+        {
+            return ScriptCommands.Assign("{DiskCreateFolder-Profile}", parentFolder, false,
+                ScriptCommands.Assign("{DiskCreateFolder-Path}", parentFolder.Profile.Path.Combine(parentFolder.FullPath, folderName), false,
+                DiskCreateFolder("{DiskCreateFolder-Profile}", "{DiskCreateFolder-Path}", destVariable, nameGenerationMode, nextCommand)));
         }
 
     }

@@ -86,7 +86,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public override Script.IScriptCommand GetTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
         {
-            return new BatchTransferScriptCommand(srcModel, destDirModel, removeOriginal);                
+            return new SzsBatchTransferScriptCommand(srcModel, destDirModel, removeOriginal);                
         }
 
         public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)
