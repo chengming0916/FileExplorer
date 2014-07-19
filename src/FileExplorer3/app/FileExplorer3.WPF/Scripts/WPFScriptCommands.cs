@@ -1230,7 +1230,7 @@ namespace FileExplorer.Script
 
     #region FileList based.
 
-    public static class FileList
+    public static partial class FileList
     {
         public static IScriptCommand Do(Func<IFileListViewModel, IScriptCommand> commandFunc)
         {

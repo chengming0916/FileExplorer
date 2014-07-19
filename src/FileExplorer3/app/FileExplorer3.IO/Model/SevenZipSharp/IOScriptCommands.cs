@@ -48,7 +48,7 @@ namespace FileExplorer.Script
     /// <summary>
     /// Uses SevenZipWrapper.CompressMultiple thus quicker then FileTransferScriptCommand which move one file at a time.    
     /// </summary>
-    public class BatchTransferScriptCommand : ScriptCommandBase
+    public class SzsBatchTransferScriptCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;
         private IEntryModel _destDirModel;
@@ -60,7 +60,7 @@ namespace FileExplorer.Script
         /// <param name="srcModel"></param>
         /// <param name="destDirModel"></param>
         /// <param name="removeOriginal"></param>
-        public BatchTransferScriptCommand(IEntryModel srcModel, IEntryModel destDirModel,
+        public SzsBatchTransferScriptCommand(IEntryModel srcModel, IEntryModel destDirModel,
             bool removeOriginal = false)
             : base(removeOriginal ? "Move" : "Copy")
         {
@@ -125,8 +125,7 @@ namespace FileExplorer.Script
                 var srcMapping = (_srcModel.Profile as IDiskProfile).DiskIO.Mapper[_srcModel];
                 string destName = PathFE.GetFileName(srcMapping.IOPath);
                 string destFullName = destProfile.Path.Combine(_destDirModel.FullPath, destName); //PathFE.Combine(destMapping.IOPath, destName);
-
-
+                
 
                 if (_srcModel.IsDirectory)
                 {

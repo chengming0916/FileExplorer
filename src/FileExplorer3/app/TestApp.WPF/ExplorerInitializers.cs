@@ -158,8 +158,10 @@ namespace TestApp
                  );
 
             explorerModel.FileList.Commands.Commands.NewFolder =
-                FileList.Do(flvm => WPFScriptCommands.CreatePath(
+                 FileList.Do(flvm => WPFScriptCommands.CreatePath(
                         flvm.CurrentDirectory, "NewFolder", true, true,
+                //FileList.Do(flvm => CoreScriptCommands.DiskCreateFolder(
+                //        flvm.CurrentDirectory, "NewFolder", "{DestinationFolder}", NameGenerationMode.Rename, 
                         m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
 
             explorerModel.FileList.Commands.Commands.Delete =

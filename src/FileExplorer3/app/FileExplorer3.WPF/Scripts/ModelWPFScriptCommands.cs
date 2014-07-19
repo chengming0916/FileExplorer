@@ -17,12 +17,14 @@ namespace FileExplorer.Script
 {
     public static partial class WPFScriptCommands
     {
+        [Obsolete("CoreScriptCommands.ParsePathFromProfiles")]
         public static IScriptCommand ParsePath(IProfile[] profiles, string path, Func<IEntryModel, IScriptCommand> ifFoundFunc,
             IScriptCommand ifNotFound)
         {
             return new ParsePathCommand(profiles, path, ifFoundFunc, ifNotFound);
         }
 
+        [Obsolete("CoreScriptCommands.DiskCreatePath")]
         public static IScriptCommand CreatePath(IProfile profile, string path, bool isFolder, bool renameIfExists,
             Func<IEntryModel, IScriptCommand> thenFunc)
         {
@@ -49,12 +51,14 @@ namespace FileExplorer.Script
         /// <param name="filter"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
+        [Obsolete("CoreScriptCommands.List")]
         public static IScriptCommand List(IEntryModel[] directories, Func<IEntryModel, bool> filter = null, Func<IEntryModel, bool> lookupFilter = null,
             bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
         {
             return new ListDirectoryCommand(directories, filter, lookupFilter, recrusive, nextCommandFunc);
         }
 
+        [Obsolete("CoreScriptCommands.List")]
         public static IScriptCommand List(IEntryModel directory, Func<IEntryModel, bool> filter = null, Func<IEntryModel, bool> lookupFilter = null,
            bool recrusive = false, Func<IEntryModel[], IScriptCommand> nextCommandFunc = null)
         {

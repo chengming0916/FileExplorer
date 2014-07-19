@@ -36,6 +36,16 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
+
+        public static IScriptCommand List(IEntryModel directoryEntry, string destVariable = "{Destination}",
+            string maskVariable = "*",
+            ListOptions options = ListOptions.File | ListOptions.Folder,
+            IScriptCommand nextCommand = null)
+        {
+        return ScriptCommands.Assign("{List-DirectoryEntry}", directoryEntry, false, 
+            List("{List-DirectoryEntry}", destVariable, maskVariable,options,
+            ScriptCommands.Reset(nextCommand, "{List-DirectoryEntry}")));
+        }
     }
 
     /// <summary>
