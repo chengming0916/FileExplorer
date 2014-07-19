@@ -1,4 +1,5 @@
-﻿using FileExplorer.Script;
+﻿using FileExplorer.Defines;
+using FileExplorer.Script;
 using MetroLog;
 using System;
 using System.Collections;
@@ -53,6 +54,11 @@ namespace FileExplorer.Script
         /// </summary>
         public ScriptCommandBase ThenCommand { get; set; }
 
+        /// <summary>
+        /// Whether to report progress, default : true.
+        /// </summary>
+        public bool IsProgressEnabled { get; set; }
+
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ForEach>();
 
         public ForEach()
@@ -60,6 +66,7 @@ namespace FileExplorer.Script
         {
             CurrentItemKey = "{CurrentItem}";
             ItemsKey = "{Items}";
+            IsProgressEnabled = true;
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
@@ -68,12 +75,22 @@ namespace FileExplorer.Script
             if (e == null)
                 return ResultCommand.Error(new ArgumentException(ItemsKey));
 
+            IProgress<TransferProgress> progress = NullTransferProgress.Instance;
+            if (IsProgressEnabled)
+            {
+                List<object> list;
+                e = list = e.Cast<object>().ToList();
+                progress = pm.GetProgress();
+                progress.Report(TransferProgress.IncrementTotalEntries(list.Count));
+            }
+
             uint counter = 0;
             foreach (var item in e)
             {
                 counter++;
                 pm.SetValue(CurrentItemKey, item);
                 await ScriptRunner.RunScriptAsync(pm.Clone(), NextCommand);
+                progress.Report(TransferProgress.IncrementProcessedEntries());
                 if (pm.Error != null)
                 {
                     pm.SetValue<Object>(CurrentItemKey, null);

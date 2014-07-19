@@ -32,14 +32,14 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            ScriptCommands = new DynamicDictionary<IScriptCommand>();
-            ScriptCommands.Delete = NullScriptCommand.Instance;
-            ScriptCommands.ToggleRename = DirectoryTree.ToggleRename;
-            ScriptCommands.Open = DirectoryTree.ExpandSelected;
-            ScriptCommands.OpenTab = NullScriptCommand.Instance;
-            ScriptCommands.NewWindow = NullScriptCommand.Instance;
-            ScriptCommands.Map = NullScriptCommand.Instance;
-            ScriptCommands.Unmap = Explorer.DoSelection(ems =>
+            Commands = new DynamicDictionary<IScriptCommand>();
+            Commands.Delete = NullScriptCommand.Instance;
+            Commands.ToggleRename = DirectoryTree.ToggleRename;
+            Commands.Open = DirectoryTree.ExpandSelected;
+            Commands.OpenTab = NullScriptCommand.Instance;
+            Commands.NewWindow = NullScriptCommand.Instance;
+            Commands.Map = NullScriptCommand.Instance;
+            Commands.Unmap = Explorer.DoSelection(ems =>
                 Script.ScriptCommands.If(pd => (ems.First() as IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
                         Script.WPFScriptCommands.IfOkCancel(windowManager, pd => "Unmap",  
                             pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label), 
@@ -54,13 +54,13 @@ namespace FileExplorer.WPF.ViewModels
             exportBindingSource.Add(
                 new ExportCommandBindings(
                     
-                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.ScriptCommands.Open, ParameterDicConverter, ScriptBindingScope.Local),           
-                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.ScriptCommands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.ScriptCommands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.ScriptCommands.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.ScriptCommands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.ScriptCommands.Map, ParameterDicConverter, ScriptBindingScope.Explorer),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Unmap, this, (ch) => ch.ScriptCommands.Unmap, ParameterDicConverter, ScriptBindingScope.Local)
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Commands.Open, ParameterDicConverter, ScriptBindingScope.Local),           
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.Commands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.Commands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.Commands.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.Commands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.Commands.Map, ParameterDicConverter, ScriptBindingScope.Explorer),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Unmap, this, (ch) => ch.Commands.Unmap, ParameterDicConverter, ScriptBindingScope.Local)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();

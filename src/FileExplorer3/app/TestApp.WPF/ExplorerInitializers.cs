@@ -118,11 +118,11 @@ namespace TestApp
 
         public async Task InitalizeAsync(IExplorerViewModel explorerModel)
         {
-            explorerModel.DirectoryTree.Commands.ScriptCommands.NewWindow =
-              new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.Script.ExtensionMethods.GetCurrentDirectoryFunc);
+            explorerModel.DirectoryTree.Commands.Commands.NewWindow =
+              new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.Script.WPFExtensionMethods.GetCurrentDirectoryFunc);
 
-            explorerModel.FileList.Commands.ScriptCommands.NewWindow =
-                new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.Script.ExtensionMethods.GetFileListSelectionFunc);
+            explorerModel.FileList.Commands.Commands.NewWindow =
+                new MdiWindow.OpenInNewWindowCommand(_container, _initializer, FileExplorer.Script.WPFExtensionMethods.GetFileListSelectionFunc);
         }
     }
 
@@ -148,7 +148,7 @@ namespace TestApp
                 new ToolbarCommandsInitializers(_windowManager));
 
 
-            explorerModel.FileList.Commands.ScriptCommands.Open =
+            explorerModel.FileList.Commands.Commands.Open =
              FileList.IfSelection(evm => evm.Count() == 1,
                  FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                      FileList.OpenSelectedDirectory, //Selected directory                        
@@ -157,12 +157,12 @@ namespace TestApp
                  ResultCommand.NoError //Selected more than one item, ignore.
                  );
 
-            explorerModel.FileList.Commands.ScriptCommands.NewFolder =
+            explorerModel.FileList.Commands.Commands.NewFolder =
                 FileList.Do(flvm => WPFScriptCommands.CreatePath(
                         flvm.CurrentDirectory, "NewFolder", true, true,
                         m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
 
-            explorerModel.FileList.Commands.ScriptCommands.Delete =
+            explorerModel.FileList.Commands.Commands.Delete =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     WPFScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
@@ -174,7 +174,7 @@ namespace TestApp
                         ResultCommand.NoError),
                     NullScriptCommand.Instance);
 
-            explorerModel.FileList.Commands.ScriptCommands.Copy =
+            explorerModel.FileList.Commands.Commands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                    WPFScriptCommands.IfOkCancel(_windowManager, pd => "Copy",
                         pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
@@ -182,7 +182,7 @@ namespace TestApp
                             ResultCommand.NoError),
                     NullScriptCommand.Instance);
 
-            explorerModel.FileList.Commands.ScriptCommands.Cut =
+            explorerModel.FileList.Commands.Commands.Cut =
                   FileList.IfSelection(evm => evm.Count() >= 1,
                    WPFScriptCommands.IfOkCancel(_windowManager, pd => "Cut",
                         pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
@@ -190,7 +190,7 @@ namespace TestApp
                             ResultCommand.NoError),
                     NullScriptCommand.Instance);
 
-            explorerModel.DirectoryTree.Commands.ScriptCommands.Delete =
+            explorerModel.DirectoryTree.Commands.Commands.Delete =
                        WPFScriptCommands.IfOkCancel(_windowManager, pd => "Delete",
                            pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
                                 WPFScriptCommands.ShowProgress(_windowManager, "Delete",
@@ -201,7 +201,7 @@ namespace TestApp
                            ResultCommand.NoError);
 
             if (_profiles.Length > 0)
-                explorerModel.DirectoryTree.Commands.ScriptCommands.Map =
+                explorerModel.DirectoryTree.Commands.Commands.Map =
                     Explorer.PickDirectory(initilizer, _profiles,
                     dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(dir)), ResultCommand.NoError);
             

@@ -39,8 +39,8 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            ScriptCommands = new DynamicDictionary<IScriptCommand>();
-            ScriptCommands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
+            Commands = new DynamicDictionary<IScriptCommand>();
+            Commands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
                 IExplorerViewModel elvm = pd.AsVMParameterDic().Explorer;
                 elvm.FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Replace, true);
@@ -48,20 +48,20 @@ namespace FileExplorer.WPF.ViewModels
                 return ResultCommand.NoError;
             });
             
-            ScriptCommands.Transfer = NullScriptCommand.Instance;
-            ScriptCommands.ZoomIn = Explorer.Zoom(ZoomMode.ZoomIn);
-            ScriptCommands.ZoomOut = Explorer.Zoom(ZoomMode.ZoomOut);
-            ScriptCommands.CloseTab = NullScriptCommand.Instance;
+            Commands.Transfer = NullScriptCommand.Instance;
+            Commands.ZoomIn = Explorer.Zoom(ZoomMode.ZoomIn);
+            Commands.ZoomOut = Explorer.Zoom(ZoomMode.ZoomOut);
+            Commands.CloseTab = NullScriptCommand.Instance;
 
             #endregion
 
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
             exportBindingSource.Add(
               new ExportCommandBindings(
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.ScriptCommands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Explorer),
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.ScriptCommands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Explorer),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.ScriptCommands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseTab, this, (ch) => ch.ScriptCommands.CloseTab, ParameterDicConverter, ScriptBindingScope.Explorer)
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.Commands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.Commands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.Commands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseTab, this, (ch) => ch.Commands.CloseTab, ParameterDicConverter, ScriptBindingScope.Explorer)
                 //ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseWindow, this, (ch) => ch.ScriptCommands.Close, ParameterDicConverter, ScriptBindingScope.Explorer)
               ));
             exportBindingSource.AddRange(additionalBindingExportSource);

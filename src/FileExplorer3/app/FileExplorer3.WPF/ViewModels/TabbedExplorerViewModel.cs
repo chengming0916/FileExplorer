@@ -48,12 +48,12 @@ namespace FileExplorer.WPF.ViewModels
             ExplorerViewModel expvm = new ExplorerViewModel(initializer);
             expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
-            expvm.Commands.ScriptCommands.CloseTab =
+            expvm.Commands.Commands.CloseTab =
                 WPFScriptCommands.AssignVariableToParameter("Explorer", TabbedExplorer.CloseTab(this));
-            expvm.FileList.Commands.ScriptCommands.OpenTab =
+            expvm.FileList.Commands.Commands.OpenTab =
                 FileList.IfSelection(evm => evm.Count() >= 1,
                     FileList.AssignSelectionToParameter(TabbedExplorer.OpenTab(this)), ResultCommand.NoError);
-            expvm.DirectoryTree.Commands.ScriptCommands.OpenTab =
+            expvm.DirectoryTree.Commands.Commands.OpenTab =
                     DirectoryTree.AssignSelectionToParameter(TabbedExplorer.OpenTab(this));
 
             ActivateItem(expvm);

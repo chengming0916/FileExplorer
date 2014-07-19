@@ -95,7 +95,7 @@ namespace FileExplorer.Script
                     {
                         Progress<Defines.ProgressEventArgs> progress1 = new Progress<Defines.ProgressEventArgs>(
                             (pea) =>
-                            {
+                            {                                
                                 if (!String.IsNullOrEmpty(pea.Message))
                                     progress.Report(TransferProgress.SetMessage(Defines.ProgressType.Running, pea.Message));
                                 if (!String.IsNullOrEmpty(pea.File))

@@ -68,12 +68,12 @@ namespace FileExplorer.Models
             _profile = profile;
             _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
                 new FileSystemInfoProfile(profile.Events());
-            _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);
+            _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);            
 
             TransferCommand =
                new FileExplorer.Script.TransferCommand((effect, source, destDir) =>
-                   source.Profile is IDiskProfile ?
-                       IOScriptCommands.Transfer(source, destDir, effect == DragDropEffects.Move)
+                   source.Profile is IDiskProfile ?                      
+                       IOScriptCommands.DiskTransfer(source, destDir, effect == DragDropEffects.Move, true)                       
                        : ResultCommand.Error(new NotSupportedException())
                    );
         }
@@ -165,9 +165,9 @@ namespace FileExplorer.Models
             if (entries.Any(e => e.Equals(destDir)))
                 return DragDropEffects.None;
 
-            if (MessageBox.Show(
-                String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
-                entries.Count(), fileName, allowedEffects), "FileBasedDragDropHandler.OnDropCompleted", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //if (MessageBox.Show(
+            //    String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
+            //    entries.Count(), fileName, allowedEffects), "FileBasedDragDropHandler.OnDropCompleted", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 DragDropEffects effect = allowedEffects.HasFlag(DragDropEffects.Copy) ? DragDropEffects.Copy :
                     allowedEffects.HasFlag(DragDropEffects.Move) ? DragDropEffects.Move : DragDropEffects.None;
@@ -181,7 +181,9 @@ namespace FileExplorer.Models
                         { "Source" , entries.ToArray() },
                         { "Dest" , destDir },
                         {"DragDropEffects", effect }
-                    }, TransferCommand);
+                    }, 
+                    WPFScriptCommands.ShowProgress(effect.ToString(), 
+                        TransferCommand, true));
                 return effect;
             };
             return DragDropEffects.None;

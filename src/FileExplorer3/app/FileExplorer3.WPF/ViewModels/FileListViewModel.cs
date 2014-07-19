@@ -67,7 +67,7 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Cosntructor
 
-        public FileListViewModel(IEventAggregator events, ISidebarViewModel sidebar = null)
+        public FileListViewModel(IWindowManager windowManager, IEventAggregator events, ISidebarViewModel sidebar = null)
         {
             Events = events;
             var entryHelper = new EntriesHelper<IEntryViewModel>(loadEntriesTask) { ClearBeforeLoad = false };
@@ -94,7 +94,7 @@ namespace FileExplorer.WPF.ViewModels
                     if (e.PropertyName == "IsVisible")
                         NotifyOfPropertyChange(() => ShowSidebar);
                 };
-            Commands = new FileListCommandManager(this, events, Selection, Sidebar.Commands);
+            Commands = new FileListCommandManager(this, windowManager, events, Selection, Sidebar.Commands);
         }
 
         #endregion

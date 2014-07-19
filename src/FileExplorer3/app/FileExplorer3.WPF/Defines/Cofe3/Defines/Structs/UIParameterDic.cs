@@ -12,7 +12,7 @@ using FileExplorer.WPF.BaseControls;
 
 namespace FileExplorer.Script
 {
-    public static partial class ExtensionMethods
+    public static partial class WPFExtensionMethods
     {
         public static DragInputProcessor GetDragInputProcessor(this UIParameterDic dic)
         {

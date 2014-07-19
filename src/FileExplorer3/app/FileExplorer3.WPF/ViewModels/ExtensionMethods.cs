@@ -16,7 +16,7 @@ using FileExplorer.Models;
 
 namespace FileExplorer.Script
 {
-    public static partial class ExtensionMethods
+    public static partial class WPFExtensionMethods
     {
         public static Func<ParameterDic, IEntryModel[]> GetCurrentDirectoryFunc =
            pd => pd.ContainsKey("DirectoryTree") && pd["DirectoryTree"] is IDirectoryTreeViewModel ?

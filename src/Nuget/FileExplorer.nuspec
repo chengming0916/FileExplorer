@@ -14,6 +14,7 @@
     <tags>WPF Shell File Explorer</tags>
     <dependencies>
       <dependency id="Caliburn.Micro" version="2.0.0" />
+      <dependency id="MetroLog" version="0.8.6" />      
       <dependency id="Google.Apis.Drive.v2" version="1.8.1" />
       <dependency id="DropNet" version="1.9.6" />
       <dependency id="ExifLib" version="1.5.1" />
