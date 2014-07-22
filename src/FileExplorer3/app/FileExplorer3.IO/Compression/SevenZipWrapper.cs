@@ -414,8 +414,8 @@ namespace FileExplorer.IO.Compress
             OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat("abc" + type);
             Dictionary<int, string> fileDictionary = new Dictionary<int, string>();
 
-            //foreach (var foundItem in lookup(getExtractor(stream, null), filter))
-            //    fileDictionary.Add(foundItem.Value1, null);
+            foreach (var foundItem in lookup(getExtractor(stream, null), filter))
+                fileDictionary.Add(foundItem.Value1, null);
 
             if (fileDictionary.Count > 0)
             {
