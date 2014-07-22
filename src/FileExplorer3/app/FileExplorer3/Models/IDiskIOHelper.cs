@@ -16,7 +16,10 @@ namespace FileExplorer.Models
         IDiskPathMapper Mapper { get; }
         IDiskProfile Profile { get; }
 
+        [Obsolete]
         IScriptCommand GetTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal);
+
+        IScriptCommand GetTransferCommand(string sourceKey, string destinationKey, bool removeOriginal, IScriptCommand nextCommand);
 
         Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileExplorer.Defines.FileAccess access, CancellationToken ct);
         Task DeleteAsync(IEntryModel entryModel, CancellationToken ct);

@@ -62,11 +62,10 @@ namespace FileExplorer.Models.SevenZipSharp
 
                     bool isRoot = appliedModels.All(em => em is SzsRootModel);
                     Func<IEntryModel, IScriptCommand, IScriptCommand> transferCommandFunc =
-                        (destModel, thenCommand) => ScriptCommands.ForEach(appliedModels, am =>
-                                     isRoot ?                                                         
-                                        IOScriptCommands.DiskTransferChild(am, destModel, false, true) :
-                                        IOScriptCommands.DiskTransfer(am, destModel),
-                                        thenCommand);
+                        (destModel, thenCommand) => 
+                                     isRoot ?
+                                        IOScriptCommands.DiskTransferChild(appliedModels, destModel, false, true, thenCommand) :
+                                        IOScriptCommands.DiskTransfer(appliedModels, destModel, false, true, thenCommand);
 
 
                     //Extract to ...
@@ -196,11 +195,9 @@ namespace FileExplorer.Models.SevenZipSharp
                         subCommands.Add(new CommandModel(
                           WPFScriptCommands.SaveFilePicker(_initializer, "Zip archives (.zip)|*.zip|7z archives (.7z)|*.7z", firstArchivePath,
                               pmi => WPFScriptCommands.ShowProgress("Compress",
-                                  IOScriptCommands.ParseOrCreateArchive(pmi.Profile as IDiskProfile, pmi.FileName,
-                               pm => ScriptCommands.ForEach(appliedModels,
-                                  am => IOScriptCommands.DiskTransfer(am, pm, false, true),
-                                      WPFScriptCommands.HideProgress()))),
-                                        ResultCommand.NoError))
+                                  IOScriptCommands.ParseOrCreateArchive(pmi.Profile as IDiskProfile, pmi.FileName,                               
+                                  pm => IOScriptCommands.DiskTransfer(appliedModels, pm, false, true))), 
+                                        ResultCommand.NoError)) //ShowFilePicker.Cancel
                         {
                             Header = "Compress to ...",
                             IsEnabled = true,
@@ -212,9 +209,8 @@ namespace FileExplorer.Models.SevenZipSharp
                                 subCommands.Add(new CommandModel(
                                     WPFScriptCommands.ShowProgress("Compress",
                                         IOScriptCommands.ParseOrCreateArchive(firstProfile, destPath,
-                                            pm => ScriptCommands.ForEach(appliedModels,
-                                                am => IOScriptCommands.DiskTransfer(am, pm, false, true,
-                                            null), WPFScriptCommands.HideProgress()))))
+                                            pm => IOScriptCommands.DiskTransfer(appliedModels, pm, false, true,
+                                            null))))
                                 {
                                     Header = "Compress to " + destName,
                                     IsEnabled = true,

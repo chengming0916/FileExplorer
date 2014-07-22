@@ -89,6 +89,11 @@ namespace FileExplorer.Models.SevenZipSharp
             return new SzsBatchTransferScriptCommand(srcModel, destDirModel, removeOriginal);                
         }
 
+        public override IScriptCommand GetTransferCommand(string sourceKey, string destinationKey, bool removeOriginal, IScriptCommand nextCommand)
+        {
+            return IOScriptCommands.SzsDiskTransfer(sourceKey, destinationKey, removeOriginal, nextCommand);
+        }
+
         public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)
         {
             string parentPath = Profile.Path.GetDirectoryName(fullPath);

@@ -25,10 +25,29 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
+
+
+        public static IScriptCommand NotifyChanged(ChangeType changeType, IEntryModel srcEntry, IEntryModel destEntry, 
+            IScriptCommand nextCommand = null)
+        {
+            return new NotifyChanged()
+            {
+                ChangeType = changeType,
+                SourceProfile = srcEntry == null ? null : srcEntry.Profile,
+                SourceEntryKey = srcEntry == null ? null : srcEntry.FullPath,
+                DestinationProfile = destEntry == null ? null : destEntry.Profile,
+                DestinationEntryKey = destEntry == null ? null : destEntry.FullPath,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
     }
 
     public class NotifyChanged : ScriptCommandBase
     {
+        public IProfile SourceProfile { get; set; }
+
+        public IProfile DestinationProfile { get; set; }
+
         /// <summary>
         /// Profile used report source changed, default = null.
         /// </summary>
@@ -68,9 +87,9 @@ namespace FileExplorer.Script
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            IProfile sourceProfile = pm.GetValue<IProfile>(SourceProfileKey) ??
+            IProfile sourceProfile = SourceProfile ?? pm.GetValue<IProfile>(SourceProfileKey) ??
                 pm.GetValue<IEntryModel>(SourceEntryKey, NullEntryModel.Instance).Profile;
-            IProfile destinationProfile = pm.GetValue<IProfile>(DestinationProfileKey) ??
+            IProfile destinationProfile = DestinationProfile ?? pm.GetValue<IProfile>(DestinationProfileKey) ??
                 pm.GetValue<IEntryModel>(DestinationEntryKey, NullEntryModel.Instance).Profile;
             string sourcePath = pm.GetValue<string>(SourceEntryKey) ??
                 pm.GetValue<IEntryModel>(SourceEntryKey, NullEntryModel.Instance).FullPath;
