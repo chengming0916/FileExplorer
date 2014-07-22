@@ -67,7 +67,7 @@ namespace FileExplorer.WPF.ViewModels
 
                     string src = Source == null ? null : SourcePathHelper == null ? Source : SourcePathHelper.GetFileName(Source);
                     string dest = Destination == null ? null : DestinationPathHelper == null ? Destination : DestinationPathHelper.GetDirectoryName(Destination);
-                    Message = String.Format("From [b]{0}[/b] To [b]{1}[/b]", src, dest);
+                    Message = value.Message ?? String.Format("From [b]{0}[/b] To [b]{1}[/b]", src, dest);
                     IsCancelEnabled = true;
                     break;
                 case ProgressType.Error :

@@ -96,13 +96,20 @@ namespace FileExplorer.Script
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            IEntryModel entryModel = pm.GetValue<IEntryModel>(EntryKey);
-            if (entryModel == null || !entryModel.IsDirectory)
-                return ResultCommand.Error(new ArgumentException(EntryKey + " is not found or not a directory IEntryModel"));
+            IEntryModel[] entryModel;
+            try
+            {
+                entryModel = await pm.GetValueAsEntryModelArrayAsync(EntryKey);
+            }
+            catch
+            {
+                return ResultCommand.Error(new ArgumentException(EntryKey + " is not found or not a directory IEntryModel or IEntryModel[]"));
+            }
             string masks = pm.ReplaceVariableInsideBracketed(MaskKey);
+            var filter = createFilter(ListOptions, masks);
 
-            IEntryModel[] listItems = (await entryModel.Profile.ListAsync(entryModel, pm.CancellationToken,
-                createFilter(ListOptions, masks))).ToArray();
+
+            IEntryModel[] listItems = (await EntryUtils.ListAsync(entryModel, pm.CancellationToken, filter, false)).ToArray();
 
             logger.Debug(String.Format("{0} = IEntryModel[{1}]", DestinationKey, listItems.Length));
             pm.SetValue(DestinationKey, listItems);

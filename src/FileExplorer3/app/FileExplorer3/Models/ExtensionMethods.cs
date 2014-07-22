@@ -73,6 +73,40 @@ namespace FileExplorer.Models
             }
         }
 
+        public static async Task<IList<IEntryModel>> ListRecursiveAsync(this IProfile profile, IEntryModel entry,
+            CancellationToken ct, Func<IEntryModel, bool> filter,
+            Func<IEntryModel, bool> contLookupFilter, bool refresh = false)
+        {
+            contLookupFilter = contLookupFilter ?? (em => true);
+
+            IList<IEntryModel> retList =
+                await profile.ListAsync(entry, ct, filter, refresh);
+            List<IEntryModel> subsubItemList = new List<IEntryModel>();
+
+            if (!ct.IsCancellationRequested)
+                foreach (var subEntry in 
+                    await profile.ListAsync(entry, ct, contLookupFilter, refresh))
+                    subsubItemList.AddRange(await profile.ListRecursiveAsync(subEntry, ct, filter, contLookupFilter, refresh));
+
+            return retList.Concat(subsubItemList).ToList();
+        }
+
+        
+
+        public static async Task<IList<IEntryModel>> ListRecursiveAsync(this IProfile profile, IEntryModel[] entries,
+          CancellationToken ct, Func<IEntryModel, bool> filter,
+            Func<IEntryModel, bool> contLookupFilter = null,
+            bool refresh = false)
+        {
+            List<IEntryModel> retList = new List<IEntryModel>();
+            contLookupFilter = contLookupFilter ?? (em => true);
+
+            foreach (var entry in entries)
+                retList.AddRange(await profile.ListRecursiveAsync(entry, ct, filter, contLookupFilter, refresh));
+
+            return retList;
+        }
+
         public static IEntryModel Convert(this IConverterProfile[] converterProfiles, IEntryModel entryModel)
         {
             IEntryModel retVal = entryModel;

@@ -16,11 +16,12 @@ namespace FileExplorer.IO
         protected DiskIOHelperBase(IDiskProfile profile)
         {
             Mapper = new IODiskPatheMapper();
-            Profile = profile;
+            Profile = profile;            
         }
 
         public IDiskProfile Profile { get; protected set; }
-        public IDiskPathMapper Mapper { get; protected set; }
+        public IDiskPathMapper Mapper { get; protected set; }        
+        
 
         public virtual Task<Stream> OpenStreamAsync(IEntryModel entryModel,
             FileExplorer.Defines.FileAccess access, CancellationToken ct)
@@ -44,10 +45,16 @@ namespace FileExplorer.IO
         }
 
 
-
+        [Obsolete]
         public virtual IScriptCommand GetTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal)
         {
             return IOScriptCommands.DiskTransfer(srcModel, destDirModel, removeOriginal, false);
+        }
+
+        public virtual IScriptCommand GetTransferCommand(string sourceKey, string destinationKey, 
+            bool removeOriginal, IScriptCommand nextCommand)
+        {
+            return IOScriptCommands.DiskTransfer(sourceKey, destinationKey, removeOriginal, false, nextCommand);
         }
     }
 }

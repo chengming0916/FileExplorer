@@ -58,7 +58,7 @@ namespace FileExplorer.Models
     public class FileBasedDragDropHandler : IDragDropHandler
     {
         private IProfile _fsiProfile; //For loading drag items.        
-        public IScriptCommand TransferCommand { get; set; }
+        public  DiskTransfer TransferCommand { get; set; }        
 
         private IProfile _profile;
         private Func<IEntryModel, bool> _getIsVirtualFunc;
@@ -68,14 +68,15 @@ namespace FileExplorer.Models
             _profile = profile;
             _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
                 new FileSystemInfoProfile(profile.Events());
-            _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);            
+            _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);
 
             TransferCommand =
-               new FileExplorer.Script.TransferCommand((effect, source, destDir) =>
-                   source.Profile is IDiskProfile ?                      
-                       IOScriptCommands.DiskTransfer(source, destDir, effect == DragDropEffects.Move, true)                       
-                       : ResultCommand.Error(new NotSupportedException())
-                   );
+                new DiskTransfer();
+               //new FileExplorer.Script.TransferCommand((effect, source, destDir) =>
+               //    source.Profile is IDiskProfile ?                      
+               //        IOScriptCommands.DiskTransfer(source, destDir, effect == DragDropEffects.Move, true)                       
+               //        : ResultCommand.Error(new NotSupportedException())
+               //    );
         }
 
         public virtual async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
@@ -176,14 +177,7 @@ namespace FileExplorer.Models
                     return DragDropEffects.None;
                 
                 ScriptRunner.RunScriptAsync(
-                    new ParameterDic()
-                    {
-                        { "Source" , entries.ToArray() },
-                        { "Dest" , destDir },
-                        {"DragDropEffects", effect }
-                    }, 
-                    WPFScriptCommands.ShowProgress(effect.ToString(), 
-                        TransferCommand, true));
+                    IOScriptCommands.DiskTransfer(entries.ToArray(), destDir, effect == DragDropEffects.Move, true));
                 return effect;
             };
             return DragDropEffects.None;

@@ -77,6 +77,8 @@
     <Compile Include="Scripts\v2\List.cs" />
     <Compile Include="Scripts\v2\NotifyChanged.cs" />
     <Compile Include="Scripts\v2\ParsePath.cs" />
+    <Compile Include="Utils\EntryUtils.cs" />
+    <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\FileNameGenerator.cs" />
     <Compile Include="Utils\ProgressConverter.cs" />
     <Compile Include="Utils\StringUtils.cs" />
