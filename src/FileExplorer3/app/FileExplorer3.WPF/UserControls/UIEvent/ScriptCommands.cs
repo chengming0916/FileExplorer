@@ -39,6 +39,7 @@ namespace FileExplorer.Script
        
     }
 
+    [Obsolete("Use ScriptCommands.PrintDebug")]
     public class DebugScriptCommand : IScriptCommand
     {
         public enum HandleType { printOrgSource, printSelector, prepareDataObject }
@@ -105,6 +106,12 @@ namespace FileExplorer.Script
         }
         public bool ContinueOnCaptureContext { get { return false; } }
 
+
+        public ScriptCommandBase NextCommand
+        {
+            get;
+            set;
+        }
     }
 
 

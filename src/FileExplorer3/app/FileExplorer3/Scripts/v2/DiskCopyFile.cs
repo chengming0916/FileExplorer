@@ -27,7 +27,7 @@ namespace FileExplorer.Script
                 CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
                     CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
                         CoreScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}",
-                        CoreScriptCommands.NotifyChanged(ChangeType.Created, null, "{DiskCopyFile.Source}", null, "{DiskCopyFile.Destination}",
+                        CoreScriptCommands.notifyChanged(ChangeType.Created, null, "{DiskCopyFile.Source}", null, "{DiskCopyFile.Destination}",
                             ScriptCommands.Reset(nextCommand, "{DiskCopyFile.Source}", "{DiskCopyFile.Destination}")))))),
               ResultCommand.Error(new FileNotFoundException(sourceFileVariable)));
         }
@@ -46,7 +46,7 @@ namespace FileExplorer.Script
                     CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
                    CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
                        CoreScriptCommands.CopyStream("{CopyStream-Source}", "{CopyStream-Dest}",
-                       CoreScriptCommands.NotifyChanged(ChangeType.Created, null, "{DiskCopyFile.Source}", null, "{DiskCopyFile.Destination}",
+                       CoreScriptCommands.notifyChanged(ChangeType.Created, null, "{DiskCopyFile.Source}", null, "{DiskCopyFile.Destination}",
                            ScriptCommands.Reset(nextCommand, "{DiskCopyFile-Source}", "{DiskCopyFile-Dest}")))))));
         }
     }

@@ -88,6 +88,11 @@ namespace FileExplorer.Script
             get { return _continueOnCaptureContext; }
             protected set { _continueOnCaptureContext = value; }
         }
+
+        public ScriptCommandBase NextCommand
+        {
+            get { return _ifTrueCommand as ScriptCommandBase; }
+        }
     }
 
     public class ForEachCommand<T> : ScriptCommandBase
@@ -198,7 +203,7 @@ namespace FileExplorer.Script
 
 
 
-
+    [Obsolete("Use ResultCommand")]
     public class NoScriptCommand : IScriptCommand
     {
 
@@ -224,5 +229,10 @@ namespace FileExplorer.Script
 
         public bool ContinueOnCaptureContext { get { return false; } }
 
+
+        public ScriptCommandBase NextCommand
+        {
+            get { return null; }
+        }
     }
 }

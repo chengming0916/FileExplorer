@@ -74,12 +74,17 @@ namespace FileExplorer.Script
     /// <summary>
     /// A script command that cannot execute.
     /// </summary>
-    public class NullScriptCommand : IScriptCommand
+    [Obsolete("Use ResultCommand")]
+    public class NullScriptCommand : ScriptCommandBase
     {
-
         public static NullScriptCommand Instance = new NullScriptCommand();
 
-        public string CommandKey { get { return "Null"; } }        
+        public NullScriptCommand()
+            : base("Null")
+        {
+
+        }
+        
         public IScriptCommand Execute(ParameterDic pm)
         {
             return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
@@ -95,7 +100,6 @@ namespace FileExplorer.Script
             return false;
         }
 
-        public bool ContinueOnCaptureContext { get { return false; }}
         
     }
 

@@ -9,6 +9,8 @@ namespace FileExplorer.Script
 
     public interface IScriptCommand
     {
+        ScriptCommandBase NextCommand { get; }
+
         /// <summary>
         /// Call ExecuteAsync() calls ConfigureAwait(ContinueOnCaptureContext), if command is UI command, set to true.
         /// </summary>

@@ -12,8 +12,9 @@ namespace FileExplorer.Script
 {
     public static partial class CoreScriptCommands
     {
-        public static IScriptCommand NotifyChanged(ChangeType changeType, string sourceProfileKey = null, string sourceEntryKey = null,
-         string destinationProfileKey = "Profile", string destinationEntryKey = "Entry", IScriptCommand nextCommand = null)
+        private static IScriptCommand notifyChanged(
+            ChangeType changeType, object sourceProfileKey, string sourceEntryKey,
+         object destinationProfileKey, string destinationEntryKey, IScriptCommand nextCommand)
         {
             return new NotifyChanged()
             {
@@ -26,45 +27,77 @@ namespace FileExplorer.Script
             };
         }
 
-
-        public static IScriptCommand NotifyChanged(ChangeType changeType, IEntryModel srcEntry, IEntryModel destEntry, 
-            IScriptCommand nextCommand = null)
+        public static IScriptCommand NotifyMoved(object sourceProfileKey = null, string sourceEntryKey = null,
+         object destinationProfileKey = null, string destinationEntryKey = "Entry", IScriptCommand nextCommand = null)
         {
-            return new NotifyChanged()
-            {
-                ChangeType = changeType,
-                SourceProfile = srcEntry == null ? null : srcEntry.Profile,
-                SourceEntryKey = srcEntry == null ? null : srcEntry.FullPath,
-                DestinationProfile = destEntry == null ? null : destEntry.Profile,
-                DestinationEntryKey = destEntry == null ? null : destEntry.FullPath,
-                NextCommand = (ScriptCommandBase)nextCommand
-            };
+            return notifyChanged(ChangeType.Moved, sourceProfileKey, sourceEntryKey, 
+                destinationProfileKey, destinationEntryKey, nextCommand);
         }
+
+        public static IScriptCommand NotifyCreated(object profileKey = null, 
+            string entryKey = "Entry", IScriptCommand nextCommand = null)
+        {
+            return notifyChanged(ChangeType.Created, null, null, profileKey, entryKey, nextCommand);
+        }
+
+        public static IScriptCommand NotifyDeleted(object profileKey = null,
+           string entryKey = "Entry", IScriptCommand nextCommand = null)
+        {
+            return notifyChanged(ChangeType.Deleted, null, null, profileKey, entryKey, nextCommand);
+        }
+
+        public static IScriptCommand NotifyChanged(object profileKey = null,
+          string entryKey = "Entry", IScriptCommand nextCommand = null)
+        {
+            return notifyChanged(ChangeType.Changed, null, null, profileKey, entryKey, nextCommand);
+        }
+
+
+        public static IScriptCommand NotifyMoved(IEntryModel srcEntry, IEntryModel destEntry, IScriptCommand nextCommand = null)
+        {
+            srcEntry = srcEntry ?? NullEntryModel.Instance;
+            return NotifyMoved(srcEntry.Profile, srcEntry.FullPath, destEntry.Profile, destEntry.FullPath, nextCommand);
+        }
+
+        public static IScriptCommand NotifyCreated(IEntryModel entry, IScriptCommand nextCommand = null)
+        {
+            entry = entry ?? NullEntryModel.Instance;
+            return NotifyCreated(entry, nextCommand);
+        }
+
+        public static IScriptCommand NotifyDeleted(IEntryModel entry, IScriptCommand nextCommand = null)
+        {
+            entry = entry ?? NullEntryModel.Instance;
+            return NotifyDeleted(entry, nextCommand);
+        }
+
+        public static IScriptCommand NotifyChanged(IEntryModel entry, IScriptCommand nextCommand = null)
+        {
+            entry = entry ?? NullEntryModel.Instance;
+            return NotifyChanged(entry, nextCommand);
+        }
+
     }
 
     public class NotifyChanged : ScriptCommandBase
     {
-        public IProfile SourceProfile { get; set; }
-
-        public IProfile DestinationProfile { get; set; }
-
         /// <summary>
-        /// Profile used report source changed, default = null.
+        /// Profile used report source changed, can be a key or actual IProfile, default = null.
         /// </summary>
-        public string SourceProfileKey { get; set; }
+        public object SourceProfileKey { get; set; }
 
         /// <summary>
-        /// Can be either a path (prase from sourceProfile) or IEntryModel, default = null.
+        /// Can be either a csv path (prase from sourceProfile) or IEntryModel, default = null.
         /// </summary>
-        public string SourceEntryKey { get; set; }
+        public string SourceEntryKey { get; set; }        
 
         /// <summary>
-        /// Profile used report destination changed, default = "Profile".
+        /// Profile used report destination changed, can be a key or actual IProfile, default = "Profile".
         /// </summary>
-        public string DestinationProfileKey { get; set; }
+        public object DestinationProfileKey { get; set; }
 
         /// <summary>
-        /// Can be either a path (prase from sourceProfile) or IEntryModel, default = "Entry".
+        /// Can be either a csv path (prase from sourceProfile) or IEntryModel, default = "Entry".
         /// </summary>
         public string DestinationEntryKey { get; set; }
 
@@ -87,28 +120,35 @@ namespace FileExplorer.Script
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            IProfile sourceProfile = SourceProfile ?? pm.GetValue<IProfile>(SourceProfileKey) ??
+            IProfile sourceProfile = SourceProfileKey as IProfile ?? pm.GetValue<IProfile>(SourceProfileKey as string) ??
                 pm.GetValue<IEntryModel>(SourceEntryKey, NullEntryModel.Instance).Profile;
-            IProfile destinationProfile = DestinationProfile ?? pm.GetValue<IProfile>(DestinationProfileKey) ??
+            IProfile destinationProfile = DestinationProfileKey as IProfile ?? pm.GetValue<IProfile>(DestinationProfileKey as string) ??
                 pm.GetValue<IEntryModel>(DestinationEntryKey, NullEntryModel.Instance).Profile;
+            
             string sourcePath = pm.GetValue<string>(SourceEntryKey) ??
                 pm.GetValue<IEntryModel>(SourceEntryKey, NullEntryModel.Instance).FullPath;
+            string[] sourcePaths = sourcePath == null ? new string[] {} : 
+                sourcePath.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
             string destinationPath = pm.GetValue<string>(DestinationEntryKey) ??
                pm.GetValue<IEntryModel>(DestinationEntryKey, NullEntryModel.Instance).FullPath;
+            string[] destinationPaths =
+                destinationPath == null ? new string[] { } :
+                destinationPath.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             logger.Info(String.Format("({0}) {1} -> {2}", ChangeType, sourcePath, destinationPath));
             if (ChangeType == ChangeType.Moved && sourceProfile != null && destinationProfile != null && sourcePath != null)
             {
                 if (sourceProfile != destinationProfile)
                 {
-                    sourceProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType.Deleted, sourcePath));
-                    destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType.Created, destinationPath));
+                    sourceProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType.Deleted, sourcePaths));
+                    destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType.Created, destinationPaths));
                 }
                 else
                     destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(destinationPath, sourcePath));
             }
             else
-                destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType, destinationPath));
+                destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType, destinationPaths));
 
             return NextCommand;
         }

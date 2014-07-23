@@ -142,7 +142,7 @@ namespace FileExplorer.Script
             logger.Info(String.Format("{0} = {1} ({2})", DestinationKey, createddModel.FullPath, IsFolder ? "Folder" : "File"));
             pm.SetValue(DestinationKey, createddModel);
 
-            return CoreScriptCommands.NotifyChanged(ChangeType.Created, null, null, null, DestinationKey, NextCommand);
+            return CoreScriptCommands.NotifyCreated(null, DestinationKey, NextCommand);
         }
     }
 }
