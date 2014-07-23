@@ -336,6 +336,48 @@ namespace FileExplorer.IO.Compress
         }
         #endregion
 
+        #region ModifyArchive
+
+        public void Modify(string archivePath, string orginalPath, string destName, bool isFolder,
+            IProgress<FileExplorer.Defines.ProgressEventArgs> progress = null)
+        {
+            OutArchiveFormat archiveFormat = SevenZipWrapper.getArchiveFormat(archivePath);
+            string srcParentPath = FileExplorer.Models.PathHelper.Disk.GetDirectoryName(orginalPath);
+            string destPath = FileExplorer.Models.PathHelper.Disk.Combine(srcParentPath, destName);
+            orginalPath = orginalPath.TrimEnd('\\');
+
+            var dic = lookup(getExtractor(archivePath), isFolder ? orginalPath + "\\*" : orginalPath).ToDictionary(tup => tup.Value1,
+                tup => FileExplorer.Models.PathHelper.Disk.Combine(destPath,
+                    tup.Value2.Substring(orginalPath.Length)));
+            if (dic.Count() > 0)
+            {
+                SevenZipCompressor compressor = getCompressor(archiveFormat, null, progress);
+                compressor.ModifyArchive(archivePath, dic);
+            }
+        }
+
+        public bool Modify(string type, Stream stream,
+            string orginalPath, string destName, bool isFolder, IProgress<FileExplorer.Defines.ProgressEventArgs> progress = null)
+        {
+            var arcFormat = getArchiveFormat("abc." + type);
+            SevenZipCompressor compressor = getCompressor(arcFormat, null, progress);
+
+            string tempFile = null;
+
+            using (var tempStream = TempStreamUtils.NewTempStream(out tempFile, type))
+                StreamUtils.CopyStream(stream, tempStream, true, true, false);
+
+            Modify(tempFile, orginalPath, destName, isFolder, progress);
+
+            using (var tempStream = new FileStream(tempFile, FileMode.Open))
+                StreamUtils.CopyStream(tempStream, stream, false, true, true);
+
+
+            return true;
+        }
+
+        #endregion
+
         #region Compress
 
         public void CompressMultiple(string archivePath, Dictionary<string, Stream> streamDic,
@@ -361,6 +403,7 @@ namespace FileExplorer.IO.Compress
         //{
         //    return CompressMultiple(type, stream, new Dictionary<string, Stream>() { { fileName, fileStream } });
         //}
+
 
 
 

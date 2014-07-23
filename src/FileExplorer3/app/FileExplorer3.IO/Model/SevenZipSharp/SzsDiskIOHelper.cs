@@ -26,11 +26,27 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public override async Task<IEntryModel> RenameAsync(IEntryModel entryModel, string newName, CancellationToken ct)
         {
-            throw new NotImplementedException();
-            //SevenZipWrapper wrapper = (Profile as SzsProfile).Wrapper;
-            //string destPath =  Profile.Path.Combine(Profile.Path.GetDirectoryName(entryModel.FullPath), newName);
+            SevenZipWrapper wrapper = (Profile as SzsProfile).Wrapper;
+            string destPath =  Profile.Path.Combine(Profile.Path.GetDirectoryName(entryModel.FullPath), newName);
 
-            //return await Profile.ParseAsync(destPath);
+            SzsProfile profile = Profile as SzsProfile;
+            ISzsItemModel szsEntryModel = entryModel as ISzsItemModel;
+            string type = profile.Path.GetExtension(szsEntryModel.Root.Name);
+
+            using (var releaser = await profile.WorkingLock.LockAsync())
+            using (var stream = await profile.DiskIO.OpenStreamAsync(szsEntryModel.Root, Defines.FileAccess.ReadWrite, ct))            
+                wrapper.Modify(type, stream, (entryModel as ISzsItemModel).RelativePath, newName,
+                    entryModel.IsDirectory && !(entryModel is SzsRootModel));
+
+            lock (profile.VirtualModels)
+            {
+                if (profile.VirtualModels.Contains(szsEntryModel))
+                    profile.VirtualModels.Remove(szsEntryModel);
+            }                
+
+            Profile.NotifyEntryChanges(this, destPath, Defines.ChangeType.Moved, entryModel.FullPath);
+
+            return await Profile.ParseAsync(destPath);
         }
 
         public override async Task DeleteAsync(IEntryModel entryModel, CancellationToken ct)
