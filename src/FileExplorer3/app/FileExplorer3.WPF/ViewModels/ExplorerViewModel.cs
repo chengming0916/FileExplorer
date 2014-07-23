@@ -162,7 +162,9 @@ namespace FileExplorer.WPF.ViewModels
         {
             try
             {
-                string[] paths = message.ParseNames.Select(p => p != null && p.Contains('\\') ?
+                string[] paths = message.ParseNames
+                    .Where(p => p != null)
+                    .Select(p => p.Contains('\\') ?
                         PathHelper.Disk.GetDirectoryName(p) : PathHelper.Web.GetDirectoryName(p))
                         .Distinct().ToArray();
 
@@ -195,7 +197,8 @@ namespace FileExplorer.WPF.ViewModels
 
         public void Handle(EntryChangedEvent message)
         {
-            Application.Current.Dispatcher.InvokeAsync(() => BroascastAsync(message));
+            if (Application.Current != null)
+                Application.Current.Dispatcher.InvokeAsync(() => BroascastAsync(message));
         }
 
         public void Handle(BroadcastEvent message)
@@ -213,7 +216,7 @@ namespace FileExplorer.WPF.ViewModels
             Queue<IScriptCommand> cmds = new Queue<IScriptCommand>();
 
             cmds.Enqueue(Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories));
-            
+
             if (message.Sender != this)
                 cmds.Enqueue(Explorer.GoTo(CurrentDirectory.EntryModel));
             else
@@ -249,7 +252,7 @@ namespace FileExplorer.WPF.ViewModels
 
             FileList.ProcessedEntries.SetFilters(
                 ColumnFilter.CreateNew<IEntryModel>(value, "FullPath",
-                e => e.IsDirectory || 
+                e => e.IsDirectory ||
                     PathFE.MatchFileMasks(
                     e.Profile.Path.GetFileName(e.FullPath), value)));
             NotifyOfPropertyChange(() => SelectedFilter);

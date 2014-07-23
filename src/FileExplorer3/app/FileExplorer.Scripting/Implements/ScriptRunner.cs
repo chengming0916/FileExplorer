@@ -93,6 +93,9 @@ namespace FileExplorer.Script
                 {
                     pd.Error = ex;
                     logger.Error("Error when running script", ex);
+                    var progress = pd.GetProgress();
+                    if (progress != null)
+                        progress.Report(Defines.TransferProgress.Error(ex));
                     throw ex;
                 }
             }
@@ -119,8 +122,9 @@ namespace FileExplorer.Script
                     {
                         pd.CommandHistory.Add(current.CommandKey);
                         //logger.Info("Running " + current.CommandKey);
+
                         var retCmd = await current.ExecuteAsync(pd)
-                            .ConfigureAwait(current.ContinueOnCaptureContext);
+                            .ConfigureAwait(current.RequireCaptureContext());
 
                         if (retCmd != null)
                         {
@@ -136,6 +140,9 @@ namespace FileExplorer.Script
                 {
                     pd.Error = ex;
                     logger.Error("Error when running script", ex);
+                    var progress = pd.GetProgress();
+                    if (progress != null)
+                        progress.Report(Defines.TransferProgress.Error(ex));
                     throw ex;
                 }
 

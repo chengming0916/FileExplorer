@@ -150,6 +150,9 @@ namespace FileExplorer.Models
 
         public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
         {
+            if (entries.Any(e => e.Equals(destDir) || e.Parent.Equals(destDir)))
+                return QueryDropResult.None;
+
             if (destDir.IsDirectory)
                 return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
             else return QueryDropResult.None;
@@ -163,8 +166,10 @@ namespace FileExplorer.Models
 
             if (entries.Count() == 0)
                 return DragDropEffects.None;
-            if (entries.Any(e => e.Equals(destDir)))
+            if (entries.Any(e => e.Equals(destDir) || e.Parent.Equals(destDir)))
                 return DragDropEffects.None;
+            
+
 
             //if (MessageBox.Show(
             //    String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
@@ -177,7 +182,8 @@ namespace FileExplorer.Models
                     return DragDropEffects.None;
                 
                 ScriptRunner.RunScriptAsync(
-                    IOScriptCommands.DiskTransfer(entries.ToArray(), destDir, effect == DragDropEffects.Move, true));
+                    WPFScriptCommands.ShowProgress(effect.ToString(), 
+                    IOScriptCommands.DiskTransfer(entries.ToArray(), destDir, effect == DragDropEffects.Move, true), true));
                 return effect;
             };
             return DragDropEffects.None;
