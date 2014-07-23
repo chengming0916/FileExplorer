@@ -8,12 +8,12 @@ namespace FileExplorer.Models
 {
 
 
- 
+
     public class PathHelper : IPathHelper
     {
         public static IPathHelper Disk = new PathHelper('\\', p => p.Contains(":\\"));
         public static IPathHelper Web = new PathHelper('/', p => p.Contains("://"));
-        public static IPathHelper Auto(string path) 
+        public static IPathHelper Auto(string path)
         { return path.Contains("/") ? Web : Disk; }
         #region Constructor
 
@@ -36,12 +36,13 @@ namespace FileExplorer.Models
             string retVal = path1;
 
             foreach (var p in paths)
-            {
-                if (_isfullPathFunc(p))
-                    retVal = p;
-                else
-                    retVal = retVal.TrimEnd(_separator) + _separator + p.TrimStart(_separator);
-            }
+                if (!String.IsNullOrEmpty(p))
+                {
+                    if (_isfullPathFunc(p))
+                        retVal = p;
+                    else
+                        retVal = retVal.TrimEnd(_separator) + _separator + p.TrimStart(_separator);
+                }
             return retVal.TrimStart(_separator);
         }
 
@@ -68,8 +69,8 @@ namespace FileExplorer.Models
         {
             return System.IO.Path.GetExtension(GetFileName(path));
         }
-      
-     
+
+
 
         #endregion
 
@@ -93,6 +94,6 @@ namespace FileExplorer.Models
 
 
 
-       
+
     }
 }

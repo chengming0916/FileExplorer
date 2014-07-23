@@ -62,19 +62,19 @@ namespace FileExplorer.Script
         public static IScriptCommand NotifyCreated(IEntryModel entry, IScriptCommand nextCommand = null)
         {
             entry = entry ?? NullEntryModel.Instance;
-            return NotifyCreated(entry, nextCommand);
+            return NotifyCreated(entry.Profile, entry.FullPath, nextCommand);
         }
 
         public static IScriptCommand NotifyDeleted(IEntryModel entry, IScriptCommand nextCommand = null)
         {
             entry = entry ?? NullEntryModel.Instance;
-            return NotifyDeleted(entry, nextCommand);
+            return NotifyDeleted(entry.Profile, entry.FullPath, nextCommand);
         }
 
         public static IScriptCommand NotifyChanged(IEntryModel entry, IScriptCommand nextCommand = null)
         {
             entry = entry ?? NullEntryModel.Instance;
-            return NotifyChanged(entry, nextCommand);
+            return NotifyChanged(entry.Profile, entry.FullPath, nextCommand);
         }
 
     }

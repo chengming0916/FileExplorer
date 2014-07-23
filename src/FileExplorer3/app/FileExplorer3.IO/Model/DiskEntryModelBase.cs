@@ -24,6 +24,8 @@ namespace FileExplorer.IO
         {
             //string dirName = this.Profile.Path.GetDirectoryName(this.FullPath);
             DiskProfile.DiskIO.RenameAsync(this, newName, CancellationToken.None);
+            string newPath = DiskProfile.Path.Combine(DiskProfile.Path.GetDirectoryName(FullPath), newName);
+            DiskProfile.NotifyEntryChanges(this, newPath, FileExplorer.Defines.ChangeType.Moved, this.FullPath);
             //new ScriptRunner().RunAsync(new ParameterDic(), this.Rename(newName));
             //Then DiskIO raise NotifyChange, and refresh the ExplorerViewModel.
         }
