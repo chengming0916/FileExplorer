@@ -46,7 +46,7 @@ namespace FileExplorer.Script
 
 
 
-    public class IfScriptCommand : IScriptCommand
+    public class IfScriptCommand : ScriptCommandBase
     {
         private Func<ParameterDic, bool> _condition;
         private IScriptCommand _otherwiseCommand;
@@ -54,21 +54,18 @@ namespace FileExplorer.Script
         private bool _continueOnCaptureContext = false;
         public IfScriptCommand(Func<ParameterDic, bool> condition,
             IScriptCommand ifTrueCommand, IScriptCommand otherwiseCommand)
+            : base("IfScriptCommand")
         { _condition = condition; _ifTrueCommand = ifTrueCommand; _otherwiseCommand = otherwiseCommand; }
 
-        public string CommandKey
-        {
-            get { return "IfScriptCommand"; }
-        }
-
-        public IScriptCommand Execute(ParameterDic pm)
+        
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             if (_condition(pm))
                 return _ifTrueCommand;
             return _otherwiseCommand;
         }
 
-        public virtual bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(ParameterDic pm)
         {
             if (_condition != null && _condition(pm))
                 return _ifTrueCommand == null || _ifTrueCommand.CanExecute(pm);
@@ -76,23 +73,13 @@ namespace FileExplorer.Script
         }
 
 
-        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             if (_condition(pm))
                 return _ifTrueCommand;
             return _otherwiseCommand;
         }
 
-        public bool ContinueOnCaptureContext
-        {
-            get { return _continueOnCaptureContext; }
-            protected set { _continueOnCaptureContext = value; }
-        }
-
-        public ScriptCommandBase NextCommand
-        {
-            get { return _ifTrueCommand as ScriptCommandBase; }
-        }
     }
 
     public class ForEachCommand<T> : ScriptCommandBase

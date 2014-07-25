@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +21,11 @@ namespace FileExplorer.Script
                 SkipIfExists = skipIfExists,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
+        }
+
+        public static IScriptCommand ReassignToParameter(string sourceVariableKey = "{SourceVariable}", IScriptCommand nextCommand = null)
+        {
+            return Reassign(sourceVariableKey, null, "{Parameter}", false, nextCommand);
         }    
     }
 
@@ -37,7 +43,7 @@ namespace FileExplorer.Script
         /// Func[object,object] to convert SourceVariable to DestinationVariable, default = null.
         /// </summary>
         public string ValueConverterKey { get; set; }
-
+        
         /// <summary>
         /// Variable name to set to, default = "DestinationVariable".
         /// </summary>
@@ -61,8 +67,8 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            object value = pm.ReplaceVariableInsideBracketed(SourceVariableKey);
-
+            object value = pm.GetValue<object>(SourceVariableKey);
+            
             if (ValueConverterKey != null)
             {
                 Func<object, object> valueConverter = pm.GetValue<Func<object, object>>(ValueConverterKey);
@@ -72,7 +78,7 @@ namespace FileExplorer.Script
 
             pm.SetValue(DestinationVariableKey, value, SkipIfExists);
 
-            return base.Execute(pm);
+            return NextCommand;
         }
     }
 

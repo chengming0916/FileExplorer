@@ -12,6 +12,8 @@ namespace FileExplorer.Script
     [XmlInclude(typeof(ResultCommand))]    
     [XmlInclude(typeof(Print))]
     [XmlInclude(typeof(ForEach))]
+    [XmlInclude(typeof(IfValue))]
+    [XmlInclude(typeof(AssignValueConverter))]
     public class BaseScriptCommands
     {
 

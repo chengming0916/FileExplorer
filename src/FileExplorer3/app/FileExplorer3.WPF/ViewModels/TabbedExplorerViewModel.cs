@@ -40,7 +40,7 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Methods
 
-        public void OpenTab(IEntryModel model = null)
+        public IExplorerViewModel OpenTab(IEntryModel model = null)
         {
             var initializer = _initializer.Clone();
             if (model != null)
@@ -49,14 +49,21 @@ namespace FileExplorer.WPF.ViewModels
             expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
             expvm.Commands.Commands.CloseTab =
-                WPFScriptCommands.AssignVariableToParameter("Explorer", TabbedExplorer.CloseTab(this));
+                UIScriptCommands.CloseExplorerTab("TabbedExplorer", "Explorer");
+                //ScriptCommands.ReassignToParameter("{Explorer}", TabbedExplorer.CloseTab(this));
             expvm.FileList.Commands.Commands.OpenTab =
+                ScriptCommands.Assign("{TabbedExplorer}", this,false, 
                 FileList.IfSelection(evm => evm.Count() >= 1,
-                    FileList.AssignSelectionToParameter(TabbedExplorer.OpenTab(this)), ResultCommand.NoError);
+                    FileList.AssignSelectionToParameter(
+                    UIScriptCommands.OpenExplorerTab("TabbedExplorer", "Parameter", null)), ResultCommand.NoError));
             expvm.DirectoryTree.Commands.Commands.OpenTab =
-                    DirectoryTree.AssignSelectionToParameter(TabbedExplorer.OpenTab(this));
+                ScriptCommands.Assign("{TabbedExplorer}", this,false,
+                    DirectoryTree.AssignSelectionToParameter(
+                    UIScriptCommands.OpenExplorerTab("TabbedExplorer", "Parameter", null)));
 
             ActivateItem(expvm);
+
+            return expvm;
         }
 
         public void CloseTab(IExplorerViewModel evm)

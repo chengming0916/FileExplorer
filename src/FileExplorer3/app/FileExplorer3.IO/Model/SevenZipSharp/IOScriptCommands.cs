@@ -44,10 +44,11 @@ namespace FileExplorer.Script
                 em => WPFScriptCommands.WriteBytes(em, bytes, thenFunc));
         }
     }
-
+    
     /// <summary>
     /// Uses SevenZipWrapper.CompressMultiple thus quicker then FileTransferScriptCommand which move one file at a time.    
     /// </summary>
+    [Obsolete("SzsDiskTransfer")]
     public class SzsBatchTransferScriptCommand : ScriptCommandBase
     {
         private IEntryModel _srcModel;

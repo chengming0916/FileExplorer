@@ -52,6 +52,7 @@ namespace FileExplorer.Script
             return new DoSelection(commandKey, getSelectionFunc, nextCommandFunc, noSelectionCommand);
         }
 
+        [Obsolete("ScriptCommands.Assign")]
         public static IScriptCommand AssignVariableToAnotherVariable(string sourceName, string targetName,
             IScriptCommand thenCommand)
         {
@@ -62,6 +63,7 @@ namespace FileExplorer.Script
             }, pm => pm.ContainsKey(sourceName));
         }
 
+        [Obsolete("ScriptCommands.Assign")]
         public static IScriptCommand AssignVariableToParameter(string sourceName,
            IScriptCommand thenCommand)
         {
@@ -601,15 +603,19 @@ namespace FileExplorer.Script
     #endregion
 
 
+    [Obsolete]
     public static class TabbedExplorer
     {
+        [Obsolete("UIScriptCommands.CloseExplorerTab")]
         public static IScriptCommand CloseTab(ITabbedExplorerViewModel tevm)
         {
             return new CloseTab(tevm);
         }
 
+        [Obsolete("UIScriptCommands.NewExplorerTab")]
         public static IScriptCommand NewTab = new OpenTab();
 
+        [Obsolete]
         public static IScriptCommand AssignActiveTabToParameter(IScriptCommand thenCommand)
         {
             return Do((tevm, pd) => { pd.Parameter = tevm.ActiveItem; return thenCommand; });
@@ -620,17 +626,23 @@ namespace FileExplorer.Script
         /// </summary>
         /// <param name="tevm"></param>
         /// <returns></returns>
+        [Obsolete("UIScriptCommands.NewExplorerTab")]
         public static IScriptCommand OpenTab(ITabbedExplorerViewModel tevm)
         {
             return new OpenTab(m => m != null && m.IsDirectory, tevm);
         }
 
+        [Obsolete]
         public static IScriptCommand Do(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
         {
             return new DoTabbedExplorer(commandFunc);
         }
+
+
+       
     }
 
+    [Obsolete]
     internal class CloseTab : ScriptCommandBase
     {
         private ITabbedExplorerViewModel _tevm;
@@ -666,6 +678,7 @@ namespace FileExplorer.Script
         }
     }
 
+    [Obsolete]
     internal class OpenTab : ScriptCommandBase
     {
         private Func<IEntryModel, bool> _filter;
@@ -713,6 +726,7 @@ namespace FileExplorer.Script
         }
     }
 
+    [Obsolete]
     internal class DoTabbedExplorer : DoCommandBase<ITabbedExplorerViewModel>
     {
         internal DoTabbedExplorer(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
@@ -762,12 +776,13 @@ namespace FileExplorer.Script
         //{
         //    return new GotoDirectory(thenCommand);
         //}
-
+        [Obsolete("UIScriptCommands.GoTo")]
         public static IScriptCommand GoTo(IEntryModel dir, IScriptCommand thenCommand = null)
         {
             return new GotoDirectory(dir, thenCommand);
         }
 
+        [Obsolete("UIScriptCommands.GoTo")]
         public static IScriptCommand GoTo(string path, IScriptCommand thenCommand = null)
         {
             return new GotoDirectory(path, thenCommand);
@@ -1116,7 +1131,7 @@ namespace FileExplorer.Script
             _initializer.WindowManager.ShowWindow(evm, _context, _settings);
             if (_settings != null && _settings.ContainsKey("StartupDirectory") &&
                 _settings["StartupDirectory"] is IEntryModel)
-                return Explorer.GoTo(_settings["StartupDirectory"] as IEntryModel);
+                return UIScriptCommands.GoTo(_settings["StartupDirectory"] as IEntryModel);
             return ResultCommand.NoError;
         }
     }
