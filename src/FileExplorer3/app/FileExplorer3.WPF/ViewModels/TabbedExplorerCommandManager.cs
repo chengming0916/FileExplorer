@@ -31,9 +31,9 @@ namespace FileExplorer.WPF.ViewModels
             #region Set ScriptCommands
 
             Commands = new DynamicDictionary<IScriptCommand>();
-            Commands.NewTab = TabbedExplorer.NewTab;
+            Commands.NewTab = UIScriptCommands.NewExplorerTab("TabbedExplorer", null);
             Commands.CloseTab = 
-                    TabbedExplorer.CloseTab(_tevm);
+                    UIScriptCommands.CloseActiveExplorerTab("TabbedExplorer");
 
             #endregion
 

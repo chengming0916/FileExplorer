@@ -25,7 +25,7 @@ namespace FileExplorer.WPF.ViewModels
     public interface ITabbedExplorerViewModel : ITabControlViewModel<IExplorerViewModel>,
         IConductor, IConductActiveItem, IParent<IScreen>
     {
-        void OpenTab(IEntryModel model = null);
+        IExplorerViewModel OpenTab(IEntryModel model = null);
         void CloseTab(IExplorerViewModel evm);
     }
 }

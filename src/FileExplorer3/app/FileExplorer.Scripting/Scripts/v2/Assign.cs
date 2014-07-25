@@ -69,6 +69,15 @@ namespace FileExplorer.Script
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<Assign>();
 
         public Assign()
+            : base("Assign")
+        {
+            VariableKey = "{Variable}";
+            Value = null;
+            SkipIfExists = false;
+        }
+
+        protected Assign(string commandKey)
+            : base(commandKey)
         {
             VariableKey = "{Variable}";
             Value = null;

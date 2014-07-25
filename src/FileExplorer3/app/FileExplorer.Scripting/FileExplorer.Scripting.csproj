@@ -58,6 +58,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Defines\Structs\ParameterDic.cs" />
     <Compile Include="Scripts\v2\Assign.cs" />
+    <Compile Include="Scripts\v2\AssignValueConverter.cs" />
+    <Compile Include="Scripts\v2\IfValue.cs" />
     <Compile Include="Scripts\v2\Print.cs" />
     <Compile Include="Scripts\v2\ForEach.cs" />
     <Compile Include="Scripts\v2\RunCommands.cs" />

@@ -23,7 +23,7 @@ namespace FileExplorer.Script
         /// <param name="allowCustomImplementation"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand DiskTransfer(string srcEntryVariable = "Source", string destDirectoryVariable = "Destination", bool removeOriginal = false,
+        public static IScriptCommand DiskTransfer(string srcEntryVariable = "{Source}", string destDirectoryVariable = "{Destination}", bool removeOriginal = false,
            bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
             return new DiskTransfer()
@@ -60,8 +60,8 @@ namespace FileExplorer.Script
             return DiskTransfer(new IEntryModel[] { srcModel }, destDirModel, removeOriginal, allowCustomImplementation, nextCommand);
         }
 
-        public static IScriptCommand DiskTransferChild(string srcDirectoryVariable = "Source",
-           string destDirectoryVariable = "Destination",
+        public static IScriptCommand DiskTransferChild(string srcDirectoryVariable = "{Source}",
+           string destDirectoryVariable = "{Destination}",
             string mask = "*", ListOptions listOptions = ListOptions.File | ListOptions.Folder,
             bool removeOriginal = false, bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
@@ -119,7 +119,12 @@ namespace FileExplorer.Script
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<DiskTransfer>();
 
-        public DiskTransfer() : base("DiskTransfer") { SourceEntryKey = "Source"; DestinationDirectoryEntryKey = "Destination"; RemoveOriginal = false; AllowCustomImplementation = true; }
+        public DiskTransfer()
+            : base("DiskTransfer")
+        {
+            SourceEntryKey = "{Source}"; DestinationDirectoryEntryKey = "{Destination}";
+            RemoveOriginal = false; AllowCustomImplementation = true;
+        }
 
         private async Task<IScriptCommand> transferSystemIOAsync(ParameterDic pm, IEntryModel[] srcEntries, IEntryModel destEntry)
         {
@@ -132,9 +137,9 @@ namespace FileExplorer.Script
 
                     var srcMapper = srcProfile.DiskIO.Mapper;
                     var destMapping = destProfile.DiskIO.Mapper[destEntry];
-                    
-                    
-                    List<string> createdPath = new List<string>();                    
+
+
+                    List<string> createdPath = new List<string>();
                     List<string> changedPath = new List<string>();
 
                     progress.Report(TransferProgress.IncrementTotalEntries(srcEntries.Count()));
@@ -168,15 +173,15 @@ namespace FileExplorer.Script
                             else createdPath.Add(destFullName);
                             File.Move(srcMapping.IOPath, destFullName);
                         }
-                        progress.Report(TransferProgress.IncrementProcessedEntries());                        
+                        progress.Report(TransferProgress.IncrementProcessedEntries());
                     }
 
                     logger.Info(String.Format("{0} {1} -> {2} using System.IO",
                            RemoveOriginal ? "Move" : "Copy", srcEntries.GetDescription(), destEntry.Name));
 
                     return ScriptCommands.RunCommands(Script.RunCommands.RunMode.Parallel, NextCommand,
-                        
-                        CoreScriptCommands.NotifyCreated(destEntry.Profile, String.Join(",", createdPath)), 
+
+                        CoreScriptCommands.NotifyCreated(destEntry.Profile, String.Join(",", createdPath)),
                         CoreScriptCommands.NotifyChanged(destEntry.Profile, String.Join(",", changedPath))
                         );
                 });
@@ -184,7 +189,7 @@ namespace FileExplorer.Script
 
         private async Task<IScriptCommand> transferScriptCommandAsync(ParameterDic pm, IEntryModel[] srcEntries, IEntryModel destEntry)
         {
-            var progress = pm.ContainsKey("Progress") ? pm["Progress"] as IProgress<TransferProgress> : NullTransferProgress.Instance;
+            var progress = pm.GetProgress() ?? NullTransferProgress.Instance;
 
             var srcProfile = srcEntries.First().Profile as IDiskProfile;
             var destProfile = destEntry.Profile as IDiskProfile;
@@ -192,7 +197,7 @@ namespace FileExplorer.Script
             var srcMapper = srcProfile.DiskIO.Mapper;
             var destMapping = destProfile.DiskIO.Mapper[destEntry];
             List<IScriptCommand> notifyChangeCommands = new List<IScriptCommand>();
-            
+
             List<string> changedPath = new List<string>();
             progress.Report(TransferProgress.IncrementTotalEntries(srcEntries.Count()));
             foreach (var srcEntry in srcEntries)
@@ -201,7 +206,7 @@ namespace FileExplorer.Script
                 string destName = PathFE.GetFileName(srcMapping.IOPath);
                 string destFullName = destProfile.Path.Combine(destEntry.FullPath, destName);
 
-                progress.Report(TransferProgress.From(srcEntry.FullPath, destEntry.FullPath));                
+                progress.Report(TransferProgress.From(srcEntry.FullPath, destEntry.FullPath));
 
                 if (srcEntry.IsDirectory)
                     await ScriptRunner.RunScriptAsync(pm,
@@ -251,7 +256,7 @@ namespace FileExplorer.Script
             if (srcEntries == null || destProfile == null)
                 return ResultCommand.Error(new ArgumentException("Either source or dest is not IDiskProfile."));
 
-            var progress = pm.ContainsKey("Progress") ? pm["Progress"] as IProgress<TransferProgress> : NullTransferProgress.Instance;
+            var progress = pm.GetProgress() ?? NullTransferProgress.Instance;
 
 
             if (AllowCustomImplementation)

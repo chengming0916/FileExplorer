@@ -3,6 +3,7 @@ using MetroLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -26,15 +27,15 @@ namespace FileExplorer
             if (variableKey == null)
                 return null;
 
-            Regex regex = new Regex("{(?<TextInsideBrackets>.+)}");
+            Regex regex = new Regex("{(?<TextInsideBrackets>\\w+)}");
             string value = variableKey;
 
             Match match = regex.Match(value);
 
             while (match.Success)
-            {
+            {                
                 string key = match.Groups["TextInsideBrackets"].Value;
-                value = value.Replace("{" + key + "}", pd.ContainsKey(key) ? pd[key].ToString() : "");
+                value = value.Replace("{" + key + "}", pd.ContainsKey(key) ? pd[key].ToString() : "");                
                 match = regex.Match(value);
             }
 
@@ -68,6 +69,24 @@ namespace FileExplorer
             return variableKey.TrimStart('{').TrimEnd('}');
         }
 
+        public static string CombineVariable(string variableKey, string combineStr)
+        {
+            return "{" + getVariable(variableKey) + "-" + combineStr + "}";
+        }
+
+        public bool HasValue<T>(string variableKey)
+        {
+            if (variableKey == null)
+                return false;
+            string variable = getVariable(variableKey);
+            return this.ContainsKey(variable) && this[variable] is T;
+        }
+
+        public bool HasValue(string variableKey)
+        {
+            return HasValue<Object>(variableKey);
+        }
+
         public T GetValue<T>(string variableKey, T defaultValue)
         {
             if (variableKey == null)
@@ -93,6 +112,9 @@ namespace FileExplorer
 
         public bool SetValue<T>(string variableKey, T value, bool skipIfExists = false)
         {
+            if (variableKey == null)
+                return false;
+
             string variable = getVariable(variableKey);
             if (this.ContainsKey(variable))
             {

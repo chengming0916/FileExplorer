@@ -33,12 +33,13 @@ namespace FileExplorer.Script
         /// <param name="variable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand PrintLogger(string variable, IScriptCommand nextCommand = null)
+        public static IScriptCommand PrintLogger(LogLevel logLevel, string variable, IScriptCommand nextCommand = null)
         {
             return new Print()
             {
                 DestinationType = Print.PrintDestinationType.Logger,
                 VariableKey = variable,
+                LogLevel = logLevel,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
@@ -56,6 +57,8 @@ namespace FileExplorer.Script
         /// Variable to print.
         /// </summary>
         public string VariableKey { get; set; }
+
+        public LogLevel LogLevel { get; set; }
 
         /// <summary>
         /// Where to print to.
@@ -77,7 +80,7 @@ namespace FileExplorer.Script
             if (DestinationType.HasFlag(PrintDestinationType.Debug))
                 Debug.WriteLine(variable);
             if (DestinationType.HasFlag(PrintDestinationType.Logger))
-                logger.Info(variable);
+                logger.Log(LogLevel, variable);
 
             return NextCommand;
         }

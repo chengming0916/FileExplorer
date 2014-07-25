@@ -25,7 +25,7 @@ namespace FileExplorer.Script
         /// <param name="allowCustomImplementation"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand SzsDiskTransfer(string srcEntryVariable = "Source", string destDirectoryVariable = "Destination", bool removeOriginal = false,
+        public static IScriptCommand SzsDiskTransfer(string srcEntryVariable = "{Source}", string destDirectoryVariable = "{Destination}", bool removeOriginal = false,
            IScriptCommand nextCommand = null)
         {
             return new SzsDiskTransfer()
@@ -50,9 +50,9 @@ namespace FileExplorer.Script
         public static IScriptCommand SzsDiskTransfer(IEntryModel[] srcModels, ISzsItemModel destDirModel, bool removeOriginal = false,
             IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.Assign("SourceDiskTransferEntry", srcModels, false,
-                ScriptCommands.Assign("DestinationDiskTransferEntry", destDirModel, false,
-                SzsDiskTransfer("SourceDiskTransferEntry", "DestinationDiskTransferEntry",
+            return ScriptCommands.Assign("{SourceDiskTransferEntry}", srcModels, false,
+                ScriptCommands.Assign("{DestinationDiskTransferEntry}", destDirModel, false,
+                SzsDiskTransfer("{SourceDiskTransferEntry}", "{DestinationDiskTransferEntry}",
                 removeOriginal, nextCommand)));
         }
 
@@ -62,12 +62,12 @@ namespace FileExplorer.Script
     public class SzsDiskTransfer : ScriptCommandBase
     {
         /// <summary>
-        /// IEntryModel or IEntryModel[] to transfer to destination, default = "Source"
+        /// IEntryModel or IEntryModel[] to transfer to destination, default = "{Source}"
         /// </summary>
         public string SourceEntryKey { get; set; }
 
         /// <summary>
-        /// Destination directory IEntryModel (ISzsItemModel), default = "Destination" 
+        /// Destination directory IEntryModel (ISzsItemModel), default = "{Destination}" 
         /// </summary>
         public string DestinationDirectoryEntryKey { get; set; }
 
@@ -81,7 +81,8 @@ namespace FileExplorer.Script
         public SzsDiskTransfer()
             : base("SzsDiskTransfer")
         {
-
+            SourceEntryKey = "{Source}";
+            DestinationDirectoryEntryKey = "{Destination}";
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
