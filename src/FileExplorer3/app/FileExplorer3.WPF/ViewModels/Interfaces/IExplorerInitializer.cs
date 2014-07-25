@@ -20,6 +20,9 @@ namespace FileExplorer.WPF.ViewModels
         IExplorerInitializer Clone();
 
         List<IViewModelInitializer<IExplorerViewModel>> Initializers { get; }
+
+        Task InitializeModelCreatedAsync(IExplorerViewModel evm);
+        Task InitializeViewAttachedAsync(IExplorerViewModel evm);
     }
 
     public class ExplorerInitializer : IExplorerInitializer
@@ -58,6 +61,15 @@ namespace FileExplorer.WPF.ViewModels
             return new ExplorerInitializer(WindowManager, Events, RootModels, Initializers.ToArray());
         }
 
+        public Task InitializeModelCreatedAsync(IExplorerViewModel evm)
+        {
+            return Task.Delay(0);
+        }
+
+        public async Task InitializeViewAttachedAsync(IExplorerViewModel evm)
+        {
+            await Initializers.InitalizeAsync(evm);
+        }
 
         #endregion
 
@@ -75,5 +87,8 @@ namespace FileExplorer.WPF.ViewModels
 
         #endregion
 
+
+
+        
     }
 }

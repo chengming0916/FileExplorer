@@ -10,7 +10,7 @@ namespace FileExplorer.Script
     public static partial class ScriptCommands
     {
         /// <summary>
-        /// Use Expression to compare two value in ParameterDic, and run different command based on the result.
+        /// Serializable, Use Expression to compare two value in ParameterDic, and run different command based on the result.
         /// </summary>
         /// <param name="op"></param>
         /// <param name="variable1"></param>
@@ -32,7 +32,7 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
-        /// Do IfValue comparsion based on the length of an array in ParameterDic.
+        /// Serializable, Run IfValue comparsion based on the length of an array in ParameterDic.
         /// </summary>
         /// <param name="op"></param>
         /// <param name="arrayVariable"></param>

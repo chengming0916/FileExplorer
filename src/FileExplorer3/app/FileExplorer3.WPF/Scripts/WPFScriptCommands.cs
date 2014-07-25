@@ -140,13 +140,15 @@ namespace FileExplorer.Script
             return new ShowMessageBox(caption, message);
         }
 
-
+        
+        [Obsolete("CoreScriptCommands.Download")]
         public static DownloadFile Download(string sourceUrl, IEntryModel entry,
            HttpClient httpClient, IScriptCommand nextCommand = null)
-        {
+        {            
             return new DownloadFile(sourceUrl, entry, httpClient, nextCommand);
         }
 
+        [Obsolete("CoreScriptCommands.Download")]
         public static IScriptCommand Download(string sourceUrl, IEntryModel entry, IScriptCommand nextCommand = null)
         {
             return new DownloadFile(sourceUrl, entry, null, nextCommand);

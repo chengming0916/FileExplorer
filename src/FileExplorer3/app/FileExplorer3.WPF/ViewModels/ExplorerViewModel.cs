@@ -60,6 +60,7 @@ namespace FileExplorer.WPF.ViewModels
             if (_events != null)
                 _events.Subscribe(this);
             _internalEvents.Subscribe(this);
+            initializer.InitializeModelCreatedAsync(this);
 
         }
 
@@ -92,7 +93,8 @@ namespace FileExplorer.WPF.ViewModels
                 _initializer.Initializers.EnsureOneStartupDirectoryOnly();
 
                 _attachedView = true;
-                _initializer.Initializers.InitalizeAsync(this);
+                _initializer.InitializeViewAttachedAsync(this);
+                //_initializer.Initializers.InitalizeAsync(this);
             }
 
             //if (_rootModels != null && _rootModels.Length > 0)
@@ -316,7 +318,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 
-        public ICommandManager Commands { get; private set; }
+        public ICommandManager Commands { get; private set; }        
 
         public IBreadcrumbViewModel Breadcrumb { get; private set; }
         public IDirectoryTreeViewModel DirectoryTree { get; private set; }

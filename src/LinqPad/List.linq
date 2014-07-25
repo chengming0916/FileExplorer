@@ -1,5 +1,6 @@
 <Query Kind="Statements">
   <Reference Relative="..\FileExplorer3\app\FileExplorer3.WPF\bin\Debug\Caliburn.Micro.Platform.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\FileExplorer3.WPF\bin\Debug\Caliburn.Micro.Platform.dll</Reference>
+  <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer.Scripting.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer.Scripting.dll</Reference>
   <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.dll</Reference>
   <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.IO.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.IO.dll</Reference>
   <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.WPF.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.WPF.dll</Reference>
@@ -23,10 +24,10 @@ LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 string tempDirectory = "C:\\Temp";
 
 IScriptCommand listCommand =
-              ScriptCommands.ParsePath(tempDirectory, "Parent",			  
-			    ScriptCommands.List("Parent", "Children", "*", FileExplorer.Defines.ListOptions.File, 
+              CoreScriptCommands.ParsePath("{Profile}", tempDirectory, "Parent",			  
+			    CoreScriptCommands.List("Parent", "Children", "*", FileExplorer.Defines.ListOptions.File, 
 				ScriptCommands.ForEach("Children", "Child", 
-				  ScriptCommands.PrintLogger("{Child}"))));
+				  ScriptCommands.PrintLogger(LogLevel.Debug,"{Child}"))));
                 
 			
 await ScriptRunner.RunScriptAsync(new ParameterDic() {  
