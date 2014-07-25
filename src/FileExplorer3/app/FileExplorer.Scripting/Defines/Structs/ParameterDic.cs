@@ -27,7 +27,7 @@ namespace FileExplorer
             if (variableKey == null)
                 return null;
 
-            Regex regex = new Regex("{(?<TextInsideBrackets>\\w+)}");
+            Regex regex = new Regex("{(?<TextInsideBrackets>[^}]+)}");
             string value = variableKey;
 
             Match match = regex.Match(value);

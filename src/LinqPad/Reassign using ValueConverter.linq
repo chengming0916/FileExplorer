@@ -19,28 +19,36 @@ IScriptCommand getPropertyCommand =
   ScriptCommands.AssignValueConverter(ValueConverterType.GetProperty, "{Converter}", 
     ScriptCommands.Reassign("{Variable1}", "{Converter}", "{Variable2}", false, 
 	  ScriptCommands.PrintDebug("{Variable1} -> {Variable2}")), "DayOfWeek");
-
-
-await ScriptRunner.RunScriptAsync(new ParameterDic() { 
-                { "Variable1", DateTime.Now },
-            }, getPropertyCommand);
 			
 IScriptCommand executeMethodCommand = 
   ScriptCommands.AssignValueConverter(ValueConverterType.ExecuteMethod, "{Converter}", 
     ScriptCommands.Reassign("{Variable1}", "{Converter}", "{Variable2}", false, 
-	  ScriptCommands.PrintDebug("{Variable1} + 1 day -> {Variable2}")), "AddDays", 1);			
-	  
-await ScriptRunner.RunScriptAsync(new ParameterDic() { 
-                { "Variable1", DateTime.Now },
-            }, executeMethodCommand);
+	  ScriptCommands.PrintDebug("{Variable1} + 1 day -> {Variable2}")), "AddDays", 1);				  
 			
 IScriptCommand getItemInArrayCommand = 
   ScriptCommands.AssignValueConverter(ValueConverterType.GetArrayItem, "{Converter}", 
     ScriptCommands.Reassign("{Array}", "{Converter}", "{DestVariable}", false, 
 	  ScriptCommands.PrintDebug("Item 1 -> {DestVariable}")), 1);	
+
+//Shortcut method.	  
+	  
+getPropertyCommand = ScriptCommands.AssignProperty("{Variable1}", "DayOfWeek", "{Variable2}", 
+  ScriptCommands.PrintDebug("{Variable1} -> {Variable2}"));
+  
+executeMethodCommand = ScriptCommands.AssignMethodResult("{Variable1}", "AddDays", new object[] { 1 }, "{Variable2}", 
+  ScriptCommands.PrintDebug("{Variable1} + 1 day -> {Variable2}"));
 	  
 getItemInArrayCommand = ScriptCommands.AssignArrayItem("{Array}", 1, "{DestVariable}", 
   ScriptCommands.PrintDebug("Item 1 -> {DestVariable}"));
+
+
+await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                { "Variable1", DateTime.Now },
+            }, getPropertyCommand);
+
+await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                { "Variable1", DateTime.Now },
+            }, executeMethodCommand);	  
 	  
 await ScriptRunner.RunScriptAsync(new ParameterDic() { 
                 { "Array", new [] { 1,2,3} },

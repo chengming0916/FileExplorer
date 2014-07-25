@@ -1,5 +1,6 @@
 <Query Kind="Statements">
   <Reference Relative="..\FileExplorer3\app\FileExplorer3.WPF\bin\Debug\Caliburn.Micro.Platform.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\FileExplorer3.WPF\bin\Debug\Caliburn.Micro.Platform.dll</Reference>
+  <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer.Scripting.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer.Scripting.dll</Reference>
   <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.dll</Reference>
   <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.IO.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.IO.dll</Reference>
   <Reference Relative="..\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.WPF.dll">&lt;MyDocuments&gt;\QuickZipSvn\FileExplorer\src\FileExplorer3\app\TestApp.WPF\bin\Debug\FileExplorer3.WPF.dll</Reference>
@@ -19,17 +20,17 @@
 LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 
 IScriptCommand downloadCommand =             
-              ScriptCommands.Download("{Url}", "{Stream}",
-                ScriptCommands.DiskParseOrCreateFile("{DestinationFile}", "{Destination}",
-                ScriptCommands.OpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
-                ScriptCommands.CopyStream("{Stream}", "{DestinationStream}"))));
+              CoreScriptCommands.Download("{Url}", "{Stream}",
+                CoreScriptCommands.DiskParseOrCreateFile("{Profile}", "{DestinationFile}", "{Destination}",
+                CoreScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+                CoreScriptCommands.CopyStream("{Stream}", "{DestinationStream}"))));
 
 IScriptCommand copyCommand =
-               ScriptCommands.ParsePath("{SourceFile}", "{Source}",
-               ScriptCommands.DiskParseOrCreateFile("{DestinationFile}", "{Destination}",
-               ScriptCommands.OpenStream("{Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
-               ScriptCommands.OpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
-               ScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}")))),
+               CoreScriptCommands.ParsePath("{Profile}","{SourceFile}", "{Source}",
+               CoreScriptCommands.DiskParseOrCreateFile("{Profile}","{DestinationFile}", "{Destination}",
+               CoreScriptCommands.DiskOpenStream("{Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
+               CoreScriptCommands.DiskOpenStream("{Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+               CoreScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}")))),
                ResultCommand.Error(new FileNotFoundException()));			
 			   
 IScriptCommand iterateCommand =
