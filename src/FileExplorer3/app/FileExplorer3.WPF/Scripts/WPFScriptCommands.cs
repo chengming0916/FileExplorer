@@ -922,7 +922,7 @@ namespace FileExplorer.Script
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var selection = _getSelectionFunc(pm);
-            if (selection == null || selection.Length == 0)
+            if (selection == null || selection.Length == 0 || selection[0] == null)
                 return _noSelectionCommand;
             else return _nextCommandFunc(selection);
         }
@@ -1133,7 +1133,7 @@ namespace FileExplorer.Script
             _initializer.WindowManager.ShowWindow(evm, _context, _settings);
             if (_settings != null && _settings.ContainsKey("StartupDirectory") &&
                 _settings["StartupDirectory"] is IEntryModel)
-                return UIScriptCommands.GoTo(_settings["StartupDirectory"] as IEntryModel);
+                return UIScriptCommands.ExplorerGoTo(_settings["StartupDirectory"] as IEntryModel);
             return ResultCommand.NoError;
         }
     }
@@ -1610,7 +1610,7 @@ namespace FileExplorer.Script
         public override bool CanExecute(ParameterDic pm)
         {
             var selectedItems = _getSelectionFunc(pm);
-            return selectedItems.Length == 1 && selectedItems[0].IsRenamable;
+            return selectedItems.Length == 1 && selectedItems[0] != null && selectedItems[0].IsRenamable;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)

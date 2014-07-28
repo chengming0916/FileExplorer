@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Defines;
-using FileExplorer.Defines;
+
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
@@ -83,12 +83,58 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
     public class SetExpanded<VM, T> : ITreeLookupProcessor<VM, T>
     {
-        public static SetExpanded<VM, T> WhenChildSelected = new SetExpanded<VM, T>();
+        public static SetExpanded<VM, T> WhenChildSelected = new SetExpanded<VM, T>(HierarchicalResult.Child);
+        public static SetExpanded<VM, T> WhenSelected = new SetExpanded<VM, T>(HierarchicalResult.Current);
+
+        public SetExpanded(HierarchicalResult matchResult)
+        {
+            MatchResult = matchResult;
+        }
+
+        private HierarchicalResult MatchResult { get; set; }
 
         public bool Process(HierarchicalResult hr, ITreeSelector<VM,T> parentSelector, ITreeSelector<VM,T> selector)
         {
-            if (hr == HierarchicalResult.Child)
+            if (MatchResult.HasFlag(hr))
                 selector.EntryHelper.IsExpanded = true;
+            if (hr == FileExplorer.Defines.HierarchicalResult.Current)
+                (selector.ViewModel as IDirectoryNodeViewModel).IsBringIntoView = true;
+            return true;
+        }
+    }
+
+    public class SetBringIntoView : ITreeLookupProcessor<IDirectoryNodeViewModel, FileExplorer.Models.IEntryModel>
+    {        
+        public static SetBringIntoView WhenSelected
+            = new SetBringIntoView();
+             
+
+        public bool Process(HierarchicalResult hr, ITreeSelector<IDirectoryNodeViewModel, 
+            FileExplorer.Models.IEntryModel> parentSelector,
+            ITreeSelector<IDirectoryNodeViewModel, FileExplorer.Models.IEntryModel> selector)
+        {            
+            if (hr == FileExplorer.Defines.HierarchicalResult.Current)
+                selector.ViewModel.IsBringIntoView = true;
+            return true;
+        }
+    }
+
+    public class SetCollapsed<VM, T> : ITreeLookupProcessor<VM, T>
+    {
+        public static SetCollapsed<VM, T> WhenChildSelected = new SetCollapsed<VM, T>(HierarchicalResult.Child);
+        public static SetCollapsed<VM, T> WhenNotRelated = new SetCollapsed<VM, T>(HierarchicalResult.Unrelated);
+
+        public SetCollapsed(HierarchicalResult matchResult)
+        {
+            MatchResult = matchResult;
+        }
+
+        private HierarchicalResult MatchResult { get; set; }
+
+        public bool Process(HierarchicalResult hr, ITreeSelector<VM,T> parentSelector, ITreeSelector<VM,T> selector)
+        {
+            if (MatchResult.HasFlag(hr))
+                selector.EntryHelper.IsExpanded = false;
             return true;
         }
     }

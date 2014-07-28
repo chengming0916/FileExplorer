@@ -44,22 +44,22 @@ namespace FileExplorer.WPF.ViewModels
         {
             var initializer = _initializer.Clone();
             if (model != null)
-                initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
+                (initializer as ExplorerInitializer).Initializers.Add(ExplorerInitializers.StartupDirectory(model));
             ExplorerViewModel expvm = new ExplorerViewModel(initializer);
             expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
             expvm.Commands.Commands.CloseTab =
-                UIScriptCommands.CloseExplorerTab("TabbedExplorer", "Explorer");
+                UIScriptCommands.TabExplorerCloseTab("TabbedExplorer", "Explorer");
                 //ScriptCommands.ReassignToParameter("{Explorer}", TabbedExplorer.CloseTab(this));
             expvm.FileList.Commands.Commands.OpenTab =
                 ScriptCommands.Assign("{TabbedExplorer}", this,false, 
                 FileList.IfSelection(evm => evm.Count() >= 1,
                     FileList.AssignSelectionToParameter(
-                    UIScriptCommands.OpenExplorerTab("TabbedExplorer", "Parameter", null)), ResultCommand.NoError));
+                    UIScriptCommands.TabExplorerNewTab("TabbedExplorer", "Parameter", null)), ResultCommand.NoError));
             expvm.DirectoryTree.Commands.Commands.OpenTab =
                 ScriptCommands.Assign("{TabbedExplorer}", this,false,
                     DirectoryTree.AssignSelectionToParameter(
-                    UIScriptCommands.OpenExplorerTab("TabbedExplorer", "Parameter", null)));
+                    UIScriptCommands.TabExplorerNewTab("TabbedExplorer", "Parameter", null)));
 
             ActivateItem(expvm);
 

@@ -22,6 +22,8 @@ using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {
+    [Export(typeof(IExplorerViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class ExplorerViewModel : Screen, IExplorerViewModel,
         IHandle<DirectoryChangedEvent>,
         IHandle<EntryChangedEvent>,
@@ -33,6 +35,7 @@ namespace FileExplorer.WPF.ViewModels
 
 
         #region Cosntructor
+
 
         public ExplorerViewModel(IExplorerInitializer initializer)
         {
@@ -60,14 +63,36 @@ namespace FileExplorer.WPF.ViewModels
             if (_events != null)
                 _events.Subscribe(this);
             _internalEvents.Subscribe(this);
-            initializer.InitializeModelCreatedAsync(this);
 
         }
 
-        public ExplorerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
-            : this(new ExplorerInitializer(windowManager, events, rootModels))
+        [ImportingConstructor]
+        public ExplorerViewModel(IWindowManager windowManager, IEventAggregator events)
         {
+            _events = events;
+            _rootModels = new IEntryModel[] { };
+            _windowManager = windowManager;
+            _initializer = NullExplorerInitializer.Instance;
 
+            WindowTitleMask = "{0}";
+            DisplayName = "";
+            //Toolbar = new ToolbarViewModel(events);
+            Breadcrumb = new BreadcrumbViewModel(_internalEvents);
+            Statusbar = new StatusbarViewModel(_internalEvents);
+            Sidebar = new SidebarViewModel(_internalEvents);
+            FileList = new FileListViewModel(_windowManager, _internalEvents, Sidebar);
+            DirectoryTree = new DirectoryTreeViewModel(_windowManager, _internalEvents);
+            Navigation = new NavigationViewModel(_internalEvents);
+
+            DragHelper = NullSupportDrag.Instance;
+            DropHelper = NullSupportDrop.Instance;
+
+            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation, Breadcrumb);
+            //setRootModels(_rootModels);
+
+            if (_events != null)
+                _events.Subscribe(this);
+            _internalEvents.Subscribe(this);
         }
 
 
@@ -75,50 +100,38 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Methods
 
+        protected override void OnInitialize()
+        {
+
+            base.OnInitialize();
+        }
+
         protected override void OnViewAttached(object view, object context)
         {
             base.OnViewAttached(view, context);
 
             if (!_attachedView)
             {
-                var uiEle = view as System.Windows.UIElement;
+                var uiEle = view as System.Windows.FrameworkElement;
+
                 this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Explorer);
-
-                //uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
-                //    {
-
-                //    }), System.Windows.Threading.DispatcherPriority.Loaded);
-
-                _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(null));
-                _initializer.Initializers.EnsureOneStartupDirectoryOnly();
-
-                _attachedView = true;
                 _initializer.InitializeViewAttachedAsync(this);
-                //_initializer.Initializers.InitalizeAsync(this);
+                _attachedView = true;
             }
-
-            //if (_rootModels != null && _rootModels.Length > 0)
-            //    uiEle.Dispatcher.BeginInvoke((System.Action)(() =>
-
-            //Commands.Execute(
-            //    new IScriptCommand[] { 
-            //        Explorer.GoTo(_rootModels.First())
-            //    })), System.Windows.Threading.DispatcherPriority.Background
-            //    );
-
-
         }
+
+
 
         public async Task GoAsync(IEntryModel entryModel)
         {
             entryModel = entryModel ?? RootModels.FirstOrDefault();
             if (entryModel != null)
             {
-                if (!_attachedView)
-                {
-                    _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(entryModel));
-                }
-                else
+                //if (!_attachedView && _initializer is ExplorerInitializer)
+                //{
+                //    _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(entryModel));
+                //}
+                //else
                 {
                     await Task.WhenAll(
                         FileList.SetCurrentDirectoryAsync(entryModel),
@@ -220,16 +233,16 @@ namespace FileExplorer.WPF.ViewModels
             cmds.Enqueue(Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories));
 
             if (message.Sender != this)
-                cmds.Enqueue(UIScriptCommands.GoTo(CurrentDirectory.EntryModel));
+                cmds.Enqueue(UIScriptCommands.ExplorerGoTo(CurrentDirectory.EntryModel));
             else
                 switch (message.ChangeType)
                 {
                     case ChangeType.Created:
                     case ChangeType.Changed:
-                        cmds.Enqueue(UIScriptCommands.GoTo(message.AppliedRootDirectories.First()));
+                        cmds.Enqueue(UIScriptCommands.ExplorerGoTo(message.AppliedRootDirectories.First()));
                         break;
                     case ChangeType.Deleted:
-                        cmds.Enqueue(UIScriptCommands.GoTo(RootModels.FirstOrDefault()));
+                        cmds.Enqueue(UIScriptCommands.ExplorerGoTo(RootModels.FirstOrDefault()));
                         break;
                 }
 
@@ -278,6 +291,13 @@ namespace FileExplorer.WPF.ViewModels
 
         #endregion
 
+        private void setInitializer(IExplorerInitializer value)
+        {
+            _initializer = value;
+            if (_initializer != null)
+                _initializer.InitializeModelCreatedAsync(this);
+        }
+
         #endregion
 
         #region Data
@@ -301,7 +321,17 @@ namespace FileExplorer.WPF.ViewModels
         #region Public Properties
 
 
-        public IExplorerInitializer Initializer { get { return _initializer; } }
+        public IExplorerInitializer Initializer
+        {
+            get { return _initializer; }
+            set
+            {
+                setInitializer(value);
+            }
+        }
+
+     
+
         public IExplorerParameters Parameters
         {
             get { return _parameters; }
@@ -318,7 +348,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 
-        public ICommandManager Commands { get; private set; }        
+        public ICommandManager Commands { get; private set; }
 
         public IBreadcrumbViewModel Breadcrumb { get; private set; }
         public IDirectoryTreeViewModel DirectoryTree { get; private set; }
@@ -363,8 +393,12 @@ namespace FileExplorer.WPF.ViewModels
         }
         public float HeaderOpacity { get { return _isDragging ? 0.5f : 1f; } }
 
-        public IEventAggregator Events { get { return _events; } }
-        public IWindowManager WindowManager { get { return _windowManager; } }
+        private IEventAggregator Events
+        {
+            get { return _events; }
+            set { _events = value; }
+        }
+        private IWindowManager WindowManager { get { return _windowManager; } set { _windowManager = value; } }
 
 
         #endregion

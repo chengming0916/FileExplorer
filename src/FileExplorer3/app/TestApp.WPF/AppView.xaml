@@ -48,12 +48,15 @@
 
                     <StackPanel Orientation="Vertical" Grid.Row="0" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal"  >
-                            <Button x:Name="OpenWindow"  Content="Explorer Window" ToolTip="Open a new Explorer window" />
+                            <Button x:Name="OpenWindow"  Content="Explorer Window" ToolTip="Open a new Explorer window" />                                                   
+                        </StackPanel>
+                        <WrapPanel Orientation="Horizontal"  >
                             <CheckBox x:Name="ExpandRootDirectories" Content="Expand" ToolTip="Expand Root directory when start"/>
                             <CheckBox x:Name="EnableDrag" Content="Drag" ToolTip="Enable Drag support"  />
                             <CheckBox x:Name="EnableDrop" Content="Drop" ToolTip="Enable Drop support" />
                             <CheckBox x:Name="EnableMultiSelect" Content="MultiSelect" ToolTip="Enable Multiselect using drag"  />
-                        </StackPanel>
+                            <CheckBox x:Name="UseScriptCommandInitializer" Content="Initialize using ScriptCommand" ToolTip="Instead of using the original ExplorerInitializer" />
+                        </WrapPanel>
                         <Button x:Name="OpenToolWindow"  Content="Tool Window" ToolTip="Open a Explorer tool window, which is usable as part of your UI" />
                         <!--<Button x:Name="UpdateWindow" Content="Update Previous Opened Window" />-->
                         <Button x:Name="MdiWindow" Content="Mdi Window" ToolTip="Open a new Mdi window that allow showing multiple intance of Explorer"  Grid.Row="2"/>

@@ -15,7 +15,7 @@ namespace FileExplorer.WPF.ViewModels
     public interface IExplorerViewModel : ISupportCommandManager, 
         IScreen, IDraggable
     {
-        IExplorerInitializer Initializer { get; }
+        IExplorerInitializer Initializer { get; set; }
 
         IEntryModel[] RootModels { get; set; }
        
@@ -30,7 +30,7 @@ namespace FileExplorer.WPF.ViewModels
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);
 
-        IEventAggregator Events { get; }
-        IWindowManager WindowManager { get; }
+        //IEventAggregator Events { get; }
+        //IWindowManager WindowManager { get; }
     }
 }

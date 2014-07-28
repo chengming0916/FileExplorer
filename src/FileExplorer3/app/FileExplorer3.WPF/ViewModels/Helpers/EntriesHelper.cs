@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
+using MetroLog;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
     public class EntriesHelper<VM> : NotifyPropertyChanged, IEntriesHelper<VM>
     {
         #region Constructor
+
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<EntriesHelper<VM>>();
 
         public EntriesHelper(Func<bool, object, Task<IEnumerable<VM>>> loadSubEntryFunc)
         {
@@ -88,7 +91,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                                 }
                             }, _lastCancellationToken, scheduler);
                         }
-                        catch (InvalidOperationException) { }
+                        catch (InvalidOperationException ex) { logger.Error("Cannot obtain SynchronizationContext", ex); }
 
 
                     }

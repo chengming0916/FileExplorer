@@ -106,16 +106,15 @@ namespace FileExplorer.WPF.ViewModels
         {
             return new DirectoryNodeViewModel(_events, _rootModel, entryModel, this);
         }
-
-      
-  
+          
 
         #endregion
 
         #region Data
 
         IEventAggregator _events;
-        bool _showCaption = true; bool _isShown = false;
+        bool _showCaption = true; 
+        bool _isBringIntoView;
         private IDirectoryTreeViewModel _rootModel;
 
         #endregion
@@ -123,6 +122,10 @@ namespace FileExplorer.WPF.ViewModels
         #region Public Properties
 
         public bool ShowCaption { get { return _showCaption; } set { _showCaption = value; NotifyOfPropertyChange(() => ShowCaption); } }        
+        /// <summary>
+        /// Bind to TreeViewItemEx.IsBringIntoView, when true, Call tvItem.BringIntoView().
+        /// </summary>
+        public bool IsBringIntoView { get { return _isBringIntoView; } set { _isBringIntoView = value; NotifyOfPropertyChange(() => IsBringIntoView); } }
         public ITreeSelector<IDirectoryNodeViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IDirectoryNodeViewModel> Entries { get; set; }
         public ISupportDrop DropHelper { get; set; }

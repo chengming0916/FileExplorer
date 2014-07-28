@@ -18,14 +18,14 @@ namespace FileExplorer.Script
         /// <param name="directoryVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand GoTo(string explorerVariable = "{Explorer}", string directoryVariable = "{Directory}", 
+        public static IScriptCommand ExplorerGoTo(string explorerVariable = "{Explorer}", string directoryVariable = "{Directory}", 
             IScriptCommand nextCommand = null)
         {
-            return new GoTo()
+            return new ExplorerGoTo()
             {
                 NextCommand = (ScriptCommandBase)nextCommand,
                 ExplorerKey = explorerVariable, 
-                DirectoryEntryKey = directoryVariable
+                DirectoryEntryKey = directoryVariable                
             };
         }
 
@@ -36,21 +36,21 @@ namespace FileExplorer.Script
         /// <param name="directory"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand GoTo(string explorerVariable = "{Explorer}", IEntryModel directory = null, 
+        public static IScriptCommand ExplorerGoTo(string explorerVariable = "{Explorer}", IEntryModel directory = null, 
             IScriptCommand nextCommand = null)
         {
             return ScriptCommands.Assign("{Goto-Directory}", directory, false,
-                GoTo(explorerVariable, "{Goto-Directory}", nextCommand));
+                ExplorerGoTo(explorerVariable, "{Goto-Directory}", nextCommand));
         }
 
-        public static IScriptCommand GoTo(IEntryModel directory = null,
+        public static IScriptCommand ExplorerGoTo(IEntryModel directory = null,
            IScriptCommand nextCommand = null)
         {
-            return GoTo("{Explorer}", directory, nextCommand);
+            return ExplorerGoTo("{Explorer}", directory, nextCommand);
         }
     }
 
-    class GoTo : ScriptCommandBase
+    class ExplorerGoTo : ScriptCommandBase
     {
         /// <summary>
         /// Point to Explorer (IExplorerViewModel) to be used.  Default = "{Explorer}".
@@ -64,13 +64,14 @@ namespace FileExplorer.Script
         public string DirectoryEntryKey { get; set; }
 
  
-        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<GoTo>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerGoTo>();
 
-        public GoTo()
+        public ExplorerGoTo()
             : base("GoToDirectory")
         {
             ExplorerKey = "{Explorer}";            
             DirectoryEntryKey = "{Directory}";
+            ContinueOnCaptureContext = true;
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
@@ -84,7 +85,8 @@ namespace FileExplorer.Script
                 (await pm.GetValueAsEntryModelArrayAsync(DirectoryEntryKey)).FirstOrDefault();
 
             await evm.GoAsync(dm);
-            return ResultCommand.NoError;
+            logger.Info("Path = " + dm.FullPath);
+            return NextCommand;
         }        
     }
 }

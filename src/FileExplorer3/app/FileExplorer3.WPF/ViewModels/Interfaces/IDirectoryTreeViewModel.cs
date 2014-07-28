@@ -24,7 +24,8 @@ namespace FileExplorer.WPF.ViewModels
 
     public interface IDirectoryNodeViewModel : IEntryViewModel, ISupportTreeSelector<IDirectoryNodeViewModel, IEntryModel>, IDraggable
     {
-        bool ShowCaption { get; set; }        
+        bool ShowCaption { get; set; }
+        bool IsBringIntoView { get; set; }
     }
 
 }
