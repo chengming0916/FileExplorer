@@ -11,11 +11,11 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
-        public static IScriptCommand OpenExplorerTab(string tabbedExplorerVariable = "{TabbedExplorer}",
+        public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
             string directoryVariable = "{Entry}",
             string destinationVariable = "{Explorer}")
         {
-            return new NewExplorerTab()
+            return new TabExplorerNewTab()
             {
                 DirectoryEntryKey = directoryVariable,
                 DestinationKey = destinationVariable,
@@ -23,14 +23,14 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand NewExplorerTab(string tabbedExplorerVariable = "{TabbedExplorer}",
+        public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
                  string destinationVariable = "{Explorer}")
         {
-            return OpenExplorerTab(tabbedExplorerVariable, null, destinationVariable);
+            return TabExplorerNewTab(tabbedExplorerVariable, null, destinationVariable);
         }
     }
 
-    public class NewExplorerTab : ScriptCommandBase
+    public class TabExplorerNewTab : ScriptCommandBase
     {
         /// <summary>
         /// Point to TabbedExplorer (ITabbedExplorerViewModel) to be closed.  Default = "{TabbedExplorer}".
@@ -48,9 +48,9 @@ namespace FileExplorer.Script
         /// </summary>
         public string DestinationKey { get; set; }
 
-        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<NewExplorerTab>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<TabExplorerNewTab>();
 
-        public NewExplorerTab()
+        public TabExplorerNewTab()
             : base("NewExplorerTab")
         {
             TabbedExplorerKey = "{TabbedExplorer}";

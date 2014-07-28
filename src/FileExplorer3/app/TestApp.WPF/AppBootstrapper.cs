@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using MetroLog;
+using FileExplorer.WPF.ViewModels;
 
 namespace TestApp
 {
@@ -37,13 +38,17 @@ namespace TestApp
                     AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()
                         .Concat(new ComposablePartCatalog[] { new DirectoryCatalog(".") }))
                 );
+            var catalog = new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)));
+            container = new CompositionContainer(catalog);
+
 
             CompositionBatch batch = new CompositionBatch();
 
             batch.AddExportedValue<IWindowManager>(new AppWindowManager());
-            batch.AddExportedValue<IEventAggregator>(new EventAggregator());
+            batch.AddExportedValue<IEventAggregator>(new EventAggregator());            
 
             batch.AddExportedValue(container);
+            
             //Debug.WriteLine(ConventionManager.GetElementConvention(typeof(ListViewEx)));
 
             //To-Do: https://caliburnmicro.codeplex.com/wikipage?title=All%20About%20Conventions
@@ -57,7 +62,7 @@ namespace TestApp
             //            ? View.ModelProperty
             //            : ListViewEx.OuterRightContentProperty;
             //    };
-            container.Compose(batch);
+            container.Compose(batch);;
 
         }
 

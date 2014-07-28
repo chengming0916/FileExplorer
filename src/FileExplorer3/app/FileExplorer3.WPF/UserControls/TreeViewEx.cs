@@ -80,6 +80,16 @@ namespace FileExplorer.WPF.UserControls
                          (args.OriginalSource as TreeViewItem).BringIntoView();
 
                  }));
+
+            this.AddValueChanged(TreeViewItemEx.IsBringIntoViewProperty, (o, e) =>
+            {
+                TreeViewItemEx tvItem = o as TreeViewItemEx;
+                if (tvItem.IsBringIntoView)
+                {
+                    this.BringIntoView();
+                    tvItem.IsBringIntoView = false;
+                }
+            });
         }
 
         #endregion
@@ -114,6 +124,7 @@ namespace FileExplorer.WPF.UserControls
                         dispatcherTimer.Start();
                     }
                 });
+          
         }
 
         protected override void OnDragEnter(DragEventArgs e)
@@ -150,6 +161,20 @@ namespace FileExplorer.WPF.UserControls
 
         public static readonly DependencyProperty IsDraggingOverProperty =
             DependencyProperty.Register("IsDraggingOver", typeof(bool),
+            typeof(TreeViewItemEx), new UIPropertyMetadata(false));
+
+
+        /// <summary>
+        /// Changing this property to true will Bring the Item into View then set to false again.
+        /// </summary>
+        public bool IsBringIntoView
+        {
+            get { return (bool)GetValue(IsBringIntoViewProperty); }
+            set { SetValue(IsBringIntoViewProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsBringIntoViewProperty =
+            DependencyProperty.Register("IsBringIntoView", typeof(bool),
             typeof(TreeViewItemEx), new UIPropertyMetadata(false));
 
         public bool IsLoading

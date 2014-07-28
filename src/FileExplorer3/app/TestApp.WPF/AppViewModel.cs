@@ -29,8 +29,14 @@ using FileExplorer.Defines;
 
 namespace TestApp
 {
+    public interface IAppViewModel
+    {
+
+    }
+
+
     [Export(typeof(IScreen))]
-    public class AppViewModel : Screen, IHandle<RootChangedEvent>//, IHandle<SelectionChangedEvent>
+    public class AppViewModel : Screen, IAppViewModel, IHandle<RootChangedEvent>//, IHandle<SelectionChangedEvent>
     {
         #region Cosntructor
 
@@ -70,7 +76,7 @@ namespace TestApp
             };
 
             if (AuthorizationKeys.DropBox_Client_Secret != null)
-                _profileDropBox = new DropBoxProfile(_events, 
+                _profileDropBox = new DropBoxProfile(_events,
                         AuthorizationKeys.DropBox_Client_Id,
                               AuthorizationKeys.DropBox_Client_Secret,
                               loginDropBox);
@@ -99,21 +105,58 @@ namespace TestApp
         }
 
 
+
         public void OpenWindow(object context = null)
         {
             var profiles = new IProfile[] {
-                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
-            };
-            var initializer = getInitializer(_windowManager, _events, RootModels.ToArray(),
-                 new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
-                 new ColumnInitializers(),
-                 new ScriptCommandsInitializers(_windowManager, _events, profiles),
-                 new ToolbarCommandsInitializers(_windowManager));
-            
-            //_windowManager.ShowWindow(new ExplorerViewModel(_events, _windowManager, RootModels.ToArray()), "ToolWindow");
-            //_windowManager.ShowWindow(new ExplorerViewModel(_events, _windowManager, RootModels.ToArray()));
-            ScriptRunner.RunScriptAsync(Explorer.NewWindow(initializer, context, null));
+                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
+
+            IExplorerInitializer initializer;
+
+            if (UseScriptCommandInitializer)
+                //Use ScriptCommandInitializer
+                initializer = new ScriptCommandInitializer()
+             {
+                 OnModelCreated = new IScriptCommand[] {
+                    ScriptCommands.RunCommands(RunCommands.RunMode.Sequence,
+                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, RootModels.ToArray()),
+                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrag, _enableDrag),
+                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrop, _enableDrop),
+                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableMultiSelect, _enableMultiSelect),
+                        UIScriptCommands.ExplorerDo(epvm => 
+                            {
+                                ColumnInitializers.InitializeColumnInfo(epvm);
+                                ScriptCommandsInitializers.InitializeScriptCommands(epvm, _windowManager, _events, profiles);
+                                ToolbarCommandsInitializers.InitializeToolbarCommands(epvm, _windowManager);
+                            })
+                    ) },
+
+                 OnViewAttached = new IScriptCommand[] { 
+                    ScriptCommands.PrintDebug("ScriptCommandInitializer"),                     
+                    ScriptCommands.Assign("{Root}", RootModels.FirstOrDefault(), false,                     
+                    UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}",
+                    UIScriptCommands.DirectoryTreeToggleExpand("{Root}")))
+                 }
+             };
+            else //Use ExplorerInitializer (Obsoluting)            
+                initializer = new ExplorerInitializer(_windowManager, _events, RootModels.ToArray())
+                {
+                    Initializers = new List<IViewModelInitializer<IExplorerViewModel>>()
+                    {
+                         new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
+                         new ColumnInitializers(),
+                         new ScriptCommandsInitializers(_windowManager, _events, profiles),
+                         new ToolbarCommandsInitializers(_windowManager)
+                    }
+                };
+
+
+            ExplorerViewModel evm = new ExplorerViewModel(_windowManager, _events) { Initializer = initializer };
+            //evm.RootModels = RootModels.ToArray();            ;
+            _windowManager.ShowWindow(evm);
+            //ScriptRunner.RunScriptAsync(Explorer.NewWindow(initializer, context, null));
         }
+
 
         public void OpenToolWindow()
         {
@@ -124,7 +167,7 @@ namespace TestApp
         public void PickFiles()
         {
             ScriptRunner.RunScriptAsync(
-                new ParameterDic() { { "WindowManager" , _windowManager }},
+                new ParameterDic() { { "WindowManager", _windowManager } },
 
                 WPFScriptCommands.OpenFileDialog(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
                     (fpvm) => WPFScriptCommands.MessageBox("Open", fpvm.FileName), ResultCommand.OK));
@@ -192,7 +235,7 @@ namespace TestApp
             var profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
             };
-            await ScriptRunner.RunScriptAsync(new ParameterDic() { { "Events", _events } }, 
+            await ScriptRunner.RunScriptAsync(new ParameterDic() { { "Events", _events } },
               Explorer.PickDirectory(initializer, profiles,
                 dir => new SimpleScriptCommand("AddToRootProfile",
                     pd =>
@@ -331,8 +374,11 @@ namespace TestApp
         private IEventAggregator _events;
         private IWindowManager _windowManager;
         private IExplorerViewModel _explorer = null;
+
         private bool _expandRootDirectories = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
+
+        private bool _useScriptCommandInitializer = true;
 
         private ObservableCollection<IEntryModel> _rootModels = new ObservableCollection<IEntryModel>();
         private string _fileFilter = "Texts (.txt)|*.txt|Pictures (.jpg, .png)|*.jpg,*.png|Songs (.mp3)|*.mp3|All Files (*.*)|*.*";
@@ -342,12 +388,16 @@ namespace TestApp
 
         #region Public Properties
 
+
+
         public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
         public IEntryModel SelectedRootModel { get { return _selectedRootModel; } set { _selectedRootModel = value; NotifyOfPropertyChange(() => SelectedRootModel); } }
         public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
+        public bool UseScriptCommandInitializer { get { return _useScriptCommandInitializer; } set { _useScriptCommandInitializer = value; NotifyOfPropertyChange(() => UseScriptCommandInitializer); } }
+
         public string FileFilter { get { return _fileFilter; } set { _fileFilter = value; NotifyOfPropertyChange(() => FileFilter); } }
 
         #endregion
@@ -357,4 +407,6 @@ namespace TestApp
 
 
     }
+
+
 }

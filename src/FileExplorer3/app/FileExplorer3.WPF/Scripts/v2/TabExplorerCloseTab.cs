@@ -10,19 +10,19 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
-        public static IScriptCommand CloseExplorerTab(string tabbedExplorerVariable = "{TabbedExplorer}", 
+        public static IScriptCommand TabExplorerCloseTab(string tabbedExplorerVariable = "{TabbedExplorer}", 
             string tabVariable = "{Explorer}")
         {
-            return new CloseExplorerTab()
+            return new TabExplorerCloseTab()
             {
                 TabKey = tabVariable,
                 TabbedExplorerKey = tabbedExplorerVariable
             };
         }
 
-        public static IScriptCommand CloseActiveExplorerTab(string tabbedExplorerVariable = "{TabbedExplorer}")
+        public static IScriptCommand TabExplorerCloseTab(string tabbedExplorerVariable = "{TabbedExplorer}")
         {
-            return new CloseExplorerTab()
+            return new TabExplorerCloseTab()
             {
                 TabKey = null,
                 TabbedExplorerKey = tabbedExplorerVariable
@@ -30,7 +30,7 @@ namespace FileExplorer.Script
         }
     }
 
-    public class CloseExplorerTab : ScriptCommandBase
+    public class TabExplorerCloseTab : ScriptCommandBase
     {
         /// <summary>
         /// Point to Explorer (IExplorerViewModel) to be closed. Default = "{Explorer}".
@@ -42,9 +42,9 @@ namespace FileExplorer.Script
         /// </summary>
         public string TabbedExplorerKey { get; set; }
 
-        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<CloseExplorerTab>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<TabExplorerCloseTab>();
 
-        public CloseExplorerTab()
+        public TabExplorerCloseTab()
             : base("CloseExplorerTab")
         {
             TabKey = "{Explorer}";
