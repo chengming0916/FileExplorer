@@ -1,4 +1,6 @@
-﻿using FileExplorer.Models;
+﻿using Caliburn.Micro;
+using FileExplorer.Models;
+using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.ViewModels;
 using MetroLog;
 using System;
@@ -18,14 +20,14 @@ namespace FileExplorer.Script
         /// <param name="directoryVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ExplorerGoTo(string explorerVariable = "{Explorer}", string directoryVariable = "{Directory}", 
+        public static IScriptCommand ExplorerGoTo(string explorerVariable = "{Explorer}", string directoryVariable = "{Directory}",
             IScriptCommand nextCommand = null)
         {
             return new ExplorerGoTo()
             {
                 NextCommand = (ScriptCommandBase)nextCommand,
-                ExplorerKey = explorerVariable, 
-                DirectoryEntryKey = directoryVariable                
+                ExplorerKey = explorerVariable,
+                DirectoryEntryKey = directoryVariable
             };
         }
 
@@ -36,7 +38,7 @@ namespace FileExplorer.Script
         /// <param name="directory"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ExplorerGoTo(string explorerVariable = "{Explorer}", IEntryModel directory = null, 
+        public static IScriptCommand ExplorerGoTo(string explorerVariable = "{Explorer}", IEntryModel directory = null,
             IScriptCommand nextCommand = null)
         {
             return ScriptCommands.Assign("{Goto-Directory}", directory, false,
@@ -53,7 +55,12 @@ namespace FileExplorer.Script
     class ExplorerGoTo : ScriptCommandBase
     {
         /// <summary>
-        /// Point to Explorer (IExplorerViewModel) to be used.  Default = "{Explorer}".
+        /// Point to Events (IEventAggregator), this is used if Explorer is not found. Default = "{Events}".
+        /// </summary>
+        public string EventsKey { get; set; }
+
+        /// <summary>
+        /// Point to Explorer (IExplorerViewModel) to be used.  Default = "{Explorer}".        
         /// </summary>
         public string ExplorerKey { get; set; }
 
@@ -63,13 +70,15 @@ namespace FileExplorer.Script
         /// </summary>
         public string DirectoryEntryKey { get; set; }
 
- 
+
+
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerGoTo>();
 
         public ExplorerGoTo()
             : base("GoToDirectory")
         {
-            ExplorerKey = "{Explorer}";            
+            EventsKey = "{Events}";
+            ExplorerKey = "{Explorer}";
             DirectoryEntryKey = "{Directory}";
             ContinueOnCaptureContext = true;
         }
@@ -78,15 +87,23 @@ namespace FileExplorer.Script
         {
 
             var evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);
-            if (evm == null)
-                return ResultCommand.Error(new ArgumentNullException(ExplorerKey));
-
             var dm = DirectoryEntryKey == null ? null :
-                (await pm.GetValueAsEntryModelArrayAsync(DirectoryEntryKey)).FirstOrDefault();
+               (await pm.GetValueAsEntryModelArrayAsync(DirectoryEntryKey)).FirstOrDefault();
 
-            await evm.GoAsync(dm);
+            if (evm == null)
+            {
+                var events = pm.GetValue<IEventAggregator>(EventsKey);
+                if (events != null)
+                    events.PublishOnUIThread(new DirectoryChangedEvent(this, dm, null));
+                else return ResultCommand.Error(new ArgumentNullException(ExplorerKey));
+            }
+            else
+            {
+                await evm.GoAsync(dm);
+            }
+
             logger.Info("Path = " + dm.FullPath);
             return NextCommand;
-        }        
+        }
     }
 }

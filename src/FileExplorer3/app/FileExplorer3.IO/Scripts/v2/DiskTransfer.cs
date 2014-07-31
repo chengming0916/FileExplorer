@@ -48,9 +48,9 @@ namespace FileExplorer.Script
         public static IScriptCommand DiskTransfer(IEntryModel[] srcModels, IEntryModel destDirModel, bool removeOriginal = false,
             bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.Assign("SourceDiskTransferEntry", srcModels, false,
-                ScriptCommands.Assign("DestinationDiskTransferEntry", destDirModel, false,
-                DiskTransfer("SourceDiskTransferEntry", "DestinationDiskTransferEntry",
+            return ScriptCommands.Assign("{SourceDiskTransferEntry}", srcModels, false,
+                ScriptCommands.Assign("{DestinationDiskTransferEntry}", destDirModel, false,
+                DiskTransfer("{SourceDiskTransferEntry}", "{DestinationDiskTransferEntry}",
                 removeOriginal, allowCustomImplementation, nextCommand)));
         }
 
@@ -71,8 +71,8 @@ namespace FileExplorer.Script
                                     ScriptCommands.Reset(nextCommand, "{DTC-DestDirectory}", "{DTC-SrcDirectory}")));
         }
 
-        public static IScriptCommand DiskTransferChild(string srcDirectoryVariable = "Source",
-           string destDirectoryVariable = "Destination", bool removeOriginal = false, bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
+        public static IScriptCommand DiskTransferChild(string srcDirectoryVariable = "{Source}",
+           string destDirectoryVariable = "{Destination}", bool removeOriginal = false, bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
             return DiskTransferChild(srcDirectoryVariable, destDirectoryVariable, "*", ListOptions.File | ListOptions.Folder, removeOriginal, allowCustomImplementation, nextCommand);
         }
@@ -80,9 +80,9 @@ namespace FileExplorer.Script
         public static IScriptCommand DiskTransferChild(IEntryModel[] srcModels, IEntryModel destDirModel,
             bool removeOriginal = false, bool allowCustomImplementation = true, IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.Assign("SourceDiskTransferEntry", srcModels, false,
-               ScriptCommands.Assign("DestinationDiskTransferEntry", destDirModel, false,
-               DiskTransferChild("SourceDiskTransferEntry", "DestinationDiskTransferEntry",
+            return ScriptCommands.Assign("{SourceDiskTransferEntry}", srcModels, false,
+               ScriptCommands.Assign("{DestinationDiskTransferEntry}", destDirModel, false,
+               DiskTransferChild("{SourceDiskTransferEntry}", "{DestinationDiskTransferEntry}",
                removeOriginal, allowCustomImplementation, nextCommand)));
         }
 
@@ -179,10 +179,10 @@ namespace FileExplorer.Script
                     logger.Info(String.Format("{0} {1} -> {2} using System.IO",
                            RemoveOriginal ? "Move" : "Copy", srcEntries.GetDescription(), destEntry.Name));
 
-                    return ScriptCommands.RunCommands(Script.RunCommands.RunMode.Parallel, NextCommand,
+                    return ScriptCommands.RunCommandsInParallel(NextCommand,
 
-                        CoreScriptCommands.NotifyCreated(destEntry.Profile, String.Join(",", createdPath)),
-                        CoreScriptCommands.NotifyChanged(destEntry.Profile, String.Join(",", changedPath))
+                        CoreScriptCommands.NotifyEntryChangedPath(ChangeType.Created, destEntry.Profile, createdPath.ToArray()),
+                        CoreScriptCommands.NotifyEntryChangedPath(ChangeType.Changed, destEntry.Profile, changedPath.ToArray())
                         );
                 });
         }

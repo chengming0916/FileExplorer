@@ -10,6 +10,12 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, close a tab.
+        /// </summary>
+        /// <param name="tabbedExplorerVariable"></param>
+        /// <param name="tabVariable"></param>
+        /// <returns></returns>
         public static IScriptCommand TabExplorerCloseTab(string tabbedExplorerVariable = "{TabbedExplorer}", 
             string tabVariable = "{Explorer}")
         {
@@ -20,6 +26,11 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Serializable, close a tab.
+        /// </summary>
+        /// <param name="tabbedExplorerVariable"></param>
+        /// <returns></returns>
         public static IScriptCommand TabExplorerCloseTab(string tabbedExplorerVariable = "{TabbedExplorer}")
         {
             return new TabExplorerCloseTab()

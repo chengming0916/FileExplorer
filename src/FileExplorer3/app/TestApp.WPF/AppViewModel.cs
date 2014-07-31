@@ -89,6 +89,9 @@ namespace TestApp
 
 
             RootModels.Add(AsyncUtils.RunSync(() => _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName)));
+
+
+            
         }
 
         #endregion
@@ -104,6 +107,12 @@ namespace TestApp
             return retVal;
         }
 
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context);
+
+          
+        }
 
 
         public void OpenWindow(object context = null)
@@ -113,12 +122,12 @@ namespace TestApp
 
             IExplorerInitializer initializer;
 
-            if (UseScriptCommandInitializer)
+            if (UseScriptCommandInitializer)          
                 //Use ScriptCommandInitializer
                 initializer = new ScriptCommandInitializer()
              {
                  OnModelCreated = new IScriptCommand[] {
-                    ScriptCommands.RunCommands(RunCommands.RunMode.Sequence,
+                    ScriptCommands.RunCommandsInSequence(
                         UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, RootModels.ToArray()),
                         UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrag, _enableDrag),
                         UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrop, _enableDrop),
@@ -131,12 +140,22 @@ namespace TestApp
                             })
                     ) },
 
-                 OnViewAttached = new IScriptCommand[] { 
-                    ScriptCommands.PrintDebug("ScriptCommandInitializer"),                     
-                    ScriptCommands.Assign("{Root}", RootModels.FirstOrDefault(), false,                     
-                    UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}",
-                    UIScriptCommands.DirectoryTreeToggleExpand("{Root}")))
-                 }
+                 OnViewAttached = 
+                 String.IsNullOrEmpty(OpenPath) ? 
+                    new IScriptCommand[] 
+                    { 
+                        ScriptCommands.PrintDebug("ScriptCommandInitializer"),                     
+                        ScriptCommands.Assign("{Root}", RootModels.FirstOrDefault(), false,                     
+                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}",
+                        UIScriptCommands.DirectoryTreeToggleExpand("{Root}")))
+                    
+                    } : 
+                    new IScriptCommand[] {  
+                        ScriptCommands.PrintDebug("ScriptCommandInitializer"),                     
+                        ScriptCommands.Assign("{Profile}", _profileEx, false,
+                                CoreScriptCommands.ParsePath("{Profile}", OpenPath, "{Root}", 
+                                    UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}")))
+                    }                                                                                   
              };
             else //Use ExplorerInitializer (Obsoluting)            
                 initializer = new ExplorerInitializer(_windowManager, _events, RootModels.ToArray())
@@ -152,9 +171,27 @@ namespace TestApp
 
 
             ExplorerViewModel evm = new ExplorerViewModel(_windowManager, _events) { Initializer = initializer };
-            //evm.RootModels = RootModels.ToArray();            ;
-            _windowManager.ShowWindow(evm);
-            //ScriptRunner.RunScriptAsync(Explorer.NewWindow(initializer, context, null));
+            _windowManager.ShowWindow(evm);            
+
+            
+        //        IScriptCommand showWindowCommand =
+        //UIScriptCommands.ExplorerShow(
+        //   UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, "{RootDirectories}"),
+        //  ScriptCommands.AssignArrayItem("{RootDirectories}", 0, "{Root}",
+        //    UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}")), "{WindowManager}", "{Events}", ResultCommand.NoError);
+
+          
+        //        IEventAggregator evnts = new EventAggregator();
+        //        IWindowManager wm = new WindowManager();
+        //        FileSystemInfoExProfile profile = new FileSystemInfoExProfile(_events, _windowManager);
+        //        var rootModel = AsyncUtils.RunSync(() => profile.ParseAsync(""));
+
+        //        ScriptRunner.RunScriptAsync(new ParameterDic() { 
+        //        { "RootDirectories", new IEntryModel[] { rootModel } },	
+        //        { "Events", _events },
+        //        { "WindowManager", _windowManager }				
+        //    }, showWindowCommand);
+
         }
 
 
@@ -371,12 +408,13 @@ namespace TestApp
 
         //private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
         //private string _addPath = lookupPath;
-        private IEventAggregator _events;
+        private IEventAggregator _events;        
         private IWindowManager _windowManager;
         private IExplorerViewModel _explorer = null;
 
         private bool _expandRootDirectories = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
+        private string _openPath = "";
 
         private bool _useScriptCommandInitializer = true;
 
@@ -389,7 +427,7 @@ namespace TestApp
         #region Public Properties
 
 
-
+        public string OpenPath { get { return _openPath; } set { _openPath = value; NotifyOfPropertyChange(() => OpenPath); } }
         public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
         public IEntryModel SelectedRootModel { get { return _selectedRootModel; } set { _selectedRootModel = value; NotifyOfPropertyChange(() => SelectedRootModel); } }
         public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }

@@ -88,7 +88,7 @@ namespace FileExplorer.Script
             }
 
             if (Access == FileAccess.ReadWrite || Access == FileAccess.Write)
-                return CoreScriptCommands.NotifyChanged((string)null, EntryKey, ThenCommand);
+                return CoreScriptCommands.NotifyEntryChangedProfile( ChangeType.Changed, null, EntryKey, ThenCommand);
             else return ThenCommand;
         }
     }

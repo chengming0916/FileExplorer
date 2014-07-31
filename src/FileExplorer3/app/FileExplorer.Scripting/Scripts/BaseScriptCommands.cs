@@ -13,7 +13,7 @@ namespace FileExplorer.Script
     [XmlInclude(typeof(Print))]
     [XmlInclude(typeof(ForEach))]
     [XmlInclude(typeof(IfValue))]
-    [XmlInclude(typeof(AssignValueConverter))]
+    [XmlInclude(typeof(AssignValueConverter))]    
     public class BaseScriptCommands
     {
 

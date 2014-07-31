@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -29,6 +30,59 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)trueCommand,
                 OtherwiseCommand = (ScriptCommandBase)otherwiseCommand,
             };
+        }
+
+        public static IScriptCommand IfValue<T>(ComparsionOperator op, string variable = "{variable}", T value = default(T), IScriptCommand trueCommand = null,
+            IScriptCommand otherwiseCommand = null)
+        {
+            string ifValueValueProperty = "{IfValue-Value}";
+            return
+                ScriptCommands.Assign(ifValueValueProperty, value, true,
+                    IfValue(op, variable, ifValueValueProperty, trueCommand, otherwiseCommand));
+        }
+
+
+        public static IScriptCommand IfEquals<T>(string variable = "{variable}", T value = default(T), IScriptCommand trueCommand = null,
+            IScriptCommand otherwiseCommand = null)
+        {
+            string ifEqualValueProperty = "{IfEquals-Value}";
+            return
+                ScriptCommands.Assign(ifEqualValueProperty, value, true,
+                    IfValue(ComparsionOperator.Equals, variable, ifEqualValueProperty, trueCommand, otherwiseCommand));
+        }
+
+        public static IScriptCommand IfTrue(string variable = "{variable}", IScriptCommand trueCommand = null, 
+            IScriptCommand otherwiseCommand = null)
+        {
+            return IfEquals<bool>(variable, true, trueCommand, otherwiseCommand);
+        }
+
+        /// <summary>
+        /// Serializable, Use Reassign to obtain a property of a vaiable in ParameterDic and use IfEquals to compare, and run different command based on result.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="variable"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        /// <param name="trueCommand"></param>
+        /// <param name="otherwiseCommand"></param>
+        /// <returns></returns>
+        public static  IScriptCommand IfPropertyEquals<T>(string variable = "{variable}", string propertyName = "Property",
+            T value = default(T),
+            IScriptCommand trueCommand = null, 
+            IScriptCommand otherwiseCommand = null)
+        {
+            string variableProperty = ParameterDic.CombineVariable(variable, propertyName);
+            string valueProperty = "{IfPropertyEquals-Value}";
+            return AssignProperty(variable, propertyName, valueProperty,
+                    IfEquals<T>(valueProperty, value, trueCommand, otherwiseCommand));                
+        }
+
+        public static  IScriptCommand IfPropertyIsTrue(string variable = "{variable}", string propertyName = "Property",            
+            IScriptCommand trueCommand = null, 
+            IScriptCommand otherwiseCommand = null)
+        {
+            return IfPropertyEquals<bool>(variable, propertyName, true, trueCommand, otherwiseCommand);
         }
 
         /// <summary>
@@ -71,14 +125,18 @@ namespace FileExplorer.Script
 
         public string Variable2Key { get; set; }
 
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<IfValue>();
+
         public override IScriptCommand Execute(ParameterDic pm)
         {
             object value1 = pm.GetValue<Object>(Variable1Key);
             object value2 = pm.GetValue<Object>(Variable2Key);
 
             bool result = false;
+
+            logger.Info(String.Format("{0} {1} {2}?", value1, Operator, value2));
             if (value1 != null && value2 != null)
-            {
+            {                
                 var left = Expression.Constant(value1);
                 var right = Expression.Constant(value2);
                 Expression expression;

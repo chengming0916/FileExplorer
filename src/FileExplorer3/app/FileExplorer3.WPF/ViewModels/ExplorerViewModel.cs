@@ -127,17 +127,10 @@ namespace FileExplorer.WPF.ViewModels
             entryModel = entryModel ?? RootModels.FirstOrDefault();
             if (entryModel != null)
             {
-                //if (!_attachedView && _initializer is ExplorerInitializer)
-                //{
-                //    _initializer.Initializers.Add(ExplorerInitializers.StartupDirectory(entryModel));
-                //}
-                //else
-                {
-                    await Task.WhenAll(
-                        FileList.SetCurrentDirectoryAsync(entryModel),
-                        DirectoryTree.SelectAsync(entryModel),
-                        Breadcrumb.Selection.AsRoot().SelectAsync(entryModel));
-                }
+                await Task.WhenAll(
+                    FileList.SetCurrentDirectoryAsync(entryModel),
+                    DirectoryTree.SelectAsync(entryModel),
+                    Breadcrumb.Selection.AsRoot().SelectAsync(entryModel));
             }
 
         }
@@ -163,7 +156,7 @@ namespace FileExplorer.WPF.ViewModels
 
         private void setRootModels(IEntryModel[] rootModels)
         {
-            if (rootModels == null)
+            if (rootModels == null || rootModels.Length == 0)
                 return;
             _rootModels = rootModels;
             _rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
@@ -295,7 +288,11 @@ namespace FileExplorer.WPF.ViewModels
         {
             _initializer = value;
             if (_initializer != null)
+            {
                 _initializer.InitializeModelCreatedAsync(this);
+                if (_attachedView)
+                    _initializer.InitializeViewAttachedAsync(this);
+            }
         }
 
         #endregion
@@ -330,7 +327,7 @@ namespace FileExplorer.WPF.ViewModels
             }
         }
 
-     
+
 
         public IExplorerParameters Parameters
         {

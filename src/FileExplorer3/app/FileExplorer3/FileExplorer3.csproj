@@ -67,6 +67,8 @@
     <Compile Include="Defines\Cofe3\Utils\CofePath.cs" />
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
+    <Compile Include="Scripts\v2\BroadcastEntryChangedEvent.cs" />
+    <Compile Include="Scripts\v2\BroadcastEvent.cs" />
     <Compile Include="Scripts\v2\CopyStream.cs" />
     <Compile Include="Scripts\v2\DiskCopyFile.cs" />
     <Compile Include="Scripts\v2\DiskCreatePath.cs" />

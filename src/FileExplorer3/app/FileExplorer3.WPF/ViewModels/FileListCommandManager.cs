@@ -48,7 +48,7 @@ namespace FileExplorer.WPF.ViewModels
                     WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                         WPFScriptCommands.ShowProgress(windowManager, "Delete",
-                            ScriptCommands.RunCommands(RunCommands.RunMode.Queue, new HideProgress(),
+                            ScriptCommands.RunCommandsInQueue(new HideProgress(),
                                FileList.AssignSelectionToParameter(
                                  CoreScriptCommands.DiskDeleteMultiple("Parameter"))), true), 
                      ResultCommand.NoError),

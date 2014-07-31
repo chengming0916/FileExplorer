@@ -16,7 +16,7 @@ namespace FileExplorer.Script
         /// <param name="thenCommand"></param>
         /// <param name="commands"></param>
         /// <returns></returns>
-        public static IScriptCommand RunCommands(RunCommands.RunMode mode = Script.RunCommands.RunMode.Queue,
+        public static IScriptCommand RunCommands(RunMode mode = RunMode.Queue,
             IScriptCommand thenCommand = null, params IScriptCommand[] commands)
         {
             return new RunCommands()
@@ -26,6 +26,37 @@ namespace FileExplorer.Script
                 ScriptCommands = commands.Cast<ScriptCommandBase>().ToArray()
             };
         }
+
+        public static IScriptCommand RunCommandsInQueue(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
+        {
+            return RunCommands(RunMode.Queue, thenCommand, commands);
+        }
+
+        public static IScriptCommand RunCommandsInSequence(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
+        {
+            return RunCommands(RunMode.Sequence, thenCommand, commands);
+        }
+
+        public static IScriptCommand RunCommandsInParallel(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
+        {
+            return RunCommands(RunMode.Parallel, thenCommand, commands);
+        }
+    }
+
+    public enum RunMode
+    {
+        /// <summary>
+        /// Run ScriptCommands one by one, when it returns a command, it's queued. (Default)
+        /// </summary>
+        Queue,
+        /// <summary>
+        /// Run all command together, ParameterDic are cloned per instance. (async only)
+        /// </summary>
+        Parallel,
+        /// <summary>
+        /// Run ScriptCommands one by one, when it returns a command, it run it next.
+        /// </summary>
+        Sequence
     }
 
     /// <summary>
@@ -33,21 +64,7 @@ namespace FileExplorer.Script
     /// </summary>
     public class RunCommands : ScriptCommandBase
     {
-        public enum RunMode
-        {
-            /// <summary>
-            /// Run ScriptCommands one by one, when it returns a command, it's queued. (Default)
-            /// </summary>
-            Queue,
-            /// <summary>
-            /// Run all command together, ParameterDic are cloned per instance. (async only)
-            /// </summary>
-            Parallel,
-            /// <summary>
-            /// Run ScriptCommands one by one, when it returns a command, it run it next.
-            /// </summary>
-            Sequence
-        }
+        
 
         /// <summary>
         /// A list of ScriptCommands to run.
@@ -96,7 +113,7 @@ namespace FileExplorer.Script
 
         public override bool CanExecute(ParameterDic pm)
         {
-            return ScriptCommands.First().CanExecute(pm);
+            return ScriptCommands.Length == 0 || ScriptCommands.First().CanExecute(pm);
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)

@@ -12,6 +12,14 @@ namespace FileExplorer.Script
 
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, change parameters of an IExplorerViewModel.
+        /// </summary>
+        /// <param name="explorerVariable"></param>
+        /// <param name="parameterType"></param>
+        /// <param name="valueVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand ExplorerSetParameters(string explorerVariable = "{Explorer}", 
            ExplorerParameterType parameterType = ExplorerParameterType.EnableDrag,
            object valueVariable = null, IScriptCommand nextCommand = null)

@@ -1,4 +1,5 @@
-﻿using FileExplorer.IO;
+﻿using FileExplorer.Defines;
+using FileExplorer.IO;
 using FileExplorer.Models;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,12 @@ namespace FileExplorer.Script
 {
     public static partial class CoreScriptCommands
     {
-        public static IScriptCommand DiskDelete(string entryKey = "{Entry}", IScriptCommand nextCommand = null)
+        public static IScriptCommand DiskDelete(string entryKey, bool notifyChange,
+            IScriptCommand nextCommand = null)
         {
+            if (notifyChange)
+                nextCommand = CoreScriptCommands.NotifyEntryChangedProfile(ChangeType.Deleted, null, entryKey, nextCommand);
+
             return new DiskDelete()
             {
                 EntryKey = entryKey,
@@ -19,10 +24,22 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand DiskDeleteMultiple(string entriesKey = "{Entries}", IScriptCommand nextCommand = null)
+        public static IScriptCommand DiskDelete(string entryKey = "{Entry}", IScriptCommand nextCommand = null)
         {
+            return DiskDelete(entryKey, false, nextCommand);
+        }
+
+        public static IScriptCommand DiskDeleteMultiple(string entriesKey, bool notifyChange, IScriptCommand nextCommand = null)
+        {
+            if (notifyChange)
+                nextCommand = CoreScriptCommands.NotifyEntryChanged(Defines.ChangeType.Deleted, null, entriesKey, nextCommand);
             return ScriptCommands.ForEach(entriesKey, "{CurrentDeleteItem}",
                 CoreScriptCommands.DiskDelete("{CurrentDeleteItem}"), nextCommand);
+        }
+
+        public static IScriptCommand DiskDeleteMultiple(string entriesKey = "{Entries}", IScriptCommand nextCommand = null)
+        {
+            return DiskDeleteMultiple(entriesKey, false, nextCommand);
         }
     }
 

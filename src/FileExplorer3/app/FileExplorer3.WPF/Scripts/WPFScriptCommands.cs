@@ -1261,6 +1261,7 @@ namespace FileExplorer.Script
             return new IfFileList(condition, ifTrueCommand, otherwiseCommand);
         }
 
+        [Obsolete("UIScriptCommands.FileListIfSelectionLength")]
         public static IScriptCommand IfSelection(Func<IEntryViewModel[], bool> condition, IScriptCommand ifTrueCommand,
             IScriptCommand otherwiseCommand)
         {
@@ -1304,6 +1305,7 @@ namespace FileExplorer.Script
                 variableName, thenCommand);
         }
 
+        [Obsolete("UIScriptCommands.BroadcastDirectoryChanged or ExplorerGoTo")]
         public static IScriptCommand OpenSelectedDirectory =
             new OpenSelectedDirectory(WPFExtensionMethods.GetFileListSelectionFunc);
 
@@ -1875,7 +1877,7 @@ namespace FileExplorer.Script
 
             return WPFScriptCommands.ReportProgress(
                 TransferProgress.IncrementTotalEntries(source.Length),
-                ScriptCommands.RunCommands(RunCommands.RunMode.Sequence, null, transferCommands)
+                ScriptCommands.RunCommandsInSequence(null, transferCommands)
                 );          
         }
 

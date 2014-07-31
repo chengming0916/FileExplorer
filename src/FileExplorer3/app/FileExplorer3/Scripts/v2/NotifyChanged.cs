@@ -11,12 +11,12 @@ using Caliburn.Micro;
 namespace FileExplorer.Script
 {
     public static partial class CoreScriptCommands
-    {
-        private static IScriptCommand notifyChanged(
-            ChangeType changeType, object sourceProfileKey, string sourceEntryKey,
-         object destinationProfileKey, string destinationEntryKey, IScriptCommand nextCommand)
+    {        
+        public static IScriptCommand NotifyEntryChanged(
+            ChangeType changeType, string sourceProfileKey, string sourceEntryKey,
+         string destinationProfileKey, string destinationEntryKey, IScriptCommand nextCommand = null)
         {
-            return new NotifyChanged()
+            return new NotifyEntryChanged()
             {
                 ChangeType = changeType,
                 SourceProfileKey = sourceProfileKey,
@@ -27,77 +27,95 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand NotifyMoved(object sourceProfileKey = null, string sourceEntryKey = null,
-         object destinationProfileKey = null, string destinationEntryKey = "Entry", IScriptCommand nextCommand = null)
+        public static IScriptCommand NotifyEntryChanged(
+           ChangeType changeType, string profileKey, string entryKey, IScriptCommand nextCommand = null)
         {
-            return notifyChanged(ChangeType.Moved, sourceProfileKey, sourceEntryKey, 
-                destinationProfileKey, destinationEntryKey, nextCommand);
+            return NotifyEntryChanged(changeType, null, null, profileKey, entryKey, nextCommand);
         }
 
-        public static IScriptCommand NotifyCreated(object profileKey = null, 
-            string entryKey = "Entry", IScriptCommand nextCommand = null)
+        #region Profile, EntryKey
+
+        public static IScriptCommand NotifyEntryChangedProfile(
+          ChangeType changeType, IProfile sourceProfile, string sourceEntryKey,
+          IProfile destinationProfile, string destinationEntryKey, IScriptCommand nextCommand = null)
         {
-            return notifyChanged(ChangeType.Created, null, null, profileKey, entryKey, nextCommand);
+            string sourceProfileKey = "{SourceProfileKey}";
+            string destinationProfileKey = "{DestinationProfileKey}";
+            return ScriptCommands.Assign(sourceProfileKey, sourceProfile, false,
+                ScriptCommands.Assign(destinationProfileKey, destinationProfile, false,
+                NotifyEntryChanged(changeType, sourceProfileKey, sourceEntryKey,
+                destinationProfileKey, destinationEntryKey, nextCommand)));
+        }
+              
+        public static IScriptCommand NotifyEntryChangedProfile(
+            ChangeType changeType, IProfile profile, string entryKey, IScriptCommand nextCommand = null)
+        {
+            return NotifyEntryChangedProfile(changeType, null, null, profile, entryKey, nextCommand);
         }
 
-        public static IScriptCommand NotifyDeleted(object profileKey = null,
-           string entryKey = "Entry", IScriptCommand nextCommand = null)
+        #endregion
+
+        #region Profile, EntryPaths
+        public static IScriptCommand NotifyEntryChangedPath(
+          ChangeType changeType, IProfile sourceProfile, string[] sourceEntryPaths,
+          IProfile destinationProfile, string[] destinationEntryPaths, IScriptCommand nextCommand = null)
         {
-            return notifyChanged(ChangeType.Deleted, null, null, profileKey, entryKey, nextCommand);
+            string sourceEntriesKey = "{SourceEntriesKey}";
+            string destinationEntriesKey = "{DestinationEntriesKey}";
+            return ScriptCommands.Assign(sourceEntriesKey, sourceEntryPaths, false,
+                ScriptCommands.Assign(destinationEntriesKey, destinationEntryPaths, false,
+                NotifyEntryChangedProfile(changeType, sourceProfile, sourceEntriesKey,
+                destinationProfile, destinationEntriesKey, nextCommand)));
         }
 
-        public static IScriptCommand NotifyChanged(object profileKey = null,
-          string entryKey = "Entry", IScriptCommand nextCommand = null)
+        public static IScriptCommand NotifyEntryChangedPath(
+             ChangeType changeType, IProfile profile, string[] entryPaths, IScriptCommand nextCommand = null)
         {
-            return notifyChanged(ChangeType.Changed, null, null, profileKey, entryKey, nextCommand);
+            return NotifyEntryChangedPath(changeType, null, new string[] {}, profile, entryPaths, nextCommand);
+        }
+        #endregion
+
+        #region Entry
+
+        public static IScriptCommand NotifyEntryChanged(
+            ChangeType changeType, IEntryModel[] entries, IScriptCommand nextCommand = null)
+        {
+            return NotifyEntryChangedPath(changeType, null, null, entries.First().Profile, 
+                entries.Select(e => e.FullPath).ToArray(), nextCommand);
         }
 
-
-        public static IScriptCommand NotifyMoved(IEntryModel srcEntry, IEntryModel destEntry, IScriptCommand nextCommand = null)
+        public static IScriptCommand NotifyEntryChanged(
+            ChangeType changeType, IEntryModel entry, IScriptCommand nextCommand = null)
         {
-            srcEntry = srcEntry ?? NullEntryModel.Instance;
-            return NotifyMoved(srcEntry.Profile, srcEntry.FullPath, destEntry.Profile, destEntry.FullPath, nextCommand);
+            return NotifyEntryChangedPath(changeType, null, null, entry.Profile, new string[] { entry.FullPath }, nextCommand);
         }
+        #endregion
 
-        public static IScriptCommand NotifyCreated(IEntryModel entry, IScriptCommand nextCommand = null)
-        {
-            entry = entry ?? NullEntryModel.Instance;
-            return NotifyCreated(entry.Profile, entry.FullPath, nextCommand);
-        }
 
-        public static IScriptCommand NotifyDeleted(IEntryModel entry, IScriptCommand nextCommand = null)
-        {
-            entry = entry ?? NullEntryModel.Instance;
-            return NotifyDeleted(entry.Profile, entry.FullPath, nextCommand);
-        }
 
-        public static IScriptCommand NotifyChanged(IEntryModel entry, IScriptCommand nextCommand = null)
-        {
-            entry = entry ?? NullEntryModel.Instance;
-            return NotifyChanged(entry.Profile, entry.FullPath, nextCommand);
-        }
+       
 
     }
 
-    public class NotifyChanged : ScriptCommandBase
+    public class NotifyEntryChanged : ScriptCommandBase
     {
         /// <summary>
-        /// Profile used report source changed, can be a key or actual IProfile, default = null.
+        /// Profile used report source changed, default = null.
         /// </summary>
-        public object SourceProfileKey { get; set; }
+        public string SourceProfileKey { get; set; }
 
         /// <summary>
-        /// Can be either a csv path (prase from sourceProfile) or IEntryModel, default = null.
+        /// Can be either a path or path array (prase from sourceProfile) or IEntryModel, default = null.
         /// </summary>
-        public string SourceEntryKey { get; set; }        
+        public string SourceEntryKey { get; set; }
 
         /// <summary>
-        /// Profile used report destination changed, can be a key or actual IProfile, default = "Profile".
+        /// Profile used report destination changed, default = "Profile".
         /// </summary>
-        public object DestinationProfileKey { get; set; }
+        public string DestinationProfileKey { get; set; }
 
         /// <summary>
-        /// Can be either a csv path (prase from sourceProfile) or IEntryModel, default = "Entry".
+        /// Can be either a path or path array (prase from destProfile) or IEntryModel, default = "Entry".
         /// </summary>
         public string DestinationEntryKey { get; set; }
 
@@ -106,9 +124,9 @@ namespace FileExplorer.Script
         /// </summary>
         public ChangeType ChangeType { get; set; }
 
-        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<NotifyChanged>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<NotifyEntryChanged>();
 
-        public NotifyChanged()
+        public NotifyEntryChanged()
             : base("NotifyChanged")
         {
             SourceProfileKey = null;
@@ -118,26 +136,53 @@ namespace FileExplorer.Script
             ChangeType = Defines.ChangeType.Changed;
         }
 
+        private bool parseEntryAndProfile(ParameterDic pm, string key, string profileKey,
+            out string[] entryPath, out IProfile profile)
+        {
+            object value = pm.GetValue(key);
+
+            if (value is string)
+                value = new string[] { value as string };
+            if (value is string[])
+            {
+                entryPath = value as string[];
+                profile = pm.GetValue<IProfile>(profileKey);
+                return true;
+            }
+
+            if (value is IEntryModel)
+                value = new IEntryModel[] { value as IEntryModel };
+
+            if (value is IEntryModel[])
+            {
+                IEntryModel[] ems = value as IEntryModel[];
+                entryPath = ems.Select(em => em.FullPath).ToArray();
+                profile = ems.First().Profile;
+                return true;
+            }
+
+            entryPath = null;
+            profile = null;
+            return false;
+        }
+
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            IProfile sourceProfile = SourceProfileKey as IProfile ?? pm.GetValue<IProfile>(SourceProfileKey as string) ??
-                pm.GetValue<IEntryModel>(SourceEntryKey, NullEntryModel.Instance).Profile;
-            IProfile destinationProfile = DestinationProfileKey as IProfile ?? pm.GetValue<IProfile>(DestinationProfileKey as string) ??
-                pm.GetValue<IEntryModel>(DestinationEntryKey, NullEntryModel.Instance).Profile;
-            
-            string sourcePath = pm.GetValue<string>(SourceEntryKey) ??
-                pm.GetValue<IEntryModel>(SourceEntryKey, NullEntryModel.Instance).FullPath;
-            string[] sourcePaths = sourcePath == null ? new string[] {} : 
-                sourcePath.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] sourcePaths, destinationPaths;
+            IProfile sourceProfile, destinationProfile;
 
-            string destinationPath = pm.GetValue<string>(DestinationEntryKey) ??
-               pm.GetValue<IEntryModel>(DestinationEntryKey, NullEntryModel.Instance).FullPath;
-            string[] destinationPaths =
-                destinationPath == null ? new string[] { } :
-                destinationPath.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            parseEntryAndProfile(pm, SourceEntryKey, SourceProfileKey, out sourcePaths, out sourceProfile);
 
-            logger.Info(String.Format("({0}) {1} -> {2}", ChangeType, sourcePath, destinationPath));
-            if (ChangeType == ChangeType.Moved && sourceProfile != null && destinationProfile != null && sourcePath != null)
+
+            if (!parseEntryAndProfile(pm, DestinationEntryKey, DestinationProfileKey, out destinationPaths, out destinationProfile))
+            {
+                logger.Error(String.Format("Failed to parse {0} or {1}", DestinationEntryKey, DestinationProfileKey));
+                return NextCommand;
+            }
+
+
+            logger.Info(String.Format("({0}) {1} -> {2}", ChangeType, sourcePaths, destinationPaths));            
+            if (ChangeType == ChangeType.Moved && sourceProfile != null && destinationProfile != null && sourcePaths != null)
             {
                 if (sourceProfile != destinationProfile)
                 {
@@ -145,7 +190,7 @@ namespace FileExplorer.Script
                     destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType.Created, destinationPaths));
                 }
                 else
-                    destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(destinationPath, sourcePath));
+                    destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(destinationPaths.FirstOrDefault(), sourcePaths.FirstOrDefault()));
             }
             else
                 destinationProfile.Events.PublishOnCurrentThread(new EntryChangedEvent(ChangeType, destinationPaths));

@@ -59,7 +59,9 @@ namespace FileExplorer.WPF.ViewModels
             //Initializers.EnsureOneStartupDirectoryOnly();
             if (!Initializers.Any(i => i is StartupDirInitializer))
             {
-                await evm.GoAsync(RootModels.FirstOrDefault());
+                var firstDir = RootModels.FirstOrDefault();
+                if (firstDir != null)
+                    await evm.GoAsync(firstDir);
             }
 
             await Initializers.InitalizeAsync(evm);
@@ -72,8 +74,8 @@ namespace FileExplorer.WPF.ViewModels
         #endregion
 
         #region Public Properties
-        
-        public IEventAggregator Events { get; set; }        
+
+        public IEventAggregator Events { get; set; }
         public IWindowManager WindowManager { get; set; }
         public IEntryModel[] RootModels { get; set; }
         public IParameters Parameters { get; set; }
