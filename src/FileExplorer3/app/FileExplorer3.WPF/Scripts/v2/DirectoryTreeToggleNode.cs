@@ -13,9 +13,17 @@ namespace FileExplorer.Script
 
     public static partial class UIScriptCommands
     {
-         public static IScriptCommand DirectoryTreeToggleNode(string explorerVariable = "{DirectoryTree}",
-            string directoryEntryVariable = "{Directory}",
-           DirectoryTreeToggleMode toggleMode = DirectoryTreeToggleMode.Expand, IScriptCommand nextCommand = null)
+        /// <summary>
+        /// Serializable, toggle a node specified in an variable in [DirectoryTree] to expand or collapse.
+        /// </summary>
+        /// <param name="explorerVariable"></param>
+        /// <param name="directoryEntryVariable"></param>
+        /// <param name="toggleMode"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand DirectoryTreeToggleNode(string explorerVariable = "{DirectoryTree}",
+           string directoryEntryVariable = "{Directory}",
+          DirectoryTreeToggleMode toggleMode = DirectoryTreeToggleMode.Expand, IScriptCommand nextCommand = null)
         {
             return new DirectoryTreeToggleNode()
             {
@@ -26,6 +34,12 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Serializable, toggle a node specified in an variable in [DirectoryTree] to expand.
+        /// </summary>
+        /// <param name="directoryEntryVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand DirectoryTreeToggleExpand(
             string directoryEntryVariable = "{Directory}", IScriptCommand nextCommand = null)
         {
@@ -33,16 +47,22 @@ namespace FileExplorer.Script
                 nextCommand);
         }
 
+        /// <summary>
+        /// Serializable, toggle a node specified in an variable in [DirectoryTree] to collapse.
+        /// </summary>
+        /// <param name="directoryEntryVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand DirectoryTreeToggleCollapse(
            string directoryEntryVariable = "{Directory}", IScriptCommand nextCommand = null)
         {
             return DirectoryTreeToggleNode("{DirectoryTree}", directoryEntryVariable, DirectoryTreeToggleMode.Collapse,
                 nextCommand);
-        }      
+        }
     }
 
 
-    public enum DirectoryTreeToggleMode {  Expand, Collapse }
+    public enum DirectoryTreeToggleMode { Expand, Collapse }
 
     /// <summary>
     /// Expand or Collapse 
@@ -79,7 +99,7 @@ namespace FileExplorer.Script
         {
             IExplorerViewModel evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);
             IDirectoryTreeViewModel dvm = evm != null ? evm.DirectoryTree :
-                pm.GetValue<IDirectoryTreeViewModel>(ExplorerKey);            
+                pm.GetValue<IDirectoryTreeViewModel>(ExplorerKey);
             IEntryModel em = pm.GetValue<IEntryModel>(DirectoryEntryKey);
 
             if (dvm == null)
@@ -89,7 +109,7 @@ namespace FileExplorer.Script
 
             switch (ToggleMode)
             {
-                case DirectoryTreeToggleMode.Expand :
+                case DirectoryTreeToggleMode.Expand:
                     await dvm.Selection.LookupAsync(em,
                             RecrusiveSearch<IDirectoryNodeViewModel, IEntryModel>.LoadSubentriesIfNotLoaded,
                             SetCollapsed<IDirectoryNodeViewModel, IEntryModel>.WhenNotRelated,

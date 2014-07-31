@@ -169,7 +169,7 @@ namespace FileExplorer.Script
                         destProfile.Wrapper.CompressMultiple(archiveType, stream, compressDic, progress1);
 
                     logger.Info(String.Format("{0} items transfered", compressDic.Count()));
-                    return CoreScriptCommands.NotifyChanged(destEntry, NextCommand);
+                    return CoreScriptCommands.NotifyEntryChanged( ChangeType.Changed, destEntry, NextCommand);
                 });
 
 

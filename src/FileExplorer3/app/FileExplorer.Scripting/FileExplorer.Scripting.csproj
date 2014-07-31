@@ -42,7 +42,7 @@
     <Compile Include="Scripts\ExtensionMethods.cs" />
     <Compile Include="Scripts\ScriptCommandsv1.cs" />
     <Compile Include="Implements\ScriptCommandSerializer.cs" />
-    <Compile Include="Scripts\FileExplorer3Commands.cs" />
+    <Compile Include="Scripts\BaseScriptCommands.cs" />
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Interfaces\ExtensionMethods.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicConverter.cs" />
@@ -65,6 +65,7 @@
     <Compile Include="Scripts\v2\RunCommands.cs" />
     <Compile Include="Scripts\v2\Reassign.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
+    <Compile Include="Utils\TypeInfoUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MetroLog">

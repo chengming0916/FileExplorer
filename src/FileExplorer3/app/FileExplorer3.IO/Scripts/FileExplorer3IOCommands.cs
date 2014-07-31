@@ -7,7 +7,8 @@ using System.Xml.Serialization;
 
 namespace FileExplorer.Script
 {
-    [XmlInclude(typeof(DiskTransfer))]    
+    [XmlInclude(typeof(DiskTransfer))]  
+    [XmlInclude(typeof(DiskRun))]
     public class FileExplorer3IOCommands
     {
 

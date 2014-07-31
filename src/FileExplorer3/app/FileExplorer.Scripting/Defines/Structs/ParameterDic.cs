@@ -64,7 +64,7 @@ namespace FileExplorer
 
         private static string getVariable(string variableKey)
         {
-            if (!variableKey.StartsWith("{") && variableKey.EndsWith("}"))
+            if (!(variableKey.StartsWith("{") && variableKey.EndsWith("}")))
                 throw new ArgumentException(variableKey);
             return variableKey.TrimStart('{').TrimEnd('}');
         }

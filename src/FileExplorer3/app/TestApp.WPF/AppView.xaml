@@ -57,6 +57,10 @@
                             <CheckBox x:Name="EnableMultiSelect" Content="MultiSelect" ToolTip="Enable Multiselect using drag"  />
                             <CheckBox x:Name="UseScriptCommandInitializer" Content="Initialize using ScriptCommand" ToolTip="Instead of using the original ExplorerInitializer" />
                         </WrapPanel>
+                        <DockPanel>
+                            <TextBlock Text="OpenPath" DockPanel.Dock="Left" />
+                            <TextBox x:Name="OpenPath" />
+                        </DockPanel>
                         <Button x:Name="OpenToolWindow"  Content="Tool Window" ToolTip="Open a Explorer tool window, which is usable as part of your UI" />
                         <!--<Button x:Name="UpdateWindow" Content="Update Previous Opened Window" />-->
                         <Button x:Name="MdiWindow" Content="Mdi Window" ToolTip="Open a new Mdi window that allow showing multiple intance of Explorer"  Grid.Row="2"/>

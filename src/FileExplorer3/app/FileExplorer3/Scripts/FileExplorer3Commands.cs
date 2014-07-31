@@ -12,7 +12,7 @@ namespace FileExplorer.Script
     [XmlInclude(typeof(DiskOpenStream))]
     [XmlInclude(typeof(CopyStream))]
     [XmlInclude(typeof(Download))]    
-    [XmlInclude(typeof(NotifyChanged))]
+    [XmlInclude(typeof(NotifyEntryChanged))]
     [XmlInclude(typeof(BaseScriptCommands))]
     public class FileExplorer3Commands
     {

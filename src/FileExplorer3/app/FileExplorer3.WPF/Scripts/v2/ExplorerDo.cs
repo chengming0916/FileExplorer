@@ -31,6 +31,13 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Not Serializable, given explorer (IExplorerViewModel), do the specified code.
+        /// </summary>
+        /// <param name="doActionAsync"></param>
+        /// <param name="continueOnCaptureContext"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand ExplorerDoAsync(
             Func<IExplorerViewModel, Task> doActionAsync = null,
             bool continueOnCaptureContext = false,
@@ -58,6 +65,12 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Not Serializable, given explorer (IExplorerViewModel), do the specified code.
+        /// </summary>
+        /// <param name="doAction"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand ExplorerDo(
             Action<IExplorerViewModel> doAction = null,            
             IScriptCommand nextCommand = null)

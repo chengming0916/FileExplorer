@@ -50,7 +50,7 @@ namespace FileExplorer.WPF.Defines
         }
 
         public DirectoryChangedEvent(object sender, IEntryModel newM, IEntryModel originalM)
-            : this(sender, EntryViewModel.FromEntryModel(newM), EntryViewModel.FromEntryModel(originalM))
+            : this(sender, EntryViewModel.FromEntryModel(newM), originalM == null ? null : EntryViewModel.FromEntryModel(originalM))
         {
 
         }

@@ -13,6 +13,8 @@ namespace FileExplorer.WPF.ViewModels
 
         public IScriptCommand[] OnModelCreated { get; set; }
 
+        public ParameterDic StartupParameters { get; set; }
+
         public Caliburn.Micro.IEventAggregator Events
         {
             get;
@@ -39,13 +41,13 @@ namespace FileExplorer.WPF.ViewModels
         public async Task InitializeModelCreatedAsync(IExplorerViewModel evm)
         {
             if (OnModelCreated != null)
-                await evm.Commands.ExecuteAsync(OnModelCreated);
+                await evm.Commands.ExecuteAsync(OnModelCreated, StartupParameters);
         }
 
         public async Task InitializeViewAttachedAsync(IExplorerViewModel evm)
         {
             if (OnViewAttached != null)
-                await evm.Commands.ExecuteAsync(OnViewAttached);
+                await evm.Commands.ExecuteAsync(OnViewAttached, StartupParameters);
         }
 
 

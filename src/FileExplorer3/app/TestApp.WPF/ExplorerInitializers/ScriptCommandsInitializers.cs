@@ -32,17 +32,35 @@ namespace TestApp
                new ColumnInitializers(),
                new ScriptCommandsInitializers(windowManager, events),
                new ToolbarCommandsInitializers(windowManager));
+            
 
+            //explorerModel.FileList.Commands.Commands.Open =
+            // FileList.IfSelection(evm => evm.Count() == 1,
+            //     FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
+            //         FileList.OpenSelectedDirectory, //Selected directory                        
+            //         FileList.AssignSelectionToParameter(
+            //             new OpenWithScriptCommand(null))),  //Selected non-directory
+            //     ResultCommand.NoError //Selected more than one item, ignore.
+            //     );
 
             explorerModel.FileList.Commands.Commands.Open =
-             FileList.IfSelection(evm => evm.Count() == 1,
-                 FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
-                     FileList.OpenSelectedDirectory, //Selected directory                        
-                     FileList.AssignSelectionToParameter(
-                         new OpenWithScriptCommand(null))),  //Selected non-directory
-                 ResultCommand.NoError //Selected more than one item, ignore.
-                 );
+             UIScriptCommands.FileListAssignSelection("{Selection}",                            //Assign Selection
+               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,        //If Selection.Length = 1
+                 ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",            //FirstSelected = Selection[0]
+                   ScriptCommands.IfPropertyIsTrue("{FirstSelected}", "IsDirectory",            //FirstSelected.IsDirectory?                   
+                        UIScriptCommands.NotifyDirectoryChanged("{Selection}"),              //True -> Broadcast ChangeDirectory using {Events}
+                        IOScriptCommands.DiskRun("{FirstSelected}")                             //False -> DiskRun
+                        )
+               )));
 
+            explorerModel.FileList.Commands.Commands.Delete =
+                UIScriptCommands.FileListAssignSelection("{Selection}",                         //Assign Selection
+                ScriptCommands.AssignProperty("{Selection}", "Length", "{Selection-Length}",    //Assign Selection Length
+                ScriptCommands.IfValue<int>(ComparsionOperator.GreaterThanOrEqual, "{Selection-Length}", 1, //If Selection Length >= 1
+                  ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",                   //FirstSelected = Selection[0]
+                  UIScriptCommands.MessageBoxYesNo("FileExplorer", "Delete {FirstSelected} and {Selection-Length} Item(s)?", //Yes, ShowMessageBox   
+                  CoreScriptCommands.DiskDeleteMultiple("{Selection}", true))))));                   //User clicked yes, Call Delete.
+  
             explorerModel.FileList.Commands.Commands.NewFolder =
                  FileList.Do(flvm => WPFScriptCommands.CreatePath(
                         flvm.CurrentDirectory, "NewFolder", true, true,
@@ -50,17 +68,19 @@ namespace TestApp
                      //        flvm.CurrentDirectory, "NewFolder", "{DestinationFolder}", NameGenerationMode.Rename, 
                         m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
 
-            explorerModel.FileList.Commands.Commands.Delete =
-                 FileList.IfSelection(evm => evm.Count() >= 1,
-                    WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
-                        pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                        WPFScriptCommands.ShowProgress(windowManager, "Delete",
-                                    ScriptCommands.RunInSequence(
-                                        FileList.AssignSelectionToParameter(
-                                            IOScriptCommands.DeleteFromParameter),
-                                        new HideProgress())),
-                        ResultCommand.NoError),
-                    NullScriptCommand.Instance);
+            //explorerModel.FileList.Commands.Commands.Delete =
+            //     FileList.IfSelection(evm => evm.Count() >= 1,
+            //        WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
+            //            pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+            //            WPFScriptCommands.ShowProgress(windowManager, "Delete",
+            //                        ScriptCommands.RunInSequence(
+            //                            FileList.AssignSelectionToParameter(
+            //                                IOScriptCommands.DeleteFromParameter),
+            //                            new HideProgress())),
+            //            ResultCommand.NoError),
+            //        NullScriptCommand.Instance);
+
+            
 
             explorerModel.FileList.Commands.Commands.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,

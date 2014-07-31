@@ -11,6 +11,13 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, open a tab.
+        /// </summary>
+        /// <param name="tabbedExplorerVariable"></param>
+        /// <param name="directoryVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <returns></returns>
         public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
             string directoryVariable = "{Entry}",
             string destinationVariable = "{Explorer}")
@@ -23,6 +30,12 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Serializable, open a tab.
+        /// </summary>
+        /// <param name="tabbedExplorerVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <returns></returns>
         public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
                  string destinationVariable = "{Explorer}")
         {
