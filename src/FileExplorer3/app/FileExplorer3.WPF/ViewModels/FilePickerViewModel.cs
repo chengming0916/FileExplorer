@@ -13,6 +13,7 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.Script;
 using FileExplorer.Models;
+using System.ComponentModel.Composition;
 
 
 namespace FileExplorer.WPF.ViewModels
@@ -26,13 +27,13 @@ namespace FileExplorer.WPF.ViewModels
         IProfile Profile { get; }
     }
 
+    [Export(typeof(IExplorerViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class FilePickerViewModel : ExplorerViewModel, IEntryModelInfo
     {
         #region Constructor
 
-        public FilePickerViewModel(IExplorerInitializer initializer, string filterStr,
-          FilePickerMode mode = FilePickerMode.Open)
-            : base(initializer)
+        private void init(FilePickerMode mode = FilePickerMode.Open, string filterStr = "All files (*)|*")
         {
             FilterStr = filterStr;
             WindowTitleMask = Enum.GetName(typeof(FilePickerMode), mode);
@@ -86,6 +87,20 @@ namespace FileExplorer.WPF.ViewModels
             FileList.EnableMultiSelect = false;
         }
 
+        [ImportingConstructor]
+        public FilePickerViewModel(IWindowManager windowManager, IEventAggregator events)
+            : base(windowManager, events)
+        {
+            init();
+        }
+
+        public FilePickerViewModel(IExplorerInitializer initializer, string filterStr,
+          FilePickerMode mode = FilePickerMode.Open)
+            : base(initializer)
+        {
+            init(mode, filterStr);
+        }
+
         public FilePickerViewModel(IEventAggregator events, IWindowManager windowManager, string filterStr,
             FilePickerMode mode = FilePickerMode.Open, params IEntryModel[] rootModels)
             : this(new ExplorerInitializer(windowManager, events, rootModels), filterStr, mode)
@@ -105,7 +120,7 @@ namespace FileExplorer.WPF.ViewModels
             UserControl uc = view as UserControl;
             uc.Loaded += (o, e) =>
                 {
-                    SelectedFilter = Filters.AllNonBindable.First().Filter;
+                        SelectedFilter = Filters.AllNonBindable.First().Filter;
                 };
         }
 
@@ -215,7 +230,7 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Public Properties
 
-
+        public FilePickerMode PickerMode { get { return _mode; } set { _mode = value; } }
 
         public string FileName { get { return _selectedFileName; } set { setFileName(value); } }
         public IProfile Profile { get; private set; }

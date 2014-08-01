@@ -198,6 +198,7 @@
     <Compile Include="Scripts\IOScriptCommands.cs" />
     <Compile Include="Scripts\v2\DiskRun.cs" />
     <Compile Include="Scripts\v2\DiskTransfer.cs" />
+    <Compile Include="Scripts\v2\IOInitializeHelpers.cs" />
     <Compile Include="Scripts\v2\SzsDiskTransfer.cs" />
     <Compile Include="Utils\CompressUtils.cs" />
     <Compile Include="Utils\ExIconExtractor.cs" />

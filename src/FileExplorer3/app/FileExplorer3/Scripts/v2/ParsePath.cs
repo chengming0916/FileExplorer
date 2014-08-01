@@ -20,44 +20,43 @@ namespace FileExplorer.Script
     {
         
 
-        /// <summary>
-        /// Serializable, Parse a path, requires Profile set to an IDiskProfile or IDiskProfile[].
-        /// </summary>
-        /// <param name="pathVariable">Actual path or reference variable (if Bracketed), e.g. C:\Temp or {Path}.</param>
-        /// <param name="destVariable"></param>
-        /// <param name="foundCommand"></param>
-        /// <param name="notFoundCommand"></param>
-        /// <returns></returns>
-        public static IScriptCommand ParsePathFromProfiles(string profilesVariable = "{Profiles}", string pathVariable = "{Path}", string destVariable = "{Entry}",
-            IScriptCommand foundCommand = null, IScriptCommand notFoundCommand = null)
-        {
-            return new ParsePath()
-            {
-                ProfileKey = null,
-                ProfilesKey = profilesVariable,
-                PathKey = pathVariable,
-                DestinationKey = destVariable,
-                NextCommand = (ScriptCommandBase)foundCommand,
-                NotFoundCommand = (ScriptCommandBase)notFoundCommand
-            };
-        }
+        ///// <summary>
+        ///// Serializable, Parse a path, requires Profile set to an IDiskProfile or IDiskProfile[].
+        ///// </summary>
+        ///// <param name="pathVariable">Actual path or reference variable (if Bracketed), e.g. C:\Temp or {Path}.</param>
+        ///// <param name="destVariable"></param>
+        ///// <param name="foundCommand"></param>
+        ///// <param name="notFoundCommand"></param>
+        ///// <returns></returns>
+        //public static IScriptCommand ParsePathFromProfiles(string profilesVariable = "{Profiles}", string pathVariable = "{Path}", string destVariable = "{Entry}",
+        //    IScriptCommand foundCommand = null, IScriptCommand notFoundCommand = null)
+        //{
+        //    return new ParsePath()
+        //    {
+        //        ProfileKey = null,
+        //        ProfilesKey = profilesVariable,
+        //        PathKey = pathVariable,
+        //        DestinationKey = destVariable,
+        //        NextCommand = (ScriptCommandBase)foundCommand,
+        //        NotFoundCommand = (ScriptCommandBase)notFoundCommand
+        //    };
+        //}
 
         /// <summary>
         /// Serializable, Parse a path, requires Profile set to an IDiskProfile or IDiskProfile[].
         /// </summary>
-        /// <param name="pathVariable">Actual path or reference variable (if Bracketed), e.g. C:\Temp or {Path}.</param>
+        /// <param name="pathOrPathVariable">Actual path or reference variable (if Bracketed), e.g. C:\Temp or {Path}.</param>
         /// <param name="destVariable"></param>
         /// <param name="foundCommand"></param>
         /// <param name="notFoundCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ParsePath(string profileVariable = "{Profile}", string pathVariable = "{Path}", string destVariable = "{Entry}",
+        public static IScriptCommand ParsePath(string profileVariable = "{Profile}", string pathOrPathVariable = "{Path}", string destVariable = "{Entry}",
             IScriptCommand foundCommand = null, IScriptCommand notFoundCommand = null)
         {
             return new ParsePath()
             {
-                ProfileKey = profileVariable,
-                ProfilesKey = null,
-                PathKey = pathVariable,
+                ProfileKey = profileVariable,                
+                PathKey = pathOrPathVariable,
                 DestinationKey = destVariable,
                 NextCommand = (ScriptCommandBase)foundCommand,
                 NotFoundCommand = (ScriptCommandBase)notFoundCommand
@@ -76,10 +75,10 @@ namespace FileExplorer.Script
         /// </summary>
         public string ProfileKey { get; set; }
 
-        /// <summary>
-        /// Profile to parse path (IProfile[]), default = Profiles
-        /// </summary>
-        public string ProfilesKey { get; set; }
+        ///// <summary>
+        ///// Profile to parse path (IProfile[]), default = Profiles
+        ///// </summary>
+        //public string ProfilesKey { get; set; }
 
         /// <summary>
         /// Required, path to parse, default = {Path} or C:\\Temp
@@ -99,17 +98,15 @@ namespace FileExplorer.Script
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ParsePath>();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public ParsePath() : base("ParsePath") { ProfileKey = "{Profile}"; ProfilesKey = "{Profiles}"; PathKey = "{Path}"; DestinationKey = "{Entry}"; }
+        public ParsePath() : base("ParsePath") { ProfileKey = "{Profile}";  PathKey = "{Path}"; DestinationKey = "{Entry}"; }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            string path = pm.ReplaceVariableInsideBracketed(PathKey);
-            if (String.IsNullOrEmpty(path))
-                return ResultCommand.Error(new ArgumentException("Path not specified."));
+            string path = pm.ReplaceVariableInsideBracketed(PathKey);            
 
             IProfile profile = pm.GetValue<IProfile>(ProfileKey, null);
             IProfile[] profiles = profile != null ? new IProfile[] { profile } :
-                pm.GetValue<IProfile[]>(ProfilesKey, null);
+                pm.GetValue<IProfile[]>(ProfileKey, null);
             if (profiles == null)
                 return ResultCommand.Error(new ArgumentException("Profiles not specified."));
 

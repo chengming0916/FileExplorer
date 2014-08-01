@@ -43,24 +43,10 @@ namespace TestApp
             //     ResultCommand.NoError //Selected more than one item, ignore.
             //     );
 
-            explorerModel.FileList.Commands.Commands.Open =
-             UIScriptCommands.FileListAssignSelection("{Selection}",                            //Assign Selection
-               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,        //If Selection.Length = 1
-                 ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",            //FirstSelected = Selection[0]
-                   ScriptCommands.IfPropertyIsTrue("{FirstSelected}", "IsDirectory",            //FirstSelected.IsDirectory?                   
-                        UIScriptCommands.NotifyDirectoryChanged("{Selection}"),              //True -> Broadcast ChangeDirectory using {Events}
-                        IOScriptCommands.DiskRun("{FirstSelected}")                             //False -> DiskRun
-                        )
-               )));
+            explorerModel.FileList.Commands.Commands.Open = IOInitializeHelpers.FileList_Open_For_DiskBased_Items;
 
-            explorerModel.FileList.Commands.Commands.Delete =
-                UIScriptCommands.FileListAssignSelection("{Selection}",                         //Assign Selection
-                ScriptCommands.AssignProperty("{Selection}", "Length", "{Selection-Length}",    //Assign Selection Length
-                ScriptCommands.IfValue<int>(ComparsionOperator.GreaterThanOrEqual, "{Selection-Length}", 1, //If Selection Length >= 1
-                  ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",                   //FirstSelected = Selection[0]
-                  UIScriptCommands.MessageBoxYesNo("FileExplorer", "Delete {FirstSelected} and {Selection-Length} Item(s)?", //Yes, ShowMessageBox   
-                  CoreScriptCommands.DiskDeleteMultiple("{Selection}", true))))));                   //User clicked yes, Call Delete.
-  
+            explorerModel.FileList.Commands.Commands.Delete = IOInitializeHelpers.FileList_Delete_For_DiskBased_Items;
+                
             explorerModel.FileList.Commands.Commands.NewFolder =
                  FileList.Do(flvm => WPFScriptCommands.CreatePath(
                         flvm.CurrentDirectory, "NewFolder", true, true,

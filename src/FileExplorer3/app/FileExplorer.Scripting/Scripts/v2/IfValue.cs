@@ -30,7 +30,7 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)trueCommand,
                 OtherwiseCommand = (ScriptCommandBase)otherwiseCommand,
             };
-        }
+        }        
 
         public static IScriptCommand IfValue<T>(ComparsionOperator op, string variable = "{variable}", T value = default(T), IScriptCommand trueCommand = null,
             IScriptCommand otherwiseCommand = null)
@@ -49,6 +49,11 @@ namespace FileExplorer.Script
             return
                 ScriptCommands.Assign(ifEqualValueProperty, value, true,
                     IfValue(ComparsionOperator.Equals, variable, ifEqualValueProperty, trueCommand, otherwiseCommand));
+        }
+
+        public static IScriptCommand IfAssigned(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            return IfEquals<Object>(variable, null, otherwiseCommand, trueCommand);
         }
 
         public static IScriptCommand IfTrue(string variable = "{variable}", IScriptCommand trueCommand = null, 

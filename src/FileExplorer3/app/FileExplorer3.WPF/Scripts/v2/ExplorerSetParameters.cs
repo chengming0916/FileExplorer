@@ -1,4 +1,6 @@
-﻿using FileExplorer.Models;
+﻿using FileExplorer.Defines;
+using FileExplorer.Models;
+using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;
 using MetroLog;
 using System;
@@ -20,15 +22,15 @@ namespace FileExplorer.Script
         /// <param name="valueVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ExplorerSetParameters(string explorerVariable = "{Explorer}", 
+        public static IScriptCommand ExplorerSetParameters(string explorerVariable = "{Explorer}",
            ExplorerParameterType parameterType = ExplorerParameterType.EnableDrag,
            object valueVariable = null, IScriptCommand nextCommand = null)
         {
-            return new ExplorerSetParameters()
+            return new ExplorerParam()
             {
                 ExplorerKey = explorerVariable,
                 ParameterType = parameterType,
-                ValueKey = valueVariable, 
+                ValueKey = valueVariable,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
@@ -41,9 +43,20 @@ namespace FileExplorer.Script
         }
     }
 
-    public enum ExplorerParameterType {  EnableDrag, EnableDrop, EnableMultiSelect, RootModels }
+    public enum ExplorerParameterType
+    {
+        //Explorer
+        RootModels,
 
-    public class ExplorerSetParameters : ScriptCommandBase
+        //FilePicker
+        FilePickerMode, FilterStr, 
+
+        //FileList
+        EnableDrag, EnableDrop, EnableMultiSelect, 
+        ColumnList, ColumnFilters
+    }
+
+    public class ExplorerParam : ScriptCommandBase
     {
         /// <summary>
         /// Point to Explorer (IExplorerViewModel) to be used.  Default = "{Explorer}".
@@ -60,9 +73,9 @@ namespace FileExplorer.Script
         /// </summary>
         public object ValueKey { get; set; }
 
-        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerSetParameters>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerParam>();
 
-        public ExplorerSetParameters()
+        public ExplorerParam()
             : base("ExplorerSetParameters")
         {
             ExplorerKey = "{Explorer}";
@@ -81,31 +94,58 @@ namespace FileExplorer.Script
 
             switch (ParameterType)
             {
-                case ExplorerParameterType.EnableDrag :
+                case ExplorerParameterType.EnableDrag:
                     evm.FileList.EnableDrag = evm.DirectoryTree.EnableDrag = true.Equals(value);
                     break;
-                case ExplorerParameterType.EnableDrop :
-                    evm.FileList.EnableDrop = evm.DirectoryTree.EnableDrop = true.Equals(value);                        
+                case ExplorerParameterType.EnableDrop:
+                    evm.FileList.EnableDrop = evm.DirectoryTree.EnableDrop = true.Equals(value);
                     break;
-                case ExplorerParameterType.EnableMultiSelect :
-                    evm.FileList.EnableMultiSelect = true.Equals(value);                        
+                case ExplorerParameterType.EnableMultiSelect:
+                    evm.FileList.EnableMultiSelect = true.Equals(value);
                     break;
-                case ExplorerParameterType.RootModels :
+                case ExplorerParameterType.RootModels:
                     if (ValueKey == null)
                         return ResultCommand.Error(new ArgumentNullException("ValueKey"));
 
                     IEntryModel[] rootModels = ValueKey is string ? pm.GetValue<IEntryModel[]>(ValueKey as string) :
                         ValueKey as IEntryModel[];
-                    if (rootModels == null)                        
+                    if (rootModels == null)
                         return ResultCommand.Error(new KeyNotFoundException(ValueKey.ToString()));
                     evm.RootModels = rootModels;
 
+                    break;
+                case ExplorerParameterType.FilePickerMode:
+                    var mode = pm.GetValue(ValueKey as string);
+                    FilePickerMode pickerMode;
+                    if (mode is FilePickerMode)
+                        pickerMode = (FilePickerMode)mode;
+                    else if (mode is string)
+                        Enum.TryParse<FilePickerMode>(mode as string, out pickerMode);
+                    else break;
+                    if (evm is FilePickerViewModel)
+                        (evm as FilePickerViewModel).PickerMode = pickerMode;
+                    break;
+                case ExplorerParameterType.FilterStr:
+                    string filterStr = pm.GetValue<string>(ValueKey as string);
+                    if (filterStr != null)
+                        if (evm is FilePickerViewModel)
+                            (evm as FilePickerViewModel).FilterStr = filterStr;
+                    break;
+                case ExplorerParameterType.ColumnList:
+                    ColumnInfo[] columnInfo = pm.GetValue<ColumnInfo[]>(ValueKey as string);
+                    if (columnInfo != null)
+                        evm.FileList.Columns.ColumnList = columnInfo;
+                    break;
+                case ExplorerParameterType.ColumnFilters:
+                    ColumnFilter[] columnfilters = pm.GetValue<ColumnFilter[]>(ValueKey as string);
+                    if (columnfilters != null)
+                        evm.FileList.Columns.ColumnFilters = columnfilters;
                     break;
 
                 default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));
             }
 
-            logger.Info(String.Format("Set {0} to {1}", ParameterType, ValueKey));
+            logger.Info(String.Format("Set {0} to {1} ({2})", ParameterType, ValueKey, value));
 
             return NextCommand;
         }
