@@ -45,6 +45,21 @@ namespace FileExplorer.Script
                 ExplorerGoTo(explorerVariable, "{Goto-Directory}", nextCommand));
         }
 
+        /// <summary>
+        /// Serializable, parse a path and go to specified directory.
+        /// </summary>
+        /// <param name="explorerVariable"></param>
+        /// <param name="profileVariable"></param>
+        /// <param name="pathOrPathVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand ExplorerParseAndGoTo(string explorerVariable = "{Explorer}", 
+            string profileVariable = "{Profile}", string pathOrPathVariable = "", IScriptCommand nextCommand = null)
+        {
+            return CoreScriptCommands.ParsePath(profileVariable, pathOrPathVariable, "{GoTo-Directory}",
+                ExplorerGoTo(explorerVariable, "{Goto-Directory}", nextCommand));
+        }
+
         public static IScriptCommand ExplorerGoTo(IEntryModel directory = null,
            IScriptCommand nextCommand = null)
         {

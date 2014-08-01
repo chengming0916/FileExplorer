@@ -10,7 +10,7 @@ namespace FileExplorer.Script
     [XmlInclude(typeof(TabExplorerCloseTab))]
     [XmlInclude(typeof(TabExplorerNewTab))]
     [XmlInclude(typeof(ExplorerGoTo))]
-    [XmlInclude(typeof(ExplorerSetParameters))]
+    [XmlInclude(typeof(ExplorerParam))]
     [XmlInclude(typeof(DirectoryTreeToggleNode))]
     [XmlInclude(typeof(FileListAssignSelection))]
     [XmlInclude(typeof(NotifyDirectoryChanged))]
