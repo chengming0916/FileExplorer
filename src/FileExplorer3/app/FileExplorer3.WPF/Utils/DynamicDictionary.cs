@@ -14,6 +14,8 @@ namespace FileExplorer.WPF.Utils
     {
         private Dictionary<string, TValue> _dictionary;
 
+        public Dictionary<string, TValue> Dictionary { get { return _dictionary; } }
+
         public DynamicDictionary(IEqualityComparer<string> comparer)
         {
             _dictionary = new Dictionary<string, TValue>(comparer);

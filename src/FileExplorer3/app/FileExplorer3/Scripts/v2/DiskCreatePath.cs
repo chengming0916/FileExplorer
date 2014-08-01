@@ -64,6 +64,16 @@ namespace FileExplorer.Script
             return DiskCreatePath(profileVariable, pathVariable, true, destVariable, nameGenerationMode, nextCommand);
         }
 
+
+        /// <summary>
+        /// Not Serializable, create a folder by specified parameter.
+        /// </summary>
+        /// <param name="parentFolder"></param>
+        /// <param name="folderName"></param>
+        /// <param name="destVariable"></param>
+        /// <param name="nameGenerationMode"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand DiskCreateFolder(IEntryModel parentFolder, string folderName, string destVariable = "{Entry}",
            NameGenerationMode nameGenerationMode = NameGenerationMode.Rename, IScriptCommand nextCommand = null)
         {

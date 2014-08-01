@@ -69,7 +69,7 @@ namespace FileExplorer.Script
         /// </summary>
         public string DestinationKey { get; set; }
 
-        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerParam>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<FileListAssignSelection>();
 
         public FileListAssignSelection()
             : base("FileListAssignSelection")

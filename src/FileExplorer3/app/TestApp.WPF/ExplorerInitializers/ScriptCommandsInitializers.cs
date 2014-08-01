@@ -43,16 +43,24 @@ namespace TestApp
             //     ResultCommand.NoError //Selected more than one item, ignore.
             //     );
 
-            explorerModel.FileList.Commands.Commands.Open = IOInitializeHelpers.FileList_Open_For_DiskBased_Items;
+            //explorerModel.FileList.Commands.Commands.Open = IOInitializeHelpers.FileList_Open_For_DiskBased_Items;
 
-            explorerModel.FileList.Commands.Commands.Delete = IOInitializeHelpers.FileList_Delete_For_DiskBased_Items;
-                
-            explorerModel.FileList.Commands.Commands.NewFolder =
-                 FileList.Do(flvm => WPFScriptCommands.CreatePath(
-                        flvm.CurrentDirectory, "NewFolder", true, true,
-                     //FileList.Do(flvm => CoreScriptCommands.DiskCreateFolder(
-                     //        flvm.CurrentDirectory, "NewFolder", "{DestinationFolder}", NameGenerationMode.Rename, 
-                        m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
+            //explorerModel.FileList.Commands.Commands.Delete = IOInitializeHelpers.FileList_Delete_For_DiskBased_Items;
+
+            explorerModel.FileList.Commands.Commands.NewFolder = 
+                UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}", 
+                    ScriptCommands.AssignProperty("{CurrentDirectory}", "Profile", "{CurrentDirectory-Profile}", 
+                    ScriptCommands.AssignProperty("{CurrentDirectory}", "FullPath", "{CurrentDirectory-FullPath}", 
+                        CoreScriptCommands.DiskCreateFolder("{CurrentDirectory-Profile}", "{CurrentDirectory-FullPath}\\NewFolder", 
+                        "{NewFolder}", NameGenerationMode.Rename, 
+                            UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)))));
+
+            //explorerModel.FileList.Commands.Commands.NewFolder =
+            //     FileList.Do(flvm => WPFScriptCommands.CreatePath(
+            //            flvm.CurrentDirectory, "NewFolder", true, true,
+            //         //FileList.Do(flvm => CoreScriptCommands.DiskCreateFolder(
+            //         //        flvm.CurrentDirectory, "NewFolder", "{DestinationFolder}", NameGenerationMode.Rename, 
+            //            m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
 
             //explorerModel.FileList.Commands.Commands.Delete =
             //     FileList.IfSelection(evm => evm.Count() >= 1,

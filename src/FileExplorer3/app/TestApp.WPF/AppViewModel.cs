@@ -130,6 +130,8 @@ namespace TestApp
                         UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableMultiSelect, "{EnableMultiSelect}"),
                         UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.ColumnList, "{ColumnList}"),
                         UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.ColumnFilters, "{ColumnFilters}"),
+                        UIScriptCommands.SetScriptCommand("{FileList}", "Open", "{FileListOpenCommand}"),
+                        UIScriptCommands.SetScriptCommand("{FileList}", "Delete", "{FileListDeleteCommand}"), 
                         UIScriptCommands.ExplorerDo(epvm => 
                             {                        
                                 ScriptCommandsInitializers.InitializeScriptCommands(epvm, _windowManager, _events, profiles);
@@ -164,7 +166,9 @@ namespace TestApp
                     { "EnableDrop", _enableDrop },                     
                     { "EnableMultiSelect", _enableMultiSelect}, 
                     { "ColumnList", IOInitializeHelpers.FileList_ColumList_For_DiskBased_Items }, 
-                    { "ColumnFilters", IOInitializeHelpers.FileList_ColumnFilter_For_DiskBased_Items }
+                    { "ColumnFilters", IOInitializeHelpers.FileList_ColumnFilter_For_DiskBased_Items }, 
+                    { "FileListOpenCommand", IOInitializeHelpers.FileList_Open_For_DiskBased_Items }, 
+                    { "FileListDeleteCommand", IOInitializeHelpers.FileList_Delete_For_DiskBased_Items }
                 }, showWindowCommand);
         }
 
