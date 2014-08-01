@@ -49,11 +49,9 @@ namespace TestApp
 
             explorerModel.FileList.Commands.Commands.NewFolder = 
                 UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}", 
-                    ScriptCommands.AssignProperty("{CurrentDirectory}", "Profile", "{CurrentDirectory-Profile}", 
-                    ScriptCommands.AssignProperty("{CurrentDirectory}", "FullPath", "{CurrentDirectory-FullPath}", 
-                        CoreScriptCommands.DiskCreateFolder("{CurrentDirectory-Profile}", "{CurrentDirectory-FullPath}\\NewFolder", 
+                        CoreScriptCommands.DiskCreateFolder("{CurrentDirectory.Profile}", "{CurrentDirectory.FullPath}\\NewFolder", 
                         "{NewFolder}", NameGenerationMode.Rename, 
-                            UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)))));
+                            UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
 
             //explorerModel.FileList.Commands.Commands.NewFolder =
             //     FileList.Do(flvm => WPFScriptCommands.CreatePath(

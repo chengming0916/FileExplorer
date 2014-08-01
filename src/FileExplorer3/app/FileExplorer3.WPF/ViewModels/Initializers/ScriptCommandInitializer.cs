@@ -9,6 +9,11 @@ namespace FileExplorer.WPF.ViewModels
 {
     public class ScriptCommandInitializer : IExplorerInitializer
     {
+        public ScriptCommandInitializer()
+        {
+            RootModels = new FileExplorer.Models.IEntryModel[] { };
+        }
+
         public IScriptCommand[] OnViewAttached { get; set; }
 
         public IScriptCommand[] OnModelCreated { get; set; }

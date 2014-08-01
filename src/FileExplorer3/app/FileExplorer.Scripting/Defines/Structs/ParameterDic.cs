@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Defines;
+using FileExplorer.Utils;
 using MetroLog;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace FileExplorer
             while (match.Success)
             {                
                 string key = match.Groups["TextInsideBrackets"].Value;
-                value = value.Replace("{" + key + "}", pd.ContainsKey(key) ? pd[key].ToString() : "");                
+                value = value.Replace("{" + key + "}", pd.GetValue("{" + key + "}").ToString());                
                 match = regex.Match(value);
             }
 
@@ -92,10 +93,21 @@ namespace FileExplorer
             if (variableKey == null)
                 return defaultValue;
 
-            string variable = getVariable(variableKey);
-               
+            string variable = getVariable(variableKey);           
+
             if (this.ContainsKey(variable) && this[variable] is T)
                 return (T)this[variable];
+            else if (variable.Contains("."))
+            {
+                string[] variableSplit = variable.Split('.');
+                if (this.ContainsKey(variableSplit[0]))
+                {
+                    var val = TypeInfoUtils.GetPropertyOrMethod(this[variableSplit[0]], variableSplit.Skip(1).ToArray());
+                    if (val is T)
+                        return (T)val;
+                }
+
+            }
 
             return defaultValue;
         }
