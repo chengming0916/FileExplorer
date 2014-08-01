@@ -84,7 +84,7 @@ namespace FileExplorer.Script
             ListOptions = Defines.ListOptions.File | Defines.ListOptions.Folder;
         }
 
-        private static Func<IEntryModel, bool> createFilter(ListOptions listOptions, string mask)
+        public static Func<IEntryModel, bool> createFilter(ListOptions listOptions, string mask)
         {
             if (!listOptions.HasFlag(ListOptions.File))
                 return em => em.IsDirectory && StringUtils.MatchFileMasks(em.Name, mask);

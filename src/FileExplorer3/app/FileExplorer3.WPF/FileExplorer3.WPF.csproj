@@ -154,6 +154,10 @@
     <Compile Include="Scripts\ModelWPFScriptCommands.cs" />
     <Compile Include="Models\WebFileStream.cs" />
     <None Include="Scripts\v2\DoCommandBase.cs" />
+    <Compile Include="Scripts\v2\ExplorerAssignCurrentDirectory.cs" />
+    <Compile Include="Scripts\v2\FileListRefresh.cs" />
+    <Compile Include="Scripts\v2\FileListSelect.cs" />
+    <Compile Include="Scripts\v2\SetScriptCommand.cs" />
     <Compile Include="Scripts\v2\ExplorerShow.cs" />
     <Compile Include="Scripts\v2\DirectoryTreeToggleNode.cs" />
     <Compile Include="Scripts\v2\ExplorerDo.cs" />
