@@ -300,7 +300,7 @@ namespace FileExplorer.WPF.UserControls
             // Note: this could be deferred to idle time for efficiency
             CleanUpItems(firstVisibleItemIndex, lastVisibleItemIndex);
 
-            return base.MeasureOverride(availableSize);
+            return availableSize;//base.MeasureOverride(availableSize);
         }
 
         /// <summary>

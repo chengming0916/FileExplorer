@@ -111,5 +111,10 @@ namespace FileExplorer.Defines
         /// For ExifPropertyProvider, extract "10/290" from "0.0344827586206897 (10/290)"
         /// </summary>
         public static string ExtractValueInBracketPattern = @"^(?<value1>[^(^\s]*) \((?<value2>[\d/]*)\)";
+
+        /// <summary>
+        /// For parsing variable with or without an array index accesser (e.g. this[123]).
+        /// </summary>
+        public static string ParseArrayCounterPattern = "(?<variable>[^\\[]*)(\\[(?<counter>[\\d]*)\\])?";
     }
 }

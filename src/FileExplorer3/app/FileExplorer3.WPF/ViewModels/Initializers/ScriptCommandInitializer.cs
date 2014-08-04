@@ -47,6 +47,8 @@ namespace FileExplorer.WPF.ViewModels
         {
             if (OnModelCreated != null)
                 await evm.Commands.ExecuteAsync(OnModelCreated, StartupParameters);
+
+            
         }
 
         public async Task InitializeViewAttachedAsync(IExplorerViewModel evm)

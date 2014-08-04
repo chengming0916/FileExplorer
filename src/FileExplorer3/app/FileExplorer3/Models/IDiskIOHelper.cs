@@ -19,7 +19,7 @@ namespace FileExplorer.Models
         [Obsolete]
         IScriptCommand GetTransferCommand(IEntryModel srcModel, IEntryModel destDirModel, bool removeOriginal);
 
-        IScriptCommand GetTransferCommand(string sourceKey, string destinationKey, bool removeOriginal, IScriptCommand nextCommand);
+        IScriptCommand GetTransferCommand(string sourceKey, string destinationDirKey, string destinationKey, bool removeOriginal, IScriptCommand nextCommand);
 
         Task<Stream> OpenStreamAsync(IEntryModel entryModel, FileExplorer.Defines.FileAccess access, CancellationToken ct);
         Task DeleteAsync(IEntryModel entryModel, CancellationToken ct);

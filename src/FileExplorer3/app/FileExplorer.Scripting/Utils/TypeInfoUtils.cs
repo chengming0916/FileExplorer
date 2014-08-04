@@ -1,8 +1,10 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Utils
@@ -18,6 +20,11 @@ namespace FileExplorer.Utils
 
         public static object GetPropertyOrMethod(object obj, string name)
         {
+            var match = Regex.Match(name, RegexPatterns.ParseArrayCounterPattern);
+            name = match.Groups["variable"].Value;
+            int idx = match.Groups["counter"].Success ? Int32.Parse(match.Groups["counter"].Value) : -1;
+
+
             if (name.EndsWith("()"))
             {
                 var methodInfo = obj.GetType().GetTypeInfo().GetMethodInfoRecursive(name.TrimEnd('(', ')'));
@@ -30,7 +37,13 @@ namespace FileExplorer.Utils
                 var propertyInfo = obj.GetType().GetTypeInfo().GetPropertyInfoRecursive(name);
                 if (propertyInfo == null)
                     throw new KeyNotFoundException(name);
-                else return propertyInfo.GetValue(obj);
+                else
+                {
+                    object retVal = propertyInfo.GetValue(obj);
+                    if (retVal is Array && idx != -1)
+                        return (retVal as Array).GetValue(idx);
+                    else return retVal;
+                }
             }
         }
 

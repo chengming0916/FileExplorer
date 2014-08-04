@@ -98,7 +98,7 @@ namespace FileExplorer.Script
                 if (destProfile == null)
                 {
                     logger.Warn(String.Format("{0} isn't Szs based entry, DiskTransfer is used instead.", destEntry.Name));
-                    return IOScriptCommands.DiskTransfer(SourceEntryKey, DestinationDirectoryEntryKey, RemoveOriginal, false, NextCommand);
+                    return IOScriptCommands.DiskTransfer(SourceEntryKey, DestinationDirectoryEntryKey, null, RemoveOriginal, false, NextCommand);
                 }
                 if (!destEntry.IsDirectory) return ResultCommand.Error(new ArgumentException(DestinationDirectoryEntryKey + " is not a folder."));
 
