@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
+    <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
     <Compile Include="Implements\PathHelper.cs" />
     <Compile Include="Scripts\ExtensionMethods.cs" />
@@ -64,7 +65,9 @@
     <Compile Include="Scripts\v2\ForEach.cs" />
     <Compile Include="Scripts\v2\RunCommands.cs" />
     <Compile Include="Scripts\v2\Reassign.cs" />
+    <Compile Include="Scripts\v2\RunScriptCommand.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
+    <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\TypeInfoUtils.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1751,7 +1751,7 @@ namespace FileExplorer.Script
     {
 
         private static byte[] preferCopy = new byte[] { 5, 0, 0, 0 };
-        private static byte[] preferCut = new byte[] { 5, 0, 0, 0 };
+        private static byte[] preferCut = new byte[] { 2, 0, 0, 0 };
 
         private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
         private bool _removeOrginal;
@@ -1773,7 +1773,7 @@ namespace FileExplorer.Script
             dropEffect.Write(moveEffect, 0, moveEffect.Length);
             da.SetData("Preferred DropEffect", dropEffect);
 
-            Clipboard.Clear();
+            Clipboard.Clear(); 
             Clipboard.SetDataObject(da, true);
 
             return ResultCommand.NoError;

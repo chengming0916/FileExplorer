@@ -31,6 +31,14 @@ namespace FileExplorer.Script
             };
         }
 
+        public static IScriptCommand Assign(Dictionary<string, object> variableDic, bool skipIfExists = false, IScriptCommand nextCommand = null)
+        {
+            IScriptCommand cmd = nextCommand;
+            foreach (var k in variableDic.Keys)
+                cmd = Assign(k, variableDic[k], skipIfExists, cmd);
+            return cmd;
+        }
+
         /// <summary>
         /// Serializable, remove a variable from ParameterDic.
         /// </summary>
@@ -85,7 +93,7 @@ namespace FileExplorer.Script
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {
+        {            
             if (Value != null)
                 if (pm.SetValue<Object>(VariableKey, Value, SkipIfExists))
                     logger.Debug(String.Format("{0} = {1}", VariableKey, Value));

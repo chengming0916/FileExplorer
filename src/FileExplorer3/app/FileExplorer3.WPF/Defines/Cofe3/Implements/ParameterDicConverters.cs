@@ -13,8 +13,8 @@ namespace FileExplorer.Script
     public static class ParameterDicConverters
     {
         public static IParameterDicConverter ConvertParameterOnly =
-            new ParameterDicConverterBase((p, p2) => 
-                    p is ParameterDic ? (p as ParameterDic) : 
+            new ParameterDicConverterBase((p, p2) =>
+                    p is ParameterDic ? (p as ParameterDic) :
                     new ParameterDic() { { "Parameter", p } },
                 (pd, p2) => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
 
@@ -78,6 +78,14 @@ namespace FileExplorer.Script
                     return retVal;
                 }, null, ParameterDicConverters.ConvertUIParameter);
         }
+
+        //public static IParameterDicConverter AddStartupParameters(this IParameterDicConverter converter, ParameterDic parameters)
+        //{
+        //    return new ParameterDicConverterBase((p, p2) =>
+        //    {
+        //        return parameters;
+        //    }, null, converter);
+        //}
     }
 
     public class ParameterDicConverterBase : IParameterDicConverter
@@ -85,6 +93,7 @@ namespace FileExplorer.Script
         private Func<ParameterDic, object[], object> _convertBackFunc;
         private Func<object, object[], ParameterDic> _convertFunc;
         private IParameterDicConverter _baseConverter;
+        private ParameterDic _additionalParameters = new ParameterDic();
 
         public ParameterDicConverterBase(Func<object, object[], ParameterDic> convertFunc,
             Func<ParameterDic, object[], object> convertBackFunc, IParameterDicConverter baseConverter = null)
@@ -92,6 +101,11 @@ namespace FileExplorer.Script
             _convertFunc = convertFunc;
             _convertBackFunc = convertBackFunc;
             _baseConverter = baseConverter;
+        }
+
+        public void AddAdditionalParameters(ParameterDic pd)
+        {
+            _additionalParameters = ParameterDic.Combine(_additionalParameters, pd);
         }
 
         public ParameterDic Convert(object parameter, params object[] additionalParameters)
@@ -103,6 +117,9 @@ namespace FileExplorer.Script
                 foreach (var k in baseRetVal.Keys)
                     if (!retVal.ContainsKey(k))
                         retVal.Add(k, baseRetVal[k]);
+                foreach (var k in _additionalParameters.Keys)
+                    if (!retVal.ContainsKey(k))
+                        retVal.Add(k, _additionalParameters[k]);
             }
             return retVal;
         }

@@ -85,12 +85,12 @@ namespace FileExplorer.Script
 
         }
         
-        public IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
         }
 
-        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
         }

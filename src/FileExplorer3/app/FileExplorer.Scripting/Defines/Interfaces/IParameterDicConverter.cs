@@ -11,6 +11,11 @@ namespace FileExplorer.Script
     /// </summary>
     public interface IParameterDicConverter
     {
+        /// <summary>
+        /// used by ExplorerAssignScriptParameters IScriptCommand to inject parameters to CommandManager.
+        /// </summary>
+        /// <param name="pd"></param>
+        void AddAdditionalParameters(ParameterDic pd);
         ParameterDic Convert(object parameter, params object[] additionalParameters);
         object ConvertBack(ParameterDic pd, params object[] additionalParameters);
     }

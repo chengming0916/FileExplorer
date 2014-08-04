@@ -80,7 +80,7 @@ namespace FileExplorer.Script
         {
             ExplorerKey = "{Explorer}";
             ParameterType = ExplorerParameterType.EnableDrag;
-            ValueKey = "true";
+            ValueKey = "true";            
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
@@ -107,7 +107,8 @@ namespace FileExplorer.Script
                     if (ValueKey == null)
                         return ResultCommand.Error(new ArgumentNullException("ValueKey"));
 
-                    IEntryModel[] rootModels = ValueKey is string ? pm.GetValue<IEntryModel[]>(ValueKey as string) :
+                    IEntryModel[] rootModels = ValueKey is string ? 
+                        await pm.GetValueAsEntryModelArrayAsync(ValueKey as string, null) :
                         ValueKey as IEntryModel[];
                     if (rootModels == null)
                         return ResultCommand.Error(new KeyNotFoundException(ValueKey.ToString()));

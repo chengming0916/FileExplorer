@@ -120,35 +120,21 @@ namespace TestApp
             var profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
 
-            IScriptCommand showWindowCommand = UIScriptCommands.ExplorerShow(                 
-              
-                  //OnModelCreated
-                  ScriptCommands.RunCommandsInSequence(null, 
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, "{RootDirectories}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrag, "{EnableDrag}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrop, "{EnableDrop}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableMultiSelect, "{EnableMultiSelect}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.ColumnList, "{ColumnList}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.ColumnFilters, "{ColumnFilters}"),
-                        UIScriptCommands.SetScriptCommand("{FileList}", "Open", "{FileListOpenCommand}"),
-                        UIScriptCommands.SetScriptCommand("{FileList}", "Delete", "{FileListDeleteCommand}"), 
+            IScriptCommand onModelCreated = 
+                        IOScriptCommands.ExplorerDefault( 
                         UIScriptCommands.ExplorerDo(epvm => 
                             {                        
                                 ScriptCommandsInitializers.InitializeScriptCommands(epvm, _windowManager, _events, profiles);
                                 ToolbarCommandsInitializers.InitializeToolbarCommands(epvm, _windowManager);
-                            })), 
+                            }));
+            //IScriptCommand onViewAttached =  ScriptCommands.IfAssignedAndNotEmptyString("{StartupPath}", 
+            //         UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{Profiles}", "{StartupPath}"),                      
+            //           UIScriptCommands.ExplorerGoTo("{Explorer}", "{RootDirectories[0]}",
+            //                UIScriptCommands.DirectoryTreeToggleExpand("{RootDirectories[0]}")));
 
-                  //OnViewAttached.
-                  ScriptCommands.IfAssigned("{StartupPath}", 
-                     UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{Profiles}", "{StartupPath}"), 
-                     ScriptCommands.AssignArrayItem("{RootDirectories}", 0, "{Root0}", 
-                       UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root0}", 
-                            UIScriptCommands.DirectoryTreeToggleExpand("{Root0}")))),
-
-                  "{WindowManager}", "{Events}", "{Explorer}",
-                  
-                  //ThenCommand
-                  ResultCommand.NoError);
+            IScriptCommand showWindowCommand = 
+                UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
+                  "{WindowManager}", "{Events}", "{Explorer}", ResultCommand.NoError);
                             
 
             IEventAggregator evnts = new EventAggregator();
@@ -157,18 +143,21 @@ namespace TestApp
             var rootModel = AsyncUtils.RunSync(() => profile.ParseAsync(""));
 
             ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                    //Required
                     { "Profiles", profiles },
+                    { "OnModelCreated", onModelCreated },
+                    { "OnViewAttached", 
+                        ScriptCommands.RunCommandsInSequence(
+                            UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()
+                        ) },                    
+                    { "RootDirectories", RootModels.ToArray() },	                    
+                    //Optional
                     { "StartupPath", OpenPath },
-                    { "RootDirectories", RootModels.ToArray() },	
                     { "Events", _events },
                     { "WindowManager", _windowManager },
 				    { "EnableDrag", _enableDrag }, 
                     { "EnableDrop", _enableDrop },                     
                     { "EnableMultiSelect", _enableMultiSelect}, 
-                    { "ColumnList", IOInitializeHelpers.FileList_ColumList_For_DiskBased_Items }, 
-                    { "ColumnFilters", IOInitializeHelpers.FileList_ColumnFilter_For_DiskBased_Items }, 
-                    { "FileListOpenCommand", IOInitializeHelpers.FileList_Open_For_DiskBased_Items }, 
-                    { "FileListDeleteCommand", IOInitializeHelpers.FileList_Delete_For_DiskBased_Items }
                 }, showWindowCommand);
         }
 
@@ -263,27 +252,27 @@ namespace TestApp
 
         public void SaveFile()
         {
-            ScriptRunner.RunScriptAsync(
-                 new ParameterDic() 
-                 { 
-                 { "WindowManager", _windowManager }, 
-                 { "RootModels", RootModels.ToArray() },
-                 { "FilterStr", FileFilter },
-                 { "ProfileEx", _profileEx }
-                 },
-               UIScriptCommands.FileSave(
-                 ScriptCommands.RunCommandsInQueue(null, 
-                    UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, "{RootModels}",
-                    UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.FilterStr, "{FilterStr}"))
-                 ),
+            //ScriptRunner.RunScriptAsync(
+            //     new ParameterDic() 
+            //     { 
+            //     { "WindowManager", _windowManager }, 
+            //     { "RootModels", RootModels.ToArray() },
+            //     { "FilterStr", FileFilter },
+            //     { "ProfileEx", _profileEx }
+            //     },
+            //   UIScriptCommands.FileSave(
+            //     ScriptCommands.RunCommandsInQueue(null, 
+            //        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, "{RootModels}",
+            //        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.FilterStr, "{FilterStr}"))
+            //     ),
                  
-                 UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{ProfileEx}", ""),                 
-                 "{WindowsManager}", "{Events}", "{DialogResult}", "{SelectionPaths}",
+            //     UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{ProfileEx}", ""),                 
+            //     "{WindowsManager}", "{Events}", "{DialogResult}", "{SelectionPaths}",
                   
-                 ScriptCommands.IfTrue("{DialogResult}", 
-                    UIScriptCommands.MessageBoxOK("SaveFile", "{SelectionPaths}"), 
-                    UIScriptCommands.MessageBoxOK("SaveFile", "Cancelled"))
-                    ));
+            //     ScriptCommands.IfTrue("{DialogResult}", 
+            //        UIScriptCommands.MessageBoxOK("SaveFile", "{SelectionPaths}"), 
+            //        UIScriptCommands.MessageBoxOK("SaveFile", "Cancelled"))
+            //        ));
 
 
             //ScriptRunner.RunScriptAsync(

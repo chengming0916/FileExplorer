@@ -32,10 +32,10 @@ namespace FileExplorer.Utils
         /// <returns></returns>
         public static Stream StringToStream(string s)
         {
-            byte[] byteArray = Encoding.Unicode.GetBytes( s );
+            byte[] byteArray = Encoding.Unicode.GetBytes(s);
             return new MemoryStream(byteArray);
-        }       
-        
+        }
+
 
         public static string FirstCharToLowercase(this string input)
         {
@@ -60,8 +60,7 @@ namespace FileExplorer.Utils
         //public static Dictionary<string, string> ParamStringToDic(string fullParamString)
         //{
         //    return CofeServices.ParamParser.StringToDictionary(fullParamString);
-        //}
-
+        //}        
 
         #region Match File Masks
         private static string constructFileMaskRegexPattern(string fileMask, bool forceSlashCheck)
@@ -211,7 +210,7 @@ namespace FileExplorer.Utils
     /// StringUtils generic
     /// </summary>
     /// <typeparam name="T">Target interface type, e.g. IFileSystemInfo, IEntryFilter</typeparam>
-    public static class StringUtils<T> 
+    public static class StringUtils<T>
     {
 
         #region Methods

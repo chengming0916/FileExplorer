@@ -34,9 +34,10 @@ namespace FileExplorer
             Match match = regex.Match(value);
 
             while (match.Success)
-            {                
-                string key = match.Groups["TextInsideBrackets"].Value;
-                value = value.Replace("{" + key + "}", pd.GetValue("{" + key + "}").ToString());                
+            {
+                string key = "{" + match.Groups["TextInsideBrackets"].Value + "}";
+                object val = pd.GetValue(key);
+                value = value.Replace(key, val == null ? "" : val.ToString());
                 match = regex.Match(value);
             }
 
@@ -61,18 +62,28 @@ namespace FileExplorer
             foreach (var ppair in ppairs)
                 retVal.Add(ppair.Key, ppair.Value);
             return retVal;
-        }        
+        }
 
         private static string getVariable(string variableKey)
         {
             if (!(variableKey.StartsWith("{") && variableKey.EndsWith("}")))
-                throw new ArgumentException(variableKey);
+                throw new ArgumentException(variableKey + " is not a valid variable.");
             return variableKey.TrimStart('{').TrimEnd('}');
         }
 
         public static string CombineVariable(string variableKey, string combineStr)
         {
             return "{" + getVariable(variableKey) + "-" + combineStr + "}";
+        }
+
+        public static ParameterDic Combine(ParameterDic orginalDic, ParameterDic newDic)
+        {
+            ParameterDic retDic = orginalDic.Clone();
+            foreach (var k in newDic.Keys)
+                if (!(retDic.ContainsKey(k)))
+                    retDic.Add(k, newDic[k]);
+
+            return retDic;
         }
 
         public bool HasValue<T>(string variableKey)
@@ -93,20 +104,22 @@ namespace FileExplorer
             if (variableKey == null)
                 return defaultValue;
 
-            string variable = getVariable(variableKey);           
+            string variable = getVariable(variableKey);
 
-            if (this.ContainsKey(variable) && this[variable] is T)
-                return (T)this[variable];
-            else if (variable.Contains("."))
+            string[] variableSplit = variable.Split('.');
+
+            var match = Regex.Match(variableSplit[0], RegexPatterns.ParseArrayCounterPattern);
+            string varName = match.Groups["variable"].Value;
+            int idx = match.Groups["counter"].Success ? Int32.Parse(match.Groups["counter"].Value) : -1;
+
+            if (this.ContainsKey(varName))
             {
-                string[] variableSplit = variable.Split('.');
-                if (this.ContainsKey(variableSplit[0]))
-                {
-                    var val = TypeInfoUtils.GetPropertyOrMethod(this[variableSplit[0]], variableSplit.Skip(1).ToArray());
-                    if (val is T)
-                        return (T)val;
-                }
-
+                object initValue = this[varName];
+                if (idx != -1 && initValue is Array)
+                    initValue = (initValue as Array).GetValue(idx);
+                var val = TypeInfoUtils.GetPropertyOrMethod(initValue, variableSplit.Skip(1).ToArray());
+                if (val is T)
+                    return (T)val;
             }
 
             return defaultValue;
@@ -131,18 +144,18 @@ namespace FileExplorer
             if (this.ContainsKey(variable))
             {
                 if (!skipIfExists)
-                {                    
+                {
                     if (!(this[variable] is T) || !(this[variable].Equals(value)))
                     {
                         this[variable] = value;
                         return true;
                     }
                     else return false;
-                    
+
                 }
                 else
                 {
-                    
+
                     return false;
                 }
             }
@@ -150,11 +163,11 @@ namespace FileExplorer
             {
                 this.Add(variable, value);
                 return true;
-                
+
             }
         }
 
-        
+
         //public static ParameterDic FromNameValueCollection(NameValueCollection col, string[] paramToFetch)
         //{
         //    ParameterDic retVal = new ParameterDic();
@@ -205,12 +218,15 @@ namespace FileExplorer
 
         public CancellationToken CancellationToken
         {
-            get { return this.ContainsKey("CancellationToken") && this["CancellationToken"] is CancellationToken ? 
-                (CancellationToken)this["CancellationToken"] : CancellationToken.None; }
+            get
+            {
+                return this.ContainsKey("CancellationToken") && this["CancellationToken"] is CancellationToken ?
+                    (CancellationToken)this["CancellationToken"] : CancellationToken.None;
+            }
             set { if (this.ContainsKey("CancellationToken")) this["CancellationToken"] = value; else this.Add("CancellationToken", value); }
         }
 
-        
+
         /// <summary>
         /// Most exception is throw directly, if not, it will set the Error property, which will be thrown 
         /// in PropertyInvoker.ensureNoError() method.

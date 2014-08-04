@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer.WPF.Models;
 using FileExplorer.Models;
+using System.ComponentModel.Composition;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -13,8 +14,7 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-         public DirectoryPickerViewModel(IExplorerInitializer initializer)
-            : base(initializer)
+        private void init()
         {
             FileList.Selection.SelectionChanged += (o, e) =>
             {
@@ -28,10 +28,23 @@ namespace FileExplorer.WPF.ViewModels
             FileList.EnableMultiSelect = false;
         }
 
+        public DirectoryPickerViewModel(IExplorerInitializer initializer)
+            : base(initializer)
+        {
+            init();
+        }
+
+        [ImportingConstructor]
+        public DirectoryPickerViewModel(IWindowManager windowManager, IEventAggregator events)
+            : base(windowManager, events)
+        {
+            init();
+        }
+
         public DirectoryPickerViewModel(IEventAggregator events, IWindowManager windowManager, params IEntryModel[] rootModels)
             : this(new ExplorerInitializer(windowManager, events, rootModels))
         {
-           
+
         }
 
         #endregion
@@ -66,8 +79,11 @@ namespace FileExplorer.WPF.ViewModels
         #region Public Properties
 
         public bool CanOpen { get { return _canOpen; } set { _canOpen = value; NotifyOfPropertyChange(() => CanOpen); } }
-        public IEntryModel SelectedDirectory { get { return _selectedDirectory; } 
-            set { _selectedDirectory = value; NotifyOfPropertyChange(() => SelectedDirectory); } }
+        public IEntryModel SelectedDirectory
+        {
+            get { return _selectedDirectory; }
+            set { _selectedDirectory = value; NotifyOfPropertyChange(() => SelectedDirectory); }
+        }
 
         #endregion
 

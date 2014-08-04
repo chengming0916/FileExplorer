@@ -196,8 +196,10 @@
     <Compile Include="Compression\SevenZipWrapper.cs" />
     <Compile Include="Scripts\FileExplorer3IOCommands.cs" />
     <Compile Include="Scripts\IOScriptCommands.cs" />
+    <Compile Include="Scripts\v2\DiskClipboard.cs" />
     <Compile Include="Scripts\v2\DiskRun.cs" />
     <Compile Include="Scripts\v2\DiskTransfer.cs" />
+    <Compile Include="Scripts\v2\ExplorerDefault.cs" />
     <Compile Include="Scripts\v2\IOInitializeHelpers.cs" />
     <Compile Include="Scripts\v2\SzsDiskTransfer.cs" />
     <Compile Include="Utils\CompressUtils.cs" />

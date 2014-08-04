@@ -32,6 +32,30 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
+        /// If StartupPath is defined, goto the path, otherwise go to first root directory and expand it.
+        /// Used to initialize Explorer onViewAttached.
+        /// </summary>
+        /// <param name="explorerVariable"></param>
+        /// <param name="profilesVariable"></param>
+        /// <param name="rootDirectoriesVariable"></param>
+        /// <param name="startupPathVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand ExplorerGotoStartupPathOrFirstRoot(string explorerVariable = "{Explorer}", 
+            string profilesVariable = "{Profiles}",
+            string rootDirectoriesVariable = "{RootDirectories}", 
+            string startupPathVariable = "{Startup}", IScriptCommand nextCommand = null)
+        {
+            string firstRootDirectoriesVariable = ParameterDic.CombineVariable(rootDirectoriesVariable, "[0]");
+            return 
+                  ScriptCommands.RunCommandsInSequence(nextCommand,
+                  ScriptCommands.IfAssignedAndNotEmptyString(startupPathVariable,
+                     UIScriptCommands.ExplorerParseAndGoTo(explorerVariable, profilesVariable, startupPathVariable),
+                       UIScriptCommands.ExplorerGoTo(explorerVariable, firstRootDirectoriesVariable,
+                            UIScriptCommands.DirectoryTreeToggleExpand(firstRootDirectoriesVariable))));
+        }
+
+        /// <summary>
         /// Not serializable, goto the specified directory.
         /// </summary>
         /// <param name="explorerVariable"></param>

@@ -47,11 +47,7 @@ namespace TestApp
 
             //explorerModel.FileList.Commands.Commands.Delete = IOInitializeHelpers.FileList_Delete_For_DiskBased_Items;
 
-            explorerModel.FileList.Commands.Commands.NewFolder = 
-                UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}", 
-                        CoreScriptCommands.DiskCreateFolder("{CurrentDirectory.Profile}", "{CurrentDirectory.FullPath}\\NewFolder", 
-                        "{NewFolder}", NameGenerationMode.Rename, 
-                            UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
+            //explorerModel.FileList.Commands.Commands.NewFolder = IOInitializeHelpers.FileList_NewFolder_ForDiskBased_Items;
 
             //explorerModel.FileList.Commands.Commands.NewFolder =
             //     FileList.Do(flvm => WPFScriptCommands.CreatePath(
@@ -71,39 +67,60 @@ namespace TestApp
             //                            new HideProgress())),
             //            ResultCommand.NoError),
             //        NullScriptCommand.Instance);
-
             
+            
+            //explorerModel.FileList.Commands.Commands.Cut = UIScriptCommands.FileListAssignSelection("{Selection}",
+            //    IOScriptCommands.DiskCut("{Selection}"));
+            //explorerModel.FileList.Commands.Commands.Copy = UIScriptCommands.FileListAssignSelection("{Selection}",
+            //    IOScriptCommands.DiskCopy("{Selection}"));
+            //explorerModel.FileList.Commands.Commands.Paste =                 
+            //    UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
+            //    IOScriptCommands.DiskPaste("{CurrentDirectory}", "{Destination}", 
+            //    UIScriptCommands.FileListSelect("{FileList}", "{Destination}")));
 
-            explorerModel.FileList.Commands.Commands.Copy =
-                 FileList.IfSelection(evm => evm.Count() >= 1,
-                   WPFScriptCommands.IfOkCancel(windowManager, pd => "Copy",
-                        pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                            ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
-                            ResultCommand.NoError),
-                    NullScriptCommand.Instance);
+            //explorerModel.FileList.Commands.Commands.Copy =
+            //     FileList.IfSelection(evm => evm.Count() >= 1,
+            //       WPFScriptCommands.IfOkCancel(windowManager, pd => "Copy",
+            //            pd => String.Format("Copy {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+            //                ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
+            //                ResultCommand.NoError),
+            //        NullScriptCommand.Instance);
 
-            explorerModel.FileList.Commands.Commands.Cut =
-                  FileList.IfSelection(evm => evm.Count() >= 1,
-                   WPFScriptCommands.IfOkCancel(windowManager, pd => "Cut",
-                        pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                            ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
-                            ResultCommand.NoError),
-                    NullScriptCommand.Instance);
+            //explorerModel.FileList.Commands.Commands.Cut =
+            //      FileList.IfSelection(evm => evm.Count() >= 1,
+            //       WPFScriptCommands.IfOkCancel(windowManager, pd => "Cut",
+            //            pd => String.Format("Cut {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
+            //                ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
+            //                ResultCommand.NoError),
+            //        NullScriptCommand.Instance);
 
-            explorerModel.DirectoryTree.Commands.Commands.Delete =
-                       WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
-                           pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
-                                WPFScriptCommands.ShowProgress(windowManager, "Delete",
-                                        ScriptCommands.RunInSequence(
-                                            DirectoryTree.AssignSelectionToParameter(
-                                                IOScriptCommands.DeleteFromParameter),
-                                            new HideProgress())),
-                           ResultCommand.NoError);
+            //explorerModel.DirectoryTree.Commands.Commands.Delete =
+            //           WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
+            //               pd => String.Format("Delete {0}?", ((pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue.Label)),
+            //                    WPFScriptCommands.ShowProgress(windowManager, "Delete",
+            //                            ScriptCommands.RunInSequence(
+            //                                DirectoryTree.AssignSelectionToParameter(
+            //                                    IOScriptCommands.DeleteFromParameter),
+            //                                new HideProgress())),
+            //               ResultCommand.NoError);
+
+
+            //explorerModel.DirectoryTree.Commands.Commands.Map =
+            //    UIScriptCommands.ExplorerShow
 
             if (profiles.Length > 0)
+
                 explorerModel.DirectoryTree.Commands.Commands.Map =
                     Explorer.PickDirectory(initilizer, profiles,
                     dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(dir)), ResultCommand.NoError);
+
+           
+            explorerModel.DirectoryTree.Commands.Commands.Map = 
+                UIScriptCommands.ProfilePicker("{Profiles}", "{Profile}", "{WindowManager}", 
+                   CoreScriptCommands.ParsePath("{Profile}", "", "{RootDirectory}",
+                    UIScriptCommands.DirectoryPick(null, null,
+                     "{WindowManager}", "{Events}", "{SelectionPath}", 
+                      UIScriptCommands.MessageBoxOK("{SelectionPath}"))));
 
 
             //explorerModel.Commands.ScriptCommands.Transfer =

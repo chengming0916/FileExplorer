@@ -51,10 +51,10 @@ namespace FileExplorer.IO
             return IOScriptCommands.DiskTransfer(srcModel, destDirModel, removeOriginal, false);
         }
 
-        public virtual IScriptCommand GetTransferCommand(string sourceKey, string destinationKey, 
+        public virtual IScriptCommand GetTransferCommand(string sourceKey, string destinationDirKey, string destinationKey, 
             bool removeOriginal, IScriptCommand nextCommand)
         {
-            return IOScriptCommands.DiskTransfer(sourceKey, destinationKey, removeOriginal, false, nextCommand);
+            return IOScriptCommands.DiskTransfer(sourceKey, destinationDirKey, destinationKey,  removeOriginal, false, nextCommand);
         }
     }
 }

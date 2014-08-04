@@ -15,6 +15,7 @@ namespace FileExplorer.Script
     public static class IOInitializeHelpers
     {
         #region FileList_ColumnInfo_For_DiskBased_Items
+
         public static ColumnInfo[] FileList_ColumList_For_DiskBased_Items = new ColumnInfo[] 
                 {
                     ColumnInfo.FromTemplate("Name", "GridLabelTemplate", "EntryModel.Label", new ValueComparer<IEntryModel>(p => p.Label), 200),   
@@ -90,6 +91,23 @@ namespace FileExplorer.Script
                   UIScriptCommands.MessageBoxYesNo("FileExplorer", "Delete {FirstSelected} and {Selection-Length} Item(s)?", //Yes, ShowMessageBox   
                   CoreScriptCommands.DiskDeleteMultiple("{Selection}", true))))));   //User clicked yes, Call Delete.
   
+        public static IScriptCommand FileList_NewFolder_ForDiskBased_Items =
+            UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
+                CoreScriptCommands.DiskCreateFolder("{CurrentDirectory.Profile}", "{CurrentDirectory.FullPath}\\NewFolder",
+                    "{NewFolder}", NameGenerationMode.Rename,
+                    UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
+
+        public static IScriptCommand FileList_Cut_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
+                IOScriptCommands.DiskCut("{Selection}"));
+
+        public static IScriptCommand FileList_Copy_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
+                IOScriptCommands.DiskCopy("{Selection}"));
+
+        public static IScriptCommand FileList_Paste_For_DiskBased_Items = UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
+                IOScriptCommands.DiskPaste("{CurrentDirectory}", "{Destination}",
+                UIScriptCommands.FileListSelect("{FileList}", "{Destination}")));
+        
+
             //explorerModel.FileList.Commands.Commands.NewFolder =
             //     FileList.Do(flvm => WPFScriptCommands.CreatePath(
             //            flvm.CurrentDirectory, "NewFolder", true, true,
