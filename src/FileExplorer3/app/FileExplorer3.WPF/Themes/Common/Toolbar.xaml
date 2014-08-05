@@ -159,8 +159,9 @@
                     </Button>
 
                     <bc:DropDown x:Name="ExpanderDropDown" 
-                                 Visibility="{Binding HasItems, RelativeSource={RelativeSource Mode=TemplatedParent}
-                                        , Converter={StaticResource btvc}}"
+                                 Visibility="{Binding HasItems, 
+                                            RelativeSource={RelativeSource Mode=TemplatedParent}, 
+                                            Converter={StaticResource btvc}}"
                                  BorderThickness="0"  Grid.Column="1" HeaderButtonTemplate="{StaticResource BlankButton}" 
                                  Padding="6,0" IsDropDownOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                         <bc:DropDown.Header>

@@ -29,7 +29,7 @@ namespace FileExplorer.WPF.UserControls
 
         public EditBox()
         {
-                      
+
         }
 
 
@@ -88,14 +88,26 @@ namespace FileExplorer.WPF.UserControls
         #endregion
 
         #region Public Properties
-public static readonly DependencyProperty DisplayValueProperty = DependencyProperty.Register("DisplayValue", typeof(object),
-    typeof(EditBox), new FrameworkPropertyMetadata());
 
-public object DisplayValue
-{
-    get { return GetValue(DisplayValueProperty); }
-    set { SetValue(DisplayValueProperty, value); }
-}
+        
+        public static readonly DependencyProperty TextWrappingProperty = DependencyProperty.Register("TextWrapping", typeof(System.Windows.TextWrapping),
+            typeof(EditBox), new FrameworkPropertyMetadata(System.Windows.TextWrapping.Wrap));
+
+        public object TextWrapping
+        {
+            get { return GetValue(TextWrappingProperty); }
+            set { SetValue(TextWrappingProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty DisplayValueProperty = DependencyProperty.Register("DisplayValue", typeof(object),
+            typeof(EditBox), new FrameworkPropertyMetadata());
+
+        public object DisplayValue
+        {
+            get { return GetValue(DisplayValueProperty); }
+            set { SetValue(DisplayValueProperty, value); }
+        }
 
         public static readonly DependencyProperty ActualValueProperty = DependencyProperty.Register("ActualValue", typeof(object),
             typeof(EditBox), new FrameworkPropertyMetadata("", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));

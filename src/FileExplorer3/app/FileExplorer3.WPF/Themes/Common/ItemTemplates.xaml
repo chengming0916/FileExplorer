@@ -86,6 +86,7 @@
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
                         IsEditable="{Binding IsRenamable}"        
                         IsEditing="{Binding IsRenaming}"
+                        TextWrapping="NoWrap"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Padding="10,0,0,0"
