@@ -5,9 +5,11 @@
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Default/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/Converters.xaml" />
         <ResourceDictionary Source="ItemTemplates.xaml" />        
         <ResourceDictionary Source="ListViewItem.xaml" />
         <ResourceDictionary Source="ListView.xaml" />
+        
     </ResourceDictionary.MergedDictionaries>
 
 
@@ -30,8 +32,8 @@
                              
                              ItemTemplate="{DynamicResource IconItemTemplate}"
                              ItemContainerStyle="{StaticResource IconItemContainerStyle}"
-                             ItemHeight="{Binding Parameters.ItemSize}"
-                             ItemWidth="{Binding Parameters.ItemSize}" 
+                             ItemHeight="{Binding Parameters.ItemSize, Converter={StaticResource add40p}}"
+                             ItemWidth="{Binding Parameters.ItemSize, Converter={StaticResource add40p}}" 
                              HorizontalContentAlignment="Left" >       
     </uc:VirtualWrapPanelView>
     <!--ItemWidth="{Binding RelativeSource={RelativeSource AncestorType=uc:FileList}, Path=Parameters.ItemSize, Mode=OneWay}"-->

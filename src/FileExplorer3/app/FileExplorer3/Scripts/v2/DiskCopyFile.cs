@@ -22,13 +22,14 @@ namespace FileExplorer.Script
             string destinationProfileVariable = "{DestinationProfile}", string destinationFileVariable = "{DestinationFile}",
             IScriptCommand nextCommand = null)
         {
-            return CoreScriptCommands.ParsePath(sourceProfileVariable, sourceFileVariable, "{DiskCopyFile.Source}",
-              CoreScriptCommands.DiskParseOrCreateFile(destinationProfileVariable, destinationFileVariable, "{DiskCopyFile.Destination}",
-                CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
-                    CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+            
+            return CoreScriptCommands.ParsePath(sourceProfileVariable, sourceFileVariable, dcSourceVariable,
+              CoreScriptCommands.DiskParseOrCreateFile(destinationProfileVariable, destinationFileVariable, dcDestVariable,
+                CoreScriptCommands.DiskOpenStream(dcSourceVariable, "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
+                    CoreScriptCommands.DiskOpenStream(dcDestVariable, "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
                         CoreScriptCommands.CopyStream("{SourceStream}", "{DestinationStream}",
-                        CoreScriptCommands.NotifyEntryChanged(ChangeType.Created, null, "{DiskCopyFile.Source}", null, "{DiskCopyFile.Destination}",
-                            ScriptCommands.Reset(nextCommand, "{DiskCopyFile.Source}", "{DiskCopyFile.Destination}")))))),
+                        CoreScriptCommands.NotifyEntryChanged(ChangeType.Created, null, dcSourceVariable, null, dcDestVariable,
+                            ScriptCommands.Reset(nextCommand, dcSourceVariable, dcDestVariable)))))),
               ResultCommand.Error(new FileNotFoundException(sourceFileVariable)));
         }
 
@@ -43,11 +44,14 @@ namespace FileExplorer.Script
         {
             return ScriptCommands.Assign("{DiskCopyFile-Source}", srcFile, false,
                    ScriptCommands.Assign("{DiskCopyFile-Dest}", destFile, false,
-                    CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Source}", "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
-                   CoreScriptCommands.DiskOpenStream("{DiskCopyFile.Destination}", "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
+                    CoreScriptCommands.DiskOpenStream(dcSourceVariable, "{SourceStream}", FileExplorer.Defines.FileAccess.Read,
+                   CoreScriptCommands.DiskOpenStream(dcDestVariable, "{DestinationStream}", FileExplorer.Defines.FileAccess.Write,
                        CoreScriptCommands.CopyStream("{CopyStream-Source}", "{CopyStream-Dest}",
-                       CoreScriptCommands.NotifyEntryChanged(ChangeType.Created, null, "{DiskCopyFile.Source}", null, "{DiskCopyFile.Destination}",
-                           ScriptCommands.Reset(nextCommand, "{DiskCopyFile-Source}", "{DiskCopyFile-Dest}")))))));
+                       CoreScriptCommands.NotifyEntryChanged(ChangeType.Created, null, dcSourceVariable, null, dcDestVariable,
+                           ScriptCommands.Reset(nextCommand, dcSourceVariable, dcDestVariable)))))));
         }
+
+        private static string dcSourceVariable = "{DiskCopyFile-Source}";
+        private static string dcDestVariable = "{DiskCopyFile-Destination}";
     }
 }

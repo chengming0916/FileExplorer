@@ -44,7 +44,7 @@ namespace FileExplorer.Script
         public static IScriptCommand ExplorerGotoStartupPathOrFirstRoot(string explorerVariable = "{Explorer}", 
             string profilesVariable = "{Profiles}",
             string rootDirectoriesVariable = "{RootDirectories}", 
-            string startupPathVariable = "{Startup}", IScriptCommand nextCommand = null)
+            string startupPathVariable = "{StartupPath}", IScriptCommand nextCommand = null)
         {
             string firstRootDirectoriesVariable = ParameterDic.CombineVariable(rootDirectoriesVariable, "[0]");
             return 

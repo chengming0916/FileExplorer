@@ -70,7 +70,6 @@
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         
         <!-- Bind to ViewModel -->
-        <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
     </Style>
 
@@ -78,7 +77,6 @@
     <Style x:Key="FileListItemStyle_Grid" TargetType="{x:Type ListViewItem}" 
            >
         <!-- Bind to ViewModel -->
-        <Setter Property="TextSearch.Text" Value="{Binding EntryModel.Label, Mode=OneWay}" />
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         <Setter Property="BorderThickness" Value="1" />
         <Style.Triggers>

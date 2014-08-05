@@ -53,18 +53,24 @@
 
     <DataTemplate x:Key="IconItemTemplate">
 
-        <DockPanel LastChildFill="True">
+        <DockPanel LastChildFill="True" x:Name="dp">
+            <Image Source="{Binding Icon, Mode=OneWay}"  DockPanel.Dock="Top"
+                   Width="{Binding  DataContext.Parameters.ItemSize, 
+                        RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                   Height="{Binding DataContext.Parameters.ItemSize, 
+                        RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                   />
             <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
                         IsEditable="{Binding IsRenamable}"        
                         IsEditing="{Binding IsRenaming, Mode=TwoWay}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
-                        DockPanel.Dock="Bottom"
+                       
                         />
             <!--<TextBlock x:Name="Label" TextAlignment="Center" 
                        Text="{Binding EntryModel.Label}" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" />-->
-            <Image Source="{Binding Icon, Mode=OneWay}"  />
+            
         </DockPanel>
     </DataTemplate>
 

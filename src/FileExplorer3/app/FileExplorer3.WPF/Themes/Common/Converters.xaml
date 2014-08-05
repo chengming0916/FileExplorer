@@ -19,6 +19,7 @@
     <conv:UriToImageSourceConverter x:Key="uti" />
     <conv:GridLengthValueConverter x:Key="glv" />
     <conv:StreamToImageConverter x:Key="sti" />
+    <conv:IntAddConverter x:Key="add40p" AddPercent="0.40" />
     <!--
     
     <conv:FlipBoolToVisibilityConverter x:Key="fbtv" />
