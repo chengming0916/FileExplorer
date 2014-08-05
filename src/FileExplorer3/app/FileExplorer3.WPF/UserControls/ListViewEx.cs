@@ -447,7 +447,7 @@ namespace FileExplorer.WPF.UserControls
 
         public ListViewItemEx()
         {
-
+            
         }
 
         #endregion

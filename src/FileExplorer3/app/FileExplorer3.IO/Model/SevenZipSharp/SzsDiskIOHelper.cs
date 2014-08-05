@@ -107,7 +107,7 @@ namespace FileExplorer.Models.SevenZipSharp
 
         public override IScriptCommand GetTransferCommand(string sourceKey, string destinationDirKey, string destinationKey, bool removeOriginal, IScriptCommand nextCommand)
         {
-            return IOScriptCommands.SzsDiskTransfer(sourceKey, destinationKey, removeOriginal, nextCommand);
+            return IOScriptCommands.SzsDiskTransfer(sourceKey, destinationDirKey, removeOriginal, nextCommand);
         }
 
         public override async Task<IEntryModel> CreateAsync(string fullPath, bool isDirectory, CancellationToken ct)

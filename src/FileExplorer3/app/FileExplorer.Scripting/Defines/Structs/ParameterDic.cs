@@ -73,7 +73,7 @@ namespace FileExplorer
 
         public static string CombineVariable(string variableKey, string combineStr)
         {
-            return "{" + getVariable(variableKey) + "-" + combineStr + "}";
+            return "{" + getVariable(variableKey) + combineStr + "}";
         }
 
         public static ParameterDic Combine(ParameterDic orginalDic, ParameterDic newDic)

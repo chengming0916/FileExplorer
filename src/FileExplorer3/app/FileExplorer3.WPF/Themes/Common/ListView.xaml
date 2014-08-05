@@ -258,6 +258,8 @@
 
     <Style TargetType="{x:Type uc:ListViewEx}">
         <Setter Property="VirtualizingPanel.IsVirtualizing" Value="False" />
+        <Setter Property="TextSearch.TextPath" Value="EntryModel.Label" />
+        <Setter Property="IsTextSearchEnabled" Value="True" />
         <!--<Setter Property="TextRootItem.TextPath" Value="EmbeddedModel.Label" />-->
         <Setter Property="Template" Value="{StaticResource ListViewExTemplateWithDockableScrollViewer}" />
         <!--<Setter Property="SelectionMode" Value="Extended" />-->

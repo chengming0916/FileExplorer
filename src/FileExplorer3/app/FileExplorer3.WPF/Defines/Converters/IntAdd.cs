@@ -13,18 +13,20 @@ namespace QuickZip.Converters
         public static IntAddConverter Instance = new IntAddConverter();
 
         public int Add { get; set; }
+        public float AddPercent { get; set; }
+        
 
         #region IValueConverter Members
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value is int)
             {
-                return ((int)value + Add);
+                return ((int)value + Add + (int)((int)value * AddPercent));
             }
 
             if (value is double)
             {
-                return ((double)value + Add);
+                return ((double)value + Add + ((double)value * AddPercent));
             }
             return null;         
         }
