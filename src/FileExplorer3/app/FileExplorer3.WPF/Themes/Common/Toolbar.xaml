@@ -159,6 +159,8 @@
                     </Button>
 
                     <bc:DropDown x:Name="ExpanderDropDown" 
+                                 Visibility="{Binding HasItems, RelativeSource={RelativeSource Mode=TemplatedParent}
+                                        , Converter={StaticResource btvc}}"
                                  BorderThickness="0"  Grid.Column="1" HeaderButtonTemplate="{StaticResource BlankButton}" 
                                  Padding="6,0" IsDropDownOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                         <bc:DropDown.Header>
@@ -194,7 +196,7 @@
                                     <Rectangle Fill="{StaticResource Menu.Static.Separator}" HorizontalAlignment="Left" 
                                                Margin="29,2,0,2" Width="1" Grid.Column="1"/>
 
-                                    <ItemsPresenter x:Name="ItemsPresenter" Grid.ColumnSpan="2" Grid.Column="1"
+                                    <ItemsPresenter x:Name="ItemsPresenter" Grid.ColumnSpan="2" Grid.Column="1" 
                                                 KeyboardNavigation.DirectionalNavigation="Cycle" Grid.IsSharedSizeScope="true" 
                                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
                                                 KeyboardNavigation.TabNavigation="Cycle"/>
