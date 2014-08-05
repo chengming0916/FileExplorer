@@ -17,7 +17,7 @@
                     <TextBlock x:Name="PART_DisplayTextBlockPart" 
                                Background="{Binding Background, RelativeSource = {RelativeSource FindAncestor,AncestorType={x:Type local:EditBox}}}"
                                Visibility="{Binding IsEditing, Converter={StaticResource fbtv}, RelativeSource = {RelativeSource TemplatedParent}}"  
-                               TextWrapping="Wrap" TextAlignment="Center" 
+                               TextWrapping="{Binding TextWrapping, RelativeSource={RelativeSource Mode=TemplatedParent}}" TextAlignment="Center" 
                      Text="{Binding Path=DisplayValue, RelativeSource = {RelativeSource TemplatedParent}}">
                     </TextBlock>
                 </ControlTemplate>

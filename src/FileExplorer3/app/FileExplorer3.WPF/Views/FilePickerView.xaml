@@ -66,12 +66,12 @@
                         Visibility="{Binding IsSaveEnabled, Converter={StaticResource btvc}}">
                     <TextBlock FontWeight="Bold" Text="Save"  />
                 </Button>
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10,5" HorizontalAlignment="Right"  >
-                    <Label Content="File _name:" Target="{Binding ElementName=tboxFileName}"/>
-                    <TextBox Width="200" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"
+                <DockPanel Grid.Row="0" Grid.Column="0" Margin="10,5" HorizontalAlignment="Stretch"  >
+                    <Label DockPanel.Dock="Left" Content="File _name:" Target="{Binding ElementName=tboxFileName}"/>
+                    <TextBox Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"
                              VerticalContentAlignment="Center"
                              x:Name="tboxFileName" />
-                </StackPanel>
+                </DockPanel>
                 
                 
                 
