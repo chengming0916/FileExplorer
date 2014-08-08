@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using FileExplorer.Script;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Utils;
 using System;
@@ -27,8 +28,8 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            Commands = new DynamicDictionary<IScriptCommand>();
-            Commands.ToggleBreadcrumb = new SimpleScriptCommand("ToggleBreadcrumb", 
+            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
+            CommandDictionary.ToggleBreadcrumb = new SimpleScriptCommand("ToggleBreadcrumb", 
                 pd => { IBreadcrumbViewModel bread = pd["Breadcrumb"] as IBreadcrumbViewModel; 
                     bread.ShowBreadcrumb = !bread.ShowBreadcrumb; return ResultCommand.NoError; });
 
@@ -38,7 +39,7 @@ namespace FileExplorer.WPF.ViewModels
             exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(                                        
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.ToggleBreadcrumb, this, (ch) => ch.Commands.ToggleBreadcrumb, ParameterDicConverter, ScriptBindingScope.Explorer)
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.ToggleBreadcrumb, this, (ch) => ch.CommandDictionary.ToggleBreadcrumb, ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();             

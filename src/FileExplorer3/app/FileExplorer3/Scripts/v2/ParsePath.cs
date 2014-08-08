@@ -18,7 +18,7 @@ namespace FileExplorer.Script
 {
     public static partial class CoreScriptCommands
     {
-        
+
 
         ///// <summary>
         ///// Serializable, Parse a path, requires Profile set to an IDiskProfile or IDiskProfile[].
@@ -55,7 +55,7 @@ namespace FileExplorer.Script
         {
             return new ParsePath()
             {
-                ProfileKey = profileVariable,                
+                ProfileKey = profileVariable,
                 PathKey = pathOrPathVariable,
                 DestinationKey = destVariable,
                 NextCommand = (ScriptCommandBase)foundCommand,
@@ -98,11 +98,11 @@ namespace FileExplorer.Script
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ParsePath>();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public ParsePath() : base("ParsePath") { ProfileKey = "{Profile}";  PathKey = "{Path}"; DestinationKey = "{Entry}"; }
+        public ParsePath() : base("ParsePath") { ProfileKey = "{Profile}"; PathKey = "{Path}"; DestinationKey = "{Entry}"; }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
-            string path = pm.ReplaceVariableInsideBracketed(PathKey);            
+            string path = pm.ReplaceVariableInsideBracketed(PathKey);
 
             IProfile profile = pm.GetValue<IProfile>(ProfileKey, null);
             IProfile[] profiles = profile != null ? new IProfile[] { profile } :
@@ -112,15 +112,17 @@ namespace FileExplorer.Script
 
             pm.SetValue<IEntryModel>(DestinationKey, null);
             foreach (var p in profiles)
-            {
-                var retVal = await p.ParseAsync(path);
-                if (retVal != null)
+                if (p.MatchPathPattern(path))
                 {
-                    logger.Debug(String.Format("{0} = {1}", DestinationKey, retVal));
-                    pm.SetValue<IEntryModel>(DestinationKey, retVal);
-                    break;
+
+                    var retVal = await p.ParseAsync(path);
+                    if (retVal != null)
+                    {
+                        logger.Debug(String.Format("{0} = {1}", DestinationKey, retVal));
+                        pm.SetValue<IEntryModel>(DestinationKey, retVal);
+                        break;
+                    }
                 }
-            }
 
             if (pm.GetValue(DestinationKey) == null)
             {

@@ -6,25 +6,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Utils
+namespace FileExplorer.Utils
 {
     //http://reyrahadian.wordpress.com/2012/02/01/creating-a-dynamic-dictionary-with-c-4-dynamic/
     //http://blog.lab49.com/archives/3893
     public class DynamicDictionary<TValue> : DynamicObject, INotifyPropertyChanged
     {
         private Dictionary<string, TValue> _dictionary;
+        protected IEqualityComparer<string> _comparer;
 
         public Dictionary<string, TValue> Dictionary { get { return _dictionary; } }
+        
 
         public DynamicDictionary(IEqualityComparer<string> comparer)
         {
             _dictionary = new Dictionary<string, TValue>(comparer);
+            _comparer = comparer;
         }
 
         public DynamicDictionary()
             : this(StringComparer.CurrentCulture)
         {
 
+        }
+
+        public TValue this[string key] { get { return _dictionary[key]; }
+            set
+            {
+                if (_dictionary.ContainsKey(key))
+                    _dictionary[key] = value;
+                else _dictionary.Add(key, value);
+            }
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)

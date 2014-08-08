@@ -14,6 +14,7 @@ using FileExplorer.Defines;
 using FileExplorer.Models;
 using System.Text.RegularExpressions;
 using System.ComponentModel.Composition;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.Models
 {

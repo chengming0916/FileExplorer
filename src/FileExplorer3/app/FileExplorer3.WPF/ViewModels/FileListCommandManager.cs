@@ -13,6 +13,7 @@ using System.Windows.Input;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -34,8 +35,8 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            Commands = new DynamicDictionary<IScriptCommand>();
-            Commands.Open = FileList.IfSelection(evm => evm.Count() == 1,
+            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
+            CommandDictionary.Open = FileList.IfSelection(evm => evm.Count() == 1,
                    FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
                        FileList.OpenSelectedDirectory,  //Selected directory
                        ResultCommand.NoError),   //Selected non-directory
@@ -44,7 +45,7 @@ namespace FileExplorer.WPF.ViewModels
 
 
 
-            Commands.Delete = FileList.IfSelection(evm => evm.Count() >= 1,
+            CommandDictionary.Delete = FileList.IfSelection(evm => evm.Count() >= 1,
                     WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
                         pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
                         WPFScriptCommands.ShowProgress(windowManager, "Delete",
@@ -54,28 +55,28 @@ namespace FileExplorer.WPF.ViewModels
                      ResultCommand.NoError),
                      NullScriptCommand.Instance);
 
-            Commands.NewFolder = NullScriptCommand.Instance;
+            CommandDictionary.NewFolder = NullScriptCommand.Instance;
 
-            Commands.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
+            CommandDictionary.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
                 pd.AsVMParameterDic().FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Update, true);
                 return ResultCommand.OK;
             });
 
-            Commands.ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
+            CommandDictionary.ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
                 FileList.ToggleRename, NullScriptCommand.Instance);
 
-            Commands.Copy =
+            CommandDictionary.Copy =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
                     NullScriptCommand.Instance);
 
-            Commands.Cut =
+            CommandDictionary.Cut =
                  FileList.IfSelection(evm => evm.Count() >= 1,
                     FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
                     NullScriptCommand.Instance);
 
-            Commands.Paste = FileExplorer.Script.ScriptCommands.RunInSequence(
+            CommandDictionary.Paste = FileExplorer.Script.ScriptCommands.RunInSequence(
                 FileList.AssignCurrentDirectoryToDestination(
                     FileList.AssignSelectionToParameter(ClipboardCommands.Paste(
                     FileExplorer.Script.WPFExtensionMethods.GetFileListCurrentDirectoryFunc,
@@ -87,11 +88,11 @@ namespace FileExplorer.WPF.ViewModels
                     )
             );
 
-            Commands.OpenTab = NullScriptCommand.Instance;
-            Commands.NewWindow = NullScriptCommand.Instance;
+            CommandDictionary.OpenTab = NullScriptCommand.Instance;
+            CommandDictionary.NewWindow = NullScriptCommand.Instance;
 
-            Commands.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
-            Commands.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
+            CommandDictionary.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
+            CommandDictionary.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
 
             #endregion
 
@@ -99,18 +100,18 @@ namespace FileExplorer.WPF.ViewModels
             exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(
-                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Commands.Open, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewFolder, this, (ch) => ch.Commands.NewFolder, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.Commands.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.Commands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.Commands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Cut, this, (ch) => ch.Commands.Cut, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Copy, this, (ch) => ch.Commands.Copy, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Paste, this, (ch) => ch.Commands.Paste, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.Commands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.Commands.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.Commands.ZoomIn, ParameterDicConverter, ScriptBindingScope.Local),
-                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.Commands.ZoomOut, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.CommandDictionary.Open, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewFolder, this, (ch) => ch.CommandDictionary.NewFolder, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Refresh, this, (ch) => ch.CommandDictionary.Refresh, ParameterDicConverter, ScriptBindingScope.Explorer),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.CommandDictionary.Delete, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.CommandDictionary.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Cut, this, (ch) => ch.CommandDictionary.Cut, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Copy, this, (ch) => ch.CommandDictionary.Copy, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Paste, this, (ch) => ch.CommandDictionary.Paste, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.CommandDictionary.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.CommandDictionary.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.IncreaseZoom, this, (ch) => ch.CommandDictionary.ZoomIn, ParameterDicConverter, ScriptBindingScope.Local),
+                ScriptCommandBinding.FromScriptCommand(NavigationCommands.DecreaseZoom, this, (ch) => ch.CommandDictionary.ZoomOut, ParameterDicConverter, ScriptBindingScope.Local),
                 new ScriptCommandBinding(ExplorerCommands.ToggleCheckBox, p => true, p => ToggleCheckBox(), ParameterDicConverter, ScriptBindingScope.Explorer),
                 new ScriptCommandBinding(ExplorerCommands.ToggleViewMode, p => true, p => ToggleViewMode(), ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));

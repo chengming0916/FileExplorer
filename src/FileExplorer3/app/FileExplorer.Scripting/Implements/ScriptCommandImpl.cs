@@ -73,12 +73,12 @@ namespace FileExplorer.Script
 
     /// <summary>
     /// A script command that cannot execute.
-    /// </summary>
-    [Obsolete("Use ResultCommand")]
+    /// </summary>    
     public class NullScriptCommand : ScriptCommandBase
     {
-        public static NullScriptCommand Instance = new NullScriptCommand();
+        public static IScriptCommand Instance = ResultCommand.NoError;
 
+        [Obsolete("Use ResultCommand")]
         public NullScriptCommand()
             : base("Null")
         {

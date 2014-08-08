@@ -39,7 +39,11 @@
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
+    <Compile Include="Implements\DynamicRelayCommandDictionary.cs" />
+    <Compile Include="Implements\NullParameterDicConverter.cs" />
+    <Compile Include="Implements\ParameterDicConverterBase.cs" />
     <Compile Include="Implements\PathHelper.cs" />
+    <Compile Include="Implements\ScriptRelayCommand.cs" />
     <Compile Include="Scripts\ExtensionMethods.cs" />
     <Compile Include="Scripts\ScriptCommandsv1.cs" />
     <Compile Include="Implements\ScriptCommandSerializer.cs" />
@@ -67,6 +71,9 @@
     <Compile Include="Scripts\v2\Reassign.cs" />
     <Compile Include="Scripts\v2\RunScriptCommand.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
+    <Compile Include="Utils\DynamicDictionary.cs" />
+    <Compile Include="Utils\NotifyPropertyChanged.cs" />
+    <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\StringUtils.cs" />
     <Compile Include="Utils\TypeInfoUtils.cs" />
   </ItemGroup>

@@ -25,7 +25,7 @@ namespace FileExplorer.WPF.ViewModels
         /// <summary>
         /// An IScriptCommand DynamicDictionary, include changable commands.
         /// </summary>
-        dynamic Commands { get; }
+        dynamic CommandDictionary { get; }
 
         /// <summary>
         /// Return a list of Commands for Toolbar and ContextMenu.
@@ -64,7 +64,9 @@ namespace FileExplorer.WPF.ViewModels
         #region Public Properties
 
         public IParameterDicConverter ParameterDicConverter { get; protected set; }
-        public dynamic Commands { get; protected set; }
+        public dynamic CommandDictionary { get; protected set; }
+        [Obsolete("Use CommandDictionary")]
+        public dynamic Commands { get { return CommandDictionary; } }
 
         public IToolbarCommandsHelper ToolbarCommands { get; protected set; }
         public IEnumerable<IScriptCommandBinding> ExportedCommandBindings { get { return getCommandBindings(); } }

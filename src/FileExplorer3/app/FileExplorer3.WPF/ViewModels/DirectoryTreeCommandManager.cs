@@ -12,6 +12,7 @@ using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -32,14 +33,14 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            Commands = new DynamicDictionary<IScriptCommand>();
-            Commands.Delete = NullScriptCommand.Instance;
-            Commands.ToggleRename = DirectoryTree.ToggleRename;
-            Commands.Open = DirectoryTree.ExpandSelected;
-            Commands.OpenTab = NullScriptCommand.Instance;
-            Commands.NewWindow = NullScriptCommand.Instance;
-            Commands.Map = NullScriptCommand.Instance;
-            Commands.Unmap = Explorer.DoSelection(ems =>
+            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
+            CommandDictionary.Delete = NullScriptCommand.Instance;
+            CommandDictionary.ToggleRename = DirectoryTree.ToggleRename;            
+            CommandDictionary.Open = DirectoryTree.ExpandSelected;
+            CommandDictionary.OpenTab = NullScriptCommand.Instance;
+            CommandDictionary.NewWindow = NullScriptCommand.Instance;
+            CommandDictionary.Map = NullScriptCommand.Instance;
+            CommandDictionary.Unmap = Explorer.DoSelection(ems =>
                 Script.ScriptCommands.If(pd => (ems.First() as IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
                         Script.WPFScriptCommands.IfOkCancel(windowManager, pd => "Unmap",  
                             pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label), 
@@ -54,13 +55,13 @@ namespace FileExplorer.WPF.ViewModels
             exportBindingSource.Add(
                 new ExportCommandBindings(
                     
-                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.Commands.Open, ParameterDicConverter, ScriptBindingScope.Local),           
-                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.Commands.Delete, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.Commands.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.Commands.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.Commands.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.Commands.Map, ParameterDicConverter, ScriptBindingScope.Explorer),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Unmap, this, (ch) => ch.Commands.Unmap, ParameterDicConverter, ScriptBindingScope.Local)
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.CommandDictionary.Open, ParameterDicConverter, ScriptBindingScope.Local),           
+                    ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Delete, this, (ch) => ch.CommandDictionary.Delete, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.CommandDictionary.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.CommandDictionary.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.CommandDictionary.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.CommandDictionary.Map, ParameterDicConverter, ScriptBindingScope.Explorer),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Unmap, this, (ch) => ch.CommandDictionary.Unmap, ParameterDicConverter, ScriptBindingScope.Local)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();
