@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -29,16 +30,16 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            Commands = new DynamicDictionary<IScriptCommand>();
+            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
 
-            Commands.TogglePreviewer = Sidebar.Toggle();
+            CommandDictionary.TogglePreviewer = Sidebar.Toggle();
 
             #endregion
 
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
             exportBindingSource.Add(
               new ExportCommandBindings(
-                  ScriptCommandBinding.FromScriptCommand(ExplorerCommands.TogglePreviewer, this, (ch) => ch.Commands.TogglePreviewer, ParameterDicConverter, ScriptBindingScope.Explorer)
+                  ScriptCommandBinding.FromScriptCommand(ExplorerCommands.TogglePreviewer, this, (ch) => ch.CommandDictionary.TogglePreviewer, ParameterDicConverter, ScriptBindingScope.Explorer)
               ));
             exportBindingSource.AddRange(additionalBindingExportSource);
           

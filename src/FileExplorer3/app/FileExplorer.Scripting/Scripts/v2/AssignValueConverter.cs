@@ -162,7 +162,20 @@ namespace FileExplorer.Script
                     break;
                 case ValueConverterType.ExecuteMethod:
                     string methodName = ConverterParameter.Count() > 0 ? ConverterParameter.First() as string : null;
-                    object[] methodParameters = ConverterParameter.Skip(1).ToArray();
+                    Func<object, object> checkParameters = p =>
+                        {
+                            if (p is string)
+                            {
+                                string pString = p as string;
+                                if (pString.StartsWith("{") && pString.EndsWith("}"))
+                                    return pm.GetValue(pString);
+                            }
+                            return p;
+                        };
+
+                    object[] methodParameters = ConverterParameter.Skip(1)
+                        .Select(param => checkParameters(param))
+                        .ToArray();
                     Func<Object, Object> retVa1l = String.IsNullOrEmpty(methodName) ?
                         (Func<Object, Object>)(v => v) :
                         (Func<Object, Object>)(v =>

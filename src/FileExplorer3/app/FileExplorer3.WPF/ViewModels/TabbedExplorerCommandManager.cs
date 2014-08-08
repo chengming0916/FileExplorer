@@ -11,6 +11,7 @@ using System.Windows.Input;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -30,9 +31,9 @@ namespace FileExplorer.WPF.ViewModels
 
             #region Set ScriptCommands
 
-            Commands = new DynamicDictionary<IScriptCommand>();
-            Commands.NewTab = UIScriptCommands.TabExplorerNewTab("TabbedExplorer", null);
-            Commands.CloseTab = 
+            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
+            CommandDictionary.NewTab = UIScriptCommands.TabExplorerNewTab("TabbedExplorer", null);
+            CommandDictionary.CloseTab = 
                     UIScriptCommands.TabExplorerCloseTab("TabbedExplorer");
 
             #endregion
@@ -41,9 +42,9 @@ namespace FileExplorer.WPF.ViewModels
             exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewTab, this, (ch) => ch.Commands.NewTab, ParameterDicConverter, ScriptBindingScope.Application),
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewTab, this, (ch) => ch.CommandDictionary.NewTab, ParameterDicConverter, ScriptBindingScope.Application),
                 //ScriptCommandBinding.FromScriptCommand(ApplicationCommands.New, this, (ch) => ch.ScriptCommands.NewTab, ParameterDicConverter, ScriptBindingScope.Application),
-                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseTab, this, (ch) => ch.Commands.CloseTab, ParameterDicConverter, ScriptBindingScope.Application)
+                ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseTab, this, (ch) => ch.CommandDictionary.CloseTab, ParameterDicConverter, ScriptBindingScope.Application)
                 ));
 
             _exportBindingSource = exportBindingSource.ToArray();

@@ -10,6 +10,7 @@ using Caliburn.Micro;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
 using MetroLog;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {

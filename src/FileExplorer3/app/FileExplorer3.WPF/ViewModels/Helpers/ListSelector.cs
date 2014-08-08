@@ -10,6 +10,7 @@ using Cinch;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Defines;
+using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {

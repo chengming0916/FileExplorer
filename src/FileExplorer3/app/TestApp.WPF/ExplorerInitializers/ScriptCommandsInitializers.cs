@@ -110,12 +110,12 @@ namespace TestApp
 
             if (profiles.Length > 0)
 
-                explorerModel.DirectoryTree.Commands.Commands.Map =
+                explorerModel.DirectoryTree.Commands.CommandDictionary.Map =
                     Explorer.PickDirectory(initilizer, profiles,
                     dir => Explorer.BroadcastRootChanged(RootChangedEvent.Created(dir)), ResultCommand.NoError);
 
            
-            explorerModel.DirectoryTree.Commands.Commands.Map = 
+            explorerModel.DirectoryTree.Commands.CommandDictionary.Map = 
                 UIScriptCommands.ProfilePicker("{Profiles}", "{Profile}", "{WindowManager}", 
                    CoreScriptCommands.ParsePath("{Profile}", "", "{RootDirectory}",
                     UIScriptCommands.DirectoryPick(null, null,

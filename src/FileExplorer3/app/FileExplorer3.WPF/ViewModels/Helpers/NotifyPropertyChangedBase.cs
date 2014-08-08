@@ -8,28 +8,5 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
-    /// <summary>
-    /// Helper use this instead of PropertyChangedBase so it can be port to other framework.
-    /// </summary>
-    public class NotifyPropertyChanged : INotifyPropertyChanged
-    {
-        protected virtual void NotifyOfPropertyChanged<T>(Expression<Func<T>> expression)
-        {
-            NotifyOfPropertyChanged(GetPropertyName<T>(expression));            
-        }
-        protected virtual void NotifyOfPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        protected string GetPropertyName<T>(Expression<Func<T>> expression)
-        {
-            MemberExpression memberExpression = (MemberExpression)expression.Body;
-            return memberExpression.Member.Name;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-    }
+ 
 }

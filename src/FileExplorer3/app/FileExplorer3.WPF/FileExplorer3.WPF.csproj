@@ -193,6 +193,7 @@
     <Compile Include="Utils\ConsoleProgress.cs" />
     <Compile Include="Utils\ConsoleTarget.cs" />
     <Compile Include="Utils\FileExplorerBootStrapper.cs" />
+    <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\ResourceUtils.cs" />
     <Compile Include="ViewModels\SelectProfileViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbCommandManager.cs" />
@@ -215,7 +216,6 @@
     <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
-    <Compile Include="Utils\DynamicDictionary.cs" />
     <Compile Include="Utils\ParamStringUtils.cs" />
     <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\ICommandScriptCommand.cs" />
@@ -406,7 +406,6 @@
     <Compile Include="UserControls\InputBindingTrigger.cs" />
     <Compile Include="Utils\FastObservableCollection.cs" />
     <Compile Include="Utils\PropertyPathHelper.cs" />
-    <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\SimpleCommand.cs" />
     <Compile Include="ValueComparer.cs" />
     <Compile Include="ViewModels\Actions\AppendDirectoryTree.cs" />

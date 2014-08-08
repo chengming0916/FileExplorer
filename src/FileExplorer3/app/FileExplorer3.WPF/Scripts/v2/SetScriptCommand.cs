@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Utils;
+﻿using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using MetroLog;
 using System;
@@ -79,7 +80,7 @@ namespace FileExplorer.Script
         public override IScriptCommand Execute(ParameterDic pm)
         {
             var vm = pm.GetValue<ISupportCommandManager>(ControlKey);
-            var vmDic = vm.Commands.Commands as DynamicDictionary<IScriptCommand>;
+            var vmDic = vm.Commands.CommandDictionary as DynamicDictionary<IScriptCommand>;
             
             IScriptCommand cmd = pm.GetValue<IScriptCommand>(ValueKey);
 
