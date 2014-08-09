@@ -29,7 +29,8 @@ namespace FileExplorer
             var convertedPd = converter.Convert(parameter, additionalParameters);
             if (pd != null)
                 foreach (var k in pd.Keys)
-                    convertedPd.AddOrUpdate(k, pd[k]);
+                    if (!convertedPd.ContainsKey(k))
+                        convertedPd.Add(k, pd[k]);
             return convertedPd;
         }
 

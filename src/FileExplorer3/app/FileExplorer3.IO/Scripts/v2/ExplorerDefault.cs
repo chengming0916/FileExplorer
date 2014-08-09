@@ -77,6 +77,7 @@ namespace FileExplorer.Script
                     { "{FileListCutCommand}", IOInitializeHelpers.FileList_Cut_For_DiskBased_Items },
                     { "{FileListCopyCommand}", IOInitializeHelpers.FileList_Copy_For_DiskBased_Items },
                     { "{FileListPasteCommand}", IOInitializeHelpers.FileList_Paste_For_DiskBased_Items },    
+                    { "{FileListNewWindowCommand}", IOInitializeHelpers.FileList_NewWindow },
                     { "{DirectoryTreeMapCommand}", IOInitializeHelpers.DirectoryTree_Map_From_Profiles }
                 }, true,
                 ScriptCommands.RunCommandsInSequence(NextCommand,
@@ -93,7 +94,8 @@ namespace FileExplorer.Script
                         UIScriptCommands.SetScriptCommand(FileListKey, "Cut", "{FileListCutCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "Copy", "{FileListCopyCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "Paste", "{FileListPasteCommand}"),
-                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Map", "{DirectoryTreeMapCommand}")
+                        UIScriptCommands.SetScriptCommand(FileListKey, "NewWindow", "{FileListNewWindowCommand}"),
+                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Map", "{DirectoryTreeMapCommand}")                        
                        )                
                 );
         }

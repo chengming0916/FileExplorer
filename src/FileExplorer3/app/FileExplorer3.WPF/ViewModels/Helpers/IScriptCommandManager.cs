@@ -20,7 +20,7 @@ namespace FileExplorer.WPF.ViewModels
         /// A number of parameter have to be added to ParameterDic to run commands in ScriptCommands (e.g. FileList), 
         /// use this converter to add the parameter.
         /// </summary>
-        IParameterDicConverter ParameterDicConverter { get; }
+        IParameterDicConverter ParameterDicConverter { get; set; }
         
         /// <summary>
         /// An IScriptCommand DynamicDictionary, include changable commands.
@@ -69,7 +69,7 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Public Properties
 
-        public IParameterDicConverter ParameterDicConverter { get; protected set; }
+        public IParameterDicConverter ParameterDicConverter { get; set; }
         public dynamic CommandDictionary { get; protected set; }
         [Obsolete("Use CommandDictionary")]
         public dynamic Commands { get { return CommandDictionary; } }
