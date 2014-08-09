@@ -120,13 +120,12 @@ namespace TestApp
             var profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
 
-            IScriptCommand onModelCreated = 
-                        IOScriptCommands.ExplorerDefault( 
-                        UIScriptCommands.ExplorerDo(epvm => 
-                            {                        
-                                ScriptCommandsInitializers.InitializeScriptCommands(epvm, _windowManager, _events, profiles);
-                                ToolbarCommandsInitializers.InitializeToolbarCommands(epvm, _windowManager);
-                            }));
+            IScriptCommand onModelCreated =
+                ScriptCommands.RunCommandsInSequence(null,
+                    IOScriptCommands.ExplorerDefault(),
+                    IOScriptCommands.ExplorerDefaultToolbarCommands(),
+                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", "{EnableDrag},{EnableDrop},{EnableMultiSelect}")
+                    );
             //IScriptCommand onViewAttached =  ScriptCommands.IfAssignedAndNotEmptyString("{StartupPath}", 
             //         UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{Profiles}", "{StartupPath}"),                      
             //           UIScriptCommands.ExplorerGoTo("{Explorer}", "{RootDirectories[0]}",
@@ -148,8 +147,11 @@ namespace TestApp
                     { "OnModelCreated", onModelCreated },
                     { "OnViewAttached", 
                         ScriptCommands.RunCommandsInSequence(
-                            UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()
-                        ) },                    
+                            UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(),
+                            UIScriptCommands.SetScriptCommand("{FileList}", "NewWindow",
+                                ScriptCommands.Assign("{OnModelCreated}", onModelCreated, false,                                                               
+                                        IOInitializeHelpers.FileList_NewWindow)))
+                    },                    
                     { "RootDirectories", RootModels.ToArray() },	                    
                     //Optional
                     { "StartupPath", OpenPath },
@@ -180,10 +182,10 @@ namespace TestApp
              {
                  OnModelCreated = new IScriptCommand[] {
                     ScriptCommands.RunCommandsInSequence(
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, RootModels.ToArray()),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrag, _enableDrag),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrop, _enableDrop),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableMultiSelect, _enableMultiSelect),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.RootModels, RootModels.ToArray()),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.EnableDrag, _enableDrag),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.EnableDrop, _enableDrop),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.EnableMultiSelect, _enableMultiSelect),
                         UIScriptCommands.ExplorerDo(epvm => 
                             {
                                 ColumnInitializers.InitializeColumnInfo(epvm);

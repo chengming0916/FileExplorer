@@ -76,9 +76,9 @@ namespace FileExplorer.Script
     /// </summary>    
     public class NullScriptCommand : ScriptCommandBase
     {
-        public static IScriptCommand Instance = ResultCommand.NoError;
+        public static IScriptCommand Instance = new NullScriptCommand();
 
-        [Obsolete("Use ResultCommand")]
+       
         public NullScriptCommand()
             : base("Null")
         {
@@ -95,7 +95,7 @@ namespace FileExplorer.Script
             return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
         }
 
-        public bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(ParameterDic pm)
         {
             return false;
         }

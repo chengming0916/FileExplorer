@@ -57,7 +57,8 @@ namespace FileExplorer.WPF.ViewModels
             DragHelper = NullSupportDrag.Instance;
             DropHelper = NullSupportDrop.Instance;
 
-            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation, Breadcrumb);
+            Commands = new ExplorerCommandManager(this, _windowManager, _events, 
+                FileList, DirectoryTree, Navigation, Breadcrumb);
             setRootModels(_rootModels);
 
             if (_events != null)
@@ -87,7 +88,8 @@ namespace FileExplorer.WPF.ViewModels
             DragHelper = NullSupportDrag.Instance;
             DropHelper = NullSupportDrop.Instance;
 
-            Commands = new ExplorerCommandManager(this, _events, FileList, DirectoryTree, Navigation, Breadcrumb);
+            Commands = new ExplorerCommandManager(this, 
+                _windowManager, _events, FileList, DirectoryTree, Navigation, Breadcrumb);
             //setRootModels(_rootModels);
 
             if (_events != null)

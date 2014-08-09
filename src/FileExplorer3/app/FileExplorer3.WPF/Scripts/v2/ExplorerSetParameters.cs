@@ -22,12 +22,13 @@ namespace FileExplorer.Script
         /// <param name="valueVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ExplorerSetParameters(string explorerVariable = "{Explorer}",
+        public static IScriptCommand ExplorerSetParameter(string explorerVariable = "{Explorer}",
            ExplorerParameterType parameterType = ExplorerParameterType.EnableDrag,
            object valueVariable = null, IScriptCommand nextCommand = null)
         {
             return new ExplorerParam()
             {
+                Direction = ParameterDirection.Set,
                 ExplorerKey = explorerVariable,
                 ParameterType = parameterType,
                 ValueKey = valueVariable,
@@ -35,11 +36,42 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand ExplorerSetParameters(
+        public static IScriptCommand ExplorerSetParameter(
            ExplorerParameterType parameterType = ExplorerParameterType.EnableDrag,
            object valueVariable = null, IScriptCommand nextCommand = null)
         {
-            return ExplorerSetParameters("{Explorer}", parameterType, valueVariable, nextCommand);
+            return ExplorerSetParameter("{Explorer}", parameterType, valueVariable, nextCommand);
+        }
+
+        public static IScriptCommand ExplorerGetParameter(string explorerVariable = "{Explorer}",
+           ExplorerParameterType parameterType = ExplorerParameterType.EnableDrag,
+           string valueVariable = null, IScriptCommand nextCommand = null)
+        {
+            return new ExplorerParam()
+            {
+                Direction = ParameterDirection.Get,
+                ExplorerKey = explorerVariable,
+                ParameterType = parameterType,
+                ValueKey = valueVariable,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
+
+        public static IScriptCommand ExplorerGetParameter(
+           ExplorerParameterType parameterType = ExplorerParameterType.EnableDrag,
+           string valueVariable = null, IScriptCommand nextCommand = null)
+        {
+            return ExplorerGetParameter("{Explorer}", parameterType, valueVariable, nextCommand);
+        }
+
+        public static IScriptCommand ExplorerCopyParameter(string fromExplorerVariable = "{Explorer}",
+           string toExplorerVariable = "{Explorer1}",
+           ExplorerParameterType parameterType = ExplorerParameterType.EnableDrag,
+           IScriptCommand nextCommand = null)
+        {
+            string copyParameterVariable = "{ExplorerCopyParameter}";
+            return ExplorerGetParameter(fromExplorerVariable, parameterType, copyParameterVariable, 
+                ExplorerSetParameter(toExplorerVariable, parameterType, copyParameterVariable, nextCommand));
         }
     }
 
@@ -49,11 +81,16 @@ namespace FileExplorer.Script
         RootModels,
 
         //FilePicker
-        FilePickerMode, FilterStr, 
+        FilePickerMode, FilterStr,
 
         //FileList
-        EnableDrag, EnableDrop, EnableMultiSelect, 
+        EnableDrag, EnableDrop, EnableMultiSelect,
         ColumnList, ColumnFilters
+    }
+
+    public enum ParameterDirection
+    {
+        Set, Get
     }
 
     public class ExplorerParam : ScriptCommandBase
@@ -62,6 +99,8 @@ namespace FileExplorer.Script
         /// Point to Explorer (IExplorerViewModel) to be used.  Default = "{Explorer}".
         /// </summary>
         public string ExplorerKey { get; set; }
+
+        public ParameterDirection Direction { get; set; }
 
         /// <summary>
         /// The Parameter type to work with.
@@ -73,6 +112,7 @@ namespace FileExplorer.Script
         /// </summary>
         public object ValueKey { get; set; }
 
+
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerParam>();
 
         public ExplorerParam()
@@ -80,7 +120,8 @@ namespace FileExplorer.Script
         {
             ExplorerKey = "{Explorer}";
             ParameterType = ExplorerParameterType.EnableDrag;
-            ValueKey = "true";            
+            ValueKey = "true";
+            Direction = ParameterDirection.Set;
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
@@ -90,6 +131,55 @@ namespace FileExplorer.Script
             if (evm == null)
                 return ResultCommand.Error(new KeyNotFoundException(ExplorerKey));
 
+            return
+                Direction == ParameterDirection.Set ?
+                await setParameterAsync(pm, evm) :
+                await getParameterAsync(pm, evm);
+        }
+
+        private async Task<IScriptCommand> getParameterAsync(ParameterDic pm, IExplorerViewModel evm)
+        {
+            string ValueKeyString = ValueKey as string;
+            if (ValueKeyString != null)
+                switch (ParameterType)
+                {
+                    case ExplorerParameterType.EnableDrag:
+                        pm.SetValue(ValueKeyString, evm.FileList.EnableDrag);
+                        break;
+                    case ExplorerParameterType.EnableDrop:
+                        pm.SetValue(ValueKeyString, evm.FileList.EnableDrop);
+                        break;
+                    case ExplorerParameterType.EnableMultiSelect:
+                        pm.SetValue(ValueKeyString, evm.FileList.EnableMultiSelect);
+                        break;
+                    case ExplorerParameterType.RootModels:
+                        pm.SetValue(ValueKeyString, evm.RootModels);
+                        break;
+                    case ExplorerParameterType.FilePickerMode:
+                        if (evm is FilePickerViewModel)
+                            pm.SetValue(ValueKeyString, (evm as FilePickerViewModel).PickerMode);
+                        break;
+                    case ExplorerParameterType.FilterStr:
+                        if (evm is FilePickerViewModel)
+                            pm.SetValue(ValueKeyString, (evm as FilePickerViewModel).FilterStr);
+                        break;
+                    case ExplorerParameterType.ColumnList:
+                        pm.SetValue(ValueKeyString, evm.FileList.Columns.ColumnList);
+                        break;
+                    case ExplorerParameterType.ColumnFilters:
+                        pm.SetValue(ValueKeyString, evm.FileList.Columns.ColumnFilters);
+                        break;
+
+                    default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));
+                }
+
+            logger.Info(String.Format("Set {0} to ParameterDic[{1}]", ParameterType, ValueKey));
+
+            return NextCommand;
+        }
+
+        private async Task<IScriptCommand> setParameterAsync(ParameterDic pm, IExplorerViewModel evm)
+        {
             object value = ValueKey is string ? pm.GetValue<object>(ValueKey as string) : ValueKey;
 
             switch (ParameterType)
@@ -107,7 +197,7 @@ namespace FileExplorer.Script
                     if (ValueKey == null)
                         return ResultCommand.Error(new ArgumentNullException("ValueKey"));
 
-                    IEntryModel[] rootModels = ValueKey is string ? 
+                    IEntryModel[] rootModels = ValueKey is string ?
                         await pm.GetValueAsEntryModelArrayAsync(ValueKey as string, null) :
                         ValueKey as IEntryModel[];
                     if (rootModels == null)

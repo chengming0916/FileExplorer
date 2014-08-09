@@ -64,8 +64,11 @@ namespace FileExplorer.WPF.Models
         public abstract Task<IEntryModel> ParseAsync(string path);
         public abstract Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false);
 
-        public bool MatchPathPattern(string path)
+        public virtual bool MatchPathPattern(string path)
         {
+            if (path == "")
+                return true;
+
             foreach (var pattern in _pathPatterns)
                 if (new Regex(pattern, RegexOptions.IgnoreCase).Match(path).Success)
                     return true;

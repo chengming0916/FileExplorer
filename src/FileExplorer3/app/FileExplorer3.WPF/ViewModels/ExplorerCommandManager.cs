@@ -18,14 +18,14 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-        public ExplorerCommandManager(IExplorerViewModel evm, IEventAggregator events,
+        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator events,
              params ISupportCommandManager[] cMs)
-            : this(evm, events, cMs.Select(cm => cm.Commands).ToArray())
+            : this(evm, windowManager, events, cMs.Select(cm => cm.Commands).ToArray())
         {
 
         }
 
-        public ExplorerCommandManager(IExplorerViewModel evm, IEventAggregator events,
+        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator events,
              params IExportCommandBindings[] additionalBindingExportSource)
         {
             _evm = evm;
@@ -36,6 +36,7 @@ namespace FileExplorer.WPF.ViewModels
                  new Tuple<string, object>("DirectoryTree", _evm.DirectoryTree),
                  new Tuple<string, object>("FileList", _evm.FileList),
                  new Tuple<string, object>("Statusbar", _evm.Statusbar),
+                 new Tuple<string, object>("WindowManager", windowManager),
                  new Tuple<string, object>("Events", events));
 
             #region Set ScriptCommands

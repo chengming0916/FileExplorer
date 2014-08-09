@@ -97,6 +97,15 @@ namespace FileExplorer.Script
                     "{NewFolder}", NameGenerationMode.Rename,
                     UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
 
+        public static IScriptCommand FileList_NewWindow = 
+            UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
+              ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1, 
+                   UIScriptCommands.ExplorerSetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+                    UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
+                        "{WindowManager}", "{Events}", "{ExplorerNew}", 
+                        //UIScriptCommands.ExplorerCopyParameter("{Explorer}", "{ExplorerNew}", ExplorerParameterType.RootModels,
+                            UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}")))));
+
         public static IScriptCommand FileList_Cut_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
                 IOScriptCommands.DiskCut("{Selection}"));
 
@@ -106,8 +115,14 @@ namespace FileExplorer.Script
         public static IScriptCommand FileList_Paste_For_DiskBased_Items = UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
                 IOScriptCommands.DiskPaste("{CurrentDirectory}", "{Destination}",
                 UIScriptCommands.FileListSelect("{FileList}", "{Destination}")));
-        
 
+        public static IScriptCommand DirectoryTree_Map_From_Profiles = 
+            UIScriptCommands.ProfilePicker("{Profiles}", "{Profile}", "{WindowManager}",
+                   CoreScriptCommands.ParsePath("{Profile}", "", "{RootDirectory}",
+                    UIScriptCommands.DirectoryPick(null, null,
+                     "{WindowManager}", null, "{Selection}", "{SelectionPath}",
+                      UIScriptCommands.NotifyRootCreated("{Selection}",                        
+                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection}")))));
             //explorerModel.FileList.Commands.Commands.NewFolder =
             //     FileList.Do(flvm => WPFScriptCommands.CreatePath(
             //            flvm.CurrentDirectory, "NewFolder", true, true,

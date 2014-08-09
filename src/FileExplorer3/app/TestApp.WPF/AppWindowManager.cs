@@ -26,10 +26,12 @@ namespace TestApp
                     window.SizeToContent = SizeToContent.Height;
                     window.Width = 300;
                 }
-                else if (model is FileExplorer.WPF.ViewModels.AddDirectoryViewModel)
+                else if (model is FileExplorer.WPF.ViewModels.AddDirectoryViewModel || 
+                    model is FileExplorer.WPF.ViewModels.FilePickerViewModel || 
+                    model is FileExplorer.WPF.ViewModels.DirectoryPickerViewModel)
                 {
-                    window.SizeToContent = SizeToContent.Height;
-                    window.Width = 300;
+                    window.SizeToContent = SizeToContent.Manual;
+                    window.Width = 800; window.Height = 500;
                 }
                 else
                 {
