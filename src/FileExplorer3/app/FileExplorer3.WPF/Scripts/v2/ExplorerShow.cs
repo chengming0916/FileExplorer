@@ -16,7 +16,7 @@ namespace FileExplorer.Script
             string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
             string destinationVariable = "{Explorer}", string dialogResultVariable = "{DialogResult}",
-            string selectionEntriesVariable = "{SelectionEntries}", string selectionPathsVariable = "{SelectionPaths}",
+            string selectionEntriesVariable = "{Selection}", string selectionPathsVariable = "{SelectionPaths}",
             IScriptCommand nextCommand = null
             )
         {
@@ -57,7 +57,7 @@ namespace FileExplorer.Script
 
         public static IScriptCommand DirectoryPick(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
-            string selectedPathVariable = "{SelectionPath}",
+            string selectedEntryVariable = "{Selection}", string selectedPathVariable = "{SelectionPath}", 
             IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
         {
             string dialogResultVariable = "{DirectoryPick-DialogResult}";
@@ -65,7 +65,7 @@ namespace FileExplorer.Script
             IScriptCommand onDirectoryPickCreated = 
                 ScriptCommands.RunCommandsInSequence(
                     ScriptCommands.RunScriptCommand(onModelCreatedVariable),         
-                    UIScriptCommands.ExplorerSetParameters("{Explorer}",
+                    UIScriptCommands.ExplorerSetParameter("{Explorer}",
                             ExplorerParameterType.RootModels, "{RootDirectory}"));
             IScriptCommand onDirectoryPickAttached = 
                 ScriptCommands.RunCommandsInSequence(
@@ -77,7 +77,7 @@ namespace FileExplorer.Script
                 ScriptCommands.Assign("{OnDirectoryPickCreated}", onDirectoryPickCreated, false, 
                 ScriptCommands.Assign("{OnDirectoryPickAttached}", onDirectoryPickAttached, false,                 
                     explorerShow(ExplorerMode.DirectoryOpen, "{OnDirectoryPickCreated}", "{OnDirectoryPickAttached}",
-              windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, null,
+              windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, selectedEntryVariable,
               selectedPathVariable, 
               ScriptCommands.IfTrue(dialogResultVariable,  nextCommand, cancelCommand))));
         }

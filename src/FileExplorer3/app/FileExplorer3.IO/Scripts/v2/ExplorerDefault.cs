@@ -8,9 +8,9 @@ namespace FileExplorer.Script
 {
     public static partial class IOScriptCommands
     {
-        public static IScriptCommand ExplorerDefault(string explorerVariable = "{Explorer}", 
-            string fileListVariable = "{FileList}", string directoryTreeVariable = "{DirectoryTree}", 
-            string breadcrumbVariable = "{Breadcrumb}", IScriptCommand nextCommand = null)
+        public static IScriptCommand ExplorerDefault(string explorerVariable, 
+            string fileListVariable, string directoryTreeVariable, 
+            string breadcrumbVariable, IScriptCommand nextCommand = null)
         {
             return new ExplorerDefault()
             {
@@ -53,6 +53,9 @@ namespace FileExplorer.Script
         /// </summary>
         public string BreadcrumbKey { get; set; }
 
+
+        public string WindowManagerKey { get; set; }
+
         public ExplorerDefault()
             : base("ExplorerDefault")
         {
@@ -63,34 +66,34 @@ namespace FileExplorer.Script
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {
-            
-
+        {            
             return ScriptCommands.Assign(new Dictionary<string, object>()
                 {
                     { "{ColumnList}", IOInitializeHelpers.FileList_ColumList_For_DiskBased_Items }, 
                     { "{ColumnFilters}", IOInitializeHelpers.FileList_ColumnFilter_For_DiskBased_Items }, 
                     { "{FileListOpenCommand}", IOInitializeHelpers.FileList_Open_For_DiskBased_Items }, 
                     { "{FileListDeleteCommand}", IOInitializeHelpers.FileList_Delete_For_DiskBased_Items }, 
-                    { "{FileListNewFolderCommand}", IOInitializeHelpers.FileList_NewFolder_ForDiskBased_Items }, 
+                    { "{FileListNewFolderCommand}", IOInitializeHelpers.FileList_NewFolder_ForDiskBased_Items },                     
                     { "{FileListCutCommand}", IOInitializeHelpers.FileList_Cut_For_DiskBased_Items },
                     { "{FileListCopyCommand}", IOInitializeHelpers.FileList_Copy_For_DiskBased_Items },
-                    { "{FileListPasteCommand}", IOInitializeHelpers.FileList_Paste_For_DiskBased_Items },                    
+                    { "{FileListPasteCommand}", IOInitializeHelpers.FileList_Paste_For_DiskBased_Items },    
+                    { "{DirectoryTreeMapCommand}", IOInitializeHelpers.DirectoryTree_Map_From_Profiles }
                 }, true,
                 ScriptCommands.RunCommandsInSequence(NextCommand,
                         UIScriptCommands.ExplorerAssignScriptParameters(ExplorerKey, "{Profiles}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerKey, ExplorerParameterType.RootModels, "{RootDirectories}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerKey, ExplorerParameterType.EnableDrag, "{EnableDrag}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerKey, ExplorerParameterType.EnableDrop, "{EnableDrop}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerKey, ExplorerParameterType.EnableMultiSelect, "{EnableMultiSelect}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerKey, ExplorerParameterType.ColumnList, "{ColumnList}"),
-                        UIScriptCommands.ExplorerSetParameters(ExplorerKey, ExplorerParameterType.ColumnFilters, "{ColumnFilters}"),
-                        UIScriptCommands.SetScriptCommand(FileListKey, "Open", "{FileListOpenCommand}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.RootModels, "{RootDirectories}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.EnableDrag, "{EnableDrag}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.EnableDrop, "{EnableDrop}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.EnableMultiSelect, "{EnableMultiSelect}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ColumnList, "{ColumnList}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ColumnFilters, "{ColumnFilters}"),
+                        UIScriptCommands.SetScriptCommand(FileListKey, "Open", "{FileListOpenCommand}"),                        
                         UIScriptCommands.SetScriptCommand(FileListKey, "Delete", "{FileListDeleteCommand}"),
-                        UIScriptCommands.SetScriptCommand(FileListKey, "NewFolder", "{FileListNewFolderCommand}"),
+                        UIScriptCommands.SetScriptCommand(FileListKey, "NewFolder", "{FileListNewFolderCommand}"),                        
                         UIScriptCommands.SetScriptCommand(FileListKey, "Cut", "{FileListCutCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "Copy", "{FileListCopyCommand}"),
-                        UIScriptCommands.SetScriptCommand(FileListKey, "Paste", "{FileListPasteCommand}")
+                        UIScriptCommands.SetScriptCommand(FileListKey, "Paste", "{FileListPasteCommand}"),
+                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Map", "{DirectoryTreeMapCommand}")
                        )                
                 );
         }

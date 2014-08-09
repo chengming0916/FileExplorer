@@ -28,6 +28,12 @@ namespace FileExplorer.WPF.ViewModels
         dynamic CommandDictionary { get; }
 
         /// <summary>
+        /// Renamed to CommandDictionary.
+        /// </summary>
+        [Obsolete("Renamed to CommandDictionary")]
+        dynamic Commands { get; }
+
+        /// <summary>
         /// Return a list of Commands for Toolbar and ContextMenu.
         /// </summary>
         IToolbarCommandsHelper ToolbarCommands { get; }

@@ -73,7 +73,9 @@ namespace FileExplorer.Script
 
             addStartupParameters(evm.Commands, startupParameters);
             addStartupParameters(evm.FileList.Commands, startupParameters);
-            addStartupParameters(evm.DirectoryTree.Commands, startupParameters);            
+            addStartupParameters(evm.DirectoryTree.Commands, startupParameters);
+            addStartupParameters(evm.Navigation.Commands, startupParameters);
+            addStartupParameters(evm.Breadcrumb.Commands, startupParameters);            
 
             return NextCommand;
         }

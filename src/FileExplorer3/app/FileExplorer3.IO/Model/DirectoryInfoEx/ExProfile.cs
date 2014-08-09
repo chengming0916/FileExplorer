@@ -182,7 +182,7 @@ namespace FileExplorer.Models
         {
             return new FileInfoEx(path);
         }
-
+      
         public override async Task<IEntryModel> ParseAsync(string path)
         {
             return await Task<IEntryModel>.Factory.StartNew(() =>

@@ -158,6 +158,7 @@
     <Compile Include="Scripts\v2\ExplorerAssignScriptParameters.cs" />
     <Compile Include="Scripts\v2\FileListRefresh.cs" />
     <Compile Include="Scripts\v2\FileListSelect.cs" />
+    <Compile Include="Scripts\v2\NotifyRootChanged.cs" />
     <Compile Include="Scripts\v2\ProfilePicker.cs" />
     <Compile Include="Scripts\v2\SetScriptCommand.cs" />
     <Compile Include="Scripts\v2\ExplorerShow.cs" />

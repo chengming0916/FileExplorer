@@ -52,8 +52,11 @@ namespace FileExplorer.Models.SevenZipSharp
         {
             List<ICommandModel> subCommands = new List<ICommandModel>();
 
-            if (appliedModels.Length >= 1)
+            if (appliedModels.Length >= 1 &&
+               !(appliedModels.Any(em => em.FullPath.StartsWith("::"))))                
             {
+               
+                    
 
                 #region Decompress - When selected archive.
                 if (appliedModels.All(em => em is ISzsItemModel))

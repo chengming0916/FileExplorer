@@ -23,6 +23,8 @@ namespace FileExplorer.WPF.ViewModels
         IFileListViewModel FileList { get; }
         IStatusbarViewModel Statusbar { get; }
         ISidebarViewModel Sidebar { get; }
+        INavigationViewModel Navigation { get; }
+        IBreadcrumbViewModel Breadcrumb { get; }
 
         IExplorerParameters Parameters { get; set; }
         string FilterStr { get; set; }

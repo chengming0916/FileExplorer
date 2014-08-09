@@ -29,6 +29,7 @@ namespace FileExplorer.WPF.ViewModels
             ParameterDicConverter =
              ParameterDicConverters.ConvertVMParameter(
                  new Tuple<string, object>("DirectoryTree", _dlvm),
+                 new Tuple<string, object>("WindowManager", windowManager),
                  new Tuple<string, object>("Events", events));
 
             #region Set ScriptCommands
