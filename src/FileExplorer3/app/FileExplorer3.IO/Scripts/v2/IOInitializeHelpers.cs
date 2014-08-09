@@ -100,9 +100,9 @@ namespace FileExplorer.Script
         public static IScriptCommand FileList_NewWindow = 
             UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1, 
-                   UIScriptCommands.ExplorerSetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
                     UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
-                        "{WindowManager}", "{Events}", "{ExplorerNew}", 
+                        "{WindowManager}", "{Events}", "{Explorer}", 
                         //UIScriptCommands.ExplorerCopyParameter("{Explorer}", "{ExplorerNew}", ExplorerParameterType.RootModels,
                             UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}")))));
 

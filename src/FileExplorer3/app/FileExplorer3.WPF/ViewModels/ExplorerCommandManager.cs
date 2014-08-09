@@ -22,7 +22,11 @@ namespace FileExplorer.WPF.ViewModels
              params ISupportCommandManager[] cMs)
             : this(evm, windowManager, events, cMs.Select(cm => cm.Commands).ToArray())
         {
-
+            //Workaround: Add all properties to sub-commandManager, 
+            //e.g. Add Explorer to FileList.Commands.ParameterDicConverter
+            var paramDic = ParameterDicConverter.Convert(null);
+            foreach (var iscm in cMs)            
+                iscm.Commands.ParameterDicConverter.AddAdditionalParameters(paramDic);            
         }
 
         public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator events,
@@ -37,7 +41,7 @@ namespace FileExplorer.WPF.ViewModels
                  new Tuple<string, object>("FileList", _evm.FileList),
                  new Tuple<string, object>("Statusbar", _evm.Statusbar),
                  new Tuple<string, object>("WindowManager", windowManager),
-                 new Tuple<string, object>("Events", events));
+                 new Tuple<string, object>("Events", events));            
 
             #region Set ScriptCommands
 

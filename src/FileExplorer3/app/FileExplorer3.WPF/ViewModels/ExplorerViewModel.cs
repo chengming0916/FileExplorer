@@ -297,10 +297,17 @@ namespace FileExplorer.WPF.ViewModels
             }
         }
 
+        public override string ToString()
+        {
+            return String.Format("ExplorerVM {0}", _id);
+        }
+
         #endregion
 
         #region Data
 
+        private static int count = 0;
+        private int _id = count++;
         private bool _attachedView = false;
         private IEntryModel[] _rootModels;
         private IEventAggregator _events;

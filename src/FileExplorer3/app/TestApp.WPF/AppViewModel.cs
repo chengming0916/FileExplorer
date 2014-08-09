@@ -124,7 +124,8 @@ namespace TestApp
                 ScriptCommands.RunCommandsInSequence(null,
                     IOScriptCommands.ExplorerDefault(),
                     IOScriptCommands.ExplorerDefaultToolbarCommands(),
-                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", "{EnableDrag},{EnableDrop},{EnableMultiSelect}")
+                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", 
+                            "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
                     );
             //IScriptCommand onViewAttached =  ScriptCommands.IfAssignedAndNotEmptyString("{StartupPath}", 
             //         UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{Profiles}", "{StartupPath}"),                      
@@ -147,10 +148,8 @@ namespace TestApp
                     { "OnModelCreated", onModelCreated },
                     { "OnViewAttached", 
                         ScriptCommands.RunCommandsInSequence(
-                            UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(),
-                            UIScriptCommands.SetScriptCommand("{FileList}", "NewWindow",
-                                ScriptCommands.Assign("{OnModelCreated}", onModelCreated, false,                                                               
-                                        IOInitializeHelpers.FileList_NewWindow)))
+                            UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()
+                        )
                     },                    
                     { "RootDirectories", RootModels.ToArray() },	                    
                     //Optional
