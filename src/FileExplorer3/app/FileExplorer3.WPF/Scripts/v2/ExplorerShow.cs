@@ -169,6 +169,8 @@ namespace FileExplorer.Script
             IExplorerInitializer initializer = new ScriptCommandInitializer()
              {
                  StartupParameters = pm,
+                 WindowManager = wm, 
+                 Events = events, 
                  OnModelCreated = new IScriptCommand[] { modelCreatedCommands },
                  OnViewAttached = new IScriptCommand[] { viewAttachedCommands }
              };
@@ -205,7 +207,7 @@ namespace FileExplorer.Script
 
             logger.Info(String.Format("Showing {0}", evm));
             pm.SetValue(DestinationKey, evm, false);
-
+            
             if (ExplorerMode == Script.ExplorerMode.Normal)
                 wm.ShowWindow(evm);
             else

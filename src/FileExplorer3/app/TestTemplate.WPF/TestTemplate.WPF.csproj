@@ -107,6 +107,10 @@
     <Resource Include="folder.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting.csproj">
+      <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
+      <Name>FileExplorer.Scripting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileExplorer3.IO\FileExplorer3.IO.csproj">
       <Project>{bcbcaf38-714a-40e4-87ef-f6cf63dd62aa}</Project>
       <Name>FileExplorer3.IO</Name>

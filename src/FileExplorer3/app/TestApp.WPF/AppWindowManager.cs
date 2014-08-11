@@ -12,6 +12,14 @@ namespace TestApp
 {
     public class AppWindowManager : WindowManager
     {
+        protected override Window CreateWindow(object rootModel, bool isDialog, object context, IDictionary<string, object> settings)
+        {
+            Window window = base.CreateWindow(rootModel, isDialog, context, settings);
+            if (!isDialog)
+                window.Owner = null;
+            return window;
+        }
+
         protected override Window EnsureWindow(object model, object view, bool isDialog)
         {
             Window window = base.EnsureWindow(model, view, isDialog);
@@ -26,8 +34,8 @@ namespace TestApp
                     window.SizeToContent = SizeToContent.Height;
                     window.Width = 300;
                 }
-                else if (model is FileExplorer.WPF.ViewModels.AddDirectoryViewModel || 
-                    model is FileExplorer.WPF.ViewModels.FilePickerViewModel || 
+                else if (model is FileExplorer.WPF.ViewModels.AddDirectoryViewModel ||
+                    model is FileExplorer.WPF.ViewModels.FilePickerViewModel ||
                     model is FileExplorer.WPF.ViewModels.DirectoryPickerViewModel)
                 {
                     window.SizeToContent = SizeToContent.Manual;
@@ -60,7 +68,7 @@ namespace TestApp
                         window.Width = 800; window.Height = 500;
                     }
 
-                    
+
                 }
 
             return window;
