@@ -11,6 +11,7 @@ using Cinch;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.Utils;
 
 namespace TestTemplate.WPF
 {
