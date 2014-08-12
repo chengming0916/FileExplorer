@@ -64,7 +64,7 @@ namespace FileExplorer.Script
     /// </summary>
     public class RunCommands : ScriptCommandBase
     {
-        
+
 
         /// <summary>
         /// A list of ScriptCommands to run.
@@ -143,9 +143,12 @@ namespace FileExplorer.Script
             else return NextCommand;
         }
 
-        public new bool ContinueOnCaptureContext
+        public override bool ContinueOnCaptureContext
         {
-            get { return ScriptCommands.Any(c => c.ContinueOnCaptureContext); }
+            get
+            {
+                return ScriptCommands.Any(c => c.RequireCaptureContext());
+            }
             set { }
         }
     }

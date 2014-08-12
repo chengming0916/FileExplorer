@@ -16,6 +16,7 @@ namespace FileExplorer.WPF.Defines
         public static string strToggleCheckBox = "Checkboxes";
         public static string strToggleViewMode = "ViewMode";
         public static string strTogglePreviewer = "Previewer";
+        public static string strOpen = "Open";
         public static string strNewTab = "New tab";
         public static string strOpenInNewTab = "Open in new tab";
         public static string strCloseTab = "Close tab";

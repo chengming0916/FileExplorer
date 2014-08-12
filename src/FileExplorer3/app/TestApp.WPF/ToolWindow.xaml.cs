@@ -27,14 +27,16 @@ namespace TestApp
     public partial class ToolWindowTest : Window
     {
         private IEntryModel[] _rootDirs;
-        private string _mask;
+        private string _filterStr;
         private string _selectedPath;
+        private IProfile[] _profiles;
 
-        public ToolWindowTest(IEntryModel[] rootDirs, string mask, string selectedPath = "c:\\")
+        public ToolWindowTest(IProfile[] profiles, IEntryModel[] rootDirs, string mask, string selectedPath = "c:\\")
         {
             InitializeComponent();
+            _profiles = profiles;
             _rootDirs = rootDirs;
-            _mask = mask;
+            _filterStr = mask;
             _selectedPath = selectedPath;
         }
 
@@ -42,19 +44,73 @@ namespace TestApp
         {
             base.OnApplyTemplate();
             FileExplorer.WPF.UserControls.Explorer exp = explorer as FileExplorer.WPF.UserControls.Explorer;
-            exp.RootDirectories = _rootDirs;
-            exp.ViewModel.FileList.ShowToolbar = false;
-            exp.ViewModel.FileList.ShowGridHeader = false;
-            exp.ViewModel.FileList.Parameters.ViewMode = "List";
-            exp.ViewModel.FileList.Parameters.ItemSize = 16;
-            exp.ViewModel.FileList.EnableDrag = true;
-            exp.ViewModel.FileList.EnableDrop = false;
-            exp.ViewModel.FileList.EnableMultiSelect = false;
-            exp.ViewModel.FilterStr = _mask;
-            testDroppable.DataContext = new TestDroppableViewModel();
-            
-            if (_selectedPath != null)
-                exp.ViewModel.GoAsync(_selectedPath);
+            //exp.RootDirectories = _rootDirs;
+            //exp.ViewModel.FileList.ShowToolbar = false;
+            //exp.ViewModel.FileList.ShowGridHeader = false;
+            //exp.ViewModel.FileList.Parameters.ViewMode = "List";
+            //exp.ViewModel.FileList.Parameters.ItemSize = 16;
+            //exp.ViewModel.FileList.EnableDrag = true;
+            //exp.ViewModel.FileList.EnableDrop = false;
+            //exp.ViewModel.FileList.EnableMultiSelect = false;
+            //exp.ViewModel.FilterStr = _mask;
+            //testDroppable.DataContext = new TestDroppableViewModel();
+
+            //if (_selectedPath != null)
+            //    exp.ViewModel.GoAsync(_selectedPath);
+
+            IScriptCommand onModelCreated =
+               ScriptCommands.RunCommandsInSequence(null,
+                   IOScriptCommands.ExplorerDefault(),
+                   IOScriptCommands.ExplorerDefaultToolbarCommands(),
+                   UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
+                           "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
+                   );
+
+            exp.ViewModel.Initializer =
+                new ScriptCommandInitializer()
+                {
+                    OnModelCreated = onModelCreated,
+                    OnViewAttached = UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(),
+                    RootModels = _rootDirs,
+                    StartupParameters = new ParameterDic()
+                    {
+                         { "Profiles", _profiles },
+                         { "RootDirectories", _rootDirs },	    
+                         { "StartupPath", _selectedPath },
+                         { "FilterString", _filterStr },
+                         { "ViewMode", "List" }, 
+                         { "ItemSize", 16 },
+                         { "EnableDrag", true }, 
+                         { "EnableDrop", true }, 
+                         { "FileListNewWindowCommand", NullScriptCommand.Instance },
+                         { "EnableMultiSelect", false},
+                         { "ShowToolbar", false }, 
+                         { "ShowGridHeader", false }
+                    }
+                };
+
+
+
+            //FileSystemInfoExProfile profile = new FileSystemInfoExProfile(exp.ViewModel.Events, exp.ViewModel.WindowManager);
+            //var rootModel = AsyncUtils.RunSync(() => profile.ParseAsync(""));
+
+            //exp.ViewModel.Commands.ExecuteAsync(
+            //    new IScriptCommand[] { cmd2Run },
+            //    new ParameterDic() { 
+            //        //Required
+            //        { "Profiles", _profiles },
+            //        //{ "OnModelCreated", onModelCreated },
+            //        //{ "OnViewAttached", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()},                    
+            //        { "RootDirectories", _rootDirs },	                    
+            //        //Optional
+            //        { "StartupPath", _selectedPath },
+            //        //{ "Events", exp.ViewModel.Events },
+            //        //{ "WindowManager", exp.ViewModel.WindowManager },
+            //        { "EnableDrag", true }, 
+            //        { "EnableDrop", true },                     
+            //        { "EnableMultiSelect", false}
+            //    });
+
             //or exp.ViewModel.Commands.ExecuteAsync(new IScriptCommand[] { Explorer.GoTo("C:\\") });
         }
     }

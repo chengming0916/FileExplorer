@@ -19,59 +19,71 @@ namespace FileExplorer.WPF.ViewModels
 
         public NavigationCommandManager(INavigationViewModel nvm, IEventAggregator events,
              params IExportCommandBindings[] additionalBindingExportSource)
+            : base(additionalBindingExportSource)
         {
             _nvm = nvm;
 
-            ParameterDicConverter =
-             ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("Navigation", _nvm),
-                 new Tuple<string, object>("Events", events));
+            InitCommandManager();
+             ToolbarCommands = new ToolbarCommandsHelper(events,
+                null,
+                null)
+                {
+                };
 
-            #region Set ScriptCommands
+        }
 
-            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
-            CommandDictionary.Back = new SimpleScriptCommand("GoBack", (pd) =>
+        #endregion
+
+        #region Methods
+        protected override IParameterDicConverter setupParamDicConverter()
+        {
+            return ParameterDicConverters.ConvertVMParameter(new Tuple<string, object>("Navigation", _nvm));
+        }
+
+
+
+        protected override IEnumerable<string> getScriptCommands()
+        {
+            yield return "Back";
+            yield return "Next";
+            yield return "Up";
+        }
+
+        protected override void setupScriptCommands(dynamic commandDictionary)
+        {
+            commandDictionary.Back = new SimpleScriptCommand("GoBack", (pd) =>
             {
                 pd.AsVMParameterDic().Navigation.GoBack();
                 return ResultCommand.OK;
             }, pd => pd.AsVMParameterDic().Navigation.CanGoBack);
 
-            CommandDictionary.Next = new SimpleScriptCommand("GoNext", (pd) =>
+            commandDictionary.Next = new SimpleScriptCommand("GoNext", (pd) =>
             {
                 pd.AsVMParameterDic().Navigation.GoNext();
                 return ResultCommand.OK;
             }, pd => pd.AsVMParameterDic().Navigation.CanGoNext);
 
-            CommandDictionary.Up = new SimpleScriptCommand("GoUp", (pd) =>
+            commandDictionary.Up = new SimpleScriptCommand("GoUp", (pd) =>
             {
                 pd.AsVMParameterDic().Navigation.GoUp();
                 return ResultCommand.OK;
             }, pd => pd.AsVMParameterDic().Navigation.CanGoUp);
  
 
-            #endregion
+        }
 
-            List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
-            exportBindingSource.AddRange(additionalBindingExportSource);
+        protected override IExportCommandBindings[] setupExportBindings()
+        {
+            List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();            
             exportBindingSource.Add(
-                new ExportCommandBindings(                    
+                new ExportCommandBindings(
                 ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseBack, this, (ch) => ch.CommandDictionary.Back, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseForward, this, (ch) => ch.CommandDictionary.Next, ParameterDicConverter, ScriptBindingScope.Explorer),
                 ScriptCommandBinding.FromScriptCommand(NavigationCommands.BrowseHome, this, (ch) => ch.CommandDictionary.Up, ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));
 
-            _exportBindingSource = exportBindingSource.ToArray();
-
-             ToolbarCommands = new ToolbarCommandsHelper(events,
-                null,
-                null)
-                {
-                };
+            return exportBindingSource.ToArray();
         }
-
-        #endregion
-
-        #region Methods
 
         #endregion
 

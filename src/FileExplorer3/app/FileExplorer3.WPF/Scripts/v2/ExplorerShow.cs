@@ -171,8 +171,8 @@ namespace FileExplorer.Script
                  StartupParameters = pm,
                  WindowManager = wm, 
                  Events = events, 
-                 OnModelCreated = new IScriptCommand[] { modelCreatedCommands },
-                 OnViewAttached = new IScriptCommand[] { viewAttachedCommands }
+                 OnModelCreated = modelCreatedCommands,
+                 OnViewAttached = viewAttachedCommands 
              };
 
             ExplorerViewModel evm = null;

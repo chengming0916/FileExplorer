@@ -20,31 +20,12 @@ namespace FileExplorer.WPF.ViewModels
 
         public SidebarCommandManager(ISidebarViewModel svm, IEventAggregator events,
              params IExportCommandBindings[] additionalBindingExportSource)
+            : base(additionalBindingExportSource)
         {
             _svm = svm;
 
-            ParameterDicConverter =
-             ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("Sidebar", _svm),
-                 new Tuple<string, object>("Events", events));
+            InitCommandManager();
 
-            #region Set ScriptCommands
-
-            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
-
-            CommandDictionary.TogglePreviewer = Sidebar.Toggle();
-
-            #endregion
-
-            List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
-            exportBindingSource.Add(
-              new ExportCommandBindings(
-                  ScriptCommandBinding.FromScriptCommand(ExplorerCommands.TogglePreviewer, this, (ch) => ch.CommandDictionary.TogglePreviewer, ParameterDicConverter, ScriptBindingScope.Explorer)
-              ));
-            exportBindingSource.AddRange(additionalBindingExportSource);
-          
-
-            _exportBindingSource = exportBindingSource.ToArray();
 
              ToolbarCommands = new ToolbarCommandsHelper(events,
                 null,
@@ -57,7 +38,31 @@ namespace FileExplorer.WPF.ViewModels
         #endregion
 
         #region Methods
-        
+        protected override IParameterDicConverter setupParamDicConverter()
+        {
+            return ParameterDicConverters.ConvertVMParameter(new Tuple<string, object>("Sidebar", _svm));
+        }
+
+        protected override IEnumerable<string> getScriptCommands()
+        {
+            yield return "TogglePreviewer";
+        }
+
+        protected override void setupScriptCommands(dynamic commandDictionary)
+        {            
+            commandDictionary.TogglePreviewer = Sidebar.Toggle();
+        }
+
+        protected override IExportCommandBindings[] setupExportBindings()
+        {
+            List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
+            exportBindingSource.Add(
+              new ExportCommandBindings(
+                  ScriptCommandBinding.FromScriptCommand(ExplorerCommands.TogglePreviewer, this, (ch) => ch.CommandDictionary.TogglePreviewer, ParameterDicConverter, ScriptBindingScope.Explorer)
+              ));            
+            return exportBindingSource.ToArray();
+        }
+
         #endregion
 
         #region Data

@@ -17,7 +17,7 @@ namespace FileExplorer.Script
         public static IScriptCommand ExplorerDefaultToolbarCommands(string explorerVariable,
             string windowManagerVariable, IScriptCommand nextCommand = null)
         {
-            return new ExplorerDefaultToolbarCommands()
+            return new IOExplorerDefaultToolbarCommands()
             {
                 ExplorerKey = explorerVariable,
                 WindowManagerKey = windowManagerVariable,
@@ -34,7 +34,7 @@ namespace FileExplorer.Script
     /// <summary>
     /// Set default ScriptCommand and parameter for DiskBased use.
     /// </summary>
-    public class ExplorerDefaultToolbarCommands : ScriptCommandBase
+    public class IOExplorerDefaultToolbarCommands : ScriptCommandBase
     {
         /// <summary>
         /// Point to Explorer (IExplorerViewModel).
@@ -43,11 +43,12 @@ namespace FileExplorer.Script
 
         public string WindowManagerKey { get; set; }
 
-        public ExplorerDefaultToolbarCommands()
+        public IOExplorerDefaultToolbarCommands()
             : base("ExplorerDefault")
         {
             ExplorerKey = "{Explorer}";
             WindowManagerKey = "{WindowManager}";
+            ContinueOnCaptureContext = true;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
@@ -56,8 +57,8 @@ namespace FileExplorer.Script
             return UIScriptCommands.ExplorerDo(ExplorerKey, explorerModel =>
                 {
                     explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] {                               
-                new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc                 
-                new StaticCommandProvider(
+                new FileBasedCommandProvider(explorerModel.FileList.Commands), //Open, Cut, Copy, Paste etc                 
+                new StaticCommandProvider(                    
                      //new CommandModel(ExplorerCommands.CloseTab) { IsEnabled = true, Header="CloseTab", IsVisibleOnToolbar = true },
                     new FileExplorer.Models.SevenZipSharp.SzsCommandModel(explorerModel.Initializer),
                     new SeparatorCommandModel(),

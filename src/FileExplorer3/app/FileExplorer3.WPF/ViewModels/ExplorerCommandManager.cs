@@ -18,49 +18,78 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator events,
+        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator globalEvents, IEventAggregator events,
              params ISupportCommandManager[] cMs)
-            : this(evm, windowManager, events, cMs.Select(cm => cm.Commands).ToArray())
+            : this(evm, windowManager, globalEvents, events, cMs.Select(cm => cm.Commands).ToArray())
         {
             //Workaround: Add all properties to sub-commandManager, 
             //e.g. Add Explorer to FileList.Commands.ParameterDicConverter
             var paramDic = ParameterDicConverter.Convert(null);
-            foreach (var iscm in cMs)            
-                iscm.Commands.ParameterDicConverter.AddAdditionalParameters(paramDic);            
+            foreach (var iscm in cMs)
+                iscm.Commands.ParameterDicConverter.AddAdditionalParameters(paramDic);
         }
 
-        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator events,
+        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator globalEvents, IEventAggregator events,
              params IExportCommandBindings[] additionalBindingExportSource)
+            : base(additionalBindingExportSource)
         {
             _evm = evm;
+            _windowManager = windowManager;
+            _events = events;
+            _globalEvents = globalEvents;
 
-            ParameterDicConverter =
-             ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("Explorer", _evm),                 
+
+            InitCommandManager();
+            ToolbarCommands = new ToolbarCommandsHelper(events,
+               null,
+               null)
+               {
+               };
+            
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected override IParameterDicConverter setupParamDicConverter()
+        {
+            return ParameterDicConverters.ConvertVMParameter(
+               new Tuple<string, object>("Explorer", _evm),
                  new Tuple<string, object>("DirectoryTree", _evm.DirectoryTree),
                  new Tuple<string, object>("FileList", _evm.FileList),
                  new Tuple<string, object>("Statusbar", _evm.Statusbar),
-                 new Tuple<string, object>("WindowManager", windowManager),
-                 new Tuple<string, object>("Events", events));            
+                 new Tuple<string, object>("WindowManager", _windowManager),
+                 new Tuple<string, object>("Events", _events),
+                 new Tuple<string, object>("GlobalEvents", _globalEvents)
+                );
+        }
 
-            #region Set ScriptCommands
+        protected override IEnumerable<string> getScriptCommands()
+        {
+            yield return "Refresh";
+            yield return "Transfer";
+            yield return "ZoomIn";
+            yield return "ZoomOut";
+            yield return "CloseTab";
+        }
 
-            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
-            CommandDictionary.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
+        protected override void setupScriptCommands(dynamic commandDictionary)
+        {
+            commandDictionary.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
                 IExplorerViewModel elvm = pd.AsVMParameterDic().Explorer;
                 elvm.FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Replace, true);
                 elvm.DirectoryTree.Selection.RootSelector.SelectedViewModel.Entries.LoadAsync(UpdateMode.Replace, true);
                 return ResultCommand.NoError;
             });
-            
-            CommandDictionary.Transfer = NullScriptCommand.Instance;
-            CommandDictionary.ZoomIn = Explorer.Zoom(ZoomMode.ZoomIn);
-            CommandDictionary.ZoomOut = Explorer.Zoom(ZoomMode.ZoomOut);
-            CommandDictionary.CloseTab = NullScriptCommand.Instance;
 
-            #endregion
+            commandDictionary.ZoomIn = Explorer.Zoom(ZoomMode.ZoomIn);
+            commandDictionary.ZoomOut = Explorer.Zoom(ZoomMode.ZoomOut);
+        }
 
+        protected override IExportCommandBindings[] setupExportBindings()
+        {
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
             exportBindingSource.Add(
               new ExportCommandBindings(
@@ -70,32 +99,22 @@ namespace FileExplorer.WPF.ViewModels
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseTab, this, (ch) => ch.CommandDictionary.CloseTab, ParameterDicConverter, ScriptBindingScope.Explorer)
                 //ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseWindow, this, (ch) => ch.ScriptCommands.Close, ParameterDicConverter, ScriptBindingScope.Explorer)
               ));
-            exportBindingSource.AddRange(additionalBindingExportSource);
-          
 
-            _exportBindingSource = exportBindingSource.ToArray();
-
-             ToolbarCommands = new ToolbarCommandsHelper(events,
-                null,
-                null)
-                {
-                };
+            return exportBindingSource.ToArray();
         }
-        
-        #endregion
-
-        #region Methods
-        
         #endregion
 
         #region Data
 
         IExplorerViewModel _evm;
-        
+        private IWindowManager _windowManager;
+        private IEventAggregator _events;
+        private IEventAggregator _globalEvents;
+
         #endregion
 
         #region Public Properties
-        
+
         #endregion
     }
 }

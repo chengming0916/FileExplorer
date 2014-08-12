@@ -32,7 +32,7 @@ namespace FileExplorer.WPF.ViewModels
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);
 
-        //IEventAggregator Events { get; }
-        //IWindowManager WindowManager { get; }
+        IEventAggregator Events { get; }
+        IWindowManager WindowManager { get; }
     }
 }
