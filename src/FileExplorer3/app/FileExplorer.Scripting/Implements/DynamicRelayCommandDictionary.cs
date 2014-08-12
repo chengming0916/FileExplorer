@@ -30,7 +30,7 @@ namespace FileExplorer.Script
 
         #endregion
 
-        #region Methods
+        #region Methods       
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {

@@ -70,7 +70,7 @@ namespace FileExplorer.Script
         #region Public Properties
 
         [DefaultValue(false)]
-        public bool ContinueOnCaptureContext
+        public virtual bool ContinueOnCaptureContext
         {
             get { return _continueOnCaptureContext; }
             set { _continueOnCaptureContext = value; }

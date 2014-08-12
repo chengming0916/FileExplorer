@@ -12,7 +12,7 @@ namespace FileExplorer.Script
             string fileListVariable, string directoryTreeVariable, 
             string breadcrumbVariable, IScriptCommand nextCommand = null)
         {
-            return new ExplorerDefault()
+            return new IOExplorerDefault()
             {
                 ExplorerKey = explorerVariable,
                 FileListKey = fileListVariable,
@@ -31,7 +31,7 @@ namespace FileExplorer.Script
     /// <summary>
     /// Set default ScriptCommand and parameter for DiskBased use.
     /// </summary>
-    public class ExplorerDefault : ScriptCommandBase
+    public class IOExplorerDefault : ScriptCommandBase
     {
         /// <summary>
         /// Point to Explorer (IExplorerViewModel).
@@ -56,7 +56,7 @@ namespace FileExplorer.Script
 
         public string WindowManagerKey { get; set; }
 
-        public ExplorerDefault()
+        public IOExplorerDefault()
             : base("ExplorerDefault")
         {
             ExplorerKey = "{Explorer}";
@@ -88,6 +88,12 @@ namespace FileExplorer.Script
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.EnableMultiSelect, "{EnableMultiSelect}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ColumnList, "{ColumnList}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ColumnFilters, "{ColumnFilters}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.FilterString, "{FilterString}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ViewMode, "{ViewMode}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ItemSize, "{ItemSize}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ShowToolbar, "{ShowToolbar}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ShowSidebar, "{ShowSidebar}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.ShowGridHeader, "{ShowGridHeader}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "Open", "{FileListOpenCommand}"),                        
                         UIScriptCommands.SetScriptCommand(FileListKey, "Delete", "{FileListDeleteCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "NewFolder", "{FileListNewFolderCommand}"),                        

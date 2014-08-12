@@ -58,7 +58,7 @@ namespace TestApp
 
 
             explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] {                               
-                new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc                 
+                new FileBasedCommandProvider(explorerModel.FileList.Commands), //Open, Cut, Copy, Paste etc                 
                 new StaticCommandProvider(
                      //new CommandModel(ExplorerCommands.CloseTab) { IsEnabled = true, Header="CloseTab", IsVisibleOnToolbar = true },
                     new FileExplorer.Models.SevenZipSharp.SzsCommandModel(explorerModel.Initializer),

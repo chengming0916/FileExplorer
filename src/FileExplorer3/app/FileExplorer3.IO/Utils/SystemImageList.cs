@@ -285,6 +285,9 @@ namespace QuickZip.Converters
 
         public SystemImageList getImageList(IconSize size)
         {
+            if (size == IconSize.thumbnail)
+                size = IconSize.jumbo;
+
             if (currentImageList != null && currentImageListSize == size)
                 return currentImageList;
 

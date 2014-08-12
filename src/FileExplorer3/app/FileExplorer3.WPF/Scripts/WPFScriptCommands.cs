@@ -897,8 +897,12 @@ namespace FileExplorer.Script
 
         public override bool CanExecute(ParameterDic pm)
         {
-            VM evm = (VM)pm[_viewModelName];
-            return evm != null;// && AsyncUtils.RunSync(() => _commandFunc(evm)).CanExecute(pm);
+            if (pm.ContainsKey(_viewModelName))
+            {
+                VM evm = (VM)pm[_viewModelName];
+                return evm != null;// && AsyncUtils.RunSync(() => _commandFunc(evm)).CanExecute(pm);
+            }
+            return false;
         }
     }
 

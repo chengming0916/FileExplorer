@@ -14,9 +14,9 @@ namespace FileExplorer.WPF.ViewModels
             RootModels = new FileExplorer.Models.IEntryModel[] { };
         }
 
-        public IScriptCommand[] OnViewAttached { get; set; }
+        public IScriptCommand OnViewAttached { get; set; }
 
-        public IScriptCommand[] OnModelCreated { get; set; }
+        public IScriptCommand OnModelCreated { get; set; }
 
         public ParameterDic StartupParameters { get; set; }
 
@@ -46,7 +46,10 @@ namespace FileExplorer.WPF.ViewModels
         public async Task InitializeModelCreatedAsync(IExplorerViewModel evm)
         {
             if (OnModelCreated != null)
-                await evm.Commands.ExecuteAsync(OnModelCreated, StartupParameters);
+                await evm.Commands.ExecuteAsync(
+                    new IScriptCommand[] {
+                    OnModelCreated }
+                    , StartupParameters);
 
             
         }
@@ -54,7 +57,8 @@ namespace FileExplorer.WPF.ViewModels
         public async Task InitializeViewAttachedAsync(IExplorerViewModel evm)
         {
             if (OnViewAttached != null)
-                await evm.Commands.ExecuteAsync(OnViewAttached, StartupParameters);
+                await evm.Commands.ExecuteAsync(
+                    new IScriptCommand[] { OnViewAttached }, StartupParameters);
         }
 
 

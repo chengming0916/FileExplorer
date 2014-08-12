@@ -91,7 +91,8 @@ namespace TestApp
             RootModels.Add(AsyncUtils.RunSync(() => _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName)));
 
 
-
+            _profiles = new IProfile[] {
+                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
         }
 
         #endregion
@@ -117,40 +118,20 @@ namespace TestApp
 
         public void OpenWindowUsingScriptCommand()
         {
-            var profiles = new IProfile[] {
-                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
-
+     
             IScriptCommand onModelCreated =
                 ScriptCommands.RunCommandsInSequence(null,
                     IOScriptCommands.ExplorerDefault(),
                     IOScriptCommands.ExplorerDefaultToolbarCommands(),
                     UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", 
                             "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
-                    );
-            //IScriptCommand onViewAttached =  ScriptCommands.IfAssignedAndNotEmptyString("{StartupPath}", 
-            //         UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{Profiles}", "{StartupPath}"),                      
-            //           UIScriptCommands.ExplorerGoTo("{Explorer}", "{RootDirectories[0]}",
-            //                UIScriptCommands.DirectoryTreeToggleExpand("{RootDirectories[0]}")));
-
-            IScriptCommand showWindowCommand = 
-                UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
-                  "{WindowManager}", "{Events}", "{Explorer}", ResultCommand.NoError);
-                            
-
-            IEventAggregator evnts = new EventAggregator();
-            IWindowManager wm = new WindowManager();
-            FileSystemInfoExProfile profile = new FileSystemInfoExProfile(_events, _windowManager);
-            var rootModel = AsyncUtils.RunSync(() => profile.ParseAsync(""));
+                    );                                                     
 
             ScriptRunner.RunScriptAsync(new ParameterDic() { 
                     //Required
-                    { "Profiles", profiles },
+                    { "Profiles", _profiles },
                     { "OnModelCreated", onModelCreated },
-                    { "OnViewAttached", 
-                        ScriptCommands.RunCommandsInSequence(
-                            UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()
-                        )
-                    },                    
+                    { "OnViewAttached", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()},                    
                     { "RootDirectories", RootModels.ToArray() },	                    
                     //Optional
                     { "StartupPath", OpenPath },
@@ -159,7 +140,7 @@ namespace TestApp
 				    { "EnableDrag", _enableDrag }, 
                     { "EnableDrop", _enableDrop },                     
                     { "EnableMultiSelect", _enableMultiSelect}, 
-                }, showWindowCommand);
+                }, UIScriptCommands.ExplorerShow());
         }
 
         public void OpenWindow(object context = null)
@@ -179,7 +160,7 @@ namespace TestApp
                 //Use ScriptCommandInitializer
                 initializer = new ScriptCommandInitializer()
              {
-                 OnModelCreated = new IScriptCommand[] {
+                 OnModelCreated = 
                     ScriptCommands.RunCommandsInSequence(
                         UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.RootModels, RootModels.ToArray()),
                         UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.EnableDrag, _enableDrag),
@@ -191,19 +172,17 @@ namespace TestApp
                                 ScriptCommandsInitializers.InitializeScriptCommands(epvm, _windowManager, _events, profiles);
                                 ToolbarCommandsInitializers.InitializeToolbarCommands(epvm, _windowManager);
                             })
-                    ) },
+                    ),
 
                  OnViewAttached =
                  String.IsNullOrEmpty(OpenPath) ?
-                    new IScriptCommand[] 
-                    {                         
+                    ScriptCommands.RunCommandsInSequence(null,                                              
                         ScriptCommands.Assign("{Root}", RootModels.FirstOrDefault(), false,                     
                         UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}",
                         UIScriptCommands.DirectoryTreeToggleExpand("{Root}")))                    
-                    } :
-                    new IScriptCommand[] {                                                               
-                           UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{ProfileEx}", OpenPath)
-                    },
+                    ) :            
+                    UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{ProfileEx}", OpenPath)
+                    ,
                  StartupParameters = new ParameterDic()
                  {
                      { "ProfileEx", _profileEx }
@@ -232,7 +211,7 @@ namespace TestApp
 
         public void OpenToolWindow()
         {
-            new TestApp.ToolWindowTest(RootModels.ToArray(), FileFilter, "c:\\").Show();
+            new TestApp.ToolWindowTest(_profiles, RootModels.ToArray(), FileFilter, "c:\\").Show();
         }
 
 
@@ -463,6 +442,8 @@ namespace TestApp
         IProfile _profileEx;
         IProfile _profileSkyDrive;
         IProfile _profileGoogleDrive;
+
+        IProfile[] _profiles;
 
         //private List<string> _viewModes = new List<string>() { "Icon", "SmallIcon", "Grid" };
         //private string _addPath = lookupPath;

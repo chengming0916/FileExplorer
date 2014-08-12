@@ -16,38 +16,47 @@ namespace FileExplorer.WPF.ViewModels
         
         #region Constructor
 
-        public BreadcrumbCommandManager(IBreadcrumbViewModel bvm, IEventAggregator events,
-             params IExportCommandBindings[] additionalBindingExportSource)
+        public BreadcrumbCommandManager(IBreadcrumbViewModel bvm, IEventAggregator events, 
+            params IExportCommandBindings[] additionalBindingExportSource)
+            : base(additionalBindingExportSource)
         {
             _bvm = bvm;
-
-            ParameterDicConverter =
-             ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("Breadcrumb", _bvm),
-                 new Tuple<string, object>("Events", events));
-
-            #region Set ScriptCommands
-
-            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
-            CommandDictionary.ToggleBreadcrumb = new SimpleScriptCommand("ToggleBreadcrumb", 
-                pd => { IBreadcrumbViewModel bread = pd["Breadcrumb"] as IBreadcrumbViewModel; 
-                    bread.ShowBreadcrumb = !bread.ShowBreadcrumb; return ResultCommand.NoError; });
-
-            #endregion
-
-            List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
-            exportBindingSource.AddRange(additionalBindingExportSource);
-            exportBindingSource.Add(
-                new ExportCommandBindings(                                        
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.ToggleBreadcrumb, this, (ch) => ch.CommandDictionary.ToggleBreadcrumb, ParameterDicConverter, ScriptBindingScope.Explorer)
-                ));
-
-            _exportBindingSource = exportBindingSource.ToArray();             
+            InitCommandManager();
         }
 
         #endregion
 
         #region Methods
+        protected override IParameterDicConverter setupParamDicConverter()
+        {
+            return ParameterDicConverters.ConvertVMParameter(new Tuple<string, object>("Breadcrumb", _bvm));
+        }
+
+        protected override IEnumerable<string> getScriptCommands()
+        {
+            yield return "ToggleBreadcrumb";
+        }
+
+        protected override void setupScriptCommands(dynamic commandDictionary)
+        {
+            commandDictionary.ToggleBreadcrumb = new SimpleScriptCommand("ToggleBreadcrumb",
+                 pd =>
+                 {
+                     IBreadcrumbViewModel bread = pd["Breadcrumb"] as IBreadcrumbViewModel;
+                     bread.ShowBreadcrumb = !bread.ShowBreadcrumb; return ResultCommand.NoError;
+                 });
+        }
+
+        protected override IExportCommandBindings[] setupExportBindings()
+        {
+            List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();            
+            exportBindingSource.Add(
+                new ExportCommandBindings(
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.ToggleBreadcrumb, this, (ch) => ch.CommandDictionary.ToggleBreadcrumb, ParameterDicConverter, ScriptBindingScope.Explorer)
+                ));
+
+            return exportBindingSource.ToArray();            
+        }
 
         #endregion
 

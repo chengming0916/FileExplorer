@@ -70,7 +70,7 @@ namespace FileExplorer.Script
            IScriptCommand nextCommand = null)
         {
             string copyParameterVariable = "{ExplorerCopyParameter}";
-            return ExplorerGetParameter(fromExplorerVariable, parameterType, copyParameterVariable, 
+            return ExplorerGetParameter(fromExplorerVariable, parameterType, copyParameterVariable,
                 ExplorerSetParameter(toExplorerVariable, parameterType, copyParameterVariable, nextCommand));
         }
     }
@@ -81,11 +81,12 @@ namespace FileExplorer.Script
         RootModels,
 
         //FilePicker
-        FilePickerMode, FilterStr,
+        FilePickerMode, FilterString,
 
         //FileList
         EnableDrag, EnableDrop, EnableMultiSelect,
-        ColumnList, ColumnFilters
+        ColumnList, ColumnFilters, ViewMode, ItemSize,
+        ShowToolbar, ShowSidebar, ShowGridHeader
     }
 
     public enum ParameterDirection
@@ -159,9 +160,8 @@ namespace FileExplorer.Script
                         if (evm is FilePickerViewModel)
                             pm.SetValue(ValueKeyString, (evm as FilePickerViewModel).PickerMode);
                         break;
-                    case ExplorerParameterType.FilterStr:
-                        if (evm is FilePickerViewModel)
-                            pm.SetValue(ValueKeyString, (evm as FilePickerViewModel).FilterStr);
+                    case ExplorerParameterType.FilterString:
+                        pm.SetValue(ValueKeyString, evm.FilterStr);
                         break;
                     case ExplorerParameterType.ColumnList:
                         pm.SetValue(ValueKeyString, evm.FileList.Columns.ColumnList);
@@ -170,6 +170,22 @@ namespace FileExplorer.Script
                         pm.SetValue(ValueKeyString, evm.FileList.Columns.ColumnFilters);
                         break;
 
+                    case ExplorerParameterType.ViewMode:
+                        pm.SetValue(ValueKeyString, evm.FileList.Parameters.ViewMode);
+                        break;
+
+                    case ExplorerParameterType.ItemSize:
+                        pm.SetValue(ValueKeyString, evm.FileList.Parameters.ItemSize);
+                        break;
+                    case ExplorerParameterType.ShowToolbar:
+                        pm.SetValue(ValueKeyString, evm.FileList.ShowToolbar);
+                        break;
+                    case ExplorerParameterType.ShowSidebar:
+                        pm.SetValue(ValueKeyString, evm.FileList.ShowSidebar);
+                        break;
+                    case ExplorerParameterType.ShowGridHeader:
+                        pm.SetValue(ValueKeyString, evm.FileList.ShowGridHeader);
+                        break;
                     default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));
                 }
 
@@ -185,13 +201,16 @@ namespace FileExplorer.Script
             switch (ParameterType)
             {
                 case ExplorerParameterType.EnableDrag:
-                    evm.FileList.EnableDrag = evm.DirectoryTree.EnableDrag = true.Equals(value);
+                    if (value is bool)
+                        evm.FileList.EnableDrag = evm.DirectoryTree.EnableDrag = true.Equals(value);
                     break;
                 case ExplorerParameterType.EnableDrop:
-                    evm.FileList.EnableDrop = evm.DirectoryTree.EnableDrop = true.Equals(value);
+                    if (value is bool)
+                        evm.FileList.EnableDrop = evm.DirectoryTree.EnableDrop = true.Equals(value);
                     break;
                 case ExplorerParameterType.EnableMultiSelect:
-                    evm.FileList.EnableMultiSelect = true.Equals(value);
+                    if (value is bool)
+                        evm.FileList.EnableMultiSelect = true.Equals(value);
                     break;
                 case ExplorerParameterType.RootModels:
                     if (ValueKey == null)
@@ -216,11 +235,10 @@ namespace FileExplorer.Script
                     if (evm is FilePickerViewModel)
                         (evm as FilePickerViewModel).PickerMode = pickerMode;
                     break;
-                case ExplorerParameterType.FilterStr:
-                    string filterStr = pm.GetValue<string>(ValueKey as string);
+                case ExplorerParameterType.FilterString:
+                    string filterStr = pm.ReplaceVariableInsideBracketed(ValueKey as string);
                     if (filterStr != null)
-                        if (evm is FilePickerViewModel)
-                            (evm as FilePickerViewModel).FilterStr = filterStr;
+                        evm.FilterStr = filterStr;
                     break;
                 case ExplorerParameterType.ColumnList:
                     ColumnInfo[] columnInfo = pm.GetValue<ColumnInfo[]>(ValueKey as string);
@@ -231,6 +249,30 @@ namespace FileExplorer.Script
                     ColumnFilter[] columnfilters = pm.GetValue<ColumnFilter[]>(ValueKey as string);
                     if (columnfilters != null)
                         evm.FileList.Columns.ColumnFilters = columnfilters;
+                    break;
+
+                case ExplorerParameterType.ViewMode:
+                    if (value is string)
+                        evm.FileList.Parameters.ViewMode = value as string;
+                    break;
+
+                case ExplorerParameterType.ItemSize:
+
+                    if (value is int)
+                        evm.FileList.Parameters.ItemSize = (int)value;
+                    break;
+
+                case ExplorerParameterType.ShowToolbar:
+                    if (value is bool)
+                        evm.FileList.ShowToolbar = true.Equals(value);
+                    break;
+                case ExplorerParameterType.ShowSidebar:
+                    if (value is bool)
+                        evm.FileList.ShowSidebar = true.Equals(value);
+                    break;
+                case ExplorerParameterType.ShowGridHeader:
+                    if (value is bool)
+                        evm.FileList.ShowGridHeader = true.Equals(value);
                     break;
 
                 default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));

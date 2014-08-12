@@ -201,6 +201,7 @@
     <Compile Include="Scripts\v2\DiskTransfer.cs" />
     <Compile Include="Scripts\v2\ExplorerDefaultToolbarCommands.cs" />
     <Compile Include="Scripts\v2\ExplorerDefault.cs" />
+    <Compile Include="Scripts\v2\ExplorerInit.cs" />
     <Compile Include="Scripts\v2\IOInitializeHelpers.cs" />
     <Compile Include="Scripts\v2\SzsDiskTransfer.cs" />
     <Compile Include="Utils\CompressUtils.cs" />

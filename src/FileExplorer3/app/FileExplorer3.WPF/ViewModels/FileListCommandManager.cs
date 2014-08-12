@@ -17,88 +17,88 @@ using FileExplorer.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    public class FileListCommandManager : CommandManagerBase, IExportCommandBindings
+    public class FileListCommandManager : CommandManagerBase
     {
         #region Constructor        
 
-        public FileListCommandManager(IFileListViewModel flvm, IWindowManager windowManager, IEventAggregator events,
+        public FileListCommandManager(IFileListViewModel flvm, IWindowManager windowManager, IEventAggregator events, 
             params IExportCommandBindings[] additionalBindingExportSource)
+            : base(additionalBindingExportSource)
         {
-            _flvm = flvm;
-
-            ParameterDicConverter =
-             ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("FileList", flvm),
-                 new Tuple<string, object>("WindowManager", windowManager),
-                 new Tuple<string, object>("Events", events));
-
+            _flvm = flvm;            
+           
+            IEntryModel _currentDirectoryModel = null;
+            InitCommandManager();
+            ToolbarCommands = new ToolbarCommandsHelper(events, ParameterDicConverter,
+                message => { _currentDirectoryModel = message.NewModel; return new IEntryModel[] { _currentDirectoryModel }; },
+                message => message.SelectedModels.Count() == 0 && _currentDirectoryModel != null ? new IEntryModel[] { _currentDirectoryModel } : message.SelectedModels.ToArray())
+                {
+                    ExtraCommandProviders = new[] { 
+                        new FileBasedCommandProvider(this), //Open, Cut, Copy, Paste etc    
+                        new StaticCommandProvider(new SelectGroupCommand(flvm), 
+                            new ViewModeCommand(flvm),                             
+                            new SeparatorCommandModel(),
+                            new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnToolbar = true, 
+                                HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE188)                        
+                            },
+                            new DirectoryCommandModel(
+                                new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true }) 
+                                { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
+                            new ToggleVisibilityCommand(flvm.Sidebar, ExplorerCommands.TogglePreviewer)  
+                            ) 
+                    }
+                };
            
 
-            #region Set ScriptCommands
+        }
 
-            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
-            CommandDictionary.Open = FileList.IfSelection(evm => evm.Count() == 1,
-                   FileList.IfSelection(evm => evm[0].EntryModel.IsDirectory,
-                       FileList.OpenSelectedDirectory,  //Selected directory
-                       ResultCommand.NoError),   //Selected non-directory
-                   ResultCommand.NoError //Selected more than one item.                   
-                   );
+        #endregion
 
+        #region Methods        
 
+        protected override IParameterDicConverter setupParamDicConverter()
+        {
+            return ParameterDicConverters.ConvertVMParameter(new Tuple<string, object>("FileList", _flvm));
+        }
+                                   
+        protected override IEnumerable<string> getScriptCommands()
+        {
+            yield return "Open";
+            yield return "Delete";
+            yield return "NewFolder";
+            yield return "Refresh";
+            yield return "ToggleRename";
+            yield return "Copy";
+            yield return "Cut";
+            yield return "Paste";
+            yield return "OpenTab";
+            yield return "NewWindow";
+            yield return "ZoomIn";
+            yield return "ZoomOut";
+        }
 
-            CommandDictionary.Delete = FileList.IfSelection(evm => evm.Count() >= 1,
-                    WPFScriptCommands.IfOkCancel(windowManager, pd => "Delete",
-                        pd => String.Format("Delete {0} items?", (pd["FileList"] as IFileListViewModel).Selection.SelectedItems.Count),
-                        WPFScriptCommands.ShowProgress(windowManager, "Delete",
-                            ScriptCommands.RunCommandsInQueue(new HideProgress(),
-                               FileList.AssignSelectionToParameter(
-                                 CoreScriptCommands.DiskDeleteMultiple("Parameter"))), true), 
-                     ResultCommand.NoError),
-                     NullScriptCommand.Instance);
+        protected override void setupScriptCommands(dynamic commandDictionary)
+        {           
 
-            CommandDictionary.NewFolder = NullScriptCommand.Instance;
-
-            CommandDictionary.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
+            commandDictionary.Refresh = new SimpleScriptCommand("Refresh", (pd) =>
             {
                 pd.AsVMParameterDic().FileList.ProcessedEntries.EntriesHelper.LoadAsync(UpdateMode.Update, true);
                 return ResultCommand.OK;
             });
 
-            CommandDictionary.ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
+            commandDictionary.ToggleRename = FileList.IfSelection(evm => evm.Count() == 1 && evm[0].IsRenamable,
                 FileList.ToggleRename, NullScriptCommand.Instance);
 
-            CommandDictionary.Copy =
-                 FileList.IfSelection(evm => evm.Count() >= 1,
-                    FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Copy)),
-                    NullScriptCommand.Instance);
+            commandDictionary.OpenTab = NullScriptCommand.Instance;
+            commandDictionary.NewWindow = NullScriptCommand.Instance;
 
-            CommandDictionary.Cut =
-                 FileList.IfSelection(evm => evm.Count() >= 1,
-                    FileExplorer.Script.ScriptCommands.RunInSequence(FileList.AssignSelectionToParameter(ClipboardCommands.Cut)),
-                    NullScriptCommand.Instance);
+            commandDictionary.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
+            commandDictionary.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
+        }
 
-            CommandDictionary.Paste = FileExplorer.Script.ScriptCommands.RunInSequence(
-                FileList.AssignCurrentDirectoryToDestination(
-                    FileList.AssignSelectionToParameter(ClipboardCommands.Paste(
-                    FileExplorer.Script.WPFExtensionMethods.GetFileListCurrentDirectoryFunc,
-                    (dragDropEffects, src, dest) => new SimpleScriptCommand("Paste", (pm) =>
-                        {
-                            dest.Profile.DragDrop().OnDropCompleted(src.ToList(), null, dest, dragDropEffects);
-                            return ResultCommand.NoError;
-                        })))
-                    )
-            );
-
-            CommandDictionary.OpenTab = NullScriptCommand.Instance;
-            CommandDictionary.NewWindow = NullScriptCommand.Instance;
-
-            CommandDictionary.ZoomIn = FileList.Zoom(ZoomMode.ZoomIn);
-            CommandDictionary.ZoomOut = FileList.Zoom(ZoomMode.ZoomOut);
-
-            #endregion
-
+        protected override IExportCommandBindings[] setupExportBindings()
+        {
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
-            exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(
                     ScriptCommandBinding.FromScriptCommand(ApplicationCommands.Open, this, (ch) => ch.CommandDictionary.Open, ParameterDicConverter, ScriptBindingScope.Local),
@@ -117,33 +117,8 @@ namespace FileExplorer.WPF.ViewModels
                 new ScriptCommandBinding(ExplorerCommands.ToggleViewMode, p => true, p => ToggleViewMode(), ParameterDicConverter, ScriptBindingScope.Explorer)
                 ));
 
-            _exportBindingSource = exportBindingSource.ToArray();
-
-            IEntryModel _currentDirectoryModel = null;
-            ToolbarCommands = new ToolbarCommandsHelper(events, ParameterDicConverter,
-                message => { _currentDirectoryModel = message.NewModel; return new IEntryModel[] { _currentDirectoryModel }; },
-                message => message.SelectedModels.Count() == 0 && _currentDirectoryModel != null ? new IEntryModel[] { _currentDirectoryModel } : message.SelectedModels.ToArray())
-                {
-                    ExtraCommandProviders = new[] { 
-                        new FileBasedCommandProvider(), //Open, Cut, Copy, Paste etc    
-                        new StaticCommandProvider(new SelectGroupCommand(flvm), 
-                            new ViewModeCommand(flvm),                             
-                            new SeparatorCommandModel(),
-                            new CommandModel(ExplorerCommands.NewFolder) { IsVisibleOnToolbar = true, 
-                                HeaderIconExtractor = ResourceIconExtractor<ICommandModel>.ForSymbol(0xE188)                        
-                            },
-                            new DirectoryCommandModel(
-                                new CommandModel(ExplorerCommands.NewFolder) { Header = Strings.strFolder, IsVisibleOnMenu = true }) 
-                                { IsVisibleOnMenu = true, Header = Strings.strNew, IsEnabled = true},
-                            new ToggleVisibilityCommand(flvm.Sidebar, ExplorerCommands.TogglePreviewer)  
-                            ) 
-                    }
-                };
+            return exportBindingSource.ToArray();
         }
-
-        #endregion
-
-        #region Methods        
 
         public void ToggleViewMode()
         {            

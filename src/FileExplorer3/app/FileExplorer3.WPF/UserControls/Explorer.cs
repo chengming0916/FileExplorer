@@ -32,7 +32,7 @@ namespace FileExplorer.WPF.UserControls
         {
             _wm = new WindowManager();
             _events = new EventAggregator();
-            _evm = new ExplorerViewModel(new ExplorerInitializer(_wm, _events, new IEntryModel[] { }));
+            _evm = new ExplorerViewModel(_wm, _events);
         }
 
         #endregion

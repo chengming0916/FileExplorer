@@ -21,25 +21,49 @@ namespace FileExplorer.WPF.ViewModels
 
         public TabbedExplorerCommandManager(ITabbedExplorerViewModel nvm, IEventAggregator events,
              params IExportCommandBindings[] additionalBindingExportSource)
+            : base(additionalBindingExportSource)
         {
             _tevm = nvm;
-            
-            ParameterDicConverter =
-             ParameterDicConverters.ConvertVMParameter(
-                 new Tuple<string, object>("TabbedExplorer", _tevm),
-                 new Tuple<string, object>("Events", events));
+            _events = events;
+            InitCommandManager();
 
-            #region Set ScriptCommands
+             ToolbarCommands = new ToolbarCommandsHelper(events,
+                null,
+                null)
+                {
+                };
 
-            CommandDictionary = new DynamicRelayCommandDictionary() { ParameterDicConverter = ParameterDicConverter };
-            CommandDictionary.NewTab = UIScriptCommands.TabExplorerNewTab("TabbedExplorer", null);
-            CommandDictionary.CloseTab = 
+             
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected override IParameterDicConverter setupParamDicConverter()
+        {
+            return ParameterDicConverters.ConvertVMParameter(new Tuple<string, object>("TabbedExplorer", _tevm), 
+                new Tuple<string, object>("Events", _events));
+        }
+
+
+
+        protected override IEnumerable<string> getScriptCommands()
+        {
+            yield return "NewTab";
+            yield return "CloseTab";
+        }
+
+        protected override void setupScriptCommands(dynamic commandDictionary)
+        {            
+            commandDictionary.NewTab = UIScriptCommands.TabExplorerNewTab("TabbedExplorer", null);
+            commandDictionary.CloseTab =
                     UIScriptCommands.TabExplorerCloseTab("TabbedExplorer");
+        }
 
-            #endregion
-
+        protected override IExportCommandBindings[] setupExportBindings()
+        {
             List<IExportCommandBindings> exportBindingSource = new List<IExportCommandBindings>();
-            exportBindingSource.AddRange(additionalBindingExportSource);
             exportBindingSource.Add(
                 new ExportCommandBindings(
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewTab, this, (ch) => ch.CommandDictionary.NewTab, ParameterDicConverter, ScriptBindingScope.Application),
@@ -47,24 +71,15 @@ namespace FileExplorer.WPF.ViewModels
                 ScriptCommandBinding.FromScriptCommand(ExplorerCommands.CloseTab, this, (ch) => ch.CommandDictionary.CloseTab, ParameterDicConverter, ScriptBindingScope.Application)
                 ));
 
-            _exportBindingSource = exportBindingSource.ToArray();
-
-             ToolbarCommands = new ToolbarCommandsHelper(events,
-                null,
-                null)
-                {
-                };
+            return exportBindingSource.ToArray();
         }
-
-        #endregion
-
-        #region Methods
 
         #endregion
 
         #region Data
 
         private ITabbedExplorerViewModel _tevm;
+        private IEventAggregator _events;
 
         #endregion
 

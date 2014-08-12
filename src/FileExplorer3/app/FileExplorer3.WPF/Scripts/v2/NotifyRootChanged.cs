@@ -29,26 +29,26 @@ namespace FileExplorer.Script
         public static IScriptCommand NotifyRootCreated(string directoryVariable = "{Directory}", 
             IScriptCommand nextCommand = null)
         {
-            return NotifyRootChanged("{Events}", ChangeType.Created, directoryVariable, nextCommand);
+            return NotifyRootChanged("{GlobalEvents}", ChangeType.Created, directoryVariable, nextCommand);
         }
 
         public static IScriptCommand NotifyRootChanged(string directoryVariable = "{Directory}",
             IScriptCommand nextCommand = null)
         {
-            return NotifyRootChanged("{Events}", ChangeType.Changed, directoryVariable, nextCommand);
+            return NotifyRootChanged("{GlobalEvents}", ChangeType.Changed, directoryVariable, nextCommand);
         }
 
         public static IScriptCommand NotifyRootDeleted(string directoryVariable = "{Directory}",
             IScriptCommand nextCommand = null)
         {
-            return NotifyRootChanged("{Events}", ChangeType.Deleted, directoryVariable, nextCommand);
+            return NotifyRootChanged("{GlobalEvents}", ChangeType.Deleted, directoryVariable, nextCommand);
         }
     }
 
     public class NotifyRootChanged : ScriptCommandBase
     {
         /// <summary>
-        /// EventAggregator (IEventAggregator) used to broadcast the event.
+        /// EventAggregator (IEventAggregator) used to broadcast the event, Default = {GlobalEvents}
         /// </summary>
         public string EventsKey { get; set; }
 

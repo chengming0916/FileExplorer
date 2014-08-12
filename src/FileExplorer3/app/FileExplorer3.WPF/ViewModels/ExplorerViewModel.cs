@@ -57,7 +57,7 @@ namespace FileExplorer.WPF.ViewModels
             DragHelper = NullSupportDrag.Instance;
             DropHelper = NullSupportDrop.Instance;
 
-            Commands = new ExplorerCommandManager(this, _windowManager, _events, 
+            Commands = new ExplorerCommandManager(this, _windowManager, _internalEvents, _events,
                 FileList, DirectoryTree, Navigation, Breadcrumb);
             setRootModels(_rootModels);
 
@@ -88,8 +88,8 @@ namespace FileExplorer.WPF.ViewModels
             DragHelper = NullSupportDrag.Instance;
             DropHelper = NullSupportDrop.Instance;
 
-            Commands = new ExplorerCommandManager(this, 
-                _windowManager, _events, FileList, DirectoryTree, Navigation, Breadcrumb);
+            Commands = new ExplorerCommandManager(this,
+                _windowManager, _events, _internalEvents, FileList, DirectoryTree, Navigation, Breadcrumb);
             //setRootModels(_rootModels);
 
             if (_events != null)
@@ -399,12 +399,16 @@ namespace FileExplorer.WPF.ViewModels
         }
         public float HeaderOpacity { get { return _isDragging ? 0.5f : 1f; } }
 
-        private IEventAggregator Events
+        public IEventAggregator Events
         {
             get { return _events; }
             set { _events = value; }
         }
-        private IWindowManager WindowManager { get { return _windowManager; } set { _windowManager = value; } }
+        public IWindowManager WindowManager
+        {
+            get { return _windowManager; }
+            set { _windowManager = value; }
+        }
 
 
         #endregion

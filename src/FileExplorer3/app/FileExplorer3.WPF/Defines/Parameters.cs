@@ -77,15 +77,23 @@ namespace FileExplorer.WPF.Defines
 
         public int NavigationSize { get { return _navigationSize; } set { _navigationSize = value; NotifyOfPropertyChanged(() => NavigationSize); } }
         public int StatusbarSize { get { return _statusbarSize; } set { _statusbarSize = value; NotifyOfPropertyChanged(() => StatusbarSize); } }
-       
+
         //public float SidebarSize { get { return _sidebarSize; } set { _sidebarSize = value; NotifyOfPropertyChanged(() => SidebarSize); } } 
     }
 
-    public class FileListParameters: NotifyPropertyChanged, IFileListParameters
+    public class FileListParameters : NotifyPropertyChanged, IFileListParameters
     {
         private int _itemSize = 65;
         private string _viewMode = "Icon";
-        public int ItemSize { get { return _itemSize; } set { _itemSize = value; NotifyOfPropertyChanged(() => ItemSize); } }
-        public string ViewMode { get { return _viewMode; } set { _viewMode = value; NotifyOfPropertyChanged(() => ViewMode); } }
+        public int ItemSize
+        {
+            get { return _itemSize; }
+            set { _itemSize = value; NotifyOfPropertyChanged(() => ItemSize); }
+        }
+        public string ViewMode
+        {
+            get { return _viewMode; }
+            set { _viewMode = value; NotifyOfPropertyChanged(() => ViewMode); }
+        }
     }
 }
