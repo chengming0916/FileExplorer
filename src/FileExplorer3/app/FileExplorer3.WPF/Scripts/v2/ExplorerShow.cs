@@ -45,14 +45,17 @@ namespace FileExplorer.Script
                 eventAggregatorVariable, destinationVariable, null, null, null, nextCommand);
         }
 
-        public static IScriptCommand FileSave(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
+        public static IScriptCommand FilePick(ExplorerMode mode = ExplorerMode.FileSave, string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
-            string dialogResultVariable = "{DialogResult}", string selectionPathsVariable = "{SelectionPaths}",
-            IScriptCommand nextCommand = null)
+            string selectionPathsVariable = "{SelectionPaths}",
+            IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
         {
-            return explorerShow(ExplorerMode.FileSave, onModelCreatedVariable, onViewAttachedVariable,
+            string dialogResultVariable = "{FileSave-DialogResult}";
+
+            return explorerShow(mode, onModelCreatedVariable, onViewAttachedVariable,
                 windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, null,
-                selectionPathsVariable, nextCommand);
+                selectionPathsVariable,
+                    ScriptCommands.IfTrue(dialogResultVariable, nextCommand, cancelCommand));
         }
 
         public static IScriptCommand DirectoryPick(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
@@ -224,7 +227,7 @@ namespace FileExplorer.Script
                             pm.SetValue(SelectionPathsKey, fpvm.FileName);
                             break;
                         case Script.ExplorerMode.FileOpen:
-                            pm.SetValue(SelectionPathsKey, fpvm.SelectedFiles.Select(m => m.FullPath));
+                            pm.SetValue(SelectionPathsKey, fpvm.SelectedFiles.Select(m => m.FullPath).ToArray());
                             pm.SetValue(SelectionEntriesKey, fpvm.SelectedFiles);
                             break;
                         case Script.ExplorerMode.DirectoryOpen: 

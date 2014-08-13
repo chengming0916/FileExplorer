@@ -19,7 +19,7 @@ namespace FileExplorer.Script
         /// <param name="trueCommand"></param>
         /// <param name="otherwiseCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand IfValue(ComparsionOperator op, string variable1 = "{Variable1}", 
+        public static IScriptCommand IfValue(ComparsionOperator op, string variable1 = "{Variable1}",
             string variable2 = "{Variable2}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
             return new IfValue()
@@ -30,7 +30,7 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)trueCommand,
                 OtherwiseCommand = (ScriptCommandBase)otherwiseCommand,
             };
-        }        
+        }
 
         public static IScriptCommand IfValue<T>(ComparsionOperator op, string variable = "{variable}", T value = default(T), IScriptCommand trueCommand = null,
             IScriptCommand otherwiseCommand = null)
@@ -58,12 +58,12 @@ namespace FileExplorer.Script
 
         public static IScriptCommand IfAssignedAndNotEmptyString(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
-            return IfEquals<Object>(variable, null, otherwiseCommand, 
-                IfEquals<string>(variable, "", otherwiseCommand, 
+            return IfEquals<Object>(variable, null, otherwiseCommand,
+                IfEquals<string>(variable, "", otherwiseCommand,
                 trueCommand));
         }
 
-        public static IScriptCommand IfTrue(string variable = "{variable}", IScriptCommand trueCommand = null, 
+        public static IScriptCommand IfTrue(string variable = "{variable}", IScriptCommand trueCommand = null,
             IScriptCommand otherwiseCommand = null)
         {
             return IfEquals<bool>(variable, true, trueCommand, otherwiseCommand);
@@ -79,19 +79,19 @@ namespace FileExplorer.Script
         /// <param name="trueCommand"></param>
         /// <param name="otherwiseCommand"></param>
         /// <returns></returns>
-        public static  IScriptCommand IfPropertyEquals<T>(string variable = "{variable}", string propertyName = "Property",
+        public static IScriptCommand IfPropertyEquals<T>(string variable = "{variable}", string propertyName = "Property",
             T value = default(T),
-            IScriptCommand trueCommand = null, 
+            IScriptCommand trueCommand = null,
             IScriptCommand otherwiseCommand = null)
         {
             string variableProperty = ParameterDic.CombineVariable(variable, propertyName);
             string valueProperty = "{IfPropertyEquals-Value}";
             return AssignProperty(variable, propertyName, valueProperty,
-                    IfEquals<T>(valueProperty, value, trueCommand, otherwiseCommand));                
+                    IfEquals<T>(valueProperty, value, trueCommand, otherwiseCommand));
         }
 
-        public static  IScriptCommand IfPropertyIsTrue(string variable = "{variable}", string propertyName = "Property",            
-            IScriptCommand trueCommand = null, 
+        public static IScriptCommand IfPropertyIsTrue(string variable = "{variable}", string propertyName = "Property",
+            IScriptCommand trueCommand = null,
             IScriptCommand otherwiseCommand = null)
         {
             return IfPropertyEquals<bool>(variable, propertyName, true, trueCommand, otherwiseCommand);
@@ -106,27 +106,27 @@ namespace FileExplorer.Script
         /// <param name="trueCommand"></param>
         /// <param name="otherwiseCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand IfArrayLength(ComparsionOperator op, string arrayVariable = "{array}", 
+        public static IScriptCommand IfArrayLength(ComparsionOperator op, string arrayVariable = "{array}",
             string valueVariable = "{value}",
             IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
-            return ScriptCommands.AssignValueConverter(ValueConverterType.GetProperty, "{GetPropertyConverter}", 
-                ScriptCommands.Reassign(arrayVariable, "{GetPropertyConverter}", "{ArrayLength}", false, 
-                  ScriptCommands.PrintLogger(MetroLog.LogLevel.Debug, "Length of array is {ArrayLength}",  
+            return ScriptCommands.AssignValueConverter(ValueConverterType.GetProperty, "{GetPropertyConverter}",
+                ScriptCommands.Reassign(arrayVariable, "{GetPropertyConverter}", "{ArrayLength}", false,
+                  ScriptCommands.PrintLogger(MetroLog.LogLevel.Debug, "Length of array is {ArrayLength}",
                   ScriptCommands.IfValue(op, "{ArrayLength}", valueVariable, trueCommand, otherwiseCommand))), "Length");
         }
 
-        public static IScriptCommand IfArrayLength(ComparsionOperator op = ComparsionOperator.GreaterThanOrEqual, 
+        public static IScriptCommand IfArrayLength(ComparsionOperator op = ComparsionOperator.GreaterThanOrEqual,
             string arrayVariable = "{array}", int value = 1,
             IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
-            return 
-                ScriptCommands.Assign("{ArrayLengthValue}", value, false, 
+            return
+                ScriptCommands.Assign("{ArrayLengthValue}", value, false,
                   IfArrayLength(op, arrayVariable, "{ArrayLengthValue}", trueCommand, otherwiseCommand));
         }
     }
 
-    public enum ComparsionOperator {  Equals, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual }
+    public enum ComparsionOperator { Equals, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual }
     public class IfValue : ScriptCommandBase
     {
         public ScriptCommandBase OtherwiseCommand { get; set; }
@@ -146,9 +146,13 @@ namespace FileExplorer.Script
 
             bool result = false;
 
-            logger.Info(String.Format("{0} {1} {2}?", value1, Operator, value2));
+
+            if (logger.IsDebugEnabled)
+                logger.Debug(String.Format("Variable {0} ({1}) {2} Variable {3} ({4})?",
+                         ParameterDic.GetVariable(Variable1Key), value1,
+                         Operator, ParameterDic.GetVariable(Variable2Key), value2));
             if (value1 != null && value2 != null)
-            {                
+            {
                 var left = Expression.Constant(value1);
                 var right = Expression.Constant(value2);
                 Expression expression;
@@ -166,9 +170,11 @@ namespace FileExplorer.Script
 
                 result = Expression.Lambda<Func<bool>>(expression).Compile().Invoke();
 
+                logger.Info(String.Format("Executing {0} Command ({1})",
+                    result, result ? NextCommand : OtherwiseCommand));
             }
 
-            return result ? NextCommand : OtherwiseCommand;                
+            return result ? NextCommand : OtherwiseCommand;
         }
 
     }

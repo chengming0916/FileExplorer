@@ -43,7 +43,32 @@ namespace TestApp
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            FileExplorer.WPF.UserControls.Explorer exp = explorer as FileExplorer.WPF.UserControls.Explorer;
+            FileExplorer.WPF.UserControls.Explorer exp = explorer as FileExplorer.WPF.UserControls.Explorer;       
+            
+            exp.ViewModel.Initializer =
+                new ScriptCommandInitializer()
+                {
+                    OnModelCreated = IOInitializeHelpers.Explorer_Initialize_Default,
+                    OnViewAttached = UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(),
+                    RootModels = _rootDirs,
+                    StartupParameters = new ParameterDic()
+                    {
+                         { "Profiles", _profiles },
+                         { "RootDirectories", _rootDirs },	    
+                         { "StartupPath", _selectedPath },
+                         { "FilterString", _filterStr },
+                         { "ViewMode", "List" }, 
+                         { "ItemSize", 16 },
+                         { "EnableDrag", true }, 
+                         { "EnableDrop", true }, 
+                         { "FileListNewWindowCommand", NullScriptCommand.Instance }, //Disable NewWindow Command.
+                         { "EnableMultiSelect", true},
+                         { "ShowToolbar", false }, 
+                         { "ShowGridHeader", false }
+                    }
+                };
+
+            #region Obsoluted
             //exp.RootDirectories = _rootDirs;
             //exp.ViewModel.FileList.ShowToolbar = false;
             //exp.ViewModel.FileList.ShowGridHeader = false;
@@ -58,60 +83,11 @@ namespace TestApp
             //if (_selectedPath != null)
             //    exp.ViewModel.GoAsync(_selectedPath);
 
-            IScriptCommand onModelCreated =
-               ScriptCommands.RunCommandsInSequence(null,
-                   IOScriptCommands.ExplorerDefault(),
-                   IOScriptCommands.ExplorerDefaultToolbarCommands(),
-                   UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
-                           "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
-                   );
-
-            exp.ViewModel.Initializer =
-                new ScriptCommandInitializer()
-                {
-                    OnModelCreated = onModelCreated,
-                    OnViewAttached = UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(),
-                    RootModels = _rootDirs,
-                    StartupParameters = new ParameterDic()
-                    {
-                         { "Profiles", _profiles },
-                         { "RootDirectories", _rootDirs },	    
-                         { "StartupPath", _selectedPath },
-                         { "FilterString", _filterStr },
-                         { "ViewMode", "List" }, 
-                         { "ItemSize", 16 },
-                         { "EnableDrag", true }, 
-                         { "EnableDrop", true }, 
-                         { "FileListNewWindowCommand", NullScriptCommand.Instance },
-                         { "EnableMultiSelect", false},
-                         { "ShowToolbar", false }, 
-                         { "ShowGridHeader", false }
-                    }
-                };
-
-
-
             //FileSystemInfoExProfile profile = new FileSystemInfoExProfile(exp.ViewModel.Events, exp.ViewModel.WindowManager);
             //var rootModel = AsyncUtils.RunSync(() => profile.ParseAsync(""));
 
-            //exp.ViewModel.Commands.ExecuteAsync(
-            //    new IScriptCommand[] { cmd2Run },
-            //    new ParameterDic() { 
-            //        //Required
-            //        { "Profiles", _profiles },
-            //        //{ "OnModelCreated", onModelCreated },
-            //        //{ "OnViewAttached", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()},                    
-            //        { "RootDirectories", _rootDirs },	                    
-            //        //Optional
-            //        { "StartupPath", _selectedPath },
-            //        //{ "Events", exp.ViewModel.Events },
-            //        //{ "WindowManager", exp.ViewModel.WindowManager },
-            //        { "EnableDrag", true }, 
-            //        { "EnableDrop", true },                     
-            //        { "EnableMultiSelect", false}
-            //    });
-
             //or exp.ViewModel.Commands.ExecuteAsync(new IScriptCommand[] { Explorer.GoTo("C:\\") });
+            #endregion
         }
     }
 

@@ -39,6 +39,7 @@ namespace FileExplorer.WPF.Models
 
             DragDrop = new NullDragDropHandler();
             Events = events ?? new EventAggregator();
+            _pathPatterns = new string[] { "." };
             Converters = converters;            
         }
 

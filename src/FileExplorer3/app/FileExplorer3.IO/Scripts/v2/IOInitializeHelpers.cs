@@ -14,6 +14,27 @@ namespace FileExplorer.Script
 {
     public static class IOInitializeHelpers
     {
+
+        /// <summary>
+        /// <para>Call ExplorerDefault(), ExplorerDefaultToolbarCommands() 
+        /// and assign the followings parameter to CommandManager: (for use when OpenInNewWindow)
+        /// OnViewAttached, OnModelCreated, EnableDrag/Drop/MultiSelect.</para>
+        /// 
+        /// <para>ExplorerDefault() allow you to change these parameters (in additional to above):
+        /// RootDirectories, ColumnList, ColumnFilters, FilterString, ViewMode, ItemSize, ShowToolbar/Sidebar/GridHeader.</para>
+        ///
+        /// <para>ExplorerDefaultToolbarCommands() assign the CommandModels in Toolbar and ContextMenu, they are not
+        /// Customizable currently.  You can only disable the command.</para>
+        ///
+        /// </summary>
+        public static IScriptCommand Explorer_Initialize_Default =
+            ScriptCommands.RunCommandsInSequence(null,
+                   IOScriptCommands.ExplorerDefault(),
+                   IOScriptCommands.ExplorerDefaultToolbarCommands(),
+                   UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
+                        "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
+                   );
+
         #region FileList_ColumnInfo_For_DiskBased_Items
 
         public static ColumnInfo[] FileList_ColumList_For_DiskBased_Items = new ColumnInfo[] 

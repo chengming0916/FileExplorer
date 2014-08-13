@@ -43,6 +43,30 @@ namespace FileExplorer.Script
         {
             return NotifyRootChanged("{GlobalEvents}", ChangeType.Deleted, directoryVariable, nextCommand);
         }
+
+        public static IScriptCommand NotifyRootCreated(IEntryModel[] directories,
+           IScriptCommand nextCommand = null)
+        {
+            string directoryVariable = "{Notify-RootDirs}";
+            return ScriptCommands.Assign(directoryVariable, directories, false,
+                NotifyRootCreated(directoryVariable, nextCommand));
+        }
+
+        public static IScriptCommand NotifyRootChanged(IEntryModel[] directories,
+            IScriptCommand nextCommand = null)
+        {
+            string directoryVariable = "{Notify-RootDirs}";
+            return ScriptCommands.Assign(directoryVariable, directories, false,
+                NotifyRootChanged(directoryVariable, nextCommand));
+        }
+
+        public static IScriptCommand NotifyRootDeleted(IEntryModel[] directories,
+            IScriptCommand nextCommand = null)
+        {
+            string directoryVariable = "{Notify-RootDirs}";
+            return ScriptCommands.Assign(directoryVariable, directories, false,
+                NotifyRootDeleted(directoryVariable, nextCommand));
+        }
     }
 
     public class NotifyRootChanged : ScriptCommandBase
