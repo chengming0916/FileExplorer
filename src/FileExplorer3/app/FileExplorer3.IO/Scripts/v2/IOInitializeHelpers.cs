@@ -32,7 +32,7 @@ namespace FileExplorer.Script
                    IOScriptCommands.ExplorerDefault(),
                    IOScriptCommands.ExplorerDefaultToolbarCommands(),
                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
-                        "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
+                        "{GlobalEvents},{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
                    );
 
         #region FileList_ColumnInfo_For_DiskBased_Items
@@ -123,7 +123,7 @@ namespace FileExplorer.Script
               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1, 
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
                     UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
-                        "{WindowManager}", "{Events}", "{Explorer}", 
+                        "{WindowManager}", "{GlobalEvents}", "{Explorer}", 
                         //UIScriptCommands.ExplorerCopyParameter("{Explorer}", "{ExplorerNew}", ExplorerParameterType.RootModels,
                             UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}")))));
 
