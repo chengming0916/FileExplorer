@@ -119,35 +119,35 @@ namespace TestApp
         public void OpenWindowUsingScriptCommand()
         {
             #region Obsoluted - Same as the code below.
-            IScriptCommand onModelCreated =
-                ScriptCommands.RunCommandsInSequence(null,
-                    IOScriptCommands.ExplorerDefault(),
-                    IOScriptCommands.ExplorerDefaultToolbarCommands(),
-                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
-                            "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
-                    );
+            //IScriptCommand onModelCreated =
+            //    ScriptCommands.RunCommandsInSequence(null,
+            //        IOScriptCommands.ExplorerDefault(),
+            //        IOScriptCommands.ExplorerDefaultToolbarCommands(),
+            //        UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
+            //                "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
+            //        );
 
-            ScriptRunner.RunScriptAsync(new ParameterDic() { 
-                    //Required
-                    { "Profiles", _profiles },
-                    { "OnModelCreated", onModelCreated },
-                    { "OnViewAttached", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()},                    
-                    { "RootDirectories", RootModels.ToArray() },	                    
-                    //Optional
-                    { "StartupPath", OpenPath },
-                    { "Events", _events },
-                    { "WindowManager", _windowManager },
-                    { "EnableDrag", _enableDrag }, 
-                    { "EnableDrop", _enableDrop },                     
-                    { "EnableMultiSelect", _enableMultiSelect}, 
-                }, UIScriptCommands.ExplorerShow());
+            //ScriptRunner.RunScriptAsync(new ParameterDic() { 
+            //        //Required
+            //        { "Profiles", _profiles },
+            //        { "OnModelCreated", onModelCreated },
+            //        { "OnViewAttached", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()},                    
+            //        { "RootDirectories", RootModels.ToArray() },	                    
+            //        //Optional
+            //        { "StartupPath", OpenPath },
+            //        { "Events", _events },
+            //        { "WindowManager", _windowManager },
+            //        { "EnableDrag", _enableDrag }, 
+            //        { "EnableDrop", _enableDrop },                     
+            //        { "EnableMultiSelect", _enableMultiSelect}, 
+            //    }, UIScriptCommands.ExplorerShow());
             #endregion
 
             //IOScriptCommands.ExplorerShow initialize {OnModelCreated} and {OnViewAttached} to IO based.
             //While UIScriptCommands.ExplorerShow have to specify explicitly.
             ScriptRunner.RunScriptAsync(new ParameterDic() {                   
                     { "StartupPath", OpenPath },
-                    { "Events", _events },
+                    { "GlobalEvents", _events },
                     { "WindowManager", _windowManager },
                     { "EnableDrag", _enableDrag }, 
                     { "EnableDrop", _enableDrop },                     
