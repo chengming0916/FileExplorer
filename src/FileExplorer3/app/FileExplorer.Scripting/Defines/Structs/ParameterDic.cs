@@ -64,7 +64,7 @@ namespace FileExplorer
             return retVal;
         }
 
-        private static string getVariable(string variableKey)
+        public static string GetVariable(string variableKey)
         {
             if (!(variableKey.StartsWith("{") && variableKey.EndsWith("}")))
                 throw new ArgumentException(variableKey + " is not a valid variable.");
@@ -73,7 +73,7 @@ namespace FileExplorer
 
         public static string CombineVariable(string variableKey, string combineStr)
         {
-            return "{" + getVariable(variableKey) + combineStr + "}";
+            return "{" + GetVariable(variableKey) + combineStr + "}";
         }
 
         public static ParameterDic Combine(ParameterDic orginalDic, ParameterDic newDic)
@@ -90,7 +90,7 @@ namespace FileExplorer
         {
             if (variableKey == null)
                 return false;
-            string variable = getVariable(variableKey);
+            string variable = GetVariable(variableKey);
             return this.ContainsKey(variable) && this[variable] is T;
         }
 
@@ -104,7 +104,7 @@ namespace FileExplorer
             if (variableKey == null)
                 return defaultValue;
 
-            string variable = getVariable(variableKey);
+            string variable = GetVariable(variableKey);
 
             string[] variableSplit = variable.Split('.');
 
@@ -140,7 +140,7 @@ namespace FileExplorer
             if (variableKey == null)
                 return false;
 
-            string variable = getVariable(variableKey);
+            string variable = GetVariable(variableKey);
             if (this.ContainsKey(variable))
             {
                 if (!skipIfExists)

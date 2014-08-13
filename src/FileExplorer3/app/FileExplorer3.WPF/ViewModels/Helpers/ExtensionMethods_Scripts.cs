@@ -23,6 +23,19 @@ namespace FileExplorer.Script
             scriptRunner = scriptRunner ?? new ScriptRunner();
             scriptRunner.Run(commandManager.ParameterDicConverter.ConvertAndMerge(parameterDic), commands);
         }
+
+
+        /// <summary>
+        /// Execute an Explorer command.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="parameterDic">Will be merged with parameters from ParameterDicConverter</param>
+        /// <param name="scriptRunner"></param>
+        public static void Execute(this ICommandManager commandManager, IScriptCommand command, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+        {
+            Execute(commandManager, new IScriptCommand[] { command }, parameterDic, scriptRunner);
+        }
+
         /// <summary>
         /// Execute an Explorer command.
         /// </summary>
@@ -34,6 +47,18 @@ namespace FileExplorer.Script
         {
             scriptRunner = scriptRunner ?? new ScriptRunner();
             await scriptRunner.RunAsync(commandManager.ParameterDicConverter.ConvertAndMerge(parameterDic), commands);
+        }
+
+        /// <summary>
+        /// Execute an Explorer command.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="parameterDic"></param>
+        /// <param name="scriptRunner"></param>
+        /// <returns></returns>
+        public static async Task ExecuteAsync(this ICommandManager commandManager, IScriptCommand command, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+        {
+            await ExecuteAsync(commandManager, new IScriptCommand[] { command }, parameterDic, scriptRunner);
         }
      
     }

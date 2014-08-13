@@ -47,12 +47,8 @@ namespace FileExplorer.WPF.UserControls
             {
                 IEntryModel[] newRootDirs = args.NewValue as IEntryModel[];
                 if (newRootDirs != null && newRootDirs.Length > 0)
-                    exp._evm.Commands.Execute(
-                        new IScriptCommand[] 
-                    { 
-                        FileExplorer.Script.Explorer.ChangeRoot(ChangeType.Changed, newRootDirs),
-                        //FileExplorer.ViewModels.Explorer.GoTo(newRootDirs.First())
-                    }
+                    exp._evm.Commands.Execute(                       
+                        UIScriptCommands.NotifyRootChanged(newRootDirs)
                         );
             }
             else if (args.Property == ModeProperty)
@@ -73,15 +69,18 @@ namespace FileExplorer.WPF.UserControls
 
         #region Data
 
-        IWindowManager _wm;
-        IEventAggregator _events;
-        IExplorerViewModel _evm;
+        protected IWindowManager _wm;
+        protected IEventAggregator _events;
+        protected IExplorerViewModel _evm;
 
         #endregion
 
         #region Public Properties
 
         public IExplorerViewModel ViewModel { get { return _evm; } }
+
+        public IWindowManager WindowManager { get { return _wm; } set { _wm = value; } }
+        public IEventAggregator Events { get { return _events; } set { _events = value; } }
 
         public static DependencyProperty ModeProperty = DependencyProperty.Register("Mode",
             typeof(ExplorerMode), typeof(Explorer), new PropertyMetadata(ExplorerMode.Unknown, OnPropertiesChanged));

@@ -118,14 +118,14 @@ namespace TestApp
 
         public void OpenWindowUsingScriptCommand()
         {
-     
+            #region Obsoluted - Same as the code below.
             IScriptCommand onModelCreated =
                 ScriptCommands.RunCommandsInSequence(null,
                     IOScriptCommands.ExplorerDefault(),
                     IOScriptCommands.ExplorerDefaultToolbarCommands(),
-                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", 
+                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
                             "{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
-                    );                                                     
+                    );
 
             ScriptRunner.RunScriptAsync(new ParameterDic() { 
                     //Required
@@ -137,75 +137,48 @@ namespace TestApp
                     { "StartupPath", OpenPath },
                     { "Events", _events },
                     { "WindowManager", _windowManager },
-				    { "EnableDrag", _enableDrag }, 
+                    { "EnableDrag", _enableDrag }, 
                     { "EnableDrop", _enableDrop },                     
                     { "EnableMultiSelect", _enableMultiSelect}, 
                 }, UIScriptCommands.ExplorerShow());
+            #endregion
+
+            //IOScriptCommands.ExplorerShow initialize {OnModelCreated} and {OnViewAttached} to IO based.
+            //While UIScriptCommands.ExplorerShow have to specify explicitly.
+            ScriptRunner.RunScriptAsync(new ParameterDic() {                   
+                    { "StartupPath", OpenPath },
+                    { "Events", _events },
+                    { "WindowManager", _windowManager },
+                    { "EnableDrag", _enableDrag }, 
+                    { "EnableDrop", _enableDrop },                     
+                    { "EnableMultiSelect", _enableMultiSelect}, 
+                },                
+                IOScriptCommands.ExplorerShow(_profiles, RootModels.ToArray()));
         }
 
         public void OpenWindow(object context = null)
-        {
-            var profiles = new IProfile[] {
-                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
-
-            IExplorerInitializer initializer;
-
+        {            
             if (UseScriptCommandInitializer)
             {
                 OpenWindowUsingScriptCommand();
-                return;
             }
-
-            if (UseScriptCommandInitializer)
-                //Use ScriptCommandInitializer
-                initializer = new ScriptCommandInitializer()
-             {
-                 OnModelCreated = 
-                    ScriptCommands.RunCommandsInSequence(
-                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.RootModels, RootModels.ToArray()),
-                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.EnableDrag, _enableDrag),
-                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.EnableDrop, _enableDrop),
-                        UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.EnableMultiSelect, _enableMultiSelect),
-                        UIScriptCommands.ExplorerDo(epvm => 
-                            {
-                                ColumnInitializers.InitializeColumnInfo(epvm);
-                                ScriptCommandsInitializers.InitializeScriptCommands(epvm, _windowManager, _events, profiles);
-                                ToolbarCommandsInitializers.InitializeToolbarCommands(epvm, _windowManager);
-                            })
-                    ),
-
-                 OnViewAttached =
-                 String.IsNullOrEmpty(OpenPath) ?
-                    ScriptCommands.RunCommandsInSequence(null,                                              
-                        ScriptCommands.Assign("{Root}", RootModels.FirstOrDefault(), false,                     
-                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}",
-                        UIScriptCommands.DirectoryTreeToggleExpand("{Root}")))                    
-                    ) :            
-                    UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{ProfileEx}", OpenPath)
-                    ,
-                 StartupParameters = new ParameterDic()
-                 {
-                     { "ProfileEx", _profileEx }
-                 }
-             };
-            else //Use ExplorerInitializer (Obsoluting)            
-                initializer = new ExplorerInitializer(_windowManager, _events, RootModels.ToArray())
+            else
+            {
+                #region Obsoluting - Use ExplorerInitializer
+                IExplorerInitializer initializer = new ExplorerInitializer(_windowManager, _events, RootModels.ToArray())
                 {
                     Initializers = new List<IViewModelInitializer<IExplorerViewModel>>()
                     {
                          new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
                          new ColumnInitializers(),
-                         new ScriptCommandsInitializers(_windowManager, _events, profiles),
+                         new ScriptCommandsInitializers(_windowManager, _events, _profiles),
                          new ToolbarCommandsInitializers(_windowManager)
                     }
                 };
-
-
-            ExplorerViewModel evm = new ExplorerViewModel(_windowManager, _events) { Initializer = initializer };
-            _windowManager.ShowWindow(evm);
-
-
-
+                ExplorerViewModel evm = new ExplorerViewModel(_windowManager, _events) { Initializer = initializer };
+                _windowManager.ShowWindow(evm);
+                #endregion
+            }
         }
 
 
@@ -217,21 +190,43 @@ namespace TestApp
 
         public void PickFiles()
         {
+            
             ScriptRunner.RunScriptAsync(
-                new ParameterDic() { { "WindowManager", _windowManager } },
+                new ParameterDic() { { "WindowManager", _windowManager}, { "Header", "OpenFiles" } },
+                
+                    IOScriptCommands.FileOpen(_profiles, RootModels.ToArray(), true, FileFilter, "{Selection}", 
+                        UIScriptCommands.MessageBoxOK("{Header}", "{Selection[0]} Selected"), 
+                        UIScriptCommands.MessageBoxOK("{Header}", "User Cancelled"))        
+            );
 
-                WPFScriptCommands.OpenFileDialog(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
-                    (fpvm) => WPFScriptCommands.MessageBox("Open", fpvm.FileName), ResultCommand.OK));
+            #region Obsoluted - 1 (Use WPFScriptCommands.OpenFileDialog() IScriptCommand)
+            //ScriptRunner.RunScriptAsync(
+            //    new ParameterDic() { { "WindowManager", _windowManager } },    
+            //    WPFScriptCommands.OpenFileDialog(_windowManager, _events, RootModels.ToArray(), FileFilter, "demo.txt",
+            //        (fpvm) => WPFScriptCommands.MessageBox("Open", fpvm.FileName), ResultCommand.OK));
+            #endregion
+
+            #region Obsoluted - 0 (Create FilePickerViewModel Manually)
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Open, RootModels.ToArray());
             //updateExplorerModel(initExplorerModel(filePicker));
             //if (_windowManager.ShowDialog(filePicker).Value)
             //{
             //    MessageBox.Show(String.Join(",", filePicker.SelectedFiles.Select(em => em.FullPath)));
             //}
+            #endregion
         }
 
         public void SaveFile()
         {
+            ScriptRunner.RunScriptAsync(
+               new ParameterDic() { { "WindowManager", _windowManager }, { "Header", "SaveFile" } },
+
+                   IOScriptCommands.FileSave(_profiles, RootModels.ToArray(), FileFilter, "{Selection}",
+                       UIScriptCommands.MessageBoxOK("{Header}", "{Selection[0]} Selected"),
+                       UIScriptCommands.MessageBoxOK("{Header}", "User Cancelled"))
+           );
+
+            #region Obsolute - 2 (Use UIScriptCommands.FileSave)
             //ScriptRunner.RunScriptAsync(
             //     new ParameterDic() 
             //     { 
@@ -253,19 +248,23 @@ namespace TestApp
             //        UIScriptCommands.MessageBoxOK("SaveFile", "{SelectionPaths}"), 
             //        UIScriptCommands.MessageBoxOK("SaveFile", "Cancelled"))
             //        ));
+            #endregion
 
-
+            #region Obsolute - 1 (Use WPFScriptCommands.SaveFilePicker() IScriptCommand)
             //ScriptRunner.RunScriptAsync(
             //     new ParameterDic() { { "WindowManager", _windowManager } },
             //   WPFScriptCommands.SaveFilePicker(_windowManager, null, RootModels.ToArray(), FileFilter, "demo.txt",
             //       (fpvm) => WPFScriptCommands.MessageBox("Save", fpvm.FileName), ResultCommand.OK));
+            #endregion
 
+            #region Obsolute - 0 (Create FilePickerViewModel manually)
             //var filePicker = new FilePickerViewModel(_events, _windowManager, FileFilter, FilePickerMode.Save, RootModels.ToArray());
             //updateExplorerModel(initExplorerModel(filePicker));
             //if (_windowManager.ShowDialog(filePicker).Value)
             //{
             //    MessageBox.Show(filePicker.FileName);
             //}
+            #endregion
         }
 
         private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)

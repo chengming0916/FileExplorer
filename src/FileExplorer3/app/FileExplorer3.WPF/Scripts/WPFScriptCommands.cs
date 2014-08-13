@@ -842,12 +842,14 @@ namespace FileExplorer.Script
             return new ShowDirectoryPicker(initializer, rootProfiles, nextCommandFunc, cancelCommand);
         }
 
+        [Obsolete("UIScriptCommands.NotifyRootChanged")]
         public static IScriptCommand ChangeRoot(ChangeType changeType,
             IEntryModel[] appliedRootDirectories, IScriptCommand nextCommand = null)
         {
             return new ChangeRootCommand(changeType, appliedRootDirectories, nextCommand);
         }
 
+         [Obsolete("UIScriptCommands.NotifyRootChanged")]
         public static IScriptCommand BroadcastRootChanged(RootChangedEvent evnt, IEventAggregator events = null,
             IScriptCommand nextCommand = null)
         {

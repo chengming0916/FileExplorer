@@ -120,7 +120,8 @@ namespace FileExplorer.WPF.ViewModels
             UserControl uc = view as UserControl;
             uc.Loaded += (o, e) =>
                 {
-                        SelectedFilter = Filters.AllNonBindable.First().Filter;
+                    if (Filters.AllNonBindable.Count() > 0)
+                        SelectedFilter = Filters.AllNonBindable.First().Filter;                    
                 };
         }
 
