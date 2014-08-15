@@ -129,7 +129,7 @@ namespace FileExplorer.Script
                 case RunMode.Sequence:
                     foreach (var cmd in ScriptCommands)
                     {
-                        await ScriptRunner.RunScriptAsync(pm, cmd);
+                        await ScriptRunner.RunScriptAsync(pm, cmd);                         
                         if (pm.Error != null)
                             return ResultCommand.Error(pm.Error);
                     }

@@ -51,7 +51,7 @@ namespace FileExplorer.Script
             {
                 if (MarkHandled)
                     pm.IsHandled = true;
-                logger.Debug("OK");
+                //logger.Debug("OK");
             }
             else
             {

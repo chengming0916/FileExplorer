@@ -10,6 +10,8 @@ using System.ComponentModel.Composition;
 
 namespace FileExplorer.WPF.ViewModels
 {
+    [Export(typeof(IExplorerViewModel))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class DirectoryPickerViewModel : ExplorerViewModel
     {
         #region Constructor

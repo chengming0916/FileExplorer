@@ -93,7 +93,11 @@ namespace TestApp
 
             _profiles = new IProfile[] {
                 _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
+
+
         }
+
+        
 
         #endregion
 
@@ -152,12 +156,12 @@ namespace TestApp
                     { "EnableDrag", _enableDrag }, 
                     { "EnableDrop", _enableDrop },                     
                     { "EnableMultiSelect", _enableMultiSelect}, 
-                },                
+                },
                 IOScriptCommands.ExplorerShow(_profiles, RootModels.ToArray()));
         }
 
         public void OpenWindow(object context = null)
-        {            
+        {
             if (UseScriptCommandInitializer)
             {
                 OpenWindowUsingScriptCommand();
@@ -190,13 +194,16 @@ namespace TestApp
 
         public void PickFiles()
         {
-            
+
             ScriptRunner.RunScriptAsync(
-                new ParameterDic() { { "WindowManager", _windowManager}, { "Header", "OpenFiles" } },
-                
-                    IOScriptCommands.FileOpen(_profiles, RootModels.ToArray(), true, FileFilter, "{Selection}", 
-                        UIScriptCommands.MessageBoxOK("{Header}", "{Selection[0]} Selected"), 
-                        UIScriptCommands.MessageBoxOK("{Header}", "User Cancelled"))        
+                 new ParameterDic() { 
+                    { "WindowManager", _windowManager }, 
+                    { "Header", "OpenFile(s)" },                    
+                    { "StartupPath", OpenPath } 
+               },
+                    IOScriptCommands.FileOpen(_profiles, RootModels.ToArray(), true, FileFilter, "{Selection}",
+                        UIScriptCommands.MessageBoxOK("{Header}", "{Selection[0]} Selected"),
+                        UIScriptCommands.MessageBoxOK("{Header}", "User Cancelled"))
             );
 
             #region Obsoluted - 1 (Use WPFScriptCommands.OpenFileDialog() IScriptCommand)
@@ -219,8 +226,12 @@ namespace TestApp
         public void SaveFile()
         {
             ScriptRunner.RunScriptAsync(
-               new ParameterDic() { { "WindowManager", _windowManager }, { "Header", "SaveFile" } },
-
+               new ParameterDic() { 
+                    { "WindowManager", _windowManager }, 
+                    { "Header", "SaveFile" }, 
+                    { "FileName", "OpenFile.txt"},
+                    { "StartupPath", OpenPath } 
+               },
                    IOScriptCommands.FileSave(_profiles, RootModels.ToArray(), FileFilter, "{Selection}",
                        UIScriptCommands.MessageBoxOK("{Header}", "{Selection[0]} Selected"),
                        UIScriptCommands.MessageBoxOK("{Header}", "User Cancelled"))
@@ -240,10 +251,10 @@ namespace TestApp
             //        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, "{RootModels}",
             //        UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.FilterStr, "{FilterStr}"))
             //     ),
-                 
+
             //     UIScriptCommands.ExplorerParseAndGoTo("{Explorer}", "{ProfileEx}", ""),                 
             //     "{WindowsManager}", "{Events}", "{DialogResult}", "{SelectionPaths}",
-                  
+
             //     ScriptCommands.IfTrue("{DialogResult}", 
             //        UIScriptCommands.MessageBoxOK("SaveFile", "{SelectionPaths}"), 
             //        UIScriptCommands.MessageBoxOK("SaveFile", "Cancelled"))
@@ -267,16 +278,30 @@ namespace TestApp
             #endregion
         }
 
-        private IEntryModel showDirectoryPicker(IEntryModel[] rootModels)
+        private async Task<IEntryModel> showDirectoryPicker(IEntryModel[] rootModels)
         {
-            var directoryPicker = new DirectoryPickerViewModel(
-                AppViewModel.getInitializer(_windowManager, _events, rootModels,
-                new BasicParamInitalizers(true, false, false, false),
-                new ColumnInitializers()));
+            IProfile[] profiles = rootModels.Select(rm => rm.Profile).Distinct().ToArray();
 
-            if (_windowManager.ShowDialog(directoryPicker).Value)
-                return directoryPicker.SelectedDirectory;
-            return null;
+            return await ScriptRunner.RunScriptAsync<IEntryModel>(
+                "{OutputDirectory}",
+                new ParameterDic() { 
+                    { "WindowManager", _windowManager }, 
+                    { "Header", "DirectoryPick" } 
+                },
+
+                    IOScriptCommands.DirectoryPick(profiles, rootModels, "{OutputDirectory}", null,
+                        UIScriptCommands.MessageBoxOKCancel("{Header}", "Add {OutputDIrectory}?", null,
+                            ScriptCommands.Assign("{OutputDirectory}", null))));
+
+            
+            //var directoryPicker = new DirectoryPickerViewModel(
+            //    AppViewModel.getInitializer(_windowManager, _events, rootModels,
+            //    new BasicParamInitalizers(true, false, false, false),
+            //    new ColumnInitializers()));
+
+            //if (_windowManager.ShowDialog(directoryPicker).Value)
+            //    return directoryPicker.SelectedDirectory;
+            //return null;
         }
 
         public void Clear()
@@ -294,12 +319,11 @@ namespace TestApp
             }
         }
 
-        private void pickAndAdd(IEntryModel[] rootModel)
+        private async Task pickAndAdd(IEntryModel[] rootModel)
         {
-            IEntryModel selectedModel = showDirectoryPicker(rootModel);
-            //if (selectedModel != null)
-            //    RootModels.Add(selectedModel);
-            _events.PublishOnUIThread(new RootChangedEvent(ChangeType.Created, selectedModel));
+            IEntryModel selectedModel = await showDirectoryPicker(rootModel);
+            if (selectedModel != null)
+                _events.PublishOnUIThread(new RootChangedEvent(ChangeType.Created, selectedModel));
         }
 
         public async Task Add()
@@ -334,7 +358,7 @@ namespace TestApp
 
         public void AddDirectoryInfoEx()
         {
-            var rootModel = new[] { _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName).Result };
+            var rootModel = new[] { AsyncUtils.RunSync(() => _profileEx.ParseAsync("")) };
             pickAndAdd(rootModel);
         }
 

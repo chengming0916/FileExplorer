@@ -13,6 +13,7 @@ namespace FileExplorer.Script
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ScriptRunner>();
         public static ScriptRunner Instance = new ScriptRunner();
 
+        #region RunScript/Async(initialParameters, cloneParameters, commands[])
         public static Task RunScriptAsync(ParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
         {
             if (cloneParameters)
@@ -34,7 +35,9 @@ namespace FileExplorer.Script
                 runner = (initialParameters["ScriptRunner"] as IScriptRunner);            
             runner.Run(new Queue<IScriptCommand>(commands), initialParameters);
         }
+        #endregion
 
+        #region RunScript/Async(initialParameters, commands[])
         public static Task RunScriptAsync(ParameterDic initialParameters, params IScriptCommand[] commands)
         {
             return RunScriptAsync(initialParameters, false, commands);
@@ -44,7 +47,29 @@ namespace FileExplorer.Script
         {
             RunScript(initialParameters, false, commands);
         }
+        #endregion
 
+        #region RunScript/Async<T>(initialParameters, resultVariable, commands[])
+
+        public static async Task<T> RunScriptAsync<T>(string resultVariable = "{Result}", ParameterDic initialParameters = null, 
+            params IScriptCommand[] commands)
+        {
+            initialParameters = initialParameters ?? new ParameterDic();
+            await RunScriptAsync(initialParameters, false, commands);
+            return initialParameters.GetValue(resultVariable, default(T));
+        }
+
+        public static T RunScript<T>(string resultVariable = "{Result}", ParameterDic initialParameters = null,
+            params IScriptCommand[] commands)
+        {
+            initialParameters = initialParameters ?? new ParameterDic();
+            RunScript(initialParameters, false, commands);
+            return initialParameters.GetValue(resultVariable, default(T));
+        }
+
+        #endregion
+
+        #region #region RunScript/Async(commands[])
         public static Task RunScriptAsync(params IScriptCommand[] commands)
         {
             return RunScriptAsync(new ParameterDic(), commands);
@@ -54,7 +79,9 @@ namespace FileExplorer.Script
         {
             RunScript(new ParameterDic(), commands);
         }
-        
+        #endregion
+
+
         public ScriptRunner()
         {
 
@@ -129,7 +156,10 @@ namespace FileExplorer.Script
                         if (retCmd != null)
                         {
                             if (pd.Error != null)
+                            {
+                                logger.Error("Error when running script", pd.Error);
                                 return;
+                            }
                             cmds.Enqueue(retCmd);
                         }
                     }

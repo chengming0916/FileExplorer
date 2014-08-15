@@ -135,6 +135,17 @@ namespace FileExplorer
             return GetValue<Object>(variableKey);
         }
 
+        public bool ClearValue(string variableKey)
+        {
+            string variable = GetVariable(variableKey);
+            if (this.ContainsKey(variable))
+            {
+                this.Remove(variable);
+                return true;                
+            }
+            return false;
+        }
+
         public bool SetValue<T>(string variableKey, T value, bool skipIfExists = false)
         {
             if (variableKey == null)

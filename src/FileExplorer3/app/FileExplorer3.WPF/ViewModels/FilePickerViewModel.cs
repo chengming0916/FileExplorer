@@ -62,7 +62,7 @@ namespace FileExplorer.WPF.ViewModels
                     FileList.Selection.SelectedItems.FirstOrDefault(evm => evm.EntryModel.IsDirectory);
                 if (firstDir != null)
                 {
-                    setFileName(firstDir.EntryModel.Label, false);
+                    //setFileName(firstDir.EntryModel.Label, false);
                 }
                 else
                 {

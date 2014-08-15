@@ -136,14 +136,15 @@ namespace FileExplorer.Script
         public static IScriptCommand FileList_Paste_For_DiskBased_Items = UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
                 IOScriptCommands.DiskPaste("{CurrentDirectory}", "{Destination}",
                 UIScriptCommands.FileListSelect("{FileList}", "{Destination}")));
-
+        
         public static IScriptCommand DirectoryTree_Map_From_Profiles = 
             UIScriptCommands.ProfilePicker("{Profiles}", "{Profile}", "{WindowManager}",
-                   CoreScriptCommands.ParsePath("{Profile}", "", "{RootDirectory}",
-                    UIScriptCommands.DirectoryPick(null, null,
+                   CoreScriptCommands.ParsePath("{Profile}", "", "{RootDirectories}",
+                   ScriptCommands.AssignProperty("{RootDirectories}", "FullPath", "{StartupPath}", 
+                    UIScriptCommands.ExplorerPick(ExplorerMode.DirectoryOpen, "{OnModelCreated}", "{OnViewAttached}",
                      "{WindowManager}", null, "{Selection}", "{SelectionPath}",
                       UIScriptCommands.NotifyRootCreated("{Selection}",                        
-                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection}")))));
+                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection}"))))));
             //explorerModel.FileList.Commands.Commands.NewFolder =
             //     FileList.Do(flvm => WPFScriptCommands.CreatePath(
             //            flvm.CurrentDirectory, "NewFolder", true, true,
