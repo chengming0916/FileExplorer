@@ -45,45 +45,46 @@ namespace FileExplorer.Script
                 eventAggregatorVariable, destinationVariable, null, null, null, nextCommand);
         }
 
-        public static IScriptCommand FilePick(ExplorerMode mode = ExplorerMode.FileSave, string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
+        public static IScriptCommand ExplorerPick(ExplorerMode mode = ExplorerMode.FileSave, string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+            string selectionVariable = null,
             string selectionPathsVariable = "{SelectionPaths}",
             IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
         {
-            string dialogResultVariable = "{FileSave-DialogResult}";
+            string dialogResultVariable = "{ExplorerPick-DialogResult}";
 
             return explorerShow(mode, onModelCreatedVariable, onViewAttachedVariable,
-                windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, null,
+                windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, selectionVariable,
                 selectionPathsVariable,
                     ScriptCommands.IfTrue(dialogResultVariable, nextCommand, cancelCommand));
         }
 
-        public static IScriptCommand DirectoryPick(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
-            string selectedEntryVariable = "{Selection}", string selectedPathVariable = "{SelectionPath}", 
-            IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
-        {
-            string dialogResultVariable = "{DirectoryPick-DialogResult}";
+        //public static IScriptCommand DirectoryPick(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
+        //    string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+        //    string selectedEntryVariable = "{Selection}", string selectedPathVariable = "{SelectionPath}", 
+        //    IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
+        //{
+        //    string dialogResultVariable = "{DirectoryPick-DialogResult}";
 
-            IScriptCommand onDirectoryPickCreated = 
-                ScriptCommands.RunCommandsInSequence(
-                    ScriptCommands.RunScriptCommand(onModelCreatedVariable),         
-                    UIScriptCommands.ExplorerSetParameter("{Explorer}",
-                            ExplorerParameterType.RootModels, "{RootDirectory}"));
-            IScriptCommand onDirectoryPickAttached = 
-                ScriptCommands.RunCommandsInSequence(
-                    ScriptCommands.RunScriptCommand(onViewAttachedVariable),  
-                UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot());
+        //    //IScriptCommand onDirectoryPickCreated = 
+        //    //    ScriptCommands.RunCommandsInSequence(
+        //    //        ScriptCommands.RunScriptCommand(onModelCreatedVariable),         
+        //    //        UIScriptCommands.ExplorerSetParameter("{Explorer}",
+        //    //                ExplorerParameterType.RootModels, "{RootDirectory}"));
+        //    //IScriptCommand onDirectoryPickAttached = 
+        //    //    ScriptCommands.RunCommandsInSequence(
+        //    //        ScriptCommands.RunScriptCommand(onViewAttachedVariable),  
+        //    //    UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot());
 
 
-            return 
-                ScriptCommands.Assign("{OnDirectoryPickCreated}", onDirectoryPickCreated, false, 
-                ScriptCommands.Assign("{OnDirectoryPickAttached}", onDirectoryPickAttached, false,                 
-                    explorerShow(ExplorerMode.DirectoryOpen, "{OnDirectoryPickCreated}", "{OnDirectoryPickAttached}",
-              windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, selectedEntryVariable,
-              selectedPathVariable, 
-              ScriptCommands.IfTrue(dialogResultVariable,  nextCommand, cancelCommand))));
-        }
+        //    return 
+        //        //ScriptCommands.Assign("{OnDirectoryPickCreated}", onDirectoryPickCreated, false, 
+        //        //ScriptCommands.Assign("{OnDirectoryPickAttached}", onDirectoryPickAttached, false,                 
+        //            explorerShow(ExplorerMode.DirectoryOpen, onModelCreatedVariable, onViewAttachedVariable,
+        //      windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, selectedEntryVariable,
+        //      selectedPathVariable, 
+        //      ScriptCommands.IfTrue(dialogResultVariable,  nextCommand, cancelCommand));
+        //}
 
         //public static IScriptCommand ExplorerShow(IEntryModel[] rootModels,
         //    bool enableDrag, bool enableDrop, bool enableMultiSelect,

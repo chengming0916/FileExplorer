@@ -24,7 +24,7 @@ namespace FileExplorer.Script
                         "{Events}", explorerVariable, nextCommand));
         }
 
-        public static IScriptCommand FileOpen(IProfile[] profiles, IEntryModel[] rootDirectories,
+        public static IScriptCommand FileOpen(IProfile[] profiles, IEntryModel[] rootDirectories,            
            bool enableMultiSelect = true, string filterString = "All files (*.*)|*.*",
            string selectionPathsVariable = "{Selection}",
            IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
@@ -32,7 +32,7 @@ namespace FileExplorer.Script
             return ScriptCommands.Assign(new Dictionary<string, object>()
                 {
                     {"{Profiles}", profiles },
-                    {"{RootDirectories}", rootDirectories },
+                    {"{RootDirectories}", rootDirectories },                    
                     {"{EnableDrag}", false },
                     {"{EnableDrop}", false },
                     {"{FilterString}", filterString },
@@ -41,19 +41,19 @@ namespace FileExplorer.Script
                     {"{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default }, 
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
                 }, false,
-                  UIScriptCommands.FilePick(ExplorerMode.FileOpen, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
-                        "{Events}", selectionPathsVariable, nextCommand, cancelCommand));
+                  UIScriptCommands.ExplorerPick(ExplorerMode.FileOpen, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
+                        "{Events}", null, selectionPathsVariable, nextCommand, cancelCommand));
         }
 
-        public static IScriptCommand FileSave(IProfile[] profiles, IEntryModel[] rootDirectories,
-            string filterString = "All files (*.*)|*.*",
+        public static IScriptCommand FileSave(IProfile[] profiles, IEntryModel[] rootDirectories,            
+            string filterString = "All files (*.*)|*.*", 
             string selectionPathsVariable = "{Selection}",
             IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
         {
             return ScriptCommands.Assign(new Dictionary<string, object>()
                 {
                     {"{Profiles}", profiles },
-                    {"{RootDirectories}", rootDirectories },
+                    {"{RootDirectories}", rootDirectories },                    
                     {"{EnableDrag}", false },
                     {"{EnableDrop}", false },
                     {"{FilterString}", filterString },
@@ -62,9 +62,33 @@ namespace FileExplorer.Script
                     {"{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default }, 
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
                 }, false,
-                  UIScriptCommands.FilePick(ExplorerMode.FileSave, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
-                        "{Events}", selectionPathsVariable, nextCommand, cancelCommand));
+                  UIScriptCommands.ExplorerPick(ExplorerMode.FileSave, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
+                        "{Events}", null, selectionPathsVariable, nextCommand, cancelCommand));
         }
 
+        public static IScriptCommand DirectoryPick(IProfile[] profiles, IEntryModel[] rootDirectories,
+            string selectionVariable = "{Selection}", string selectionPathVariable = "{SelectionPaths}",
+            IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
+        {
+            return ScriptCommands.Assign(new Dictionary<string, object>()
+                {
+                    {"{Profiles}", profiles },
+                    {"{RootDirectories}", rootDirectories },                    
+                    {"{EnableDrag}", false },
+                    {"{EnableDrop}", false },                    
+                    {"{EnableMultiSelect}", false },
+                    {"{FileListNewWindowCommand}", NullScriptCommand.Instance },
+                    {"{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default }, 
+                    {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
+                }, false,
+                 UIScriptCommands.ExplorerPick(ExplorerMode.DirectoryOpen, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
+                       "{Events}", selectionVariable, selectionPathVariable, nextCommand, cancelCommand));
+        }
+
+
+         //public static IScriptCommand DirectoryPick(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
+         //   string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+         //   string selectedEntryVariable = "{Selection}", string selectedPathVariable = "{SelectionPath}", 
+         //   IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
     }
 }

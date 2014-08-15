@@ -83,6 +83,7 @@ namespace FileExplorer.Script
                 ScriptCommands.RunCommandsInSequence(NextCommand,
                         UIScriptCommands.ExplorerAssignScriptParameters(ExplorerKey, "{Profiles}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.RootModels, "{RootDirectories}"),
+                        UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.FileName, "{FileName}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.EnableDrag, "{EnableDrag}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.EnableDrop, "{EnableDrop}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.EnableMultiSelect, "{EnableMultiSelect}"),

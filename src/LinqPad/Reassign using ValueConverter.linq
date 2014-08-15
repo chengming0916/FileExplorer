@@ -28,7 +28,13 @@ IScriptCommand executeMethodCommand =
 IScriptCommand getItemInArrayCommand = 
   ScriptCommands.AssignValueConverter(ValueConverterType.GetArrayItem, "{Converter}", 
     ScriptCommands.Reassign("{Array}", "{Converter}", "{DestVariable}", false, 
-	  ScriptCommands.PrintDebug("Item 1 -> {DestVariable}")), 1);	
+	  ScriptCommands.PrintDebug("Array -> {DestVariable}")), 1);	
+	  
+           IScriptCommand assignArrayCommand =
+   ScriptCommands.AssignArray("{DestVariable}", "System.String", new object[] { "A", "B", "C"}, false,      
+       ScriptCommands.PrintDebug("AssignArray -> {DestVariable}"));
+
+            ScriptRunner.RunScript(assignArrayCommand);
 
 //Shortcut method.	  
 	  
@@ -50,6 +56,10 @@ await ScriptRunner.RunScriptAsync(new ParameterDic() {
                 { "Variable1", DateTime.Now },
             }, executeMethodCommand);	  
 	  
+await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                { "Array", new [] { 1,2,3} },
+            }, getItemInArrayCommand);
+			
 await ScriptRunner.RunScriptAsync(new ParameterDic() { 
                 { "Array", new [] { 1,2,3} },
             }, getItemInArrayCommand);

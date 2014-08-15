@@ -93,10 +93,10 @@ namespace FileExplorer.Script
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {            
-            if (Value != null)
-                if (pm.SetValue<Object>(VariableKey, Value, SkipIfExists))
-                    logger.Debug(String.Format("{0} = {1}", VariableKey, Value));
+        {
+
+            if (pm.SetValue<Object>(VariableKey, Value, SkipIfExists))
+                logger.Debug(String.Format("{0} = {1}", VariableKey, Value));
             // else logger.Debug(String.Format("Skipped {0}, already exists.", VariableKey));
 
             return NextCommand;

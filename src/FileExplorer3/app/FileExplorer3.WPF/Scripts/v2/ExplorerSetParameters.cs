@@ -81,7 +81,7 @@ namespace FileExplorer.Script
         RootModels,
 
         //FilePicker
-        FilePickerMode, FilterString,
+        FileName, FilePickerMode, FilterString,
 
         //FileList
         EnableDrag, EnableDrop, EnableMultiSelect,
@@ -156,6 +156,10 @@ namespace FileExplorer.Script
                     case ExplorerParameterType.RootModels:
                         pm.SetValue(ValueKeyString, evm.RootModels);
                         break;
+                    case ExplorerParameterType.FileName :
+                        if (evm is FilePickerViewModel)
+                            pm.SetValue(ValueKeyString, (evm as FilePickerViewModel).FileName);
+                        break;
                     case ExplorerParameterType.FilePickerMode:
                         if (evm is FilePickerViewModel)
                             pm.SetValue(ValueKeyString, (evm as FilePickerViewModel).PickerMode);
@@ -223,6 +227,10 @@ namespace FileExplorer.Script
                         return ResultCommand.Error(new KeyNotFoundException(ValueKey.ToString()));
                     evm.RootModels = rootModels;
 
+                    break;
+                case ExplorerParameterType.FileName:
+                    if (evm is FilePickerViewModel)
+                        (evm as FilePickerViewModel).FileName = value as string;
                     break;
                 case ExplorerParameterType.FilePickerMode:
                     var mode = pm.GetValue(ValueKey as string);

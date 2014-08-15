@@ -227,12 +227,11 @@ namespace FileExplorer.WPF.ViewModels
 
             cmds.Enqueue(Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories));
 
-            if (message.Sender != this)
+            if (message.Sender != null && message.Sender != this)
                 cmds.Enqueue(UIScriptCommands.ExplorerGoTo(CurrentDirectory.EntryModel));
             else
                 switch (message.ChangeType)
-                {
-                    case ChangeType.Created:
+                {                    
                     case ChangeType.Changed:
                         cmds.Enqueue(UIScriptCommands.ExplorerGoTo(message.AppliedRootDirectories.First()));
                         break;

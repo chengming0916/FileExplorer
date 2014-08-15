@@ -41,12 +41,12 @@ namespace FileExplorer.Script
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand AssignArrayItem(string arrayVariable = "{Array}", int id = 0, 
+        public static IScriptCommand AssignArrayItem(string arrayVariable = "{Array}", int id = 0,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
             string valueConverterVariable = ParameterDic.CombineVariable(arrayVariable, "Converter");
             return AssignValueConverter(ValueConverterType.GetArrayItem, valueConverterVariable,
-                ScriptCommands.Reassign(arrayVariable, valueConverterVariable, 
+                ScriptCommands.Reassign(arrayVariable, valueConverterVariable,
                     destinationVariable, false, nextCommand), id);
         }
 
@@ -59,12 +59,12 @@ namespace FileExplorer.Script
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand AssignMethodResult(string sourceObjectVariable = "{Source}", 
+        public static IScriptCommand AssignMethodResult(string sourceObjectVariable = "{Source}",
             string methodName = "Method", object[] parameters = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
             string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
-            
+
             List<object> methodParams = new List<object>();
             methodParams.Add(methodName);
             if (parameters != null)
@@ -83,7 +83,7 @@ namespace FileExplorer.Script
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand AssignProperty(string sourceObjectVariable = "{Source}", 
+        public static IScriptCommand AssignProperty(string sourceObjectVariable = "{Source}",
             string propertyName = "Property",
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -91,7 +91,7 @@ namespace FileExplorer.Script
             return AssignValueConverter(ValueConverterType.GetProperty, valueConverterVariable,
                 ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
                     destinationVariable, false, nextCommand), propertyName);
-        }
+        }  
     }
 
     public enum ValueConverterType
@@ -125,17 +125,17 @@ namespace FileExplorer.Script
             VariableKey = "{Converter}";
             Value = null;
             SkipIfExists = false;
-        }        
+        }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             switch (ConverterType)
             {
-                case ValueConverterType.GetArrayItem :
+                case ValueConverterType.GetArrayItem:
                     Int32 id = ConverterParameter.Count() > 0 ? Int32.Parse(ConverterParameter.First().ToString()) : -1;
                     if (id == -1)
                         return ResultCommand.Error(new KeyNotFoundException());
-                    Value = (Func<Object,Object>)(v => (v as Array).GetValue(id));
+                    Value = (Func<Object, Object>)(v => (v as Array).GetValue(id));
                     break;
 
                 case ValueConverterType.GetProperty:
@@ -192,6 +192,7 @@ namespace FileExplorer.Script
                     Value = retVa1l;
 
                     break;
+               
                 default: return ResultCommand.Error(new NotSupportedException(ConverterType.ToString()));
 
             }

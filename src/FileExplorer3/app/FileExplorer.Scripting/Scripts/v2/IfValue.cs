@@ -37,7 +37,7 @@ namespace FileExplorer.Script
         {
             string ifValueValueProperty = "{IfValue-Value}";
             return
-                ScriptCommands.Assign(ifValueValueProperty, value, true,
+                ScriptCommands.Assign(ifValueValueProperty, value, false,
                     IfValue(op, variable, ifValueValueProperty, trueCommand, otherwiseCommand));
         }
 
@@ -47,7 +47,7 @@ namespace FileExplorer.Script
         {
             string ifEqualValueProperty = "{IfEquals-Value}";
             return
-                ScriptCommands.Assign(ifEqualValueProperty, value, true,
+                ScriptCommands.Assign(ifEqualValueProperty, value, false,
                     IfValue(ComparsionOperator.Equals, variable, ifEqualValueProperty, trueCommand, otherwiseCommand));
         }
 

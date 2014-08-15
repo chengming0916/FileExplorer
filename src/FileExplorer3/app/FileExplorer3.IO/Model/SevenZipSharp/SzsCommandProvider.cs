@@ -181,7 +181,8 @@ namespace FileExplorer.Models.SevenZipSharp
                     IEntryModel firstEntry = appliedModels[0];
                     IDiskProfile firstProfile = firstEntry.Profile as IDiskProfile;
 
-                    if (firstProfile != null && !firstEntry.FullPath.StartsWith("::{"))
+                    if (firstProfile != null && !firstEntry.FullPath.StartsWith("::{")
+                        && firstEntry.Parent != null)
                     {
                         IPathHelper path = firstEntry.Profile.Path;
                         //Header = path.GetExtension(firstEntry.Name).TrimStart('.').FirstCharToUppercase();
@@ -228,10 +229,11 @@ namespace FileExplorer.Models.SevenZipSharp
                 }
                 #endregion
 
-                SubCommands = subCommands;
+              
             }
 
-
+            SubCommands = subCommands;
+            IsVisibleOnMenu = SubCommands.Count() > 0;
         }
 
 
