@@ -52,10 +52,10 @@ namespace FileExplorer.Script
                         (p is DiskEntryModelBase) ? (p as DiskEntryModelBase).Size
                         : 0), 200),  
 
-                    ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 
-                        new ValueComparer<IEntryModel>(p => 
-                            (p is FileSystemInfoModel) ? (p as FileSystemInfoModel).Attributes
-                            : System.IO.FileAttributes.Normal), 200)   
+                    //ColumnInfo.FromBindings("FSI.Attributes", "EntryModel.Attributes", "", 
+                    //    new ValueComparer<IEntryModel>(p => 
+                    //        (p is FileSystemInfoModel) ? (p as FileSystemInfoModel).Attributes
+                    //        : System.IO.FileAttributes.Normal), 200)   
                 };
         #endregion
 

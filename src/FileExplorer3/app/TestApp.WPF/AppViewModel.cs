@@ -92,7 +92,7 @@ namespace TestApp
 
 
             _profiles = new IProfile[] {
-                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive };
+                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive }.Where(p => p != null).ToArray();
 
 
         }

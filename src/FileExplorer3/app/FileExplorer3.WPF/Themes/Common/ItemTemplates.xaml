@@ -60,7 +60,7 @@
                    Height="{Binding DataContext.Parameters.ItemSize, 
                         RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
                    />
-            <uc:EditBox x:Name="eb" Margin="5,0" DisplayValue="{Binding EntryModel.Label}" 
+            <uc:EditBox x:Name="eb" Margin="0,0" DisplayValue="{Binding EntryModel.Label}" 
                         ActualValue="{Binding EntryModel.Name, Mode=TwoWay}" 
                         IsEditable="{Binding IsRenamable}"        
                         IsEditing="{Binding IsRenaming, Mode=TwoWay}"

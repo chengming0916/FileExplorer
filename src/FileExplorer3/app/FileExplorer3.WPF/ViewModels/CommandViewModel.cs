@@ -90,9 +90,9 @@ namespace FileExplorer.WPF.ViewModels
                 if (bytes.Length > 0)
                     Icon = new System.Windows.Controls.Image()
                     {
-                        Source = 
+                        Source =
                             BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes),
-                        MaxWidth = 16, 
+                        MaxWidth = 16,
                         MaxHeight = 16
 
                     };
@@ -165,7 +165,12 @@ namespace FileExplorer.WPF.ViewModels
             get
             {
                 return _icon is System.Windows.Controls.Image ?
-                    new System.Windows.Controls.Image() { Source = (_icon as System.Windows.Controls.Image).Source } : null;
+                    new System.Windows.Controls.Image()
+                    {
+                        MaxWidth = 16,
+                        MaxHeight = 16,
+                        Source = (_icon as System.Windows.Controls.Image).Source
+                    } : null;
                 ;
 
             }

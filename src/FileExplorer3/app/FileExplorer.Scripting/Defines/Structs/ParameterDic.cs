@@ -26,14 +26,14 @@ namespace FileExplorer
         public static string ReplaceVariableInsideBracketed(this ParameterDic pd, string variableKey)
         {
             if (variableKey == null)
-                return null;
+                return null;            
 
             Regex regex = new Regex("{(?<TextInsideBrackets>[^}]+)}");
             string value = variableKey;
 
             Match match = regex.Match(value);
 
-            while (match.Success)
+            while (!value.StartsWith("::") && match.Success)
             {
                 string key = "{" + match.Groups["TextInsideBrackets"].Value + "}";
                 object val = pd.GetValue(key);

@@ -19,6 +19,7 @@ namespace FileExplorer.WPF.ViewModels
         public LoginViewModel(ILoginInfo loginInfo)
         {
             LoginInfo = loginInfo;
+            DisplayName = "";
         }
 
         #endregion
@@ -39,7 +40,7 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         void navigating(object sender, NavigatingCancelEventArgs e)
-        {
+        {            
             CurrentUri = e.Uri;
             if (LoginInfo != null)
                 if (LoginInfo.CheckLogin(new BrowserStatus()
@@ -52,6 +53,7 @@ namespace FileExplorer.WPF.ViewModels
 
         void loadCompleted(object sender, NavigationEventArgs e)
         {
+            DisplayName = ((dynamic)_webBrowser.Document).Title;
             CurrentUri = e.Uri;
             if (LoginInfo != null)
                 if (LoginInfo.CheckLogin(new BrowserStatus()
@@ -81,7 +83,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Public Properties
 
         public ILoginInfo LoginInfo { get { return _loginInfo; } set { _loginInfo = value; NotifyOfPropertyChange(() => LoginInfo); } }
-        public Uri CurrentUri { get { return _currentUri; } set { _currentUri = value; NotifyOfPropertyChange(() => CurrentUri); } }
+        public Uri CurrentUri { get { return _currentUri; } set { _currentUri = value; NotifyOfPropertyChange(() => CurrentUri); } }        
 
         #endregion
     }
