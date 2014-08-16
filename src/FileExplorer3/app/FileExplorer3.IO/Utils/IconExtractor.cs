@@ -83,6 +83,7 @@ namespace QuickZip.UserControls.Logic.Tools.IconExtractor
 
         static SystemImageListCollection sysImgList = new SystemImageListCollection();
         static ReaderWriterLock sysImgListLock = new ReaderWriterLock();
+        static TimeSpan lockWaitTime = TimeSpan.FromSeconds(5);
 
         #region Public Properties
 
@@ -184,29 +185,34 @@ namespace QuickZip.UserControls.Logic.Tools.IconExtractor
         {
             Bitmap retVal = null;
 
-            sysImgListLock.AcquireReaderLock(1000);
 
-            try
-            {
-                if (size != sysImgList.CurrentImageListSize)
-                {
-                    LockCookie lockCookie = sysImgListLock.UpgradeToWriterLock(Timeout.Infinite);
-                    try
-                    {
-                        SystemImageList imgList = sysImgList[size];
-                        retVal = imgList[ptr, isDirectory, forceLoad];
-                    }
-                    finally
-                    {
-                        sysImgListLock.DowngradeFromWriterLock(ref lockCookie);
-                    }
-                }
-                else
-                {
-                    retVal = sysImgList[size][ptr, isDirectory, forceLoad];
-                }
-            }
-            finally { sysImgListLock.ReleaseReaderLock(); }
+
+            using (var imgList = new SystemImageList(size))
+                retVal = imgList[ptr, isDirectory, forceLoad];
+
+            //sysImgListLock.AcquireReaderLock(1000);
+
+            //try
+            //{
+            //    if (size != sysImgList.CurrentImageListSize)
+            //    {
+            //        LockCookie lockCookie = sysImgListLock.UpgradeToWriterLock(lockWaitTime);
+            //        try
+            //        {
+            //            SystemImageList imgList = sysImgList[size];
+            //            retVal = imgList[ptr, isDirectory, forceLoad];
+            //        }
+            //        finally
+            //        {
+            //            sysImgListLock.DowngradeFromWriterLock(ref lockCookie);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        retVal = sysImgList[size][ptr, isDirectory, forceLoad];
+            //    }
+            //}
+            //finally { sysImgListLock.ReleaseReaderLock(); }
 
 
             return retVal;
@@ -216,28 +222,32 @@ namespace QuickZip.UserControls.Logic.Tools.IconExtractor
         {
 
             Bitmap retVal = null;
-            sysImgListLock.AcquireReaderLock(1000);
-            try
-            {
-                if (!sysImgList.IsImageListInited || size != sysImgList.CurrentImageListSize)
-                {
-                    LockCookie lockCookie = sysImgListLock.UpgradeToWriterLock(Timeout.Infinite);
-                    try
-                    {
-                        SystemImageList imgList = sysImgList[size];
-                        retVal = imgList[fileName, isDirectory, forceLoad];
-                    }
-                    finally
-                    {
-                        sysImgListLock.DowngradeFromWriterLock(ref lockCookie);
-                    }
-                }
-                else
-                {
-                    retVal = sysImgList[size][fileName, isDirectory, forceLoad];
-                }
-            }
-            finally { sysImgListLock.ReleaseReaderLock(); }
+
+            using (var imgList = new SystemImageList(size))
+                retVal = imgList[fileName, isDirectory, forceLoad];
+
+            //sysImgListLock.AcquireReaderLock(1000);
+            //try
+            //{
+            //    if (!sysImgList.IsImageListInited || size != sysImgList.CurrentImageListSize)
+            //    {
+            //        LockCookie lockCookie = sysImgListLock.UpgradeToWriterLock(lockWaitTime);
+            //        try
+            //        {
+            //            SystemImageList imgList = sysImgList[size];
+            //            retVal = imgList[fileName, isDirectory, forceLoad];
+            //        }
+            //        finally
+            //        {
+            //            sysImgListLock.DowngradeFromWriterLock(ref lockCookie);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        retVal = sysImgList[size][fileName, isDirectory, forceLoad];
+            //    }
+            //}
+            //finally { sysImgListLock.ReleaseReaderLock(); }
 
             return retVal;
         }

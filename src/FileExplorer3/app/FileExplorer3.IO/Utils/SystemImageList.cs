@@ -1,6 +1,7 @@
 ﻿/// Created By LYCJ (2010), released under LGPL license
 /// I did some tidy up Based on http://vbaccelerator.com/home/net/code/libraries/Shell_Projects/SysImageList/article.asp
 
+using MetroLog;
 using System;
 using System.Drawing;
 using System.IO;
@@ -306,6 +307,8 @@ namespace QuickZip.Converters
 
     public class SystemImageList : IDisposable
     {
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<SystemImageList>();
+
         public static IntPtr Test()
         {
             SHFILEINFO shfi = new SHFILEINFO();
@@ -710,6 +713,7 @@ namespace QuickZip.Converters
 
         public virtual void Dispose(bool disposing)
         {
+            logger.Debug(String.Format("Dispose, disposing : {0}", disposing));
             if (!_disposed)
             {
                 if (disposing)
