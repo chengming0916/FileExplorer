@@ -419,24 +419,38 @@ namespace TestApp
         public void TabWindow()
         {
 
-            var profiles = new IProfile[] {
-                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
-            };
 
-            var initializer = getInitializer(_windowManager, _events, RootModels.ToArray(),
-                ExplorerInitializers.Parameter(new FileListParameters() { ViewMode = "Icon", ItemSize = 100 }),
-                ExplorerInitializers.Parameter(new ExplorerParameters() { UIScale = 1.1f, FileListSize = "3*", NavigationSize = 45 }),
-                new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
-                new ColumnInitializers(),
-                new ScriptCommandsInitializers(_windowManager, _events, profiles),
-                new ToolbarCommandsInitializers(_windowManager));
+            ScriptRunner.RunScriptAsync(new ParameterDic() {                   
+                    { "StartupPath", OpenPath },
+                    { "GlobalEvents", _events },
+                    { "WindowManager", _windowManager },
+                    { "EnableDrag", _enableDrag }, 
+                    { "EnableDrop", _enableDrop },                     
+                    { "EnableMultiSelect", _enableMultiSelect}, 
+                },
+               IOScriptCommands.ExplorerShow(_profiles, RootModels.ToArray()));
 
-            var tabVM = new TabbedExplorerViewModel(initializer);
+
+            //var profiles = new IProfile[] {
+            //    _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive
+            //};
+
+            //var initializer = getInitializer(_windowManager, _events, RootModels.ToArray(),
+            //    ExplorerInitializers.Parameter(new FileListParameters() { ViewMode = "Icon", ItemSize = 100 }),
+            //    ExplorerInitializers.Parameter(new ExplorerParameters() { UIScale = 1.1f, FileListSize = "3*", NavigationSize = 45 }),
+            //    new BasicParamInitalizers(_expandRootDirectories, _enableMultiSelect, _enableDrag, _enableDrop),
+            //    new ColumnInitializers(),
+            //    new ScriptCommandsInitializers(_windowManager, _events, profiles),
+            //    new ToolbarCommandsInitializers(_windowManager));
+
+            //var initializer = 
+
+            //var tabVM = new TabbedExplorerViewModel(initializer);
 
             //var windowManager = new TabbedAppWindowManager(tabVM);
 
 
-            _windowManager.ShowWindow(tabVM);
+            //_windowManager.ShowWindow(tabVM);
         }
 
         public void Handle(RootChangedEvent message)

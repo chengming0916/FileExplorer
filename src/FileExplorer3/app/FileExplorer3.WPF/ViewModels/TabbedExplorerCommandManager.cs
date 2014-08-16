@@ -56,9 +56,9 @@ namespace FileExplorer.WPF.ViewModels
 
         protected override void setupScriptCommands(dynamic commandDictionary)
         {            
-            commandDictionary.NewTab = UIScriptCommands.TabExplorerNewTab("TabbedExplorer", null);
+            commandDictionary.NewTab = UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", null);
             commandDictionary.CloseTab =
-                    UIScriptCommands.TabExplorerCloseTab("TabbedExplorer");
+                    UIScriptCommands.TabExplorerCloseTab("{TabbedExplorer}");
         }
 
         protected override IExportCommandBindings[] setupExportBindings()

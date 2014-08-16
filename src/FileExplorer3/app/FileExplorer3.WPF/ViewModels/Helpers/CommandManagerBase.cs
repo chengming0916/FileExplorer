@@ -9,6 +9,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer;
 using System.Windows.Input;
+using System.Windows;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -17,7 +18,7 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-        protected CommandManagerBase(IExportCommandBindings[] additionalBindingExportSource)
+        protected CommandManagerBase(params IExportCommandBindings[] additionalBindingExportSource)
         {
             _additionalBindingExportSource = additionalBindingExportSource;
         }
@@ -27,7 +28,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Methods        
 
         public void InitCommandManager()
-        {            
+        {                                   
             _parameterDicConverter = setupParamDicConverter();
             _commandDictionary = setupCommandDictionary(ParameterDicConverter);
             _exportBindingSource = setupExportBindings().Concat(_additionalBindingExportSource).ToArray();

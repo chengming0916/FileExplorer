@@ -34,14 +34,14 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
-        
-         public static IScriptCommand ExplorerShow(
-            string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
-            string destinationVariable = "{Explorer}", 
-            IScriptCommand nextCommand = null)
+
+        public static IScriptCommand ExplorerShow(
+           string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
+           string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+           string destinationVariable = "{Explorer}",
+           IScriptCommand nextCommand = null)
         {
-            return explorerShow(ExplorerMode.Normal, onModelCreatedVariable, onViewAttachedVariable, windowManagerVariable, 
+            return explorerShow(ExplorerMode.Normal, onModelCreatedVariable, onViewAttachedVariable, windowManagerVariable,
                 eventAggregatorVariable, destinationVariable, null, null, null, nextCommand);
         }
 
@@ -126,8 +126,14 @@ namespace FileExplorer.Script
         /// </summary>
         public string WindowManagerKey { get; set; }
 
+        /// <summary>
+        /// Global Event Aggregator, Default={Events}
+        /// </summary>
         public string EventAggregatorKey { get; set; }
 
+        /// <summary>
+        /// Output the created IExplorerViewModel, default={Explorer}
+        /// </summary>
         public string DestinationKey { get; set; }
 
         /// <summary>
@@ -143,7 +149,7 @@ namespace FileExplorer.Script
         /// <summary>
         /// Point to a string[] (string if FileSave) of selected file or folders, Default = {SelectionPaths}
         /// </summary>
-        public string SelectionPathsKey { get; set; }        
+        public string SelectionPathsKey { get; set; }
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerShow>();
 
@@ -167,16 +173,13 @@ namespace FileExplorer.Script
             IWindowManager wm = pm.GetValue<IWindowManager>(WindowManagerKey) ?? new WindowManager();
             IEventAggregator events = pm.GetValue<IEventAggregator>(EventAggregatorKey) ?? new EventAggregator();
 
-            IScriptCommand modelCreatedCommands = pm.GetValue<IScriptCommand>(OnModelCreatedKey) ?? ResultCommand.NoError;
-            IScriptCommand viewAttachedCommands = pm.GetValue<IScriptCommand>(OnViewAttachedKey) ?? ResultCommand.NoError;
-
             IExplorerInitializer initializer = new ScriptCommandInitializer()
              {
                  StartupParameters = pm,
-                 WindowManager = wm, 
-                 Events = events, 
-                 OnModelCreated = modelCreatedCommands,
-                 OnViewAttached = viewAttachedCommands 
+                 WindowManager = wm,
+                 Events = events,
+                 OnModelCreated = ScriptCommands.RunScriptCommand(OnModelCreatedKey),
+                 OnViewAttached = ScriptCommands.RunScriptCommand(OnViewAttachedKey)
              };
 
             ExplorerViewModel evm = null;
@@ -199,7 +202,7 @@ namespace FileExplorer.Script
                         PickerMode = FilePickerMode.Save
                     };
                     break;
-                case Script.ExplorerMode.DirectoryOpen :
+                case Script.ExplorerMode.DirectoryOpen:
                     evm = new DirectoryPickerViewModel(wm, events)
                         {
                             Initializer = initializer
@@ -211,7 +214,7 @@ namespace FileExplorer.Script
 
             logger.Info(String.Format("Showing {0}", evm));
             pm.SetValue(DestinationKey, evm, false);
-            
+
             if (ExplorerMode == Script.ExplorerMode.Normal)
                 wm.ShowWindow(evm);
             else
@@ -231,7 +234,7 @@ namespace FileExplorer.Script
                             pm.SetValue(SelectionPathsKey, fpvm.SelectedFiles.Select(m => m.FullPath).ToArray());
                             pm.SetValue(SelectionEntriesKey, fpvm.SelectedFiles);
                             break;
-                        case Script.ExplorerMode.DirectoryOpen: 
+                        case Script.ExplorerMode.DirectoryOpen:
                             pm.SetValue(SelectionPathsKey, dpvm.SelectedDirectory.FullPath);
                             pm.SetValue(SelectionEntriesKey, dpvm.SelectedDirectory);
                             break;
