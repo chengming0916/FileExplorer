@@ -100,6 +100,7 @@
     <Compile Include="BaseControls\DisplayContentControl.cs" />
     <Compile Include="BaseControls\DockableScrollViewer.cs" />
     <Compile Include="BaseControls\ScrollableTabPanel.cs" />
+    <Compile Include="Defines\Attributes.cs" />
     <Compile Include="Defines\Cofe3\Defines\Structs\UIParameterDic.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -198,6 +199,7 @@
     <Compile Include="Utils\ResourceUtils.cs" />
     <Compile Include="ViewModels\Helpers\CommandManagerBase.cs" />
     <Compile Include="ViewModels\Helpers\ExtensionMethods_Scripts.cs" />
+    <Compile Include="ViewModels\Interfaces\IStartupWindowSize.cs" />
     <Compile Include="ViewModels\SelectProfileViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbCommandManager.cs" />
     <Compile Include="ViewModels\Initializers\ExplorerInitializers.cs" />
@@ -842,9 +844,17 @@
     <Folder Include="Defines\Script\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting [WPF].csproj">
+      <Project>{45b4c0ed-a35e-4b0b-8c78-9a1d48f7527a}</Project>
+      <Name>FileExplorer.Scripting [WPF]</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting.csproj">
       <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
       <Name>FileExplorer.Scripting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileExplorer3\FileExplorer3 [WPF].csproj">
+      <Project>{b876634c-850c-4678-a1a1-34f6ffea6d52}</Project>
+      <Name>FileExplorer3 [WPF]</Name>
     </ProjectReference>
     <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
       <Project>{bd72b62f-6bcf-43d0-ad6a-332decfae4ed}</Project>

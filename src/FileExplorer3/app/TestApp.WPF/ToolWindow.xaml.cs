@@ -67,6 +67,7 @@ namespace TestApp
                          { "ShowGridHeader", false }
                     }
                 };
+            testDroppable.DataContext = new TestDroppableViewModel();
 
             #region Obsoluted
             //exp.RootDirectories = _rootDirs;
@@ -78,7 +79,7 @@ namespace TestApp
             //exp.ViewModel.FileList.EnableDrop = false;
             //exp.ViewModel.FileList.EnableMultiSelect = false;
             //exp.ViewModel.FilterStr = _mask;
-            //testDroppable.DataContext = new TestDroppableViewModel();
+           
 
             //if (_selectedPath != null)
             //    exp.ViewModel.GoAsync(_selectedPath);

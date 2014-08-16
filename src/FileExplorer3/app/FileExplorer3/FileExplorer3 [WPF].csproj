@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Caliburn.Micro, Version=2.0.0.6, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.Core.2.0.0\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro.Platform">
       <HintPath>..\packages\Caliburn.Micro.2.0.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
@@ -63,7 +67,6 @@
     <Compile Include="Defines\Cofe3\Utils\ConverterUtils.cs" />
     <Compile Include="Defines\Cofe3\Utils\EnumAttributeUtils.cs" />
     <Compile Include="Defines\Enums.cs" />
-    <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\FileExplorer3Commands.cs" />
     <Compile Include="Scripts\ScriptCommands.cs" />
+    <Compile Include="Scripts\v2\BroadcastEvent.cs" />
     <Compile Include="Scripts\v2\CopyStream.cs" />
     <Compile Include="Scripts\v2\DiskCopyFile.cs" />
     <Compile Include="Scripts\v2\DiskCreatePath.cs" />
@@ -98,12 +102,13 @@
     <Compile Include="Scripts\v2\List.cs" />
     <Compile Include="Scripts\v2\NotifyChanged.cs" />
     <Compile Include="Scripts\v2\ParsePath.cs" />
+    <Compile Include="Utils\EntryUtils.cs" />
+    <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\FileNameGenerator.cs" />
     <Compile Include="Utils\LinqUtils.cs" />
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\ProgressConverter.cs" />
     <Compile Include="Utils\StreamUtils.cs" />
-    <Compile Include="Utils\StringUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Defines\Cofe3\Defines\Structs\" />

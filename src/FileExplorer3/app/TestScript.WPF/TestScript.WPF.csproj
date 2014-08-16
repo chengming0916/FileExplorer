@@ -137,6 +137,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting [WPF].csproj">
+      <Project>{45b4c0ed-a35e-4b0b-8c78-9a1d48f7527a}</Project>
+      <Name>FileExplorer.Scripting [WPF]</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting.csproj">
       <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
       <Name>FileExplorer.Scripting</Name>
@@ -148,6 +152,10 @@
     <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
       <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
       <Name>FileExplorer3.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileExplorer3\FileExplorer3 [WPF].csproj">
+      <Project>{b876634c-850c-4678-a1a1-34f6ffea6d52}</Project>
+      <Name>FileExplorer3 [WPF]</Name>
     </ProjectReference>
     <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
       <Project>{bd72b62f-6bcf-43d0-ad6a-332decfae4ed}</Project>

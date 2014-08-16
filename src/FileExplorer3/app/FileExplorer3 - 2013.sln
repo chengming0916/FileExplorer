@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3.WPF", "FileEx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3", "FileExplorer3\FileExplorer3.csproj", "{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.FileExplorer.WPF", "Nuget.FileExplorer.WPF\Nuget.FileExplorer.WPF.csproj", "{AECC6565-52DA-472D-BA52-2BA43B7E60CC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontToBitmap", "FontToBitmap\FontToBitmap.csproj", "{A314B99E-4C36-490E-AFA4-6B2001602F30}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.WPF", "TestApp.WPF\TestApp.WPF.csproj", "{AF3975B1-5F04-44FA-8A6E-2CD5A429C2B1}"
@@ -31,6 +29,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_DynamicRelayCommandDictionary", "Test_DynamicRelayCommandDictionary\Test_DynamicRelayCommandDictionary.csproj", "{F2918154-DEBB-4062-8E74-848E675153C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer.Scripting [WPF]", "FileExplorer.Scripting\FileExplorer.Scripting [WPF].csproj", "{45B4C0ED-A35E-4B0B-8C78-9A1D48F7527A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer3 [WPF]", "FileExplorer3\FileExplorer3 [WPF].csproj", "{B876634C-850C-4678-A1A1-34F6FFEA6D52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portable Libraries (VSPro)", "Portable Libraries (VSPro)", "{0B0376D9-FC00-4CC8-AACA-5518762FE489}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPFOnly Libraries (VSExpress)", "WPFOnly Libraries (VSExpress)", "{8BCD06D8-D2C0-4579-BD13-643E5738DC9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,16 +78,6 @@ Global
 		{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}.Release|ARM.ActiveCfg = Release|Any CPU
 		{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}.Release|x64.ActiveCfg = Release|Any CPU
 		{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED}.Release|x86.ActiveCfg = Release|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|ARM.ActiveCfg = Release|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|x64.ActiveCfg = Release|Any CPU
-		{AECC6565-52DA-472D-BA52-2BA43B7E60CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A314B99E-4C36-490E-AFA4-6B2001602F30}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -154,9 +148,25 @@ Global
 		{45B4C0ED-A35E-4B0B-8C78-9A1D48F7527A}.Release|ARM.ActiveCfg = Release|Any CPU
 		{45B4C0ED-A35E-4B0B-8C78-9A1D48F7527A}.Release|x64.ActiveCfg = Release|Any CPU
 		{45B4C0ED-A35E-4B0B-8C78-9A1D48F7527A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|x64.ActiveCfg = Release|Any CPU
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD72B62F-6BCF-43D0-AD6A-332DECFAE4ED} = {0B0376D9-FC00-4CC8-AACA-5518762FE489}
+		{ECABBC13-1922-4500-908B-CD865E91E4C5} = {0B0376D9-FC00-4CC8-AACA-5518762FE489}
+		{45B4C0ED-A35E-4B0B-8C78-9A1D48F7527A} = {8BCD06D8-D2C0-4579-BD13-643E5738DC9B}
+		{B876634C-850C-4678-A1A1-34F6FFEA6D52} = {8BCD06D8-D2C0-4579-BD13-643E5738DC9B}
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
