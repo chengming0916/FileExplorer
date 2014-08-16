@@ -36,7 +36,7 @@ namespace Test_DynamicRelayCommandDictionary
         private static Random random = new Random();
         public void AddNumber(int number)
         {
-            Items.Add(new ItemViewModel(number));
+            Items.Add(new ItemViewModel(this, number));
             Commands.Clear = TestRelayCommands.ClearCommand("{RootVM}", 
                 ScriptCommands.PrintDebug("Added clear command"));
         }
@@ -55,7 +55,7 @@ namespace Test_DynamicRelayCommandDictionary
         #region Public Properties
 
         public ObservableCollection<ItemViewModel> Items { get; private set; }
-        public dynamic Commands { get; set; }
+        public dynamic Commands { get; set; }        
 
         #endregion
     }

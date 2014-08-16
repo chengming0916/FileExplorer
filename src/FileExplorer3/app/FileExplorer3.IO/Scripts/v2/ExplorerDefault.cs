@@ -78,7 +78,8 @@ namespace FileExplorer.Script
                     { "{FileListCopyCommand}", IOInitializeHelpers.FileList_Copy_For_DiskBased_Items },
                     { "{FileListPasteCommand}", IOInitializeHelpers.FileList_Paste_For_DiskBased_Items },    
                     { "{FileListNewWindowCommand}", IOInitializeHelpers.FileList_NewWindow },
-                    { "{DirectoryTreeMapCommand}", IOInitializeHelpers.DirectoryTree_Map_From_Profiles }
+                    { "{DirectoryTreeMapCommand}", IOInitializeHelpers.DirectoryTree_Map_From_Profiles },
+                    { "{DirectoryTreeUnmapCommand}", IOInitializeHelpers.DirectoryTree_Unmap },
                 }, true,
                 ScriptCommands.RunCommandsInSequence(NextCommand,
                         UIScriptCommands.ExplorerAssignScriptParameters(ExplorerKey, "{Profiles}"),
@@ -102,7 +103,8 @@ namespace FileExplorer.Script
                         UIScriptCommands.SetScriptCommand(FileListKey, "Copy", "{FileListCopyCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "Paste", "{FileListPasteCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "NewWindow", "{FileListNewWindowCommand}"),
-                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Map", "{DirectoryTreeMapCommand}")                        
+                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Map", "{DirectoryTreeMapCommand}"),
+                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Unmap", "{DirectoryTreeUnmapCommand}")      
                        )                
                 );
         }

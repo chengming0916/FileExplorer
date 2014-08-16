@@ -80,14 +80,7 @@ namespace FileExplorer.WPF.ViewModels
         protected override void setupScriptCommands(dynamic commandDictionary)
         {
             commandDictionary.ToggleRename = DirectoryTree.ToggleRename;
-            commandDictionary.Open = DirectoryTree.ExpandSelected;
-            commandDictionary.Unmap = Explorer.DoSelection(ems =>
-                Script.ScriptCommands.If(pd => (ems.First() as IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
-                        Script.WPFScriptCommands.IfOkCancel(new WindowManager(), pd => "Unmap",
-                            pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label),
-                            Explorer.BroadcastRootChanged(RootChangedEvent.Deleted(ems.Select(em => em.EntryModel).ToArray())),
-                            ResultCommand.OK),
-                        Script.ScriptCommands.NoCommand), Script.ScriptCommands.NoCommand);
+            commandDictionary.Open = DirectoryTree.ExpandSelected;            
         }
 
         protected override IExportCommandBindings[] setupExportBindings()

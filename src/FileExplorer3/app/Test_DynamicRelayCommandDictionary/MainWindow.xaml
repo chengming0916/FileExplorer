@@ -1,5 +1,6 @@
 ﻿<Window x:Class="Test_DynamicRelayCommandDictionary.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Test_DynamicRelayCommandDictionary"
         Title="MainWindow" Height="350" Width="525">
@@ -18,7 +19,17 @@
         <ListView x:Name="listView" Grid.Column="0" ItemsSource="{Binding Items}" >
             <ListView.ItemTemplate>
                 <DataTemplate DataType="local:ItemViewModel">
-                    <TextBlock Text="{Binding Value}" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Value}">   
+                             <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <i:InvokeCommandAction Command="{Binding Commands.MouseEnterCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBlock>
+                        <Button Content="+1" Command="{Binding Commands.AddOneCommand}" />
+                        <Button Content="-1" Command="{Binding Commands.SubtractOneCommand}" />
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Resources>

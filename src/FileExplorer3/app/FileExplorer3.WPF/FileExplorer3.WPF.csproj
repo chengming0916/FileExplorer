@@ -169,6 +169,7 @@
     <Compile Include="Scripts\v2\ExplorerGoTo.cs" />
     <Compile Include="Scripts\v2\FileListAssignSelection.cs" />
     <Compile Include="Scripts\v2\MessageBoxShow.cs" />
+    <Compile Include="Scripts\v2\TabbedExplorerShow.cs" />
     <Compile Include="Scripts\v2\TabExplorerNewTab.cs" />
     <Compile Include="Scripts\v2\TabExplorerCloseTab.cs" />
     <Compile Include="Scripts\v2\ExplorerSetParameters.cs" />

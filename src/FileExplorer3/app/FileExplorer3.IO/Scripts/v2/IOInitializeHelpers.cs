@@ -145,6 +145,17 @@ namespace FileExplorer.Script
                      "{WindowManager}", null, "{Selection}", "{SelectionPath}",
                       UIScriptCommands.NotifyRootCreated("{Selection}",                        
                         UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection}"))))));
+
+        //To-Do: Update to new ScriptCommand.
+        public static IScriptCommand DirectoryTree_Unmap =
+            Explorer.DoSelection(ems =>
+                Script.ScriptCommands.If(pd => (ems.First() as FileExplorer.WPF.ViewModels.IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
+                        Script.WPFScriptCommands.IfOkCancel(new Caliburn.Micro.WindowManager(), pd => "Unmap",
+                            pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label),
+                            Explorer.BroadcastRootChanged(FileExplorer.WPF.Defines.RootChangedEvent.Deleted(ems.Select(em => em.EntryModel).ToArray())),
+                            ResultCommand.OK),
+                        Script.ScriptCommands.NoCommand), Script.ScriptCommands.NoCommand);
+
             //explorerModel.FileList.Commands.Commands.NewFolder =
             //     FileList.Do(flvm => WPFScriptCommands.CreatePath(
             //            flvm.CurrentDirectory, "NewFolder", true, true,

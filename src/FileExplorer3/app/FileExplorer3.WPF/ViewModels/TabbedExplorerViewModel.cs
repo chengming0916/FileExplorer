@@ -21,24 +21,29 @@ namespace FileExplorer.WPF.ViewModels
 
     public class TabbedExplorerViewModel : Conductor<IScreen>.Collection.OneActive,
         ITabbedExplorerViewModel, ISupportDragHelper, IHandle<RootChangedEvent>
-
     {
 
 
         #region Constructors
 
-        public TabbedExplorerViewModel(IExplorerInitializer initializer)
+        public TabbedExplorerViewModel()
         {
-            _initializer = initializer.Clone();
-            initializer.Events.Subscribe(this);
-            Commands = new TabbedExplorerCommandManager(this, initializer.Events);
-            DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
-            ////_tabs = new ObservableCollection<ITabItemViewModel>();
+            DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);            
         }
 
         #endregion
 
         #region Methods
+
+        private void setInitializer(IExplorerInitializer value)
+        {
+            if (_initializer != null)
+                _initializer.Events.Unsubscribe(this);
+
+            _initializer = value.Clone();
+            value.Events.Subscribe(this);
+            Commands = new TabbedExplorerCommandManager(this, value.Events);           
+        }
 
         public IExplorerViewModel OpenTab(IEntryModel model = null)
         {
@@ -48,18 +53,18 @@ namespace FileExplorer.WPF.ViewModels
             ExplorerViewModel expvm = new ExplorerViewModel(initializer);
             expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
-            expvm.Commands.CommandDictionary.CloseTab =
-                UIScriptCommands.TabExplorerCloseTab("TabbedExplorer", "Explorer");
-                //ScriptCommands.ReassignToParameter("{Explorer}", TabbedExplorer.CloseTab(this));
-            expvm.FileList.Commands.CommandDictionary.OpenTab =
-                ScriptCommands.Assign("{TabbedExplorer}", this,false, 
-                FileList.IfSelection(evm => evm.Count() >= 1,
-                    FileList.AssignSelectionToParameter(
-                    UIScriptCommands.TabExplorerNewTab("TabbedExplorer", "Parameter", null)), ResultCommand.NoError));
-            expvm.DirectoryTree.Commands.CommandDictionary.OpenTab =
-                ScriptCommands.Assign("{TabbedExplorer}", this,false,
-                    DirectoryTree.AssignSelectionToParameter(
-                    UIScriptCommands.TabExplorerNewTab("TabbedExplorer", "Parameter", null)));
+            //expvm.FileList.Commands.CommandDictionary.CloseTab =
+            //    UIScriptCommands.TabExplorerCloseTab("{TabbedExplorer}", "{Explorer}");
+            //    //ScriptCommands.ReassignToParameter("{Explorer}", TabbedExplorer.CloseTab(this));
+            //expvm.FileList.Commands.CommandDictionary.OpenTab =
+            //    ScriptCommands.Assign("{TabbedExplorer}", this,false, 
+            //    FileList.IfSelection(evm => evm.Count() >= 1,
+            //        FileList.AssignSelectionToParameter(
+            //        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Parameter}", null)), ResultCommand.NoError));
+            //expvm.DirectoryTree.Commands.CommandDictionary.OpenTab =
+            //    ScriptCommands.Assign("{TabbedExplorer}", this,false,
+            //        DirectoryTree.AssignSelectionToParameter(
+            //        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Parameter}", null)));
 
             ActivateItem(expvm);
 
@@ -138,6 +143,12 @@ namespace FileExplorer.WPF.ViewModels
         #endregion
 
         #region Public Properties
+
+        public IExplorerInitializer Initializer
+        {
+            get { return _initializer; }
+            set { setInitializer(value); }
+        }        
 
         //public ObservableCollection<ITabItemViewModel> Tabs { get { return _tabs; } }
         public ICommandManager Commands { get; private set; }
