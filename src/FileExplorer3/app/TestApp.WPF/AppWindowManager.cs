@@ -47,7 +47,13 @@ namespace TestApp
 
                     if (model is FileExplorer.WPF.ViewModels.ExplorerViewModel)
                     {
-                        window.Width = 800; window.Height = 500;
+                        IExplorerViewModel evm = model as IExplorerViewModel;
+                        window.Width = evm.Parameters.Width;
+                        window.Height = evm.Parameters.Height;                         
+                        window.SizeToContent = SizeToContent.Manual;
+
+                        window.SetBinding(Window.WidthProperty, new Binding("Parameters.Width") { Mode = BindingMode.TwoWay });
+                        window.SetBinding(Window.HeightProperty, new Binding("Parameters.Height") { Mode = BindingMode.TwoWay });
                         window.SetBinding(Window.IconProperty, new Binding("CurrentDirectory.Icon") { Mode = BindingMode.OneWay });
                     }
                     else if (model is FileExplorer.WPF.ViewModels.TabbedExplorerViewModel)

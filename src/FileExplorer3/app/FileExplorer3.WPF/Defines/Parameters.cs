@@ -42,6 +42,9 @@ namespace FileExplorer.WPF.Defines
         /// </summary>
         int StatusbarSize { get; set; }
         //float SidebarSize { get; set; }
+        int Width { get; set; }
+
+        int Height { get; set; }
     }
 
 
@@ -70,6 +73,8 @@ namespace FileExplorer.WPF.Defines
         private string _fileListSize = "2*";
         private int _navigationSize = 30;
         private int _statusbarSize = 30;
+        private int _width = 800;
+        private int _height = 500;
 
         public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChanged(() => UIScale); } }
         public string DirectoryTreeSize { get { return _directoryTreeSize; } set { _directoryTreeSize = value; NotifyOfPropertyChanged(() => DirectoryTreeSize); } }
@@ -77,6 +82,10 @@ namespace FileExplorer.WPF.Defines
 
         public int NavigationSize { get { return _navigationSize; } set { _navigationSize = value; NotifyOfPropertyChanged(() => NavigationSize); } }
         public int StatusbarSize { get { return _statusbarSize; } set { _statusbarSize = value; NotifyOfPropertyChanged(() => StatusbarSize); } }
+
+        public int Height { get { return _height; }
+            set { _height = value; NotifyOfPropertyChanged(() => Height); } }
+        public int Width { get { return _width; } set { _width = value; NotifyOfPropertyChanged(() => Width); } }
 
         //public float SidebarSize { get { return _sidebarSize; } set { _sidebarSize = value; NotifyOfPropertyChanged(() => SidebarSize); } } 
     }
