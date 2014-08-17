@@ -114,14 +114,14 @@ namespace FileExplorer.Script
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
                     UIScriptCommands.TabbedExplorerShow("{OnModelCreated}", "{OnViewAttached}","{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
                         "{WindowManager}", "{GlobalEvents}",  "{TabbedExplorer}", 
-                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", null)))));
+                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null)))));
 
 
         public static IScriptCommand FileList_OpenTab =
             UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", null))));
+                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null))));
 
         public static IScriptCommand FileList_Cut_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
                 IOScriptCommands.DiskCut("{Selection}"));

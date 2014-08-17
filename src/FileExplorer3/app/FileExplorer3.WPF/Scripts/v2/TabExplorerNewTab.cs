@@ -18,9 +18,9 @@ namespace FileExplorer.Script
         /// <param name="directoryVariable"></param>
         /// <param name="destinationVariable"></param>
         /// <returns></returns>
-        public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable,
-            string directoryVariable,
-            string destinationVariable, IScriptCommand nextCommand)
+        public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
+            string directoryVariable = null,
+            string destinationVariable = "{Explorer}", IScriptCommand nextCommand = null)
         {
             return new TabExplorerNewTab()
             {
@@ -30,18 +30,7 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
-
-        /// <summary>
-        /// Serializable, open a tab.
-        /// </summary>
-        /// <param name="tabbedExplorerVariable"></param>
-        /// <param name="destinationVariable"></param>
-        /// <returns></returns>
-        public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
-                 string destinationVariable = "{Explorer}", IScriptCommand nextCommand = null)
-        {
-            return TabExplorerNewTab(tabbedExplorerVariable, null, destinationVariable, nextCommand);
-        }
+    
     }
 
     public class TabExplorerNewTab : ScriptCommandBase
