@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using System.ComponentModel.Composition;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -26,31 +27,57 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Constructors
 
-        public TabbedExplorerViewModel()
+        [ImportingConstructor]
+        public TabbedExplorerViewModel(IWindowManager windowManager, IEventAggregator events)
         {
-            DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);            
+            DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
+
+            _events = events;
+            _windowManager = windowManager;
+
+            events.Subscribe(this);
+            Commands = new TabbedExplorerCommandManager(this, _events);
+
+            Commands.SetCommandToDictionary(OnTabExplorerAttachedKey,
+                UIScriptCommands.TabExplorerNewTab());
         }
 
         #endregion
 
         #region Methods
 
-        private void setInitializer(IExplorerInitializer value)
-        {
-            if (_initializer != null)
-                _initializer.Events.Unsubscribe(this);
-
-            _initializer = value.Clone();
-            value.Events.Subscribe(this);
-            Commands = new TabbedExplorerCommandManager(this, value.Events);           
-        }
-
         public IExplorerViewModel OpenTab(IEntryModel model = null)
         {
             var initializer = _initializer.Clone();
-            if (model != null)
-                (initializer as ExplorerInitializer).Initializers.Add(ExplorerInitializers.StartupDirectory(model));
-            ExplorerViewModel expvm = new ExplorerViewModel(initializer);
+
+            if (initializer is ExplorerInitializer)
+            {
+                ExplorerInitializer eInit = initializer as ExplorerInitializer;
+                if (model != null)
+                    eInit.Initializers.Add(ExplorerInitializers.StartupDirectory(model));
+            }
+            else
+                if (initializer is ScriptCommandInitializer)
+                {
+                    ScriptCommandInitializer sInit = initializer as ScriptCommandInitializer;
+
+                    sInit.OnViewAttached = (model != null) ?
+                        ScriptCommands.Assign("{StartupPath}", model.FullPath, false,
+                        UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot()) :
+                        UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot();
+
+                    sInit.OnModelCreated = ScriptCommands.Assign("{TabbedExplorer}", this, false,
+                            UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", "{TabbedExplorer}",
+                            sInit.OnModelCreated));
+                }
+
+
+            ExplorerViewModel expvm = new ExplorerViewModel(_windowManager, _events) { Initializer = initializer };
+
+            //expvm.Commands.ParameterDicConverter.AddAdditionalParameters(new ParameterDic()
+            //    {
+            //        {"TabbedExplorer", this }
+            //    });
             expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
             //expvm.FileList.Commands.CommandDictionary.CloseTab =
@@ -81,7 +108,8 @@ namespace FileExplorer.WPF.ViewModels
             base.OnViewAttached(view, context);
             var uiEle = view as System.Windows.UIElement;
             this.Commands.RegisterCommand(uiEle, ScriptBindingScope.Application);
-            uiEle.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new System.Action(() => OpenTab()));
+            Commands.ExecuteAsync(OnTabExplorerAttachedKey);
+            //uiEle.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new System.Action(() => OpenTab()));
 
             //uiEle.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, 
             //    delegate () =>
@@ -144,11 +172,16 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Public Properties
 
+        public string OnTabExplorerAttachedKey = "{OnTabExplorerAttached}";
+        private IWindowManager _windowManager;
+        private IEventAggregator _events;
+        private bool _showTabs = false;
+
         public IExplorerInitializer Initializer
         {
             get { return _initializer; }
-            set { setInitializer(value); }
-        }        
+            set { _initializer = value; }
+        }
 
         //public ObservableCollection<ITabItemViewModel> Tabs { get { return _tabs; } }
         public ICommandManager Commands { get; private set; }

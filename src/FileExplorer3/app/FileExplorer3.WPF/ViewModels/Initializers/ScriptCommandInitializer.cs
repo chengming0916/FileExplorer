@@ -40,7 +40,9 @@ namespace FileExplorer.WPF.ViewModels
 
         public IExplorerInitializer Clone()
         {
-            throw new NotImplementedException();
+            return new ScriptCommandInitializer() { Events = Events, OnModelCreated = OnModelCreated, 
+                OnViewAttached = OnViewAttached, RootModels = RootModels, 
+                StartupParameters = StartupParameters, WindowManager = WindowManager };
         }
 
         public async Task InitializeModelCreatedAsync(IExplorerViewModel evm)

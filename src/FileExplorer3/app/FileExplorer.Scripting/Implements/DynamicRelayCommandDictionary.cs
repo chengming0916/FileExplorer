@@ -32,6 +32,13 @@ namespace FileExplorer.Script
 
         #region Methods       
 
+        public void SetCommand(string commandName, IScriptCommand command)
+        {
+            base[commandName] = command;
+            RelayCommandDictionary[commandName] =
+                 new ScriptRelayCommand(command, ParameterDicConverter, ScriptRunner);
+        }
+
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             if (binder.Name.Equals(RelayCommandsKey, StringComparison.CurrentCultureIgnoreCase) ||

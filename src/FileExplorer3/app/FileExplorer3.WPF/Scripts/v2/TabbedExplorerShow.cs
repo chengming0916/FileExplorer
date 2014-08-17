@@ -9,6 +9,29 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Script
 {
+    public static partial class UIScriptCommands
+    {
+        public static IScriptCommand TabbedExplorerShow(
+            string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
+            string onTabExplorerCreatedVariable = "{OnTabExplorerCreated}", string onTabExplorerAttachedVariable = "{OnTabExplorerAttached}",
+            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+            string destinationVariable = "{TabbedExplorer}", IScriptCommand nextCommand = null)
+        {
+            return new TabbedExplorerShow()
+            {
+                OnModelCreatedKey = onModelCreatedVariable,
+                OnViewAttachedKey = onViewAttachedVariable,
+                OnTabExplorerCreatedKey = onTabExplorerCreatedVariable,
+                OnTabExplorerAttachedKey = onTabExplorerAttachedVariable,
+                WindowManagerKey = windowManagerVariable,
+                EventAggregatorKey = eventAggregatorVariable,
+                DestinationKey = destinationVariable,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
+    }
+
+
     public class TabbedExplorerShow : ScriptCommandBase
     {
         /// <summary>
@@ -43,7 +66,7 @@ namespace FileExplorer.Script
 
 
         /// <summary>
-        /// Output the ITabbedExplorerViewModel, Default= {TabExplorer}
+        /// Output the ITabbedExplorerViewModel, Default= {TabbedExplorer}
         /// </summary>
         public string DestinationKey { get; set; }
 
@@ -57,8 +80,8 @@ namespace FileExplorer.Script
             OnModelCreatedKey = "{OnModelCreated}";
             OnTabExplorerCreatedKey = "{OnTabExplorerCreated}";
             OnViewAttachedKey = "{OnViewAttached}";
-            OnTabExplorerAttachedKey = "{OnTabExplorerAttachedKey}";
-            DestinationKey = "{Explorer}";
+            OnTabExplorerAttachedKey = "{OnTabExplorerAttached}";
+            DestinationKey = "{TabbedExplorer}";
             ContinueOnCaptureContext = true;
         }
 
@@ -67,7 +90,10 @@ namespace FileExplorer.Script
             IWindowManager wm = pm.GetValue<IWindowManager>(WindowManagerKey) ?? new WindowManager();
             IEventAggregator events = pm.GetValue<IEventAggregator>(EventAggregatorKey) ?? new EventAggregator();
 
-            IExplorerInitializer initializer = new ScriptCommandInitializer()
+
+            TabbedExplorerViewModel tevm = new TabbedExplorerViewModel(wm, events);
+            pm.SetValue(DestinationKey, tevm);
+            tevm.Initializer = new ScriptCommandInitializer()
             {
                 StartupParameters = pm,
                 WindowManager = wm,
@@ -76,12 +102,13 @@ namespace FileExplorer.Script
                 OnViewAttached = ScriptCommands.RunScriptCommand(OnViewAttachedKey)
             };
 
-            TabbedExplorerViewModel tevm = new TabbedExplorerViewModel() { Initializer = initializer };
-            await tevm.Commands.ExecuteAsync(pm.GetValue<IScriptCommand>(OnTabExplorerCreatedKey));
+            if (pm.HasValue(OnTabExplorerCreatedKey))
+                await tevm.Commands.ExecuteAsync(pm.GetValue<IScriptCommand>(OnTabExplorerCreatedKey));
+            tevm.OnTabExplorerAttachedKey = OnTabExplorerAttachedKey;
 
             logger.Info(String.Format("Showing {0}", tevm));
             wm.ShowWindow(tevm);
-            
+
 
             return NextCommand;
         }

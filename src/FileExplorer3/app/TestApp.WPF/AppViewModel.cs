@@ -419,7 +419,6 @@ namespace TestApp
         public void TabWindow()
         {
 
-
             ScriptRunner.RunScriptAsync(new ParameterDic() {                   
                     { "StartupPath", OpenPath },
                     { "GlobalEvents", _events },
@@ -428,7 +427,39 @@ namespace TestApp
                     { "EnableDrop", _enableDrop },                     
                     { "EnableMultiSelect", _enableMultiSelect}, 
                 },
-               IOScriptCommands.ExplorerShow(_profiles, RootModels.ToArray()));
+                IOScriptCommands.TabbedExplorerShow(_profiles, RootModels.ToArray()));
+
+
+            //var tabVM = new TabbedExplorerViewModel(_windowManager, _events);
+            //tabVM.Initializer = new ScriptCommandInitializer()
+            //{
+            //    Events = _events,
+            //    WindowManager = _windowManager,
+            //    OnModelCreated = ScriptCommands.RunScriptCommand("{OnModelCreated}"),
+            //    OnViewAttached = ScriptCommands.RunScriptCommand("{OnViewAttached}"),                
+            //    StartupParameters = new FileExplorer.ParameterDic() 
+            //    { 
+            //        {"TabbedExplorer", tabVM },
+            //        {"Profiles", _profiles },
+            //        {"RootDirectories", RootModels.ToArray() },
+            //        {"OnModelCreated", IOInitializeHelpers.Explorer_Initialize_Default },
+            //        {"OnViewAttached", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() },
+            //    }
+            //};
+
+            
+            //_windowManager.ShowWindow(tabVM);
+
+
+            //ScriptRunner.RunScriptAsync(new ParameterDic() {                   
+            //        { "StartupPath", OpenPath },
+            //        { "GlobalEvents", _events },
+            //        { "WindowManager", _windowManager },
+            //        { "EnableDrag", _enableDrag }, 
+            //        { "EnableDrop", _enableDrop },                     
+            //        { "EnableMultiSelect", _enableMultiSelect}, 
+            //    },
+            //   IOScriptCommands.ExplorerShow(_profiles, RootModels.ToArray()));
 
 
             //var profiles = new IProfile[] {
