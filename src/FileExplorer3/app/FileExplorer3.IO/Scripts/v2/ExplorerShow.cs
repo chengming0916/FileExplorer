@@ -24,6 +24,22 @@ namespace FileExplorer.Script
                         "{Events}", explorerVariable, nextCommand));
         }
 
+        public static IScriptCommand TabbedExplorerShow(IProfile[] profiles, IEntryModel[] rootDirectories,
+            string tabbedExplorerVariable = "{TabbedExplorer}", IScriptCommand nextCommand = null)
+        {
+            return ScriptCommands.Assign(new Dictionary<string, object>()
+                {
+                    {"{Profiles}", profiles },
+                    {"{RootDirectories}", rootDirectories },
+                    {"{OnModelCreated}", IOInitializeHelpers.TabbedExplorer_Initialize_Default }, 
+                    {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }, 
+
+                }, false,
+                  UIScriptCommands.TabbedExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
+                  "{OnTabExplorerCreated}", "{OnTabExplorerAttached}", 
+                  "{WindowManager}", "{Events}", tabbedExplorerVariable, nextCommand));
+        }
+
         public static IScriptCommand FileOpen(IProfile[] profiles, IEntryModel[] rootDirectories,            
            bool enableMultiSelect = true, string filterString = "All files (*.*)|*.*",
            string selectionPathsVariable = "{Selection}",

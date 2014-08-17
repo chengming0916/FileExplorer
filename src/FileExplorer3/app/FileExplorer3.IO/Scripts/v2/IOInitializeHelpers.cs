@@ -15,25 +15,7 @@ namespace FileExplorer.Script
     public static class IOInitializeHelpers
     {
 
-        /// <summary>
-        /// <para>Call ExplorerDefault(), ExplorerDefaultToolbarCommands() 
-        /// and assign the followings parameter to CommandManager: (for use when OpenInNewWindow)
-        /// OnViewAttached, OnModelCreated, EnableDrag/Drop/MultiSelect.</para>
-        /// 
-        /// <para>ExplorerDefault() allow you to change these parameters (in additional to above):
-        /// RootDirectories, ColumnList, ColumnFilters, FilterString, ViewMode, ItemSize, ShowToolbar/Sidebar/GridHeader.</para>
-        ///
-        /// <para>ExplorerDefaultToolbarCommands() assign the CommandModels in Toolbar and ContextMenu, they are not
-        /// Customizable currently.  You can only disable the command.</para>
-        ///
-        /// </summary>
-        public static IScriptCommand Explorer_Initialize_Default =
-            ScriptCommands.RunCommandsInSequence(null,
-                   IOScriptCommands.ExplorerDefault(),
-                   IOScriptCommands.ExplorerDefaultToolbarCommands(),
-                   UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
-                        "{GlobalEvents},{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
-                   );
+       
 
         #region FileList_ColumnInfo_For_DiskBased_Items
 
@@ -123,9 +105,23 @@ namespace FileExplorer.Script
               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1, 
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
                     UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
-                        "{WindowManager}", "{GlobalEvents}", "{Explorer}", 
-                        //UIScriptCommands.ExplorerCopyParameter("{Explorer}", "{ExplorerNew}", ExplorerParameterType.RootModels,
+                        "{WindowManager}", "{GlobalEvents}", "{Explorer}",                         
                             UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}")))));
+
+        public static IScriptCommand FileList_NewTabbedWindow = 
+            UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
+              ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
+                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+                    UIScriptCommands.TabbedExplorerShow("{OnModelCreated}", "{OnViewAttached}","{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
+                        "{WindowManager}", "{GlobalEvents}",  "{TabbedExplorer}", 
+                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", null)))));
+
+
+        public static IScriptCommand FileList_OpenTab =
+            UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
+              ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
+                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", null))));
 
         public static IScriptCommand FileList_Cut_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
                 IOScriptCommands.DiskCut("{Selection}"));
@@ -162,6 +158,30 @@ namespace FileExplorer.Script
             //         //FileList.Do(flvm => CoreScriptCommands.DiskCreateFolder(
             //         //        flvm.CurrentDirectory, "NewFolder", "{DestinationFolder}", NameGenerationMode.Rename, 
             //            m => FileList.Refresh(FileList.Select(fm => fm.Equals(m), ResultCommand.OK), true)));
+
+        /// <summary>
+        /// <para>Call ExplorerDefault(), ExplorerDefaultToolbarCommands() 
+        /// and assign the followings parameter to CommandManager: (for use when OpenInNewWindow)
+        /// OnViewAttached, OnModelCreated, EnableDrag/Drop/MultiSelect.</para>
+        /// 
+        /// <para>ExplorerDefault() allow you to change these parameters (in additional to above):
+        /// RootDirectories, ColumnList, ColumnFilters, FilterString, ViewMode, ItemSize, ShowToolbar/Sidebar/GridHeader.</para>
+        ///
+        /// <para>ExplorerDefaultToolbarCommands() assign the CommandModels in Toolbar and ContextMenu, they are not
+        /// Customizable currently.  You can only disable the command.</para>
+        ///
+        /// </summary>
+        public static IScriptCommand Explorer_Initialize_Default =
+            ScriptCommands.RunCommandsInSequence(null,
+                   IOScriptCommands.ExplorerDefault(),
+                   IOScriptCommands.ExplorerDefaultToolbarCommands(),
+                   UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
+                        "{GlobalEvents},{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect}")
+                   );
+
+        public static IScriptCommand TabbedExplorer_Initialize_Default =
+          ScriptCommands.Assign("{FileListNewWindowCommand}", IOInitializeHelpers.FileList_NewTabbedWindow, false,
+          Explorer_Initialize_Default);
 
     }
 }

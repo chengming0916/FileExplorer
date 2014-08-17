@@ -38,6 +38,10 @@ namespace FileExplorer.WPF.ViewModels
         /// </summary>
         IToolbarCommandsHelper ToolbarCommands { get; }
 
+
+         IScriptCommand GetCommandFromDictionary(string commandVariable = "{Command}",
+           IScriptCommand defaultValue = null);
+         void SetCommandToDictionary(string commandVariable = "{Command}", IScriptCommand cmd = null);
      
     }
 

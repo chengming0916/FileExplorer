@@ -65,7 +65,22 @@ namespace FileExplorer.WPF.ViewModels
         /// Setup ScriptCommandBindings to be exported, obsoluting.
         /// </summary>
         /// <returns></returns>
-        protected virtual IExportCommandBindings[] setupExportBindings() { return new IExportCommandBindings[] { }; }       
+        protected virtual IExportCommandBindings[] setupExportBindings() { return new IExportCommandBindings[] { }; }
+
+        public IScriptCommand GetCommandFromDictionary(string commandVariable = "{Command}",
+           IScriptCommand defaultValue = null)
+        {
+            string command = ParameterDic.GetVariable(commandVariable);            
+            if (_commandDictionary.Dictionary.ContainsKey(command))
+                return _commandDictionary[command];
+            else return defaultValue;
+        }
+
+        public void SetCommandToDictionary(string commandVariable = "{Command}", IScriptCommand cmd = null)
+        {
+            string command = ParameterDic.GetVariable(commandVariable);
+            _commandDictionary.SetCommand(commandVariable, cmd);
+        }
 
         #endregion
 
@@ -80,7 +95,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Public Properties
 
         public IParameterDicConverter ParameterDicConverter { get { return _parameterDicConverter; } }
-        public dynamic CommandDictionary { get { return _commandDictionary; } }
+        public dynamic CommandDictionary { get { return _commandDictionary; } }        
         [Obsolete("Use CommandDictionary")]
         public dynamic Commands { get { return CommandDictionary; } }
 

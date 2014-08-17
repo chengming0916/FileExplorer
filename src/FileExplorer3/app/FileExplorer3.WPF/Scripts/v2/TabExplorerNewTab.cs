@@ -18,15 +18,16 @@ namespace FileExplorer.Script
         /// <param name="directoryVariable"></param>
         /// <param name="destinationVariable"></param>
         /// <returns></returns>
-        public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
-            string directoryVariable = "{Entry}",
-            string destinationVariable = "{Explorer}")
+        public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable,
+            string directoryVariable,
+            string destinationVariable, IScriptCommand nextCommand)
         {
             return new TabExplorerNewTab()
             {
                 DirectoryEntryKey = directoryVariable,
                 DestinationKey = destinationVariable,
-                TabbedExplorerKey = tabbedExplorerVariable
+                TabbedExplorerKey = tabbedExplorerVariable,
+                NextCommand = (ScriptCommandBase)nextCommand
             };
         }
 
@@ -37,9 +38,9 @@ namespace FileExplorer.Script
         /// <param name="destinationVariable"></param>
         /// <returns></returns>
         public static IScriptCommand TabExplorerNewTab(string tabbedExplorerVariable = "{TabbedExplorer}",
-                 string destinationVariable = "{Explorer}")
+                 string destinationVariable = "{Explorer}", IScriptCommand nextCommand = null)
         {
-            return TabExplorerNewTab(tabbedExplorerVariable, null, destinationVariable);
+            return TabExplorerNewTab(tabbedExplorerVariable, null, destinationVariable, nextCommand);
         }
     }
 
@@ -81,16 +82,16 @@ namespace FileExplorer.Script
             var dm = DirectoryEntryKey == null ? null :
                 (await pm.GetValueAsEntryModelArrayAsync(DirectoryEntryKey)).FirstOrDefault();
 
-            var destTab = tevm.OpenTab();
+            var destTab = tevm.OpenTab(dm);
             logger.Info(String.Format("New Tab #{0}", tevm.GetTabIndex(destTab)));
-            logger.Debug(String.Format("{0} = {1}", DestinationKey, destTab));            
-            pm.SetValue(DestinationKey, tevm.OpenTab(dm));
-            return ResultCommand.NoError;
+            logger.Debug(String.Format("{0} = {1}", DestinationKey, destTab));
+            pm.SetValue(DestinationKey, destTab);
+            return NextCommand;
         }
 
-        public override bool CanExecute(ParameterDic pm)
-        {
-            return pm.HasValue(TabbedExplorerKey);
-        }
+        //public override bool CanExecute(ParameterDic pm)
+        //{
+        //    return pm.HasValue(TabbedExplorerKey);
+        //}
     }
 }
