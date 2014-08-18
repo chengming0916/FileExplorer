@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FileExplorer.WPF.Defines
 {
@@ -45,6 +46,8 @@ namespace FileExplorer.WPF.Defines
         int Width { get; set; }
 
         int Height { get; set; }
+
+        Point Position { get; set; }
     }
 
 
@@ -75,6 +78,7 @@ namespace FileExplorer.WPF.Defines
         private int _statusbarSize = 30;
         private int _width = 800;
         private int _height = 500;
+        private Point _position = new Point(0,0);
 
         public float UIScale { get { return _uiScale; } set { _uiScale = value; NotifyOfPropertyChanged(() => UIScale); } }
         public string DirectoryTreeSize { get { return _directoryTreeSize; } set { _directoryTreeSize = value; NotifyOfPropertyChanged(() => DirectoryTreeSize); } }
@@ -86,6 +90,8 @@ namespace FileExplorer.WPF.Defines
         public int Height { get { return _height; }
             set { _height = value; NotifyOfPropertyChanged(() => Height); } }
         public int Width { get { return _width; } set { _width = value; NotifyOfPropertyChanged(() => Width); } }
+
+        public Point Position { get { return _position; } set { _position = value; NotifyOfPropertyChanged(() => Position); } }
 
         //public float SidebarSize { get { return _sidebarSize; } set { _sidebarSize = value; NotifyOfPropertyChanged(() => SidebarSize); } } 
     }

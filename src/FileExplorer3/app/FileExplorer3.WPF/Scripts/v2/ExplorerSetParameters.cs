@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FileExplorer.Script
 {
@@ -79,6 +80,7 @@ namespace FileExplorer.Script
     {
         //Explorer
         RootModels,
+        ExplorerWidth, ExplorerHeight, ExplorerPosition,
 
         //FilePicker
         FileName, FilePickerMode, FilterString,
@@ -153,6 +155,15 @@ namespace FileExplorer.Script
                     case ExplorerParameterType.EnableMultiSelect:
                         pm.SetValue(ValueKeyString, evm.FileList.EnableMultiSelect);
                         break;
+                    case ExplorerParameterType.ExplorerWidth :
+                        pm.SetValue(ValueKeyString, evm.Parameters.Width);
+                        break;
+                    case ExplorerParameterType.ExplorerHeight:
+                        pm.SetValue(ValueKeyString, evm.Parameters.Height);
+                        break;
+                    case ExplorerParameterType.ExplorerPosition:
+                        pm.SetValue(ValueKeyString, evm.Parameters.Position);
+                        break;
                     case ExplorerParameterType.RootModels:
                         pm.SetValue(ValueKeyString, evm.RootModels);
                         break;
@@ -215,6 +226,19 @@ namespace FileExplorer.Script
                 case ExplorerParameterType.EnableMultiSelect:
                     if (value is bool)
                         evm.FileList.EnableMultiSelect = true.Equals(value);
+                    break;
+
+                case ExplorerParameterType.ExplorerWidth:
+                    if (value is int)
+                        evm.Parameters.Width = (int)value;
+                    break;
+                case ExplorerParameterType.ExplorerHeight:
+                    if (value is int)
+                        evm.Parameters.Height = (int)value;
+                    break;
+                case ExplorerParameterType.ExplorerPosition:
+                    if (value is Point)
+                        evm.Parameters.Position = (Point)value;
                     break;
                 case ExplorerParameterType.RootModels:
                     if (ValueKey == null)
