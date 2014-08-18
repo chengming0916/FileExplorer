@@ -155,10 +155,8 @@
     </copy>
     <copy file="${src.path}\app\packages\Microsoft.Bcl.Build.1.0.7\tools\Microsoft.Bcl.Build.targets"
         tofile="${dest.path}\src\FileExplorer3\app\packages\Microsoft.Bcl.Build.1.0.7\tools\Microsoft.Bcl.Build.targets" />
-    <copy file="${src.path}\app\FileExplorer3 - 2013 Pro.sln"
-        tofile="${dest.path}\src\FileExplorer3\app\FileExplorer3 - 2013 Pro.sln" />
-    <copy file="${src.path}\app\FileExplorer3 - 2013 Express.sln"
-    tofile="${dest.path}\src\FileExplorer3\app\FileExplorer3 - 2013 Express.sln" />
+    <copy file="${src.path}\app\FileExplorer3 - 2013.sln"
+        tofile="${dest.path}\src\FileExplorer3\app\FileExplorer3 - 2013.sln" />    
     
     <echo message="copy.bin: demos -> ${dest.path}\demo\net45\bin" />
     <copy todir="${dest.path}\demo\net45\bin">
