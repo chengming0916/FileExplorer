@@ -101,7 +101,7 @@ namespace FileExplorer.WPF.Utils
             _scriptCommand = value;
             _command = new SimpleCommand()
             {
-                CanExecuteDelegate = (p) => 
+                CanExecuteDelegate = (p) => !(ScriptCommand is NullScriptCommand) &&
                     ScriptCommand.CanExecute(ParameterDicConverter.Convert(p)),
                 ExecuteDelegate = (p) => ScriptRunner.RunScriptAsync(ParameterDicConverter.Convert(p), ScriptCommand)
             };

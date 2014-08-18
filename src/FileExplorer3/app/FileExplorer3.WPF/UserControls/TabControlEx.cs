@@ -85,6 +85,15 @@ namespace FileExplorer.WPF.UserControls
             set { SetValue(RightTabHeaderContentProperty, value); }
         }
 
+        public static DependencyProperty ShowTabPanelProperty = DependencyProperty.Register(
+            "ShowTabPanel", typeof(bool), typeof(TabControlEx), new PropertyMetadata(true));
+
+        public bool ShowTabPanel
+        {
+            get { return (bool)GetValue(ShowTabPanelProperty); }
+            set { SetValue(ShowTabPanelProperty, value); }
+        }
+
         #endregion
     }
 

@@ -48,7 +48,7 @@
 
                     <StackPanel Orientation="Vertical" Grid.Row="0" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal"  >
-                            <Button x:Name="OpenWindow"  Content="Explorer Window" ToolTip="Open a new Explorer window" />                                                   
+                            <Button x:Name="OpenWindow"  Content="Explorer Window" ToolTip="Open a new Explorer window" />
                         </StackPanel>
                         <WrapPanel Orientation="Horizontal"  >
                             <CheckBox x:Name="ExpandRootDirectories" Content="Expand" ToolTip="Expand Root directory when start"/>
@@ -64,7 +64,10 @@
                         <Button x:Name="OpenToolWindow"  Content="Tool Window" ToolTip="Open a Explorer tool window, which is usable as part of your UI" />
                         <!--<Button x:Name="UpdateWindow" Content="Update Previous Opened Window" />-->
                         <Button x:Name="MdiWindow" Content="Mdi Window" ToolTip="Open a new Mdi window that allow showing multiple intance of Explorer"  Grid.Row="2"/>
-                        <Button x:Name="TabWindow" Content="Tab Window" ToolTip="Open a new Tabbed window that allow showing Explorer in different tabs" Grid.Row="4"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="TabWindow" Content="Tab Window" ToolTip="Open a new Tabbed window that allow showing Explorer in different tabs" Grid.Row="4"/>
+                            <CheckBox x:Name="ShowTabsWhenOneTab" Content="ShowTabsWhenOneTab" />
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </GroupBox>

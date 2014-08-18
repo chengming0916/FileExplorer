@@ -50,7 +50,7 @@ namespace FileExplorer.Script
                 ScriptCommands.Assign(ifEqualValueProperty, value, false,
                     IfValue(ComparsionOperator.Equals, variable, ifEqualValueProperty, trueCommand, otherwiseCommand));
         }
-
+        
         public static IScriptCommand IfAssigned(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
             return IfEquals<Object>(variable, null, otherwiseCommand, trueCommand);
@@ -169,13 +169,13 @@ namespace FileExplorer.Script
                 }
 
                 result = Expression.Lambda<Func<bool>>(expression).Compile().Invoke();
-
-                logger.Info(String.Format("Executing {0} Command ({1})",
-                    result, result ? NextCommand : OtherwiseCommand));
             }
+            else result = (Operator == ComparsionOperator.Equals && value1 == null && value2 == null);
+
+            logger.Info(String.Format("Executing {0} Command ({1})",
+                  result, result ? NextCommand : OtherwiseCommand));
 
             return result ? NextCommand : OtherwiseCommand;
         }
-
     }
 }

@@ -143,7 +143,7 @@ namespace FileExplorer.Script
             string ValueKeyString = ValueKey as string;
             if (ValueKeyString != null)
                 switch (ParameterType)
-                {
+                {                    
                     case ExplorerParameterType.EnableDrag:
                         pm.SetValue(ValueKeyString, evm.FileList.EnableDrag);
                         break;

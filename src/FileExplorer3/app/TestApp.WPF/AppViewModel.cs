@@ -425,9 +425,10 @@ namespace TestApp
                     { "WindowManager", _windowManager },
                     { "EnableDrag", _enableDrag }, 
                     { "EnableDrop", _enableDrop },                     
-                    { "EnableMultiSelect", _enableMultiSelect}, 
+                    { "EnableMultiSelect", _enableMultiSelect}                    , 
+                    { "EnableTabsWhenOneTab", _showTabsWhenOneTab}
                 },
-                IOScriptCommands.TabbedExplorerShow(_profiles, RootModels.ToArray()));
+                IOScriptCommands.TabbedExplorerShow(_profiles, RootModels.ToArray(), "{TabbedExplorer}"));
 
 
             //var tabVM = new TabbedExplorerViewModel(_windowManager, _events);
@@ -529,12 +530,14 @@ namespace TestApp
         private string _fileFilter = "Texts (.txt)|*.txt|Pictures (.jpg, .png)|*.jpg,*.png|Songs (.mp3)|*.mp3|All Files (*.*)|*.*";
         private DropBoxProfile _profileDropBox;
         private IEntryModel _selectedRootModel;
+        private bool _showTabsWhenOneTab;
         #endregion
 
         #region Public Properties
 
 
         public string OpenPath { get { return _openPath; } set { _openPath = value; NotifyOfPropertyChange(() => OpenPath); } }
+        public bool ShowTabsWhenOneTab { get { return _showTabsWhenOneTab; } set { _showTabsWhenOneTab = value; NotifyOfPropertyChange(() => ShowTabsWhenOneTab); } }
         public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
         public IEntryModel SelectedRootModel { get { return _selectedRootModel; } set { _selectedRootModel = value; NotifyOfPropertyChange(() => SelectedRootModel); } }
         public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }
