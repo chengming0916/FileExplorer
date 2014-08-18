@@ -78,9 +78,9 @@ namespace FileExplorer.Script
             return NextCommand;
         }
 
-        //public override bool CanExecute(ParameterDic pm)
-        //{
-        //    return pm.HasValue(TabbedExplorerKey);
-        //}
+        public override bool CanExecute(ParameterDic pm)
+        {
+            return pm.HasValue(TabbedExplorerKey);
+        }
     }
 }

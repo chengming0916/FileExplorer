@@ -159,7 +159,10 @@
                         <Rectangle Fill="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" 
                                    Height="1" VerticalAlignment="Bottom" />
 
-                        <Border Grid.Row="0" >
+                        <Border Grid.Row="0" 
+                                Visibility="{Binding ShowTabPanel, 
+                                            RelativeSource={RelativeSource TemplatedParent}, 
+                                            Converter={StaticResource btvc}}" >
                             <ScrollViewer x:Name="HeaderPanelScrollViewer" Grid.Row="0" ScrollViewer.PanningMode="HorizontalOnly"
                                           Style="{StaticResource TabPanelScrollViewerStyle}"
                                 VerticalScrollBarVisibility="Disabled"
@@ -168,8 +171,7 @@
                                 IsDeferredScrollingEnabled="False"
                                 SnapsToDevicePixels="True" 
                                 HorizontalAlignment="Stretch" 
-                                    VerticalAlignment="Stretch"
-                                         
+                                    VerticalAlignment="Stretch"                                         
                                           >
                                 <!--<tcs:ScrollableTabPanel IsItemsHost="True"
                                                         x:Name="PART_ScrollContentPresenter"

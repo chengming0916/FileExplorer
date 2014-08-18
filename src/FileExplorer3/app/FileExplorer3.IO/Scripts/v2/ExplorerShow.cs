@@ -32,12 +32,12 @@ namespace FileExplorer.Script
                     {"{Profiles}", profiles },
                     {"{RootDirectories}", rootDirectories },
                     {"{OnModelCreated}", IOInitializeHelpers.TabbedExplorer_Initialize_Default }, 
-                    {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }, 
+                    {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() },
 
                 }, false,
                   UIScriptCommands.TabbedExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
                   "{OnTabExplorerCreated}", "{OnTabExplorerAttached}", 
-                  "{WindowManager}", "{Events}", tabbedExplorerVariable, nextCommand));
+                  "{WindowManager}", "{Events}", tabbedExplorerVariable, UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", null, "{Explorer}", nextCommand)));
         }
 
         public static IScriptCommand FileOpen(IProfile[] profiles, IEntryModel[] rootDirectories,            

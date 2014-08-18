@@ -40,6 +40,7 @@ namespace FileExplorer.WPF.ViewModels
 
             Commands.SetCommandToDictionary(OnTabExplorerAttachedKey,
                 UIScriptCommands.TabExplorerNewTab());
+
         }
 
         #endregion
@@ -94,6 +95,7 @@ namespace FileExplorer.WPF.ViewModels
             //        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Parameter}", null)));
 
             ActivateItem(expvm);
+            checkTabs();
 
             return expvm;
         }
@@ -101,6 +103,12 @@ namespace FileExplorer.WPF.ViewModels
         public void CloseTab(IExplorerViewModel evm)
         {
             DeactivateItem(evm, true);
+            checkTabs();
+        }
+
+        private void checkTabs()
+        {
+            ShowTabs = base.Items.Count() == 1 ? EnableTabsWhenOneTab : true;
         }
 
         protected override void OnViewAttached(object view, object context)
@@ -176,11 +184,22 @@ namespace FileExplorer.WPF.ViewModels
         private IWindowManager _windowManager;
         private IEventAggregator _events;
         private bool _showTabs = false;
+        private bool _enableTabsWhenOneTab = true;
 
         public IExplorerInitializer Initializer
         {
             get { return _initializer; }
             set { _initializer = value; }
+        }
+
+        public bool EnableTabsWhenOneTab { get { return _enableTabsWhenOneTab; }
+            set { _enableTabsWhenOneTab = value; checkTabs(); }
+        }
+
+        public bool ShowTabs
+        {
+            get { return _showTabs; }
+            set { _showTabs = value; NotifyOfPropertyChange(() => ShowTabs); }
         }
 
         //public ObservableCollection<ITabItemViewModel> Tabs { get { return _tabs; } }

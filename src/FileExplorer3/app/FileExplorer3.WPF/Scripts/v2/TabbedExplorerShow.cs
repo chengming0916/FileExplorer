@@ -106,6 +106,8 @@ namespace FileExplorer.Script
                 await tevm.Commands.ExecuteAsync(pm.GetValue<IScriptCommand>(OnTabExplorerCreatedKey));
             tevm.OnTabExplorerAttachedKey = OnTabExplorerAttachedKey;
 
+            object enableTabsWhenOneTab = pm.GetValue("{EnableTabsWhenOneTab}");
+            tevm.EnableTabsWhenOneTab = !(enableTabsWhenOneTab is bool) || (bool)enableTabsWhenOneTab;
             logger.Info(String.Format("Showing {0}", tevm));
             wm.ShowWindow(tevm);
 

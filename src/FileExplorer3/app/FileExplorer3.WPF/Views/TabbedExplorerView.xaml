@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
         <!--<Button x:Name="OpenTab"  Grid.Row="1"  Content="Add" />-->
         <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.RowSpan="2" />
-        <uc:TabControlEx x:Name="Items" >
+        <uc:TabControlEx x:Name="Items" ShowTabPanel="{Binding ShowTabs, Mode=OneWay}" >
             <uc:TabControlEx.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Background="Transparent" AllowDrop="True">
