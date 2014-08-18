@@ -157,7 +157,7 @@ namespace TestApp
                     { "EnableDrop", _enableDrop },                     
                     { "EnableMultiSelect", _enableMultiSelect}, 
                 },
-                IOScriptCommands.ExplorerShow(_profiles, RootModels.ToArray()));
+                IOScriptCommands.ExplorerNewWindow(_profiles, RootModels.ToArray()));
         }
 
         public void OpenWindow(object context = null)
@@ -413,7 +413,7 @@ namespace TestApp
 
         public void MdiWindow()
         {
-            new MdiWindow(RootModels.ToArray()).Show();
+            new MdiWindow(_windowManager, _events, RootModels.ToArray()).Show();
         }
 
         public void TabWindow()
@@ -428,7 +428,7 @@ namespace TestApp
                     { "EnableMultiSelect", _enableMultiSelect}                    , 
                     { "EnableTabsWhenOneTab", _showTabsWhenOneTab}
                 },
-                IOScriptCommands.TabbedExplorerShow(_profiles, RootModels.ToArray(), "{TabbedExplorer}"));
+                IOScriptCommands.ExplorerNewTabWindow(_profiles, RootModels.ToArray(), "{TabbedExplorer}"));
 
 
             //var tabVM = new TabbedExplorerViewModel(_windowManager, _events);

@@ -23,7 +23,8 @@ namespace FileExplorer.WPF.Defines
         public static RoutedUICommand CloseTab = new RoutedUICommand(Strings.strCloseTab, "CloseTab", typeof(ExplorerCommands),
                     new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F4, ModifierKeys.Control) }));
 
-        public static RoutedUICommand NewWindow = new RoutedUICommand(Strings.strOpenInNewWindow, "OpenInNewWindow", typeof(ExplorerCommands));
+        public static RoutedUICommand NewWindow = new RoutedUICommand(Strings.strOpenInNewWindow, "OpenInNewWindow", typeof(ExplorerCommands), 
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.W, ModifierKeys.Control) }));
         public static RoutedUICommand CloseWindow = new RoutedUICommand(Strings.strCloseWindow, "CloseWindow", typeof(ExplorerCommands));
 
         public static RoutedUICommand Map = new RoutedUICommand("Map", "Map", typeof(ExplorerCommands));

@@ -107,6 +107,8 @@
     <Compile Include="ExplorerInitializers\ColumnInitializers.cs" />
     <Compile Include="ExplorerInitializers\ScriptCommandsInitializers.cs" />
     <Compile Include="ExplorerInitializers\MdiWindowInitializers.cs" />
+    <Compile Include="Scripts\OpenInNewMdiWindowV1.cs" />
+    <Compile Include="Scripts\v2\ExplorerShowMdi.cs" />
     <Compile Include="ToolWindow.xaml.cs">
       <DependentUpon>ToolWindow.xaml</DependentUpon>
     </Compile>
