@@ -9,7 +9,7 @@ namespace FileExplorer.Script
 {
     public static partial class IOScriptCommands
     {
-        public static IScriptCommand ExplorerShow(IProfile[] profiles, IEntryModel[] rootDirectories,
+        public static IScriptCommand ExplorerNewWindow(IProfile[] profiles, IEntryModel[] rootDirectories,
             string explorerVariable = "{Explorer}", IScriptCommand nextCommand = null)
         {
             return ScriptCommands.Assign(new Dictionary<string, object>()
@@ -20,11 +20,11 @@ namespace FileExplorer.Script
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
 
                 }, false,
-                  UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
+                  UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
                         "{Events}", explorerVariable, nextCommand));
         }
 
-        public static IScriptCommand TabbedExplorerShow(IProfile[] profiles, IEntryModel[] rootDirectories,
+        public static IScriptCommand ExplorerNewTabWindow(IProfile[] profiles, IEntryModel[] rootDirectories,
             string tabbedExplorerVariable = "{TabbedExplorer}", IScriptCommand nextCommand = null)
         {
             return ScriptCommands.Assign(new Dictionary<string, object>()
@@ -35,7 +35,7 @@ namespace FileExplorer.Script
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() },
 
                 }, false,
-                  UIScriptCommands.TabbedExplorerShow("{OnModelCreated}", "{OnViewAttached}", 
+                  UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", 
                   "{OnTabExplorerCreated}", "{OnTabExplorerAttached}", 
                   "{WindowManager}", "{Events}", tabbedExplorerVariable, UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", null, "{Explorer}", nextCommand)));
         }

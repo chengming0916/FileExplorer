@@ -12,22 +12,30 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
-        private static IScriptCommand explorerShow(ExplorerMode explorerMode,
-            string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
+
+        public static IScriptCommand ExplorerNewWindow(
+           string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
-            string destinationVariable = "{Explorer}", string dialogResultVariable = "{DialogResult}",
+          string explorerVariable = "{Explorer}", IScriptCommand nextCommand = null
+          )
+        {
+            return ExplorerCreate(ExplorerMode.Normal, onModelCreatedVariable, onViewAttachedVariable, windowManagerVariable, eventAggregatorVariable, 
+                explorerVariable,
+                explorerShow(windowManagerVariable, explorerVariable, null, null, null, nextCommand)); 
+        }
+
+
+        private static IScriptCommand explorerShow(
+            string windowManagerVariable = "{WindowManager}", 
+            string explorerVariable = "{Explorer}", string dialogResultVariable = "{DialogResult}",
             string selectionEntriesVariable = "{Selection}", string selectionPathsVariable = "{SelectionPaths}",
             IScriptCommand nextCommand = null
             )
         {
             return new ExplorerShow()
             {
-                ExplorerMode = explorerMode,
-                OnModelCreatedKey = onModelCreatedVariable,
-                OnViewAttachedKey = onViewAttachedVariable,
                 WindowManagerKey = windowManagerVariable,
-                EventAggregatorKey = eventAggregatorVariable,
-                DestinationKey = destinationVariable,
+                ExplorerKey = explorerVariable,                
                 DialogResultKey = dialogResultVariable,
                 SelectionEntriesKey = selectionEntriesVariable,
                 SelectionPathsKey = selectionPathsVariable,
@@ -35,15 +43,6 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand ExplorerShow(
-           string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-           string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
-           string destinationVariable = "{Explorer}",
-           IScriptCommand nextCommand = null)
-        {
-            return explorerShow(ExplorerMode.Normal, onModelCreatedVariable, onViewAttachedVariable, windowManagerVariable,
-                eventAggregatorVariable, destinationVariable, null, null, null, nextCommand);
-        }
 
         public static IScriptCommand ExplorerPick(ExplorerMode mode = ExplorerMode.FileSave, string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
@@ -52,96 +51,36 @@ namespace FileExplorer.Script
             IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
         {
             string dialogResultVariable = "{ExplorerPick-DialogResult}";
+            string explorerVariable = "{ExplorerPick-Explorer}";
 
-            return explorerShow(mode, onModelCreatedVariable, onViewAttachedVariable,
-                windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, selectionVariable,
-                selectionPathsVariable,
-                    ScriptCommands.IfTrue(dialogResultVariable, nextCommand, cancelCommand));
+            return ExplorerCreate(mode, onModelCreatedVariable, onViewAttachedVariable,
+                  windowManagerVariable, eventAggregatorVariable, explorerVariable, 
+                  UIScriptCommands.explorerShow(windowManagerVariable, explorerVariable, dialogResultVariable, selectionVariable,
+                        selectionPathsVariable, 
+                        ScriptCommands.IfTrue(dialogResultVariable, nextCommand, cancelCommand)));
         }
-
-        //public static IScriptCommand DirectoryPick(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-        //    string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
-        //    string selectedEntryVariable = "{Selection}", string selectedPathVariable = "{SelectionPath}", 
-        //    IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
-        //{
-        //    string dialogResultVariable = "{DirectoryPick-DialogResult}";
-
-        //    //IScriptCommand onDirectoryPickCreated = 
-        //    //    ScriptCommands.RunCommandsInSequence(
-        //    //        ScriptCommands.RunScriptCommand(onModelCreatedVariable),         
-        //    //        UIScriptCommands.ExplorerSetParameter("{Explorer}",
-        //    //                ExplorerParameterType.RootModels, "{RootDirectory}"));
-        //    //IScriptCommand onDirectoryPickAttached = 
-        //    //    ScriptCommands.RunCommandsInSequence(
-        //    //        ScriptCommands.RunScriptCommand(onViewAttachedVariable),  
-        //    //    UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot());
-
-
-        //    return 
-        //        //ScriptCommands.Assign("{OnDirectoryPickCreated}", onDirectoryPickCreated, false, 
-        //        //ScriptCommands.Assign("{OnDirectoryPickAttached}", onDirectoryPickAttached, false,                 
-        //            explorerShow(ExplorerMode.DirectoryOpen, onModelCreatedVariable, onViewAttachedVariable,
-        //      windowManagerVariable, eventAggregatorVariable, null, dialogResultVariable, selectedEntryVariable,
-        //      selectedPathVariable, 
-        //      ScriptCommands.IfTrue(dialogResultVariable,  nextCommand, cancelCommand));
-        //}
-
-        //public static IScriptCommand ExplorerShow(IEntryModel[] rootModels,
-        //    bool enableDrag, bool enableDrop, bool enableMultiSelect,
-        //    string windowManagerVariable = "{windowManager}", string eventAggregatorVariable = "{Events}",
-        //    IScriptCommand nextCommand = null)
-        //{
-        //    return explorerShow(ExplorerMode.Normal,
-        //        ScriptCommands.RunCommandsInSequence(
-        //                UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.RootModels, rootModels.ToArray()),
-        //                UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrag, enableDrag),
-        //                UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableDrop, enableDrop),
-        //                UIScriptCommands.ExplorerSetParameters(ExplorerParameterType.EnableMultiSelect, enableMultiSelect)),
-        //        ScriptCommands.RunCommandsInSequence(
-        //                ScriptCommands.Assign("{Root}", rootModels.FirstOrDefault(), false),
-        //                UIScriptCommands.ExplorerGoTo("{Explorer}", "{Root}")),
-        //                windowManagerVariable, eventAggregatorVariable, null, null, null, null, nextCommand);
-
-        //}
     }
 
-    public enum ExplorerMode { Normal, FileOpen, FileSave, DirectoryOpen }
-
+    
     public class ExplorerShow : ScriptCommandBase
     {
-        /// <summary>
-        /// IScriptCommand to run when the Explorer model is created.
-        /// </summary>
-        public string OnModelCreatedKey { get; set; }
-
-        /// <summary>
-        /// IScriptCommand to run when Explorer view is attached to Explorer model. (UI commands)
-        /// </summary>
-        public string OnViewAttachedKey { get; set; }
-
-        public ExplorerMode ExplorerMode { get; set; }
-
         /// <summary>
         /// WindowManager used to show the window, optional, Default={WindowManager}
         /// </summary>
         public string WindowManagerKey { get; set; }
-
+        
         /// <summary>
-        /// Global Event Aggregator, Default={Events}
+        /// Show this IExplorerViewModel, default={Explorer}
         /// </summary>
-        public string EventAggregatorKey { get; set; }
+        public string ExplorerKey { get; set; }
 
-        /// <summary>
-        /// Output the created IExplorerViewModel, default={Explorer}
-        /// </summary>
-        public string DestinationKey { get; set; }
 
         /// <summary>
         /// Point to a boolean, indicate whether the dialog is confirmed or cancel, Default = {DialogResult}
         /// </summary>
-        public string DialogResultKey { get; set; }
+        public string DialogResultKey { get; set; } 
 
-        /// <summary>
+          /// <summary>
         /// Point to an IEntryModel of selected file or folders, in FileOpenMode only , Default = {Selection}
         /// </summary>
         public string SelectionEntriesKey { get; set; }
@@ -151,97 +90,62 @@ namespace FileExplorer.Script
         /// </summary>
         public string SelectionPathsKey { get; set; }
 
+
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ExplorerShow>();
 
         public ExplorerShow()
             : base("ExplorerShow")
         {
             WindowManagerKey = "{WindowManager}";
-            EventAggregatorKey = "{Events}";
-            ExplorerMode = Script.ExplorerMode.Normal;
-            OnModelCreatedKey = "{OnModelCreated}";
-            OnViewAttachedKey = "{OnViewAttached}";
-            DestinationKey = "{Explorer}";
+            ExplorerKey = "{Explorer}";
             DialogResultKey = "{DialogResult}";
             SelectionEntriesKey = "{Selection}";
             SelectionPathsKey = "{SelectionPaths}";
-            ContinueOnCaptureContext = true;
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             IWindowManager wm = pm.GetValue<IWindowManager>(WindowManagerKey) ?? new WindowManager();
-            IEventAggregator events = pm.GetValue<IEventAggregator>(EventAggregatorKey) ?? new EventAggregator();
-
-            IExplorerInitializer initializer = new ScriptCommandInitializer()
-             {
-                 StartupParameters = pm,
-                 WindowManager = wm,
-                 Events = events,
-                 OnModelCreated = ScriptCommands.RunScriptCommand(OnModelCreatedKey),
-                 OnViewAttached = ScriptCommands.RunScriptCommand(OnViewAttachedKey)
-             };
-
-            ExplorerViewModel evm = null;
-            switch (ExplorerMode)
-            {
-                case Script.ExplorerMode.Normal:
-                    evm = new ExplorerViewModel(wm, events) { Initializer = initializer };
-                    break;
-                case Script.ExplorerMode.FileOpen:
-                    evm = new FilePickerViewModel(wm, events)
-                    {
-                        Initializer = initializer,
-                        PickerMode = FilePickerMode.Open
-                    };
-                    break;
-                case Script.ExplorerMode.FileSave:
-                    evm = new FilePickerViewModel(wm, events)
-                    {
-                        Initializer = initializer,
-                        PickerMode = FilePickerMode.Save
-                    };
-                    break;
-                case Script.ExplorerMode.DirectoryOpen:
-                    evm = new DirectoryPickerViewModel(wm, events)
-                        {
-                            Initializer = initializer
-                        };
-                    break;
-                default:
-                    return ResultCommand.Error(new NotSupportedException(ExplorerMode.ToString()));
-            }
-
+            IExplorerViewModel evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);
+            if (evm == null)
+                return ResultCommand.Error(new KeyNotFoundException(ExplorerKey));
             logger.Info(String.Format("Showing {0}", evm));
-            pm.SetValue(DestinationKey, evm, false);
-
-            if (ExplorerMode == Script.ExplorerMode.Normal)
-                wm.ShowWindow(evm);
-            else
+            
+            if (evm is DirectoryPickerViewModel)
             {
-                bool result = wm.ShowDialog(evm).Value;
+                DirectoryPickerViewModel dpvm = evm as DirectoryPickerViewModel;
+                 bool result = wm.ShowDialog(dpvm).Value;
+                pm.SetValue(DialogResultKey, result);
+
+                if (result)
+                {
+                    pm.SetValue(SelectionPathsKey, dpvm.SelectedDirectory.FullPath);
+                            pm.SetValue(SelectionEntriesKey, dpvm.SelectedDirectory);
+                }
+            }
+            else  if (evm is FilePickerViewModel)
+            {
+                FilePickerViewModel fpvm = evm as FilePickerViewModel;
+                 bool result = wm.ShowDialog(fpvm).Value;
                 pm.SetValue(DialogResultKey, result);
                 if (result)
                 {
-                    FilePickerViewModel fpvm = evm as FilePickerViewModel;
-                    DirectoryPickerViewModel dpvm = evm as DirectoryPickerViewModel;
-                    switch (ExplorerMode)
+                    switch (fpvm.PickerMode)
                     {
-                        case Script.ExplorerMode.FileSave:
+                        case FilePickerMode.Save:
                             pm.SetValue(SelectionPathsKey, fpvm.FileName);
                             break;
-                        case Script.ExplorerMode.FileOpen:
+                        case FilePickerMode.Open:
                             pm.SetValue(SelectionPathsKey, fpvm.SelectedFiles.Select(m => m.FullPath).ToArray());
                             pm.SetValue(SelectionEntriesKey, fpvm.SelectedFiles);
                             break;
-                        case Script.ExplorerMode.DirectoryOpen:
-                            pm.SetValue(SelectionPathsKey, dpvm.SelectedDirectory.FullPath);
-                            pm.SetValue(SelectionEntriesKey, dpvm.SelectedDirectory);
-                            break;
                     }
-
-
                 }
+
+            }
+            else
+            {
+                 wm.ShowWindow(evm);
             }
 
             return NextCommand;

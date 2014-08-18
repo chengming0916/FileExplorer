@@ -104,7 +104,7 @@ namespace FileExplorer.Script
             UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                    UIScriptCommands.ExplorerShow("{OnModelCreated}", "{OnViewAttached}",
+                    UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}",
                         "{WindowManager}", "{GlobalEvents}", "{Explorer}",
                             UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}")))));
 
@@ -112,7 +112,7 @@ namespace FileExplorer.Script
             UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                    UIScriptCommands.TabbedExplorerShow("{OnModelCreated}", "{OnViewAttached}", "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
+                    UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
                         "{WindowManager}", "{GlobalEvents}", "{TabbedExplorer}",
                         UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null)))));
 

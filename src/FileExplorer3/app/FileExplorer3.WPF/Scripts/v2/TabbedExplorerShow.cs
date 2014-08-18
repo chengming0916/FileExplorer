@@ -11,7 +11,7 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
-        public static IScriptCommand TabbedExplorerShow(
+        public static IScriptCommand ExplorerNewTabWindow(
             string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string onTabExplorerCreatedVariable = "{OnTabExplorerCreated}", string onTabExplorerAttachedVariable = "{OnTabExplorerAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
