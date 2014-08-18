@@ -32,14 +32,14 @@ namespace TestApp
         {
             InitializeComponent();
 
-            _root = rootModels;
+            _rootDirectories = rootModels;
 
             _initializer = new ScriptCommandInitializer()
             {
                 WindowManager = wm,
                 Events = events,
                 OnModelCreated = IOInitializeHelpers.Explorer_Initialize_Default,
-                OnViewAttached = UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(), 
+                OnViewAttached = UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(),
                 RootModels = rootModels,
                 StartupParameters = new ParameterDic()
                 {
@@ -53,14 +53,14 @@ namespace TestApp
             //    new ToolbarCommandsInitializers(_windowManager));
 
             //_initializer.Initializers.Add(new MdiWindowInitializers(_initializer, Container));
-           
+
         }
 
         public IExplorerInitializer _initializer;
         public IEventAggregator _events = new EventAggregator();
         public IWindowManager _windowManager = new WindowManager();
         public IProfile _profileEx = null;
-        public IEntryModel[] _root = null;
+        public IEntryModel[] _rootDirectories = null;
 
         public override void OnApplyTemplate()
         {
@@ -71,7 +71,21 @@ namespace TestApp
 
         private void Explorer_Click(object sender, RoutedEventArgs e)
         {
-            new TestApp.Script.OpenInNewMdiWindowV1(Container, _initializer).Execute(new ParameterDic());
+            var profiles = _rootDirectories.Select(em => em.Profile).Distinct().ToArray();
+            ScriptRunner.RunScript(
+                new ParameterDic()
+                {
+                    {"ExplorerWidth", 500 },
+                    {"ExplorerHeight", 334 },                    
+                    {"FileListNewWindowCommand", 
+                         UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
+                        ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
+                        ScriptCommands.Assign("{StartupPath}", "{Selection[0].FullPath}", false, 
+                        TestAppCommands.ExplorerNewMdiWindow(Container, profiles, _rootDirectories, "{Explorer}")))) }
+                          
+                },
+                TestAppCommands.ExplorerNewMdiWindow(Container, profiles, _rootDirectories, "{Explorer}"));
+            //new TestApp.Script.OpenInNewMdiWindowV1(Container, _initializer).Execute(new ParameterDic());
         }
 
         private void WPFMDI_Click(object sender, RoutedEventArgs e)
