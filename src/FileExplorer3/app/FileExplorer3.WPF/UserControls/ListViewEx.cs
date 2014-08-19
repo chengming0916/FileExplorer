@@ -43,9 +43,11 @@ namespace FileExplorer.WPF.UserControls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.HandleScrollBarInvisible();
-            this.AddHandler(ListViewEx.LoadedEvent, (RoutedEventHandler)((o, e) => OnLoaded()));
-
+            this.HandleScrollBarInvisible();   
+         
+         this.AddHandler(ListViewEx.LoadedEvent, (RoutedEventHandler)((o, e) =>
+             Dispatcher.BeginInvoke((Action)(() => OnLoaded()), System.Windows.Threading.DispatcherPriority.ContextIdle)));
+                //OnLoaded()));
         }
 
         public void OnLoaded()
@@ -371,7 +373,7 @@ namespace FileExplorer.WPF.UserControls
         }
 
 
-   
+
 
         #region SelectionMode property, UnselectAllRequired event.
         public static readonly DependencyProperty SelectionModeExProperty =
@@ -447,7 +449,7 @@ namespace FileExplorer.WPF.UserControls
 
         public ListViewItemEx()
         {
-            
+
         }
 
         #endregion

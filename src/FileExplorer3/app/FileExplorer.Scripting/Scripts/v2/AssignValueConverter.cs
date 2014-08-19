@@ -76,6 +76,20 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
+        /// Serializable, AssignMethodResult but no return variable.
+        /// </summary>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="methodName"></param>
+        /// <param name="parameters"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand ExecuteMethod(string sourceObjectVariable = "{Source}",
+            string methodName = "Method", object[] parameters = null, IScriptCommand nextCommand = null)
+        {
+            return AssignMethodResult(sourceObjectVariable, methodName, parameters, null, nextCommand);
+        }
+
+        /// <summary>
         /// Serializable, shortcut method for [AssignValueConverter], which obtains value of a property from a variable and assign to another variable.
         /// </summary>
         /// <param name="sourceObjectVariable"></param>

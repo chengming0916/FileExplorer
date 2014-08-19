@@ -181,6 +181,8 @@ namespace FileExplorer.WPF.ViewModels
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
         private IFileListParameters _parameters = new FileListParameters();
+        private IColumnsHelper _columns;
+        private ICommandManager _commands;
 
         #endregion
 
@@ -195,9 +197,9 @@ namespace FileExplorer.WPF.ViewModels
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
 
-        public ICommandManager Commands { get; private set; }
+        public ICommandManager Commands { get { return _commands; } set { _commands = value; NotifyOfPropertyChange(() => Commands); } }
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
-        public IColumnsHelper Columns { get; private set; }
+        public IColumnsHelper Columns { get { return _columns; } set { _columns = value; NotifyOfPropertyChange(() => Columns); } }
         public IEventAggregator Events { get; private set; }
         public IListSelector<IEntryViewModel, IEntryModel> Selection { get; private set; }
         public ISupportDrag DragHelper { get; private set; }

@@ -64,6 +64,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
                 foreach (var f in _colFilters)
                     if (f.Matches(em))
                         f.MatchedCount++;
+            NotifyOfPropertyChanged(() => ColumnFilters);
         }
 
         public void SetColumnFilters(ColumnFilter[] filters)
