@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Models;
+using FileExplorer.Utils;
 using MetroLog;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace FileExplorer.Defines
 {
     
 
-    public class ColumnInfo
+    public class ColumnInfo : NotifyPropertyChanged
     {
         public string Header { get; set; }
         public string ValuePath { get; set; }

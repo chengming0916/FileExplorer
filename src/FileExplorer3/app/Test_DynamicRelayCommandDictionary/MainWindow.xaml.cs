@@ -33,13 +33,17 @@ namespace Test_DynamicRelayCommandDictionary
         {
             base.OnApplyTemplate();
 
-            _rvm.Commands.AddRandom = ScriptCommands.AssignValueConverter(ValueConverterType.ExecuteMethod, "{Converter}", 
-                                    ScriptCommands.Reassign("{RootVM}", "{Converter}", null, false, 
-                                    ScriptCommands.PrintDebug("Add")), "AddRandomNumber");
+            //Assign commands in run time.
 
-            _rvm.Commands.Add = ScriptCommands.AssignValueConverter(ValueConverterType.ExecuteMethod, "{Converter}",
-                                    ScriptCommands.Reassign("{RootVM}", "{Converter}", null, false,
-                                    ScriptCommands.PrintDebug("Add")), "AddNumber", "{Parameter}");
+            //RootVM is defined in ParameterDicConverter, where Parameter is from ICommand.CommandParameter.
+            _rvm.Commands.AddRandom =
+                ScriptCommands.AssignMethodResult("{RootVM}", "AddRandomNumber", null, "{Output}",
+                    ScriptCommands.PrintDebug("{Output} Added."));            
+            //-> thus _rvm.Commands.AddRandomCommand is Bindable RelayCommand.
+            _rvm.Commands.Add = 
+                ScriptCommands.ExecuteMethod("{RootVM}", "AddNumber", new object[] {"{Parameter}" },
+                    ScriptCommands.PrintDebug("{Parameter} Added."));
+            //Not necessary use ExecuteMethod, as one can define their own commands.
 
 
         }

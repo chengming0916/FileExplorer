@@ -41,9 +41,11 @@ namespace Test_DynamicRelayCommandDictionary
                 ScriptCommands.PrintDebug("Added clear command"));
         }
 
-        public void AddRandomNumber()
+        public int AddRandomNumber()
         {
-            AddNumber(random.Next());
+            int number = random.Next();
+            AddNumber(number);
+            return number;
         }
 
         #endregion
