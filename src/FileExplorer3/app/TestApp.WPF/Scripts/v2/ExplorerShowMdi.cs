@@ -15,6 +15,17 @@ namespace TestApp
 {
     public static partial class TestAppCommands
     {
+        public static IScriptCommand FileList_NewMdiWindow = 
+             UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
+                         ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
+                         ScriptCommands.Assign("{StartupPath}", "{Selection[0].FullPath}", false,
+                         TestAppCommands.ExplorerNewMdiWindow())));
+
+        public static IScriptCommand MdiExplorer_Initialize_Default =
+                ScriptCommands.Assign("{FileListNewWindowCommand}", TestAppCommands.FileList_NewMdiWindow, false,          
+                IOInitializeHelpers.Explorer_Initialize_Default);
+        
+
         public static IScriptCommand ExplorerNewMdiWindow(WPF.MDI.MdiContainer container,
             IProfile[] profiles, IEntryModel[] rootDirectories,
            string explorerVariable = "{Explorer}", IScriptCommand nextCommand = null)
@@ -24,21 +35,32 @@ namespace TestApp
                     {"{MdiContainer}", container},
                     {"{Profiles}", profiles },
                     {"{RootDirectories}", rootDirectories },
-                    {"{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default }, 
+                    {"{OnModelCreated}", ScriptCommands.RunCommandsInSequence(null,
+                        TestAppCommands.MdiExplorer_Initialize_Default, 
+                        UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", "{MdiContainer},{RootDirectories}"))}, 
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }                    
                 }, false,
-                  UIScriptCommands.ExplorerCreate(ExplorerMode.Normal, "{OnModelCreated}", "{OnViewAttached}", 
-                  "{WindowManager}", "{Events}", explorerVariable, 
-                    TestAppCommands.ExplorerShowMdi("{MdiContainer}", "{WindowManager}", explorerVariable, nextCommand)));
+                  TestAppCommands.ExplorerNewMdiWindow("{MdiContainer}", "{WindowManager}", "{Events}", "{Explorer}", nextCommand));                  
         }
 
-        public static IScriptCommand ExplorerShowMdi(string mdiContainerKey = "{MdiContainer}",
+        public static IScriptCommand ExplorerNewMdiWindow(string mdiContainerVariable = "{MdiContainer}",
+            string windowManagerVariable = "{WindowManager}", string eventsVariable = "{Events}", string explorerVariable = "{Explorer}",
+            IScriptCommand nextCommand = null)
+        {
+            return
+                  UIScriptCommands.ExplorerCreate(ExplorerMode.Normal, "{OnModelCreated}", "{OnViewAttached}",
+                  windowManagerVariable, eventsVariable, explorerVariable,
+                    TestAppCommands.ExplorerShowMdi(mdiContainerVariable, windowManagerVariable, explorerVariable,
+                    nextCommand));
+        }
+
+        public static IScriptCommand ExplorerShowMdi(string mdiContainerVariable = "{MdiContainer}",
             string windowManagerKey = "{WindowManager}", string explorerKey = "{Explorer}",
             IScriptCommand nextCommand = null)
         {
             return new ExplorerShowMdi()
             {
-                MdiContainerKey = mdiContainerKey,
+                MdiContainerKey = mdiContainerVariable,
                 WindowManagerKey = windowManagerKey,
                 ExplorerKey = explorerKey,
                 NextCommand = (ScriptCommandBase)nextCommand

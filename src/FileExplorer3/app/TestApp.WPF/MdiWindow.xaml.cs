@@ -76,13 +76,7 @@ namespace TestApp
                 new ParameterDic()
                 {
                     {"ExplorerWidth", 500 },
-                    {"ExplorerHeight", 334 },                    
-                    {"FileListNewWindowCommand", 
-                         UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
-                        ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
-                        ScriptCommands.Assign("{StartupPath}", "{Selection[0].FullPath}", false, 
-                        TestAppCommands.ExplorerNewMdiWindow(Container, profiles, _rootDirectories, "{Explorer}")))) }
-                          
+                    {"ExplorerHeight", 334 },                                       
                 },
                 TestAppCommands.ExplorerNewMdiWindow(Container, profiles, _rootDirectories, "{Explorer}"));
             //new TestApp.Script.OpenInNewMdiWindowV1(Container, _initializer).Execute(new ParameterDic());
