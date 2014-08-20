@@ -100,31 +100,31 @@ namespace FileExplorer.Script
 
         }
 
-        protected ScriptCommandBase(string commandKey, params string[] parameters)
-            : base(commandKey, parameters)
-        {
-            CommandKey = commandKey;
-            CommandParameters = parameters;
-            _nextCommandConstructor = ScriptCommandConstructor<T>.ReturnCommand(ResultCommand.NoError);
-        }
+        //protected ScriptCommandBase(string commandKey, params string[] parameters)
+        //    : base(commandKey, parameters)
+        //{
+        //    CommandKey = commandKey;
+        //    CommandParameters = parameters;
+        //    _nextCommandConstructor = ScriptCommandConstructor<T>.ReturnCommand(ResultCommand.NoError);
+        //}
 
-        protected ScriptCommandBase(string commandKey, IScriptCommand nextCommand, params string[] parameters)
-            : base(commandKey, parameters)
-        {
-            CommandKey = commandKey;
-            CommandParameters = parameters;
+        //protected ScriptCommandBase(string commandKey, IScriptCommand nextCommand, params string[] parameters)
+        //    : base(commandKey, parameters)
+        //{
+        //    CommandKey = commandKey;
+        //    CommandParameters = parameters;
 
-            _nextCommandConstructor = ScriptCommandConstructor<T>.ReturnCommand(nextCommand ?? ResultCommand.NoError);
-        }
+        //    _nextCommandConstructor = ScriptCommandConstructor<T>.ReturnCommand(nextCommand ?? ResultCommand.NoError);
+        //}
 
-        protected ScriptCommandBase(string commandKey, IScriptCmdCtor<T> nextCommandConstructor, params string[] parameters)
-            : base(commandKey, parameters)
-        {
-            CommandKey = commandKey;
-            CommandParameters = parameters;
+        //protected ScriptCommandBase(string commandKey, IScriptCmdCtor<T> nextCommandConstructor, params string[] parameters)
+        //    : base(commandKey, parameters)
+        //{
+        //    CommandKey = commandKey;
+        //    CommandParameters = parameters;
 
-            _nextCommandConstructor = nextCommandConstructor ?? ScriptCommandConstructor<T>.ReturnCommand(ResultCommand.NoError);
-        }
+        //    _nextCommandConstructor = nextCommandConstructor ?? ScriptCommandConstructor<T>.ReturnCommand(ResultCommand.NoError);
+        //}
         
         #endregion
 
@@ -134,13 +134,13 @@ namespace FileExplorer.Script
 
         #region Data
 
-        private IScriptCmdCtor<T> _nextCommandConstructor;
+        //private IScriptCmdCtor<T> _nextCommandConstructor;
         
         #endregion
 
         #region Public Properties
 
-        public new ScriptCommandConstructor<T> NextCommand { get { return (ScriptCommandConstructor<T>)_nextCommandConstructor; } set { _nextCommandConstructor = value; } }
+        //public new ScriptCommandConstructor<T> NextCommand { get { return (ScriptCommandConstructor<T>)_nextCommandConstructor; } set { _nextCommandConstructor = value; } }
 
         #endregion       
     }

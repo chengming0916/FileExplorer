@@ -86,6 +86,8 @@ namespace FileExplorer.Script
                         )
                )));
 
+     
+
         public static IScriptCommand FileList_Delete_For_DiskBased_Items =
                 UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
                 ScriptCommands.AssignProperty("{Selection}", "Length", "{Selection-Length}",  //Assign Selection Length
@@ -100,29 +102,31 @@ namespace FileExplorer.Script
                     "{NewFolder}", NameGenerationMode.Rename,
                     UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
 
-        public static IScriptCommand FileList_NewWindow =
-            UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
+           public static IScriptCommand FileList_Selection_Is_One_Folder =
+             UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
               ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                    UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}",
-                        "{WindowManager}", "{GlobalEvents}", "{Explorer}",
-                            UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}")))));
+                ScriptCommands.IfTrue("{Selection[0].IsDirectory}", ResultCommand.OK)));
+
+
+        public static IScriptCommand FileList_NewWindow =
+            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder, 
+             UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+              UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}",
+                  "{WindowManager}", "{GlobalEvents}", "{Explorer}",
+                      UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}"))));
 
         public static IScriptCommand FileList_NewTabbedWindow =
-            UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
-              ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
+             ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder, 
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
                     UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
                         "{WindowManager}", "{GlobalEvents}", "{TabbedExplorer}",
-                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null)))));
+                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null))));
 
 
         public static IScriptCommand FileList_OpenTab =
-            ScriptCommands.IfAssigned("{TabbedExplorer}",
-            UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
-              ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
+            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder, 
                    UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null)))), NullScriptCommand.Instance);
+                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null)));
 
         public static IScriptCommand FileList_Cut_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
                 IOScriptCommands.DiskCut("{Selection}"));

@@ -40,6 +40,7 @@
     <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
     <Compile Include="Implements\DynamicRelayCommandDictionary.cs" />
+    <Compile Include="Implements\ExtensionMethods.cs" />
     <Compile Include="Implements\NullParameterDicConverter.cs" />
     <Compile Include="Implements\ParameterDicConverterBase.cs" />
     <Compile Include="Implements\PathHelper.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Defines\Structs\ParameterDic.cs" />
     <Compile Include="Scripts\v2\Assign.cs" />
     <Compile Include="Scripts\v2\AssignArray.cs" />
+    <Compile Include="Scripts\v2\AssignCanExecuteCondition.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />
     <Compile Include="Scripts\v2\IfValue.cs" />
     <Compile Include="Scripts\v2\Print.cs" />
