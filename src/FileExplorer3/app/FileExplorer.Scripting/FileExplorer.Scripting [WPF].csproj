@@ -75,6 +75,7 @@
     <Compile Include="Scripts\ExtensionMethods.cs" />
     <Compile Include="Scripts\ScriptCommandsv1.cs" />
     <Compile Include="Scripts\v2\Assign.cs" />
+    <Compile Include="Scripts\v2\AssignCanExecuteCondition.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />
     <Compile Include="Scripts\v2\ForEach.cs" />
     <Compile Include="Scripts\v2\IfValue.cs" />

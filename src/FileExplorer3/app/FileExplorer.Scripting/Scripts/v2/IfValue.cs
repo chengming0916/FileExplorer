@@ -139,18 +139,11 @@ namespace FileExplorer.Script
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<IfValue>();
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        private bool compare(ParameterDic pm)
         {
             object value1 = pm.GetValue<Object>(Variable1Key);
             object value2 = pm.GetValue<Object>(Variable2Key);
 
-            bool result = false;
-
-
-            if (logger.IsDebugEnabled)
-                logger.Debug(String.Format("Variable {0} ({1}) {2} Variable {3} ({4})?",
-                         ParameterDic.GetVariable(Variable1Key), value1,
-                         Operator, ParameterDic.GetVariable(Variable2Key), value2));
             if (value1 != null && value2 != null)
             {
                 var left = Expression.Constant(value1);
@@ -168,14 +161,22 @@ namespace FileExplorer.Script
                         throw new NotSupportedException(Operator.ToString());
                 }
 
-                result = Expression.Lambda<Func<bool>>(expression).Compile().Invoke();
+                return Expression.Lambda<Func<bool>>(expression).Compile().Invoke();
             }
-            else result = (Operator == ComparsionOperator.Equals && value1 == null && value2 == null);
-
-            logger.Info(String.Format("Executing {0} Command ({1})",
-                  result, result ? NextCommand : OtherwiseCommand));
-
-            return result ? NextCommand : OtherwiseCommand;
+            else return (Operator == ComparsionOperator.Equals && value1 == null && value2 == null);
         }
+
+        public override IScriptCommand Execute(ParameterDic pm)
+        {
+            object value1 = pm.GetValue<Object>(Variable1Key);
+            object value2 = pm.GetValue<Object>(Variable2Key);
+
+            bool result = compare(pm);
+
+            logger.Debug(String.Format("Executing {0} Command ({1})",
+                 result, result ? NextCommand : OtherwiseCommand));
+
+            return result ? NextCommand : OtherwiseCommand;           
+        }       
     }
 }
