@@ -204,7 +204,7 @@ namespace FileExplorer.Script
                     default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));
                 }
 
-            logger.Info(String.Format("Set {0} to ParameterDic[{1}]", ParameterType, ValueKey));
+            logger.Debug(String.Format("Set {0} to ParameterDic[{1}]", ParameterType, ValueKey));
 
             return NextCommand;
         }
@@ -310,7 +310,7 @@ namespace FileExplorer.Script
                 default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));
             }
 
-            logger.Info(String.Format("Set {0} to {1} ({2})", ParameterType, ValueKey, value));
+            logger.Debug(String.Format("Set {0} to {1} ({2})", ParameterType, ValueKey, value));
 
             return NextCommand;
         }
