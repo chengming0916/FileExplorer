@@ -86,7 +86,7 @@ namespace FileExplorer.Script
 
             if (cmd != null)
             {
-                logger.Info(String.Format("Set {0}.{1} to {2} ({3})", ControlKey, Target, ValueKey, cmd));
+                logger.Debug(String.Format("Set {0}.{1} to {2} ({3})", ControlKey, Target, ValueKey, cmd));
                 vmDic.Dictionary[Target] = cmd;
             }
 
