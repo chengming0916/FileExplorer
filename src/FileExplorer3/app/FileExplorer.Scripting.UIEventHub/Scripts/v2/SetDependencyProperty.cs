@@ -95,7 +95,7 @@ namespace FileExplorer.UIEventHub
                 return ResultCommand.Error(new ArgumentException(PropertyKey));
 
             object value = pm.GetValue(ValueKey);
-            logger.Info(String.Format("Set {0}'s {1} to {2}", ele, property, value));
+            logger.Debug(String.Format("Set {0}'s {1} to {2}", ele, property, value));
             ele.SetValue(property, value);
 
             return NextCommand;

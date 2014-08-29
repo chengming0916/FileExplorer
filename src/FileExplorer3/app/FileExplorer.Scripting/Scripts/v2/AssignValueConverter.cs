@@ -105,7 +105,30 @@ namespace FileExplorer.Script
             return AssignValueConverter(ValueConverterType.GetProperty, valueConverterVariable,
                 ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
                     destinationVariable, false, nextCommand), propertyName);
-        }  
+        }
+
+        public static IScriptCommand SetProperty(string sourceObjectVariable = "{Source}",
+           string propertyName = "Property",
+           string valueVariable = "{Value}", IScriptCommand nextCommand = null)
+        {
+            string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
+            return AssignValueConverter(ValueConverterType.SetProperty, valueConverterVariable,
+                ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
+                    valueVariable, false, nextCommand), propertyName);
+        }
+
+        public static IScriptCommand SetProperty<T>(string sourceObjectVariable = "{Source}",
+         string propertyName = "Property",
+         T value = default(T), IScriptCommand nextCommand = null)
+        {
+            string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
+            string valueVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Value");
+            return
+                Assign(valueVariable, value, false,
+                AssignValueConverter(ValueConverterType.SetProperty, valueConverterVariable,
+                ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
+                    valueVariable, false, nextCommand), propertyName));
+        }
     }
 
     public enum ValueConverterType
@@ -113,7 +136,7 @@ namespace FileExplorer.Script
         /// <summary>
         /// Given an Array, get specific item.
         /// </summary>
-        GetArrayItem, GetProperty, ExecuteMethod
+        GetArrayItem, GetProperty, ExecuteMethod, SetProperty
     }
 
     public class AssignValueConverter : Assign
@@ -174,6 +197,27 @@ namespace FileExplorer.Script
 
 
                     break;
+                case ValueConverterType.SetProperty:
+                    string property1 = ConverterParameter.Count() > 0 ? ConverterParameter.First() as string : null;
+                    Action<Object, Object> retVal1 = String.IsNullOrEmpty(property1) ?
+                        (Action<Object, Object>)((o, v) => { }) :
+                        (Action<Object, Object>)((o, v) =>
+                            {
+                                var typeInfo = o is Array ? typeof(Array).GetTypeInfo() : o.GetType().GetTypeInfo();
+                                var propertyInfo = typeInfo.GetPropertyInfoRecursive(property1);
+                                if (propertyInfo == null)
+                                {
+                                    var fieldInfo = typeInfo.GetFieldInfoRecursive(property1);
+
+                                    if (fieldInfo == null)
+                                        throw new KeyNotFoundException(String.Format("{0} cannot be found in {1}", property1, o.GetType()));
+
+                                    fieldInfo.SetValue(o, v);
+                                }
+                                else propertyInfo.SetValue(o, v);
+                            });
+                    Value = retVal1;
+                    break;
                 case ValueConverterType.ExecuteMethod:
                     string methodName = ConverterParameter.Count() > 0 ? ConverterParameter.First() as string : null;
                     Func<object, object> checkParameters = p =>
@@ -206,7 +250,7 @@ namespace FileExplorer.Script
                     Value = retVa1l;
 
                     break;
-               
+
                 default: return ResultCommand.Error(new NotSupportedException(ConverterType.ToString()));
 
             }

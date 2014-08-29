@@ -67,17 +67,28 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            object value = pm.GetValue<object>(SourceVariableKey);
+            object source = pm.GetValue<object>(SourceVariableKey);
+            
             
             if (ValueConverterKey != null)
             {
-                Func<object, object> valueConverter = pm.GetValue<Func<object, object>>(ValueConverterKey);
-                if (valueConverter != null)
-                    value = valueConverter(value);
+                object valueConverter = pm.GetValue<object>(ValueConverterKey);
+
+                if (valueConverter is Func<object, object>) //GetProperty, ExecuteMethod, GetArrayItem
+                {                    
+                    Func<object, object> valueConverterFunc = valueConverter as Func<object, object>;
+                    object value = valueConverterFunc(source);
+                    pm.SetValue(DestinationVariableKey, value, SkipIfExists);
+                }
+                else 
+                    if (valueConverter is Action<object, object>) //SetProperty
+                    {
+                        Action<object, object> valueConverterAct = valueConverter as Action<object, object>;
+                        object value = pm.GetValue<object>(DestinationVariableKey);
+                        valueConverterAct(source, value);
+                    }
             }
-
-            pm.SetValue(DestinationVariableKey, value, SkipIfExists);
-
+          
             return NextCommand;
         }
     }

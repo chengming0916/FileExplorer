@@ -62,6 +62,16 @@ namespace FileExplorer.Script
                 };
             }, null, ParameterDicConverters.ConvertParameterOnly);
 
+
+        public static IParameterDicConverter FromParameterDic(ParameterDic pd, IParameterDicConverter baseConverter = null)
+        {
+            return new ParameterDicConverterBase((p, p2) =>
+            {
+                return pd;
+
+            }, null, baseConverter);
+        }
+            
     }
 
 

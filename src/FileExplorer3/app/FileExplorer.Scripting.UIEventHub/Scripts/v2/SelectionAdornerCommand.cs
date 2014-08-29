@@ -15,7 +15,8 @@ namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand AttachSelectionAdorner(IScriptCommand nextCommand = null)
+        public static IScriptCommand AttachSelectionAdorner(string selectionAdornerVariable = "{SelectionAdorner}", 
+            IScriptCommand nextCommand = null)
         {
             return new SelectionAdornerCommand()
             {
@@ -24,7 +25,8 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand DettachSelectionAdorner(IScriptCommand nextCommand = null)
+        public static IScriptCommand DettachSelectionAdorner(string selectionAdornerVariable = "{SelectionAdorner}", 
+            IScriptCommand nextCommand = null)
         {
             return new SelectionAdornerCommand()
             {
@@ -33,13 +35,12 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand UpdateSelectionAdorner(
-            string selectionBoundAdjustedVariable = "{SelectionBoundAdjusted}", IScriptCommand nextCommand = null)
+        public static IScriptCommand UpdateSelectionAdorner(string selectionAdornerVariable = "{SelectionAdorner}", 
+            IScriptCommand nextCommand = null)
         {
             return new SelectionAdornerCommand()
             {
-                AdornerMode = UIEventHub.AdornerMode.Update,
-                SelectionBoundAdjustedKey = selectionBoundAdjustedVariable,
+                AdornerMode = UIEventHub.AdornerMode.Update,                
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
@@ -61,12 +62,6 @@ namespace FileExplorer.UIEventHub
         public string SelectionAdornerKey { get; set; }
 
         /// <summary>
-        ///Required when update, assigned by ObtainPointerPosition command.
-        ///SelectionBounds (Rect) that used to calcuate selected items, took scroll bar position into account.                       
-        /// </summary>
-        public string SelectionBoundAdjustedKey { get; set; }
-
-        /// <summary>
         /// Start position relative to sender, adjusted with scrollbar position.
         /// </summary>
         public string StartPositionAdjustedKey { get; set; }
@@ -80,8 +75,7 @@ namespace FileExplorer.UIEventHub
         public SelectionAdornerCommand()
             : base("SelectionAdornerCommand")
         {
-            SelectionAdornerKey = "{SelectionAdorner}";
-            SelectionBoundAdjustedKey = "{SelectionBoundAdjusted}";
+            SelectionAdornerKey = "{SelectionAdorner}";            
             StartPositionAdjustedKey = "{StartPositionAdjusted}";
             CurrentPositionKey = "{CurrentPosition}";
         }
@@ -130,8 +124,7 @@ namespace FileExplorer.UIEventHub
                         if (updateAdorner == null)
                             return ResultCommand.Error(new Exception("Adorner not found."));
 
-                        updateAdorner.IsSelecting = AttachedProperties.GetIsSelecting(sender);
-                        Rect selectionBound = pm.GetValue<Rect>(SelectionBoundAdjustedKey);
+                        updateAdorner.IsSelecting = AttachedProperties.GetIsSelecting(sender);                        
                         Point startAdjusted = pm.GetValue<Point>("{StartPosition}");
                         Point current = pm.GetValue<Point>(CurrentPositionKey);
                         updateAdorner.SetValue(SelectionAdorner.StartPositionProperty, startAdjusted);

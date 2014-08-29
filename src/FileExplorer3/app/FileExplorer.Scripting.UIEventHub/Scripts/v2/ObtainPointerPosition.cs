@@ -163,7 +163,7 @@ namespace FileExplorer.UIEventHub
             pm.SetValue(SelectionBoundAdjustedKey, new Rect(startAdjustedPos,
                 currentAdjustedPos));
 
-            logger.Info(String.Format("{0}", new Rect(startPos, currentPos)));
+            logger.Debug(String.Format("{0}", new Rect(startPos, currentPos)));
 
             return _nextCommand;
         }

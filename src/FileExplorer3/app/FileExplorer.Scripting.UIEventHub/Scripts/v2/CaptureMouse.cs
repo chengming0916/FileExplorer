@@ -60,7 +60,7 @@ namespace FileExplorer.UIEventHub
 
             eventArgs.Handled = true;
 
-            logger.Info(String.Format("Capture {0}", _mode));
+            logger.Debug(String.Format("Capture {0}", _mode));
             switch (_mode)
             { 
                 case CaptureMouseMode.ScrollContentPresenter :
