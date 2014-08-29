@@ -16,7 +16,7 @@ namespace FileExplorer.Script
         /// <param name="thenCommand"></param>
         /// <param name="commands"></param>
         /// <returns></returns>
-        public static IScriptCommand RunCommands(RunMode mode = RunMode.Queue,
+        public static IScriptCommand Run(RunMode mode = RunMode.Queue,
             IScriptCommand thenCommand = null, params IScriptCommand[] commands)
         {
             return new RunCommands()
@@ -27,19 +27,19 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand RunCommandsInQueue(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
+        public static IScriptCommand RunQueue(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
         {
-            return RunCommands(RunMode.Queue, thenCommand, commands);
+            return Run(RunMode.Queue, thenCommand, commands);
         }
 
-        public static IScriptCommand RunCommandsInSequence(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
+        public static IScriptCommand RunSequence(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
         {
-            return RunCommands(RunMode.Sequence, thenCommand, commands);
+            return Run(RunMode.Sequence, thenCommand, commands);
         }
 
-        public static IScriptCommand RunCommandsInParallel(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
+        public static IScriptCommand RunParallel(IScriptCommand thenCommand = null, params IScriptCommand[] commands)
         {
-            return RunCommands(RunMode.Parallel, thenCommand, commands);
+            return Run(RunMode.Parallel, thenCommand, commands);
         }
     }
 

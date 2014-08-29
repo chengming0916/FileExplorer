@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public static class LinqUtils
     {

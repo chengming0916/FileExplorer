@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     /// <summary>
     /// Enum related utils.

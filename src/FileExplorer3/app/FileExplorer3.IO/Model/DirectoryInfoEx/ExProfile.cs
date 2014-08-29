@@ -22,7 +22,7 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF;
 using FileExplorer.Defines;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {

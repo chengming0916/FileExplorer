@@ -28,7 +28,18 @@
 
         </StackPanel>
     </DataTemplate>
-
+    
+    <DataTemplate x:Key="GridSizeTemplate" >
+        <StackPanel Orientation="Horizontal">
+            <TextBlock x:Name="tb" Text="{Binding EntryModel.Size, Converter={StaticResource ffs}}" />
+        </StackPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding EntryModel.IsDirectory}" Value="True">
+                <Setter TargetName="tb" Property="Text" Value="" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+    
     <DataTemplate x:Key="TreeItemTemplate" >
         <StackPanel Orientation="Horizontal">
             <!--<Image Source="{Binding Icon, Mode=OneWay}" Width="30" Height="30"  />

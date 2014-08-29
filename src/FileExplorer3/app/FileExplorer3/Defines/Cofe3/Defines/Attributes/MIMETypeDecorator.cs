@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer
 {

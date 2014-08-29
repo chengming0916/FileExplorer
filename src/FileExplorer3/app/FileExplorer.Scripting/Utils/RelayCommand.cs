@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public class RelayCommand : ICommand
     {

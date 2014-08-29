@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public static class ConverterUtils
     {

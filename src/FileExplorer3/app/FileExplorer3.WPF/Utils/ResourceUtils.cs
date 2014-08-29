@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Resources;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public static class ResourceUtils
     {

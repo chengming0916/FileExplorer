@@ -1,5 +1,5 @@
 ﻿using FileExplorer.IO;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
 using System.IO;
 using System.Threading;

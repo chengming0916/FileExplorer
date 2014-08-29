@@ -67,7 +67,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
 
     public class BeginDragLite : ScriptCommandBase
     {
-        public BeginDragLite() : base("BeginDragLite") { }
+        public BeginDragLite() : base("BeginDragLite") { }        
 
         public override IScriptCommand Execute(ParameterDic pm)
         {

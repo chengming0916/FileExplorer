@@ -1,4 +1,4 @@
-﻿using FileExplorer.Utils;
+﻿using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;

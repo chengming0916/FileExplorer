@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FileExplorer;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.IO;

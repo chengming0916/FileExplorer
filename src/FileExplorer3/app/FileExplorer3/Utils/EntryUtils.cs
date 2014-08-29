@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public static class EntryUtils
     {

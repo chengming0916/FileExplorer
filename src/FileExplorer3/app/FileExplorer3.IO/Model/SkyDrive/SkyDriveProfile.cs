@@ -9,7 +9,7 @@ using FileExplorer.WPF.BaseControls;
 using Microsoft.Live;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {

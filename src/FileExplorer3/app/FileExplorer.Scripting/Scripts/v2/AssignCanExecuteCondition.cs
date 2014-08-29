@@ -9,7 +9,7 @@ namespace FileExplorer.Script
     public static partial class ScriptCommands
     {
         /// <summary>
-        /// Specify the canExecute condition by execute a chain of commands.    
+        /// Serializable, Specify the canExecute condition by execute a chain of commands.    
         /// </summary>
         /// <param name="conditionCommand">Run to check CanExecuteCondition, Default = ResultCommand.OK</param>
         /// <param name="nextCommand">Run after CanExecuteCondition.</param>

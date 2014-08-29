@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using Caliburn.Micro;
 
 namespace FileExplorer.Models.SevenZipSharp

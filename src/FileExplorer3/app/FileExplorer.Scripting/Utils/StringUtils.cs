@@ -9,7 +9,7 @@ using Windows.Security.Cryptography.Core;
 using System.Runtime.InteropServices.WindowsRuntime;
 #endif
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     /// <summary>
     /// String related utils.

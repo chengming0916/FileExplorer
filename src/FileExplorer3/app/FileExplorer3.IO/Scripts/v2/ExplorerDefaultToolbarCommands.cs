@@ -85,8 +85,10 @@ namespace FileExplorer.Script
 
                     explorerModel.DirectoryTree.Commands.ToolbarCommands.ExtraCommandProviders = new[] { 
                 new StaticCommandProvider(
-                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
-                    new CommandModel(ExplorerCommands.OpenTab) { IsVisibleOnMenu = true },
+                     new DirectoryCommandModel(
+                    new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true},
+                    new CommandModel(ExplorerCommands.OpenTab) { IsVisibleOnMenu = true  })
+                   { Header = "Open", IsVisibleOnMenu = true, IsEnabled = true },
                      //new CommandModel(ApplicationCommands.New) { IsVisibleOnMenu = true },
                     new CommandModel(ExplorerCommands.Refresh) { IsVisibleOnMenu = true },
                     new CommandModel(ApplicationCommands.Delete) { IsVisibleOnMenu = true },

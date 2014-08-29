@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     /// <summary>
     /// Stream related Utils.

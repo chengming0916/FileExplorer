@@ -11,7 +11,6 @@
   <Namespace>FileExplorer.IO</Namespace>
   <Namespace>FileExplorer.Models</Namespace>
   <Namespace>FileExplorer.Script</Namespace>
-  <Namespace>FileExplorer.Utils</Namespace>
   <Namespace>System.Collections</Namespace>
 </Query>
 
@@ -45,4 +44,17 @@ IScriptCommand arrayCommand =
 	
 await ScriptRunner.RunScriptAsync(new ParameterDic() { 
                 { "Variable1", (new[] {1, 2, 3, 4, 5, 6 }) }				
-            }, arrayCommand);	
+            }, arrayCommand);
+			
+IScriptCommand caseCommand = 
+  ScriptCommands.Switch("{Variable1}", 
+    new Dictionary<int, IScriptCommand>()
+	{
+		{ 1 , ScriptCommands.PrintDebug("One") }, 
+		{ 2 , ScriptCommands.PrintDebug("Two") }, 
+		{ 3 , ScriptCommands.PrintDebug("Three") }, 
+	}, ScriptCommands.PrintDebug("Otherwise"));
+	
+await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+                { "Variable1", 4 }				
+            }, caseCommand);

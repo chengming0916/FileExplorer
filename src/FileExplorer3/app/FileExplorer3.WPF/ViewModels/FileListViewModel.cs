@@ -27,7 +27,7 @@ using System.Windows.Input;
 using FileExplorer.Defines;
 using FileExplorer.Script;
 using System.Threading;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
 

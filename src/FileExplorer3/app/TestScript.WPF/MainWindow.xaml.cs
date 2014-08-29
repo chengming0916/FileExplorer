@@ -3,7 +3,7 @@ using FileExplorer;
 using FileExplorer.Models;
 using FileExplorer.Script;
 using FileExplorer.UnitTests;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.BaseControls;
 using NUnit.Framework;
 using System;

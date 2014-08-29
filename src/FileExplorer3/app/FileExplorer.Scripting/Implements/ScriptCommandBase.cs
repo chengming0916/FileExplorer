@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using System.Xml;
 using System.ComponentModel;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Script
 {        

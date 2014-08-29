@@ -14,7 +14,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Threading;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
 

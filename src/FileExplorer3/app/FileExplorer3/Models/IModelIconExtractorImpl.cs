@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using System.Collections.Concurrent;
 
 namespace FileExplorer.Models

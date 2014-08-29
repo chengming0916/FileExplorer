@@ -1,6 +1,6 @@
 ﻿using FileExplorer;
 using FileExplorer.Script;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

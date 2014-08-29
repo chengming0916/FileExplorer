@@ -13,7 +13,7 @@ using FileExplorer;
 using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {

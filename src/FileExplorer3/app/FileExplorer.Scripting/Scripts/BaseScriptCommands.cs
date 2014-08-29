@@ -8,7 +8,9 @@ using System.Xml.Serialization;
 namespace FileExplorer.Script
 {
     [XmlInclude(typeof(Assign))]
+    [XmlInclude(typeof(AssignCanExecuteCondition))]
     [XmlInclude(typeof(RunCommands))]
+    [XmlInclude(typeof(RunScriptCommand))]
     [XmlInclude(typeof(ResultCommand))]    
     [XmlInclude(typeof(Print))]
     [XmlInclude(typeof(ForEach))]

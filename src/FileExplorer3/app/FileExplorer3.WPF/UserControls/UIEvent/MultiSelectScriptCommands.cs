@@ -127,7 +127,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
 
             pm["UnselectCommand"] = UnselectCommand;
 
-            Mouse.Capture(scp);
+            Mouse.Capture(scp, CaptureMode.SubTree);
             return new UpdateIsSelecting(true);
         }
     }
@@ -296,9 +296,9 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
                contentBelowHeader == null ? new Size(0, 0) :
                    new Size(contentBelowHeader.ActualWidth, contentBelowHeader.ActualHeight);
 
-            var gvhrp = 
-                c is ListViewEx && (c as ListViewEx).ColumnsVisibility == Visibility.Collapsed ? 
-                null : 
+            var gvhrp =
+                c is ListViewEx && (c as ListViewEx).ColumnsVisibility == Visibility.Collapsed ?
+                null :
                 UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
             pd["GridViewHeaderSize"] = gvhrp == null ?
                                  new Size(0, 0) : new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
@@ -458,11 +458,13 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
             Func<HitTestResult, HitTestResultBehavior> cont = (result) => HitTestResultBehavior.Continue;
             HitTestFilterCallback selectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
             {
-                if (potentialHitTestTarget is ListViewItem || potentialHitTestTarget is TreeViewItem)
+                var frameworkElement = potentialHitTestTarget as FrameworkElement;
+                if (frameworkElement != null && frameworkElement.DataContext is ISelectable)
                 {
                     selectedList.Add(potentialHitTestTarget);
                     int id = _ic.ItemContainerGenerator.IndexFromContainer(potentialHitTestTarget);
-                    selectedIdList.Add(id);
+                    if (id != -1)
+                        selectedIdList.Add(id);
 
                     if (unselectedList.Contains(potentialHitTestTarget)) unselectedList.Remove(potentialHitTestTarget);
                     if (unselectedIdList.Contains(id)) unselectedIdList.Remove(id);
@@ -472,7 +474,8 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
             });
             HitTestFilterCallback unselectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
             {
-                if (potentialHitTestTarget is ListViewItem || potentialHitTestTarget is TreeViewItem)
+                var frameworkElement = potentialHitTestTarget as FrameworkElement;
+                if (frameworkElement != null && frameworkElement.DataContext is ISelectable)             
                 {
                     unselectedList.Add(potentialHitTestTarget);
                     unselectedIdList.Add(_ic.ItemContainerGenerator.IndexFromContainer(potentialHitTestTarget));
@@ -613,17 +616,18 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
 
             for (int i = 0; i < ic.Items.Count; i++)
             {
-                DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
-                if (item != null)
+                FrameworkElement item = ic.ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement;
+                
+                if (item != null && item.DataContext is ISelectable)
                 {
                     bool isSelecting = AttachedProperties.GetIsSelecting(item);
                     AttachedProperties.SetIsSelecting(item, false);
 
                     if (isSelecting && !unselectedList.Contains(item))
-                        item.SetValue(ListBoxItem.IsSelectedProperty, true);
+                        (item.DataContext as ISelectable).IsSelected = true;
                     else if (selectedList.Contains(item))
-                        item.SetValue(ListBoxItem.IsSelectedProperty, true);
-                    else item.SetValue(ListBoxItem.IsSelectedProperty, false);
+                        (item.DataContext as ISelectable).IsSelected = true;
+                    else (item.DataContext as ISelectable).IsSelected = false;
                 }
             }
 

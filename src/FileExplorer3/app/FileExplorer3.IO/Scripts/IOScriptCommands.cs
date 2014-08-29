@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using FileExplorer;
 using FileExplorer.Script;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;

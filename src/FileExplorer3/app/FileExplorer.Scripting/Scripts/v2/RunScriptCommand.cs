@@ -10,7 +10,14 @@ namespace FileExplorer.Script
 
     public static partial class ScriptCommands
     {
-        public static IScriptCommand RunScriptCommand(string commandVariable, bool throwIfError = false, IScriptCommand nextCommand = null)
+        /// <summary>
+        /// Serializable, Run another script command (IScriptCommand) defined in ParameterDic.
+        /// </summary>
+        /// <param name="commandVariable"></param>
+        /// <param name="throwIfError"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand Run(string commandVariable, bool throwIfError = false, IScriptCommand nextCommand = null)
         {
             return new RunScriptCommand()
             {
@@ -22,7 +29,7 @@ namespace FileExplorer.Script
     }
 
     /// <summary>
-    /// Run another script command (IScriptCommand) defined in ParameterDic
+    /// Serializable, Run another script command (IScriptCommand) defined in ParameterDic
     /// </summary>
     public class RunScriptCommand : ScriptCommandBase
     {
@@ -48,7 +55,7 @@ namespace FileExplorer.Script
             command = command ?? ResultCommand.NoError;
 
             logger.Info("Running " + CommandKey);
-            return ScriptCommands.RunCommandsInQueue(NextCommand, command);
+            return ScriptCommands.RunQueue(NextCommand, command);
         }
 
     }

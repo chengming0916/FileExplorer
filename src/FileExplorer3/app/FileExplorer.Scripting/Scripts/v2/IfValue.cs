@@ -41,6 +41,27 @@ namespace FileExplorer.Script
                     IfValue(op, variable, ifValueValueProperty, trueCommand, otherwiseCommand));
         }
 
+        /// <summary>
+        /// Serializable, do switch...case code by using multiple IfValue.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="variable"></param>
+        /// <param name="caseLookup"></param>
+        /// <param name="otherwiseCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand Switch<T>(string variable = "{variable}", 
+            Dictionary<T, IScriptCommand> caseLookup = null,
+            IScriptCommand otherwiseCommand = null, IScriptCommand nextCommnad = null)
+        {
+            IScriptCommand cmd = null;
+            foreach (var key in caseLookup.Keys)
+                cmd = 
+                    cmd == null ? IfEquals<T>(variable, key, caseLookup[key], otherwiseCommand) : 
+                    IfEquals<T>(variable, key, caseLookup[key], cmd);
+
+            return ScriptCommands.RunSequence(nextCommnad, cmd);
+        }
+
 
         public static IScriptCommand IfEquals<T>(string variable = "{variable}", T value = default(T), IScriptCommand trueCommand = null,
             IScriptCommand otherwiseCommand = null)
