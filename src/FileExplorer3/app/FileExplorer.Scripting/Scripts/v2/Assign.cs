@@ -47,7 +47,7 @@ namespace FileExplorer.Script
         /// <returns></returns>
         public static IScriptCommand Reset(IScriptCommand nextCommand = null, params string[] variables)
         {
-            return ScriptCommands.RunCommands(RunMode.Parallel, nextCommand,
+            return ScriptCommands.Run(RunMode.Parallel, nextCommand,
                 variables.Select(v => ScriptCommands.Assign(v, null)).ToArray());
         }
 

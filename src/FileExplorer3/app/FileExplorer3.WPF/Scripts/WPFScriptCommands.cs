@@ -17,7 +17,7 @@ using FileExplorer.WPF.ViewModels;
 using System.Net.Http;
 using System.Net;
 using System.Threading;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
 using System.IO;
 using FileExplorer.WPF.Defines;
@@ -1883,7 +1883,7 @@ namespace FileExplorer.Script
 
             return WPFScriptCommands.ReportProgress(
                 TransferProgress.IncrementTotalEntries(source.Length),
-                ScriptCommands.RunCommandsInSequence(null, transferCommands)
+                ScriptCommands.RunSequence(null, transferCommands)
                 );          
         }
 

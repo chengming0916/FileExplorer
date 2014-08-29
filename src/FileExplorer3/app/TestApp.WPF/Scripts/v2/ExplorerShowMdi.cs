@@ -35,7 +35,7 @@ namespace TestApp
                     {"{MdiContainer}", container},
                     {"{Profiles}", profiles },
                     {"{RootDirectories}", rootDirectories },
-                    {"{OnModelCreated}", ScriptCommands.RunCommandsInSequence(null,
+                    {"{OnModelCreated}", ScriptCommands.RunSequence(null,
                         TestAppCommands.MdiExplorer_Initialize_Default, 
                         UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", "{MdiContainer},{RootDirectories}"))}, 
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }                    

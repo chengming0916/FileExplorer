@@ -203,7 +203,7 @@ namespace FileExplorer.Script
 
                     return
                         await GetAssignDestinationCommandAsync(pm, srcEntries, destEntry, destinationKey,
-                        ScriptCommands.RunCommandsInParallel(NextCommand,
+                        ScriptCommands.RunParallel(NextCommand,
 
                         CoreScriptCommands.NotifyEntryChangedPath(ChangeType.Created, destEntry.Profile, createdPath.ToArray()),
                         CoreScriptCommands.NotifyEntryChangedPath(ChangeType.Changed, destEntry.Profile, changedPath.ToArray())

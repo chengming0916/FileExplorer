@@ -72,6 +72,7 @@
     <Compile Include="Scripts\v2\ForEach.cs" />
     <Compile Include="Scripts\v2\RunCommands.cs" />
     <Compile Include="Scripts\v2\Reassign.cs" />
+    <Compile Include="Scripts\v2\RunICommand.cs" />
     <Compile Include="Scripts\v2\RunScriptCommand.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Utils\DynamicDictionary.cs" />

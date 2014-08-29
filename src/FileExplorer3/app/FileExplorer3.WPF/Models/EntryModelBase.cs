@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using FileExplorer;
 using FileExplorer.Script;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models

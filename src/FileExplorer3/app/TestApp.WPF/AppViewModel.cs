@@ -13,7 +13,7 @@ using FileExplorer;
 using FileExplorer.WPF.Utils;
 using System.Collections.ObjectModel;
 using System.Windows;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using System.Configuration;
 using System.IO;
 using System.Windows.Input;

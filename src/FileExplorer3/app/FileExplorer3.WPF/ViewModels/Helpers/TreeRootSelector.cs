@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.Models;

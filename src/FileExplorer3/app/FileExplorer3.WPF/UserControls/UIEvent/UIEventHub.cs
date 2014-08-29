@@ -15,7 +15,7 @@ using System.Windows.Markup;
 using System.Windows.Threading;
 using FileExplorer;
 using FileExplorer.Script;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;

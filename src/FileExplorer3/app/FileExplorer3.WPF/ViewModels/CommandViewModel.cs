@@ -10,7 +10,7 @@ using Caliburn.Micro;
 using Cinch;
 using FileExplorer;
 using FileExplorer.Script;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Utils;

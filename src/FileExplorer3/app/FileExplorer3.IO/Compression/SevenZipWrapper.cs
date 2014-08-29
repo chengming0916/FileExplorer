@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using FileExplorer.IO.Interfaces;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 
 namespace FileExplorer.IO.Compress

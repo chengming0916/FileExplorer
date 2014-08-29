@@ -1,4 +1,4 @@
-﻿using FileExplorer.Utils;
+﻿using FileExplorer.WPF.Utils;
 using ExifLib;
 using FileExplorer.Defines;
 using FileExplorer.IO.Defines;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.IO;
 
 namespace FileExplorer.Models

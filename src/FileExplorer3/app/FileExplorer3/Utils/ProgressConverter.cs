@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public class ProgressConverter<T1, T2> : IProgress<T1>
     {

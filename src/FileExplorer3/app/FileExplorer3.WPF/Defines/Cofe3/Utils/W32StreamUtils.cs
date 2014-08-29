@@ -15,7 +15,7 @@ using System.Security.Cryptography;
 using FileExplorer;
 #endif
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     /// <summary>
     /// Stream related Utils.

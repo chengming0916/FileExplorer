@@ -4,7 +4,7 @@ using FileExplorer.IO.Compress;
 using FileExplorer.Models;
 using FileExplorer.Models.SevenZipSharp;
 using FileExplorer.Script;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;

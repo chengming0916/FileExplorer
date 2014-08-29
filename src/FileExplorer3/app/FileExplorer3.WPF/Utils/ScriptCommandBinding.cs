@@ -9,7 +9,7 @@ using Cinch;
 using FileExplorer;
 using FileExplorer.Script;
 using FileExplorer.WPF.ViewModels.Helpers;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.Utils
 {

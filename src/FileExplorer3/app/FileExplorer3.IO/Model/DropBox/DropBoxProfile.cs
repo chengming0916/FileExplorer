@@ -1,7 +1,7 @@
 ﻿using Caliburn.Micro;
 using DropNet;
 using DropNet.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Utils;

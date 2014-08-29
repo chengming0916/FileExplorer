@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     internal static class CompressionUtils
     {

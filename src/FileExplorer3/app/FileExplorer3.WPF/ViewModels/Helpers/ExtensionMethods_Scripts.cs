@@ -84,7 +84,7 @@ namespace FileExplorer.Script
         {
             
             IScriptCommand cmd = commandManager.GetCommandFromDictionary(commandVariable, null);
-            cmd = cmd ?? ScriptCommands.RunScriptCommand(commandVariable);
+            cmd = cmd ?? ScriptCommands.Run(commandVariable);
             await commandManager.ExecuteAsync(cmd, parameterDic, scriptRunner);
         }
 

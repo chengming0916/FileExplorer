@@ -11,7 +11,7 @@ using System.Windows.Input;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {

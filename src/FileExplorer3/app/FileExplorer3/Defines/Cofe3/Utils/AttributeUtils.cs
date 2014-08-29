@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace FileExplorer.Utils
+namespace FileExplorer.WPF.Utils
 {
     public static class AttributeUtils
     {

@@ -48,7 +48,7 @@ namespace FileExplorer.Script
         {
             string firstRootDirectoriesVariable = ParameterDic.CombineVariable(rootDirectoriesVariable, "[0]");
             return 
-                  ScriptCommands.RunCommandsInSequence(nextCommand,
+                  ScriptCommands.RunSequence(nextCommand,
                   ScriptCommands.IfAssignedAndNotEmptyString(startupPathVariable,
                      UIScriptCommands.ExplorerParseAndGoTo(explorerVariable, profilesVariable, startupPathVariable),
                        UIScriptCommands.ExplorerGoTo(explorerVariable, firstRootDirectoriesVariable,

@@ -88,8 +88,8 @@ namespace FileExplorer.Script
                  StartupParameters = pm,
                  WindowManager = wm,
                  Events = events,
-                 OnModelCreated = ScriptCommands.RunScriptCommand(OnModelCreatedKey),
-                 OnViewAttached = ScriptCommands.RunScriptCommand(OnViewAttachedKey)
+                 OnModelCreated = ScriptCommands.Run(OnModelCreatedKey),
+                 OnViewAttached = ScriptCommands.Run(OnViewAttachedKey)
              };
 
             ExplorerViewModel evm = null;

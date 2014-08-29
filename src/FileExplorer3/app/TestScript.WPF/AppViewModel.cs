@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.Collections.ObjectModel;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using MetroLog;
 using FileExplorer.UnitTests;
 using FileExplorer.Script;

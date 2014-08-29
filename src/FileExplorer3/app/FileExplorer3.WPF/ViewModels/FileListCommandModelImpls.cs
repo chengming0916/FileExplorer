@@ -8,10 +8,10 @@ using System.Windows;
 using System.Windows.Input;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {

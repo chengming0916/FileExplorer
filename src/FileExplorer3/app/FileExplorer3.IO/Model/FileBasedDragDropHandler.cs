@@ -9,7 +9,7 @@ using System.Windows;
 using Caliburn.Micro;
 using FileExplorer;
 using FileExplorer.Script;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls.DragDrop;
 using FileExplorer.WPF.ViewModels.Helpers;

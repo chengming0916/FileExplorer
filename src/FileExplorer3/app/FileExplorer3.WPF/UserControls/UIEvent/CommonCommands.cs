@@ -24,7 +24,7 @@ namespace FileExplorer.WPF.BaseControls
 
     public static partial class UITools
     {
-        public static Control GetItemUnderMouse(ItemsControl ic, Point position)
+        public static FrameworkElement GetItemUnderMouse(ItemsControl ic, Point position)
         {
             if (ic is ListView)
             {
@@ -44,7 +44,9 @@ namespace FileExplorer.WPF.BaseControls
             }
 
             else if (ic is ItemsControl)
-                return UITools.GetItemByPosition<Control, ItemsControl>(ic as ItemsControl, position);
+            {
+                return UITools.GetItemByPosition<ContentPresenter, ItemsControl>(ic as ItemsControl, position);                                
+            }
 
             return null;
 

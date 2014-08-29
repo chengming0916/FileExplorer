@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.BaseControls;
 using Google.Apis.Drive.v2;
 using Google.Apis.Http;
 using Google.Apis.Services;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {

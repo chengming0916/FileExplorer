@@ -12,7 +12,7 @@ using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {

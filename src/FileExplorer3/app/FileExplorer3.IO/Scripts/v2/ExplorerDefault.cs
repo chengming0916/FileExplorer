@@ -80,8 +80,9 @@ namespace FileExplorer.Script
                     { "{FileListNewWindowCommand}", IOInitializeHelpers.FileList_NewWindow },                    
                     { "{DirectoryTreeMapCommand}", IOInitializeHelpers.DirectoryTree_Map_From_Profiles },
                     { "{DirectoryTreeUnmapCommand}", IOInitializeHelpers.DirectoryTree_Unmap },
+                    { "{DirectoryTreeNewWindowCommand}", IOInitializeHelpers.DirectoryTree_NewWindow },                    
                 }, true,
-                ScriptCommands.RunCommandsInSequence(NextCommand,
+                ScriptCommands.RunSequence(NextCommand,
                         UIScriptCommands.ExplorerAssignScriptParameters(ExplorerKey, "{Profiles}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.RootModels, "{RootDirectories}"),
                         UIScriptCommands.ExplorerSetParameter(ExplorerKey, ExplorerParameterType.FileName, "{FileName}"),
@@ -107,6 +108,8 @@ namespace FileExplorer.Script
                         UIScriptCommands.SetScriptCommand(FileListKey, "Copy", "{FileListCopyCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "Paste", "{FileListPasteCommand}"),
                         UIScriptCommands.SetScriptCommand(FileListKey, "NewWindow", "{FileListNewWindowCommand}"),
+                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "OpenTab", "{DirectoryTreeOpenTabCommand}"),
+                        UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "NewWindow", "{DirectoryTreeNewWindowCommand}"),
                         UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Map", "{DirectoryTreeMapCommand}"),
                         UIScriptCommands.SetScriptCommand(DirectoryTreeKey, "Unmap", "{DirectoryTreeUnmapCommand}")      
                        )                

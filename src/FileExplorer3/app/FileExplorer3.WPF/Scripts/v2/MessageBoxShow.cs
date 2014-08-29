@@ -10,6 +10,15 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable Uses MessageBox.Show() to show a messagebox and store result to DestinationKey as string.
+        /// </summary>
+        /// <param name="buttons"></param>
+        /// <param name="captionVariable"></param>
+        /// <param name="contentVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand MessageBoxShow(string buttons = "OK", string captionVariable = "Header", 
             string contentVariable = "Content", string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {

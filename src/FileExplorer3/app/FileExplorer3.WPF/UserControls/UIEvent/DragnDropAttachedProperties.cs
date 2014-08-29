@@ -34,14 +34,14 @@ namespace FileExplorer.WPF.Defines
         #region StartDraggingItem
 
         public static DependencyProperty StartDraggingItemProperty =
-          DependencyProperty.RegisterAttached("StartDraggingItem", typeof(Control), typeof(AttachedProperties));
+          DependencyProperty.RegisterAttached("StartDraggingItem", typeof(FrameworkElement), typeof(AttachedProperties));
 
-        public static Control GetStartDraggingItem(DependencyObject target)
+        public static FrameworkElement GetStartDraggingItem(DependencyObject target)
         {
-            return (Control)target.GetValue(StartDraggingItemProperty);
+            return (FrameworkElement)target.GetValue(StartDraggingItemProperty);
         }
 
-        public static void SetStartDraggingItem(DependencyObject target, Control value)
+        public static void SetStartDraggingItem(DependencyObject target, FrameworkElement value)
         {
             target.SetValue(StartDraggingItemProperty, value);
         }

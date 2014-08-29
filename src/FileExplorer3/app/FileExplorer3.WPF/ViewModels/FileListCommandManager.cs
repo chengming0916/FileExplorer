@@ -13,7 +13,7 @@ using System.Windows.Input;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
-using FileExplorer.Utils;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
