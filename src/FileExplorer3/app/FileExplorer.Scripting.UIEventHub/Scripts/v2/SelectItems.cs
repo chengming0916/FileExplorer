@@ -61,8 +61,8 @@ namespace FileExplorer.UIEventHub
             bool isISelectable = ic.Items.Count > 0 && ic.Items[0] is ISelectable;
 
 
-            Action<int, object, ListBoxItem> updateSelected = null;
-            Func<int, ListBoxItem, bool> returnSelected = (idx, item) => false;
+            //Action<int, object, ListBoxItem> updateSelected = null;
+            Func<int, FrameworkElement, bool> returnSelected = (idx, item) => false;
             if (selectedIdList != null)
                 returnSelected = (idx, item) => selectedIdList.Contains(idx);
             else if (selectedList != null)
@@ -71,16 +71,17 @@ namespace FileExplorer.UIEventHub
             logger.Debug(String.Format("Selecting {0} items", selectedIdList != null ? selectedIdList.Count() :
                 selectedList.Count()));
 
-            updateSelected = (idx, vm, item) => _processor.Select(
-                ExtensionMethods.ToISelectable(vm, item), returnSelected(idx, item));
+            //updateSelected = (idx, vm, item) => _processor.Select(
+            //    ExtensionMethods.ToISelectable(vm, item), returnSelected(idx, item));
 
             for (int i = 0; i < ic.Items.Count; i++)
             {
-                ListBoxItem item = ic.ItemContainerGenerator.ContainerFromIndex(i) as ListBoxItem;
-
-                if (item != null)
-                    AttachedProperties.SetIsSelecting(item, false);
-                updateSelected(i, ic.Items[i], item);
+                FrameworkElement ele = ic.ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement;
+                
+                ISelectable item = ic.Items[i] as ISelectable;
+                item.IsSelected = returnSelected(i, ele);
+                if (ele != null)
+                    AttachedProperties.SetIsSelecting(ele, false);
 
             }
             return NextCommand;

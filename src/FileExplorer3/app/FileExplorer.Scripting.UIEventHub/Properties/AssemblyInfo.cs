@@ -37,3 +37,4 @@ using System.Windows.Markup;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.WPF.UserControls")]
 [assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.WPF.BaseControls")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.Defines")]

@@ -43,13 +43,15 @@ namespace FileExplorer.WPF.BaseControls
                 case "MouseDrag":
                 case "TouchDrag":
                     if (EnableMultiSelect)
-                        return ScriptCommands.Assign("{UnselectAllCommand}", UnselectAllCommand, false, 
+                        return 
+                            ScriptCommands.RunICommand(UnselectAllCommand, null, false, 
                             HubScriptCommands.CaptureMouse(CaptureMouseMode.ScrollContentPresenter,
                               HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", 
                                 AttachedProperties.IsSelectingProperty, true,                                 
                                     HubScriptCommands.ObtainPointerPosition(       
-                                      HubScriptCommands.AttachSelectionAdorner(  
-                                        HubScriptCommands.FindSelectedItems(HubScriptCommands.HighlightItems()))),                                 
+                                      HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",
+                                        HubScriptCommands.FindSelectedItems(
+                                            HubScriptCommands.HighlightItems()))),                                 
                                 ResultCommand.NoError)));                                
                     break;
                 case "TouchMove":
@@ -57,21 +59,32 @@ namespace FileExplorer.WPF.BaseControls
                     return HubScriptCommands.IfDependencyPropertyEquals("{Sender}",
                         AttachedProperties.IsSelectingProperty, true,
                         HubScriptCommands.ObtainPointerPosition(
-                            HubScriptCommands.UpdateSelectionAdorner("{SelectionBoundAdjusted}", 
-                                        HubScriptCommands.FindSelectedItems(HubScriptCommands.HighlightItems()))));
+                            HubScriptCommands.UpdateSelectionAdorner("{SelectionAdorner}",
+                                        HubScriptCommands.FindSelectedItems(
+                                            HubScriptCommands.HighlightItems(
+                                                HubScriptCommands.AutoScroll())))));
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
-                    return
-                    ScriptCommands.Assign("{UnselectAllCommand}", UnselectAllCommand, false,
+                    return                    
                        HubScriptCommands.ReleaseMouse(
                           HubScriptCommands.ObtainPointerPosition(
-                            HubScriptCommands.DettachSelectionAdorner(
+                            HubScriptCommands.DettachSelectionAdorner("{SelectionAdorner}",
+                            //Assign IsSelecting attached property to {WasSelecting}
                             HubScriptCommands.GetDependencyProperty("{Sender}", AttachedProperties.IsSelectingProperty, "{WasSelecting}",
+                               //Reset IsSelecting attached property.
                                HubScriptCommands.SetDependencyProperty("{Sender}", AttachedProperties.IsSelectingProperty, false,
                                  ScriptCommands.IfTrue("{WasSelecting}",
+                                    //WasSelecting
                                       HubScriptCommands.FindSelectedItems(HubScriptCommands.SelectItems()),
-                        //Check if not handled and not mouse right button and mouseoveritem = null then unselect all
-                                      ScriptCommands.PrintDebug("ToDo"))))))));                                              
+                                    //WasNotSelecting
+                                    HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false, 
+                                      ScriptCommands.IfAssigned("{ItemUnderMouse}", 
+                                        //If an Item Under Mouse
+                                        ScriptCommands.RunICommand(UnselectAllCommand, null, false, 
+                                            ScriptCommands.SetProperty("{ItemUnderMouse}", "IsSelected", true)),
+                                        //If click on empty area
+                                        ScriptCommands.RunICommand(UnselectAllCommand, null, false))                        
+                                      )))))));                                              
             }
 
             return base.onEvent(eventId);

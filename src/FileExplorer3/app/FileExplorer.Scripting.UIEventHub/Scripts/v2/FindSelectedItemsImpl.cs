@@ -99,10 +99,8 @@ namespace FileExplorer.UIEventHub
 
             pm.SetValue(SelectedListKey, selectedList);
             pm.SetValue(SelectedIdListKey, selectedIdList);
-            logger.Info(String.Format("Selected = {0}", selectedIdList.Count()));
-            //pm.SetValue<List<object>>(UnselectedListKey, null);
-            //pm.SetValue<List<int>>(UnselectedIdListKey, null);
-
+            logger.Debug(String.Format("Selected = {0}", selectedIdList.Count()));
+           
             return NextCommand;
         }
 
@@ -128,9 +126,6 @@ namespace FileExplorer.UIEventHub
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<FindSelectedItemsUsingGridView>();
 
-        private GridView _gview;
-        private ItemsControl _ic;
-        private ScrollContentPresenter _scp;
 
         protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic,
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
@@ -139,8 +134,9 @@ namespace FileExplorer.UIEventHub
             var startSelected = AttachedProperties.GetStartSelectedItem(ic);
             List<object> selectedList = new List<object>();
             List<int> selectedIdList = new List<int>();
+            var scp = ControlUtils.GetScrollContentPresenter(ic);
 
-            var currentSelected = UITools.GetSelectedListBoxItem(_scp, posRelToScp);
+            var currentSelected = UITools.GetSelectedListBoxItem(scp, posRelToScp);
             if (startSelected != null && currentSelected != null)
             {
                 int startIdx = ic.ItemContainerGenerator.IndexFromContainer(startSelected);
@@ -158,7 +154,7 @@ namespace FileExplorer.UIEventHub
             {
                 if (AttachedProperties.GetStartSelectedItem(ic) == null)
                 {
-                    var itemUnderMouse = UITools.GetSelectedListBoxItem(_scp, posRelToScp);
+                    var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, posRelToScp);
                     AttachedProperties.SetStartSelectedItem(ic, itemUnderMouse);
                 }
             }
@@ -174,10 +170,7 @@ namespace FileExplorer.UIEventHub
 
             pm.SetValue(SelectedListKey, selectedList);
             pm.SetValue(SelectedIdListKey, selectedIdList);
-            logger.Info(String.Format("Selected = {0}", selectedIdList.Count()));
-            //pm.SetValue<List<object>>(UnselectedListKey, null);
-            //pm.SetValue<List<int>>(UnselectedIdListKey, null);
-
+            logger.Debug(String.Format("Selected = {0}", selectedIdList.Count()));
             return NextCommand;
         }
     }
@@ -276,9 +269,7 @@ namespace FileExplorer.UIEventHub
 
             pm.SetValue(SelectedListKey, selectedList);
             pm.SetValue(SelectedIdListKey, selectedIdList);
-            logger.Info(String.Format("Selected = {0}", selectedIdList.Count()));
-            //pm.SetValue(UnselectedListKey, unselectedList);
-            //pm.SetValue(UnselectedIdListKey, unselectedIdList);
+            logger.Debug(String.Format("Selected = {0}", selectedIdList.Count()));      
             return NextCommand;
         }
 
