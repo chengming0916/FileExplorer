@@ -1,0 +1,90 @@
+﻿using FileExplorer.Defines;
+using FileExplorer.Script;
+using FileExplorer.WPF.Utils;
+using MetroLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace FileExplorer.UIEventHub
+{
+    public static partial class HubScriptCommands
+    {
+        public static IScriptCommand HighlightItems(IScriptCommand nextCommand = null)
+        {
+            return new HighlightItems(false)
+                {
+                    NextCommand = (ScriptCommandBase)nextCommand
+                };
+        }
+        public static IScriptCommand HighlightItemsByUpdate(IScriptCommand nextCommand = null)
+        {
+            return new HighlightItems(true)
+            {
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
+    }
+
+    public class HighlightItems : UIScriptCommandBase<ItemsControl, RoutedEventArgs>
+    {
+        private bool _update;
+
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<HighlightItems>();
+
+        internal HighlightItems(bool update) : base("HighlightItems")
+        {
+            _update = update;
+        }
+
+
+        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        {            
+            if (!_update)
+            {                
+                var selectedIdList = pm.ContainsKey("SelectedIdList") ? pm["SelectedIdList"] as List<int>
+                    : new List<int>();
+
+                logger.Debug(String.Format("Highlighting {0} items", selectedIdList.Count()));
+
+                for (int i = 0; i < ic.Items.Count; i++)
+                {
+                    DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                    if (item != null)
+                        AttachedProperties.SetIsSelecting(item, selectedIdList.Contains(i));
+                }
+            }
+            else
+            {
+                List<object> unselectedList = pm["UnselectedList"] as List<object>;
+                List<int> unselectedIdList = pm["UnselectedIdList"] as List<int>;
+
+                List<object> selectedList = pm["SelectedList"] as List<object>;
+                List<int> selectedIdList = pm["SelectedIdList"] as List<int>;
+
+                logger.Debug(String.Format("Highlighting {0} items", selectedIdList.Count()));
+                logger.Debug(String.Format("De-highlighting {0} items", unselectedIdList.Count()));
+
+                for (int i = 0; i < ic.Items.Count; i++)
+                {
+                    DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                    if (item != null)
+                    {
+                        bool isSelecting = AttachedProperties.GetIsSelecting(item);
+                        if (isSelecting && unselectedList.Contains(item))
+                            AttachedProperties.SetIsSelecting(item, false);
+                        else if (!isSelecting && selectedList.Contains(item))
+                            AttachedProperties.SetIsSelecting(item, true);
+                    }
+                }
+
+            }
+
+            return NextCommand;
+        }
+    }
+}

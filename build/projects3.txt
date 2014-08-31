@@ -1,0 +1,6 @@
+fileExplorer.Scripting
+fileExplorer3
+fileExplorer3.IO
+fileExplorer3.WPF
+TestApp.WPF
+TestTemplate.WPF
