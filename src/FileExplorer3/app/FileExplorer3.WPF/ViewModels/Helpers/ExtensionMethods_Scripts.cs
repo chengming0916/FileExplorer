@@ -18,7 +18,7 @@ namespace FileExplorer.Script
         /// <param name="command"></param>
         /// <param name="parameterDic">Will be merged with parameters from ParameterDicConverter</param>
         /// <param name="scriptRunner"></param>
-        public static void Execute(this ICommandManager commandManager, IScriptCommand[] commands, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+        public static void Execute(this ICommandManager commandManager, IScriptCommand[] commands, IParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
         {
             scriptRunner = scriptRunner ?? new ScriptRunner();
             scriptRunner.Run(commandManager.ParameterDicConverter.ConvertAndMerge(parameterDic), commands);
@@ -31,13 +31,13 @@ namespace FileExplorer.Script
         /// <param name="command"></param>
         /// <param name="parameterDic">Will be merged with parameters from ParameterDicConverter</param>
         /// <param name="scriptRunner"></param>
-        public static void Execute(this ICommandManager commandManager, IScriptCommand command, ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+        public static void Execute(this ICommandManager commandManager, IScriptCommand command, IParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
         {
             Execute(commandManager, new IScriptCommand[] { command }, parameterDic, scriptRunner);
         }
 
         public static void Execute(this ICommandManager commandManager, string commandVariable = "{Command2Run}",
-           ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+           IParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
         {
             commandManager.Execute(commandManager.GetCommandFromDictionary(commandVariable),
                 parameterDic, scriptRunner);
@@ -51,7 +51,7 @@ namespace FileExplorer.Script
         /// <param name="scriptRunner"></param>
         /// <returns></returns>
         public static async Task ExecuteAsync(this ICommandManager commandManager, IScriptCommand[] commands,
-            ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+            IParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
         {
             scriptRunner = scriptRunner ?? new ScriptRunner();
             await scriptRunner.RunAsync(commandManager.ParameterDicConverter.ConvertAndMerge(parameterDic), commands);
@@ -65,7 +65,7 @@ namespace FileExplorer.Script
         /// <param name="scriptRunner"></param>
         /// <returns></returns>
         public static async Task ExecuteAsync(this ICommandManager commandManager, IScriptCommand command,
-            ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+            IParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
         {
             await ExecuteAsync(commandManager, new IScriptCommand[] { command }, parameterDic, scriptRunner);
         }
@@ -80,7 +80,7 @@ namespace FileExplorer.Script
         /// <param name="scriptRunner"></param>
         /// <returns></returns>
         public static async Task ExecuteAsync(this ICommandManager commandManager, string commandVariable = "{Command2Run}",
-            ParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
+            IParameterDic parameterDic = null, IScriptRunner scriptRunner = null)
         {
             
             IScriptCommand cmd = commandManager.GetCommandFromDictionary(commandVariable, null);

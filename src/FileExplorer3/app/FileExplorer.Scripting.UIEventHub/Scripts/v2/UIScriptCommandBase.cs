@@ -57,7 +57,7 @@ namespace FileExplorer.UIEventHub
 
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             S sender = pm.GetValue<S>(SenderKey);
             IUIInput input = pm.GetValue<IUIInput>(InputKey);
@@ -67,7 +67,7 @@ namespace FileExplorer.UIEventHub
             return executeInner(pm, sender, evnt, input, inpProcs);
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             S sender = pm.GetValue<S>(SenderKey);
             IUIInput input = pm.GetValue<IUIInput>(InputKey);
@@ -77,12 +77,12 @@ namespace FileExplorer.UIEventHub
             return await executeInnerAsync(pm, sender, evnt, input, inpProcs);
         }
 
-        protected virtual IScriptCommand executeInner(ParameterDic pm, S sender, R evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected virtual IScriptCommand executeInner(IParameterDic pm, S sender, R evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             return AsyncUtils.RunSync(() => executeInnerAsync(pm, sender, evnt, input, inpProcs));
         }
 
-        protected virtual async Task<IScriptCommand> executeInnerAsync(ParameterDic pm, S sender, R evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected virtual async Task<IScriptCommand> executeInnerAsync(IParameterDic pm, S sender, R evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             return executeInner(pm, sender, evnt, input, inpProcs);
         }

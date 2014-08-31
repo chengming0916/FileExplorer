@@ -12,8 +12,8 @@ namespace FileExplorer.Script
                 #region Constructor
 
         public SimpleScriptCommand(string commandKey,
-            Func<ParameterDic, IScriptCommand> executeFunc,
-            Func<ParameterDic, bool> canExecuteFunc = null, bool continueOnCaptureContext = true)
+            Func<IParameterDic, IScriptCommand> executeFunc,
+            Func<IParameterDic, bool> canExecuteFunc = null, bool continueOnCaptureContext = true)
             : base(commandKey)
         {
             _executeFunc = executeFunc;
@@ -25,14 +25,14 @@ namespace FileExplorer.Script
 
         #region Methods
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             if (_canExecuteFunc == null)
                 return true;
             else return _canExecuteFunc(pm);
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             return _executeFunc(pm);
         }
@@ -41,8 +41,8 @@ namespace FileExplorer.Script
 
         #region Data
 
-        private Func<ParameterDic, bool> _canExecuteFunc;
-        private Func<ParameterDic, IScriptCommand> _executeFunc;
+        private Func<IParameterDic, bool> _canExecuteFunc;
+        private Func<IParameterDic, IScriptCommand> _executeFunc;
 
         #endregion
 
@@ -58,8 +58,8 @@ namespace FileExplorer.Script
         #region Constructor
 
         public SimpleScriptCommandAsync(string commandKey,
-            Func<ParameterDic, Task<IScriptCommand>> executeFunc,
-            Func<ParameterDic, bool> canExecuteFunc = null, bool continueOnCaptureContext = true)
+            Func<IParameterDic, Task<IScriptCommand>> executeFunc,
+            Func<IParameterDic, bool> canExecuteFunc = null, bool continueOnCaptureContext = true)
             : base(commandKey)
         {
             _executeFunc = executeFunc;
@@ -71,14 +71,14 @@ namespace FileExplorer.Script
 
         #region Methods
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             if (_canExecuteFunc == null)
                 return true;
             else return _canExecuteFunc(pm);
         }
         
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             return await _executeFunc(pm);
         }
@@ -87,8 +87,8 @@ namespace FileExplorer.Script
 
         #region Data
 
-        private Func<ParameterDic, bool> _canExecuteFunc;
-        private Func<ParameterDic, Task<IScriptCommand>> _executeFunc;
+        private Func<IParameterDic, bool> _canExecuteFunc;
+        private Func<IParameterDic, Task<IScriptCommand>> _executeFunc;
 
         #endregion
 

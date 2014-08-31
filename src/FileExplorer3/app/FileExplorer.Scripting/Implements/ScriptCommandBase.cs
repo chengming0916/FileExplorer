@@ -43,17 +43,17 @@ namespace FileExplorer.Script
 
         #region Methods
 
-        public virtual IScriptCommand Execute(ParameterDic pm)
+        public virtual IScriptCommand Execute(IParameterDic pm)
         {
             return AsyncUtils.RunSync(() => ExecuteAsync(pm));
         }
 
-        public virtual async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public virtual async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             return Execute(pm);
         }
 
-        public virtual bool CanExecute(ParameterDic pm)
+        public virtual bool CanExecute(IParameterDic pm)
         {
             return true;
         }      

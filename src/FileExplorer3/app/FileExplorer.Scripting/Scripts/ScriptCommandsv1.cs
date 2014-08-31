@@ -15,7 +15,7 @@ namespace FileExplorer.Script
         public static NoScriptCommand NoCommand = new NoScriptCommand();
 
 
-        public static IScriptCommand If(Func<ParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise)
+        public static IScriptCommand If(Func<IParameterDic, bool> condition, IScriptCommand ifTrue, IScriptCommand otherwise)
         {
             return new IfScriptCommand(condition, ifTrue, otherwise);
         }
@@ -48,24 +48,24 @@ namespace FileExplorer.Script
 
     public class IfScriptCommand : ScriptCommandBase
     {
-        private Func<ParameterDic, bool> _condition;
+        private Func<IParameterDic, bool> _condition;
         private IScriptCommand _otherwiseCommand;
         private IScriptCommand _ifTrueCommand;
         private bool _continueOnCaptureContext = false;
-        public IfScriptCommand(Func<ParameterDic, bool> condition,
+        public IfScriptCommand(Func<IParameterDic, bool> condition,
             IScriptCommand ifTrueCommand, IScriptCommand otherwiseCommand)
             : base("IfScriptCommand")
         { _condition = condition; _ifTrueCommand = ifTrueCommand; _otherwiseCommand = otherwiseCommand; }
 
         
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             if (_condition(pm))
                 return _ifTrueCommand;
             return _otherwiseCommand;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             if (_condition != null && _condition(pm))
                 return _ifTrueCommand == null || _ifTrueCommand.CanExecute(pm);
@@ -73,7 +73,7 @@ namespace FileExplorer.Script
         }
 
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             if (_condition(pm))
                 return _ifTrueCommand;
@@ -93,7 +93,7 @@ namespace FileExplorer.Script
             _commandFunc = commandFunc;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             List<IScriptCommand> outputCommands = new List<IScriptCommand>();
             foreach (var s in _source)
@@ -108,7 +108,7 @@ namespace FileExplorer.Script
             return new RunInSequenceScriptCommand(outputCommands.ToArray(), _nextCommand);
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             List<IScriptCommand> outputCommands = new List<IScriptCommand>();
             foreach (var s in _source)
@@ -125,7 +125,7 @@ namespace FileExplorer.Script
                 new RunInSequenceScriptCommand(outputCommands.ToArray(), _nextCommand);
         }
 
-        public virtual bool CanExecute(ParameterDic pm)
+        public virtual bool CanExecute(IParameterDic pm)
         {
             return _source.Count() > 0 && _commandFunc(_source.First()).CanExecute(pm);
         }
@@ -159,7 +159,7 @@ namespace FileExplorer.Script
             get { return String.Join(",", _scriptCommands.Select(c => c.CommandKey)); }
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             ScriptRunner.RunScript(pm, ScriptCommands);
             if (pm.Error != null)
@@ -167,12 +167,12 @@ namespace FileExplorer.Script
             else return _nextCommand;
         }
 
-        public virtual bool CanExecute(ParameterDic pm)
+        public virtual bool CanExecute(IParameterDic pm)
         {
             return _scriptCommands.First().CanExecute(pm);
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             await ScriptRunner.RunScriptAsync(pm, ScriptCommands);
             if (pm.Error != null)
@@ -199,17 +199,17 @@ namespace FileExplorer.Script
             get { return "None"; }
         }
 
-        public IScriptCommand Execute(ParameterDic pm)
+        public IScriptCommand Execute(IParameterDic pm)
         {
             return null;
         }
 
-        public bool CanExecute(ParameterDic pm)
+        public bool CanExecute(IParameterDic pm)
         {
             return false;
         }
 
-        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             return Execute(pm);
         }

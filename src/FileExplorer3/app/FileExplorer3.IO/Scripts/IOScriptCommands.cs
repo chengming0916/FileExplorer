@@ -73,26 +73,26 @@ namespace FileExplorer.Script
     /// </summary>    
     public class OpenWithScriptCommand : ScriptCommandBase
     {
-        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
+        private Func<IParameterDic, IEntryModel[]> _srcModelFunc;
         OpenWithInfo _info;
 
         /// <summary>
         /// Launch a file (e.g. txt) using the OpenWithInfo, if null then default method will be used, Require Parameter (IEntryModel[])
         /// </summary>
         /// <param name="info"></param>
-        public OpenWithScriptCommand(OpenWithInfo info = null, Func<ParameterDic, IEntryModel[]> srcModelFunc = null)
+        public OpenWithScriptCommand(OpenWithInfo info = null, Func<IParameterDic, IEntryModel[]> srcModelFunc = null)
             : base("OpenWith")
         {
             _info = info;
             _srcModelFunc = srcModelFunc ?? WPFScriptCommands.GetEntryModelFromParameter;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             return base.CanExecute(pm);
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var parameter = _srcModelFunc(pm);
             if (parameter != null && parameter.Count() == 1)
@@ -152,16 +152,16 @@ namespace FileExplorer.Script
         public static DeleteFileBasedEntryCommand FromParameter =
             new DeleteFileBasedEntryCommand(WPFScriptCommands.GetEntryModelFromParameter);
 
-        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
+        private Func<IParameterDic, IEntryModel[]> _srcModelFunc;
 
-        public DeleteFileBasedEntryCommand(Func<ParameterDic, IEntryModel[]> srcModelFunc)
+        public DeleteFileBasedEntryCommand(Func<IParameterDic, IEntryModel[]> srcModelFunc)
             : base("Delete")
         {
             _srcModelFunc = srcModelFunc;
         }
 
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             CancellationToken ct = pm.CancellationToken;
             var progress = pm.ContainsKey("Progress") ? pm["Progress"] as IProgress<TransferProgress> : NullTransferProgress.Instance;
@@ -212,7 +212,7 @@ namespace FileExplorer.Script
             else throw new ArgumentException("Transfer work with IDiskProfile only.");
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var srcProfile = _srcModel.Profile as IDiskProfile;
             var destProfile = _destDirModel.Profile as IDiskProfile;
@@ -269,7 +269,7 @@ namespace FileExplorer.Script
             else throw new ArgumentException("Transfer work with IDiskProfile only.");
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var destProfile = _destDirModel.Profile as IDiskProfile;
 
@@ -335,7 +335,7 @@ namespace FileExplorer.Script
 
 
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             try
             {

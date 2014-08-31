@@ -122,7 +122,7 @@ namespace FileExplorer.Script
             ContinueOnCaptureContext = true;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
 
             var evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);

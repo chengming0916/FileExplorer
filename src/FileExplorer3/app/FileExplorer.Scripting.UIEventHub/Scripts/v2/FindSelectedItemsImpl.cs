@@ -79,7 +79,7 @@ namespace FileExplorer.UIEventHub
         }
 
 
-        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             IChildInfo icInfo = UITools.FindVisualChild<Panel>(scp) as IChildInfo;
@@ -127,7 +127,7 @@ namespace FileExplorer.UIEventHub
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<FindSelectedItemsUsingGridView>();
 
 
-        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic,
+        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic,
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             Point posRelToScp = pm.GetValue<Point>(CurrentRelativePositionKey);
@@ -198,7 +198,7 @@ namespace FileExplorer.UIEventHub
             return HitTestResultBehavior.Continue;
         }
 
-        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             Rect selectionBound = pm.GetValue<Rect>(SelectionBoundKey);
             var scp = ControlUtils.GetScrollContentPresenter(ic);                        

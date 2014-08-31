@@ -43,7 +43,7 @@ namespace FileExplorer.UIEventHub
             CurrentRelativePositionKey = "{CurrentRelativePosition}";
         }
 
-        protected override Script.IScriptCommand executeInner(ParameterDic pm, Control sender, 
+        protected override Script.IScriptCommand executeInner(IParameterDic pm, Control sender, 
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             var scp = ControlUtils.GetScrollContentPresenter(sender);

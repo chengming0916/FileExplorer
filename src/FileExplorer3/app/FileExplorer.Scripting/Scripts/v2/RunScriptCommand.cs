@@ -47,7 +47,7 @@ namespace FileExplorer.Script
         {
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             IScriptCommand command = pm.GetValue<IScriptCommand>(CommandKey);
             if (command == null && ThrowIfError)

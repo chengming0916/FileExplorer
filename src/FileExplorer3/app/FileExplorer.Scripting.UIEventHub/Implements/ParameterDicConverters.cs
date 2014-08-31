@@ -13,7 +13,7 @@ namespace FileExplorer.Script
     {
         public static IParameterDicConverter ConvertParameterOnly =
             new ParameterDicConverterBase((p, p2) =>
-                    p is ParameterDic ? (p as ParameterDic) :
+                    p is IParameterDic ? (p as IParameterDic) :
                     new ParameterDic() { { "Parameter", p } },
                 (pd, p2) => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
 
@@ -63,7 +63,7 @@ namespace FileExplorer.Script
             }, null, ParameterDicConverters.ConvertParameterOnly);
 
 
-        public static IParameterDicConverter FromParameterDic(ParameterDic pd, IParameterDicConverter baseConverter = null)
+        public static IParameterDicConverter FromParameterDic(IParameterDic pd, IParameterDicConverter baseConverter = null)
         {
             return new ParameterDicConverterBase((p, p2) =>
             {

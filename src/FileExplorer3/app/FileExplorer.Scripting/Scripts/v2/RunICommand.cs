@@ -65,7 +65,7 @@ namespace FileExplorer.Script
             ParameterKey = "{Parameter}";
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             ICommand command = pm.GetValue<ICommand>(CommandKey);
             object parameter = pm.GetValue<object>(ParameterKey);

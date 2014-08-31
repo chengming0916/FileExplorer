@@ -42,7 +42,7 @@ namespace FileExplorer.UIEventHub
         }
 
 
-        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {            
             if (!_update)
             {                

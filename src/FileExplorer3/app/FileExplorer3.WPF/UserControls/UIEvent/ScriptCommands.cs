@@ -23,7 +23,7 @@ namespace FileExplorer.Script
 
         public static IScriptCommand IfKeyPressed(Key key, IScriptCommand ifTrue, IScriptCommand otherwise = null)
         {
-            Func<ParameterDic, bool> condition = pm =>
+            Func<IParameterDic, bool> condition = pm =>
             {
                 var pd = pm.AsUIParameterDic();
                 switch (pd.EventArgs.RoutedEvent.Name)
@@ -62,7 +62,7 @@ namespace FileExplorer.Script
             return memberExpression.Member.Name;
         }
 
-        public IScriptCommand Execute(ParameterDic pm)
+        public IScriptCommand Execute(IParameterDic pm)
         {
             UIParameterDic parameterDic = pm.AsUIParameterDic();
             FrameworkElement control = parameterDic.Sender as FrameworkElement;
@@ -96,11 +96,11 @@ namespace FileExplorer.Script
             return null;
         }
 
-        public bool CanExecute(ParameterDic pm)
+        public bool CanExecute(IParameterDic pm)
         {
             return true;
         }
-        public async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             return Execute(pm);
         }

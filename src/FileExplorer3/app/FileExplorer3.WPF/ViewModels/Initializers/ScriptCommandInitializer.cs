@@ -18,7 +18,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public IScriptCommand OnModelCreated { get; set; }
 
-        public ParameterDic StartupParameters { get; set; }
+        public IParameterDic StartupParameters { get; set; }
 
         public Caliburn.Micro.IEventAggregator Events
         {

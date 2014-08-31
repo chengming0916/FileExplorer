@@ -132,7 +132,7 @@ namespace FileExplorer.Script
             RemoveOriginal = false; AllowCustomImplementation = true;
         }
 
-        private async Task<IScriptCommand> GetAssignDestinationCommandAsync(ParameterDic pm, IEntryModel[] srcEntries, 
+        private async Task<IScriptCommand> GetAssignDestinationCommandAsync(IParameterDic pm, IEntryModel[] srcEntries, 
             IEntryModel destEntry, string destinationKey, IScriptCommand nextCommand)
         {
             if (DestinationKey != null)
@@ -147,7 +147,7 @@ namespace FileExplorer.Script
             else return nextCommand;
         }
 
-        private async Task<IScriptCommand> transferSystemIOAsync(ParameterDic pm, IEntryModel[] srcEntries, IEntryModel destEntry, string destinationKey)
+        private async Task<IScriptCommand> transferSystemIOAsync(IParameterDic pm, IEntryModel[] srcEntries, IEntryModel destEntry, string destinationKey)
         {
             return await Task.Run<IScriptCommand>( async () =>
                 {
@@ -211,7 +211,7 @@ namespace FileExplorer.Script
                 });
         }
 
-        private async Task<IScriptCommand> transferScriptCommandAsync(ParameterDic pm, IEntryModel[] srcEntries, IEntryModel destEntry, string destinationKey)
+        private async Task<IScriptCommand> transferScriptCommandAsync(IParameterDic pm, IEntryModel[] srcEntries, IEntryModel destEntry, string destinationKey)
         {
             var progress = pm.GetProgress() ?? NullTransferProgress.Instance;
 
@@ -259,7 +259,7 @@ namespace FileExplorer.Script
             return await GetAssignDestinationCommandAsync(pm, srcEntries, destEntry, destinationKey, NextCommand);
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             IEntryModel[] srcEntries = null;
             IEntryModel destEntry = null;

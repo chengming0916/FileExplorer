@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Defines\Interfaces\IParameterDic.cs" />
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />

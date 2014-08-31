@@ -26,13 +26,13 @@ namespace TestApp.Script
 
     public class OpenInNewMdiWindowV1 : ScriptCommandBase
     {
-        private Func<ParameterDic, IEntryModel[]> _getSelectionFunc;
+        private Func<IParameterDic, IEntryModel[]> _getSelectionFunc;
         private IExplorerInitializer _initializer;
         private MdiContainer _container;
 
         public OpenInNewMdiWindowV1(MdiContainer container,
             IExplorerInitializer initializer,
-            Func<ParameterDic, IEntryModel[]> getSelectionFunc = null)
+            Func<IParameterDic, IEntryModel[]> getSelectionFunc = null)
             : base("OpenInNewWindow")
         {
             _container = container;
@@ -40,7 +40,7 @@ namespace TestApp.Script
             _getSelectionFunc = getSelectionFunc;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
 
             var viewModel = new ExplorerViewModel(_initializer);
@@ -68,7 +68,7 @@ namespace TestApp.Script
         }
 
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var selection = _getSelectionFunc == null ? null : _getSelectionFunc(pm);
             return selection == null || (selection.Count() == 1 && selection[0].IsDirectory);

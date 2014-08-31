@@ -59,7 +59,7 @@ namespace FileExplorer.Script
             EntryKey = "{Entry}";
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {            
             IEntryModel entry = pm.GetValue<IEntryModel>(EntryKey, null);
             if (entry == null)

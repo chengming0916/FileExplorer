@@ -73,7 +73,7 @@ namespace FileExplorer.Script
             ContinueOnCaptureContext = true;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             IProfile[] rootProfiles = pm.GetValue<IProfile[]>(ProfilesKey);
             if (rootProfiles == null || rootProfiles.Length == 0)

@@ -166,7 +166,7 @@ namespace FileExplorer.Script
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<IfValue>();
 
-        private bool compare(ParameterDic pm)
+        private bool compare(IParameterDic pm)
         {
 
             try
@@ -201,7 +201,7 @@ namespace FileExplorer.Script
             }
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             object value1 = pm.GetValue<Object>(Variable1Key);
             object value2 = pm.GetValue<Object>(Variable2Key);

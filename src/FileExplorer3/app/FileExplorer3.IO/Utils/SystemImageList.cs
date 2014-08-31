@@ -713,7 +713,7 @@ namespace QuickZip.Converters
 
         public virtual void Dispose(bool disposing)
         {
-            logger.Debug(String.Format("Dispose, disposing : {0}", disposing));
+            //logger.Debug(String.Format("Dispose, disposing : {0}", disposing));
             if (!_disposed)
             {
                 if (disposing)

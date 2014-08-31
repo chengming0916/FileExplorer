@@ -85,7 +85,7 @@ namespace FileExplorer.Script
             DestinationDirectoryEntryKey = "{Destination}";
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             Dictionary<string, Stream> compressDic = new Dictionary<string, Stream>();
             try

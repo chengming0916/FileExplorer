@@ -52,7 +52,7 @@ namespace FileExplorer.UIEventHub
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<AssignDataContext>();
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             FrameworkElement origSource = pm.GetValue<FrameworkElement>(SourceElementKey);
             if (origSource == null)

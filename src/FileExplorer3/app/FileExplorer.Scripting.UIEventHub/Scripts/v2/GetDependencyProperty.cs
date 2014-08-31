@@ -64,7 +64,7 @@ namespace FileExplorer.UIEventHub
             DestinationKey = "{Value}";
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             FrameworkElement ele = pm.GetValue<FrameworkElement>(ElementKey);
             DependencyProperty property = pm.GetValue<DependencyProperty>(PropertyKey);

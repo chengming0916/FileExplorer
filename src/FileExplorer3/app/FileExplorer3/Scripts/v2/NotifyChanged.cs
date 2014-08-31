@@ -136,7 +136,7 @@ namespace FileExplorer.Script
             ChangeType = Defines.ChangeType.Changed;
         }
 
-        private bool parseEntryAndProfile(ParameterDic pm, string key, string profileKey,
+        private bool parseEntryAndProfile(IParameterDic pm, string key, string profileKey,
             out string[] entryPath, out IProfile profile)
         {
             object value = pm.GetValue(key);
@@ -166,7 +166,7 @@ namespace FileExplorer.Script
             return false;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             string[] sourcePaths, destinationPaths;
             IProfile sourceProfile, destinationProfile;

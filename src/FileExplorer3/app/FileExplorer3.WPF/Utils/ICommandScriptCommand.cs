@@ -21,12 +21,12 @@ namespace FileExplorer.WPF.Utils
             _parameterDicConverter = parameterDicConverter;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             return _command.CanExecute(_parameterDicConverter.ConvertBack(pm));
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             try
             {

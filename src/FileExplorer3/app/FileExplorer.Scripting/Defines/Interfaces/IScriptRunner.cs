@@ -8,8 +8,8 @@ namespace FileExplorer.Script
 {
     public interface IScriptRunner
     {
-        void Run(Queue<IScriptCommand> cmds, ParameterDic initialParameters);
-        Task RunAsync(Queue<IScriptCommand> cmds, ParameterDic initialParameters);
+        void Run(Queue<IScriptCommand> cmds, IParameterDic initialParameters);
+        Task RunAsync(Queue<IScriptCommand> cmds, IParameterDic initialParameters);
     }
 
 }

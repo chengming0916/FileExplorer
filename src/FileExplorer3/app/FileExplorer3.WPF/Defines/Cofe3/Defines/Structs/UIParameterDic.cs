@@ -19,7 +19,7 @@ namespace FileExplorer.Script
             return dic.InputProcessors.First(p => p is DragInputProcessor) as DragInputProcessor;
         }
 
-        public static UIParameterDic AsUIParameterDic(this ParameterDic dic)
+        public static UIParameterDic AsUIParameterDic(this IParameterDic dic)
         {
             if (dic is UIParameterDic)
                 return (UIParameterDic)dic;

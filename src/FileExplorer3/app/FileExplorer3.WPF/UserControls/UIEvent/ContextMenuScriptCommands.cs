@@ -17,7 +17,7 @@ namespace FileExplorer.WPF.BaseControls.Menu
         private ContextMenu _contextMenu;
         public ShowContextMenu(ContextMenu contextMenu) : base("ShowContextMenu", "EventArgs") { _contextMenu = contextMenu; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             if (!pd.EventArgs.Handled)

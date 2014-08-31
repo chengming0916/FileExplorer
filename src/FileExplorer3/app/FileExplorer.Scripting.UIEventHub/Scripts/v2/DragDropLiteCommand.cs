@@ -46,7 +46,7 @@ namespace FileExplorer.UIEventHub
             DragSourceKey = "{ISupportDrag}";
         }
 
-        protected override Script.IScriptCommand executeInner(ParameterDic pm, Control sender,
+        protected override Script.IScriptCommand executeInner(IParameterDic pm, Control sender,
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             if (State == DragDropState.Start)

@@ -39,7 +39,7 @@ namespace FileExplorer.UIEventHub
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<SetHandledIfNotFocused>();
 
-        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             var scp = ControlUtils.GetScrollContentPresenter(ic);
 

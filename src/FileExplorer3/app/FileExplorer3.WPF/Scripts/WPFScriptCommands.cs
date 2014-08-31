@@ -34,18 +34,18 @@ namespace FileExplorer.Script
         /// </summary>
         /// <param name="pd"></param>
         /// <returns></returns>
-        public static IEntryModel[] GetEntryModelFromParameter(ParameterDic pd)
+        public static IEntryModel[] GetEntryModelFromParameter(IParameterDic pd)
         {
             return pd["Parameter"] as IEntryModel[];
         }
 
-        public static IEntryModel GetFirstEntryModelFromParameter(ParameterDic pd)
+        public static IEntryModel GetFirstEntryModelFromParameter(IParameterDic pd)
         {
             return (pd["Parameter"] as IEntryModel[]).FirstOrDefault();
         }
 
         public static IScriptCommand DoSelection(string commandKey,
-            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc,
+            Func<IParameterDic, IEntryViewModel[]> getSelectionFunc,
             Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
             IScriptCommand noSelectionCommand)
         {
@@ -76,8 +76,8 @@ namespace FileExplorer.Script
 
     public static partial class WPFScriptCommands
     {
-        public static IfOkCancel IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
-            Func<ParameterDic, string> messageFunc, IScriptCommand okCommand,
+        public static IfOkCancel IfOkCancel(IWindowManager wm, Func<IParameterDic, string> captionFunc,
+            Func<IParameterDic, string> messageFunc, IScriptCommand okCommand,
             IScriptCommand cancelCommand)
         { return new IfOkCancel(wm, captionFunc, messageFunc, okCommand, cancelCommand); }
 
@@ -213,8 +213,8 @@ namespace FileExplorer.Script
     {
         private IScriptCommand _okCommand;
         private IScriptCommand _cancelCommand;
-        internal IfOkCancel(IWindowManager wm, Func<ParameterDic, string> captionFunc,
-            Func<ParameterDic, string> messageFunc, IScriptCommand okCommand,
+        internal IfOkCancel(IWindowManager wm, Func<IParameterDic, string> captionFunc,
+            Func<IParameterDic, string> messageFunc, IScriptCommand okCommand,
             IScriptCommand cancelCommand)
             : base(
                    pd =>
@@ -231,7 +231,7 @@ namespace FileExplorer.Script
             _cancelCommand = cancelCommand;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             return _okCommand.CanExecute(pm);
         }
@@ -268,7 +268,7 @@ namespace FileExplorer.Script
         {
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var filePicker = new FilePickerViewModel(_initializer, _filter, _mode);
             if (!String.IsNullOrEmpty(_defaultFileName))
@@ -311,7 +311,7 @@ namespace FileExplorer.Script
             Message = message;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             IWindowManager _wm = pm.ContainsKey("WindowManager") && pm["WindowManager"] is IWindowManager ?
                 (IWindowManager)pm["WindowManager"] : new WindowManager();
@@ -336,7 +336,7 @@ namespace FileExplorer.Script
             _handleProgress = handleProgress;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             pm["ProgressHeader"] = _header;
             var pdv = new ProgressDialogViewModel(pm);
@@ -359,7 +359,7 @@ namespace FileExplorer.Script
             return new HideProgress();
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             pm["ProgressHeader"] = _header;
             var pdv = new ProgressDialogViewModel(pm);
@@ -392,7 +392,7 @@ namespace FileExplorer.Script
             _progress = progress;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             if (pm.ContainsKey("Progress"))
             {
@@ -411,7 +411,7 @@ namespace FileExplorer.Script
 
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             if (pm.ContainsKey("Progress"))
             {
@@ -442,7 +442,7 @@ namespace FileExplorer.Script
         }
 
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var pdv = pm.ContainsKey("Progress") && pm["Progress"] is IProgress<TransferProgress>
                 ? pm["Progress"] as IProgress<TransferProgress> :
@@ -534,7 +534,7 @@ namespace FileExplorer.Script
         }
 
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var httpClient = _httpClientFunc();
             var pdv = pm.ContainsKey("Progress") && pm["Progress"] is IProgress<TransferProgress>
@@ -594,7 +594,7 @@ namespace FileExplorer.Script
             _evnt = evnt;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             _events = _events ?? pm.AsVMParameterDic().Events;
             _events.PublishOnUIThread(_evnt);
@@ -635,7 +635,7 @@ namespace FileExplorer.Script
         }
 
         [Obsolete]
-        public static IScriptCommand Do(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
+        public static IScriptCommand Do(Func<ITabbedExplorerViewModel, IParameterDic, IScriptCommand> commandFunc)
         {
             return new DoTabbedExplorer(commandFunc);
         }
@@ -654,7 +654,7 @@ namespace FileExplorer.Script
             _tevm = tevm;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var tevm = (_tevm ?? pm["TabbedExplorer"]) as ITabbedExplorerViewModel;
             if (tevm == null)
@@ -668,7 +668,7 @@ namespace FileExplorer.Script
             return ResultCommand.NoError;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             if (_tevm == null && !pm.ContainsKey("TabbedExplorer"))
                 return false;
@@ -692,7 +692,7 @@ namespace FileExplorer.Script
             _tevm = tevm;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             IEntryModel dirModel = null;
@@ -709,7 +709,7 @@ namespace FileExplorer.Script
             return ResultCommand.NoError;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             if (_tevm == null && !pm.ContainsKey("TabbedExplorer"))
                 return false;
@@ -731,22 +731,22 @@ namespace FileExplorer.Script
     [Obsolete]
     internal class DoTabbedExplorer : DoCommandBase<ITabbedExplorerViewModel>
     {
-        internal DoTabbedExplorer(Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
+        internal DoTabbedExplorer(Func<ITabbedExplorerViewModel, IParameterDic, IScriptCommand> commandFunc)
             : base("TabbedExplorer", commandFunc)
         {
         }
 
-        protected DoTabbedExplorer(Func<ITabbedExplorerViewModel, ParameterDic, Task<IScriptCommand>> commandFunc)
+        protected DoTabbedExplorer(Func<ITabbedExplorerViewModel, IParameterDic, Task<IScriptCommand>> commandFunc)
             : base("TabbedExplorer", commandFunc)
         {
         }
 
-        internal DoTabbedExplorer(string commandKey, Func<ITabbedExplorerViewModel, ParameterDic, IScriptCommand> commandFunc)
+        internal DoTabbedExplorer(string commandKey, Func<ITabbedExplorerViewModel, IParameterDic, IScriptCommand> commandFunc)
             : base(commandKey, commandFunc)
         {
         }
 
-        protected DoTabbedExplorer(string commandKey, Func<ITabbedExplorerViewModel, ParameterDic, Task<IScriptCommand>> commandFunc)
+        protected DoTabbedExplorer(string commandKey, Func<ITabbedExplorerViewModel, IParameterDic, Task<IScriptCommand>> commandFunc)
             : base(commandKey, commandFunc)
         {
         }
@@ -863,16 +863,16 @@ namespace FileExplorer.Script
 
     internal abstract class DoCommandBase<VM> : ScriptCommandBase
     {
-        private Func<VM, ParameterDic, Task<IScriptCommand>> _commandFunc;
+        private Func<VM, IParameterDic, Task<IScriptCommand>> _commandFunc;
         private string _viewModelName;
-        protected DoCommandBase(string viewModelName, Func<VM, ParameterDic, Task<IScriptCommand>> commandFunc)
+        protected DoCommandBase(string viewModelName, Func<VM, IParameterDic, Task<IScriptCommand>> commandFunc)
             : base(viewModelName, viewModelName)
         {
             _viewModelName = viewModelName;
             _commandFunc = commandFunc;
         }
 
-        protected DoCommandBase(string viewModelName, Func<VM, ParameterDic, IScriptCommand> commandFunc)
+        protected DoCommandBase(string viewModelName, Func<VM, IParameterDic, IScriptCommand> commandFunc)
             : this(viewModelName, (vm, pd) => Task.Run(() => commandFunc(vm, pd)))
         {
 
@@ -889,7 +889,7 @@ namespace FileExplorer.Script
 
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             VM evm = (VM)pm[_viewModelName];
             if (evm == null)
@@ -897,7 +897,7 @@ namespace FileExplorer.Script
             return await _commandFunc(evm, pm);
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             if (pm.ContainsKey(_viewModelName))
             {
@@ -910,12 +910,12 @@ namespace FileExplorer.Script
 
     internal class DoSelection : ScriptCommandBase
     {
-        private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
+        private Func<IParameterDic, IEntryViewModel[]> _getSelectionFunc;
         private Func<IEntryViewModel[], IScriptCommand> _nextCommandFunc;
         private IScriptCommand _noSelectionCommand;
 
         internal DoSelection(string commandKey,
-            Func<ParameterDic, IEntryViewModel[]> getSelectionFunc,
+            Func<IParameterDic, IEntryViewModel[]> getSelectionFunc,
             Func<IEntryViewModel[], IScriptCommand> nextCommandFunc,
             IScriptCommand noSelectionCommand)
             : base(commandKey)
@@ -925,7 +925,7 @@ namespace FileExplorer.Script
             _noSelectionCommand = noSelectionCommand;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var selection = _getSelectionFunc(pm);
             if (selection == null || selection.Length == 0 || selection[0] == null)
@@ -933,7 +933,7 @@ namespace FileExplorer.Script
             else return _nextCommandFunc(selection);
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             IScriptCommand nextCommand = Execute(pm);
             return nextCommand != null && nextCommand.CanExecute(pm);
@@ -979,7 +979,7 @@ namespace FileExplorer.Script
         }
 
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             _events = _events ?? pm["Events"] as IEventAggregator;
             if (_events != null)
@@ -1018,7 +1018,7 @@ namespace FileExplorer.Script
 
         #region Methods
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
             if (evm != null && _appliedRootDirectories != null && _appliedRootDirectories.Length > 0)
@@ -1090,7 +1090,7 @@ namespace FileExplorer.Script
             _dirPath = dirPath;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             IExplorerViewModel evm = pm["Explorer"] as IExplorerViewModel;
             IEventAggregator events = pm["Events"] as IEventAggregator;
@@ -1132,7 +1132,7 @@ namespace FileExplorer.Script
             _initializer = initializer;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var evm = new ExplorerViewModel(_initializer);
             pm["Explorer"] = evm;
@@ -1161,7 +1161,7 @@ namespace FileExplorer.Script
             _cancelCommand = cancelCommand;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             _nextCommandFunc = _nextCommandFunc ?? (em => ResultCommand.NoError);
             if (_rootProfiles != null && _rootProfiles.Length > 0)
@@ -1219,24 +1219,24 @@ namespace FileExplorer.Script
 
     internal class ExpandSelectedDirectory : ScriptCommandBase
     {
-        private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
+        private Func<IParameterDic, IEntryViewModel[]> _getSelectionFunc;
 
         /// <summary>
         /// Broadcast change directory to current selected directory, required FileList (IDirectoryTreeViewModel)
         /// </summary>
-        public ExpandSelectedDirectory(Func<ParameterDic, IEntryViewModel[]> getSelectionVMFunc)
+        public ExpandSelectedDirectory(Func<IParameterDic, IEntryViewModel[]> getSelectionVMFunc)
             : base("ExpandSelectedDirectory")
         {
             _getSelectionFunc = getSelectionVMFunc;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var selectedItems = _getSelectionFunc(pm);
             return selectedItems.Length == 1 && selectedItems[0].EntryModel.IsDirectory;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var selectedItem = _getSelectionFunc(pm).FirstOrDefault();
 
@@ -1414,7 +1414,7 @@ namespace FileExplorer.Script
         /// FileList.Selection.SelectedItems as IEntryModel[] -> Parameter, required FileList (IFileListViewModel)
         /// </summary>
         /// <param name="thenCommand"></param>
-        public AssignSelectionToVariable(Func<ParameterDic, IEntryModel[]> getSelectionFunc,
+        public AssignSelectionToVariable(Func<IParameterDic, IEntryModel[]> getSelectionFunc,
             string variableName, IScriptCommand thenCommand)
             : base(
             new SimpleScriptCommand("AssignSelectionToVariableAsEntryModelArray",
@@ -1428,7 +1428,7 @@ namespace FileExplorer.Script
 
         }
 
-        public AssignSelectionToVariable(Func<ParameterDic, IEntryModel> getSelectionFunc,
+        public AssignSelectionToVariable(Func<IParameterDic, IEntryModel> getSelectionFunc,
            string variableName, IScriptCommand thenCommand)
             : base(
             new SimpleScriptCommand("AssignSelectionToVariableAsEntryModel",
@@ -1465,7 +1465,7 @@ namespace FileExplorer.Script
             _force = force;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             if (!pm.ContainsKey("FileList"))
                 return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
@@ -1495,7 +1495,7 @@ namespace FileExplorer.Script
             _nextCommand = nextCommand;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             if (!pm.ContainsKey("FileList"))
                 return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
@@ -1520,7 +1520,7 @@ namespace FileExplorer.Script
             _nextCommand = nextCommand;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             if (!pm.ContainsKey("FileList"))
                 return ResultCommand.Error(new ArgumentException("Paremeter FileList is not found"));
@@ -1538,24 +1538,24 @@ namespace FileExplorer.Script
     internal class OpenSelectedDirectory : ScriptCommandBase
     {
         public static OpenSelectedDirectory FromFileList = new OpenSelectedDirectory(WPFExtensionMethods.GetFileListSelectionFunc);
-        private Func<ParameterDic, IEntryModel[]> _getSelectionFunc;
+        private Func<IParameterDic, IEntryModel[]> _getSelectionFunc;
 
         /// <summary>
         /// Broadcast change directory to current selected directory, required FileList (IFileListViewModel)
         /// </summary>
-        public OpenSelectedDirectory(Func<ParameterDic, IEntryModel[]> getSelectionFunc)
+        public OpenSelectedDirectory(Func<IParameterDic, IEntryModel[]> getSelectionFunc)
             : base("OpenSelectedDirectory")
         {
             _getSelectionFunc = getSelectionFunc;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var selectedItems = _getSelectionFunc(pm);
             return selectedItems.Length == 1 && selectedItems[0].IsDirectory;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var selectedItem = _getSelectionFunc(pm).FirstOrDefault();
 
@@ -1571,26 +1571,26 @@ namespace FileExplorer.Script
 
     internal class OpenInNewWindowCommand : ScriptCommandBase
     {
-        private Func<ParameterDic, IEntryModel[]> _getSelectionFunc;
+        private Func<IParameterDic, IEntryModel[]> _getSelectionFunc;
         private IExplorerInitializer _initializer;
 
         /// <summary>
         /// Broadcast change directory to current selected directory, required FileList (IFileListViewModel)
         /// </summary>
-        public OpenInNewWindowCommand(IExplorerInitializer initializer, Func<ParameterDic, IEntryModel[]> getSelectionFunc)
+        public OpenInNewWindowCommand(IExplorerInitializer initializer, Func<IParameterDic, IEntryModel[]> getSelectionFunc)
             : base("OpenInNewWindowCommand")
         {
             _initializer = initializer;
             _getSelectionFunc = getSelectionFunc;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var selectedItems = _getSelectionFunc(pm);
             return selectedItems.Length == 1 && selectedItems[0].IsDirectory;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var selectedItem = _getSelectionFunc(pm).FirstOrDefault();
 
@@ -1604,24 +1604,24 @@ namespace FileExplorer.Script
     internal class ToggleRenameCommand : ScriptCommandBase
     {
         public static ToggleRenameCommand ForSelectedItem = new ToggleRenameCommand(WPFExtensionMethods.GetFileListSelectionVMFunc);
-        private Func<ParameterDic, IEntryViewModel[]> _getSelectionFunc;
+        private Func<IParameterDic, IEntryViewModel[]> _getSelectionFunc;
 
         /// <summary>
         /// Broadcast change directory to current selected directory, required FileList (IFileListViewModel)
         /// </summary>
-        public ToggleRenameCommand(Func<ParameterDic, IEntryViewModel[]> getSelectionFunc)
+        public ToggleRenameCommand(Func<IParameterDic, IEntryViewModel[]> getSelectionFunc)
             : base("ToggleRenameCommand")
         {
             _getSelectionFunc = getSelectionFunc;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var selectedItems = _getSelectionFunc(pm);
             return selectedItems.Length == 1 && selectedItems[0] != null && selectedItems[0].IsRenamable;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var selectedItem = _getSelectionFunc(pm).FirstOrDefault();
 
@@ -1637,17 +1637,17 @@ namespace FileExplorer.Script
     {
         //public static RenameFileBasedEntryCommand FromParameter = new RenameFileBasedEntryCommand(
         //    FileBasedScriptCommandsHelper.GetFirstEntryModelFromParameter);
-        private Func<ParameterDic, IEntryModel> _srcModelFunc;
+        private Func<IParameterDic, IEntryModel> _srcModelFunc;
         private string _newName;
 
-        public RenameFileBasedEntryCommand(Func<ParameterDic, IEntryModel> srcModelFunc, string newName = null)
+        public RenameFileBasedEntryCommand(Func<IParameterDic, IEntryModel> srcModelFunc, string newName = null)
             : base("Rename")
         {
             _srcModelFunc = srcModelFunc;
             _newName = newName;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             string newName = _newName ?? pm["NewName"] as string;
             if (String.IsNullOrEmpty(newName))
@@ -1669,7 +1669,7 @@ namespace FileExplorer.Script
 
     internal class LookupEntryCommand : ScriptCommandBase
     {
-        private Func<ParameterDic, IEntryModel[]> _getItemsFunc;
+        private Func<IParameterDic, IEntryModel[]> _getItemsFunc;
         private Func<IEntryModel, bool> _lookupFunc;
         private Func<IEntryModel, IScriptCommand> _foundCommandFunc;
         private IScriptCommand _notFoundCommand;
@@ -1677,7 +1677,7 @@ namespace FileExplorer.Script
         public LookupEntryCommand(
             Func<IEntryModel, bool> lookupFunc,
             Func<IEntryModel, IScriptCommand> foundCommandFunc, IScriptCommand notFoundCommand,
-            Func<ParameterDic, IEntryModel[]> getItemsFunc = null
+            Func<IParameterDic, IEntryModel[]> getItemsFunc = null
             )
             : base("LookupEntry")
         {
@@ -1687,7 +1687,7 @@ namespace FileExplorer.Script
             _notFoundCommand = notFoundCommand;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var foundItem = _getItemsFunc(pm).FirstOrDefault(_lookupFunc);
             if (foundItem != null)
@@ -1746,7 +1746,7 @@ namespace FileExplorer.Script
         public static CopyToClipboardCommand Cut =
             new CopyToClipboardCommand(WPFScriptCommands.GetEntryModelFromParameter, true);
 
-        public static PasteFromClipboardCommand Paste(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc,
+        public static PasteFromClipboardCommand Paste(Func<IParameterDic, IEntryModel> currentDirectoryModelFunc,
             Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
         {
             return new PasteFromClipboardCommand(currentDirectoryModelFunc, transferCommandFunc);
@@ -1759,17 +1759,17 @@ namespace FileExplorer.Script
         private static byte[] preferCopy = new byte[] { 5, 0, 0, 0 };
         private static byte[] preferCut = new byte[] { 2, 0, 0, 0 };
 
-        private Func<ParameterDic, IEntryModel[]> _srcModelFunc;
+        private Func<IParameterDic, IEntryModel[]> _srcModelFunc;
         private bool _removeOrginal;
 
-        public CopyToClipboardCommand(Func<ParameterDic, IEntryModel[]> srcModelFunc, bool removeOrginal)
+        public CopyToClipboardCommand(Func<IParameterDic, IEntryModel[]> srcModelFunc, bool removeOrginal)
             : base(removeOrginal ? "Cut" : "Copy")
         {
             _removeOrginal = removeOrginal;
             _srcModelFunc = srcModelFunc;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var _srcModels = _srcModelFunc(pm);
             var da = await _srcModels.First().Profile.DragDrop().GetDataObject(_srcModels);
@@ -1789,10 +1789,10 @@ namespace FileExplorer.Script
     public class PasteFromClipboardCommand : ScriptCommandBase
     {
 
-        private Func<ParameterDic, IEntryModel> _currentDirectoryModelFunc;
+        private Func<IParameterDic, IEntryModel> _currentDirectoryModelFunc;
         private Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> _transferCommandFunc;
 
-        public PasteFromClipboardCommand(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc,
+        public PasteFromClipboardCommand(Func<IParameterDic, IEntryModel> currentDirectoryModelFunc,
             Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
             : base("Paste")
         {
@@ -1800,7 +1800,7 @@ namespace FileExplorer.Script
             _transferCommandFunc = transferCommandFunc;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var currentDirectory = _currentDirectoryModelFunc(pm);
             if (currentDirectory != null)
@@ -1819,7 +1819,7 @@ namespace FileExplorer.Script
             return ResultCommand.NoError;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var currentDirectory = _currentDirectoryModelFunc(pm);
             if (currentDirectory != null)
@@ -1854,7 +1854,7 @@ namespace FileExplorer.Script
 
         #region Methods
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var source = pm["Source"] as IEntryModel[];
             var dest = pm["Dest"] as IEntryModel;
@@ -1869,7 +1869,7 @@ namespace FileExplorer.Script
             return cannotTransfer == null;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
 
             var source = pm["Source"] as IEntryModel[];

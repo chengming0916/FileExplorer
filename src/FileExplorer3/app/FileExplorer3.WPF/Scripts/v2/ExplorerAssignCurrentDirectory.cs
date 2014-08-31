@@ -63,7 +63,7 @@ namespace FileExplorer.Script
             DestinationKey = "{CurrentDirectory}";
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             var flValue = pm.GetValue(ExplorerKey);
             IEntryModel em = flValue is IExplorerViewModel ? (flValue as IExplorerViewModel).CurrentDirectory.EntryModel :

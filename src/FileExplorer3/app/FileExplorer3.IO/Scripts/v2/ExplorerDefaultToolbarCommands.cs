@@ -51,7 +51,7 @@ namespace FileExplorer.Script
             ContinueOnCaptureContext = true;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             IWindowManager windowManager = pm.GetValue<IWindowManager>(WindowManagerKey) ?? new WindowManager();
             return UIScriptCommands.ExplorerDo(ExplorerKey, explorerModel =>

@@ -31,7 +31,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
         public QueryDragDropEffects(QueryDragDropEffectMode mode) :
             base("QueryDragDropEffects", "EventArgs") { _mode = mode; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
 
             var pd = pm.AsUIParameterDic();
@@ -74,7 +74,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             : base("ContinueDrop", "EventArgs")
         { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             //var pd = pm.AsUIParameterDic();
             //var ic = pd.Sender as ItemsControl;
@@ -103,7 +103,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
         }
 
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as UIElement;
@@ -148,7 +148,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
 
         DragDropEffects? _overrideDragDropEffect;
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as UIElement;
@@ -207,7 +207,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
         private static IDataObject _previousDataObject = null;
         private static int _draggingItemsCount = 0;
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as UIElement;
@@ -254,7 +254,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             : base("UpdateAdornerPosition", nextCommand, "EventArgs")
         { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as UIElement;
@@ -291,7 +291,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             : base("UpdateAdorner", "EventArgs")
         { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as UIElement;
@@ -337,7 +337,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public HideAdorner() : base("HideAdorner", "EventArgs") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as UIElement;
@@ -359,7 +359,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             : base("AttachAdorner", nextCommand, "EventArgs")
         { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as UIElement;
@@ -396,7 +396,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public DetachAdorner(IScriptCommand nextCommand = null) : base("DetachAdorner", nextCommand, "EventArgs") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as UIElement;

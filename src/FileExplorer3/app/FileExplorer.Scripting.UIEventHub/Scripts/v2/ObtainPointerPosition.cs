@@ -105,7 +105,7 @@ namespace FileExplorer.UIEventHub
                 pt.Y - currentScrollbarPosition.Y + startScrollbarPosition.Y);
         }
 
-        protected virtual Point AdjustHeaderPosition(Point point, ParameterDic pd,
+        protected virtual Point AdjustHeaderPosition(Point point, IParameterDic pd,
             Size gridViewHeaderSize,
             int offset = -1)
         {
@@ -117,7 +117,7 @@ namespace FileExplorer.UIEventHub
             return point;
         }
 
-        protected override IScriptCommand executeInner(ParameterDic pm, Control c,
+        protected override IScriptCommand executeInner(IParameterDic pm, Control c,
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             var scp = ControlUtils.GetScrollContentPresenter(c);

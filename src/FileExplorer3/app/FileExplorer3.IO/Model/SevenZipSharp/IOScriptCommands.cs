@@ -75,7 +75,7 @@ namespace FileExplorer.Script
 
 
 
-        private async Task<IScriptCommand> transferAsync(ParameterDic pm, IEntryModel[] ems,
+        private async Task<IScriptCommand> transferAsync(IParameterDic pm, IEntryModel[] ems,
             IProgress<TransferProgress> progress, IScriptCommand thenCommand)
         {
             Dictionary<string, Stream> compressDic = new Dictionary<string, Stream>();
@@ -114,7 +114,7 @@ namespace FileExplorer.Script
             return thenCommand;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             try
             {

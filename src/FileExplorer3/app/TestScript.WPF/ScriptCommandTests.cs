@@ -53,7 +53,7 @@ namespace FileExplorer.UnitTests
 
             mockProfile.Setup(p => p.ParseAsync(dummyPath)).Returns(Task.FromResult<IEntryModel>(mockModel.Object));
 
-            ParameterDic pd = new ParameterDic() 
+            IParameterDic pd = new ParameterDic() 
             {
                 { cmd.ProfileKey, mockProfile.Object },
                 { cmd.PathKey, dummyPath}               
@@ -79,7 +79,7 @@ namespace FileExplorer.UnitTests
                 .Returns(() => Task.FromResult(mockModel.Object))
                 .Verifiable();
 
-            ParameterDic pd = new ParameterDic() 
+            IParameterDic pd = new ParameterDic() 
             {
                 { cmd.ProfileKey, mockProfile.Object },
                 { cmd.PathKey, dummyPath}               
@@ -107,14 +107,14 @@ namespace FileExplorer.UnitTests
             mockProfile.Setup(p => p.DiskIO.OpenStreamAsync(mockModel.Object, openStream.Access, 
                 It.IsAny<CancellationToken>())).Returns(Task.FromResult<Stream>(new MemoryStream())).Verifiable();
 
-            ParameterDic pd = new ParameterDic() 
+            IParameterDic pd = new ParameterDic() 
             {
                 { openStream.EntryKey, mockModel.Object },                              
             };
 
-            streamCmd.Setup(cmd => cmd.CanExecute(It.IsAny<ParameterDic>())).Returns(true);
-            streamCmd.Setup(cmd => cmd.ExecuteAsync(It.IsAny<ParameterDic>()))
-                .Returns<ParameterDic>(pm => Task.Run(() =>
+            streamCmd.Setup(cmd => cmd.CanExecute(It.IsAny<IParameterDic>())).Returns(true);
+            streamCmd.Setup(cmd => cmd.ExecuteAsync(It.IsAny<IParameterDic>()))
+                .Returns<IParameterDic>(pm => Task.Run(() =>
                 {
                     Assert.IsTrue(pm.ContainsKey(openStream.StreamKey));
                     Assert.IsTrue(pm[openStream.StreamKey] is MemoryStream);
@@ -143,7 +143,7 @@ namespace FileExplorer.UnitTests
             StreamReader reader = new StreamReader(msDest);
 
             CopyStream copyStream = new CopyStream();
-            ParameterDic pd = new ParameterDic() 
+            IParameterDic pd = new ParameterDic() 
             {
                 { copyStream.SourceKey, msSource },                              
                 { copyStream.DestinationKey, msDest }

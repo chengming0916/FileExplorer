@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Interfaces\ExtensionMethods.cs" />
+    <Compile Include="Defines\Interfaces\IParameterDic.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicConverter.cs" />
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
     <Compile Include="Defines\Interfaces\IScriptCommand.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Scripts\v2\Print.cs" />
     <Compile Include="Scripts\v2\Reassign.cs" />
     <Compile Include="Scripts\v2\RunCommands.cs" />
+    <Compile Include="Scripts\v2\RunICommand.cs" />
     <Compile Include="Scripts\v2\RunScriptCommand.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Utils\DynamicDictionary.cs" />

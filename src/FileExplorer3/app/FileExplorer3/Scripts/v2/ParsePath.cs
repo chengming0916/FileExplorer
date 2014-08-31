@@ -100,7 +100,7 @@ namespace FileExplorer.Script
         [EditorBrowsable(EditorBrowsableState.Never)]
         public ParsePath() : base("ParsePath") { ProfileKey = "{Profile}"; PathKey = "{Path}"; DestinationKey = "{Entry}"; }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             string path = pm.ReplaceVariableInsideBracketed(PathKey);
 

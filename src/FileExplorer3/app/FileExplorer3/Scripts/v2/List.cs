@@ -94,7 +94,7 @@ namespace FileExplorer.Script
         }
 
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             IEntryModel[] entryModel;
             try

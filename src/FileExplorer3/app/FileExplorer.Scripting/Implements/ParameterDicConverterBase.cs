@@ -8,25 +8,25 @@ namespace FileExplorer.Script
 {
     public class ParameterDicConverterBase : IParameterDicConverter
     {
-        private Func<ParameterDic, object[], object> _convertBackFunc;
-        private Func<object, object[], ParameterDic> _convertFunc;
+        private Func<IParameterDic, object[], object> _convertBackFunc;
+        private Func<object, object[], IParameterDic> _convertFunc;
         private IParameterDicConverter _baseConverter;
-        private ParameterDic _additionalParameters = new ParameterDic();
+        private IParameterDic _additionalParameters = new ParameterDic();
 
-        public ParameterDicConverterBase(Func<object, object[], ParameterDic> convertFunc,
-            Func<ParameterDic, object[], object> convertBackFunc, IParameterDicConverter baseConverter = null)
+        public ParameterDicConverterBase(Func<object, object[], IParameterDic> convertFunc,
+            Func<IParameterDic, object[], object> convertBackFunc, IParameterDicConverter baseConverter = null)
         {
             _convertFunc = convertFunc;
             _convertBackFunc = convertBackFunc;
             _baseConverter = baseConverter;
         }
 
-        public void AddAdditionalParameters(ParameterDic pd)
+        public void AddAdditionalParameters(IParameterDic pd)
         {
             _additionalParameters = ParameterDic.Combine(_additionalParameters, pd);
         }
 
-        public ParameterDic Convert(object parameter, params object[] additionalParameters)
+        public IParameterDic Convert(object parameter, params object[] additionalParameters)
         {
             var retVal = _convertFunc(parameter, additionalParameters);
             if (_baseConverter != null)
@@ -42,7 +42,7 @@ namespace FileExplorer.Script
             return retVal;
         }
 
-        public object ConvertBack(ParameterDic pd, params object[] additionalParameters)
+        public object ConvertBack(IParameterDic pd, params object[] additionalParameters)
         {
             object retVal = _convertBackFunc(pd, additionalParameters);
 
@@ -51,5 +51,6 @@ namespace FileExplorer.Script
 
             return retVal;
         }
+
     }
 }

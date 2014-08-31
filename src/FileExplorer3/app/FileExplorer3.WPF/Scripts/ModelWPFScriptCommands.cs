@@ -127,7 +127,7 @@ namespace FileExplorer.WPF.Models
         }
 
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             foreach (var p in _profiles)
             {
@@ -158,7 +158,7 @@ namespace FileExplorer.WPF.Models
             _streamFunc = streamFunc;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             IDiskProfile profile = _entryModel.Profile as IDiskProfile;
             using (var stream = profile.DiskIO.OpenStreamAsync(_entryModel, _access, pm.CancellationToken).Result)
@@ -166,7 +166,7 @@ namespace FileExplorer.WPF.Models
             return _nextCommand;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             IDiskProfile profile = _entryModel.Profile as IDiskProfile;
             using (var stream = await profile.DiskIO.OpenStreamAsync(_entryModel, _access, pm.CancellationToken))
@@ -219,7 +219,7 @@ namespace FileExplorer.WPF.Models
             return retList;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {            
 
             Func<IEntryModel, bool> filter;
@@ -262,12 +262,12 @@ namespace FileExplorer.WPF.Models
             _isFolder = isFolder;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             return !_parentPath.StartsWith("::{"); //Cannot execute if GuidPath
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             string fileName = _fileNameGenerator.Generate();
             while (fileName != null &&

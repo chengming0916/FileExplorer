@@ -69,7 +69,7 @@ namespace FileExplorer.Script
             Access = FileAccess.Read;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             IEntryModel entryModel = pm.GetValue<IEntryModel>(EntryKey);
             if (entryModel == null)
@@ -81,7 +81,7 @@ namespace FileExplorer.Script
 
             using (var stream = await profile.DiskIO.OpenStreamAsync(entryModel, Access, pm.CancellationToken))
             {
-                ParameterDic pmClone = pm.Clone();
+                IParameterDic pmClone = pm.Clone();
                 pmClone.SetValue(StreamKey, stream);
                 logger.Debug(String.Format("{0} = Stream of {1}", StreamKey, EntryKey));
                 await ScriptRunner.RunScriptAsync(pmClone, NextCommand);

@@ -68,7 +68,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         }
         public ICommand UnselectCommand { get; set; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -105,7 +105,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         }
         public ICommand UnselectCommand { get; set; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as ItemsControl;
@@ -136,7 +136,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
     {
         public ContinueSelect() : base("ContinueSelect", "EventArgs") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -155,7 +155,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         public ICommand UnselectCommand { get; set; }
         public bool IsCheckBoxEnabled { get; set; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -208,7 +208,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         private bool _toValue;
         public UpdateIsSelecting(bool toValue) : base("UpdateIsSelecting") { _toValue = toValue; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -225,7 +225,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
     {
         public CheckIsSelecting() : base("CheckIsSelecting") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -269,7 +269,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
                 pt.Y - currentScrollbarPosition.Y + startScrollbarPosition.Y);
         }
 
-        public static Point AdjustHeaderPosition(Point point, ParameterDic pd, int offset = -1)
+        public static Point AdjustHeaderPosition(Point point, IParameterDic pd, int offset = -1)
         {
             Point pt = new Point(point.X, point.Y);
             pt.Offset(0, offset * ((Size)pd["ContentBelowHeaderSize"]).Height);
@@ -279,7 +279,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         }
 
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -351,7 +351,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         private IChildInfo _icInfo;
         private ItemsControl _ic;
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
             List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
@@ -383,7 +383,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         private ItemsControl _ic;
         private ScrollContentPresenter _scp;
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
             List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
@@ -448,7 +448,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
             return HitTestResultBehavior.Continue;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             List<object> selectedList; pm["SelectedList"] = selectedList = new List<object>();
             List<int> selectedIdList; pm["SelectedIdList"] = selectedIdList = new List<int>();
@@ -512,7 +512,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
     {
         public FindSelectedItems() : base("FindSelectedItems", "EventArgs", "SelectionBounds", "SelectionBoundsAdjusted") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -548,7 +548,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         public HighlightItems() : base("FindSelectedItems", "EventArgs", "SelectedIdList") { }
 
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -571,7 +571,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
     {
         public HighlightItemsByUpdate() : base("HighlightItemsByUpdate", "EventArgs", "UnselectedIdList", "UnselectedList") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             List<object> unselectedList = pm["UnselectedList"] as List<object>;
             List<int> unselectedIdList = pm["UnselectedIdList"] as List<int>;
@@ -603,7 +603,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
     {
         public SelectItemsByUpdate() : base("SelectItemByUpdate", "EventArgs", "UnselectedIdList", "UnselectedList") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             List<object> unselectedList = pm["UnselectedList"] as List<object>;
             List<int> unselectedIdList = pm["UnselectedIdList"] as List<int>;
@@ -674,7 +674,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
             : base("SelectItems", "EventArgs", "SelectedList", "SelectedIdList")
         { _processor = processor; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -731,7 +731,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
     {
         public AttachAdorner() : base("AttachAdorner") { ContinueOnCaptureContext = true; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -776,7 +776,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         //        pt.Y + startScrollbarPosition.Y - currentScrollbarPosition.Y);
         //}
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -796,7 +796,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
             return new AutoScroll();
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -813,7 +813,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
         public DetachAdorner() : base("DetachAdorner") { ContinueOnCaptureContext = true; }
 
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;
@@ -848,7 +848,7 @@ namespace FileExplorer.WPF.BaseControls.MultiSelect
             : base("AutoScroll")
         { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var c = pd.Sender as Control;

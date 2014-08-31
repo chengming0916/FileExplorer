@@ -45,7 +45,7 @@ namespace FileExplorer.UIEventHub
             _mode = mode;
         }
 
-        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, 
+        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, 
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {               
             var scp = ControlUtils.GetScrollContentPresenter(ic);            

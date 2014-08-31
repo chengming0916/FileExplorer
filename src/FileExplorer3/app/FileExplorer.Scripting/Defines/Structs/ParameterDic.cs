@@ -23,7 +23,7 @@ namespace FileExplorer
 
     public static partial class ExtensionMethods
     {
-        public static string ReplaceVariableInsideBracketed(this ParameterDic pd, string variableKey)
+        public static string ReplaceVariableInsideBracketed(this IParameterDic pd, string variableKey)
         {
             if (variableKey == null)
                 return null;            
@@ -45,10 +45,10 @@ namespace FileExplorer
         }
     }
 
-    public class ParameterDic : Dictionary<string, object>
+    public class ParameterDic : Dictionary<string, object>, IParameterDic
     {
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ParameterDic>();
-        public static ParameterDic Empty = new ParameterDic();
+        public static IParameterDic Empty = new ParameterDic();
 
         public ParameterDic()
             : base(StringComparer.CurrentCultureIgnoreCase)
@@ -56,9 +56,9 @@ namespace FileExplorer
 
         }
 
-        public static ParameterDic FromParameterPair(params ParameterPair[] ppairs)
+        public static IParameterDic FromParameterPair(params ParameterPair[] ppairs)
         {
-            ParameterDic retVal = new ParameterDic();
+            IParameterDic retVal = new ParameterDic();
             foreach (var ppair in ppairs)
                 retVal.Add(ppair.Key, ppair.Value);
             return retVal;
@@ -76,9 +76,9 @@ namespace FileExplorer
             return "{" + GetVariable(variableKey) + combineStr + "}";
         }
 
-        public static ParameterDic Combine(ParameterDic orginalDic, ParameterDic newDic)
+        public static IParameterDic Combine(IParameterDic orginalDic, IParameterDic newDic)
         {
-            ParameterDic retDic = orginalDic.Clone();
+            IParameterDic retDic = orginalDic.Clone();
             foreach (var k in newDic.Keys)
                 if (!(retDic.ContainsKey(k)))
                     retDic.Add(k, newDic[k]);
@@ -208,7 +208,7 @@ namespace FileExplorer
                 this.Add(pp.Key, pp.Value);
         }
 
-        public ParameterDic Clone()
+        public IParameterDic Clone()
         {
             ParameterDic retVal = new ParameterDic();
             retVal.LoadParameterDic(this);
@@ -248,7 +248,7 @@ namespace FileExplorer
             set { if (this.ContainsKey("Error")) this["Error"] = value; else this.Add("Error", value); }
         }
 
-        public List<string> CommandHistory = new List<string>();
+        //public List<string> CommandHistory = new List<string>();
 
     }
 }

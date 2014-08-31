@@ -62,7 +62,7 @@ namespace FileExplorer.Script
             TabbedExplorerKey = "{TabbedExplorer}";
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var tevm = pm.GetValue<ITabbedExplorerViewModel>(TabbedExplorerKey);
             if (tevm == null)
@@ -79,7 +79,7 @@ namespace FileExplorer.Script
             return ResultCommand.NoError;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             return pm.HasValue(TabbedExplorerKey);
         }

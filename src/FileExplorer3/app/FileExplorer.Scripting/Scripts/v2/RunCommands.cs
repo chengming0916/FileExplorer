@@ -86,7 +86,7 @@ namespace FileExplorer.Script
             Mode = RunMode.Queue;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             switch (Mode)
             {
@@ -111,12 +111,12 @@ namespace FileExplorer.Script
             else return NextCommand;
         }
 
-        public override bool CanExecute(ParameterDic pm)
+        public override bool CanExecute(IParameterDic pm)
         {
             return ScriptCommands.Length == 0 || ScriptCommands.First().CanExecute(pm);
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
         {
             switch (Mode)
             {

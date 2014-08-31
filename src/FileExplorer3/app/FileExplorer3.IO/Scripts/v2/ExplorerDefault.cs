@@ -65,7 +65,7 @@ namespace FileExplorer.Script
             BreadcrumbKey = "{Breadcrumb}";
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {            
             return ScriptCommands.Assign(new Dictionary<string, object>()
                 {

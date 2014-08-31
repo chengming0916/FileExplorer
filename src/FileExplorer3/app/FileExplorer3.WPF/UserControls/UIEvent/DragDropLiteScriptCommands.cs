@@ -48,7 +48,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             _mode = mode;
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             DragLiteParameters.DragMode = _mode;
 
@@ -69,7 +69,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public BeginDragLite() : base("BeginDragLite") { }        
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
 
@@ -105,7 +105,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
 
         public DoDragDropLite(ItemsControl ic, ISupportDrag isd) : base("DoDragDropLite") { _ic = ic; _isd = isd; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             if (DragLiteParameters.DragMode == DragMode.None)
             {
@@ -143,7 +143,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
 
         }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -188,7 +188,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             : base("ContinueDragLite", "EventArgs")
         { _enableDrag = enableDrag; _enableDrop = enableDrop; ContinueOnCaptureContext = true; }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -216,7 +216,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public EndDragLite() : base("EndDragLite", "EventArgs") { }
 
-        public override IScriptCommand Execute(ParameterDic pm)
+        public override IScriptCommand Execute(IParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
