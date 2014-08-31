@@ -32,15 +32,18 @@ namespace FileExplorer.Defines
 
         #region StartDraggingItem
 
+        /// <summary>
+        /// DataContext item when start dragging.
+        /// </summary>
         public static DependencyProperty StartDraggingItemProperty =
-          DependencyProperty.RegisterAttached("StartDraggingItem", typeof(FrameworkElement), typeof(AttachedProperties));
+          DependencyProperty.RegisterAttached("StartDraggingItem", typeof(object), typeof(AttachedProperties));
 
-        public static FrameworkElement GetStartDraggingItem(DependencyObject target)
+        public static object GetStartDraggingItem(DependencyObject target)
         {
-            return (FrameworkElement)target.GetValue(StartDraggingItemProperty);
+            return (object)target.GetValue(StartDraggingItemProperty);
         }
 
-        public static void SetStartDraggingItem(DependencyObject target, FrameworkElement value)
+        public static void SetStartDraggingItem(DependencyObject target, object value)
         {
             target.SetValue(StartDraggingItemProperty, value);
         }

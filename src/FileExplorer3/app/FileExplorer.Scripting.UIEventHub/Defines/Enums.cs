@@ -39,5 +39,5 @@ namespace FileExplorer.UIEventHub.Defines
         public static string CFSTR_TARGETCLSID = "TargetCLSID";
     }
 
-
+    
 }

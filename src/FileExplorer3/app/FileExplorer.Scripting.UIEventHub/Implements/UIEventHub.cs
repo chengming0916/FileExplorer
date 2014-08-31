@@ -153,13 +153,13 @@ namespace FileExplorer.WPF.BaseControls
             ParameterDic pd = ParameterDicConverters.ConvertUIInputParameter.Convert(null,
                 eventId.Name, input, _inputProcessors);
 
-            Queue<IScriptCommand> commands = new Queue<IScriptCommand>(
+            IScriptCommand[] commands = 
                processors
                .Where(p => p.ProcessEvents.Contains(input.EventArgs.RoutedEvent))
                .Select(p => p.OnEvent(eventId))
-               .Where(c => c.CanExecute(pd)));
+               .Where(c => c.CanExecute(pd)).ToArray();
 
-            await _scriptRunner.RunAsync(commands, pd);
+            await _scriptRunner.RunAsync(pd, ScriptCommands.RunSequence(null, commands));
 
             if (thenFunc != null)
                 thenFunc(pd);

@@ -1,0 +1,62 @@
+﻿<Window x:Class="DiagramingDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DiagramingDemo"
+        xmlns:bc="http://www.quickzip.org/BaseControls"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+
+        <ItemsControl ItemsSource="{Binding Items}" Background="Transparent">
+            <bc:UIEventAdapter.Processors>
+                <!--<local:CanvasDragEventProcessor EnableDrag="True" />-->
+                <bc:CanvasDragEventProcessor />
+                <bc:MultiSelectEventProcessor EnableMultiSelect="True" UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
+            </bc:UIEventAdapter.Processors>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="local:ItemViewModel">
+                    <Border Width="50" Height="50" x:Name="border"
+                            BorderBrush="DarkGreen" Background="Lavender" BorderThickness="1">
+                        <TextBlock Text="{Binding Text}" />
+                    </Border>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsSelecting}" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=TwoWay}" />
+                    <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsItemsHost="true" Width="1000" Height="1000" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <Border BorderBrush="Black" BorderThickness="1" />
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" />
+    </Grid>
+
+</Window>
