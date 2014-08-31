@@ -56,10 +56,12 @@
     <Compile Include="BaseControls\SelectionAdorner.cs" />
     <Compile Include="Defines\AttachedProperties.cs" />
     <Compile Include="Defines\Defaults.cs" />
+    <Compile Include="Defines\DragLiteParameters.cs" />
     <Compile Include="Defines\DragnDropAttachedProperties.cs" />
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\MultiSelectAttachedProperties.cs" />
     <Compile Include="Defines\UIAttachedProperties.cs" />
+    <Compile Include="Implements\CanvasDragEventProcessor.cs" />
     <Compile Include="Implements\ExtensionMethods.cs" />
     <Compile Include="Implements\MultiSelectEventProcessor.cs" />
     <Compile Include="Implements\ParameterDicConverters.cs" />
@@ -81,6 +83,9 @@
     <Compile Include="Scripts\v2\AssignItemUnderMouse.cs" />
     <Compile Include="Scripts\v2\AutoScroll.cs" />
     <Compile Include="Scripts\v2\CaptureMouse.cs" />
+    <Compile Include="Scripts\v2\AssignDataContext.cs" />
+    <Compile Include="Scripts\v2\DragDropLiteCommand.cs" />
+    <Compile Include="Scripts\v2\EventArgsHandledCommand.cs" />
     <Compile Include="Scripts\v2\SelectionAdornerCommand.cs" />
     <Compile Include="Utils\ConsoleTarget.cs" />
     <Compile Include="Scripts\v2\DetermineFindSelectionMode.cs" />
@@ -96,6 +101,7 @@
     <Compile Include="Scripts\v2\GetDependencyProperty.cs" />
     <Compile Include="Utils\ControlUtils.cs" />
     <Compile Include="BaseControls\NonsealedDataObject.cs" />
+    <Compile Include="Utils\DataContextFinder.cs" />
     <Compile Include="Utils\LBSelectable.cs" />
     <Compile Include="Utils\UITools.cs" />
     <Compile Include="BaseControls\VirtualDataObject.cs" />

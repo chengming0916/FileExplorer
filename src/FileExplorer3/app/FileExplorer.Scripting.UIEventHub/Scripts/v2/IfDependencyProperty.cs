@@ -23,11 +23,19 @@ namespace FileExplorer.UIEventHub
                 ScriptCommands.IfValue(op, destinationVariable, value, trueCommand, otherwiseCommand));
         }
 
-         public static IScriptCommand IfDependencyPropertyEquals<T>(string elementVariable = "{Sender}", 
+        public static IScriptCommand IfDependencyPropertyEquals<T>(string elementVariable = "{Sender}", 
             DependencyProperty property = null, T value = default(T), 
             IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
-        {
+        {            
             return IfDependencyProperty<T>(elementVariable, property, ComparsionOperator.Equals, value, trueCommand, otherwiseCommand);
+        }
+        
+        public static IScriptCommand IfDependencyPropertyEqualDefaultValue<T>(string elementVariable = "{Sender}", 
+            DependencyProperty property = null,  
+            IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            return IfDependencyPropertyEquals<T>(elementVariable, property,
+                (T)property.DefaultMetadata.DefaultValue, trueCommand, otherwiseCommand);
         }
         
     }

@@ -26,8 +26,8 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand SetDependencyProperty(string elementVariable,
-            DependencyProperty property, object value, IScriptCommand nextCommand)
+        public static IScriptCommand SetDependencyPropertyTyped<T>(string elementVariable,
+            DependencyProperty property, T value, IScriptCommand nextCommand = null)
         {
             string propertyVariable = ParameterDic.CombineVariable(elementVariable, "Property");
             string valueVariable = ParameterDic.CombineVariable(elementVariable, "Value");
@@ -35,6 +35,15 @@ namespace FileExplorer.UIEventHub
             return ScriptCommands.Assign(propertyVariable, property, false,
                 ScriptCommands.Assign(valueVariable, value, false,
                   SetDependencyProperty(elementVariable, propertyVariable, valueVariable, nextCommand)));
+        }
+
+        public static IScriptCommand SetDependencyProperty(string elementVariable,
+            DependencyProperty property, string valueVariable, IScriptCommand nextCommand = null)
+        {
+            string propertyVariable = ParameterDic.CombineVariable(elementVariable, "Property");            
+
+            return ScriptCommands.Assign(propertyVariable, property, false,                
+                  SetDependencyProperty(elementVariable, propertyVariable, valueVariable, nextCommand));
         }
 
         /// <summary>
@@ -47,13 +56,13 @@ namespace FileExplorer.UIEventHub
         /// <param name="ifUnchanged"></param>
         /// <returns></returns>
         public static IScriptCommand SetDependencyPropertyIfDifferent(string elementVariable,
-            DependencyProperty property, object value, IScriptCommand ifChanged, IScriptCommand ifUnchanged)
+            DependencyProperty property, object value, IScriptCommand ifChanged, IScriptCommand ifUnchanged = null)
         {                       
             string valueVariable = ParameterDic.CombineVariable(elementVariable, "Value");
             return HubScriptCommands.GetDependencyProperty(elementVariable, property, valueVariable,
                      ScriptCommands.IfEquals(valueVariable, value,
                         ifUnchanged,
-                        SetDependencyProperty(elementVariable, property, value, ifChanged)));
+                        SetDependencyPropertyTyped(elementVariable, property, value, ifChanged)));
         }
     }
 

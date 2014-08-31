@@ -90,6 +90,12 @@ namespace FileExplorer.Script
             return IfEquals<bool>(variable, true, trueCommand, otherwiseCommand);
         }
 
+        public static IScriptCommand IfFalse(string variable = "{variable}", IScriptCommand trueCommand = null,
+            IScriptCommand otherwiseCommand = null)
+        {
+            return IfEquals<bool>(variable, false, trueCommand, otherwiseCommand);
+        }
+
         /// <summary>
         /// Serializable, Use Reassign to obtain a property of a vaiable in ParameterDic and use IfEquals to compare, and run different command based on result.
         /// </summary>
@@ -162,29 +168,37 @@ namespace FileExplorer.Script
 
         private bool compare(ParameterDic pm)
         {
-            object value1 = pm.GetValue<Object>(Variable1Key);
-            object value2 = pm.GetValue<Object>(Variable2Key);
 
-            if (value1 != null && value2 != null)
+            try
             {
-                var left = Expression.Constant(value1);
-                var right = Expression.Constant(value2);
-                Expression expression;
+                object value1 = pm.GetValue<Object>(Variable1Key);
+                object value2 = pm.GetValue<Object>(Variable2Key);
 
-                switch (Operator)
+                if (value1 != null && value2 != null)
                 {
-                    case ComparsionOperator.Equals: expression = Expression.Equal(left, right); break;
-                    case ComparsionOperator.GreaterThan: expression = Expression.GreaterThan(left, right); break;
-                    case ComparsionOperator.GreaterThanOrEqual: expression = Expression.GreaterThanOrEqual(left, right); break;
-                    case ComparsionOperator.LessThan: expression = Expression.LessThan(left, right); break;
-                    case ComparsionOperator.LessThanOrEqual: expression = Expression.LessThanOrEqual(left, right); break;
-                    default:
-                        throw new NotSupportedException(Operator.ToString());
-                }
+                    var left = Expression.Constant(value1);
+                    var right = Expression.Constant(value2);
+                    Expression expression;
 
-                return Expression.Lambda<Func<bool>>(expression).Compile().Invoke();
+                    switch (Operator)
+                    {
+                        case ComparsionOperator.Equals: expression = Expression.Equal(left, right); break;
+                        case ComparsionOperator.GreaterThan: expression = Expression.GreaterThan(left, right); break;
+                        case ComparsionOperator.GreaterThanOrEqual: expression = Expression.GreaterThanOrEqual(left, right); break;
+                        case ComparsionOperator.LessThan: expression = Expression.LessThan(left, right); break;
+                        case ComparsionOperator.LessThanOrEqual: expression = Expression.LessThanOrEqual(left, right); break;
+                        default:
+                            throw new NotSupportedException(Operator.ToString());
+                    }
+
+                    return Expression.Lambda<Func<bool>>(expression).Compile().Invoke();
+                }
+                else return (Operator == ComparsionOperator.Equals && value1 == null && value2 == null);
             }
-            else return (Operator == ComparsionOperator.Equals && value1 == null && value2 == null);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
