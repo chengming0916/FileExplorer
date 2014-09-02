@@ -19,9 +19,7 @@ namespace FileExplorer.Script
             if (cloneParameters)
                 initialParameters = initialParameters.Clone();
 
-            IScriptRunner runner = Instance;
-            if (initialParameters.ContainsKey("ScriptRunner") && initialParameters["ScriptRunner"] is IScriptRunner)
-                runner = (initialParameters["ScriptRunner"] as IScriptRunner);            
+            IScriptRunner runner = initialParameters.GetValue<IScriptRunner>("{ScriptRunner}", Instance);
             return runner.RunAsync(new Queue<IScriptCommand>(commands), initialParameters);
         }
 
@@ -30,9 +28,7 @@ namespace FileExplorer.Script
             if (cloneParameters)
                 initialParameters = initialParameters.Clone();
 
-            IScriptRunner runner = Instance;
-            if (initialParameters.ContainsKey("ScriptRunner") && initialParameters["ScriptRunner"] is IScriptRunner)
-                runner = (initialParameters["ScriptRunner"] as IScriptRunner);            
+            IScriptRunner runner = initialParameters.GetValue<IScriptRunner>("{ScriptRunner}", Instance);
             runner.Run(new Queue<IScriptCommand>(commands), initialParameters);
         }
         #endregion

@@ -11,15 +11,11 @@ namespace FileExplorer.Script
     {
         public static IProgress<TransferProgress> GetProgress(this ParameterDic pd)
         {
-            return (pd.ContainsKey("Progress") ? pd["Progress"] as IProgress<TransferProgress> : null) ??
-                NullTransferProgress.Instance;
-        }
+            return pd.GetValue<IProgress<TransferProgress>>("{Progress}", NullTransferProgress.Instance); }
 
         public static void SetProgress(this ParameterDic pd, IProgress<TransferProgress> progress)
         {
-            if (pd.ContainsKey("Progress"))
-                pd["Progress"] = progress;
-            else pd.Add("Progress", progress);
+            pd.SetValue("{Progress}", progress);
         }
     }
 }
