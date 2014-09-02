@@ -15,7 +15,7 @@ namespace FileExplorer.Script
             new ParameterDicConverterBase((p, p2) =>
                     p is ParameterDic ? (p as ParameterDic) :
                     new ParameterDic() { { "Parameter", p } },
-                (pd, p2) => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
+                (pd, p2) => pd.GetValue<object>("{Parameter}", null));
 
         /// <summary>
         /// For CommandViewModel, Convert Sender, EventName, EventArgs to ParameterDic

@@ -32,12 +32,10 @@ namespace FileExplorer.Script
             if (_baseConverter != null)
             {
                 var baseRetVal = _baseConverter.Convert(parameter, additionalParameters);
-                foreach (var k in baseRetVal.Keys)
-                    if (!retVal.ContainsKey(k))
-                        retVal.Add(k, baseRetVal[k]);
-                foreach (var k in _additionalParameters.Keys)
-                    if (!retVal.ContainsKey(k))
-                        retVal.Add(k, _additionalParameters[k]);
+                foreach (var v in baseRetVal.VariableNames)
+                    retVal.SetValue(v, baseRetVal.GetValue(v), true);
+                foreach (var v in _additionalParameters.VariableNames)
+                    retVal.SetValue(v, _additionalParameters.GetValue(v), true);
             }
             return retVal;
         }

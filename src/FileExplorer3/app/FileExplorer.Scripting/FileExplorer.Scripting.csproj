@@ -36,8 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Defines\Interfaces\IParameterDicStore.cs" />
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
+    <Compile Include="Defines\Structs\MemoryParameterDicStore.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
     <Compile Include="Implements\DynamicRelayCommandDictionary.cs" />
     <Compile Include="Implements\ExtensionMethods.cs" />
