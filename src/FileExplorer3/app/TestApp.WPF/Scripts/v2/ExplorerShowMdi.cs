@@ -93,7 +93,7 @@ namespace TestApp
             ExplorerKey = "{Explorer}";
         }
 
-        public override IScriptCommand Execute(FileExplorer.IParameterDic pm)
+        public override IScriptCommand Execute(FileExplorer.ParameterDic pm)
         {
             IWindowManager wm = pm.GetValue<IWindowManager>(WindowManagerKey) ?? new WindowManager();
 

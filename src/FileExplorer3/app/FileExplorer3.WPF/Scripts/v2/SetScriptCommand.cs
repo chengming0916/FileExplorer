@@ -77,7 +77,7 @@ namespace FileExplorer.Script
             ValueKey = "{Value}";
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var vm = pm.GetValue<ISupportCommandManager>(ControlKey);
             var vmDic = vm.Commands.CommandDictionary as DynamicDictionary<IScriptCommand>;

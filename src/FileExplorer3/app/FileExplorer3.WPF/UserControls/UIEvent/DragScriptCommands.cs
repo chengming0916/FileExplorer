@@ -35,7 +35,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
                 (dc is ISupportDropHelper && (dc as ISupportDropHelper).DropHelper.IsDroppable) ? (dc as ISupportDropHelper).DropHelper :
                 null;
 
-        public static T GetDataContext<T>(IParameterDic pm, Func<object, T> filter = null)
+        public static T GetDataContext<T>(ParameterDic pm, Func<object, T> filter = null)
         {
             FrameworkElement ele;
             return GetDataContext(pm, out ele, filter);
@@ -93,7 +93,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
 
         }
 
-        public static T GetDataContext<T>(IParameterDic pm, out FrameworkElement ele, Func<object, T> filter = null)
+        public static T GetDataContext<T>(ParameterDic pm, out FrameworkElement ele, Func<object, T> filter = null)
         {
             var pd = pm.AsUIParameterDic();
             var eventArgs = pd.EventArgs as RoutedEventArgs;
@@ -136,7 +136,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public RecordStartSelectedItem() : base("RecordStartSelectedItem", "EventArgs") { }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -170,7 +170,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             _otherwiseCmd = otherwiseCmd;
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -199,7 +199,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public BeginDrag() : base("BeginDrag", "EventArgs") { }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             if (pd.EventArgs.Handled)
@@ -220,7 +220,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public ContinueDrag() : base("ContinueDrag", "EventArgs") { }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -237,7 +237,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
     {
         public EndDrag() : base("EndDrag", "EventArgs") { }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -299,7 +299,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
 
     public class IfItemUnderMouseSelected : IfScriptCommand
     {
-        private static bool conditionFunc(IParameterDic pm)
+        private static bool conditionFunc(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -341,7 +341,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
 
         #region Methods
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -421,7 +421,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             _dataObj.SetData(typeof(AttachedProperties.DragMethod), _dragMethod);
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             //Debug.WriteLine(String.Format("DoDragDrop"));
             var pd = pm.AsUIParameterDic();
@@ -475,7 +475,7 @@ namespace FileExplorer.WPF.BaseControls.DragnDrop
             _dataObj = dataObj; _resultEffect = resultEffect;
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             if (_resultEffect != DragDropEffects.None)
                 _isd.OnDragCompleted(_draggables, _dataObj, _resultEffect);

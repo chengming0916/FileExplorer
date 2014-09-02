@@ -14,36 +14,32 @@ namespace FileExplorer.Script
         public static ScriptRunner Instance = new ScriptRunner();
 
         #region RunScript/Async(initialParameters, cloneParameters, commands[])
-        public static Task RunScriptAsync(IParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
+        public static Task RunScriptAsync(ParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
         {
             if (cloneParameters)
                 initialParameters = initialParameters.Clone();
 
-            IScriptRunner runner = Instance;
-            if (initialParameters.ContainsKey("ScriptRunner") && initialParameters["ScriptRunner"] is IScriptRunner)
-                runner = (initialParameters["ScriptRunner"] as IScriptRunner);            
+            IScriptRunner runner = initialParameters.GetValue<IScriptRunner>("{ScriptRunner}", Instance);
             return runner.RunAsync(new Queue<IScriptCommand>(commands), initialParameters);
         }
 
-        public static void RunScript(IParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
+        public static void RunScript(ParameterDic initialParameters, bool cloneParameters, params IScriptCommand[] commands)
         {
             if (cloneParameters)
                 initialParameters = initialParameters.Clone();
 
-            IScriptRunner runner = Instance;
-            if (initialParameters.ContainsKey("ScriptRunner") && initialParameters["ScriptRunner"] is IScriptRunner)
-                runner = (initialParameters["ScriptRunner"] as IScriptRunner);            
+            IScriptRunner runner = initialParameters.GetValue<IScriptRunner>("{ScriptRunner}", Instance);
             runner.Run(new Queue<IScriptCommand>(commands), initialParameters);
         }
         #endregion
 
         #region RunScript/Async(initialParameters, commands[])
-        public static Task RunScriptAsync(IParameterDic initialParameters, params IScriptCommand[] commands)
+        public static Task RunScriptAsync(ParameterDic initialParameters, params IScriptCommand[] commands)
         {
             return RunScriptAsync(initialParameters, false, commands);
         }
 
-        public static void RunScript(IParameterDic initialParameters, params IScriptCommand[] commands)
+        public static void RunScript(ParameterDic initialParameters, params IScriptCommand[] commands)
         {
             RunScript(initialParameters, false, commands);
         }
@@ -51,7 +47,7 @@ namespace FileExplorer.Script
 
         #region RunScript/Async<T>(initialParameters, resultVariable, commands[])
 
-        public static async Task<T> RunScriptAsync<T>(string resultVariable = "{Result}", IParameterDic initialParameters = null, 
+        public static async Task<T> RunScriptAsync<T>(string resultVariable = "{Result}", ParameterDic initialParameters = null, 
             params IScriptCommand[] commands)
         {
             initialParameters = initialParameters ?? new ParameterDic();
@@ -59,7 +55,7 @@ namespace FileExplorer.Script
             return initialParameters.GetValue(resultVariable, default(T));
         }
 
-        public static T RunScript<T>(string resultVariable = "{Result}", IParameterDic initialParameters = null,
+        public static T RunScript<T>(string resultVariable = "{Result}", ParameterDic initialParameters = null,
             params IScriptCommand[] commands)
         {
             initialParameters = initialParameters ?? new ParameterDic();
@@ -88,10 +84,9 @@ namespace FileExplorer.Script
         }
 
 
-        public void Run(Queue<IScriptCommand> cmds, IParameterDic initialParameters)
+        public void Run(Queue<IScriptCommand> cmds, ParameterDic initialParameters)
         {
-            List<string> commandHistory = new List<string>();
-            IParameterDic pd = initialParameters;
+            ParameterDic pd = initialParameters;
             pd["ScriptRunner"] = this;
 
             while (cmds.Any())
@@ -103,7 +98,7 @@ namespace FileExplorer.Script
                     if (current.CanExecute(pd))
                     {
 
-                        commandHistory.Add(current.CommandKey);
+                        pd.CommandHistory.Add(current.CommandKey);
                         var retCmd = current.Execute(pd);
                         if (retCmd != null)
                         {
@@ -129,15 +124,14 @@ namespace FileExplorer.Script
             }
         }
 
-        public void Run(IScriptCommand cmd, IParameterDic initialParameters)
+        public void Run(IScriptCommand cmd, ParameterDic initialParameters)
         {
             Run(new Queue<IScriptCommand>(new[] { cmd }), initialParameters);
         }
 
-        public async Task RunAsync(Queue<IScriptCommand> cmds, IParameterDic initialParameters)
+        public async Task RunAsync(Queue<IScriptCommand> cmds, ParameterDic initialParameters)
         {
-            List<string> commandHistory = new List<string>();
-            IParameterDic pd = initialParameters;
+            ParameterDic pd = initialParameters;
             pd["ScriptRunner"] = this;
 
             while (cmds.Any())
@@ -149,7 +143,7 @@ namespace FileExplorer.Script
 
                     if (current.CanExecute(pd))
                     {
-                        commandHistory.Add(current.CommandKey);
+                        pd.CommandHistory.Add(current.CommandKey);
                         //logger.Info("Running " + current.CommandKey);
 
                         var retCmd = await current.ExecuteAsync(pd)

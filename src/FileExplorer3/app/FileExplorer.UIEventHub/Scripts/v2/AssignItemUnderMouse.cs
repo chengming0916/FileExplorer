@@ -64,7 +64,7 @@ namespace FileExplorer.UIEventHub
             SkipIfExists = false;
         }
 
-        protected override IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, 
+        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, 
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             Point currentRelPos = pm.GetValue<Point>(CurrentRelativePositionKey);

@@ -34,6 +34,10 @@
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
     
+    <property name="msbuild.csproj.path" value="${src.fileexplorer.uieventhub.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+    
     <property name="msbuild.csproj.path" value="${src.fileexplorer3.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
@@ -79,6 +83,8 @@
       <fileset basedir="${dest.current.path}">
         <include name="${dest.fileexplorer.scripting.dll}" />
         <include name="${dest.fileexplorer.scripting.pdb}" />
+        <include name="${dest.fileexplorer.uieventhub.dll}" />
+        <include name="${dest.fileexplorer.uieventhub.pdb}" />
         <include name="${dest.fileexplorer3.dll}" />
         <include name="${dest.fileexplorer3.pdb}" />
         <include name="${dest.fileexplorer3.wpf.dll}" />
@@ -162,7 +168,9 @@
     <copy todir="${dest.path}\demo\net45\bin">
       <fileset basedir="${dest.current.path}">
         <include name="${dest.fileexplorer.scripting.dll}" />
-        <include name="${dest.fileexplorer.scripting.pdb}" />        
+        <include name="${dest.fileexplorer.scripting.pdb}" />   
+        <include name="${dest.fileexplorer.uieventhub.dll}" />
+        <include name="${dest.fileexplorer.uieventhub.pdb}" />   
         <include name="${dest.fileexplorer3.dll}" />
         <include name="${dest.fileexplorer3.pdb}" />
         <include name="${dest.fileexplorer3.wpf.dll}" />

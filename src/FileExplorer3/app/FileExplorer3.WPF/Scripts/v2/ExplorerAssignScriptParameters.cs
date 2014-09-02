@@ -53,18 +53,18 @@ namespace FileExplorer.Script
             VariableKeys = "";
         }
 
-        private void addStartupParameters(ICommandManager cm, IParameterDic parameters)
+        private void addStartupParameters(ICommandManager cm, ParameterDic parameters)
         {
             cm.ParameterDicConverter.AddAdditionalParameters(parameters);
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             IExplorerViewModel evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);
             if (evm == null)
                 return ResultCommand.Error(new KeyNotFoundException(ExplorerKey));
 
-            IParameterDic startupParameters = new ParameterDic();
+            ParameterDic startupParameters = new ParameterDic();
             foreach (var key in VariableKeys.Split(','))
             {
                 var val = pm.GetValue(key);

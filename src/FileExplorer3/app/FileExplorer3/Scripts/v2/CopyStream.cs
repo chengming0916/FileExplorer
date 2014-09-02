@@ -52,7 +52,7 @@ namespace FileExplorer.Script
             DestinationKey = "{Destination}";
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             byte[] srcStreamAsByte = pm.GetValue<byte[]>(SourceKey);
             Stream srcStream = srcStreamAsByte != null ? new MemoryStream(srcStreamAsByte) :

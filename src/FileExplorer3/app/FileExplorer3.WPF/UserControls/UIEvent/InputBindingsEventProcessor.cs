@@ -27,7 +27,7 @@ namespace FileExplorer.WPF.BaseControls
                 _processor = processor;
                 _targetName = targetName;
             }
-            public override IScriptCommand Execute(IParameterDic pm)
+            public override IScriptCommand Execute(ParameterDic pm)
             {
                 IUIInput input = pm.AsUIParameterDic().Input;
                 object sender = input.Sender;

@@ -23,10 +23,10 @@ namespace FileExplorer
 
     public static partial class ExtensionMethods
     {
-        public static string ReplaceVariableInsideBracketed(this IParameterDic pd, string variableKey)
+        public static string ReplaceVariableInsideBracketed(this ParameterDic pd, string variableKey)
         {
             if (variableKey == null)
-                return null;            
+                return null;
 
             Regex regex = new Regex("{(?<TextInsideBrackets>[^}]+)}");
             string value = variableKey;
@@ -45,24 +45,28 @@ namespace FileExplorer
         }
     }
 
-    public class ParameterDic : Dictionary<string, object>, IParameterDic
+    public class ParameterDic : ICollection<KeyValuePair<string, object>>
     {
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ParameterDic>();
-        public static IParameterDic Empty = new ParameterDic();
+        public static ParameterDic Empty = new ParameterDic();
+        private IParameterDicStore _store;
 
-        public ParameterDic()
-            : base(StringComparer.CurrentCultureIgnoreCase)
+        #region Constructor
+
+        public ParameterDic(IParameterDicStore store = null)
+        {
+            _store = store ?? new MemoryParameterDicStore();
+        }
+
+        public ParameterDic(params ParameterPair[] ppairs)
+            : this(new MemoryParameterDicStore(ppairs))
         {
 
         }
 
-        public static IParameterDic FromParameterPair(params ParameterPair[] ppairs)
-        {
-            IParameterDic retVal = new ParameterDic();
-            foreach (var ppair in ppairs)
-                retVal.Add(ppair.Key, ppair.Value);
-            return retVal;
-        }
+        #endregion
+
+        #region Static function
 
         public static string GetVariable(string variableKey)
         {
@@ -76,14 +80,22 @@ namespace FileExplorer
             return "{" + GetVariable(variableKey) + combineStr + "}";
         }
 
-        public static IParameterDic Combine(IParameterDic orginalDic, IParameterDic newDic)
+        public static ParameterDic Combine(ParameterDic orginalDic, ParameterDic newDic)
         {
-            IParameterDic retDic = orginalDic.Clone();
-            foreach (var k in newDic.Keys)
-                if (!(retDic.ContainsKey(k)))
-                    retDic.Add(k, newDic[k]);
-
+            ParameterDic retDic = orginalDic.Clone();
+            if (newDic != null)
+                foreach (var v in newDic.VariableNames)
+                    retDic.SetValue(v, newDic.GetValue(v), true);
             return retDic;
+        }
+
+        #endregion
+
+        #region Has / Get / Set / Clear Value
+
+        public bool HasValue(string variableKey)
+        {
+            return HasValue<Object>(variableKey);
         }
 
         public bool HasValue<T>(string variableKey)
@@ -91,12 +103,8 @@ namespace FileExplorer
             if (variableKey == null)
                 return false;
             string variable = GetVariable(variableKey);
-            return this.ContainsKey(variable) && this[variable] is T;
-        }
-
-        public bool HasValue(string variableKey)
-        {
-            return HasValue<Object>(variableKey);
+            string[] variableSplit = variable.Split('.');
+            return _store.ContainsKey(variableSplit.First()) && _store[variableSplit.First()] is T;
         }
 
         public T GetValue<T>(string variableKey, T defaultValue)
@@ -106,15 +114,21 @@ namespace FileExplorer
 
             string variable = GetVariable(variableKey);
 
-            string[] variableSplit = variable.Split('.');
+            string[] variableSplit = variable.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
             var match = Regex.Match(variableSplit[0], RegexPatterns.ParseArrayCounterPattern);
             string varName = match.Groups["variable"].Value;
             int idx = match.Groups["counter"].Success ? Int32.Parse(match.Groups["counter"].Value) : -1;
 
-            if (this.ContainsKey(varName))
+            if (_store.ContainsKey(varName))
             {
-                object initValue = this[varName];
+                object initValue = _store[varName];
+                if (initValue is ParameterDic && idx == -1 && variableSplit.Length > 0)
+                {
+                    //Omit the first variable.
+                    string trailVariable = "{" + String.Join(".", variableSplit.Skip(1).ToArray()) + "}";
+                    return (initValue as ParameterDic).GetValue<T>(trailVariable);
+                }
                 if (idx != -1 && initValue is Array)
                     initValue = (initValue as Array).GetValue(idx);
                 var val = TypeInfoUtils.GetPropertyOrMethod(initValue, variableSplit.Skip(1).ToArray());
@@ -138,10 +152,10 @@ namespace FileExplorer
         public bool ClearValue(string variableKey)
         {
             string variable = GetVariable(variableKey);
-            if (this.ContainsKey(variable))
+            if (_store.ContainsKey(variable))
             {
-                this.Remove(variable);
-                return true;                
+                _store.Remove(variable);
+                return true;
             }
             return false;
         }
@@ -152,91 +166,102 @@ namespace FileExplorer
                 return false;
 
             string variable = GetVariable(variableKey);
-            if (this.ContainsKey(variable))
-            {
-                if (!skipIfExists)
-                {
-                    if (!(this[variable] is T) || !(this[variable].Equals(value)))
-                    {
-                        this[variable] = value;
-                        return true;
-                    }
-                    else return false;
+            string[] variableSplit = variable.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
+            if (variableSplit.Length > 1)
+            {
+                var subPd = GetValue<ParameterDic>(variableSplit[0]);
+                if (subPd == null)
+                    throw new KeyNotFoundException(variableSplit[0]);
+                return subPd.SetValue<T>(String.Join(".", variableSplit.Skip(1).ToArray()), value, skipIfExists);
+            }
+            else
+                if (_store.ContainsKey(variable))
+                {
+                    if (!skipIfExists)
+                    {
+                        if (!(_store[variable] is T) || !(_store[variable].Equals(value)))
+                        {
+                            this[variable] = value;
+                            return true;
+                        }
+                        else return false;
+
+                    }
+                    else
+                    {
+
+                        return false;
+                    }
                 }
                 else
                 {
+                    _store.Add(variable, value);
+                    return true;
 
-                    return false;
                 }
-            }
-            else
-            {
-                this.Add(variable, value);
-                return true;
-
-            }
         }
 
+        #endregion
 
-        //public static ParameterDic FromNameValueCollection(NameValueCollection col, string[] paramToFetch)
-        //{
-        //    ParameterDic retVal = new ParameterDic();
+        #region Clone
 
-        //    foreach (var key in col.AllKeys)
-        //    {
-        //        if (paramToFetch.Contains(key, StringComparer.CurrentCultureIgnoreCase))
-        //        {
-        //            retVal.Add(key, col[key]);
-        //        }
-        //    }
-        //    return retVal;
-        //}
+        public ParameterDic Clone()
+        {
+            return new ParameterDic(_store.Clone());
+        }
 
+        #endregion
 
+        #region Obsoluted function.
+
+        private string convertVariable(string key)
+        {
+            return key.StartsWith("{") ? key : "{" + key + "}";
+        }
+
+        [Obsolete("SetValue")]
         public void AddOrUpdate(string key, object value)
         {
-            if (this.ContainsKey(key))
-                this[key] = value;
-            else this.Add(key, value);
+            key = convertVariable(key);
+            SetValue(key, value);
         }
 
-        public void LoadParameterDic(ParameterDic pd)
+        [Obsolete("Variables")]
+        public IEnumerable<string> Keys { get { return _store.Keys; } }
+
+        [Obsolete()]
+        public object this[string key]
         {
-            this.Clear();
-            foreach (var pp in pd)
-                this.Add(pp.Key, pp.Value);
+            get { return Store[key]; }
+            set { Store[key] = value; }
         }
 
-        public IParameterDic Clone()
-        {
-            ParameterDic retVal = new ParameterDic();
-            retVal.LoadParameterDic(this);
-            return retVal;
-        }
+        #endregion
+
+        #region Dependency Properties
 
         public bool IsHandled
         {
-            get { return this.ContainsKey("Handled") && true.Equals(this["Handled"]); }
-            set { if (this.ContainsKey("Handled")) this["Handled"] = value; else this.Add("Handled", value); }
+            get { return GetValue<bool>("{Handled}", false); }
+            set { SetValue<bool>("{Handled}", value); }
         }
 
         public object Parameter
         {
-            get { return this.ContainsKey("Parameter") && this["Parameter"] is object ? this["Parameter"] as object : null; }
-            set { if (this.ContainsKey("Parameter")) this["Parameter"] = value; else this.Add("Parameter", value); }
+            get { return GetValue<object>("{Parameter}", null); }
+            set { SetValue<object>("{Parameter}", value); }
         }
 
         public CancellationToken CancellationToken
         {
-            get
-            {
-                return this.ContainsKey("CancellationToken") && this["CancellationToken"] is CancellationToken ?
-                    (CancellationToken)this["CancellationToken"] : CancellationToken.None;
-            }
-            set { if (this.ContainsKey("CancellationToken")) this["CancellationToken"] = value; else this.Add("CancellationToken", value); }
+            get { return GetValue<CancellationToken>("{CancellationToken}", CancellationToken.None); }
+            set { SetValue<CancellationToken>("{CancellationToken}", value); }
         }
 
+        public IParameterDicStore Store { get { return _store; } }
+
+        public IEnumerable<ParameterPair> Variables { get { return VariableNames.Select(v => new ParameterPair(v, GetValue(v))); } }
 
         /// <summary>
         /// Most exception is throw directly, if not, it will set the Error property, which will be thrown 
@@ -244,11 +269,78 @@ namespace FileExplorer
         /// </summary>
         public Exception Error
         {
-            get { return this.ContainsKey("Error") ? this["Error"] as Exception : null; }
-            set { if (this.ContainsKey("Error")) this["Error"] = value; else this.Add("Error", value); }
+            get { return GetValue<Exception>("{Error}", null); }
+            set { SetValue<Exception>("{Error}", value); }
         }
 
-        //public List<string> CommandHistory = new List<string>();
+        public IEnumerable<string> VariableNames { get { return _store.Keys.Select(k => "{" + k + "}"); } }
 
+        public List<string> CommandHistory = new List<string>();
+
+        #endregion
+
+        #region ICollection<KeyValuePair<string, object>> members
+
+        public void Add(string key, object value)
+        {
+            Store.Add(key, value);
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return Store.ContainsKey(key);
+        }
+
+        public bool Remove(string key)
+        {
+            return Store.Remove(key);
+        }
+
+        public void Clear()
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool Contains(KeyValuePair<string, object> item)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
+        {
+            throw new NotSupportedException();
+        }
+
+        public int Count
+        {
+            get { return Store.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return Store.IsReadOnly; }
+        }
+
+        public bool Remove(KeyValuePair<string, object> item)
+        {
+            throw new NotSupportedException();
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return Store.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return Store.GetEnumerator();
+        }
+
+        public void Add(KeyValuePair<string, object> item)
+        {
+            Store.Add(item.Key, item.Value);
+        }
+
+        #endregion
     }
 }

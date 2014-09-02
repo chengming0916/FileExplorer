@@ -127,7 +127,7 @@ namespace FileExplorer.Script
             Direction = ParameterDirection.Set;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);
 
@@ -140,7 +140,7 @@ namespace FileExplorer.Script
                 await getParameterAsync(pm, evm);
         }
 
-        private async Task<IScriptCommand> getParameterAsync(IParameterDic pm, IExplorerViewModel evm)
+        private async Task<IScriptCommand> getParameterAsync(ParameterDic pm, IExplorerViewModel evm)
         {
             string ValueKeyString = ValueKey as string;
             if (ValueKeyString != null)
@@ -209,7 +209,7 @@ namespace FileExplorer.Script
             return NextCommand;
         }
 
-        private async Task<IScriptCommand> setParameterAsync(IParameterDic pm, IExplorerViewModel evm)
+        private async Task<IScriptCommand> setParameterAsync(ParameterDic pm, IExplorerViewModel evm)
         {
             object value = ValueKey is string ? pm.GetValue<object>(ValueKey as string) : ValueKey;
 

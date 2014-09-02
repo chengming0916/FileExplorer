@@ -15,23 +15,19 @@ namespace FileExplorer
             return command.ContinueOnCaptureContext || (command.NextCommand != null && command.NextCommand.RequireCaptureContext());
         }
 
-        public static void Run(this IScriptRunner scriptRunner, IParameterDic initialParameters, params IScriptCommand[] cmds)
+        public static void Run(this IScriptRunner scriptRunner, ParameterDic initialParameters, params IScriptCommand[] cmds)
         {
             scriptRunner.Run(new Queue<IScriptCommand>(cmds), initialParameters);
         }
-        public static async Task RunAsync(this IScriptRunner scriptRunner, IParameterDic initialParameters, params IScriptCommand[] cmds)
+        public static async Task RunAsync(this IScriptRunner scriptRunner, ParameterDic initialParameters, params IScriptCommand[] cmds)
         {
             await scriptRunner.RunAsync(new Queue<IScriptCommand>(cmds), initialParameters);
         }
 
-        public static IParameterDic ConvertAndMerge(this IParameterDicConverter converter, IParameterDic pd, object parameter = null, params object[] additionalParameters)
+        public static ParameterDic ConvertAndMerge(this IParameterDicConverter converter, ParameterDic pd, object parameter = null, params object[] additionalParameters)
         {
             var convertedPd = converter.Convert(parameter, additionalParameters);
-            if (pd != null)
-                foreach (var k in pd.Keys)
-                    if (!convertedPd.ContainsKey(k))
-                        convertedPd.Add(k, pd[k]);
-            return convertedPd;
+            return ParameterDic.Combine(convertedPd, pd);
         }
 
     }

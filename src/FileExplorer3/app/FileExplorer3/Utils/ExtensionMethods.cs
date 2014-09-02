@@ -18,7 +18,7 @@ namespace FileExplorer
         /// </summary>
         /// <param name="paramDic"></param>
         /// <returns></returns>
-        public static async Task<IEntryModel[]> GetValueAsEntryModelArrayAsync(this IParameterDic paramDic, string entryKey, string profileKey = null)
+        public static async Task<IEntryModel[]> GetValueAsEntryModelArrayAsync(this ParameterDic paramDic, string entryKey, string profileKey = null)
         {
             object value = paramDic.GetValue<object>(entryKey);
             if (value is IEntryModel[])
@@ -38,7 +38,7 @@ namespace FileExplorer
         /// <param name="entryKey"></param>
         /// <param name="profileKey"></param>
         /// <returns></returns>
-        public static async Task<IEntryModel> GetValueAsEntryModelAsync(this IParameterDic paramDic, string entryKey, string profileKey = null)
+        public static async Task<IEntryModel> GetValueAsEntryModelAsync(this ParameterDic paramDic, string entryKey, string profileKey = null)
         {
             object value = paramDic.GetValue<object>(entryKey);
             if (value is IEntryModel)

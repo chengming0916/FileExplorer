@@ -45,14 +45,14 @@ namespace FileExplorer.Script
             ConditionCommand = ResultCommand.OK;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             if (CanExecute(pm))
                 return NextCommand;
             else return ResultCommand.Error(pm.Error ?? new ArgumentException("pm"));
         }
 
-        public override bool CanExecute(IParameterDic pm)
+        public override bool CanExecute(ParameterDic pm)
         {
             ScriptRunner.RunScriptAsync(pm, ConditionCommand);
             return pm.IsHandled && pm.Error == null;

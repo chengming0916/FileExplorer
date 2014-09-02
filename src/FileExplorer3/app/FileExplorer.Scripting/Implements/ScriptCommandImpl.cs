@@ -26,7 +26,7 @@ namespace FileExplorer.Script
         /// <returns></returns>
         public static ResultCommand Error(Exception ex) { return new ResultCommand(ex); }
 
-        Action<IParameterDic> _executeFunc = (pm) => { };
+        Action<ParameterDic> _executeFunc = (pm) => { };
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ResultCommand>();
 
@@ -45,7 +45,7 @@ namespace FileExplorer.Script
             _exception = ex;
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             if (_exception == null)
             {
@@ -85,17 +85,17 @@ namespace FileExplorer.Script
 
         }
         
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             return ResultCommand.Error(new Exception("NullScriptCommand should not be called."));
         }
 
-        public override bool CanExecute(IParameterDic pm)
+        public override bool CanExecute(ParameterDic pm)
         {
             return false;
         }

@@ -69,7 +69,7 @@ namespace FileExplorer.WPF.BaseControls
         public MarkEventHandled() : base("MarkEventHandled") { }
         public MarkEventHandled(IScriptCommand nextCommand) : base("MarkEventHandle", nextCommand) { }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             pd.EventArgs.Handled = true;
@@ -87,7 +87,7 @@ namespace FileExplorer.WPF.BaseControls
             : base("GetDataContext", nextCommand, "EventArgs")
         { _filter = filter; _notFoundCommand = notFoundCommand; }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             var ic = pd.Sender as ItemsControl;
@@ -121,7 +121,7 @@ namespace FileExplorer.WPF.BaseControls
 
         public bool ToValue { get; set; }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             if (pd.EventArgs != null)
@@ -144,7 +144,7 @@ namespace FileExplorer.WPF.BaseControls
 
         private bool ToValue { get; set; }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             pm.IsHandled = ToValue;
             return NextCommand == null ? ResultCommand.NoError : NextCommand;
@@ -169,7 +169,7 @@ namespace FileExplorer.WPF.BaseControls
             _mode = mode;
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             var pd = pm.AsUIParameterDic();
             switch (pd.Input.InputType)

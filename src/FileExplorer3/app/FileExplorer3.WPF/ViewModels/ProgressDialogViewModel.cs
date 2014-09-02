@@ -27,7 +27,7 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-        public ProgressDialogViewModel(IParameterDic pd, CancellationTokenSource cts = null)
+        public ProgressDialogViewModel(ParameterDic pd, CancellationTokenSource cts = null)
         {
             _pd = pd;
             if (_pd.ContainsKey("ProgressHeader"))
@@ -102,7 +102,7 @@ namespace FileExplorer.WPF.ViewModels
         private Int32 _totalEntries = 0, _processedEntries = 0;
         private short _currentEntryProgress = 0;
         private CancellationTokenSource _cts;
-        private IParameterDic _pd;
+        private ParameterDic _pd;
         private string _header;
         private string _source;
         private string _destination;

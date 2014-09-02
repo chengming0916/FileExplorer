@@ -104,7 +104,7 @@ namespace FileExplorer.Script
             DoAction = e => { };            
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             IExplorerViewModel evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);
             if (evm == null)
@@ -142,7 +142,7 @@ namespace FileExplorer.Script
             ContinueOnCaptureContext = true;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             IExplorerViewModel evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);
             if (evm == null)
