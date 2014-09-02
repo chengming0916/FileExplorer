@@ -1,4 +1,5 @@
 fileExplorer.Scripting
+fileExplorer.UIEventHub
 fileExplorer3
 fileExplorer3.IO
 fileExplorer3.WPF

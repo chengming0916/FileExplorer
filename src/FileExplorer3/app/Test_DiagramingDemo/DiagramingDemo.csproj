@@ -120,10 +120,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\FileExplorer\src\FileExplorer3\app\FileExplorer.Scripting.UIEventHub\FileExplorer.UIEventHub.csproj">
-      <Project>{528f0c1a-38b5-4a42-a8bd-702f052cdf2f}</Project>
-      <Name>FileExplorer.UIEventHub</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\FileExplorer\src\FileExplorer3\app\FileExplorer.Scripting\FileExplorer.Scripting.csproj">
       <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
       <Name>FileExplorer.Scripting</Name>
@@ -131,6 +127,10 @@
     <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting [WPF].csproj">
       <Project>{45b4c0ed-a35e-4b0b-8c78-9a1d48f7527a}</Project>
       <Name>FileExplorer.Scripting [WPF]</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileExplorer.UIEventHub\FileExplorer.UIEventHub.csproj">
+      <Project>{528f0c1a-38b5-4a42-a8bd-702f052cdf2f}</Project>
+      <Name>FileExplorer.UIEventHub</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
