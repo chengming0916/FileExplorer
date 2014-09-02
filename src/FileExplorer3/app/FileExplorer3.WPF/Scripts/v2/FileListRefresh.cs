@@ -51,7 +51,7 @@ namespace FileExplorer.Script
             ContinueOnCaptureContext = true;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var flValue = pm.GetValue(FileListKey);
             IFileListViewModel flvm = flValue is IExplorerViewModel ?

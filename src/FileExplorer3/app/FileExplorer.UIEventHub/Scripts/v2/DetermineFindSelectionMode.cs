@@ -44,7 +44,7 @@ namespace FileExplorer.UIEventHub
             FindSelectionModeKey = "{FindSelectionMode}";
         }
 
-        protected override Script.IScriptCommand executeInner(IParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected override Script.IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
 
             var scp = ControlUtils.GetScrollContentPresenter(ic);

@@ -87,7 +87,7 @@ namespace FileExplorer.Script
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<NotifyRootChanged>();
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {          
             IEntryModel[] entryModels = DirectoryEntryKey == null ? new IEntryModel[] { } :
               (await pm.GetValueAsEntryModelArrayAsync(DirectoryEntryKey));

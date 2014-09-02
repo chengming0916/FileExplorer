@@ -13,9 +13,9 @@ namespace FileExplorer.Script
     {
         public static IParameterDicConverter ConvertParameterOnly =
             new ParameterDicConverterBase((p, p2) =>
-                    p is IParameterDic ? (p as IParameterDic) :
+                    p is ParameterDic ? (p as ParameterDic) :
                     new ParameterDic() { { "Parameter", p } },
-                (pd, p2) => pd.ContainsKey("Parameter") ? pd["Parameter"] : null);
+                (pd, p2) => pd.GetValue<object>("{Parameter}", null));
 
         /// <summary>
         /// For CommandViewModel, Convert Sender, EventName, EventArgs to ParameterDic
@@ -63,7 +63,7 @@ namespace FileExplorer.Script
             }, null, ParameterDicConverters.ConvertParameterOnly);
 
 
-        public static IParameterDicConverter FromParameterDic(IParameterDic pd, IParameterDicConverter baseConverter = null)
+        public static IParameterDicConverter FromParameterDic(ParameterDic pd, IParameterDicConverter baseConverter = null)
         {
             return new ParameterDicConverterBase((p, p2) =>
             {

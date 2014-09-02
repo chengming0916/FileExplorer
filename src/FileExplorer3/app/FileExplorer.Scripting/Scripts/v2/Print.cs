@@ -73,7 +73,7 @@ namespace FileExplorer.Script
             DestinationType = PrintDestinationType.Logger;
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             string variable = pm.ReplaceVariableInsideBracketed(VariableKey);
 

@@ -90,7 +90,7 @@ namespace FileExplorer.Script
             HttpClientKey = "{HttpClient}";
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var pdv = pm.GetValue<IProgress<TransferProgress>>("{Progress}", NullTransferProgress.Instance);
             string url = pm.GetValue<string>(UrlKey);

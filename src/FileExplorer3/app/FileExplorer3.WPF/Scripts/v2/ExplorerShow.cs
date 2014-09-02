@@ -103,7 +103,7 @@ namespace FileExplorer.Script
             SelectionPathsKey = "{SelectionPaths}";
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             IWindowManager wm = pm.GetValue<IWindowManager>(WindowManagerKey) ?? new WindowManager();
             IExplorerViewModel evm = pm.GetValue<IExplorerViewModel>(ExplorerKey);

@@ -69,7 +69,7 @@ namespace FileExplorer.Script
             IsProgressEnabled = true;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             IEnumerable e = pm.GetValue<IEnumerable>(ItemsKey);
             if (e == null)

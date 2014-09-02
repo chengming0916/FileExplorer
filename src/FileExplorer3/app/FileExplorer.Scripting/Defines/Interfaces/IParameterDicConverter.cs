@@ -15,8 +15,8 @@ namespace FileExplorer.Script
         /// used by ExplorerAssignScriptParameters IScriptCommand to inject parameters to CommandManager.
         /// </summary>
         /// <param name="pd"></param>
-        void AddAdditionalParameters(IParameterDic pd);
-        IParameterDic Convert(object parameter, params object[] additionalParameters);
-        object ConvertBack(IParameterDic pd, params object[] additionalParameters);
+        void AddAdditionalParameters(ParameterDic pd);
+        ParameterDic Convert(object parameter, params object[] additionalParameters);
+        object ConvertBack(ParameterDic pd, params object[] additionalParameters);
     }
 }

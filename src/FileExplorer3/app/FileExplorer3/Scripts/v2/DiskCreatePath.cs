@@ -119,13 +119,13 @@ namespace FileExplorer.Script
         { ProfileKey = "{Profile}"; DestinationKey = "{Entry}"; PathKey = "{Path}"; }
 
 
-        public override bool CanExecute(IParameterDic pm)
+        public override bool CanExecute(ParameterDic pm)
         {
             string path = pm.ReplaceVariableInsideBracketed(PathKey);
             return !String.IsNullOrEmpty(path) && !path.StartsWith("::{"); //Cannot execute if GuidPath            
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             string path = pm.ReplaceVariableInsideBracketed(PathKey);
             if (path == null)

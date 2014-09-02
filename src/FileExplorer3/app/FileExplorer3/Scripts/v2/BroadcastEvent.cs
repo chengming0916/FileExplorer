@@ -50,7 +50,7 @@ namespace FileExplorer.Script
             Event = null;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var events = pm.GetValue<IEventAggregator>(EventsKey);
             if (events == null)

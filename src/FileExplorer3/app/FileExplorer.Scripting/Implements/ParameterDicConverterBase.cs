@@ -8,41 +8,39 @@ namespace FileExplorer.Script
 {
     public class ParameterDicConverterBase : IParameterDicConverter
     {
-        private Func<IParameterDic, object[], object> _convertBackFunc;
-        private Func<object, object[], IParameterDic> _convertFunc;
+        private Func<ParameterDic, object[], object> _convertBackFunc;
+        private Func<object, object[], ParameterDic> _convertFunc;
         private IParameterDicConverter _baseConverter;
-        private IParameterDic _additionalParameters = new ParameterDic();
+        private ParameterDic _additionalParameters = new ParameterDic();
 
-        public ParameterDicConverterBase(Func<object, object[], IParameterDic> convertFunc,
-            Func<IParameterDic, object[], object> convertBackFunc, IParameterDicConverter baseConverter = null)
+        public ParameterDicConverterBase(Func<object, object[], ParameterDic> convertFunc,
+            Func<ParameterDic, object[], object> convertBackFunc, IParameterDicConverter baseConverter = null)
         {
             _convertFunc = convertFunc;
             _convertBackFunc = convertBackFunc;
             _baseConverter = baseConverter;
         }
 
-        public void AddAdditionalParameters(IParameterDic pd)
+        public void AddAdditionalParameters(ParameterDic pd)
         {
             _additionalParameters = ParameterDic.Combine(_additionalParameters, pd);
         }
 
-        public IParameterDic Convert(object parameter, params object[] additionalParameters)
+        public ParameterDic Convert(object parameter, params object[] additionalParameters)
         {
             var retVal = _convertFunc(parameter, additionalParameters);
             if (_baseConverter != null)
             {
                 var baseRetVal = _baseConverter.Convert(parameter, additionalParameters);
-                foreach (var k in baseRetVal.Keys)
-                    if (!retVal.ContainsKey(k))
-                        retVal.Add(k, baseRetVal[k]);
-                foreach (var k in _additionalParameters.Keys)
-                    if (!retVal.ContainsKey(k))
-                        retVal.Add(k, _additionalParameters[k]);
+                foreach (var v in baseRetVal.VariableNames)
+                    retVal.SetValue(v, baseRetVal.GetValue(v), true);
+                foreach (var v in _additionalParameters.VariableNames)
+                    retVal.SetValue(v, _additionalParameters.GetValue(v), true);
             }
             return retVal;
         }
 
-        public object ConvertBack(IParameterDic pd, params object[] additionalParameters)
+        public object ConvertBack(ParameterDic pd, params object[] additionalParameters)
         {
             object retVal = _convertBackFunc(pd, additionalParameters);
 
@@ -51,6 +49,5 @@ namespace FileExplorer.Script
 
             return retVal;
         }
-
     }
 }

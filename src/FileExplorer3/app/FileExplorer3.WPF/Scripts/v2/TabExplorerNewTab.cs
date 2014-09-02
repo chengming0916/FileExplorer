@@ -61,7 +61,7 @@ namespace FileExplorer.Script
             DirectoryEntryKey = null;
         }
 
-        public override async Task<IScriptCommand> ExecuteAsync(IParameterDic pm)
+        public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             DestinationKey = DestinationKey ?? "{Explorer}";
             var tevm = pm.GetValue<ITabbedExplorerViewModel>(TabbedExplorerKey);
@@ -78,7 +78,7 @@ namespace FileExplorer.Script
             return NextCommand;
         }
 
-        public override bool CanExecute(IParameterDic pm)
+        public override bool CanExecute(ParameterDic pm)
         {
             return pm.HasValue(TabbedExplorerKey);
         }

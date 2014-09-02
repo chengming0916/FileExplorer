@@ -18,46 +18,46 @@ namespace FileExplorer.Script
 {
     public static partial class WPFExtensionMethods
     {
-        public static Func<IParameterDic, IEntryModel[]> GetCurrentDirectoryFunc =
+        public static Func<ParameterDic, IEntryModel[]> GetCurrentDirectoryFunc =
            pd => pd.ContainsKey("DirectoryTree") && pd["DirectoryTree"] is IDirectoryTreeViewModel ?
                new [] { (pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedValue }               
                : new IEntryModel[] { };
 
-        public static Func<IParameterDic, IEntryViewModel[]> GetCurrentDirectoryVMFunc =
+        public static Func<ParameterDic, IEntryViewModel[]> GetCurrentDirectoryVMFunc =
            pd => pd.ContainsKey("DirectoryTree") && pd["DirectoryTree"] is IDirectoryTreeViewModel ?
                new[] { (pd["DirectoryTree"] as IDirectoryTreeViewModel).Selection.RootSelector.SelectedViewModel }
                : new IEntryViewModel[] { };
 
-        public static Func<IParameterDic, IEntryModel[]> GetFileListItemsFunc =
+        public static Func<ParameterDic, IEntryModel[]> GetFileListItemsFunc =
             pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
                 (pd["FileList"] as IFileListViewModel).ProcessedEntries.EntriesHelper.AllNonBindable
                 .Select(evm => evm.EntryModel).ToArray()
                 : new IEntryModel[] { };
 
-        public static Func<IParameterDic, IEntryViewModel[]> GetFileListItemsVMFunc =
+        public static Func<ParameterDic, IEntryViewModel[]> GetFileListItemsVMFunc =
             pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
                 (pd["FileList"] as IFileListViewModel).ProcessedEntries.EntriesHelper.AllNonBindable
                 .ToArray()
                 : new IEntryViewModel[] { };
 
-        public static Func<IParameterDic, IEntryModel[]> GetFileListSelectionFunc =
+        public static Func<ParameterDic, IEntryModel[]> GetFileListSelectionFunc =
             pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
                 (pd["FileList"] as IFileListViewModel).Selection.SelectedItems
                 .Select(evm => evm.EntryModel).ToArray()
                 : new IEntryModel[] { };
 
-        public static Func<IParameterDic, IEntryViewModel[]> GetFileListSelectionVMFunc =
+        public static Func<ParameterDic, IEntryViewModel[]> GetFileListSelectionVMFunc =
             pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
                 (pd["FileList"] as IFileListViewModel).Selection.SelectedItems
                 .ToArray()
                 : new IEntryViewModel[] { };
 
-        public static Func<IParameterDic, IEntryModel> GetFileListCurrentDirectoryFunc =
+        public static Func<ParameterDic, IEntryModel> GetFileListCurrentDirectoryFunc =
             pd => pd.ContainsKey("FileList") && pd["FileList"] is IFileListViewModel ?
                 (pd["FileList"] as IFileListViewModel).CurrentDirectory                
                 : null;
 
-        public static VMParameterDic AsVMParameterDic(this IParameterDic dic)
+        public static VMParameterDic AsVMParameterDic(this ParameterDic dic)
         {
             if (dic is VMParameterDic)
                 return (VMParameterDic)dic;

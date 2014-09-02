@@ -38,7 +38,7 @@ namespace FileExplorer.WPF.Models
             _srcParseName = srcParseName;
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
 
             if (_changeType == ChangeType.Moved && _srcProfile != null && _srcParseName != null

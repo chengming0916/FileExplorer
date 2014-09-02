@@ -17,10 +17,10 @@ namespace FileExplorer.Script
         bool ContinueOnCaptureContext { get; }
         string CommandKey { get; }
 
-        IScriptCommand Execute(IParameterDic pm);
-        Task<IScriptCommand> ExecuteAsync(IParameterDic pm);
+        IScriptCommand Execute(ParameterDic pm);
+        Task<IScriptCommand> ExecuteAsync(ParameterDic pm);
 
-        bool CanExecute(IParameterDic pm);
+        bool CanExecute(ParameterDic pm);
     }
 
    

@@ -102,7 +102,7 @@ namespace FileExplorer.Script
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<MessageBoxShow>();
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             MessageBoxButton buttons;
             if (!Enum.TryParse<MessageBoxButton>(Buttons, out buttons))

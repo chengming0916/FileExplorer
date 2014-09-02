@@ -65,7 +65,7 @@ namespace FileExplorer.Script
             SkipIfExists = false;
         }
 
-        public override IScriptCommand Execute(IParameterDic pm)
+        public override IScriptCommand Execute(ParameterDic pm)
         {
             object source = pm.GetValue<object>(SourceVariableKey);
             

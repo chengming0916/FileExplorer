@@ -50,17 +50,19 @@
   <ItemGroup>
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Interfaces\ExtensionMethods.cs" />
-    <Compile Include="Defines\Interfaces\IParameterDic.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicConverter.cs" />
+    <Compile Include="Defines\Interfaces\IParameterDicStore.cs" />
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
     <Compile Include="Defines\Interfaces\IScriptCommand.cs" />
     <Compile Include="Defines\Interfaces\IScriptCommandConstructor.cs" />
     <Compile Include="Defines\Interfaces\IScriptRunner.cs" />
     <Compile Include="Defines\Interfaces\IScriptRunnerSource.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
+    <Compile Include="Defines\Structs\MemoryParameterDicStore.cs" />
     <Compile Include="Defines\Structs\ParameterDic.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
     <Compile Include="Implements\DynamicRelayCommandDictionary.cs" />
+    <Compile Include="Implements\ExtensionMethods.cs" />
     <Compile Include="Implements\NullParameterDicConverter.cs" />
     <Compile Include="Implements\ParameterDicConverterBase.cs" />
     <Compile Include="Implements\PathHelper.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Scripts\ExtensionMethods.cs" />
     <Compile Include="Scripts\ScriptCommandsv1.cs" />
     <Compile Include="Scripts\v2\Assign.cs" />
+    <Compile Include="Scripts\v2\AssignArray.cs" />
     <Compile Include="Scripts\v2\AssignCanExecuteCondition.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />
     <Compile Include="Scripts\v2\ForEach.cs" />

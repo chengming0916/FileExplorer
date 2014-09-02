@@ -148,9 +148,9 @@ namespace FileExplorer.WPF.BaseControls
         }
 
         private async Task<bool> executeAsync(IList<UIEventProcessorBase> processors, RoutedEvent eventId,
-            IUIInput input, Action<IParameterDic> thenFunc = null)
+            IUIInput input, Action<ParameterDic> thenFunc = null)
         {
-            IParameterDic pd = ParameterDicConverters.ConvertUIInputParameter.Convert(null,
+            ParameterDic pd = ParameterDicConverters.ConvertUIInputParameter.Convert(null,
                 eventId.Name, input, _inputProcessors);
 
             IScriptCommand[] commands = 
