@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace DiagramingDemo
 {
-    public class ItemViewModel : NotifyPropertyChanged, IPositionAware, IDraggable, ISelectable
+    public class ItemViewModel : NotifyPropertyChanged, IPositionAware, IDraggable, ISelectable, IResizable
     {
 
         #region Constructor
@@ -30,6 +30,7 @@ namespace DiagramingDemo
         private static Random rand = new Random();
         private bool _isDragging = false;
         private Point _position = new Point(rand.Next(500), rand.Next(500));
+        private Size _size = new Size(rand.Next(25) + 25, rand.Next(25) + 25);
         private bool _isSelected;
         private bool _isSelecting;
         #endregion
@@ -73,6 +74,19 @@ namespace DiagramingDemo
             {
                 _position = value;
                 NotifyOfPropertyChanged(() => Position);
+            }
+        }
+
+        public Size Size
+        {
+            get
+            {
+                return _size;
+            }
+            set
+            {
+                _size = value;
+                NotifyOfPropertyChanged(() => Size);
             }
         }
 

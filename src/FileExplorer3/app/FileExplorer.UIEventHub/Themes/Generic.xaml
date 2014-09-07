@@ -3,7 +3,7 @@
     xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"
     >
     <ResourceDictionary.MergedDictionaries>
-        <!--<ResourceDictionary Source="pack://application:,,,/FileExplorer.UIEventHub;component/Themes/Common/SelectedItemsAdorner.xaml" />-->
+        <ResourceDictionary Source="pack://application:,,,/FileExplorer.UIEventHub;component/Themes/Common/ResizeDecorator.xaml" />
      
     </ResourceDictionary.MergedDictionaries>
 

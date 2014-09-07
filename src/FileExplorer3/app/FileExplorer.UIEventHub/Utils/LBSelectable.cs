@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,18 @@ namespace FileExplorer.UIEventHub
             set
             {
                 _lbItem.SetValue(ListBoxItem.IsSelectedProperty, value);
+            }
+        }
+
+        public bool IsSelecting
+        {
+            get
+            {
+                return (bool)_lbItem.GetValue(AttachedProperties.IsSelectingProperty);
+            }
+            set
+            {
+                _lbItem.SetValue(AttachedProperties.IsSelectingProperty, value);
             }
         }
     }

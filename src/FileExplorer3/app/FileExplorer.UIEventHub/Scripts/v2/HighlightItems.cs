@@ -71,14 +71,20 @@ namespace FileExplorer.UIEventHub
 
                 for (int i = 0; i < ic.Items.Count; i++)
                 {
-                    DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
-                    if (item != null)
+                    DependencyObject ele = ic.ItemContainerGenerator.ContainerFromIndex(i);
+                     ISelectable item = ic.Items[i] as ISelectable;
+
+
+                    if (ele != null)
                     {
-                        bool isSelecting = AttachedProperties.GetIsSelecting(item);
-                        if (isSelecting && unselectedList.Contains(item))
-                            AttachedProperties.SetIsSelecting(item, false);
-                        else if (!isSelecting && selectedList.Contains(item))
-                            AttachedProperties.SetIsSelecting(item, true);
+
+                        bool isSelecting = AttachedProperties.GetIsSelecting(ele);
+                        if (isSelecting && unselectedList.Contains(ele))
+                            item.IsSelecting = false;
+                        //AttachedProperties.SetIsSelecting(item, false);
+                        else if (!isSelecting && selectedList.Contains(ele))
+                            item.IsSelecting = true;
+                            //AttachedProperties.SetIsSelecting(ele, true);
                     }
                 }
 

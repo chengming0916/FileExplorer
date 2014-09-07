@@ -50,6 +50,22 @@ namespace FileExplorer.Defines
 
         #endregion
 
+        #region ResizeItemAdorner
+        public static DependencyProperty ResizeItemAdornerProperty =
+            DependencyProperty.RegisterAttached("ResizeItemAdorner", typeof(ResizeItemAdorner), typeof(AttachedProperties));
+
+        public static ResizeItemAdorner GetResizeItemAdorner(DependencyObject target)
+        {
+            return (ResizeItemAdorner)target.GetValue(ResizeItemAdornerProperty);
+        }
+
+        public static void SetResizeItemAdorner(DependencyObject target, ResizeItemAdorner value)
+        {
+            target.SetValue(ResizeItemAdornerProperty, value);
+        }
+
+        #endregion
+
         #region LastScrollContentPresenter
 
         public static DependencyProperty LastScrollContentPresenterProperty =
