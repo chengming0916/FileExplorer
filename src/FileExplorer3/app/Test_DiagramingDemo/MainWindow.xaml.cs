@@ -1,4 +1,5 @@
 ﻿using FileExplorer;
+using FileExplorer.UIEventHub;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Utils;
 using MetroLog;
@@ -34,7 +35,10 @@ namespace DiagramingDemo
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-        
+            var ra = new ResizeItemAdorner(cc) { };
+            cc.Content = ra;
+            ra.SetValue(ResizeItemAdorner.SelectedItemProperty, (DataContext as CanvasViewModel).Items[0] as IResizable);
+            ra.SetTargetItem((DataContext as CanvasViewModel).Items[0] as IResizable);
         }
     }
 }

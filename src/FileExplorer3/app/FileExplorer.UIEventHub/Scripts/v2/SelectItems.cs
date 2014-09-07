@@ -80,8 +80,9 @@ namespace FileExplorer.UIEventHub
                 
                 ISelectable item = ic.Items[i] as ISelectable;
                 item.IsSelected = returnSelected(i, ele);
-                if (ele != null)
-                    AttachedProperties.SetIsSelecting(ele, false);
+                item.IsSelecting = false;
+                //if (ele != null)
+                //    AttachedProperties.SetIsSelecting(ele, false);
 
             }
             return NextCommand;

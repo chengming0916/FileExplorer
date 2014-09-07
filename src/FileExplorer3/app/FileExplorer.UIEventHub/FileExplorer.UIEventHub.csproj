@@ -52,6 +52,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseControls\ResizeDecorator.cs" />
     <Compile Include="BaseControls\ResizeItemAdorner.cs" />
     <Compile Include="BaseControls\ResizeThumb.cs" />
     <Compile Include="BaseControls\SelectedItemsAdorner.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Interfaces\IChildInfo.cs" />
     <Compile Include="Interfaces\IPositionAware.cs" />
     <Compile Include="Interfaces\IItemSelectProcessor.cs" />
+    <Compile Include="Interfaces\IResizable.cs" />
     <Compile Include="Interfaces\ISelectable.cs" />
     <Compile Include="Interfaces\IUIDragInput.cs" />
     <Compile Include="Interfaces\IUIEventHub.cs" />
@@ -111,6 +113,7 @@
     <Compile Include="Scripts\v2\EventArgsHandledCommand.cs" />
     <Compile Include="Scripts\v2\IfKeyGesture.cs" />
     <Compile Include="Scripts\v2\SelectedItemsAdornerCommand.cs" />
+    <Compile Include="Scripts\v2\ResizeItemAdornerCommand.cs" />
     <Compile Include="Scripts\v2\SelectionAdornerCommand.cs" />
     <Compile Include="Scripts\v2\ThrottleTouchDrag.cs" />
     <Compile Include="Utils\ConsoleTarget.cs" />
@@ -147,6 +150,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\Common\ResizeDecorator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Common\Converters.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

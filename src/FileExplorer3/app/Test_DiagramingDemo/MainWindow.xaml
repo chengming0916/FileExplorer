@@ -11,7 +11,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type local:ItemViewModel}">
-                <Border Width="50" Height="50" x:Name="border"
+                <Border Width="{Binding Size.Width}" Height="{Binding Size.Height}" x:Name="border"
                             BorderBrush="DarkGreen" Background="Lavender" BorderThickness="1">
                     <TextBlock Text="{Binding Text}" />
                 </Border>
@@ -49,8 +49,8 @@
             </bc:UIEventAdapter.Processors>         
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=TwoWay}" />
-                    <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDragging, Mode=TwoWay}" />
+                    <!--<Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=OneWay}" />
+                    <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDragging, Mode=OneWay}" />-->
                     <Setter Property="Visibility" Value="{Binding IsDragging, Converter={StaticResource fbtv}}" />
                     <Setter Property="bc:CenteredCanvas.X" Value="{Binding Position.X}" />
                     <Setter Property="bc:CenteredCanvas.Y" Value="{Binding Position.Y}" />

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FileExplorer.UIEventHub;
 using FileExplorer.Script;
 using FileExplorer;
+using System.Collections;
 
 namespace DiagramingDemo
 {
