@@ -128,7 +128,7 @@ namespace FileExplorer.WPF.BaseControls
 
         public static readonly DependencyProperty CurrentPositionProperty =
          DependencyProperty.Register("CurrentPosition", typeof(Point), typeof(SelectedItemsAdorner),
-         new UIPropertyMetadata(new Point(0, 0), new PropertyChangedCallback(OnCurrentPositionChanged)));
+         new UIPropertyMetadata(new Point(-1, -1), new PropertyChangedCallback(OnCurrentPositionChanged)));
 
      
         public IEnumerable Items

@@ -32,7 +32,6 @@ namespace DiagramingDemo
         private bool _isVisible;
         private Point _position = new Point(rand.Next(500), rand.Next(500));
         private bool _isSelected;
-        private Point _orgPosition;
         private bool _isSelecting;
         #endregion
 
@@ -86,19 +85,6 @@ namespace DiagramingDemo
             {
                 _position = value;
                 NotifyOfPropertyChanged(() => Position);
-            }
-        }
-
-        public Point OriginalPosition
-        {
-            get
-            {
-                return _orgPosition;
-            }
-            set
-            {
-                _orgPosition = value;
-                NotifyOfPropertyChanged(() => OriginalPosition);
             }
         }
 

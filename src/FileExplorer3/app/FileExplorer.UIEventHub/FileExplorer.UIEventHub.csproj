@@ -103,6 +103,7 @@
     <Compile Include="Implements\DiskParameterDicStore.cs" />
     <Compile Include="Scripts\v2\DragDropLiteCommand.cs" />
     <Compile Include="Scripts\v2\EventArgsHandledCommand.cs" />
+    <Compile Include="Scripts\v2\SelectedItemsAdornerCommand.cs" />
     <Compile Include="Scripts\v2\SelectionAdornerCommand.cs" />
     <Compile Include="Scripts\v2\ThrottleTouchDrag.cs" />
     <Compile Include="Utils\ConsoleTarget.cs" />
