@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DiagramingDemo
 {
@@ -29,9 +30,9 @@ namespace DiagramingDemo
         private static Random rand = new Random();
         private bool _isDragging;
         private bool _isVisible;
-        private int _left = rand.Next(500);
+        private Point _position = new Point(rand.Next(500), rand.Next(500));
         private bool _isSelected;
-        private int _top = rand.Next(500);
+        private Point _orgPosition;
         private bool _isSelecting;
         #endregion
 
@@ -75,29 +76,29 @@ namespace DiagramingDemo
             }
         }
 
-        public int Left
+        public Point Position
         {
             get
             {
-                return _left;
+                return _position;
             }
             set
             {
-                _left = value;
-                NotifyOfPropertyChanged(() => Left);
+                _position = value;
+                NotifyOfPropertyChanged(() => Position);
             }
         }
 
-        public int Top
+        public Point OriginalPosition
         {
             get
             {
-                return _top;
+                return _orgPosition;
             }
             set
             {
-                _top = value;
-                NotifyOfPropertyChanged(() => Top);
+                _orgPosition = value;
+                NotifyOfPropertyChanged(() => OriginalPosition);
             }
         }
 

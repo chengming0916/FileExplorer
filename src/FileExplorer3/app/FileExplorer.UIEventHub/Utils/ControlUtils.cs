@@ -49,14 +49,19 @@ namespace FileExplorer.WPF.Utils
             return UITools.FindVisualChild<ItemsPresenter>(c, null, 8);
         }
 
-        public static AdornerLayer GetAdornerLayer(Control c)
+        public static AdornerLayer GetAdornerLayer(Control c, bool localOnly = false)
         {
             ItemsPresenter ip = GetItemsPresenter(c);
             ScrollContentPresenter p = GetScrollContentPresenter(ip);
 
-            AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(p);
-            if (adornerLayer != null)
-                return adornerLayer;
+            AdornerLayer adornerLayer;
+
+            if (!localOnly)
+            {
+                adornerLayer = AdornerLayer.GetAdornerLayer(p);
+                if (adornerLayer != null)
+                    return adornerLayer;
+            }
 
             AdornerDecorator ad = UITools.FindAncestor<AdornerDecorator>(ip);
             try

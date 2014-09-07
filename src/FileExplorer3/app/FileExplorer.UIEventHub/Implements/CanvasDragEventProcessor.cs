@@ -72,6 +72,7 @@ namespace FileExplorer.WPF.BaseControls
                 case "TouchDrag":
                 case "MouseDrag":
                     return 
+                        HubScriptCommands.ThrottleTouchDrag(5, 
                         HubScriptCommands.IfNotRoutedEventHandled(
                         HubScriptCommands.IfDependencyPropertyEqualDefaultValue<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, 
                             //If StartDraggingProperty = null, return.
@@ -80,23 +81,30 @@ namespace FileExplorer.WPF.BaseControls
                             HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
                                 AttachedProperties.IsDraggingProperty, true,
                                 //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
-                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", false,                                
-                                    //If ISupportDrag is assigned to a non-null value, Initialize DragLiteParameters.
-                                    HubScriptCommands.StartDragDropLite("{ISupportDrag}",
+                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", false,
+                                    //If ISupportDrag is assigned to a non-null value,                                     
+                                    //Initialize DragLiteParameters (in {DragDrop} global parameterDic).
+                                        HubScriptCommands.StartDragDropLite("{ISupportDrag}",
                                         //then set {EventArgs.Handled} to true.
                                         HubScriptCommands.SetRoutedEventHandled( 
                                             //And attach/update adorner.
                                             ScriptCommands.PrintDebug("ToDo:AttachAdorner/UpdateAdorner/UpdateAdornerText"))))
-                           , null)));
+                           , null))));
+                case "MouseMove" :
+                case "TouchMove":
+                    return 
+                        ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false, 
+                            ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Canvas", 
+                                HubScriptCommands.UpdateDragDropCanvas()));
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
-                    return HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
-                               AttachedProperties.IsDraggingProperty, false,
-                               HubScriptCommands.SetDependencyPropertyTyped<object>("{Sender}",
-                               AttachedProperties.StartDraggingItemProperty, null,
+                    return 
+                                HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", AttachedProperties.IsDraggingProperty, false,
+                                HubScriptCommands.SetDependencyPropertyTyped<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,                                  
+                                    HubScriptCommands.EndDragDropCanvas(
                                   //Set {EventArgs.Handled} to true.
-                                  HubScriptCommands.SetRoutedEventHandled( 
-                                           ScriptCommands.PrintDebug("ToDo:DetachAdorner"))));
+                                    HubScriptCommands.SetRoutedEventHandled(
+                                           ScriptCommands.PrintDebug("{DragDrop.Mode},  ToDo:DetachAdorner")))));
             
             }
 

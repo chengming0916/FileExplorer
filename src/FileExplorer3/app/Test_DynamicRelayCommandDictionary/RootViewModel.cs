@@ -21,9 +21,8 @@ namespace Test_DynamicRelayCommandDictionary
             {
                 ParameterDicConverter = new ParameterDicConverterBase(((pm, pms) => new ParameterDic()
                     {
-                        { "RootVM", this },
-                        { "Parameter", pm }
-                    }), ((pm, pms) => null)), 
+                        { "RootVM", this },                        
+                    }), ((pm, pms) => null), ParameterDicConverters.ConvertParameterOnly), 
                 ScriptRunner = new ScriptRunner()
             };
     

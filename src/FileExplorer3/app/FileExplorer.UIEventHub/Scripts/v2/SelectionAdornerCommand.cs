@@ -107,6 +107,7 @@ namespace FileExplorer.UIEventHub
                         break;
 
                     case UIEventHub.AdornerMode.Detach:
+
                         var lastScp = AttachedProperties.GetLastScrollContentPresenter(sender); //For used when detach.
                         var lastAdorner = AttachedProperties.GetSelectionAdorner(scp);
                         if (lastAdorner != null)

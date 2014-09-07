@@ -58,11 +58,11 @@
     <Compile Include="Defines\Interfaces\IScriptRunner.cs" />
     <Compile Include="Defines\Interfaces\IScriptRunnerSource.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
-    <Compile Include="Defines\Structs\MemoryParameterDicStore.cs" />
     <Compile Include="Defines\Structs\ParameterDic.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
     <Compile Include="Implements\DynamicRelayCommandDictionary.cs" />
     <Compile Include="Implements\ExtensionMethods.cs" />
+    <Compile Include="Implements\MemoryParameterDicStore.cs" />
     <Compile Include="Implements\NullParameterDicConverter.cs" />
     <Compile Include="Implements\ParameterDicConverterBase.cs" />
     <Compile Include="Implements\PathHelper.cs" />

@@ -16,7 +16,7 @@
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/DropDown.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/Buttons.xaml" />
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/BreadcrumbTreeItem.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/ItemTemplates.xaml" />
+        
     </ResourceDictionary.MergedDictionaries>
 
 

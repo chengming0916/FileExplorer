@@ -15,12 +15,12 @@ namespace FileExplorer
                 this.Add(ppair.Key, ppair.Value);            
         }
 
-        public Task SaveAsync()
+        public virtual Task SaveAsync()
         {
             return Task.Delay(0);
         }
 
-        public Task LoadAsync()
+        public virtual Task LoadAsync()
         {
             return Task.Delay(0);
         }

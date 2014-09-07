@@ -1,11 +1,11 @@
-﻿using FileExplorer.UIEventHub;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
-namespace DiagramingDemo
+namespace FileExplorer.UIEventHub
 {
     public interface IDraggablePositionAware : IDraggable
     {
@@ -20,7 +20,7 @@ namespace DiagramingDemo
         /// </summary>
         bool IsSelected { get; set; }
 
-        int Left { get; set; }
-        int Top { get; set; }        
+        Point Position { get; set; }
+        Point OriginalPosition { get; set; }
     }
 }
