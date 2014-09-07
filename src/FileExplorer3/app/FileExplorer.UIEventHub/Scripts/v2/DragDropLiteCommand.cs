@@ -27,14 +27,6 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand UpdateDragDropCanvas(IScriptCommand nextCommand = null)
-        {
-            return new DragDropLiteCommand()
-            {
-                State = DragDropState.UpdateCanvas,
-                NextCommand = (ScriptCommandBase)nextCommand,
-            };
-        }
 
         public static IScriptCommand EndDragDropCanvas(IScriptCommand nextCommand = null)
         {
@@ -46,7 +38,7 @@ namespace FileExplorer.UIEventHub
         }
     }
 
-    public enum DragDropState { StartCanvas, UpdateCanvas, EndCanvas }
+    public enum DragDropState { StartCanvas, EndCanvas }
 
     public class DragDropLiteCommand : UIScriptCommandBase<Control, RoutedEventArgs>
     {
@@ -127,40 +119,8 @@ namespace FileExplorer.UIEventHub
             pm.SetValue<object>(DragDropDragSourceKey, null);
             pm.SetValue<object>(DragDropStartPositionKey, null);
         }
-
-        private void setIsDragging(ParameterDic pm, bool value, bool updateOrgPosition)
-        {
-            var items = pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey);
-            foreach (var item in items)
-            {
-                if (updateOrgPosition && item is IDraggablePositionAware)
-                    (item as IDraggablePositionAware).OriginalPosition =
-                        (item as IDraggablePositionAware).Position;
-
-                item.IsDragging = value;
-            }
-        }
-
-        private void canvasUpdatePosition(ParameterDic pm)
-        {
-            if (pm.HasValue<Point>(DragDropStartPositionKey))
-            {
-                Point currentPosition = pm.GetValue<Point>(CurrentPositionAdjustedKey);
-                Point startPosition = pm.GetValue<Point>(DragDropStartPositionKey);
-                Vector movePt = currentPosition - startPosition;
-
-                var items = pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey);
-                foreach (var item in items)
-                    if (item is IDraggablePositionAware)
-                    {
-                        IDraggablePositionAware posAwareItem = item as IDraggablePositionAware;
-                        posAwareItem.Position = new Point(posAwareItem.OriginalPosition.X + movePt.X,
-                            posAwareItem.OriginalPosition.Y + movePt.Y);
-                    }
-            }
-        }
-
-        private static SelectedItemsAdorner adorner = null;
+       
+        private static SelectedItemsAdorner adorner = null;        
         protected override IScriptCommand executeInner(ParameterDic pm, Control sender,
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
@@ -173,44 +133,32 @@ namespace FileExplorer.UIEventHub
             {
                 case DragDropState.StartCanvas:
                     if (dragStart(pm, input, "Canvas"))
-                    {
-                        setIsDragging(pm, true, true);
-
-                        //
-                        var scp = ControlUtils.GetScrollContentPresenter(sender);
-                        AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(sender);
-                        if (adorner == null)
-                        {
-                            adorner = new SelectedItemsAdorner(scp);
-                            adornerLayer.Add(adorner);
-                        }
-                        adorner.CurrentPosition = pm.GetValue<Point>(CurrentPositionAdjustedKey);
-                        adorner.Items = (sender as ItemsControl).ItemsSource;
-                        //
-
+                    {                        
+                        foreach (var item in pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey))                        
+                            item.IsDragging = true;                        
                         return NextCommand;
                     }
-                    else return FailCommand;
-
-                case DragDropState.UpdateCanvas:
-                    //canvasUpdatePosition(pm);
-                    if (adorner != null)
-                    {
-                        adorner.CurrentPosition = pm.GetValue<Point>(CurrentPositionAdjustedKey);
-                    }
-
-                    return NextCommand;
+                    else return FailCommand;                
 
                 case DragDropState.EndCanvas:
-                    setIsDragging(pm, false, false);
-                    canvasUpdatePosition(pm);
-                    if (adorner != null)
+                    foreach (var item in pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey))
+                        item.IsDragging = true;
+
+                    if (pm.HasValue<Point>(DragDropStartPositionKey))
                     {
-                        var scp = ControlUtils.GetScrollContentPresenter(sender);
-                        AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(sender);
-                        adornerLayer.Remove(adorner);
-                        adorner = null;                        
-                    }
+                        Point currentPosition = pm.GetValue<Point>(CurrentPositionAdjustedKey);
+                        Point startPosition = pm.GetValue<Point>(DragDropStartPositionKey);
+                        Vector movePt = currentPosition - startPosition;
+
+                        var items = pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey);
+                        foreach (var item in items)
+                            if (item is IDraggablePositionAware)
+                            {
+                                IDraggablePositionAware posAwareItem = item as IDraggablePositionAware;
+                                posAwareItem.Position = new Point(posAwareItem.Position.X + movePt.X,
+                                    posAwareItem.Position.Y + movePt.Y);
+                            }
+                    }               
 
                     dragEnd(pm);
                     return NextCommand;

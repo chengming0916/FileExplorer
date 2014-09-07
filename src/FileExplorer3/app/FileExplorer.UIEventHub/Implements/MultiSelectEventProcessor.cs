@@ -44,7 +44,7 @@ namespace FileExplorer.WPF.BaseControls
                 case "TouchDrag":
                     if (EnableMultiSelect)
                         return 
-                            HubScriptCommands.ThrottleTouchDrag(5, 
+                           
                             HubScriptCommands.IfNotRoutedEventHandled(
                             HubScriptCommands.CaptureMouse(CaptureMouseMode.ScrollContentPresenter,
                               HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
@@ -53,18 +53,19 @@ namespace FileExplorer.WPF.BaseControls
                                       HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",
                                         HubScriptCommands.FindSelectedItems(
                                             HubScriptCommands.HighlightItems()))),
-                                ResultCommand.NoError))));
+                                ResultCommand.NoError)));
                     break;
                 case "TouchMove":
                 case "MouseMove":
                     return
+                         HubScriptCommands.ThrottleTouchDrag(5, 
                         HubScriptCommands.IfDependencyPropertyEquals("{Sender}",
                         AttachedProperties.IsSelectingProperty, true,
                         HubScriptCommands.ObtainPointerPosition(
                             HubScriptCommands.UpdateSelectionAdorner("{SelectionAdorner}",
                                         HubScriptCommands.FindSelectedItems(
                                             HubScriptCommands.HighlightItems(
-                                                HubScriptCommands.AutoScroll())))));
+                                                HubScriptCommands.AutoScroll()))))));
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
                     return HubScriptCommands.IfNotRoutedEventHandled(
