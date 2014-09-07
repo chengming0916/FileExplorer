@@ -1,4 +1,5 @@
-﻿using FileExplorer.Script;
+﻿using FileExplorer.Defines;
+using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Utils;
 using MetroLog;
@@ -36,9 +37,18 @@ namespace FileExplorer.UIEventHub
                 NextCommand = (ScriptCommandBase)nextCommand,
             };
         }
+
+        public static IScriptCommand CancelDragDropCanvas(IScriptCommand nextCommand = null)
+        {
+            return new DragDropLiteCommand()
+            {
+                State = DragDropState.CancelCanvas,
+                NextCommand = (ScriptCommandBase)nextCommand,
+            };
+        }
     }
 
-    public enum DragDropState { StartCanvas, EndCanvas }
+    public enum DragDropState { StartCanvas, EndCanvas, CancelCanvas }
 
     public class DragDropLiteCommand : UIScriptCommandBase<Control, RoutedEventArgs>
     {
@@ -93,7 +103,7 @@ namespace FileExplorer.UIEventHub
             ISupportDrag isd = pm.GetValue<ISupportDrag>(DragSourceKey);
             if (DragLiteParameters.DragMode == DragMode.None && isd != null)
             {
-                logger.Info(State.ToString());
+
 
                 IDataObject dataObj = DragLiteParameters.DragSource is ISupportShellDrag ?
                     (DragLiteParameters.DragSource as ISupportShellDrag).GetDataObject(DragLiteParameters.DraggingItems) : null;
@@ -119,8 +129,7 @@ namespace FileExplorer.UIEventHub
             pm.SetValue<object>(DragDropDragSourceKey, null);
             pm.SetValue<object>(DragDropStartPositionKey, null);
         }
-       
-        private static SelectedItemsAdorner adorner = null;        
+
         protected override IScriptCommand executeInner(ParameterDic pm, Control sender,
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
@@ -129,20 +138,24 @@ namespace FileExplorer.UIEventHub
             if (!pm.HasValue<Point>(CurrentPositionAdjustedKey))
                 HubScriptCommands.ObtainPointerPosition().Execute(pm);
 
+            logger.Debug(State.ToString());
             switch (State)
             {
                 case DragDropState.StartCanvas:
                     if (dragStart(pm, input, "Canvas"))
-                    {                        
-                        foreach (var item in pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey))                        
-                            item.IsDragging = true;                        
+                    {
+                        foreach (var item in
+                             pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey)
+                             .Where(i => i is IPositionAware))
+                            item.IsDragging = true;
                         return NextCommand;
                     }
-                    else return FailCommand;                
+                    else return FailCommand;
 
                 case DragDropState.EndCanvas:
-                    foreach (var item in pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey))
-                        item.IsDragging = true;
+                case DragDropState.CancelCanvas:
+                    //foreach (var item in pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey))
+                    //    item.IsDragging = true;
 
                     if (pm.HasValue<Point>(DragDropStartPositionKey))
                     {
@@ -150,15 +163,17 @@ namespace FileExplorer.UIEventHub
                         Point startPosition = pm.GetValue<Point>(DragDropStartPositionKey);
                         Vector movePt = currentPosition - startPosition;
 
-                        var items = pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey);
+                        var items = pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey)
+                            .Where(i => i is IPositionAware);
                         foreach (var item in items)
-                            if (item is IDraggablePositionAware)
-                            {
-                                IDraggablePositionAware posAwareItem = item as IDraggablePositionAware;
+                            item.IsDragging = false;
+
+                        if (State == DragDropState.EndCanvas)
+                            foreach (var posAwareItem in items.Cast<IPositionAware>())
                                 posAwareItem.Position = new Point(posAwareItem.Position.X + movePt.X,
                                     posAwareItem.Position.Y + movePt.Y);
-                            }
-                    }               
+
+                    }
 
                     dragEnd(pm);
                     return NextCommand;

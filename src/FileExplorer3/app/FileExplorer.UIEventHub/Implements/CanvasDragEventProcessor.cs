@@ -17,6 +17,7 @@ namespace FileExplorer.WPF.BaseControls
         {
             _processEvents.AddRange(
                new[] {
+                    FrameworkElement.KeyDownEvent,
                     FrameworkElement.PreviewMouseDownEvent,
                     UIEventHub.MouseDragEvent,
                     UIEventHub.TouchDragEvent,
@@ -35,20 +36,42 @@ namespace FileExplorer.WPF.BaseControls
 
             switch (eventId.Name)
             {
+                case "KeyDown":
+                    return 
+                        ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false, 
+                            //If current drag drop mode is Canvas,
+                            ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Canvas",
+                                //And Escape is pressed.
+                                HubScriptCommands.IfKeyGesture("Esc",
+                                   //Cancel Canvas drop 
+                                    HubScriptCommands.CancelDragDropCanvas(
+                                        //Set {EventArgs.Handled} to true.
+                                        HubScriptCommands.SetRoutedEventHandled(
+                                           //and Detach adorner.
+                                           HubScriptCommands.DettachSelectedItemsAdorner("SelectedItemsAdorner}"))))));
+
                 case "PreviewTouchDown":
                 case "PreviewMouseDown":
-                    return HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", false,
-                          ScriptCommands.IfAssigned("{ISupportDrag}",
-                            HubScriptCommands.ObtainPointerPosition(
-                           HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
-                             HubScriptCommands.SetDependencyProperty("{Sender}",
-                                AttachedProperties.StartDraggingItemProperty, "{ItemUnderMouse}")))));
+                    return 
+                        //Find a DataContext that implement SupportDrag.
+                        HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", 
+                            DataContextType.SupportDrag, "{ISupportDrag}", false,
+                            //And If there's one.
+                            ScriptCommands.IfAssigned("{ISupportDrag}",
+                                //Calculate a number of positions.
+                                HubScriptCommands.ObtainPointerPosition(
+                                    //Assign the datacontext item to {ItemUnderMouse}
+                                    HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
+                                        //And set Sender's StartDraggingItem to {ItemUnderMouse}
+                                        HubScriptCommands.SetDependencyProperty("{Sender}",
+                                            AttachedProperties.StartDraggingItemProperty, "{ItemUnderMouse}")))));
                 case "TouchDrag":
                 case "MouseDrag":
                     return 
-                       
+                        //If event not marked handled.
                         HubScriptCommands.IfNotRoutedEventHandled(
-                        HubScriptCommands.IfDependencyPropertyEqualDefaultValue<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, 
+                        HubScriptCommands.IfDependencyPropertyEqualDefaultValue<object>("{Sender}", 
+                                AttachedProperties.StartDraggingItemProperty, 
                             //If StartDraggingProperty = null, return.
                             ResultCommand.NoError,
                             //If StartDraggingProperty != null, Check and set IsDraggingProperty to true.
@@ -67,19 +90,22 @@ namespace FileExplorer.WPF.BaseControls
                            , null)));
                 case "MouseMove" :
                 case "TouchMove":
-                    return  HubScriptCommands.ThrottleTouchDrag(5, 
-                        ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false, 
-                            ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Canvas",
-                                HubScriptCommands.ObtainPointerPosition(HubScriptCommands.UpdateSelectedItemsAdorner("{SelectedItemsAdorner}")))));
+                    return  
+                        //Only 1 of 5 TouchEvent will be processed
+                        HubScriptCommands.ThrottleTouchDrag(5, 
+                            ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false, 
+                                ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Canvas",
+                                    HubScriptCommands.ObtainPointerPosition(
+                                        HubScriptCommands.UpdateSelectedItemsAdorner("{SelectedItemsAdorner}")))));
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
                     return 
-                                HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", AttachedProperties.IsDraggingProperty, false,
-                                HubScriptCommands.SetDependencyPropertyTyped<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,                                  
-                                    HubScriptCommands.EndDragDropCanvas(
-                                  //Set {EventArgs.Handled} to true.
+                         HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", AttachedProperties.IsDraggingProperty, false,
+                            HubScriptCommands.SetDependencyPropertyTyped<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,                                  
+                                HubScriptCommands.EndDragDropCanvas(
+                                    //Set {EventArgs.Handled} to true.
                                     HubScriptCommands.SetRoutedEventHandled(
-                                           HubScriptCommands.DettachSelectedItemsAdorner("SelectedItemsAdorner}")))));
+                                        HubScriptCommands.DettachSelectedItemsAdorner("SelectedItemsAdorner}")))));
             
             }
 
