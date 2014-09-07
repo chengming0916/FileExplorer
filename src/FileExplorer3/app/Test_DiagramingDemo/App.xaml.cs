@@ -16,8 +16,8 @@ namespace DiagramingDemo
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Info, LogLevel.Fatal, new ConsoleTarget());
-            LogManagerFactory.DefaultConfiguration.IsEnabled = true;
+            //LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Info, LogLevel.Fatal, new ConsoleTarget());
+            //LogManagerFactory.DefaultConfiguration.IsEnabled = true;
 
             base.OnStartup(e);
         }

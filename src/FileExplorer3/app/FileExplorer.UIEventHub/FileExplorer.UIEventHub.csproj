@@ -52,12 +52,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseControls\ResizeItemAdorner.cs" />
+    <Compile Include="BaseControls\ResizeThumb.cs" />
     <Compile Include="BaseControls\SelectedItemsAdorner.cs" />
     <Compile Include="BaseControls\SelfCenteredCanvas.cs" />
     <Compile Include="BaseControls\CenteredCanvas.cs" />
     <Compile Include="BaseControls\DragAdorner.cs" />
     <Compile Include="BaseControls\SelectionAdorner.cs" />
     <Compile Include="Defines\AttachedProperties.cs" />
+    <Compile Include="Defines\Converters\BoolToVisibilityCollapsed.cs" />
+    <Compile Include="Defines\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Defines\Converters\FlipBoolToVisibility.cs" />
+    <Compile Include="Defines\Converters\FlipBoolToVisibilityCollapsed.cs" />
     <Compile Include="Defines\Defaults.cs" />
     <Compile Include="Defines\DragLiteParameters.cs" />
     <Compile Include="Defines\DragnDropAttachedProperties.cs" />
@@ -82,7 +88,7 @@
     <Compile Include="Implements\TouchGestureEventProcessor.cs" />
     <Compile Include="Implements\UIEventProcessor.cs" />
     <Compile Include="Interfaces\IChildInfo.cs" />
-    <Compile Include="Interfaces\IDraggablePositionAware.cs" />
+    <Compile Include="Interfaces\IPositionAware.cs" />
     <Compile Include="Interfaces\IItemSelectProcessor.cs" />
     <Compile Include="Interfaces\ISelectable.cs" />
     <Compile Include="Interfaces\IUIDragInput.cs" />
@@ -103,6 +109,7 @@
     <Compile Include="Implements\DiskParameterDicStore.cs" />
     <Compile Include="Scripts\v2\DragDropLiteCommand.cs" />
     <Compile Include="Scripts\v2\EventArgsHandledCommand.cs" />
+    <Compile Include="Scripts\v2\IfKeyGesture.cs" />
     <Compile Include="Scripts\v2\SelectedItemsAdornerCommand.cs" />
     <Compile Include="Scripts\v2\SelectionAdornerCommand.cs" />
     <Compile Include="Scripts\v2\ThrottleTouchDrag.cs" />
@@ -140,14 +147,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\Common\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Themes\Common\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

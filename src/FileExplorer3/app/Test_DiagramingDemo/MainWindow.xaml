@@ -2,23 +2,29 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DiagramingDemo"
-        xmlns:bc="http://www.quickzip.org/BaseControls"
+        xmlns:bc="http://www.quickzip.org/BaseControls"        
         Title="MainWindow" Height="350" Width="525">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type local:ItemViewModel}">
-            <Border Width="50" Height="50" x:Name="border"
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer.UIEventHub;component/Themes/Common/Converters.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type local:ItemViewModel}">
+                <Border Width="50" Height="50" x:Name="border"
                             BorderBrush="DarkGreen" Background="Lavender" BorderThickness="1">
-                <TextBlock Text="{Binding Text}" />
-            </Border>
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding IsSelecting}" Value="True">
-                    <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                    <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
+                    <TextBlock Text="{Binding Text}" />
+                </Border>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsSelecting}" Value="True">
+                        <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                        <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </ResourceDictionary>        
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -37,15 +43,15 @@
            
             
             <bc:UIEventAdapter.Processors>
-                <!--<local:CanvasDragEventProcessor EnableDrag="True" />-->
                 <bc:CanvasDragEventProcessor />
-                <bc:MultiSelectEventProcessor EnableMultiSelect="True" UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
+                <bc:MultiSelectEventProcessor EnableMultiSelect="True" 
+                                              UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
             </bc:UIEventAdapter.Processors>         
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
                     <Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=TwoWay}" />
-                    <!--<Setter Property="Canvas.Left" Value="{Binding Position.X}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Position.Y}" />-->
+                    <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDragging, Mode=TwoWay}" />
+                    <Setter Property="Visibility" Value="{Binding IsDragging, Converter={StaticResource fbtv}}" />
                     <Setter Property="bc:CenteredCanvas.X" Value="{Binding Position.X}" />
                     <Setter Property="bc:CenteredCanvas.Y" Value="{Binding Position.Y}" />
                 </Style>
@@ -61,8 +67,6 @@
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <bc:CenteredCanvas IsItemsHost="true" Width="1000" Height="1000" />
-
-                    <!--<Canvas IsItemsHost="true" Width="1000" Height="1000" />-->
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

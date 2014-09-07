@@ -34,9 +34,7 @@ namespace DiagramingDemo
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            cc.Content = //new DragAdorner(cc);
-                
-                new SelectedItemsAdorner(cc);
+        
         }
     }
 }

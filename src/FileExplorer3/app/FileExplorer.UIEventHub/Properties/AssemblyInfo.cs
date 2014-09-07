@@ -39,6 +39,7 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.WPF.UserControls")]
 [assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.WPF.BaseControls")]
 [assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.Defines")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/Converters", "QuickZip.Converters")]
 
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located

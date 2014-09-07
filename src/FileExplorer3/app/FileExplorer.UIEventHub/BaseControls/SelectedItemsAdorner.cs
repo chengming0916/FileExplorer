@@ -12,7 +12,9 @@ using System.Windows.Media;
 
 namespace FileExplorer.WPF.BaseControls
 {
-
+    /// <summary>
+    /// For use in CanvasDrag, so selected items follow cursor around.
+    /// </summary>
     public class SelectedItemsAdorner : Adorner
     {
         #region Constructor  
@@ -60,9 +62,12 @@ namespace FileExplorer.WPF.BaseControls
         {
             var adorner = d as SelectedItemsAdorner;
             Point initialPosition = adorner.CurrentPosition;
-            var draggables = adorner.Items.OfType<IDraggablePositionAware>().Where(ipa => ipa.IsSelected).ToArray();
+            var draggables = adorner.Items                
+                .OfType<IDraggable>()
+                .Where(pa => pa is IPositionAware)
+                .Where(ipa => ipa.IsDragging).ToArray();
             adorner._canvas.Children.Clear();
-            foreach (var item in draggables)
+            foreach (var item in draggables.Cast<IPositionAware>())
             {
                 Vector offset = item.Position - initialPosition;
                 ContentPresenter cc = new ContentPresenter() { Content = item };

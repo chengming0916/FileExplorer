@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.UIEventHub;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace FileExplorer.WPF.BaseControls
     /// <summary>
     /// A Canvas panel that position item by it's centre point (X,Y) and it's size (DesiredWidth, DesiredHeight)
     /// </summary>
-    public class CenteredCanvas : Panel
+    public class CenteredCanvas : Panel, IChildInfo
     {
         #region Constructor
 
@@ -39,6 +40,18 @@ namespace FileExplorer.WPF.BaseControls
                 element.Arrange(new Rect(new Point(left, top), new Size(element.DesiredSize.Width, element.DesiredSize.Height)));
             }
             return finalSize;
+        }
+
+        public Rect GetChildRect(int itemIndex)
+        {
+            if (itemIndex >= base.InternalChildren.Count)
+                return new Rect(0, 0, 0, 0);
+            var element = base.InternalChildren[itemIndex];
+            double X = GetX(element);
+            double Y = GetY(element);
+            double left = X - (element.DesiredSize.Width / 2);
+            double top = Y - (element.DesiredSize.Height / 2);
+            return new Rect(left, top, element.DesiredSize.Width, element.DesiredSize.Height);
         }
 
         #endregion
@@ -79,6 +92,8 @@ namespace FileExplorer.WPF.BaseControls
 
         #endregion
 
-     
+
+
+
     }
 }
