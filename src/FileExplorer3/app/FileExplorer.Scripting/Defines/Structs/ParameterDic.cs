@@ -102,9 +102,10 @@ namespace FileExplorer
         {
             if (variableKey == null)
                 return false;
-            string variable = GetVariable(variableKey);
-            string[] variableSplit = variable.Split('.');
-            return _store.ContainsKey(variableSplit.First()) && _store[variableSplit.First()] is T;
+            return GetValue(variableKey) != null;
+            //string variable = GetVariable(variableKey);
+            //string[] variableSplit = variable.Split('.');
+            //return _store.ContainsKey(variableSplit.First()) && _store[variableSplit.First()] is T;
         }
 
         public T GetValue<T>(string variableKey, T defaultValue)
@@ -123,7 +124,7 @@ namespace FileExplorer
             if (_store.ContainsKey(varName))
             {
                 object initValue = _store[varName];
-                if (initValue is ParameterDic && idx == -1 && variableSplit.Length > 0)
+                if (initValue is ParameterDic && idx == -1 && variableSplit.Length > 1)
                 {
                     //Omit the first variable.
                     string trailVariable = "{" + String.Join(".", variableSplit.Skip(1).ToArray()) + "}";
@@ -170,10 +171,10 @@ namespace FileExplorer
 
             if (variableSplit.Length > 1)
             {
-                var subPd = GetValue<ParameterDic>(variableSplit[0]);
+                var subPd = GetValue<ParameterDic>("{" + variableSplit[0] + "}");
                 if (subPd == null)
                     throw new KeyNotFoundException(variableSplit[0]);
-                return subPd.SetValue<T>(String.Join(".", variableSplit.Skip(1).ToArray()), value, skipIfExists);
+                return subPd.SetValue<T>("{" + String.Join(".", variableSplit.Skip(1).ToArray()) + "}", value, skipIfExists);
             }
             else
                 if (_store.ContainsKey(variable))
@@ -239,7 +240,7 @@ namespace FileExplorer
 
         #endregion
 
-        #region Dependency Properties
+        #region Public Properties
 
         public bool IsHandled
         {

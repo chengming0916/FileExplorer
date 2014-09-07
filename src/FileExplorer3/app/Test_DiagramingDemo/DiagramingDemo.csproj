@@ -81,9 +81,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CanvasDragEventProcessor.cs" />
     <Compile Include="CanvasViewModel.cs" />
-    <Compile Include="IDraggablePositionAware.cs" />
     <Compile Include="ISupportDragPositionAware.cs" />
     <Compile Include="ItemViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">

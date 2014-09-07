@@ -1,4 +1,7 @@
-﻿using MetroLog;
+﻿using FileExplorer;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
+using MetroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +26,17 @@ namespace DiagramingDemo
     {
         public MainWindow()
         {
-          
+
             InitializeComponent();
             DataContext = new CanvasViewModel();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            cc.Content = //new DragAdorner(cc);
+                
+                new SelectedItemsAdorner(cc);
         }
     }
 }

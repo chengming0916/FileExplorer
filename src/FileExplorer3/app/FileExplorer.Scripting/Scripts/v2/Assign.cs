@@ -31,11 +31,32 @@ namespace FileExplorer.Script
             };
         }
 
+        public static IScriptCommand AssignValueFunc(string variable = "{Variable}", Func<object> valueFunc = null,
+            bool skipIfExists = false, IScriptCommand nextCommand = null)
+        {
+            valueFunc = valueFunc ?? (() => null);
+            return new Assign()
+            {
+                VariableKey = variable,
+                ValueFunc = valueFunc,
+                SkipIfExists = skipIfExists,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
+
         public static IScriptCommand Assign(Dictionary<string, object> variableDic, bool skipIfExists = false, IScriptCommand nextCommand = null)
         {
             IScriptCommand cmd = nextCommand;
             foreach (var k in variableDic.Keys)
                 cmd = Assign(k, variableDic[k], skipIfExists, cmd);
+            return cmd;
+        }
+
+        public static IScriptCommand AssignValueFunc(Dictionary<string, Func<object>> variableDic, bool skipIfExists = false, IScriptCommand nextCommand = null)
+        {
+            IScriptCommand cmd = nextCommand;
+            foreach (var k in variableDic.Keys)
+                cmd = AssignValueFunc(k, variableDic[k], skipIfExists, cmd);
             return cmd;
         }
 
@@ -70,6 +91,11 @@ namespace FileExplorer.Script
         public object Value { get; set; }
 
         /// <summary>
+        /// Func of value, if this is set, Value is overrided by result of this func at runtime, Default = null.
+        /// </summary>
+        public Func<object> ValueFunc { get; set; }
+
+        /// <summary>
         /// Whether skip (or override) if key already in dictionary, default = false.
         /// </summary>
         public bool SkipIfExists { get; set; }
@@ -81,6 +107,7 @@ namespace FileExplorer.Script
         {
             VariableKey = "{Variable}";
             Value = null;
+            ValueFunc = null;
             SkipIfExists = false;
         }
 
@@ -89,11 +116,14 @@ namespace FileExplorer.Script
         {
             VariableKey = "{Variable}";
             Value = null;
+            ValueFunc = null;
             SkipIfExists = false;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+            if (ValueFunc != null)
+                Value = ValueFunc();
 
             if (pm.SetValue<Object>(VariableKey, Value, SkipIfExists))
                 logger.Debug(String.Format("{0} = {1}", VariableKey, Value));
@@ -101,6 +131,6 @@ namespace FileExplorer.Script
 
             return NextCommand;
         }
-    }
+    }    
 
 }

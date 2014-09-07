@@ -35,13 +35,6 @@ namespace FileExplorer
 namespace FileExplorer.WPF.BaseControls
 {
 
-    public interface IUIEventHub
-    {
-        UIElement Control { get; }
-        IList<UIEventProcessorBase> EventProcessors { get; }
-        IList<IUIInputProcessor> InputProcessors { get; }
-        bool IsEnabled { get; set; }
-    }
 
 
 
@@ -73,7 +66,8 @@ namespace FileExplorer.WPF.BaseControls
                                 //ScrollViewer.SetPanningRatio(inp.Sender as DependencyObject, 1);
                                 ScrollViewer.SetPanningMode(inp.Sender as DependencyObject, PanningMode.Both);
                             }
-                        }
+                        },
+                 new TouchDragMoveCountInputProcessor()
                 );
             _scriptRunner = runner;
             IsEnabled = startIsEnabled;
@@ -195,6 +189,8 @@ namespace FileExplorer.WPF.BaseControls
                 //(_inputProcessors.Processors.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
             }
         }
+
+      
 
         #endregion
 

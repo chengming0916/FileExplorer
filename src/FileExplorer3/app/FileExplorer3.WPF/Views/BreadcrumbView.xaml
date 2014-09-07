@@ -50,7 +50,7 @@
                                 HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="True" />
                             </bc:DropDownList.Header>
                             <bc:DropDownList.ItemContainerStyle>
-                                <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource ComboboxNullAsSeparatorStyle}">
+                                <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource ComboboxNullAsSeparatorStyle}">                                    
                                     <Setter Property="Visibility" 
                                         Value="{Binding IsOverflowedOrRoot, Mode=OneWay, Converter={StaticResource btvc}}"  />
                                 </Style>

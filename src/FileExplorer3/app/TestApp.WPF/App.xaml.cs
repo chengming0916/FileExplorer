@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FileExplorer;
+using FileExplorer.Script;
+using FileExplorer.WPF.Utils;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -17,6 +20,7 @@ namespace TestApp
         protected override void OnStartup(StartupEventArgs e)
         {            
             base.OnStartup(e);
+
             //PresentationTraceSources.DataBindingSource.Listeners.Add(
             //        new ConsoleTraceListener());
 

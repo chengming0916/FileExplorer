@@ -43,7 +43,9 @@ namespace FileExplorer.WPF.BaseControls
                 case "MouseDrag":
                 case "TouchDrag":
                     if (EnableMultiSelect)
-                        return HubScriptCommands.IfNotRoutedEventHandled(
+                        return 
+                            HubScriptCommands.ThrottleTouchDrag(5, 
+                            HubScriptCommands.IfNotRoutedEventHandled(
                             HubScriptCommands.CaptureMouse(CaptureMouseMode.ScrollContentPresenter,
                               HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
                                 AttachedProperties.IsSelectingProperty, true,
@@ -51,7 +53,7 @@ namespace FileExplorer.WPF.BaseControls
                                       HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",
                                         HubScriptCommands.FindSelectedItems(
                                             HubScriptCommands.HighlightItems()))),
-                                ResultCommand.NoError)));
+                                ResultCommand.NoError))));
                     break;
                 case "TouchMove":
                 case "MouseMove":

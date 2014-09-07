@@ -36,7 +36,7 @@ namespace FileExplorer.WPF.BaseControls
                 retVal = new FreezableCollection<UIEventProcessorBase>();
                 
                 var ehub = new UIEventHub(new ScriptRunner(), obj as UIElement, true) 
-                { EventProcessors = retVal };
+                { EventProcessors = retVal };               
                 SetUIEventHub(obj, ehub);
                 SetProcessors(obj, retVal);                
             }

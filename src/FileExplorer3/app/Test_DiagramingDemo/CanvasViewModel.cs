@@ -73,7 +73,7 @@ namespace DiagramingDemo
         public System.Windows.Rect GetChildRect(int itemIndex)
         {
             var item = Items[itemIndex];
-            return new System.Windows.Rect(item.Left, item.Top, 50, 50);
+            return new System.Windows.Rect(item.Position.X, item.Position.Y, 50, 50);
         }
         #endregion 
     }
