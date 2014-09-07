@@ -46,10 +46,10 @@
       <HintPath>..\packages\Caliburn.Micro.2.0.1\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
     <Reference Include="MetroLog">
-      <HintPath>..\..\..\..\lib\MetroLog.dll</HintPath>
+      <HintPath>..\packages\MetroLog.0.8.6.1\lib\net45\MetroLog.dll</HintPath>
     </Reference>
     <Reference Include="MetroLog.Platform">
-      <HintPath>..\..\..\..\lib\MetroLog.Platform.dll</HintPath>
+      <HintPath>..\packages\MetroLog.0.8.6.1\lib\net45\MetroLog.Platform.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

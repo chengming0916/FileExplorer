@@ -34,6 +34,22 @@ namespace FileExplorer.Defines
 
         #endregion
 
+        #region SelectedItemsAdorner
+        public static DependencyProperty SelectedItemsAdornerProperty =
+            DependencyProperty.RegisterAttached("SelectedItemsAdorner", typeof(SelectedItemsAdorner), typeof(AttachedProperties));
+
+        public static SelectedItemsAdorner GetSelectedItemsAdorner(DependencyObject target)
+        {
+            return (SelectedItemsAdorner)target.GetValue(SelectedItemsAdornerProperty);
+        }
+
+        public static void SetSelectedItemsAdorner(DependencyObject target, SelectedItemsAdorner value)
+        {
+            target.SetValue(SelectedItemsAdornerProperty, value);
+        }
+
+        #endregion
+
         #region LastScrollContentPresenter
 
         public static DependencyProperty LastScrollContentPresenterProperty =

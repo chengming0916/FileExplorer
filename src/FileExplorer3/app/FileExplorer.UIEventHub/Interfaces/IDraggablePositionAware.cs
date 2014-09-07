@@ -20,7 +20,6 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         bool IsSelected { get; set; }
 
-        Point Position { get; set; }
-        Point OriginalPosition { get; set; }
+        Point Position { get; set; }        
     }
 }

@@ -2,6 +2,7 @@
 using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Utils;
+using MetroLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,9 @@ namespace FileExplorer.UIEventHub
         /// Current position relative to sender, regardless the scrollbar.
         /// </summary>
         public string CurrentPositionKey { get; set; }
+
+
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<SelectionAdornerCommand>();
 
 
         public SelectionAdornerCommand()

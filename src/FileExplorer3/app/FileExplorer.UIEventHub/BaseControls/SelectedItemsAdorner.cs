@@ -62,18 +62,14 @@ namespace FileExplorer.WPF.BaseControls
             Point initialPosition = adorner.CurrentPosition;
             var draggables = adorner.Items.OfType<IDraggablePositionAware>().Where(ipa => ipa.IsSelected).ToArray();
             adorner._canvas.Children.Clear();
-            //List<ContentControl> items = new List<ContentControl>();
             foreach (var item in draggables)
             {
                 Vector offset = item.Position - initialPosition;
                 ContentPresenter cc = new ContentPresenter() { Content = item };
                 SelfCenteredCanvas.SetOffsetX(cc, offset.X);
                 SelfCenteredCanvas.SetOffsetY(cc, offset.Y);
-                //items.Add(cc);
                 adorner._canvas.Children.Add(cc);
             }
-
-            //adorner.VisibleItems = items;
         }
 
         private static void OnCurrentPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -94,16 +90,6 @@ namespace FileExplorer.WPF.BaseControls
         #endregion
 
         #region Public Properties
-
-        //public Point InitialPosition
-        //{
-        //    get { return (Point)GetValue(InitialPositionProperty); }
-        //    set { SetValue(InitialPositionProperty, value); }
-        //}
-
-        //public static readonly DependencyProperty InitialPositionProperty =
-        // DependencyProperty.Register("InitialPosition", typeof(Point), typeof(SelectedItemsAdorner),
-        // new UIPropertyMetadata(new Point(0, 0), new PropertyChangedCallback(OnItemsChanged)));
 
         protected override int VisualChildrenCount { get { return 1; } }
 
@@ -128,7 +114,7 @@ namespace FileExplorer.WPF.BaseControls
 
         public static readonly DependencyProperty CurrentPositionProperty =
          DependencyProperty.Register("CurrentPosition", typeof(Point), typeof(SelectedItemsAdorner),
-         new UIPropertyMetadata(new Point(0, 0), new PropertyChangedCallback(OnCurrentPositionChanged)));
+         new UIPropertyMetadata(new Point(-1, -1), new PropertyChangedCallback(OnCurrentPositionChanged)));
 
      
         public IEnumerable Items
