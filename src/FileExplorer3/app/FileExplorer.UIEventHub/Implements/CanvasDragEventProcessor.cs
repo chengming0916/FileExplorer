@@ -43,7 +43,7 @@ namespace FileExplorer.WPF.BaseControls
                             ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Canvas",
                                 //And Escape is pressed.
                                 HubScriptCommands.IfKeyGesture("Esc",
-                                   //Cancel Canvas drop 
+                                   //Cancel Canvas drop (by clear {DragDrop} parameters)
                                     HubScriptCommands.CancelDragDropCanvas(
                                         //Set {EventArgs.Handled} to true.
                                         HubScriptCommands.SetRoutedEventHandled(
@@ -96,15 +96,18 @@ namespace FileExplorer.WPF.BaseControls
                             ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false, 
                                 ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Canvas",
                                     HubScriptCommands.ObtainPointerPosition(
+                                        //Update adorner CentrePosition.
                                         HubScriptCommands.UpdateSelectedItemsAdorner("{SelectedItemsAdorner}")))));
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
                     return 
                          HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", AttachedProperties.IsDraggingProperty, false,
-                            HubScriptCommands.SetDependencyPropertyTyped<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,                                  
-                                HubScriptCommands.EndDragDropCanvas(
+                            HubScriptCommands.SetDependencyPropertyTyped<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,
+                                //Update position of each IPostionAware and clear {DragDrop} parameters)
+                                HubScriptCommands.EndDragDropCanvas( 
                                     //Set {EventArgs.Handled} to true.
                                     HubScriptCommands.SetRoutedEventHandled(
+                                        //Detach adorner.
                                         HubScriptCommands.DettachSelectedItemsAdorner("SelectedItemsAdorner}")))));
             
             }
