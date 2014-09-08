@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Script;
+using FileExplorer.UIEventHub;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,12 @@ namespace FileExplorer.WPF.BaseControls
             {
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
-                    return ScriptCommands.ForEachIfAnyValue<bool>("{Sender.Items}", "IsSelected", ComparsionOperator.Equals, true, 
-                        ScriptCommands.PrintDebug("Selected"));
+                    return ScriptCommands.FilterArray("{Sender.Items}", "IsSelected", ComparsionOperator.Equals, true, "{SelectedItems}", 
+                        ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{SelectedItems}", 1,
+                            HubScriptCommands.AttachResizeItemAdorner("{ResizeItemAdorner}", 
+                                HubScriptCommands.UpdateResizeItemAdorner("{ResizeItemAdorner}", "{SelectedItems[0]}")), 
+                            HubScriptCommands.DettachResizeItemAdorner("{ResizeItemAdorner}")
+                        ));
             }
             return base.onEvent(eventId);
         }

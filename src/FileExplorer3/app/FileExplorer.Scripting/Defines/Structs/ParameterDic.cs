@@ -75,8 +75,17 @@ namespace FileExplorer
             return variableKey.TrimStart('{').TrimEnd('}');
         }
 
-        public static string CombineVariable(string variableKey, string combineStr)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="variableKey"></param>
+        /// <param name="combineStr"></param>
+        /// <param name="checkVariablekey">If true, all dot in variableKey is removed.</param>
+        /// <returns></returns>
+        public static string CombineVariable(string variableKey, string combineStr, bool checkVariablekey = true)
         {
+            if (checkVariablekey)
+                variableKey = variableKey.Replace(".", "");
             return "{" + GetVariable(variableKey) + combineStr + "}";
         }
 
