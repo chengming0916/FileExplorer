@@ -17,7 +17,7 @@ namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand AttachResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}", 
+        public static IScriptCommand AttachResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}",
             IScriptCommand nextCommand = null)
         {
             return new ResizeItemAdornerCommand()
@@ -27,7 +27,7 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand DettachResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}", 
+        public static IScriptCommand DettachResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}",
             IScriptCommand nextCommand = null)
         {
             return new ResizeItemAdornerCommand()
@@ -38,11 +38,13 @@ namespace FileExplorer.UIEventHub
         }
 
         public static IScriptCommand UpdateResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}", 
+            string targetItemVariable = null,
             IScriptCommand nextCommand = null)
         {
             return new ResizeItemAdornerCommand()
             {
-                AdornerMode = UIEventHub.AdornerMode.Update,                
+                AdornerMode = UIEventHub.AdornerMode.Update,
+                TargetItemKey = targetItemVariable,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
@@ -61,15 +63,11 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         public string ResizeItemAdornerKey { get; set; }
 
-        ///// <summary>
-        ///// Start position relative to sender, adjusted with scrollbar position.
-        ///// </summary>
-        //public string StartPositionAdjustedKey { get; set; }
-
-        ///// <summary>
-        ///// Current position relative to sender, regardless the scrollbar.
-        ///// </summary>
-        //public string CurrentPositionKey { get; set; }
+        /// <summary>
+        /// If set, the selected item (IResizable) will be used for adorner's datacontext, 
+        /// otherwise lookup from ItemsControl, Default = null.
+        /// </summary>
+        public string TargetItemKey { get; set; }
 
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ResizeItemAdornerCommand>();
@@ -78,7 +76,8 @@ namespace FileExplorer.UIEventHub
         public ResizeItemAdornerCommand()
             : base("ResizeItemAdornerCommand")
         {
-            ResizeItemAdornerKey = "{ResizeItemAdorner}";            
+            ResizeItemAdornerKey = "{ResizeItemAdorner}";
+            TargetItemKey = null;
             //StartPositionAdjustedKey = "{StartPositionAdjusted}";
             //CurrentPositionKey = "{CurrentPosition}";
         }
@@ -128,9 +127,12 @@ namespace FileExplorer.UIEventHub
                         if (updateAdorner == null)
                             return ResultCommand.Error(new Exception("Adorner not found."));
 
-                        updateAdorner.SetTargetItem((
-                            ic.ItemsSource as IEnumerable).OfType<ISelectable>()
-                            .FirstOrDefault(s => s is IResizable && s.IsSelected) as IResizable);
+                        IResizable targetItem = TargetItemKey == null ?
+                            (ic.ItemsSource as IEnumerable).OfType<ISelectable>()
+                                .FirstOrDefault(s => s is IResizable && s.IsSelected) as IResizable :
+                            pm.GetValue<IResizable>(TargetItemKey);
+
+                        updateAdorner.SetTargetItem(targetItem);
                         break;
 
                 }

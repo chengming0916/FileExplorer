@@ -19,9 +19,9 @@ namespace FileExplorer.Script
             string tempArrayVariable = ParameterDic.CombineVariable(sourceArrayVariable, "Temp");
 
             return ForEach(sourceArrayVariable, currentItemVariable,
-                IfValue(op, currentPropertyVariable, valueVariable,
-                  ConcatArray(tempArrayVariable, new object[] { currentItemVariable }, tempArrayVariable)),
-                  Assign(sourceArrayVariable, tempArrayVariable, false));
+                        IfValue(op, currentPropertyVariable, valueVariable,
+                            ConcatArray(tempArrayVariable, new object[] { currentItemVariable }, tempArrayVariable)),
+                        Assign(destinationArrayVariable, tempArrayVariable, false, nextCommand));
         }
 
 

@@ -137,10 +137,13 @@ namespace FileExplorer.Script
             string valueVariable = "{value}",
             IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
-            return ScriptCommands.AssignValueConverter(ValueConverterType.GetProperty, "{GetPropertyConverter}",
-                ScriptCommands.Reassign(arrayVariable, "{GetPropertyConverter}", "{ArrayLength}", false,
-                  ScriptCommands.PrintLogger(MetroLog.LogLevel.Debug, "Length of array is {ArrayLength}",
-                  ScriptCommands.IfValue(op, "{ArrayLength}", valueVariable, trueCommand, otherwiseCommand))), "Length");
+            return 
+                ScriptCommands.IfAssigned(arrayVariable, 
+                    ScriptCommands.AssignValueConverter(ValueConverterType.GetProperty, "{GetPropertyConverter}",
+                        ScriptCommands.Reassign(arrayVariable, "{GetPropertyConverter}", "{ArrayLength}", false,
+                            ScriptCommands.PrintLogger(MetroLog.LogLevel.Debug, "Length of array is {ArrayLength}",
+                            ScriptCommands.IfValue(op, "{ArrayLength}", valueVariable, trueCommand, otherwiseCommand))), "Length"), 
+                            otherwiseCommand);
         }
 
         public static IScriptCommand IfArrayLength(ComparsionOperator op = ComparsionOperator.GreaterThanOrEqual,
