@@ -71,6 +71,7 @@
     <Compile Include="Scripts\v2\AssignParameterDic.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />
     <Compile Include="Scripts\v2\Delay.cs" />
+    <Compile Include="Scripts\v2\Filter.cs" />
     <Compile Include="Scripts\v2\IfValue.cs" />
     <Compile Include="Scripts\v2\Print.cs" />
     <Compile Include="Scripts\v2\ForEach.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Scripts\v2\RunScriptCommand.cs" />
     <Compile Include="Utils\AsyncUtils.cs" />
     <Compile Include="Utils\DynamicDictionary.cs" />
+    <Compile Include="Utils\ExpressionUtils.cs" />
     <Compile Include="Utils\NotifyPropertyChanged.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\StringUtils.cs" />

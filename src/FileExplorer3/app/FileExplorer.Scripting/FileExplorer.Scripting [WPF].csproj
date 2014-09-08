@@ -81,6 +81,7 @@
     <Compile Include="Scripts\v2\AssignArray.cs" />
     <Compile Include="Scripts\v2\AssignCanExecuteCondition.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />
+    <Compile Include="Scripts\v2\Filter.cs" />
     <Compile Include="Scripts\v2\ForEach.cs" />
     <Compile Include="Scripts\v2\IfValue.cs" />
     <Compile Include="Scripts\v2\Print.cs" />

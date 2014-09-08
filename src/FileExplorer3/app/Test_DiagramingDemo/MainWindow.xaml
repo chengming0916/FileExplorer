@@ -46,6 +46,7 @@
                 <bc:CanvasDragEventProcessor />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="True" 
                                               UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
+                <bc:ResizeAdornerEventProcessor />
             </bc:UIEventAdapter.Processors>         
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">

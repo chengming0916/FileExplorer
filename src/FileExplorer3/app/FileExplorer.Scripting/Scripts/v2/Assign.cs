@@ -122,11 +122,18 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+            object value = Value;
             if (ValueFunc != null)
-                Value = ValueFunc();
+                value = ValueFunc();            
+            if (value is string)
+            {
+                string valueString = (string)value;
+                if (valueString.StartsWith("{") && valueString.EndsWith("}"))
+                    value = pm.GetValue(valueString);                    
+            }
 
-            if (pm.SetValue<Object>(VariableKey, Value, SkipIfExists))
-                logger.Debug(String.Format("{0} = {1}", VariableKey, Value));
+            if (pm.SetValue<Object>(VariableKey, value, SkipIfExists))
+                logger.Debug(String.Format("{0} = {1}", VariableKey, value));
             // else logger.Debug(String.Format("Skipped {0}, already exists.", VariableKey));
 
             return NextCommand;

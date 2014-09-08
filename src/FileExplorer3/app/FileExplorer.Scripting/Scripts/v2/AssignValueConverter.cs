@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using FileExplorer.WPF.Utils;
+using System.Linq.Expressions;
+using FileExplorer.Utils;
 
 namespace FileExplorer.Script
 {
@@ -129,6 +131,44 @@ namespace FileExplorer.Script
                 ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
                     valueVariable, false, nextCommand), propertyName));
         }
+
+        /// <summary>
+        /// Add variables (using Expression) to destination.
+        /// </summary>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="addValues"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand Add(string sourceObjectVariable = "{Source}",
+            object[] addValues = null,
+            string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
+            return AssignValueConverter(ValueConverterType.AddValue, valueConverterVariable,
+                ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
+                    destinationVariable, false, nextCommand),  addValues);
+        }
+
+
+        /// <summary>
+        /// Concat array to destination
+        /// </summary>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="addValues"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand ConcatArray(string sourceObjectVariable = "{Source}",
+           object[] addValues = null,
+           string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
+            return AssignValueConverter(ValueConverterType.ConcatArray, valueConverterVariable,
+                ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
+                    destinationVariable, false, nextCommand), addValues);
+        }
+
     }
 
     public enum ValueConverterType
@@ -136,7 +176,12 @@ namespace FileExplorer.Script
         /// <summary>
         /// Given an Array, get specific item.
         /// </summary>
-        GetArrayItem, GetProperty, ExecuteMethod, SetProperty
+        GetArrayItem, 
+        GetProperty, 
+        ExecuteMethod, 
+        SetProperty, 
+        AddValue, 
+        ConcatArray
     }
 
     public class AssignValueConverter : Assign
@@ -166,6 +211,17 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
+             Func<object, object> checkParameters = p =>
+                        {
+                            if (p is string)
+                            {
+                                string pString = p as string;
+                                if (pString.StartsWith("{") && pString.EndsWith("}"))
+                                    return pm.GetValue(pString);
+                            }
+                            return p;
+                        };
+
             switch (ConverterType)
             {
                 case ValueConverterType.GetArrayItem:
@@ -220,16 +276,7 @@ namespace FileExplorer.Script
                     break;
                 case ValueConverterType.ExecuteMethod:
                     string methodName = ConverterParameter.Count() > 0 ? ConverterParameter.First() as string : null;
-                    Func<object, object> checkParameters = p =>
-                        {
-                            if (p is string)
-                            {
-                                string pString = p as string;
-                                if (pString.StartsWith("{") && pString.EndsWith("}"))
-                                    return pm.GetValue(pString);
-                            }
-                            return p;
-                        };
+                   
 
                     object[] methodParameters = ConverterParameter.Skip(1)
                         .Select(param => checkParameters(param))
@@ -251,6 +298,43 @@ namespace FileExplorer.Script
 
                     break;
 
+                case ValueConverterType.AddValue:
+                    Func<Object, Object> retVa12 = (Func<Object, Object>)(v => 
+                        {
+                              var mInfo = typeof(FileExplorer.Utils.ExpressionUtils)
+                                .GetRuntimeMethods().First(m => m.Name == "Add")
+                                .MakeGenericMethod(v.GetType());
+                                foreach (var addItem in ConverterParameter.Select(p => checkParameters(p)).ToArray())
+                                    v = mInfo.Invoke(null, new object[] { v, addItem});
+                                return v;
+                        });                                      
+                    Value = retVa12;
+                    break;
+
+                case ValueConverterType.ConcatArray :
+
+                     Func<Object, Object> retVa13 = (Func<Object, Object>)(v => 
+                        {
+                            var parameters = ConverterParameter.Select(p => checkParameters(p)).ToArray();
+                            if (v == null)
+                                v = Array.CreateInstance(parameters.First().GetType(), new int[] { 0 });
+
+                            List<object> items2Add = new List<object>();
+                            foreach (var item in parameters)
+                                if (item is Array)
+                                    items2Add.AddRange((item as Array).Cast<object>());
+                                else items2Add.Add(item);
+
+                            Array array = v as Array;
+                            Type arrayType = array.GetType().GetElementType();
+                            Array newArray = Array.CreateInstance(arrayType, array.Length + items2Add.Count());
+                            Array.Copy(array, 0, newArray, 0, array.Length);
+                            Array.Copy(items2Add.ToArray(), 0, newArray, array.Length, items2Add.Count());
+                            return newArray;
+                        });                                      
+                    Value = retVa13;
+
+                    break;
                 default: return ResultCommand.Error(new NotSupportedException(ConverterType.ToString()));
 
             }
@@ -258,5 +342,41 @@ namespace FileExplorer.Script
             return base.Execute(pm);
         }
 
+
+        //private static object add(object obj1, params object[] addItems)
+        //{
+        //    if (obj1 == null)
+        //    {
+        //        return add(addItems[0], addItems.Skip(0).ToArray());
+        //    }
+
+        //    if (obj1 is Array)
+        //    {
+        //        List<object> items2Add = new List<object>();
+        //        foreach (var item in addItems)
+        //            if (item is Array)
+        //                items2Add.AddRange((item as Array).Cast<object>());
+        //            else items2Add.Add(item);
+
+        //        Array array = obj1 as Array;
+        //        Type arrayType = array.GetType().GetElementType();
+        //        Array newArray = Array.CreateInstance(arrayType, array.Length + items2Add.Count());
+        //        Array.Copy(array, 0, newArray, 0, array.Length);
+        //        Array.Copy(items2Add.ToArray(), 0, newArray, array.Length, items2Add.Count());
+        //        return newArray;
+        //    }
+        //    else
+        //    {
+                
+        //        var mInfo = typeof(FileExplorer.Utils.ExpressionUtils)
+        //        .GetRuntimeMethods().First(m => m.Name == "Add")
+        //        .MakeGenericMethod(typeof(int));
+        //        foreach (var addItem in addItems)
+        //            obj1 = mInfo.Invoke(null, new object[] {  obj1, addItem});
+        //        return obj1;
+        //    }
+        //}
     }
+
+
 }

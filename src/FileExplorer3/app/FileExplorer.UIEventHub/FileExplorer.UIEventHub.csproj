@@ -72,6 +72,7 @@
     <Compile Include="Defines\MultiSelectAttachedProperties.cs" />
     <Compile Include="Defines\UIAttachedProperties.cs" />
     <Compile Include="Implements\CanvasDragEventProcessor.cs" />
+    <Compile Include="Implements\ResizeEventProcessor.cs" />
     <Compile Include="Implements\TouchDragMoveCountInputProcessor.cs" />
     <Compile Include="Implements\ClickCountInputProcessor.cs" />
     <Compile Include="Implements\DebugInputProcessor.cs" />
