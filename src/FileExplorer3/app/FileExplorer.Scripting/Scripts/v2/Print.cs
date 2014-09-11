@@ -43,6 +43,16 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
+
+        public static IScriptCommand PrintConsole(string variable, IScriptCommand nextCommand = null)
+        {
+            return new Print()
+            {
+                DestinationType = Print.PrintDestinationType.Console,
+                VariableKey = variable,                
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
     }
 
     /// <summary>
@@ -50,8 +60,10 @@ namespace FileExplorer.Script
     /// </summary>
     public class Print : ScriptCommandBase
     {
+        public static Action<string> PrintConsoleAction = msg => { throw new NotImplementedException("Print.PrintConsoleAction not assigned."); };
+
         [Flags]
-        public enum PrintDestinationType { Logger = 1 << 0, Debug = 1 << 1 }
+        public enum PrintDestinationType { Logger = 1 << 0, Debug = 1 << 1, Console = 1 << 2 }
 
         /// <summary>
         /// Variable to print.
@@ -81,6 +93,8 @@ namespace FileExplorer.Script
                 Debug.WriteLine(variable);
             if (DestinationType.HasFlag(PrintDestinationType.Logger))
                 logger.Log(LogLevel, variable);
+            if (DestinationType.HasFlag(PrintDestinationType.Console))
+                PrintConsoleAction(variable);
 
             return NextCommand;
         }

@@ -146,17 +146,24 @@ namespace FileExplorer.Script
                         pd.CommandHistory.Add(current.CommandKey);
                         //logger.Info("Running " + current.CommandKey);
 
-                        var retCmd = await current.ExecuteAsync(pd)
-                            .ConfigureAwait(current.RequireCaptureContext());
-
-                        if (retCmd != null)
+                        try
                         {
-                            if (pd.Error != null)
+                            var retCmd = await current.ExecuteAsync(pd)
+                                .ConfigureAwait(current.RequireCaptureContext());
+
+                            if (retCmd != null)
                             {
-                                logger.Error("Error when running script", pd.Error);
-                                return;
+                                if (pd.Error != null)
+                                {
+                                    logger.Error("Error when running script", pd.Error);
+                                    return;
+                                }
+                                cmds.Enqueue(retCmd);
                             }
-                            cmds.Enqueue(retCmd);
+                        }
+                        catch(Exception ex)
+                        {
+                            throw ex;
                         }
                     }
                     else throw new Exception(String.Format("Cannot execute {0}", current));

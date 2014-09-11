@@ -12,42 +12,51 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand AttachResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}",
+        public static IScriptCommand AttachResizeItemAdorner(
+            string adornerLayerVariable = "{AdornerLayer}",
+            string resizeItemAdornerVariable = "{ResizeItemAdorner}",
             IScriptCommand nextCommand = null)
         {
             return new ResizeItemAdornerCommand()
             {
+                AdornerLayerKey = adornerLayerVariable,
+                ResizeItemAdornerKey = resizeItemAdornerVariable,
                 AdornerMode = UIEventHub.AdornerMode.Attach,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
 
-        public static IScriptCommand DettachResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}",
+        public static IScriptCommand DettachResizeItemAdorner(
+            string adornerLayerVariable = "{AdornerLayer}",
+            string resizeItemAdornerVariable = "{ResizeItemAdorner}",
             IScriptCommand nextCommand = null)
         {
             return new ResizeItemAdornerCommand()
             {
+                AdornerLayerKey = adornerLayerVariable,
+                ResizeItemAdornerKey = resizeItemAdornerVariable,
                 AdornerMode = UIEventHub.AdornerMode.Detach,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
 
-        public static IScriptCommand UpdateResizeItemAdorner(string ResizeItemAdornerVariable = "{ResizeItemAdorner}", 
-            string targetItemVariable = null,
-            IScriptCommand nextCommand = null)
-        {
-            return new ResizeItemAdornerCommand()
-            {
-                AdornerMode = UIEventHub.AdornerMode.Update,
-                TargetItemKey = targetItemVariable,
-                NextCommand = (ScriptCommandBase)nextCommand
-            };
-        }
+        //public static IScriptCommand UpdateResizeItemAdorner(string resizeItemAdornerVariable = "{ResizeItemAdorner}", 
+        //    string targetItemVariable = null,
+        //    IScriptCommand nextCommand = null)
+        //{
+        //    return new ResizeItemAdornerCommand()
+        //    {
+        //        AdornerMode = UIEventHub.AdornerMode.Update,
+        //        TargetItemKey = targetItemVariable,
+        //        NextCommand = (ScriptCommandBase)nextCommand
+        //    };
+        //}
     }
 
 
@@ -56,10 +65,15 @@ namespace FileExplorer.UIEventHub
         public AdornerMode AdornerMode { get; set; }
 
         /// <summary>
+        /// Point to the adorner layer to attach/detach adorner, Default = {CanvasResize.AdornerLayer}
+        /// </summary>
+        public string AdornerLayerKey { get; set; }
+
+        /// <summary>
         /// If attach, the selection adorner (of type ResizeItemAdorner) will be set to the key, 
         /// If update, 
         /// If detach, the ResizeItemAdorner will be point to null.
-        /// Default = "{ResizeItemAdorner}".
+        /// Default = "{CanvasResize.ResizeItemAdorner}".
         /// </summary>
         public string ResizeItemAdornerKey { get; set; }
 
@@ -76,7 +90,8 @@ namespace FileExplorer.UIEventHub
         public ResizeItemAdornerCommand()
             : base("ResizeItemAdornerCommand")
         {
-            ResizeItemAdornerKey = "{ResizeItemAdorner}";
+            AdornerLayerKey = "{CanvasResize.AdornerLayer}";
+            ResizeItemAdornerKey = "{CanvasResize.ResizeItemAdorner}";
             TargetItemKey = null;
             //StartPositionAdjustedKey = "{StartPositionAdjusted}";
             //CurrentPositionKey = "{CurrentPosition}";
@@ -88,51 +103,50 @@ namespace FileExplorer.UIEventHub
             var scp = ControlUtils.GetScrollContentPresenter(ic);
             if (scp != null)
             {
-                AdornerLayer adornerLayer = ControlUtils.GetAdornerLayer(ic);
+                AdornerLayer adornerLayer = pm.GetValue<AdornerLayer>(AdornerLayerKey);
+                if (adornerLayer != null)
 
                 switch (AdornerMode)
                 {
                     case UIEventHub.AdornerMode.Attach:
-                        if (adornerLayer == null)
-                            return ResultCommand.Error(new Exception("Adorner layer not found."));
-                        if (AttachedProperties.GetResizeItemAdorner(scp) == null)
-                        {
-
-                            //Create and register adorner.
-                            ResizeItemAdorner adorner = new ResizeItemAdorner(scp);
-                            pm.SetValue(ResizeItemAdornerKey, adorner);
-                            AttachedProperties.SetResizeItemAdorner(scp, adorner);
-                            AttachedProperties.SetLastScrollContentPresenter(ic, scp); //For used when detach.
-
-                            adornerLayer.Add(adorner);
-                        }
-                        break;
-
-                    case UIEventHub.AdornerMode.Detach:
-
-                        var lastScp = AttachedProperties.GetLastScrollContentPresenter(ic); //For used when detach.
-                        var lastAdorner = AttachedProperties.GetResizeItemAdorner(scp);
-                        if (lastAdorner != null)
-                            adornerLayer.Remove(lastAdorner);
-
-                        AttachedProperties.SetLastScrollContentPresenter(ic, null);
-                        AttachedProperties.SetResizeItemAdorner(scp, null);
-                        pm.SetValue<Object>(ResizeItemAdornerKey, null);
-                        break;
-
-                    case UIEventHub.AdornerMode.Update:
-                        var updateAdorner = pm.GetValue<ResizeItemAdorner>(ResizeItemAdornerKey) ??
-                            AttachedProperties.GetResizeItemAdorner(scp);
-
-                        if (updateAdorner == null)
-                            return ResultCommand.Error(new Exception("Adorner not found."));
-
-                        IResizable targetItem = TargetItemKey == null ?
+                       
+                         IResizable targetItem = TargetItemKey == null ?
                             (ic.ItemsSource as IEnumerable).OfType<ISelectable>()
                                 .FirstOrDefault(s => s is IResizable && s.IsSelected) as IResizable :
                             pm.GetValue<IResizable>(TargetItemKey);
 
-                        updateAdorner.SetTargetItem(targetItem);
+                        UIElement selectedItem = ic.ItemContainerGenerator.ContainerFromItem(targetItem) as UIElement;
+                        ResizeItemAdorner resizeAdorner = new ResizeItemAdorner(adornerLayer) { SelectedItem = targetItem };
+                        pm.SetValue(ResizeItemAdornerKey, resizeAdorner, false);
+                        adornerLayer.Add(resizeAdorner);
+
+                        break;
+
+                    case UIEventHub.AdornerMode.Detach:
+                        ResizeItemAdorner resizeAdorner1 = pm.GetValue<ResizeItemAdorner>(ResizeItemAdornerKey);
+                        if (resizeAdorner1 != null)
+                            adornerLayer.Remove(resizeAdorner1);
+                        pm.SetValue<object>(ResizeItemAdornerKey, null);                                               
+                        break;
+
+                    case UIEventHub.AdornerMode.Update:
+                        
+                       
+                        
+
+                        //var updateAdorner = pm.GetValue<ResizeItemAdorner>(ResizeItemAdornerKey) ??
+                        //    AttachedProperties.GetResizeItemAdorner(scp);
+
+                        
+                        //adornerLayer = UITools.FindVisualChild<AdornerLayer>(selectedItem);
+                        //ResizeItemAdorner updateAdorner = new ResizeItemAdorner(adornerLayer);
+                        //adornerLayer.Add(updateAdorner);
+
+                        ////if (updateAdorner == null)
+                        ////    return ResultCommand.Error(new Exception("Adorner not found."));
+
+
+                        //updateAdorner.SelectedItem = targetItem;
                         break;
 
                 }

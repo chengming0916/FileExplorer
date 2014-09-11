@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer.UIEventHub;component/Themes/Common/Converters.xaml" />
+                <ResourceDictionary Source="Controls/DiagramItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type local:ItemViewModel}">
@@ -24,7 +25,7 @@
                     </DataTrigger>
                 </DataTemplate.Triggers>
             </DataTemplate>
-        </ResourceDictionary>        
+        </ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -32,49 +33,45 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid.Resources>
-          
-        </Grid.Resources>
-        
-
-        <ItemsControl
+        <local:DiagramItemsControl
             Grid.Column="0"
             ItemsSource="{Binding Items}" Background="Transparent">
-           
-            
+
+
             <bc:UIEventAdapter.Processors>
                 <bc:CanvasDragEventProcessor />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="True" 
                                               UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
-                <bc:ResizeAdornerEventProcessor />
-            </bc:UIEventAdapter.Processors>         
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="ContentPresenter">
+                <bc:CanvasResizeEventProcessor />
+            </bc:UIEventAdapter.Processors>
+            <local:DiagramItemsControl.ItemContainerStyle>
+                <Style TargetType="local:DiagramItem">
                     <!--<Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=OneWay}" />
                     <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDragging, Mode=OneWay}" />-->
                     <Setter Property="Visibility" Value="{Binding IsDragging, Converter={StaticResource fbtv}}" />
                     <Setter Property="bc:CenteredCanvas.X" Value="{Binding Position.X}" />
                     <Setter Property="bc:CenteredCanvas.Y" Value="{Binding Position.Y}" />
                 </Style>
-            </ItemsControl.ItemContainerStyle>
-
-            <ItemsControl.Template>
+            </local:DiagramItemsControl.ItemContainerStyle>
+            <local:DiagramItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                        <ItemsPresenter />
+                        <ItemsPresenter x:Name="Test" />
                     </ScrollViewer>
                 </ControlTemplate>
-            </ItemsControl.Template>
-            <ItemsControl.ItemsPanel>
+            </local:DiagramItemsControl.Template>
+            <local:DiagramItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <bc:CenteredCanvas IsItemsHost="true" Width="1000" Height="1000" />
                 </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+            </local:DiagramItemsControl.ItemsPanel>
+        </local:DiagramItemsControl>
 
         <ContentControl Grid.Column="1" x:Name="cc" />
         <Border BorderBrush="Black" BorderThickness="1" />
         <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" />
     </Grid>
+
+
 
 </Window>

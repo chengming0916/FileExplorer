@@ -30,9 +30,9 @@ namespace FileExplorer.UIEventHub
     }
 
 
-    public enum CaptureMouseMode {  ScrollContentPresenter, Release }
+    public enum CaptureMouseMode { UIElement, ScrollContentPresenter, Release }
 
-    public class CaptureMouse : UIScriptCommandBase<ItemsControl, RoutedEventArgs>
+    public class CaptureMouse : UIScriptCommandBase<UIElement, RoutedEventArgs>
     {
         private CaptureMouseMode _mode;
 
@@ -45,12 +45,10 @@ namespace FileExplorer.UIEventHub
             _mode = mode;
         }
 
-        protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, 
+        protected override IScriptCommand executeInner(ParameterDic pm, UIElement ic,
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
-        {               
-            var scp = ControlUtils.GetScrollContentPresenter(ic);            
-            if (scp == null)
-                return ResultCommand.NoError;
+        {
+
 
             if (Keyboard.Modifiers != ModifierKeys.None)
                 return ResultCommand.NoError;
@@ -62,18 +60,28 @@ namespace FileExplorer.UIEventHub
 
             logger.Debug(String.Format("Capture {0}", _mode));
             switch (_mode)
-            { 
-                case CaptureMouseMode.ScrollContentPresenter :
-                    Mouse.Capture(scp, CaptureMode.SubTree);
+            {
+                case CaptureMouseMode.UIElement:
+                    Mouse.Capture(ic, CaptureMode.Element);
                     break;
-                case CaptureMouseMode.Release :
+                case CaptureMouseMode.ScrollContentPresenter:
+                    if (ic is ItemsControl)
+                    {
+                        var scp = ControlUtils.GetScrollContentPresenter(ic as ItemsControl);
+                        if (scp == null)
+                            return ResultCommand.NoError;
+
+                        Mouse.Capture(scp, CaptureMode.SubTree);
+                    }
+                    break;
+                case CaptureMouseMode.Release:
                     Mouse.Capture(null);
                     break;
-                default : 
+                default:
                     return ResultCommand.Error(new NotSupportedException("CaptureMouseMode"));
             }
             return NextCommand;
         }
-    
+
     }
 }
