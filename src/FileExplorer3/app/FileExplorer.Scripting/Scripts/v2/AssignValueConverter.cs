@@ -8,6 +8,7 @@ using System.Diagnostics;
 using FileExplorer.WPF.Utils;
 using System.Linq.Expressions;
 using FileExplorer.Utils;
+using MetroLog;
 
 namespace FileExplorer.Script
 {
@@ -147,7 +148,7 @@ namespace FileExplorer.Script
             string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
             return AssignValueConverter(ValueConverterType.AddValue, valueConverterVariable,
                 ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
-                    destinationVariable, false, nextCommand),  addValues);
+                    destinationVariable, false, nextCommand), addValues);
         }
 
 
@@ -176,11 +177,11 @@ namespace FileExplorer.Script
         /// <summary>
         /// Given an Array, get specific item.
         /// </summary>
-        GetArrayItem, 
-        GetProperty, 
-        ExecuteMethod, 
-        SetProperty, 
-        AddValue, 
+        GetArrayItem,
+        GetProperty,
+        ExecuteMethod,
+        SetProperty,
+        AddValue,
         ConcatArray
     }
 
@@ -197,6 +198,7 @@ namespace FileExplorer.Script
         /// </summary>
         public object[] ConverterParameter { get; set; }
 
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<AssignValueConverter>();
 
         public AssignValueConverter()
             : base("AssignValueConverter")
@@ -211,16 +213,16 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-             Func<object, object> checkParameters = p =>
-                        {
-                            if (p is string)
-                            {
-                                string pString = p as string;
-                                if (pString.StartsWith("{") && pString.EndsWith("}"))
-                                    return pm.GetValue(pString);
-                            }
-                            return p;
-                        };
+            Func<object, object> checkParameters = p =>
+                       {
+                           if (p is string)
+                           {
+                               string pString = p as string;
+                               if (pString.StartsWith("{") && pString.EndsWith("}"))
+                                   return pm.GetValue(pString);
+                           }
+                           return p;
+                       };
 
             switch (ConverterType)
             {
@@ -266,9 +268,9 @@ namespace FileExplorer.Script
                                     var fieldInfo = typeInfo.GetFieldInfoRecursive(property1);
 
                                     if (fieldInfo == null)
-                                        throw new KeyNotFoundException(String.Format("{0} cannot be found in {1}", property1, o.GetType()));
-
-                                    fieldInfo.SetValue(o, v);
+                                        logger.Error(String.Format("{0} cannot be found in {1}", property1, o.GetType()));
+                                    else
+                                        fieldInfo.SetValue(o, v);
                                 }
                                 else propertyInfo.SetValue(o, v);
                             });
@@ -276,7 +278,7 @@ namespace FileExplorer.Script
                     break;
                 case ValueConverterType.ExecuteMethod:
                     string methodName = ConverterParameter.Count() > 0 ? ConverterParameter.First() as string : null;
-                   
+
 
                     object[] methodParameters = ConverterParameter.Skip(1)
                         .Select(param => checkParameters(param))
@@ -299,39 +301,39 @@ namespace FileExplorer.Script
                     break;
 
                 case ValueConverterType.AddValue:
-                    Func<Object, Object> retVa12 = (Func<Object, Object>)(v => 
+                    Func<Object, Object> retVa12 = (Func<Object, Object>)(v =>
                         {
-                              var mInfo = typeof(FileExplorer.Utils.ExpressionUtils)
-                                .GetRuntimeMethods().First(m => m.Name == "Add")
-                                .MakeGenericMethod(v.GetType());
-                                foreach (var addItem in ConverterParameter.Select(p => checkParameters(p)).ToArray())
-                                    v = mInfo.Invoke(null, new object[] { v, addItem});
-                                return v;
-                        });                                      
+                            var mInfo = typeof(FileExplorer.Utils.ExpressionUtils)
+                              .GetRuntimeMethods().First(m => m.Name == "Add")
+                              .MakeGenericMethod(v.GetType());
+                            foreach (var addItem in ConverterParameter.Select(p => checkParameters(p)).ToArray())
+                                v = mInfo.Invoke(null, new object[] { v, addItem });
+                            return v;
+                        });
                     Value = retVa12;
                     break;
 
-                case ValueConverterType.ConcatArray :
+                case ValueConverterType.ConcatArray:
 
-                     Func<Object, Object> retVa13 = (Func<Object, Object>)(v => 
-                        {
-                            var parameters = ConverterParameter.Select(p => checkParameters(p)).ToArray();
-                            if (v == null)
-                                v = Array.CreateInstance(parameters.First().GetType(), new int[] { 0 });
+                    Func<Object, Object> retVa13 = (Func<Object, Object>)(v =>
+                       {
+                           var parameters = ConverterParameter.Select(p => checkParameters(p)).ToArray();
+                           if (v == null)
+                               v = Array.CreateInstance(parameters.First().GetType(), new int[] { 0 });
 
-                            List<object> items2Add = new List<object>();
-                            foreach (var item in parameters)
-                                if (item is Array)
-                                    items2Add.AddRange((item as Array).Cast<object>());
-                                else items2Add.Add(item);
+                           List<object> items2Add = new List<object>();
+                           foreach (var item in parameters)
+                               if (item is Array)
+                                   items2Add.AddRange((item as Array).Cast<object>());
+                               else items2Add.Add(item);
 
-                            Array array = v as Array;
-                            Type arrayType = array.GetType().GetElementType();
-                            Array newArray = Array.CreateInstance(arrayType, array.Length + items2Add.Count());
-                            Array.Copy(array, 0, newArray, 0, array.Length);
-                            Array.Copy(items2Add.ToArray(), 0, newArray, array.Length, items2Add.Count());
-                            return newArray;
-                        });                                      
+                           Array array = v as Array;
+                           Type arrayType = array.GetType().GetElementType();
+                           Array newArray = Array.CreateInstance(arrayType, array.Length + items2Add.Count());
+                           Array.Copy(array, 0, newArray, 0, array.Length);
+                           Array.Copy(items2Add.ToArray(), 0, newArray, array.Length, items2Add.Count());
+                           return newArray;
+                       });
                     Value = retVa13;
 
                     break;
@@ -342,40 +344,6 @@ namespace FileExplorer.Script
             return base.Execute(pm);
         }
 
-
-        //private static object add(object obj1, params object[] addItems)
-        //{
-        //    if (obj1 == null)
-        //    {
-        //        return add(addItems[0], addItems.Skip(0).ToArray());
-        //    }
-
-        //    if (obj1 is Array)
-        //    {
-        //        List<object> items2Add = new List<object>();
-        //        foreach (var item in addItems)
-        //            if (item is Array)
-        //                items2Add.AddRange((item as Array).Cast<object>());
-        //            else items2Add.Add(item);
-
-        //        Array array = obj1 as Array;
-        //        Type arrayType = array.GetType().GetElementType();
-        //        Array newArray = Array.CreateInstance(arrayType, array.Length + items2Add.Count());
-        //        Array.Copy(array, 0, newArray, 0, array.Length);
-        //        Array.Copy(items2Add.ToArray(), 0, newArray, array.Length, items2Add.Count());
-        //        return newArray;
-        //    }
-        //    else
-        //    {
-                
-        //        var mInfo = typeof(FileExplorer.Utils.ExpressionUtils)
-        //        .GetRuntimeMethods().First(m => m.Name == "Add")
-        //        .MakeGenericMethod(typeof(int));
-        //        foreach (var addItem in addItems)
-        //            obj1 = mInfo.Invoke(null, new object[] {  obj1, addItem});
-        //        return obj1;
-        //    }
-        //}
     }
 
 

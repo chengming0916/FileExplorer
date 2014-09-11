@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
 
@@ -22,18 +23,54 @@ namespace FileExplorer.WPF.BaseControls
         public ResizeItemAdorner(UIElement adornedElement)
             : base(adornedElement)
         {
-            _resize = new ResizeDecorator() { IsHitTestVisible = true, Background = null };
-            _resize.SetBinding(Control.WidthProperty, "Size.Width");
-            _resize.SetBinding(Control.HeightProperty, "Size.Height");
-            _resize.SetBinding(CenteredCanvas.XProperty, "Position.X");
-            _resize.SetBinding(CenteredCanvas.YProperty, "Position.Y");
+            _resize = new ResizeDecorator() { IsHitTestVisible = true, Background = null, DataContext = null };
+            _resize.SetBinding(Control.WidthProperty, "SelectedItem.Size.Width");
+            _resize.SetBinding(Control.HeightProperty, "SelectedItem.Size.Height");
+            //_resize.SetBinding(CenteredCanvas.XProperty, "Position.X");
+            //_resize.SetBinding(CenteredCanvas.YProperty, "Position.Y");
 
-            _canvas = new CenteredCanvas() { Background = null };
-            _canvas.Children.Add(_resize);
+            
+            //_resize.AddHandler(Thumb.DragDeltaEvent, (DragDeltaEventHandler)((o, e) =>
+            //    {
+            //        Thumb thumb = e.OriginalSource as Thumb;
+            //        double deltaVertical = 0, deltaHorizontal = 0;
 
-            this.AddLogicalChild(_canvas);
-            this.AddVisualChild(_canvas);
-            //IsHitTestVisible = false;
+            //        switch (thumb.VerticalAlignment)
+            //        {
+            //            case System.Windows.VerticalAlignment.Bottom:
+            //                deltaVertical = Math.Min(-e.VerticalChange, _resize.ActualHeight - _resize.MinHeight);
+            //                break;
+            //            case System.Windows.VerticalAlignment.Top:
+            //                deltaVertical = Math.Min(e.VerticalChange, _resize.ActualHeight - _resize.MinHeight);
+            //                break;
+            //        }
+
+            //        switch (thumb.HorizontalAlignment)
+            //        {
+            //            case System.Windows.HorizontalAlignment.Left:
+            //                deltaHorizontal = Math.Min(e.HorizontalChange, _resize.ActualWidth - _resize.MinWidth);
+            //                break;
+            //            case System.Windows.HorizontalAlignment.Right:
+            //                deltaHorizontal = Math.Min(-e.HorizontalChange, _resize.ActualWidth - _resize.MinWidth);
+            //                break;
+            //        }
+
+
+            //        if (deltaHorizontal != 0)
+            //            _resizable.Size = new Size(deltaVertical + _resizable.Size.Height, deltaHorizontal + _resizable.Size.Width);
+            //            //_resize.ScaleX = 1 + (deltaHorizontal / _resizable.Size.Width);
+            //        //if (deltaVertical != 0) _resize.ScaleY += (deltaVertical / _resize.ActualHeight);
+            //        Console.WriteLine(e.HorizontalChange);
+
+            //    }));
+
+            //_canvas = new CenteredCanvas() { Background = null };
+            //_canvas.Children.Add(_resize);
+
+            this.AddLogicalChild(_resize);
+            this.AddVisualChild(_resize);
+            
+            
         }
 
         #endregion
@@ -42,25 +79,27 @@ namespace FileExplorer.WPF.BaseControls
 
         protected override Size MeasureOverride(Size constraint)
         {
-            _canvas.Measure(constraint);
-            return constraint;
+            _resize.Measure(constraint);
+            return _resizable.Size;
         }
 
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            _canvas.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
-            return finalSize;
+            _resize.Arrange(new Rect(0, 0, _resizable.Size.Width, _resizable.Size.Height));
+            return _resizable.Size;
         }
 
-        public void SetTargetItem(IResizable selected)
-        {
-            _resize.DataContext = selected;
-        }
+        //public void SetTargetItem(IResizable selected)
+        //{
+        //    _resize.DataContext = selected;
+        //}
 
         private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as ResizeItemAdorner)._resize.DataContext = e.NewValue;
+            (d as ResizeItemAdorner)._resizable = (IResizable)e.NewValue;
+            //(d as ResizeItemAdorner)._resize.DataContext = e.NewValue;
+            (d as ResizeItemAdorner)._resize.Content = e.NewValue;
         }
 
         #endregion
@@ -68,7 +107,9 @@ namespace FileExplorer.WPF.BaseControls
         #region Data
 
         private ResizeDecorator _resize;
-        private CenteredCanvas _canvas;
+        //private ContentPresenter _cc;
+        private IResizable _resizable;
+        //private CenteredCanvas _canvas;
 
         #endregion
 
@@ -78,21 +119,21 @@ namespace FileExplorer.WPF.BaseControls
 
         protected override Visual GetVisualChild(int index)
         {
-            return _canvas;
+            return _resize;
         }
 
 
-        public object SelectedItem
+        public IResizable SelectedItem
         {
-            get { return (object)GetValue(SelectedItemProperty); }
+            get { return (IResizable)GetValue(SelectedItemProperty); }
             set { SetValue(SelectedItemProperty, value); }
         }
 
         public static readonly DependencyProperty SelectedItemProperty =
-         DependencyProperty.Register("SelectedItem", typeof(object), typeof(SelectedItemsAdorner),
+         DependencyProperty.Register("SelectedItem", typeof(IResizable), typeof(ResizeItemAdorner),
          new FrameworkPropertyMetadata(new PropertyChangedCallback(OnSelectedItemChanged)));
 
-  
+
         #endregion
     }
 }

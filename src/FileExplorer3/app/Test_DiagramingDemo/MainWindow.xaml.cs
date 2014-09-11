@@ -38,7 +38,7 @@ namespace DiagramingDemo
             var ra = new ResizeItemAdorner(cc) { };
             cc.Content = ra;
             ra.SetValue(ResizeItemAdorner.SelectedItemProperty, (DataContext as CanvasViewModel).Items[0] as IResizable);
-            ra.SetTargetItem((DataContext as CanvasViewModel).Items[0] as IResizable);
+            ra.SelectedItem = ((DataContext as CanvasViewModel).Items[0] as IResizable);
         }
     }
 }

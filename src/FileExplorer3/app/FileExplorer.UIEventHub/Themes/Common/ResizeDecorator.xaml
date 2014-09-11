@@ -2,8 +2,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"     >
 
-    <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="Control">
+    <ControlTemplate x:Key="ResizeDecoratorTemplate" TargetType="ContentControl">
         <Grid>
+            <bc:UIEventAdapter.Processors>
+                <bc:ResizeAdornerEventProcessor />
+            </bc:UIEventAdapter.Processors>
             <Thumb Height="3" Cursor="SizeNS" Margin="0 -4 0 0"
            VerticalAlignment="Top" HorizontalAlignment="Stretch"/>
             <Thumb Width="3" Cursor="SizeWE" Margin="-4 0 0 0"
@@ -20,11 +23,32 @@
            VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
             <Thumb Width="7" Height="7" Cursor="SizeNWSE" Margin="0 0 -6 -6"
            VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+            <!--<ContentPresenter
+                 IsHitTestVisible="False"
+                 Content="{TemplateBinding Content}"
+                 ContentTemplate="{TemplateBinding ContentTemplate}"
+                 Cursor="{TemplateBinding Cursor}"
+                      Margin="{TemplateBinding Padding}"
+                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+            />-->
         </Grid>
     </ControlTemplate>
 
     <Style TargetType="{x:Type bc:ResizeDecorator}">
         <Setter Property="Template" Value="{StaticResource ResizeDecoratorTemplate}" />
+        <Setter Property="RenderTransformOrigin" Value="0.5, 0.5" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TransformGroup>
+                    <TranslateTransform />
+                    <ScaleTransform ScaleX="{Binding ScaleX, RelativeSource={RelativeSource  AncestorType={x:Type ContentControl}}}" 
+                                    ScaleY="{Binding ScaleY, RelativeSource={RelativeSource  AncestorType={x:Type ContentControl}}}"
+                                    />
+                    <RotateTransform />
+                </TransformGroup>
+            </Setter.Value>
+        </Setter>
     </Style>
-     
+
 </ResourceDictionary>

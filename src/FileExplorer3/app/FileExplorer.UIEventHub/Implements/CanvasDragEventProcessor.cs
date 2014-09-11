@@ -57,14 +57,16 @@ namespace FileExplorer.WPF.BaseControls
                         HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", 
                             DataContextType.SupportDrag, "{ISupportDrag}", false,
                             //And If there's one.
-                            ScriptCommands.IfAssigned("{ISupportDrag}",
+                            ScriptCommands.IfAssigned("{ISupportDrag}",                              
                                 //Calculate a number of positions.
                                 HubScriptCommands.ObtainPointerPosition(
                                     //Assign the datacontext item to {ItemUnderMouse}
                                     HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
-                                        //And set Sender's StartDraggingItem to {ItemUnderMouse}
+                                        //And set Sender's StartDraggingItem to {ItemUnderMouse}        
+                                        ScriptCommands.IfAssigned("{ItemUnderMouse}", 
+                                          ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}", 
                                         HubScriptCommands.SetDependencyProperty("{Sender}",
-                                            AttachedProperties.StartDraggingItemProperty, "{ItemUnderMouse}")))));
+                                            AttachedProperties.StartDraggingItemProperty, "{ItemUnderMouse}")))))));
                 case "TouchDrag":
                 case "MouseDrag":
                     return 
