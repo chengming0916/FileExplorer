@@ -84,6 +84,39 @@ namespace FileExplorer.WPF.Utils
 
         }
 
+        public static T FindLogicalChild<T>(DependencyObject obj, Func<T, bool> filter = null, int level = -1) where T : DependencyObject
+        {
+            if (filter == null)
+                filter = (t) => true;
+
+            // Search immediate children first (breadth-first)
+            foreach (var c in LogicalTreeHelper.GetChildren(obj))
+            {
+                DependencyObject child = c as DependencyObject;
+
+                if (child != null && child is T && filter((T)child))
+                {
+                    return (T)child;
+                }
+                else
+                {
+                    if (level == -1 || level > 0)
+                        if (!AttachedProperties.GetSkipLookup(child))
+                        {
+                            T childOfChild = FindLogicalChild<T>(child, filter, level == -1 ? -1 : level - 1);
+
+                            if (childOfChild != null)
+                                return childOfChild;
+                        }
+                    //else
+                    //    Debug.WriteLine(child);
+                }
+            }
+
+            return null;
+
+        }
+
         public static T FindAncestor<T>(this UIElement obj) where T : UIElement
         {
             return FindAncestor<T>((DependencyObject)obj);

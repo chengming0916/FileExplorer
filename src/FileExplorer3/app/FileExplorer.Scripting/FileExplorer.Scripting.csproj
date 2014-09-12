@@ -69,6 +69,7 @@
     <Compile Include="Scripts\v2\AssignArray.cs" />
     <Compile Include="Scripts\v2\AssignCanExecuteCondition.cs" />
     <Compile Include="Scripts\v2\AssignParameterDic.cs" />
+    <Compile Include="Scripts\v2\ArithmeticCommand.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />
     <Compile Include="Scripts\v2\Delay.cs" />
     <Compile Include="Scripts\v2\Filter.cs" />

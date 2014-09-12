@@ -44,16 +44,20 @@ namespace FileExplorer.WPF.BaseControls
                 case "TouchDrag":
                     if (EnableMultiSelect)
                         return 
-                           
+                            HubScriptCommands.FindVisualParent("{EventArgs.OriginalSource}", FindMethodType.Type, 
+                                "AdornerLayer", "{AdornerLayer}", 
+                            ScriptCommands.IfAssigned("{AdornerLayer}", 
+                              ResultCommand.NoError, //Skip if drag initiated by an element over AdornerLayer.
                             HubScriptCommands.IfNotRoutedEventHandled(
                             HubScriptCommands.CaptureMouse(CaptureMouseMode.ScrollContentPresenter,
+                              HubScriptCommands.SetRoutedEventHandled(
                               HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
                                 AttachedProperties.IsSelectingProperty, true,
                                     HubScriptCommands.ObtainPointerPosition(
                                       HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",
                                         HubScriptCommands.FindSelectedItems(
                                             HubScriptCommands.HighlightItems()))),
-                                ResultCommand.NoError)));
+                                ResultCommand.NoError))))));
                     break;
                 case "TouchMove":
                 case "MouseMove":
@@ -70,6 +74,7 @@ namespace FileExplorer.WPF.BaseControls
                 case "PreviewMouseUp":
                     return HubScriptCommands.IfNotRoutedEventHandled(
                        HubScriptCommands.ReleaseMouse(
+                        HubScriptCommands.SetRoutedEventHandled(
                           HubScriptCommands.ObtainPointerPosition(
                             HubScriptCommands.DettachSelectionAdorner("{SelectionAdorner}",
                             //Assign IsSelecting attached property to {WasSelecting}
@@ -87,7 +92,7 @@ namespace FileExplorer.WPF.BaseControls
                                             ScriptCommands.SetProperty("{ItemUnderMouse}", "IsSelected", true)),
                                         //If click on empty area
                                         ScriptCommands.RunICommand(UnselectAllCommand, null, false))
-                                      ))))))));
+                                      )))))))));
             }
 
             return base.onEvent(eventId);

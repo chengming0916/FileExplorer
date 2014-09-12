@@ -32,30 +32,56 @@ namespace FileExplorer.WPF.BaseControls
 
         protected override Script.IScriptCommand onEvent(RoutedEvent eventId)
         {
-            
 
-            //if (eventId.Name.Contains("Move"))
-            //    return ResultCommand.NoError;
-            //return ScriptCommands.PrintConsole(eventId.Name);
+
+            //Console.WriteLine(eventId.Name);
             switch (eventId.Name)
             {
 
-                case "PreviewTouchDown":
-                case "PreviewMouseDown":
-                    return 
-                        HubScriptCommands.SetRoutedEventHandled(
-                        HubScriptCommands.CaptureMouse(CaptureMouseMode.UIElement, ScriptCommands.PrintConsole(eventId.Name)));
+                //case "PreviewTouchDown":
+                //case "PreviewMouseDown":
+                //    return 
+                //        ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,                         
+                //            HubScriptCommands.SetRoutedEventHandled(
+                //                ScriptCommands.Assign("{CanvasResize.IsResizing}", true, false, 
+                //                    HubScriptCommands.AssignCursorPosition(PositionRelativeToType.Null, "{CanvasResize.StartPosition}", false, 
+                //                        HubScriptCommands.CaptureMouse(CaptureMouseMode.UIElement)))));
 
+                case "MouseMove":
+                case "TouchMove":
+                    return ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,
+                        ScriptCommands.IfTrue("{CanvasResize.IsResizing}", 
+                                    HubScriptCommands.AssignCursorPosition(PositionRelativeToType.Null, 
+                                    "{CanvasResize.CurrentPosition}", false)));
                 //case "MouseDrag":
                 //case "TouchDrag":
-                //    return Scriptcomm
+                case "PreviewTouchDown":
+                case "PreviewMouseDown":
+                    return
+                       ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,
+                           HubScriptCommands.SetRoutedEventHandled(
+                                ScriptCommands.Assign("{CanvasResize.IsResizing}", true, false,
+                                   HubScriptCommands.AssignCursorPosition(PositionRelativeToType.Null, "{CanvasResize.StartPosition}", false,
+                                        //Assign Source's Name (e.g. N, NW) to CanvasResize.Mode.
+                                        ScriptCommands.Assign("{CanvasResize.Mode}", "{EventArgs.Source.Name}", false, 
+                                            HubScriptCommands.CaptureMouse(CaptureMouseMode.UIElement))))));
+
 
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
-                    return 
-                        HubScriptCommands.SetRoutedEventHandled(
-                        HubScriptCommands.CaptureMouse(CaptureMouseMode.Release, ScriptCommands.PrintConsole(eventId.Name)));
+                    return
+                        ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,
+                            ScriptCommands.Assign("{CanvasResize.IsResizing}", false, false,
+                                HubScriptCommands.SetRoutedEventHandled(
+                                    HubScriptCommands.CaptureMouse(CaptureMouseMode.Release,
+                                      ScriptCommands.Subtract("{CanvasResize.CurrentPosition.X}", "{CanvasResize.StartPosition.X}", "{DiffX}", 
+                                      ScriptCommands.Subtract("{CanvasResize.CurrentPosition.Y}", "{CanvasResize.StartPosition.Y}", "{DiffY}",   
+                                      ScriptCommands.PrintConsole("{CanvasResize.Mode}, {DiffX},{DiffY}")))))));
+                default:
+                    return ScriptCommands.PrintConsole(eventId.Name);
             }
+
+
             return base.onEvent(eventId);
         }
     }

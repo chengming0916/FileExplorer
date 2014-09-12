@@ -100,7 +100,7 @@ namespace FileExplorer.WPF.BaseControls
                         _inputProcessors.Processors.SelectMany(ip => ip.ProcessEvents))
                         .Distinct().ToArray();
 
-                        _isEnabled = value;
+                        _isEnabled = value; 
 
                         if (_isEnabled)
                         {
@@ -181,7 +181,7 @@ namespace FileExplorer.WPF.BaseControls
                "TouchDrag", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UIEventHub));
 
         public async void Control_TouchDrag(object sender, InputEventArgs e)
-        {
+        {            
             FrameworkElement control = sender as FrameworkElement;
             var input = UIInputBase.FromEventArgs(sender, e);
             if (await executeAsync(_eventProcessors, UIEventHub.TouchDragEvent, input))

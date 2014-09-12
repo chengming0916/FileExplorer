@@ -120,18 +120,7 @@ namespace FileExplorer.UIEventHub
         protected override IScriptCommand executeInner(ParameterDic pm, Control c,
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-            var scp = ControlUtils.GetScrollContentPresenter(c);
-
-            //var contentBelowHeader = (c is ListViewEx) &&
-            //    (c as ListViewEx).OuterTopContent is DependencyObject &&
-            //    DockableScrollViewer.GetIsContentVisible((c as ListViewEx)
-            //        .OuterTopContent as DependencyObject)
-            //    ?
-            //    (c as ListViewEx).OuterTopContent as FrameworkElement : null;
-
-            //pd["ContentBelowHeaderSize"] =
-            //   contentBelowHeader == null ? new Size(0, 0) :
-            //       new Size(contentBelowHeader.ActualWidth, contentBelowHeader.ActualHeight);
+            var scp = ControlUtils.GetScrollContentPresenter(c);       
 
             var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
             var gridViewHeaderSize = gvhrp == null ?

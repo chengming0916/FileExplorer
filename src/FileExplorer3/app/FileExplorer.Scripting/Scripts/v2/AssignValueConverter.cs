@@ -133,23 +133,23 @@ namespace FileExplorer.Script
                     valueVariable, false, nextCommand), propertyName));
         }
 
-        /// <summary>
-        /// Add variables (using Expression) to destination.
-        /// </summary>
-        /// <param name="sourceObjectVariable"></param>
-        /// <param name="addValues"></param>
-        /// <param name="destinationVariable"></param>
-        /// <param name="nextCommand"></param>
-        /// <returns></returns>
-        public static IScriptCommand Add(string sourceObjectVariable = "{Source}",
-            object[] addValues = null,
-            string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
-        {
-            string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
-            return AssignValueConverter(ValueConverterType.AddValue, valueConverterVariable,
-                ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
-                    destinationVariable, false, nextCommand), addValues);
-        }
+        ///// <summary>
+        ///// Add variables (using Expression) to destination.
+        ///// </summary>
+        ///// <param name="sourceObjectVariable"></param>
+        ///// <param name="addValues"></param>
+        ///// <param name="destinationVariable"></param>
+        ///// <param name="nextCommand"></param>
+        ///// <returns></returns>
+        //public static IScriptCommand Add(string sourceObjectVariable = "{Source}",
+        //    object[] addValues = null,
+        //    string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        //{
+        //    string valueConverterVariable = ParameterDic.CombineVariable(sourceObjectVariable, "Converter");
+        //    return AssignValueConverter(ValueConverterType.AddValue, valueConverterVariable,
+        //        ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
+        //            destinationVariable, false, nextCommand), addValues);
+        //}
 
 
         /// <summary>

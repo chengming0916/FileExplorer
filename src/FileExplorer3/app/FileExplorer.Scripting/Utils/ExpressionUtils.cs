@@ -27,7 +27,7 @@ namespace FileExplorer.Utils
         }
 
         public static T Subtract<T>(T a, T b)
-        {
+        {            
             // declare the parameters
             ParameterExpression paramA = System.Linq.Expressions.Expression.Parameter(typeof(T), "a"),
                 paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");
@@ -38,5 +38,46 @@ namespace FileExplorer.Utils
             // call it
             return subtract(a, b);
         }
+
+        public static T Multiply<T>(T a, T b)
+        {
+            // declare the parameters
+            ParameterExpression paramA = System.Linq.Expressions.Expression.Parameter(typeof(T), "a"),
+                paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");
+            // add the parameters together
+            BinaryExpression body = System.Linq.Expressions.Expression.Multiply(paramA, paramB);
+            // compile it
+            Func<T, T, T> multiply = System.Linq.Expressions.Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+            // call it
+            return multiply(a, b);
+        }
+
+        public static T Divide<T>(T a, T b)
+        {
+            // declare the parameters
+            ParameterExpression paramA = System.Linq.Expressions.Expression.Parameter(typeof(T), "a"),
+                paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");
+            // add the parameters together
+            BinaryExpression body = System.Linq.Expressions.Expression.Divide(paramA, paramB);
+            // compile it
+            Func<T, T, T> divide = System.Linq.Expressions.Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+            // call it
+            return divide(a, b);
+        }
+
+        public static T Modulo<T>(T a, T b)
+        {
+            // declare the parameters
+            ParameterExpression paramA = System.Linq.Expressions.Expression.Parameter(typeof(T), "a"),
+                paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");
+            // add the parameters together
+            BinaryExpression body = System.Linq.Expressions.Expression.Modulo(paramA, paramB);
+            // compile it
+            Func<T, T, T> modulo = System.Linq.Expressions.Expression.Lambda<Func<T, T, T>>(body, paramA, paramB).Compile();
+            // call it
+            return modulo(a, b);
+        }
+
+        
     }
 }
