@@ -37,7 +37,9 @@ namespace DiagramingDemo
                     return ResultCommand.NoError;
                 });
             for (int i = 1; i < 20; i++)
-                Items.Add(new ItemViewModel("Test" + i));            
+                Items.Add(new ItemViewModel("Test" + i));
+
+            Items[0].IsSelected = true;
         }
 
         public void UnselectAll()

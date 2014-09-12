@@ -89,6 +89,11 @@ namespace FileExplorer
             return "{" + GetVariable(variableKey) + combineStr + "}";
         }
 
+        public static string RandomVariable(string prefix = "")
+        {
+            return "{" + prefix + new Random().Next().ToString() + "}";
+        }
+
         public static ParameterDic Combine(ParameterDic orginalDic, ParameterDic newDic)
         {
             ParameterDic retDic = orginalDic.Clone();

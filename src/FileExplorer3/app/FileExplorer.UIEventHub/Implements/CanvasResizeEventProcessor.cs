@@ -32,11 +32,11 @@ namespace FileExplorer.WPF.BaseControls
         {
             switch (eventId.Name)
             {
-                case "MouseDrag":
-                case "TouchDrag":
-                    return ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,
-                        ScriptCommands.IfAssigned("{CanvasResize.ResizeItemAdorner}",
-                          HubScriptCommands.DettachResizeItemAdorner("{CanvasResize.AdornerLayer}","{CanvasResize.ResizeItemAdorner}")));
+                //case "MouseDrag":
+                //case "TouchDrag":
+                //    return ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,
+                //        ScriptCommands.IfAssigned("{CanvasResize.ResizeItemAdorner}",
+                //          HubScriptCommands.DettachResizeItemAdorner("{CanvasResize.AdornerLayer}","{CanvasResize.ResizeItemAdorner}")));
                 //case "MouseDrag":
                 //case "TouchDrag":
                 //    return HubScriptCommands.DettachResizeItemAdorner("{ResizeItemAdorner}");

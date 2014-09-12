@@ -107,6 +107,7 @@
     <Compile Include="Interfaces\ISupportDrop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\v2\AssignAdornerLayer.cs" />
+    <Compile Include="Scripts\v2\AssignCursorPosition.cs" />
     <Compile Include="Scripts\v2\AssignItemUnderMouse.cs" />
     <Compile Include="Scripts\v2\AutoScroll.cs" />
     <Compile Include="Scripts\v2\CaptureMouse.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Implements\DiskParameterDicStore.cs" />
     <Compile Include="Scripts\v2\DragDropLiteCommand.cs" />
     <Compile Include="Scripts\v2\EventArgsHandledCommand.cs" />
+    <Compile Include="Scripts\v2\FindUIElement.cs" />
     <Compile Include="Scripts\v2\IfKeyGesture.cs" />
     <Compile Include="Scripts\v2\SelectedItemsAdornerCommand.cs" />
     <Compile Include="Scripts\v2\ResizeItemAdornerCommand.cs" />

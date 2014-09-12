@@ -206,15 +206,22 @@ namespace FileExplorer.Script
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
-            object value1 = pm.GetValue<Object>(Variable1Key);
-            object value2 = pm.GetValue<Object>(Variable2Key);
+            try
+            {
+                object value1 = pm.GetValue<Object>(Variable1Key);
+                object value2 = pm.GetValue<Object>(Variable2Key);
 
-            bool result = compare(pm);
+                bool result = compare(pm);
 
-            logger.Debug(String.Format("Executing {0} Command ({1})",
-                 result, result ? NextCommand : OtherwiseCommand));
+                logger.Debug(String.Format("Executing {0} Command ({1})",
+                     result, result ? NextCommand : OtherwiseCommand));
 
-            return result ? NextCommand : OtherwiseCommand;           
+                return result ? NextCommand : OtherwiseCommand;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return OtherwiseCommand;
+            }
         }       
     }
 }

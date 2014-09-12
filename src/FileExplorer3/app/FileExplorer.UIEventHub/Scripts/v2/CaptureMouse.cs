@@ -48,15 +48,8 @@ namespace FileExplorer.UIEventHub
         protected override IScriptCommand executeInner(ParameterDic pm, UIElement ic,
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-
-
             if (Keyboard.Modifiers != ModifierKeys.None)
                 return ResultCommand.NoError;
-
-            if (eventArgs.Handled)
-                return ResultCommand.NoError;
-
-            eventArgs.Handled = true;
 
             logger.Debug(String.Format("Capture {0}", _mode));
             switch (_mode)
