@@ -46,17 +46,22 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        //public static IScriptCommand UpdateResizeItemAdorner(string resizeItemAdornerVariable = "{ResizeItemAdorner}", 
-        //    string targetItemVariable = null,
-        //    IScriptCommand nextCommand = null)
-        //{
-        //    return new ResizeItemAdornerCommand()
-        //    {
-        //        AdornerMode = UIEventHub.AdornerMode.Update,
-        //        TargetItemKey = targetItemVariable,
-        //        NextCommand = (ScriptCommandBase)nextCommand
-        //    };
-        //}
+        public static IScriptCommand UpdateResizeItemAdorner(string resizeItemAdornerVariable = "{CanvasResize.ResizeItemAdorner}",
+            string resizeModeVariable = "{CanvasResize.ResizeMode}",
+            string startPositionVariable = "{CanvasResize.StartPosition}",
+            string currentPositionVariable = "{CanvasResize.CurrentPosition}",
+            IScriptCommand nextCommand = null)
+        {
+            return new ResizeItemAdornerCommand()
+            {
+                AdornerMode = UIEventHub.AdornerMode.Update,
+                ResizeItemAdornerKey = resizeItemAdornerVariable,
+                ResizeModeKey = resizeModeVariable,
+                StartPositionKey = startPositionVariable,
+                CurrentPosittionKey = currentPositionVariable,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
     }
 
 
@@ -83,6 +88,11 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         public string TargetItemKey { get; set; }
 
+        public string ResizeModeKey { get; set; }
+
+        public string StartPositionKey { get; set; }
+        public string CurrentPosittionKey { get; set; }
+
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ResizeItemAdornerCommand>();
 
@@ -93,6 +103,9 @@ namespace FileExplorer.UIEventHub
             AdornerLayerKey = "{CanvasResize.AdornerLayer}";
             ResizeItemAdornerKey = "{CanvasResize.ResizeItemAdorner}";
             TargetItemKey = null;
+            ResizeModeKey = "{CanvasResize.ResizeMode}";
+            StartPositionKey = "{CanvasResize.StartPosition}";
+            CurrentPosittionKey = "{CanvasResize.CurrentPosition}";
             //StartPositionAdjustedKey = "{StartPositionAdjusted}";
             //CurrentPositionKey = "{CurrentPosition}";
         }
@@ -100,59 +113,97 @@ namespace FileExplorer.UIEventHub
         protected override Script.IScriptCommand executeInner(ParameterDic pm, ItemsControl ic,
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-            var scp = ControlUtils.GetScrollContentPresenter(ic);
-            if (scp != null)
+            if (AdornerMode == UIEventHub.AdornerMode.Update)
             {
-                AdornerLayer adornerLayer = pm.GetValue<AdornerLayer>(AdornerLayerKey);
-                if (adornerLayer != null)
 
-                switch (AdornerMode)
+                var updateAdorner = pm.GetValue<ResizeItemAdorner>(ResizeItemAdornerKey);
+                string mode = pm.GetValue<string>(ResizeModeKey);
+                Point startPosition = pm.GetValue<Point>(StartPositionKey);
+                Point currentPosition = pm.GetValue<Point>(CurrentPosittionKey);
+                Vector offset = currentPosition - startPosition;
+                //                   private static IScriptCommand previewNorthCommand =
+                //    ScriptCommands.Multiply<double>("{DiffY}", -1, "{DiffY1}",
+                //    ScriptCommands.Assign("{CanvasResize.ResizeItemAdorner.OffsetY}", "{DiffY1}", false,
+                //    ScriptCommands.Assign("{CanvasResize.ResizeItemAdorner.OffsetTop}", "{DiffY1}")));
+                //private static IScriptCommand previewSouthCommand = ScriptCommands.Assign("{CanvasResize.ResizeItemAdorner.OffsetY}", "{DiffY}");
+                //private static IScriptCommand previewWestCommand = ScriptCommands.Assign("{CanvasResize.ResizeItemAdorner.OffsetX}", "{DiffX}", false,
+                //                                                    ScriptCommands.Multiply<double>("{DiffX}", 1, "{DiffX1}",
+                //                                                    ScriptCommands.Assign("{CanvasResize.ResizeItemAdorner.OffsetLeft}", "{DiffX1}")));
+                //private static IScriptCommand previewEastCommand = ScriptCommands.Assign("{CanvasResize.ResizeItemAdorner.OffsetX}", "{DiffX}");
+
+                if (mode.Contains("N"))
                 {
-                    case UIEventHub.AdornerMode.Attach:
-                       
-                         IResizable targetItem = TargetItemKey == null ?
-                            (ic.ItemsSource as IEnumerable).OfType<ISelectable>()
-                                .FirstOrDefault(s => s is IResizable && s.IsSelected) as IResizable :
-                            pm.GetValue<IResizable>(TargetItemKey);
+                    updateAdorner.OffsetTop = offset.Y;
+                    updateAdorner.OffsetHeight = -1 * offset.Y;
+                }
 
-                        UIElement selectedItem = ic.ItemContainerGenerator.ContainerFromItem(targetItem) as UIElement;
-                        ResizeItemAdorner resizeAdorner = new ResizeItemAdorner(adornerLayer) { SelectedItem = targetItem };
-                        pm.SetValue(ResizeItemAdornerKey, resizeAdorner, false);
-                        adornerLayer.Add(resizeAdorner);
+                if (mode.Contains("E"))
+                {                    
+                    updateAdorner.OffsetWidth = offset.X;
+                }
 
-                        break;
+                if (mode.Contains("S"))
+                {                    
+                    updateAdorner.OffsetHeight = offset.Y;
+                }
 
-                    case UIEventHub.AdornerMode.Detach:
-                        ResizeItemAdorner resizeAdorner1 = pm.GetValue<ResizeItemAdorner>(ResizeItemAdornerKey);
-                        if (resizeAdorner1 != null)
-                            adornerLayer.Remove(resizeAdorner1);
-                        pm.SetValue<object>(ResizeItemAdornerKey, null);                                               
-                        break;
-
-                    case UIEventHub.AdornerMode.Update:
-                        
-                       
-                        
-
-                        //var updateAdorner = pm.GetValue<ResizeItemAdorner>(ResizeItemAdornerKey) ??
-                        //    AttachedProperties.GetResizeItemAdorner(scp);
-
-                        
-                        //adornerLayer = UITools.FindVisualChild<AdornerLayer>(selectedItem);
-                        //ResizeItemAdorner updateAdorner = new ResizeItemAdorner(adornerLayer);
-                        //adornerLayer.Add(updateAdorner);
-
-                        ////if (updateAdorner == null)
-                        ////    return ResultCommand.Error(new Exception("Adorner not found."));
-
-
-                        //updateAdorner.SelectedItem = targetItem;
-                        break;
-
+                if (mode.Contains("W"))
+                {
+                    updateAdorner.OffsetLeft = offset.X;
+                    updateAdorner.OffsetWidth = -1 * offset.X;
                 }
 
 
 
+                //adornerLayer = UITools.FindVisualChild<AdornerLayer>(selectedItem);
+                //ResizeItemAdorner updateAdorner = new ResizeItemAdorner(adornerLayer);
+                //adornerLayer.Add(updateAdorner);
+
+                ////if (updateAdorner == null)
+                ////    return ResultCommand.Error(new Exception("Adorner not found."));
+
+
+                //updateAdorner.SelectedItem = targetItem;
+
+            }
+            else
+            {
+                var scp = ControlUtils.GetScrollContentPresenter(ic);
+                if (scp != null)
+                {
+                    AdornerLayer adornerLayer = pm.GetValue<AdornerLayer>(AdornerLayerKey);
+                    if (adornerLayer != null)
+
+                        switch (AdornerMode)
+                        {
+                            case UIEventHub.AdornerMode.Attach:
+
+                                IResizable targetItem = TargetItemKey == null ?
+                                   (ic.ItemsSource as IEnumerable).OfType<ISelectable>()
+                                       .FirstOrDefault(s => s is IResizable && s.IsSelected) as IResizable :
+                                   pm.GetValue<IResizable>(TargetItemKey);
+
+                                UIElement selectedItem = ic.ItemContainerGenerator.ContainerFromItem(targetItem) as UIElement;
+                                ResizeItemAdorner resizeAdorner = new ResizeItemAdorner(adornerLayer) { SelectedItem = targetItem };
+                                pm.SetValue(ResizeItemAdornerKey, resizeAdorner, false);
+                                adornerLayer.Add(resizeAdorner);
+
+                                break;
+
+                            case UIEventHub.AdornerMode.Detach:
+                                ResizeItemAdorner detachAdorner = pm.GetValue<ResizeItemAdorner>(ResizeItemAdornerKey);
+                                if (detachAdorner != null)
+                                    adornerLayer.Remove(detachAdorner);
+                                pm.SetValue<object>(ResizeItemAdornerKey, null);
+                                break;
+
+
+
+                        }
+
+
+
+                }
             }
             return NextCommand;
         }

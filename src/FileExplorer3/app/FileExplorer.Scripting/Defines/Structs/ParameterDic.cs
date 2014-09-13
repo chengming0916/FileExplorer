@@ -194,10 +194,13 @@ namespace FileExplorer
                     (parentObject as ParameterDic).SetValue<T>(childKey, value, skipIfExists);
                     return true;
                 }
-                else
+                else 
                 {
-                    TypeInfoUtils.SetProperty(parentObject, childPath, value);
-                    return true;
+                    if (parentObject != null)
+                    {
+                        TypeInfoUtils.SetProperty(parentObject, childPath, value);
+                        return true;
+                    }
                 }
                 return false;
             }
