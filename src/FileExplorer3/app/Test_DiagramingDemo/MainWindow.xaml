@@ -7,15 +7,16 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/FileExplorer.UIEventHub;component/Themes/Common/Converters.xaml" />
-                <ResourceDictionary Source="Controls/DiagramItem.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer.UIEventHub;component/Themes/Common/Converters.xaml" />                
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type local:ItemViewModel}">
-                <Border Width="{Binding Width}" Height="{Binding Height}" x:Name="border"
+                <AdornerDecorator>
+                    <Border Width="{Binding Width}" Height="{Binding Height}" x:Name="border"
                             BorderBrush="DarkGreen" Background="Lavender" BorderThickness="1">
-                    <TextBlock Text="{Binding Text}" />
-                </Border>
+                        <TextBlock Text="{Binding Text}" />
+                    </Border>
+                </AdornerDecorator>
                 <DataTemplate.Triggers>
                     <DataTrigger Binding="{Binding IsSelecting}" Value="True">
                         <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
@@ -33,7 +34,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <local:DiagramItemsControl
+        <ItemsControl
             Grid.Column="0"
             ItemsSource="{Binding Items}" Background="Transparent">
 
@@ -44,28 +45,28 @@
                                               UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
                 <bc:CanvasResizeEventProcessor />
             </bc:UIEventAdapter.Processors>
-            <local:DiagramItemsControl.ItemContainerStyle>
-                <Style TargetType="local:DiagramItem">
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
                     <!--<Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=OneWay}" />
                     <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDragging, Mode=OneWay}" />-->
                     <Setter Property="Visibility" Value="{Binding IsDragging, Converter={StaticResource fbtv}}" />
                     <Setter Property="Canvas.Left" Value="{Binding Left}" />
                     <Setter Property="Canvas.Top" Value="{Binding Top}" />
                 </Style>
-            </local:DiagramItemsControl.ItemContainerStyle>
-            <local:DiagramItemsControl.Template>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.Template>
                 <ControlTemplate>
                     <ScrollViewer HorizontalScrollBarVisibility="Auto">
                         <ItemsPresenter x:Name="Test" />
                     </ScrollViewer>
                 </ControlTemplate>
-            </local:DiagramItemsControl.Template>
-            <local:DiagramItemsControl.ItemsPanel>
+            </ItemsControl.Template>
+            <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas IsItemsHost="true" Width="1000" Height="1000" />
                 </ItemsPanelTemplate>
-            </local:DiagramItemsControl.ItemsPanel>
-        </local:DiagramItemsControl>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
 
         <ContentControl Grid.Column="1" x:Name="cc" />
         <Border BorderBrush="Black" BorderThickness="1" />
