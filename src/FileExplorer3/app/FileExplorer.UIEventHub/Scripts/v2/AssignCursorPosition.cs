@@ -31,7 +31,8 @@ namespace FileExplorer.UIEventHub
 
     public enum PositionRelativeToType
     {
-        Null,        
+        Null, 
+        Panel, 
         Sender
     }
 
@@ -67,10 +68,15 @@ namespace FileExplorer.UIEventHub
         protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             Point position = input.Position;
+            Console.WriteLine(input.IsDragging.ToString() +  position.ToString());
             switch (PositionRelativeTo)
             {
                 case PositionRelativeToType.Sender :
                     position = input.PositionRelativeTo(sender);
+                    break;
+                case PositionRelativeToType.Panel:
+                    var parentPanel = UITools.FindAncestor<Panel>(sender);
+                    position = input.PositionRelativeTo(parentPanel);                    
                     break;
             }
             //Console.WriteLine(position);

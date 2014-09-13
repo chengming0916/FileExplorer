@@ -4,11 +4,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace FileExplorer.Utils
 {
     public static class ExpressionUtils
     {
+        public static T AbsoluteValue<T>(T a)
+        {            
+            var mInfo = typeof(Math)
+                .GetRuntimeMethods().First(m => m.Name == "Abs" && m.GetParameters().First().ParameterType == typeof(T));
+            return (T)mInfo.Invoke(null, new object[] { a });
+        }
+
         //http://www.yoda.arachsys.com/csharp/genericoperators.html
         public static T Add<T>(T a, T b)
         {
@@ -17,7 +25,7 @@ namespace FileExplorer.Utils
                 paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");
             // add the parameters together
             BinaryExpression body;
-
+            
             body = System.Linq.Expressions.Expression.Add(paramA, paramB);
 
             // compile it

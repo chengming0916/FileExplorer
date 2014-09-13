@@ -24,12 +24,12 @@ namespace FileExplorer.WPF.BaseControls
             : base(adornedElement)
         {
             _resize = new ResizeDecorator() { IsHitTestVisible = true, Background = null, DataContext = null };
-            _resize.SetBinding(Control.WidthProperty, "SelectedItem.Size.Width");
-            _resize.SetBinding(Control.HeightProperty, "SelectedItem.Size.Height");
+            //_resize.SetBinding(Control.WidthProperty, "SelectedItem.Size.Width");
+            //_resize.SetBinding(Control.HeightProperty, "SelectedItem.Size.Height");
             //_resize.SetBinding(CenteredCanvas.XProperty, "Position.X");
             //_resize.SetBinding(CenteredCanvas.YProperty, "Position.Y");
 
-            
+
             //_resize.AddHandler(Thumb.DragDeltaEvent, (DragDeltaEventHandler)((o, e) =>
             //    {
             //        Thumb thumb = e.OriginalSource as Thumb;
@@ -69,8 +69,8 @@ namespace FileExplorer.WPF.BaseControls
 
             this.AddLogicalChild(_resize);
             this.AddVisualChild(_resize);
-            
-            
+
+
         }
 
         #endregion
@@ -102,6 +102,24 @@ namespace FileExplorer.WPF.BaseControls
             (d as ResizeItemAdorner)._resize.Content = e.NewValue;
         }
 
+
+        private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var adorner = (d as ResizeItemAdorner);
+            if (e.Property == OffsetWidthProperty)
+                adorner._resize.ScaleX = 1.0d + (double)e.NewValue / adorner._resizable.Width;
+            else if (e.Property == OffsetHeightProperty)                            
+                adorner._resize.ScaleY = 1.0d + (double)e.NewValue / adorner._resizable.Height;            
+            else if (e.Property == OffsetLeftProperty)
+                adorner._resize.TranslateX = (double)e.NewValue;
+            else if (e.Property == OffsetTopProperty)
+                adorner._resize.TranslateY = (double)e.NewValue;
+
+            //Console.WriteLine(String.Format("Scale={0},{1} Size={2},{3} Offset={4},{5}", adorner._resize.ScaleX,
+            //    adorner._resize.ScaleY, adorner._resizable.Width, adorner._resizable.Height, adorner.OffsetX, adorner.OffsetY));
+        }
+
+
         #endregion
 
         #region Data
@@ -121,6 +139,47 @@ namespace FileExplorer.WPF.BaseControls
         {
             return _resize;
         }
+
+        public double OffsetWidth
+        {
+            get { return (double)GetValue(OffsetWidthProperty); }
+            set { SetValue(OffsetWidthProperty, value); }
+        }
+
+        public static readonly DependencyProperty OffsetWidthProperty =
+         DependencyProperty.Register("OffsetWidth", typeof(double), typeof(ResizeItemAdorner),
+         new FrameworkPropertyMetadata(0d, new PropertyChangedCallback(OnOffsetChanged)));
+
+        public double OffsetHeight
+        {
+            get { return (double)GetValue(OffsetHeightProperty); }
+            set { SetValue(OffsetHeightProperty, value); }
+        }
+
+        public static readonly DependencyProperty OffsetHeightProperty =
+         DependencyProperty.Register("OffsetHeight", typeof(double), typeof(ResizeItemAdorner),
+         new FrameworkPropertyMetadata(0d, new PropertyChangedCallback(OnOffsetChanged)));
+
+
+        public double OffsetLeft
+        {
+            get { return (double)GetValue(OffsetLeftProperty); }
+            set { SetValue(OffsetLeftProperty, value); }
+        }
+
+        public static readonly DependencyProperty OffsetLeftProperty =
+         DependencyProperty.Register("OffsetLeft", typeof(double), typeof(ResizeItemAdorner),
+         new FrameworkPropertyMetadata(0d, new PropertyChangedCallback(OnOffsetChanged)));
+
+        public double OffsetTop
+        {
+            get { return (double)GetValue(OffsetTopProperty); }
+            set { SetValue(OffsetTopProperty, value); }
+        }
+
+        public static readonly DependencyProperty OffsetTopProperty =
+         DependencyProperty.Register("OffsetTop", typeof(double), typeof(ResizeItemAdorner),
+         new FrameworkPropertyMetadata(0d, new PropertyChangedCallback(OnOffsetChanged)));
 
 
         public IResizable SelectedItem

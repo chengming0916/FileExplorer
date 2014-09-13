@@ -34,5 +34,25 @@ namespace FileExplorer.WPF.BaseControls
         public static readonly DependencyProperty ScaleYProperty =
             DependencyProperty.Register("ScaleY", typeof(double), typeof(ResizeDecorator),
             new FrameworkPropertyMetadata(1d));
+
+        public double TranslateX
+        {
+            get { return (double)GetValue(TranslateXProperty); }
+            set { SetValue(TranslateXProperty, value); }
+        }
+
+        public static readonly DependencyProperty TranslateXProperty =
+            DependencyProperty.Register("TranslateX", typeof(double), typeof(ResizeDecorator),
+            new FrameworkPropertyMetadata(0d));
+
+        public double TranslateY
+        {
+            get { return (double)GetValue(TranslateYProperty); }
+            set { SetValue(TranslateYProperty, value); }
+        }
+
+        public static readonly DependencyProperty TranslateYProperty =
+            DependencyProperty.Register("TranslateY", typeof(double), typeof(ResizeDecorator),
+            new FrameworkPropertyMetadata(0d));
     }
 }

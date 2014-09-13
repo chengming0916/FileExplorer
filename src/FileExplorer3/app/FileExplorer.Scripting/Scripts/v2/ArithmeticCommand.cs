@@ -266,11 +266,40 @@ namespace FileExplorer.Script
         }
         #endregion 
 
+        #region AbsoluteValue
+        /// <summary>
+        /// Serializable, Absolute variables (using Expression) to destination.
+        /// </summary>
+        /// <example>
+        /// IScriptCommand AbsCommand = ScriptCommands.Absolute("{Left}", "{Result}", 
+        ///     ScriptCommands.PrintDebug("{Result}"));
+        ///
+        /// await ScriptRunner.RunScriptAsync(new ParameterDic() { 
+        ///     { "Left", -1 } }        
+        /// AbsCommand);
+        /// </example>
+        /// <param name="value1Variable"></param>
+        /// <param name="value2Variable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand AbsoluteValue(string value1Variable = "{Value1}",            
+            string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            return new ArithmeticCommand()
+            {
+                Value1Key = value1Variable,                
+                VariableKey = destinationVariable,
+                OperatorType = ArithmeticOperatorType.AbsoluteValue,
+                NextCommand = (ScriptCommandBase)nextCommand
+            };
+        }
+        #endregion
     }
 
     public enum ArithmeticOperatorType
     {
-        Add, Subtract, Multiply, Divide, Modulo
+        Add, Subtract, Multiply, Divide, Modulo, AbsoluteValue
     }
 
     /// <summary>
@@ -329,25 +358,23 @@ namespace FileExplorer.Script
             object value = firstValue;
             string methodName = OperatorType.ToString();
             
-            //switch (OperatorType)
-            //{
-            //    case ArithmeticOperatorType.Add: methodName = "Add"; break;
-            //    case ArithmeticOperatorType.Subtract: methodName = "Subtract"; break;
-            //    case ArithmeticOperatorType.Multiply: methodName = "Multiply"; break;
-            //    case ArithmeticOperatorType.Divide: methodName = "Divide"; break;
-            //    default: throw new NotImplementedException(OperatorType.ToString());
-            //}
+         
             var mInfo = typeof(FileExplorer.Utils.ExpressionUtils)
                               .GetRuntimeMethods().First(m => m.Name == methodName)
                               .MakeGenericMethod(value.GetType());
             foreach (var addItem in secondArrayList.Select(p => checkParameters(p)).ToArray())
-                value = mInfo.Invoke(null, new object[] { value, addItem });
+                switch (mInfo.GetParameters().Length)
+                {
+                    case 1: value = mInfo.Invoke(null, new object[] { value }); break;
+                    case 2: value = mInfo.Invoke(null, new object[] { value, addItem }); break;
+                    default: throw new NotSupportedException();
+                }
             
             Value = value;
 
             return base.Execute(pm);
         }
-
+        
     }
 
 
