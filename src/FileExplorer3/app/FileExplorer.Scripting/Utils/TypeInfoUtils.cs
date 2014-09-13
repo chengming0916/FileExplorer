@@ -18,6 +18,15 @@ namespace FileExplorer.WPF.Utils
             return obj;
         }
 
+        public static void SetProperty(object obj, string name, object value)
+        {
+            var propertyInfo = obj.GetType().GetTypeInfo().GetPropertyInfoRecursive(name);
+            if (propertyInfo == null)
+                throw new KeyNotFoundException(name);
+
+            propertyInfo.SetValue(obj, value);            
+        }
+
         public static object GetPropertyOrMethod(object obj, string name)
         {
             var match = Regex.Match(name, RegexPatterns.ParseArrayCounterPattern);

@@ -184,11 +184,22 @@ namespace FileExplorer
             string[] variableSplit = variable.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (variableSplit.Length > 1)
-            {
-                var subPd = GetValue<ParameterDic>("{" + variableSplit[0] + "}");
-                if (subPd == null)
-                    throw new KeyNotFoundException(variableSplit[0]);
-                return subPd.SetValue<T>("{" + String.Join(".", variableSplit.Skip(1).ToArray()) + "}", value, skipIfExists);
+            {        
+                string parentKey = "{" + String.Join(".", variableSplit.Take(variableSplit.Length -1)) + "}";
+                string childPath = variableSplit.Last();
+                string childKey = "{" + childPath + "}";
+                object parentObject = GetValue(parentKey);
+                if (parentObject is ParameterDic)
+                {
+                    (parentObject as ParameterDic).SetValue<T>(childKey, value, skipIfExists);
+                    return true;
+                }
+                else
+                {
+                    TypeInfoUtils.SetProperty(parentObject, childPath, value);
+                    return true;
+                }
+                return false;
             }
             else
                 if (_store.ContainsKey(variable))

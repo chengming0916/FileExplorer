@@ -12,7 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type local:ItemViewModel}">
-                <Border Width="{Binding Size.Width}" Height="{Binding Size.Height}" x:Name="border"
+                <Border Width="{Binding Width}" Height="{Binding Height}" x:Name="border"
                             BorderBrush="DarkGreen" Background="Lavender" BorderThickness="1">
                     <TextBlock Text="{Binding Text}" />
                 </Border>
@@ -49,8 +49,8 @@
                     <!--<Setter Property="bc:AttachedProperties.IsSelecting" Value="{Binding IsSelecting, Mode=OneWay}" />
                     <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDragging, Mode=OneWay}" />-->
                     <Setter Property="Visibility" Value="{Binding IsDragging, Converter={StaticResource fbtv}}" />
-                    <Setter Property="bc:CenteredCanvas.X" Value="{Binding Position.X}" />
-                    <Setter Property="bc:CenteredCanvas.Y" Value="{Binding Position.Y}" />
+                    <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Top}" />
                 </Style>
             </local:DiagramItemsControl.ItemContainerStyle>
             <local:DiagramItemsControl.Template>
@@ -62,7 +62,7 @@
             </local:DiagramItemsControl.Template>
             <local:DiagramItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <bc:CenteredCanvas IsItemsHost="true" Width="1000" Height="1000" />
+                    <Canvas IsItemsHost="true" Width="1000" Height="1000" />
                 </ItemsPanelTemplate>
             </local:DiagramItemsControl.ItemsPanel>
         </local:DiagramItemsControl>

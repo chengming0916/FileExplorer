@@ -28,11 +28,13 @@ namespace DiagramingDemo
         #region Data
 
         private static Random rand = new Random();
-        private bool _isDragging = false;
-        private Point _position = new Point(rand.Next(500), rand.Next(500));
-        private Size _size = new Size(rand.Next(25) + 25, rand.Next(25) + 25);
+        private bool _isDragging = false;        
         private bool _isSelected;
         private bool _isSelecting;
+        private double _width = rand.Next(25) + 25;
+        private double _height = rand.Next(25) + 25;
+        private double _top = rand.Next(500);
+        private double _left = rand.Next(500);
         #endregion
 
         #region Public Properties
@@ -64,32 +66,57 @@ namespace DiagramingDemo
             }
         }
 
-        public Point Position
+        public double Left
         {
             get
             {
-                return _position;
+                return _left;
             }
             set
             {
-                _position = value;
-                NotifyOfPropertyChanged(() => Position);
+                _left = value;
+                NotifyOfPropertyChanged(() => Left);
             }
         }
 
-        public Size Size
+        public double Top
         {
             get
             {
-                return _size;
+                return _top;
             }
             set
             {
-                _size = value;
-                NotifyOfPropertyChanged(() => Size);
+                _top = value;
+                NotifyOfPropertyChanged(() => Top);
             }
         }
 
+        public double Width
+        {
+            get
+            {
+                return _width;
+            }
+            set
+            {
+                _width = value;
+                NotifyOfPropertyChanged(() => Width);
+            }
+        }
+
+        public double Height
+        {
+            get
+            {
+                return _height;
+            }
+            set
+            {
+                _height = value;
+                NotifyOfPropertyChanged(() => Height);
+            }
+        }
         public string DisplayName
         {
             get;

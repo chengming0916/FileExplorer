@@ -170,8 +170,7 @@ namespace FileExplorer.UIEventHub
 
                         if (State == DragDropState.EndCanvas)
                             foreach (var posAwareItem in items.Cast<IPositionAware>())
-                                posAwareItem.Position = new Point(posAwareItem.Position.X + movePt.X,
-                                    posAwareItem.Position.Y + movePt.Y);
+                                posAwareItem.OffsetPosition(movePt);                                
 
                     }
 

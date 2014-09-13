@@ -90,6 +90,7 @@
     <Compile Include="Implements\SimpleUIEventProcessor.cs" />
     <Compile Include="Implements\TouchGestureEventProcessor.cs" />
     <Compile Include="Implements\UIEventProcessor.cs" />
+    <Compile Include="Interfaces\ExtensionMethods.cs" />
     <Compile Include="Interfaces\IChildInfo.cs" />
     <Compile Include="Interfaces\IPositionAware.cs" />
     <Compile Include="Interfaces\IItemSelectProcessor.cs" />

@@ -33,7 +33,7 @@ namespace FileExplorer.UIEventHub
       
     }
 
-    public enum DataContextType { SupportDrag, SupportDrop }
+    public enum DataContextType { Any, SupportDrag, SupportDrop }
 
     /// <summary>
     /// Use DataContextFinder to lookup up from the Visual Tree of ElementKey to find a 
@@ -61,6 +61,9 @@ namespace FileExplorer.UIEventHub
             Value = null;
             switch (DataContextType)
             {
+                case UIEventHub.DataContextType.Any : 
+                    Value = origSource.DataContext;
+                    break;
                 case UIEventHub.DataContextType.SupportDrag:
                     Value = DataContextFinder.GetDataContext(origSource, DataContextFinder.SupportDrag);
                     break;

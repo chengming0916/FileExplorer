@@ -77,6 +77,11 @@ namespace FileExplorer.Script
             return IfEquals<Object>(variable, null, otherwiseCommand, trueCommand);
         }
 
+        public static IScriptCommand IfNotAssigned(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            return IfEquals<Object>(variable, null, trueCommand, otherwiseCommand);
+        }
+
         public static IScriptCommand IfAssignedAndNotEmptyString(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
             return IfEquals<Object>(variable, null, otherwiseCommand,
