@@ -68,7 +68,7 @@ namespace FileExplorer.UIEventHub
         protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             Point position = input.Position;
-            Console.WriteLine(input.IsDragging.ToString() +  position.ToString());
+            //Console.WriteLine(input.IsDragging.ToString() +  position.ToString());
             switch (PositionRelativeTo)
             {
                 case PositionRelativeToType.Sender :

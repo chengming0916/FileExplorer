@@ -73,10 +73,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\DiagramItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -86,8 +82,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CanvasViewModel.cs" />
-    <Compile Include="Controls\DiagramItem.cs" />
-    <Compile Include="Controls\DiagramItemsControl.cs" />
     <Compile Include="ItemViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

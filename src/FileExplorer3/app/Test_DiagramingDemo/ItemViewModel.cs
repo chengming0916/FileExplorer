@@ -28,7 +28,7 @@ namespace DiagramingDemo
         #region Data
 
         private static Random rand = new Random();
-        private bool _isDragging = false;        
+        private bool _isDragging = false;
         private bool _isSelected;
         private bool _isSelecting;
         private double _width = rand.Next(25) + 25;
@@ -38,7 +38,7 @@ namespace DiagramingDemo
         #endregion
 
         #region Public Properties
-      
+
 
         public bool IsSelected
         {
@@ -100,7 +100,8 @@ namespace DiagramingDemo
             }
             set
             {
-                _width = value;
+                if (value > 0)
+                    _width = value;
                 NotifyOfPropertyChanged(() => Width);
             }
         }
@@ -113,7 +114,8 @@ namespace DiagramingDemo
             }
             set
             {
-                _height = value;
+                if (value > 0)
+                    _height = value;
                 NotifyOfPropertyChanged(() => Height);
             }
         }
