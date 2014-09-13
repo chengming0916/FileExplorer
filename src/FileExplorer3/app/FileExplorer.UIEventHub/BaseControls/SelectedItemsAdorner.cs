@@ -69,7 +69,7 @@ namespace FileExplorer.WPF.BaseControls
             adorner._canvas.Children.Clear();
             foreach (var item in draggables.Cast<IPositionAware>())
             {
-                Vector offset = item.Position - initialPosition;
+                Vector offset = item.GetMiddlePoint() - initialPosition;
                 ContentPresenter cc = new ContentPresenter() { Content = item };
                 SelfCenteredCanvas.SetOffsetX(cc, offset.X);
                 SelfCenteredCanvas.SetOffsetY(cc, offset.Y);

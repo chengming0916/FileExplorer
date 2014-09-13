@@ -14,12 +14,12 @@ namespace FileExplorer.UIEventHub
     public static partial class HubScriptCommands
     {
         public static IScriptCommand FindUIElement(
-            string elementVariable = "{Sender}", 
-            FindDirectionType direction = FindDirectionType.Parent, 
-            FindTreeType tree = FindTreeType.Visual, 
-            FindMethodType method = FindMethodType.Name, 
-            string findParameterVariable = "{Parameter}", 
-            string destinationVariable = "{Destination}", 
+            string elementVariable = "{Sender}",
+            FindDirectionType direction = FindDirectionType.Parent,
+            FindTreeType tree = FindTreeType.Visual,
+            FindMethodType method = FindMethodType.Name,
+            string findParameterVariable = "{Parameter}",
+            string destinationVariable = "{Destination}",
             IScriptCommand nextCommand = null)
         {
             return new FindUIElement()
@@ -34,13 +34,23 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand FindVisualChild(string elementVariable = "{Sender}", 
-            FindMethodType method = FindMethodType.Name, 
-            string findParameterVariable = "{Parameter}", 
-            string destinationVariable = "{Destination}", 
+        public static IScriptCommand FindVisualChild(string elementVariable = "{Sender}",
+            FindMethodType method = FindMethodType.Name,
+            string findParameterVariable = "{Parameter}",
+            string destinationVariable = "{Destination}",
             IScriptCommand nextCommand = null)
         {
             return FindUIElement(elementVariable, FindDirectionType.Child, FindTreeType.Visual, method, findParameterVariable, destinationVariable, nextCommand);
+        }
+
+        public static IScriptCommand IfExistsVisualChild(string elementVariable = "{Sender}",
+            FindMethodType method = FindMethodType.Name,
+            string findparameterVariable = "{Parameter}",
+            IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            string destinationVariable = ParameterDic.CombineVariable(elementVariable, "Destination");
+            return FindVisualChild(elementVariable, method, findparameterVariable, destinationVariable,
+                ScriptCommands.IfAssigned(destinationVariable, trueCommand, otherwiseCommand));
         }
 
         public static IScriptCommand FindVisualParent(string elementVariable = "{Sender}",
@@ -50,6 +60,16 @@ namespace FileExplorer.UIEventHub
            IScriptCommand nextCommand = null)
         {
             return FindUIElement(elementVariable, FindDirectionType.Parent, FindTreeType.Visual, method, findParameterVariable, destinationVariable, nextCommand);
+        }
+
+        public static IScriptCommand IfExistsVisualParent(string elementVariable = "{Sender}",
+            FindMethodType method = FindMethodType.Name,
+            string findparameterVariable = "{Parameter}",
+            IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            string destinationVariable = ParameterDic.CombineVariable(elementVariable, "Destination");
+            return FindVisualParent(elementVariable, method, findparameterVariable, destinationVariable,
+                ScriptCommands.IfAssigned(destinationVariable, trueCommand, otherwiseCommand));
         }
 
         public static IScriptCommand FindLogicalChild(string elementVariable = "{Sender}",
@@ -73,7 +93,7 @@ namespace FileExplorer.UIEventHub
 
     public enum FindMethodType { Name, Type, Level }
     public enum FindTreeType { Visual, Logical }
-    public enum FindDirectionType {  Parent, Child }
+    public enum FindDirectionType { Parent, Child }
 
     public class FindUIElement : UIScriptCommandBase
     {
@@ -110,16 +130,16 @@ namespace FileExplorer.UIEventHub
 
 
         private FrameworkElement findVisualAncestor(ParameterDic pm, FrameworkElement sender)
-        {            
+        {
             switch (FindMethod)
-            {                    
-                case UIEventHub.FindMethodType.Name :
+            {
+                case UIEventHub.FindMethodType.Name:
                     string name = pm.ReplaceVariableInsideBracketed(FindParameterKey) ?? "";
                     return UITools.FindAncestor<FrameworkElement>(sender, ele => name.Equals(ele.Name));
-                case UIEventHub.FindMethodType.Type :
+                case UIEventHub.FindMethodType.Type:
                     string type = pm.ReplaceVariableInsideBracketed(FindParameterKey) ?? "";
                     return UITools.FindAncestor<FrameworkElement>(sender, ele => ele.GetType().Name.Equals(type, StringComparison.CurrentCultureIgnoreCase));
-                case UIEventHub.FindMethodType.Level :
+                case UIEventHub.FindMethodType.Level:
                     int level = pm.GetValue<int>(FindParameterKey, -1);
                     if (level == -1)
                         return null;
@@ -163,7 +183,7 @@ namespace FileExplorer.UIEventHub
                     return UITools.FindVisualChild<FrameworkElement>(sender, ele => name.Equals(ele.Name));
                 case UIEventHub.FindMethodType.Type:
                     string type = pm.ReplaceVariableInsideBracketed(FindParameterKey) ?? "";
-                    return UITools.FindVisualChild<FrameworkElement>(sender, ele => ele.GetType().Name.Equals(type, StringComparison.CurrentCultureIgnoreCase));          
+                    return UITools.FindVisualChild<FrameworkElement>(sender, ele => ele.GetType().Name.Equals(type, StringComparison.CurrentCultureIgnoreCase));
                 default: throw new NotSupportedException(FindMethod.ToString());
             }
         }
@@ -177,7 +197,7 @@ namespace FileExplorer.UIEventHub
                     return UITools.FindLogicalChild<FrameworkElement>(sender, ele => name.Equals(ele.Name));
                 case UIEventHub.FindMethodType.Type:
                     string type = pm.ReplaceVariableInsideBracketed(FindParameterKey) ?? "";
-                    return UITools.FindLogicalChild<FrameworkElement>(sender, ele => ele.GetType().Name.Equals(type, StringComparison.CurrentCultureIgnoreCase));                
+                    return UITools.FindLogicalChild<FrameworkElement>(sender, ele => ele.GetType().Name.Equals(type, StringComparison.CurrentCultureIgnoreCase));
                 default: throw new NotSupportedException(FindMethod.ToString());
             }
         }
@@ -201,7 +221,7 @@ namespace FileExplorer.UIEventHub
         {
             FrameworkElement sender = pm.GetValue<FrameworkElement>(SenderKey);
 
-            FrameworkElement ele = (FindDirection == FindDirectionType.Parent) ? 
+            FrameworkElement ele = (FindDirection == FindDirectionType.Parent) ?
                 findAncestor(pm, sender) : findChild(pm, sender);
 
             pm.SetValue(DestinationKey, ele, false);

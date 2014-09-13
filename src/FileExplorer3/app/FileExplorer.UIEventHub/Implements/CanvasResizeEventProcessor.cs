@@ -47,9 +47,10 @@ namespace FileExplorer.WPF.BaseControls
                         ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,
                         HubScriptCommands.DettachResizeItemAdorner("{CanvasResize.AdornerLayer}","{CanvasResize.ResizeItemAdorner}", 
                             ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{SelectedItems}", 1,
+                                ScriptCommands.Assign("{CanvasResize.ResizeItem}", "{SelectedItems[0]}", false, 
                                 HubScriptCommands.AssignAdornerLayer(AdornerType.SelectedItem, "{CanvasResize.AdornerLayer}",false, 
                                     HubScriptCommands.AttachResizeItemAdorner("{CanvasResize.AdornerLayer}","{CanvasResize.ResizeItemAdorner}")))                                                           
-                        )));
+                        ))));
             }
             return base.onEvent(eventId);
         }

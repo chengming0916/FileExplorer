@@ -80,14 +80,14 @@ namespace FileExplorer.WPF.BaseControls
         protected override Size MeasureOverride(Size constraint)
         {
             _resize.Measure(constraint);
-            return _resizable.Size;
+            return new Size(_resizable.Width, _resizable.Height);
         }
 
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            _resize.Arrange(new Rect(0, 0, _resizable.Size.Width, _resizable.Size.Height));
-            return _resizable.Size;
+            _resize.Arrange(new Rect(0, 0, _resizable.Width, _resizable.Height));
+            return new Size(_resizable.Width, _resizable.Height);
         }
 
         //public void SetTargetItem(IResizable selected)

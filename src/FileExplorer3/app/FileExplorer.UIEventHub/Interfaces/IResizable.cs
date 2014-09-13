@@ -9,6 +9,7 @@ namespace FileExplorer.UIEventHub
 {
     public interface IResizable
     {
-        Size Size { get; set; }        
+        double Height { get; set; }
+        double Width { get; set; }               
     }
 }

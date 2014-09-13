@@ -9,6 +9,7 @@ namespace FileExplorer.UIEventHub
 {
     public interface IPositionAware 
     {
-        Point Position { get; set; }
+        double Top { get; set; }
+        double Left { get; set; }        
     }
 }
