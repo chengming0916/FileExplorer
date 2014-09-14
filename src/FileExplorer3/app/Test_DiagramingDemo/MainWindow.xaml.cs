@@ -29,16 +29,12 @@ namespace DiagramingDemo
         {
 
             InitializeComponent();
-            DataContext = new CanvasViewModel();
+            ic1.DataContext = new CanvasViewModel();            
         }
 
         public override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
-            var ra = new ResizeItemAdorner(cc) { };
-            cc.Content = ra;
-            ra.SetValue(ResizeItemAdorner.SelectedItemProperty, (DataContext as CanvasViewModel).Items[0] as IResizable);
-            ra.SelectedItem = ((DataContext as CanvasViewModel).Items[0] as IResizable);
+            base.OnApplyTemplate();         
         }
     }
 }

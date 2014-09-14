@@ -12,7 +12,7 @@ using System.Collections;
 
 namespace DiagramingDemo
 {
-    public class CanvasViewModel : NotifyPropertyChanged, ISupportDrag, IChildInfo
+    public class CanvasViewModel : NotifyPropertyChanged, ISupportDrag
     {
         private ObservableCollection<ItemViewModel> _items  = new ObservableCollection<ItemViewModel>();
 
@@ -72,12 +72,12 @@ namespace DiagramingDemo
         }
         #endregion
 
-        #region IChildInfo
-        public System.Windows.Rect GetChildRect(int itemIndex)
-        {
-            var item = Items[itemIndex];
-            return new System.Windows.Rect(item.Left, item.Top, item.Width, item.Height);
-        }
-        #endregion 
+        //#region IChildInfo
+        //public System.Windows.Rect GetChildRect(int itemIndex)
+        //{
+        //    var item = Items[itemIndex];
+        //    return new System.Windows.Rect(item.Left, item.Top, item.Width, item.Height);
+        //}
+        //#endregion 
     }
 }
