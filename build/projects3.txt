@@ -5,3 +5,5 @@ fileExplorer3.IO
 fileExplorer3.WPF
 TestApp.WPF
 TestTemplate.WPF
+Test_DiagramingDemo
+Test_ShellDragDemo

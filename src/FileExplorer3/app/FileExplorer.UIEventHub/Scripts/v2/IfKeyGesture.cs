@@ -12,7 +12,7 @@ namespace FileExplorer.UIEventHub
     public static partial class HubScriptCommands
     {
 
-        public static IScriptCommand IfKeyGesture(string keyGestureVariable = "{EventArgs.Key}",
+        public static IScriptCommand IfKeyGesture(string keyGestureVariable = "{KeyGesture}",
             IScriptCommand nextCommand = null, IScriptCommand otherwiseCommand = null)
         {
             return new IfKeyGesture()

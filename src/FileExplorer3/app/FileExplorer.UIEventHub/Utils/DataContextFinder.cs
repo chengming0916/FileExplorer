@@ -18,6 +18,12 @@ namespace FileExplorer.Utils
                 (dc is ISupportDragHelper && (dc as ISupportDragHelper).DragHelper.HasDraggables) ? (dc as ISupportDragHelper).DragHelper :
                 null;
 
+        public static Func<object, ISupportShellDrag> SupportShellDrag =
+            dc => (dc is ISupportShellDrag && (dc as ISupportShellDrag).HasDraggables) ? dc as ISupportShellDrag :
+                (dc is ISupportDragHelper && (dc as ISupportDragHelper).DragHelper is ISupportShellDrag && 
+                (dc as ISupportDragHelper).DragHelper.HasDraggables) ? (dc as ISupportDragHelper).DragHelper as ISupportShellDrag:
+                null;
+
         public static Func<object, ISupportDrop> SupportDrop =
             dc => (dc is ISupportDrop && (dc as ISupportDrop).IsDroppable) ? dc as ISupportDrop :
                 (dc is ISupportDropHelper && (dc as ISupportDropHelper).DropHelper.IsDroppable) ? (dc as ISupportDropHelper).DropHelper :

@@ -21,12 +21,6 @@ namespace FileExplorer.UIEventHub
         void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect);
     }
 
-    public interface ISupportShellDrag : ISupportDrag
-    {
-        IDataObject GetDataObject(IEnumerable<IDraggable> draggables);
-        void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect);
-    }
-
     public class NullSupportDrag : ISupportDrag
     {
         public static NullSupportDrag Instance = new NullSupportDrag();

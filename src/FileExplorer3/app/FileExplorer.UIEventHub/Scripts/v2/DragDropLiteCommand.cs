@@ -21,7 +21,7 @@ namespace FileExplorer.UIEventHub
         {
             return new DragDropLiteCommand()
             {
-                State = DragDropState.StartCanvas,
+                State = DragDropLiteState.StartCanvas,
                 DragSourceKey = dragSourceVariable,
                 NextCommand = (ScriptCommandBase)nextCommand,
                 FailCommand = (ScriptCommandBase)failCommand
@@ -33,7 +33,7 @@ namespace FileExplorer.UIEventHub
         {
             return new DragDropLiteCommand()
             {
-                State = DragDropState.EndCanvas,
+                State = DragDropLiteState.EndCanvas,
                 NextCommand = (ScriptCommandBase)nextCommand,
             };
         }
@@ -42,17 +42,17 @@ namespace FileExplorer.UIEventHub
         {
             return new DragDropLiteCommand()
             {
-                State = DragDropState.CancelCanvas,
+                State = DragDropLiteState.CancelCanvas,
                 NextCommand = (ScriptCommandBase)nextCommand,
             };
         }
     }
 
-    public enum DragDropState { StartCanvas, EndCanvas, CancelCanvas }
+    public enum DragDropLiteState { StartCanvas, EndCanvas, CancelCanvas }
 
     public class DragDropLiteCommand : UIScriptCommandBase<Control, RoutedEventArgs>
     {
-        public DragDropState State { get; set; }
+        public DragDropLiteState State { get; set; }
 
         /// <summary>
         /// Point to DataContext (ISupportDrag) to initialize the drag, default = "{ISupportDrag}".
@@ -81,7 +81,7 @@ namespace FileExplorer.UIEventHub
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<DragDropLiteCommand>();
 
         static DragDropLiteCommand()
-        {
+        {            
             DragDropModeKey = "{DragDrop.Mode}";
             DragDropDraggingItemsKey = "{DragDrop.DraggingItems}";
             DragDropEffectsKey = "{DragDrop.Effects}";
@@ -141,7 +141,7 @@ namespace FileExplorer.UIEventHub
             logger.Debug(State.ToString());
             switch (State)
             {
-                case DragDropState.StartCanvas:
+                case DragDropLiteState.StartCanvas:
                     if (dragStart(pm, input, "Canvas"))
                     {
                         foreach (var item in
@@ -152,8 +152,8 @@ namespace FileExplorer.UIEventHub
                     }
                     else return FailCommand;
 
-                case DragDropState.EndCanvas:
-                case DragDropState.CancelCanvas:
+                case DragDropLiteState.EndCanvas:
+                case DragDropLiteState.CancelCanvas:
                     //foreach (var item in pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey))
                     //    item.IsDragging = true;
 
@@ -168,7 +168,7 @@ namespace FileExplorer.UIEventHub
                         foreach (var item in items)
                             item.IsDragging = false;
 
-                        if (State == DragDropState.EndCanvas)
+                        if (State == DragDropLiteState.EndCanvas)
                             foreach (var posAwareItem in items.Cast<IPositionAware>())
                                 posAwareItem.OffsetPosition(movePt);                                
 

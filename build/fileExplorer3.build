@@ -57,6 +57,14 @@
     <property name="msbuild.csproj.path" value="${src.testtemplate.wpf.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
+  
+   <property name="msbuild.csproj.path" value="${src.test_diagramingdemo.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+  
+  <property name="msbuild.csproj.path" value="${src.test_shelldragdemo.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
   </target>
 
   <target name="build-revision">
@@ -106,6 +114,22 @@
       </fileset>
     </copy>
 
+    <echo message="copy.source: FileExplorer.Scripting -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\FileExplorer.Scripting">
+      <fileset basedir="${src.path}\app\FileExplorer.Scripting">
+        <include name="*/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+    
+     <echo message="copy.source: FileExplorer.UIEventHub -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\FileExplorer.UIEventHub">
+      <fileset basedir="${src.path}\app\FileExplorer.UIEventHub">
+        <include name="*/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+    
     <echo message="copy.source: FileExplorer3 -> ${dest.path}\src\app" />
     <copy todir="${dest.path}\src\FileExplorer3\app\FileExplorer3">
       <fileset basedir="${src.path}\app\FileExplorer3">
@@ -153,6 +177,24 @@
         <include name="Properties/*" />
       </fileset>
     </copy>
+    
+    <echo message="copy.source: Test_DiagramingDemo -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\Test_DiagramingDemo">
+      <fileset basedir="${src.path}\app\Test_DiagramingDemo">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+    
+    <echo message="copy.source: Test_ShellDragDemo -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\Test_ShellDragDemo">
+      <fileset basedir="${src.path}\app\Test_ShellDragDemo">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
 
     <copy todir="${dest.path}\src\FileExplorer3\app\.nuget">
       <fileset basedir="${src.path}\app\.nuget">
@@ -181,6 +223,10 @@
         <include name="${dest.testapp.wpf.pdb}" />
         <include name="${dest.testtemplate.wpf.exe}" />
         <include name="${dest.testtemplate.wpf.pdb}" />
+        <include name="${dest.test_diagramingdemo.exe}" />
+        <include name="${dest.test_diagramingdemo.pdb}" />
+        <include name="${dest.test_shelldragdemo.exe}" />
+        <include name="${dest.test_shelldragdemo.pdb}" />
         <include name="*.dll" />
       </fileset>
     </copy>

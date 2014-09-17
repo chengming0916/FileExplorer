@@ -85,7 +85,7 @@ namespace FileExplorer.Defines
         #endregion
 
 
-        public enum DragMethod { None, Normal, Menu }
+        
         #region DragMethod
 
         /// <summary>
