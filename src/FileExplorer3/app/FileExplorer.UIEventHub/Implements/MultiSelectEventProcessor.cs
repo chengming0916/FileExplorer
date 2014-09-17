@@ -49,15 +49,16 @@ namespace FileExplorer.WPF.BaseControls
                             //Ignore If initiator by an element over AdornerLayer
                             HubScriptCommands.IfExistsVisualParent("{EventArgs.OriginalSource}", FindMethodType.Type,  "AdornerLayer", 
                                 ResultCommand.NoError, 
+                                ScriptCommands.RunICommand(UnselectAllCommand, null, false, 
                                 HubScriptCommands.CaptureMouse(CaptureMouseMode.ScrollContentPresenter,
                                     HubScriptCommands.SetRoutedEventHandled(
                                     HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
                                         AttachedProperties.IsSelectingProperty, true,
                                         HubScriptCommands.ObtainPointerPosition(
                                             HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",
-                                                HubScriptCommands.FindSelectedItems(
+                                                HubScriptCommands.FindSelectedItems( 
                                                     HubScriptCommands.HighlightItems()))),
-                                    ResultCommand.NoError)))));
+                                    ResultCommand.NoError))))));
                     break;
                 case "TouchMove":
                 case "MouseMove":
@@ -67,7 +68,7 @@ namespace FileExplorer.WPF.BaseControls
                         AttachedProperties.IsSelectingProperty, true,
                         HubScriptCommands.ObtainPointerPosition(
                             HubScriptCommands.UpdateSelectionAdorner("{SelectionAdorner}",
-                                        HubScriptCommands.FindSelectedItems(
+                                        HubScriptCommands.FindSelectedItems( 
                                             HubScriptCommands.HighlightItems(
                                                 HubScriptCommands.AutoScroll()))))));
                 case "PreviewTouchUp":

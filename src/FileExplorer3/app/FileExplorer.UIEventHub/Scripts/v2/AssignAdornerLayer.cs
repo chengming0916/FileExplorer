@@ -27,6 +27,21 @@ namespace FileExplorer.UIEventHub
                 FailCommand = (ScriptCommandBase)notFoundCommand
             };
         }
+
+        public static IScriptCommand AssignAdornerLayer(string adornerName, 
+           string destinationVariable = "{AdornerLayer}", bool skipIfExists = false,
+           IScriptCommand foundCommand = null, IScriptCommand notFoundCommand = null)
+        {
+            return new AssignAdornerLayer()
+            {
+                AssignAdornerType = AdornerType.Named,
+                AdornerName = adornerName,
+                DestinationKey = destinationVariable,
+                SkipIfExists = skipIfExists,
+                NextCommand = (ScriptCommandBase)foundCommand,
+                FailCommand = (ScriptCommandBase)notFoundCommand
+            };
+        }
     }
 
 
@@ -36,7 +51,11 @@ namespace FileExplorer.UIEventHub
         /// <summary>
         /// Find the first ISelectable item that's ISelectable.IsSelected, and return it's adorner.
         /// </summary>
-        SelectedItem
+        SelectedItem, 
+        /// <summary>
+        /// Find a AdornerDecorator named 
+        /// </summary>
+        Named
     }
 
     /// <summary>
@@ -53,6 +72,11 @@ namespace FileExplorer.UIEventHub
         /// Point to where to store the found adorner layer. Default = {AdornerLayer}
         /// </summary>
         public string DestinationKey { get; set; }
+
+        /// <summary>
+        /// If AssignAdornerType = Named, assign the adorner name.
+        /// </summary>
+        public string AdornerName { get; set; }
 
         /// <summary>
         /// Run if adorner layer is not found.
@@ -81,6 +105,11 @@ namespace FileExplorer.UIEventHub
                 return ResultCommand.Error(new KeyNotFoundException(SenderKey));
             switch (AssignAdornerType)
             {
+                case AdornerType.Named:
+                    Window parentWindow = Window.GetWindow(sender);
+                    AdornerDecorator decorator = UITools.FindVisualChildByName<AdornerDecorator>(parentWindow, "PART_DragDropAdorner");
+                    value = AdornerLayer.GetAdornerLayer(sender);
+                    break;
                 case AdornerType.ItemsControl:
                     value = AdornerLayer.GetAdornerLayer(sender);
                     break;

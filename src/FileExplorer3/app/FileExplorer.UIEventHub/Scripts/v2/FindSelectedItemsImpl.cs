@@ -36,7 +36,7 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         public static IScriptCommand FindSelectedItemsUsingHitTest(IScriptCommand nextCommand = null)
         {
-            return new FindSelectedItemsUsingHitTest() { NextCommand = (ScriptCommandBase)nextCommand };
+            return new FindSelectedItemsUsingHitTest() { NextCommand = (ScriptCommandBase)nextCommand};
         }
     }
 
@@ -183,7 +183,8 @@ namespace FileExplorer.UIEventHub
         /// <summary>
         /// SelectionBounds (Rect) on visual, regardless the scrollbar.
         /// </summary>
-        public string SelectionBoundKey { get; set; }        
+        public string SelectionBoundKey { get; set; }
+        //public bool IsHighlighting { get; set; }
 
         public FindSelectedItemsUsingHitTest() :
             base(FindSelectionMode.HitTest)
@@ -255,19 +256,39 @@ namespace FileExplorer.UIEventHub
 
             _prevBound = selectionBound;
 
+            if (ic.DataContext is IContainer<ISelectable>)
+            {
+                var childItems = (ic.DataContext as IContainer<ISelectable>).GetChildItems().ToList();
+
+                //var prevSelctionIds = IsHighlighting ? 
+                //    childItems.Where(s => s.IsSelecting).Select(s => childItems.IndexOf(s)).ToArray() : 
+                //    childItems.Where(s => s.IsSelected).Select(s => childItems.IndexOf(s)).ToArray();
+                    
+                //for (int i = 0; i < ic.Items.Count; i++)
+                //    if (!(selectedIdList.Contains(i)) && //already selected, skip.
+                //        !(unselectedIdList.Contains(i)) &&  //not selected, skip.
+                //        allSelectedItems.Contains(ic.Items[i]))
+                //    {                        
+                //        selectedIdList.Add(i);
+                //    }
+                //Console.WriteLine(unselectedIdList.Count);
+                selectedIdList = selectedIdList.SkipWhile(i => unselectedIdList.Contains(i)).ToList();
+            }
+            else
             for (int i = 0; i < ic.Items.Count; i++)
                 if (!(selectedIdList.Contains(i)) && //already selected, skip.
                     !(unselectedIdList.Contains(i)))  //not selected, skip.
             {
+                
                 FrameworkElement item = ic.ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement;
-                if (AttachedProperties.GetIsSelecting(item))
+                if (item != null && AttachedProperties.GetIsSelecting(item))
                 {
                     selectedList.Add(item);
                     selectedIdList.Add(i);
                 }                
             }
 
-            pm.SetValue(SelectedListKey, selectedList);
+            //pm.SetValue(SelectedListKey, selectedList);
             pm.SetValue(SelectedIdListKey, selectedIdList);
             logger.Debug(String.Format("Selected = {0}", selectedIdList.Count()));      
             return NextCommand;

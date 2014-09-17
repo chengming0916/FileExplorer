@@ -21,13 +21,13 @@ namespace FileExplorer.UIEventHub
                     NextCommand = (ScriptCommandBase)nextCommand
                 };
         }
-        public static IScriptCommand HighlightItemsByUpdate(IScriptCommand nextCommand = null)
-        {
-            return new HighlightItems(true)
-            {
-                NextCommand = (ScriptCommandBase)nextCommand
-            };
-        }
+        //public static IScriptCommand HighlightItemsByUpdate(IScriptCommand nextCommand = null)
+        //{
+        //    return new HighlightItems(true)
+        //    {
+        //        NextCommand = (ScriptCommandBase)nextCommand
+        //    };
+        //}
     }
 
     public class HighlightItems : UIScriptCommandBase<ItemsControl, RoutedEventArgs>
@@ -55,7 +55,14 @@ namespace FileExplorer.UIEventHub
                 {
                     DependencyObject item = ic.ItemContainerGenerator.ContainerFromIndex(i);
                     if (item != null)
-                        AttachedProperties.SetIsSelecting(item, selectedIdList.Contains(i));
+                    {
+                        bool isSelecting = selectedIdList.Contains(i);
+                        AttachedProperties.SetIsSelecting(item, isSelecting);
+                        var selectable = (item as FrameworkElement).DataContext as ISelectable;
+                        if (selectable != null)
+                            selectable.IsSelecting = isSelecting;
+                    }
+                    
                 }
             }
             else

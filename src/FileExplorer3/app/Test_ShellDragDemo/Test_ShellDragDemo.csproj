@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5B7BB78D-DB99-4C36-8D3D-DF84E5433138}</ProjectGuid>
+    <ProjectGuid>{ED896C59-0189-481B-A5FA-FDFA8BA1AA86}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestScript.WPF</RootNamespace>
-    <AssemblyName>TestScript.WPF</AssemblyName>
+    <RootNamespace>Test_ShellDragDemo</RootNamespace>
+    <AssemblyName>Test_ShellDragDemo</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -39,34 +39,15 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro, Version=2.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+    <Reference Include="MetroLog, Version=0.8.6.0, Culture=neutral, PublicKeyToken=ba4ace74c3b410f3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Caliburn.Micro.Core.2.0.1\lib\net45\Caliburn.Micro.dll</HintPath>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Caliburn.Micro.2.0.1\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="MetroLog">
-      <HintPath>..\packages\MetroLog.0.8.6\lib\net45\MetroLog.dll</HintPath>
+      <HintPath>..\packages\MetroLog.0.8.6.1\lib\net45\MetroLog.dll</HintPath>
     </Reference>
     <Reference Include="MetroLog.Platform">
-      <HintPath>..\packages\MetroLog.0.8.6\lib\net45\MetroLog.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq, Version=4.2.1402.2112, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\MetroLog.0.8.6.1\lib\net45\MetroLog.Platform.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.2.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -84,17 +65,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AppBootstrapper.cs" />
-    <Compile Include="AppView.xaml.cs">
-      <DependentUpon>AppView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="AppViewModel.cs" />
-    <Compile Include="ScriptCommandSerializer.cs" />
-    <Compile Include="ScriptCommandTests.cs" />
-    <Page Include="AppView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,6 +73,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileListViewModel.cs" />
+    <Compile Include="FileViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -137,36 +109,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting [WPF].csproj">
-      <Project>{45b4c0ed-a35e-4b0b-8c78-9a1d48f7527a}</Project>
-      <Name>FileExplorer.Scripting [WPF]</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting.csproj">
       <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
       <Name>FileExplorer.Scripting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileExplorer3.IO\FileExplorer3.IO.csproj">
-      <Project>{bcbcaf38-714a-40e4-87ef-f6cf63dd62aa}</Project>
-      <Name>FileExplorer3.IO</Name>
+    <ProjectReference Include="..\FileExplorer.UIEventHub\FileExplorer.UIEventHub.csproj">
+      <Project>{528f0c1a-38b5-4a42-a8bd-702f052cdf2f}</Project>
+      <Name>FileExplorer.UIEventHub</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
-      <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
-      <Name>FileExplorer3.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileExplorer3\FileExplorer3 [WPF].csproj">
-      <Project>{b876634c-850c-4678-a1a1-34f6ffea6d52}</Project>
-      <Name>FileExplorer3 [WPF]</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileExplorer3\FileExplorer3.csproj">
-      <Project>{bd72b62f-6bcf-43d0-ad6a-332decfae4ed}</Project>
-      <Name>FileExplorer3</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="TestSerialize.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="ScriptCommandList.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
