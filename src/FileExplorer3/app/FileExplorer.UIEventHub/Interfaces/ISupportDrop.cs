@@ -8,31 +8,6 @@ using System.Windows;
 namespace FileExplorer.UIEventHub
 {
 
-    public class QueryDropResult
-    {
-        public QueryDropResult(DragDropEffects supportedEffects, DragDropEffects preferredEffects)
-        {
-            SupportedEffects = supportedEffects;
-            PreferredEffect = preferredEffects;
-        }
-
-        public static QueryDropResult None = new QueryDropResult(DragDropEffects.None, DragDropEffects.None);
-
-        public static QueryDropResult CreateNew(DragDropEffects supportedEffects, DragDropEffects preferredEffects)
-        {
-            return new QueryDropResult(supportedEffects, preferredEffects);
-        }
-
-        public static QueryDropResult CreateNew(DragDropEffects supportedEffects)
-        {
-            return new QueryDropResult(supportedEffects, supportedEffects);
-        }
-
-
-        public DragDropEffects SupportedEffects { get; set; }
-        public DragDropEffects PreferredEffect { get; set; }
-    }
-
     public interface ISupportDropHelper
     {
         ISupportDrop DropHelper { get; }
@@ -43,9 +18,8 @@ namespace FileExplorer.UIEventHub
         bool IsDraggingOver { set; }
         bool IsDroppable { get; }
         string DropTargetLabel { get; }
-        QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects);
-        IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
-        DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects);
+        QueryDropResult QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects);        
+        DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects);
     }
 
     public class NullSupportDrop : ISupportDrop
@@ -59,14 +33,16 @@ namespace FileExplorer.UIEventHub
             return QueryDropResult.None;
         }
 
-        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
-        {
-            return new List<IDraggable>();
-        }
 
-        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
+        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
         {
             return DragDropEffects.None;
+        }
+
+
+        public QueryDropResult QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        {
+            return QueryDropResult.None;
         }
     }
 }

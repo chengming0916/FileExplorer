@@ -11,7 +11,7 @@ namespace FileExplorer.UIEventHub
     {
         public static IScriptCommand SetRoutedEventHandled(IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.SetProperty<bool>("{EventArgs}", "Handled", true, nextCommand);
+            return ScriptCommands.SetPropertyValue<bool>("{EventArgs}", "Handled", true, nextCommand);
         }
 
         public static IScriptCommand IfRoutedEventHandled(IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)

@@ -95,7 +95,7 @@ namespace FileExplorer.WPF.BaseControls
                                                     ScriptCommands.IfAssigned("{ItemUnderMouse}",
                                                         //If an Item Under Mouse
                                                         ScriptCommands.RunICommand(UnselectAllCommand, null, false,
-                                                            ScriptCommands.SetProperty("{ItemUnderMouse}", "IsSelected", true)),
+                                                            ScriptCommands.SetPropertyValue("{ItemUnderMouse}", "IsSelected", true)),
                                                         //If click on empty area
                                                         ScriptCommands.RunICommand(UnselectAllCommand, null, false))
                         ))))))))));

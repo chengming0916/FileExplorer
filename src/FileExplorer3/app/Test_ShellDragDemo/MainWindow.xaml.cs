@@ -24,7 +24,11 @@ namespace Test_ShellDragDemo
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new FileListViewModel();
+            FileListViewModel flvm1 = new FileListViewModel("FileList#1");
+            DataContext = flvm1;
+
+            for (int i = 1; i < 20; i++)
+                flvm1.Items.Add(new FileViewModel("C:\\Temp\\" + "FileVM" + i + ".txt"));     
         }
     }
 }

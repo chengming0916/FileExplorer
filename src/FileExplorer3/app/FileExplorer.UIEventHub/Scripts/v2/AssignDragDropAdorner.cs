@@ -1,5 +1,7 @@
-﻿using FileExplorer.Defines;
+﻿using FileExplorer;
+using FileExplorer.Defines;
 using FileExplorer.Script;
+using FileExplorer.UIEventHub;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Utils;
 using System;
@@ -13,50 +15,46 @@ using System.Windows.Documents;
 namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
-    {        
-        public static IScriptCommand AttachDragDropAdorner(
+    {
+        public static IScriptCommand AttachDragDropAdorner(string adornerLayerVariable = "{AdornerLayer}", string adornerVariable = "{DragDropAdorner}",
             IScriptCommand nextCommand = null)
         {
-            return AssignAdornerLayer("PART_DragDropAdorner", AssignDragDropAdorner.AdornerLayerKey, false,
+            return AssignAdornerLayer("PART_DragDropAdorner", adornerLayerVariable, false,
                   new AssignDragDropAdorner()
-                  {
-                        NextCommand = (ScriptCommandBase)
-                        HubScriptCommands.AttachAdorner(AssignDragDropAdorner.AdornerLayerKey, AssignDragDropAdorner.AdornerKey)
+                  {                      
+                      AdornerKey = adornerVariable,
+                      AdornerLayerKey = adornerLayerVariable,
+                      NextCommand = (ScriptCommandBase)HubScriptCommands.AttachAdorner(adornerLayerVariable, adornerVariable, nextCommand),   
                   });
-                   
+
         }
 
-        public static IScriptCommand DetachDragDropAdorner(
+        public static IScriptCommand DetachDragDropAdorner(string adornerLayerVariable = "{AdornerLayer}", string adornerVariable = "{DragDropAdorner}",
             IScriptCommand nextCommand = null)
         {
-            return ScriptCommands.IfAssigned(AssignDragDropAdorner.AdornerKey,
-                    AssignAdornerLayer("PART_DragDropAdorner", AssignDragDropAdorner.AdornerLayerKey, false,
-                    HubScriptCommands.DetachAdorner(AssignDragDropAdorner.AdornerLayerKey, AssignDragDropAdorner.AdornerKey)));
+            return ScriptCommands.IfAssigned(adornerVariable,
+                    AssignAdornerLayer("PART_DragDropAdorner", adornerLayerVariable, false,
+                    HubScriptCommands.DetachAdorner(adornerLayerVariable, adornerVariable)));
         }
     }
 
     public class AssignDragDropAdorner : UIScriptCommandBase<UIElement, RoutedEventArgs>
     {
         /// <summary>
-        /// Point to where to store the DragDropAdorner, default={DragDrop.DragDropAdorner}.
+        /// Point to where to store the DragDropAdorner, default={DragDropAdorner}.
         /// </summary>
-        public static string AdornerKey { get; set; }
+        public string AdornerKey { get; set; }
 
-          /// <summary>
-        /// Point to the adorner layer to attach/detach adorner, Default = {DragDrop.AdornerLayer}
+        /// <summary>
+        /// Point to the adorner layer to attach/detach adorner, Default = {AdornerLayer}
         /// </summary>
-        public static string AdornerLayerKey { get; set; }
-
-        static AssignDragDropAdorner()
-        {
-            AdornerKey = "{DragDrop.DragDropAdorner}";
-            AdornerLayerKey = "{DragDrop.AdornerLayer}";
-        }
+        public string AdornerLayerKey { get; set; }
 
         public AssignDragDropAdorner()
             : base("AssignDragDropAdorner")
         {
-       
+            AdornerKey = "{DragDropAdorner}";
+            AdornerLayerKey = "{AdornerLayer}";
         }
 
 
@@ -68,6 +66,9 @@ namespace FileExplorer.UIEventHub
             return NextCommand;
         }
 
-      
+
     }
+
+
+
 }

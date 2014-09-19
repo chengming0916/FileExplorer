@@ -110,6 +110,17 @@ namespace FileExplorer.Script
                     destinationVariable, false, nextCommand), propertyName);
         }
 
+        /// <summary>
+        /// Set property of an object in ParameterDic to another object in ParameterDic.
+        /// <example>
+        /// ScriptCommands.SetProperty("{PSI}", "FileName", "{Value}")
+        /// </example>
+        /// </summary>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="valueVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand SetProperty(string sourceObjectVariable = "{Source}",
            string propertyName = "Property",
            string valueVariable = "{Value}", IScriptCommand nextCommand = null)
@@ -120,7 +131,42 @@ namespace FileExplorer.Script
                     valueVariable, false, nextCommand), propertyName);
         }
 
-        public static IScriptCommand SetProperty<T>(string sourceObjectVariable = "{Source}",
+        /// <summary>
+        /// Set property of an object in ParameterDic to another object in ParameterDic.
+        /// </summary>
+        /// <example>
+        /// ScriptCommands.SetPropertyValue("{PSI}", (ProcessStartInfo p) => p.FileName, "{Value}", 
+        /// </example>
+        /// <typeparam name="C"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="expression"></param>
+        /// <param name="valueVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand SetProperty<C, T>(string sourceObjectVariable = "{Source}",
+           Expression<Func<C, T>> expression = null, 
+           string valueVariable = "{Value}", IScriptCommand nextCommand = null)
+        {
+            MemberExpression memberExpression = (MemberExpression)expression.Body;
+            string property = memberExpression.Member.Name;
+
+            return SetProperty(sourceObjectVariable, property, valueVariable, nextCommand);
+        }
+
+        /// <summary>
+        /// Set property of an object in ParameterDic to a value.
+        /// </summary>
+        /// <example>
+        /// ScriptCommands.SetProperty("{PSI}", "FileName", "Abc.Txt")
+        /// </example>
+        /// <typeparam name="T">Type of Value</typeparam>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand SetPropertyValue<T>(string sourceObjectVariable = "{Source}",
          string propertyName = "Property",
          T value = default(T), IScriptCommand nextCommand = null)
         {
@@ -131,6 +177,29 @@ namespace FileExplorer.Script
                 AssignValueConverter(ValueConverterType.SetProperty, valueConverterVariable,
                 ScriptCommands.Reassign(sourceObjectVariable, valueConverterVariable,
                     valueVariable, false, nextCommand), propertyName));
+        }
+
+        /// <summary>
+        /// Set property of an object in ParameterDic to a value.
+        /// </summary>
+        /// <example>
+        /// ScriptCommands.SetPropertyValue("{PSI}", (ProcessStartInfo p) => p.FileName, "GHI.txt")
+        /// </example>
+        /// <typeparam name="C"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="expression"></param>
+        /// <param name="value"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand SetPropertyValue<C, T>(string sourceObjectVariable = "{Source}",
+           Expression<Func<C, T>> expression = null,
+           T value = default(T), IScriptCommand nextCommand = null)
+        {
+            MemberExpression memberExpression = (MemberExpression)expression.Body;
+            string property = memberExpression.Member.Name;
+
+            return SetPropertyValue<T>(sourceObjectVariable, property, value, nextCommand);
         }
 
         ///// <summary>

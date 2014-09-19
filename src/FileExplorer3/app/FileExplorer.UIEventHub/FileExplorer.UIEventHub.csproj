@@ -69,6 +69,7 @@
     <Compile Include="Defines\DragLiteParameters.cs" />
     <Compile Include="Defines\DragnDropAttachedProperties.cs" />
     <Compile Include="Defines\Enums.cs" />
+    <Compile Include="Defines\QueryDropResult.cs" />
     <Compile Include="Defines\MultiSelectAttachedProperties.cs" />
     <Compile Include="Defines\UIAttachedProperties.cs" />
     <Compile Include="Implements\CanvasDragEventProcessor.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Interfaces\IItemSelectProcessor.cs" />
     <Compile Include="Interfaces\IResizable.cs" />
     <Compile Include="Interfaces\ISelectable.cs" />
+    <Compile Include="Interfaces\ISupportShellDrop.cs" />
     <Compile Include="Interfaces\ISupportShellDrag.cs" />
     <Compile Include="Interfaces\IUIDragInput.cs" />
     <Compile Include="Interfaces\IUIEventHub.cs" />
@@ -113,6 +115,8 @@
     <Compile Include="Scripts\v2\AdornerCommand.cs" />
     <Compile Include="Scripts\v2\AssignAdornerLayer.cs" />
     <Compile Include="Scripts\v2\AssignCursorPosition.cs" />
+    <Compile Include="Scripts\v2\AssignDraggables.cs" />
+    <Compile Include="Scripts\v2\UpdateDragDropAdorner.cs" />
     <Compile Include="Scripts\v2\AssignDragDropAdorner.cs" />
     <Compile Include="Scripts\v2\AssignItemUnderMouse.cs" />
     <Compile Include="Scripts\v2\AutoScroll.cs" />
