@@ -86,6 +86,7 @@
     <Compile Include="Scripts\v2\Delay.cs" />
     <Compile Include="Scripts\v2\Filter.cs" />
     <Compile Include="Scripts\v2\ForEach.cs" />
+    <Compile Include="Scripts\v2\FormatText.cs" />
     <Compile Include="Scripts\v2\IfValue.cs" />
     <Compile Include="Scripts\v2\Print.cs" />
     <Compile Include="Scripts\v2\Reassign.cs" />

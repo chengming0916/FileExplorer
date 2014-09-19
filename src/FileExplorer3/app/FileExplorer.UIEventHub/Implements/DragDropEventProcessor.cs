@@ -68,7 +68,7 @@ namespace FileExplorer.WPF.BaseControls
                             //If StartDraggingProperty != null, Check and set IsDraggingProperty to true.
                             HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
                                 AttachedProperties.IsDraggingProperty, true,                                 
-                            //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
+                                //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
                                 HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrag, "{ISupportDrag}", false,
                                   ScriptCommands.RunSequence(
                                         HubScriptCommands.IfMouseGesture(new MouseGesture() { MouseAction = MouseAction.RightClick },
@@ -97,14 +97,29 @@ namespace FileExplorer.WPF.BaseControls
                                     HubScriptCommands.SetRoutedEventHandled());
                 }
 
-            //if (EnableDrop)
-            //    switch (eventId.Name)
-            //    {
-            //        case "DragEnter": return new QueryDragDropEffects(QueryDragDropEffectMode.Enter);
-            //        case "DragOver": return new ContinueDrop();
-            //        case "DragLeave": return new QueryDragDropEffects(QueryDragDropEffectMode.Leave);
-            //        case "Drop": return new BeginDrop();
-            //    }
+            if (EnableDrop)
+                switch (eventId.Name)
+                {
+                    case "DragEnter": return
+                        ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
+                        HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrop, "{ISupportDrop}", false,
+                          ScriptCommands.IfAssigned("{ISupportDrop}",
+                            ScriptCommands.SetPropertyValue("{ISupportDrop}", "IsDraggingOver", true,
+                            //HubScriptCommands.SetDependencyProperty("{Sender}", AttachedProperties.DraggingOverItemProperty, )
+                              HubScriptCommands.SetRoutedEventHandled(
+                                HubScriptCommands.AssignDraggables( AssignDraggagablesMode.FromISupportShellDrop, "{ISupportDrop}", "{DragDrop.Draggables}", false, 
+                                  ScriptCommands.IfAssigned("{DragDrop.Draggables}", 
+                                    HubScriptCommands.AttachDragDropAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}",
+                                      ScriptCommands.SetProperty("{DragDrop.Adorner}", (DragAdorner a) => a.DraggingItems, "{DragDrop.Draggables}", 
+                                      //ToDo- DragMethod (Copy/Move?)
+                                        ScriptCommands.FormatText("{DragDrop.Draggables.Length} items to {ISupportDrop.DropTargetLabel}", "{Label}", false,
+                                        ScriptCommands.SetProperty("{DragDrop.Adorner}", (DragAdorner a) => a.Text, "{Label}")
+                                      ))))))))));
+
+                    //case "DragOver": return new ContinueDrop();
+                    //case "DragLeave": return new QueryDragDropEffects(QueryDragDropEffectMode.Leave);
+                    //case "Drop": return new BeginDrop();
+                }
 
             return base.onEvent(eventId);
         }

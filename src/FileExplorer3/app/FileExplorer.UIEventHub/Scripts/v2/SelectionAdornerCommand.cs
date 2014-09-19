@@ -48,7 +48,7 @@ namespace FileExplorer.UIEventHub
     }
 
 
-    public enum AdornerMode { Attach, Update, Detach }
+    public enum AdornerMode { Assign, Attach, Update, Detach }
 
     public class SelectionAdornerCommand : UIScriptCommandBase<ItemsControl, RoutedEventArgs>
     {

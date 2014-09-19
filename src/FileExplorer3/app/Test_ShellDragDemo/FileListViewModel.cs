@@ -15,15 +15,17 @@ using System.Windows;
 
 namespace Test_ShellDragDemo
 {
-    public class FileListViewModel : NotifyPropertyChanged, ISupportShellDrag, IContainer<ISelectable>
+    public class FileListViewModel : NotifyPropertyChanged, ISupportShellDrag, ISupportShellDrop, IContainer<ISelectable>
     {
-         private ObservableCollection<FileViewModel> _items  = new ObservableCollection<FileViewModel>();
+        private ObservableCollection<FileViewModel> _items = new ObservableCollection<FileViewModel>();
+        private bool _isDraggingOver;
 
         public ObservableCollection<FileViewModel> Items { get { return _items; } }
         public dynamic Commands { get; private set; }
 
-        public FileListViewModel()
+        public FileListViewModel(string label)
         {
+            DropTargetLabel = label;
             Commands = new DynamicRelayCommandDictionary()
             {
                 ParameterDicConverter = ParameterDicConverters.FromParameterDic(
@@ -39,9 +41,7 @@ namespace Test_ShellDragDemo
                    pd.GetValue<FileListViewModel>("{FileListVM}").UnselectAll();
                    return ResultCommand.NoError;
                });
-            
-            for (int i = 1; i < 20; i++)
-                Items.Add(new FileViewModel("FileVM" + i + ".txt"));            
+
         }
 
 
@@ -52,17 +52,16 @@ namespace Test_ShellDragDemo
         }
 
 
-        public System.Windows.IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
+        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
         {
             var da = new DataObject();
             var fList = new StringCollection();
             foreach (var d in draggables.Cast<FileViewModel>())
             {
-                string fName = "C:\\Temp\\" + d.DisplayName ;
-                if (!File.Exists(fName))
-                    using (var sw = File.CreateText(fName))
+                if (!File.Exists(d.FileName))
+                    using (var sw = File.CreateText(d.FileName))
                         sw.WriteLine(d.DisplayName);
-                fList.Add(fName);
+                fList.Add(d.FileName);
             }
             da.SetFileDropList(fList);
             return da;
@@ -97,5 +96,51 @@ namespace Test_ShellDragDemo
         {
             return Items;
         }
+
+        #region ISupportShellDrop        
+
+        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject dataObj)
+        {
+            DataObject da = dataObj as DataObject;
+            if (da.ContainsFileDropList())
+            {
+                foreach (var file in da.GetFileDropList())
+                    yield return new FileViewModel(file);
+            }
+        }
+
+        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
+        {
+            Console.WriteLine("Drop");
+            return DragDropEffects.Link;
+        }
+
+        public bool IsDraggingOver
+        {
+            get { return _isDraggingOver; }
+            set { _isDraggingOver = value; NotifyOfPropertyChanged(() => IsDraggingOver); }
+        }
+
+        public bool IsDroppable
+        {
+            get { return true; ; }
+        }
+
+        public string DropTargetLabel
+        {
+            get;
+            set;
+        }
+
+        public QueryDropResult QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        {
+            return QueryDropResult.CreateNew(DragDropEffects.Link);
+        }
+
+        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        {
+            return Drop(draggables, null, allowedEffects);
+        }
+        #endregion
     }
 }

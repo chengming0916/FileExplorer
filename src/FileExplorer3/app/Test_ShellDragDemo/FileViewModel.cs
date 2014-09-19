@@ -2,6 +2,7 @@
 using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,11 @@ namespace Test_ShellDragDemo
     {
         public FileViewModel(string fileName)
         {
-            DisplayName = fileName;
+            FileName = fileName;
+            DisplayName = Path.GetFileName(fileName);
         }
 
-
+        public string FileName { get; set; }
         public string DisplayName { get; set; }
         private bool _isDragging = false;
         public bool IsDragging

@@ -89,9 +89,10 @@ namespace FileExplorer.UIEventHub
                     
                     switch (pm.GetValue(DragMethodKey, DragMethod.Normal))
                     {
-                        case DragMethod.Menu :
+                        //case DragMethod.Menu :
+                        default:
                             return NextCommand;
-                        default: return HubScriptCommands.DetachDragDropAdorner(NextCommand);
+                        //default: return HubScriptCommands.DetachDragDropAdorner(NextCommand);
                     }
                     
                 default: throw new NotSupportedException(State.ToString());
