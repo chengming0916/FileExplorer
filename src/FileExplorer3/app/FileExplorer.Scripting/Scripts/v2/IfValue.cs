@@ -49,14 +49,14 @@ namespace FileExplorer.Script
         /// <param name="caseLookup"></param>
         /// <param name="otherwiseCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand Switch<T>(string variable = "{variable}", 
+        public static IScriptCommand Switch<T>(string variable = "{variable}",
             Dictionary<T, IScriptCommand> caseLookup = null,
             IScriptCommand otherwiseCommand = null, IScriptCommand nextCommnad = null)
         {
             IScriptCommand cmd = null;
             foreach (var key in caseLookup.Keys)
-                cmd = 
-                    cmd == null ? IfEquals<T>(variable, key, caseLookup[key], otherwiseCommand) : 
+                cmd =
+                    cmd == null ? IfEquals<T>(variable, key, caseLookup[key], otherwiseCommand) :
                     IfEquals<T>(variable, key, caseLookup[key], cmd);
 
             return ScriptCommands.RunSequence(nextCommnad, cmd);
@@ -71,10 +71,20 @@ namespace FileExplorer.Script
                 ScriptCommands.Assign(ifEqualValueProperty, value, false,
                     IfValue(ComparsionOperator.Equals, variable, ifEqualValueProperty, trueCommand, otherwiseCommand));
         }
-        
+
         public static IScriptCommand IfAssigned(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
             return IfEquals<Object>(variable, null, otherwiseCommand, trueCommand);
+        }
+
+        public static IScriptCommand IfAssigned(string[] variables = null, IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            IScriptCommand cmd = trueCommand;
+            if (variables != null)
+                foreach (var v in variables)
+                    cmd = IfAssigned(v, cmd, otherwiseCommand);
+
+            return cmd;
         }
 
         public static IScriptCommand IfNotAssigned(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
@@ -142,12 +152,12 @@ namespace FileExplorer.Script
             string valueVariable = "{value}",
             IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
-            return 
-                ScriptCommands.IfAssigned(arrayVariable, 
+            return
+                ScriptCommands.IfAssigned(arrayVariable,
                     ScriptCommands.AssignValueConverter(ValueConverterType.GetProperty, "{GetPropertyConverter}",
                         ScriptCommands.Reassign(arrayVariable, "{GetPropertyConverter}", "{ArrayLength}", false,
                             ScriptCommands.PrintLogger(MetroLog.LogLevel.Debug, "Length of array is {ArrayLength}",
-                            ScriptCommands.IfValue(op, "{ArrayLength}", valueVariable, trueCommand, otherwiseCommand))), "Length"), 
+                            ScriptCommands.IfValue(op, "{ArrayLength}", valueVariable, trueCommand, otherwiseCommand))), "Length"),
                             otherwiseCommand);
         }
 
@@ -227,6 +237,6 @@ namespace FileExplorer.Script
             {
                 return OtherwiseCommand;
             }
-        }       
+        }
     }
 }

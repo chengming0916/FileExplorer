@@ -70,7 +70,7 @@ namespace FileExplorer.Script
             object source = pm.GetValue<object>(SourceVariableKey);
             
             
-            if (ValueConverterKey != null)
+            if (source != null && ValueConverterKey != null)
             {
                 object valueConverter = pm.GetValue<object>(ValueConverterKey);
 

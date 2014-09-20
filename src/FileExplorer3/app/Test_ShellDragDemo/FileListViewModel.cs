@@ -69,7 +69,7 @@ namespace Test_ShellDragDemo
 
         public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, System.Windows.DragDropEffects effect)
         {
-            Console.WriteLine("FileListVIewModel.OnShellDragCompleted");
+            OnDragCompleted(draggables, effect);
         }
 
         public bool HasDraggables
@@ -89,7 +89,10 @@ namespace Test_ShellDragDemo
 
         public void OnDragCompleted(IEnumerable<IDraggable> draggables, System.Windows.DragDropEffects effect)
         {
-            Console.WriteLine("FileListVIewModel.OnDragCompleted");
+            if (effect == DragDropEffects.Move)
+                foreach (var f in draggables.Cast<FileViewModel>())
+                    if (Items.Contains(f))
+                        Items.Remove(f);
         }
 
         IEnumerable<ISelectable> IContainer<ISelectable>.GetChildItems()
@@ -97,7 +100,7 @@ namespace Test_ShellDragDemo
             return Items;
         }
 
-        #region ISupportShellDrop        
+        #region ISupportShellDrop
 
         public IEnumerable<IDraggable> QueryDropDraggables(IDataObject dataObj)
         {
@@ -111,7 +114,12 @@ namespace Test_ShellDragDemo
 
         public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
         {
-            Console.WriteLine("Drop");
+            foreach (var fvm in draggables.Cast<FileViewModel>())
+                this.Items.Add(fvm);
+            if (allowedEffects.HasFlag(DragDropEffects.Move))
+                return DragDropEffects.Move;
+            if (allowedEffects.HasFlag(DragDropEffects.Copy))
+                return DragDropEffects.Copy;
             return DragDropEffects.Link;
         }
 
@@ -132,9 +140,9 @@ namespace Test_ShellDragDemo
             set;
         }
 
-        public QueryDropResult QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
         {
-            return QueryDropResult.CreateNew(DragDropEffects.Link);
+            return QueryDropEffects.CreateNew(DragDropEffects.Link | DragDropEffects.Move, DragDropEffects.Move);
         }
 
         public DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)

@@ -33,7 +33,8 @@ namespace FileExplorer.UIEventHub
     {
         Null, 
         Panel, 
-        Sender
+        Sender, 
+        Window
     }
 
     /// <summary>
@@ -77,6 +78,10 @@ namespace FileExplorer.UIEventHub
                 case PositionRelativeToType.Panel:
                     var parentPanel = UITools.FindAncestor<Panel>(sender);
                     position = input.PositionRelativeTo(parentPanel);                    
+                    break;
+                case PositionRelativeToType.Window:
+                    var parentWindow = Window.GetWindow(sender);
+                    position = input.PositionRelativeTo(parentWindow);
                     break;
             }
             //Console.WriteLine(position);

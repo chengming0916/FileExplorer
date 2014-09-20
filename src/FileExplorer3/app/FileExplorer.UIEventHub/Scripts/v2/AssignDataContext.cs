@@ -17,7 +17,9 @@ namespace FileExplorer.UIEventHub
         public static IScriptCommand AssignDataContext(     
             string sourceElementVariable = "{EventArgs.OriginalSource}",
             DataContextType type = DataContextType.SupportDrag,             
-            string destVariable = "{Variable}", bool skipIfExists = false, 
+            string destVariable = "{Variable}", 
+            string destEleVariable = null, 
+            bool skipIfExists = false, 
             IScriptCommand thenCommand = null, IScriptCommand notFoundCommand = null)
         {
             return new AssignDataContext()
@@ -25,6 +27,7 @@ namespace FileExplorer.UIEventHub
                 SourceElementKey = sourceElementVariable,
                 DataContextType = type,
                 VariableKey = destVariable,
+                DataContextElementKey = destEleVariable,
                 SkipIfExists = skipIfExists,
                 NextCommand = (ScriptCommandBase)thenCommand,
                 NotFoundCommand = (ScriptCommandBase)notFoundCommand
@@ -46,11 +49,23 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         public string SourceElementKey { get; set; }
 
+        /// <summary>
+        /// Optional, point to the element that host the lookup DataContext, Default = null
+        /// </summary>
+        public string DataContextElementKey { get; set; }
+
         public ScriptCommandBase NotFoundCommand { get; set; }
 
         public DataContextType DataContextType { get; set; }
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<AssignDataContext>();
+
+        public AssignDataContext()
+            : base("AssignDataContext")
+        {
+            SourceElementKey = "{EventArgs.OriginalSource}";
+            DataContextElementKey = null;
+        }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
@@ -59,29 +74,38 @@ namespace FileExplorer.UIEventHub
                 return NotFoundCommand;
             
             Value = null;
+            FrameworkElement ele = null;
             switch (DataContextType)
             {
                 case UIEventHub.DataContextType.Any : 
                     Value = origSource.DataContext;
+                    ele = origSource;
                     break;
                 case UIEventHub.DataContextType.SupportDrag:
-                    Value = DataContextFinder.GetDataContext(origSource, DataContextFinder.SupportDrag);
+                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportDrag);
                     break;
                 case UIEventHub.DataContextType.SupportShellDrag:
-                    Value = DataContextFinder.GetDataContext(origSource, DataContextFinder.SupportShellDrag);
+                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportShellDrag);
                     break;
                 case UIEventHub.DataContextType.SupportShellDrop:
-                    Value = DataContextFinder.GetDataContext(origSource, DataContextFinder.SupportShellDrop);
+                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportShellDrop);
                     break;
                 case UIEventHub.DataContextType.SupportDrop:
-                    Value = DataContextFinder.GetDataContext(origSource, DataContextFinder.SupportDrop);
+                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportDrop);
                     break;
                 default:
                     return ResultCommand.Error(new NotSupportedException("DataContextType"));
             }
 
             if (Value != null)
-                return base.Execute(pm);
+            {
+                if (VariableKey != null)
+                    pm.SetValue(VariableKey, Value, SkipIfExists);
+                if (DataContextElementKey != null)
+                    pm.SetValue(DataContextElementKey, ele, SkipIfExists);
+
+                return NextCommand;
+            }
             else return NotFoundCommand;            
         }
 

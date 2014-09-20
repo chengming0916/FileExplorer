@@ -15,25 +15,24 @@ namespace FileExplorer.UIEventHub
 
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand StartDragDrop(string dragSourceVariable = "{ISupportDrag}",
-          IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
+        public static IScriptCommand QueryDrag(string dragSourceVariable = "{ISupportDrag}",
+            string destinationVariable = "{DragResult}",
+          IScriptCommand nextCommand = null)
         {
-            return new DragDropCommand()
+            return new QueryDrag()
             {
-                State = DragDropState.StartShell,
                 DragSourceKey = dragSourceVariable,
+                DestinationKey = destinationVariable,
                 NextCommand = (ScriptCommandBase)nextCommand,
-                CancelCommand = (ScriptCommandBase)cancelCommand
+
             };
         }
     }
 
-    public enum DragDropState { StartShell, ContinueShell, EndShell }
     public enum DragMethod { None, Normal, Menu }
 
-    public class DragDropCommand : UIScriptCommandBase<UIElement, RoutedEventArgs>
+    public class QueryDrag : UIScriptCommandBase<UIElement, RoutedEventArgs>
     {
-        public DragDropState State { get; set; }
 
         /// <summary>
         /// Point to DataContext (ISupportDrag) to initialize the drag, default = "{ISupportDrag}".
@@ -41,11 +40,13 @@ namespace FileExplorer.UIEventHub
         public string DragSourceKey { get; set; }
 
         /// <summary>
-        /// Point to DataContext (ISupportDrop) to initialize the drag, default = "{ISupportDrop}".
+        /// Store Drag result (DragDropEffects) to destination variable, default = "{DragResult}".
         /// </summary>
-        public string DropTargetKey { get; set; }
+        public string DestinationKey { get; set; }
 
-        public ScriptCommandBase CancelCommand { get; set; }
+        //public string DraggablesKey { get; set; }
+
+        //public string DataObjectKey { get; set; }
 
 
         public static string DragDropModeKey { get { return DragDropLiteCommand.DragDropModeKey; } }
@@ -56,50 +57,74 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         public static string DragMethodKey { get; set; }
 
-        //public static string DataObjectKey { get; set; }
 
-        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<DragDropCommand>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<QueryDrag>();
 
 
-        static DragDropCommand()
+        static QueryDrag()
         {
             DragMethodKey = "{DragDrop.DragMethod}";
         }
 
 
-        public DragDropCommand()
+        public QueryDrag()
             : base("DragDropCommand")
         {
             DragSourceKey = "{ISupportDrag}";
-            DropTargetKey = "{ISupportDrop}";
+            DestinationKey = "{DragResult}";
         }
 
-
+        #region Methods
 
         protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-            switch (State)
-            {
-                case DragDropState.StartShell : 
-                    return executeStartDragDrop(pm, sender);
+            //Debug.WriteLine(String.Format("DoDragDrop"));
 
-                case DragDropState.ContinueShell : 
- 
-                case DragDropState.EndShell :
-                    
-                    switch (pm.GetValue(DragMethodKey, DragMethod.Normal))
-                    {
-                        //case DragMethod.Menu :
-                        default:
-                            return NextCommand;
-                        //default: return HubScriptCommands.DetachDragDropAdorner(NextCommand);
-                    }
-                    
-                default: throw new NotSupportedException(State.ToString());
-            }            
+            ISupportShellDrag _isd = pm.GetValue<ISupportShellDrag>(DragSourceKey);
+            var draggables = _isd.GetDraggables().ToList();
+            _dataObj = _isd.GetDataObject(draggables);
+
+            if (_dataObj == null)
+                return ResultCommand.NoError; //Nothing to drag.
+
+            var effect = _isd.QueryDrag(draggables);
+
+            System.Windows.DragDrop.AddQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+
+            _dataObj.SetData(typeof(ISupportDrag), _isd);
+
+            //Determine and set the desired drag method. (Normal, Menu)            
+            _dataObj.SetData(typeof(DragMethod), pm.GetValue(DragMethodKey, DragMethod.Normal));
+            //Notify Shell DragDrop mode is activated.
+            pm.SetValue(DragDropModeKey, "Shell", false);
+
+            foreach (var d in draggables) d.IsDragging = true;
+
+            DragDropEffects resultEffect;
+            try
+            {
+                //Start the DragDrop.
+                resultEffect = System.Windows.DragDrop.DoDragDrop(sender, _dataObj, effect);
+            }
+            finally
+            {
+                //Reset DragDropMode.
+                pm.SetValue<string>(DragDropModeKey, null, false);
+                //Notify draggables not IsDragging.
+                foreach (var d in draggables) d.IsDragging = false;
+                System.Windows.DragDrop.RemoveQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+                //Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
+            }
+            
+            _isd.OnDragCompleted(draggables, _dataObj, resultEffect);
+            var dataObj = _dataObj;
+            _dataObj = null;
+            pm.SetValue(DestinationKey, resultEffect, false);
+            
+            return NextCommand;
         }
 
-        #region StartDragDrop
+        #endregion
 
         private void OnQueryContinueDrag(object sender, QueryContinueDragEventArgs e)
         {
@@ -131,52 +156,6 @@ namespace FileExplorer.UIEventHub
 
         }
 
-        private IScriptCommand executeStartDragDrop(ParameterDic pm, UIElement sender)
-        {
-            //Debug.WriteLine(String.Format("DoDragDrop"));
-
-            ISupportShellDrag _isd = pm.GetValue<ISupportShellDrag>(DragSourceKey);
-            var draggables = _isd.GetDraggables().ToList();
-            _dataObj = _isd.GetDataObject(draggables);
-
-            if (_dataObj == null)
-                return ResultCommand.NoError; //Nothing to drag.
-
-            var effect = _isd.QueryDrag(draggables);
-
-            System.Windows.DragDrop.AddQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
-
-            _dataObj.SetData(typeof(ISupportDrag), _isd);
-
-            //Determine and set the desired drag method. (Normal, Menu)            
-            _dataObj.SetData(typeof(DragMethod), pm.GetValue(DragMethodKey, DragMethod.Normal));
-            //Notify Shell DragDrop mode is activated.
-            pm.SetValue(DragDropModeKey, "Shell", false);
-
-            foreach (var d in draggables) d.IsDragging = true;
-
-            DragDropEffects resultEffect;
-            try
-            {
-                //Start the DragDrop.
-                resultEffect = System.Windows.DragDrop.DoDragDrop(sender, _dataObj, effect);                
-            }
-            finally
-            {
-                //Reset DragDropMode.
-                pm.SetValue<string>(DragDropModeKey, null, false);
-                //Notify draggables not IsDragging.
-                foreach (var d in draggables) d.IsDragging = false;
-                System.Windows.DragDrop.RemoveQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
-                //Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
-            }
-            var dataObj = _dataObj;
-            _dataObj = null;
-
-            return resultEffect != DragDropEffects.None ? NextCommand : CancelCommand;
-        }
-
-        #endregion
 
 
         #region Data

@@ -55,7 +55,7 @@ namespace FileExplorer.WPF.BaseControls
                     return 
                         //Find a DataContext that implement SupportDrag.
                         HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", 
-                            DataContextType.SupportDrag, "{ISupportDrag}", false,
+                            DataContextType.SupportDrag, "{ISupportDrag}", null, false,
                             //And If there's one.
                             ScriptCommands.IfAssigned("{ISupportDrag}",                              
                                 //Calculate a number of positions.
@@ -80,7 +80,7 @@ namespace FileExplorer.WPF.BaseControls
                             HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
                                 AttachedProperties.IsDraggingProperty, true,
                                 //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
-                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", false,
+                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", null, false,
                                     //If ISupportDrag is assigned to a non-null value,                                     
                                     //Initialize DragLiteParameters (in {DragDrop} global parameterDic).
                                         HubScriptCommands.StartDragDropLite("{ISupportDrag}",
