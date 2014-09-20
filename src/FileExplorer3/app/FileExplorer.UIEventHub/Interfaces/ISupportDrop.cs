@@ -18,7 +18,7 @@ namespace FileExplorer.UIEventHub
         bool IsDraggingOver { set; }
         bool IsDroppable { get; }
         string DropTargetLabel { get; }
-        QueryDropResult QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects);        
+        QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects);        
         DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects);
     }
 
@@ -28,9 +28,9 @@ namespace FileExplorer.UIEventHub
         public bool IsDraggingOver { set { } }
         public bool IsDroppable { get { return false; }}
         public string DropTargetLabel { get { return null; }}
-        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
-            return QueryDropResult.None;
+            return QueryDropEffects.None;
         }
 
 
@@ -40,9 +40,9 @@ namespace FileExplorer.UIEventHub
         }
 
 
-        public QueryDropResult QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
         {
-            return QueryDropResult.None;
+            return QueryDropEffects.None;
         }
     }
 }

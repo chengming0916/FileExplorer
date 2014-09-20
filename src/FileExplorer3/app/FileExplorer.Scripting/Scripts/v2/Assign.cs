@@ -72,6 +72,11 @@ namespace FileExplorer.Script
                 variables.Select(v => ScriptCommands.Assign(v, null)).ToArray());
         }
 
+        public static IScriptCommand Reset(string variable, IScriptCommand nextCommand)
+        {
+            return ScriptCommands.Assign(variable, null);
+        }
+
     }
 
 
@@ -124,12 +129,12 @@ namespace FileExplorer.Script
         {
             object value = Value;
             if (ValueFunc != null)
-                value = ValueFunc();            
+                value = ValueFunc();
             if (value is string)
             {
                 string valueString = (string)value;
                 if (valueString.StartsWith("{") && valueString.EndsWith("}"))
-                    value = pm.GetValue(valueString);                    
+                    value = pm.GetValue(valueString);
             }
 
             if (pm.SetValue<Object>(VariableKey, value, SkipIfExists))
@@ -138,6 +143,6 @@ namespace FileExplorer.Script
 
             return NextCommand;
         }
-    }    
+    }
 
 }

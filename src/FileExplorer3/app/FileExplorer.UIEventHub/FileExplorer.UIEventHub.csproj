@@ -69,7 +69,7 @@
     <Compile Include="Defines\DragLiteParameters.cs" />
     <Compile Include="Defines\DragnDropAttachedProperties.cs" />
     <Compile Include="Defines\Enums.cs" />
-    <Compile Include="Defines\QueryDropResult.cs" />
+    <Compile Include="Defines\QueryDropEffects.cs" />
     <Compile Include="Defines\MultiSelectAttachedProperties.cs" />
     <Compile Include="Defines\UIAttachedProperties.cs" />
     <Compile Include="Implements\CanvasDragEventProcessor.cs" />
@@ -115,7 +115,10 @@
     <Compile Include="Scripts\v2\AdornerCommand.cs" />
     <Compile Include="Scripts\v2\AssignAdornerLayer.cs" />
     <Compile Include="Scripts\v2\AssignCursorPosition.cs" />
-    <Compile Include="Scripts\v2\AssignDraggables.cs" />
+    <Compile Include="Scripts\v2\AssignDataObject.cs" />
+    <Compile Include="Scripts\v2\QueryDraggablesFromDataObject.cs" />
+    <Compile Include="Scripts\v2\QueryDrop.cs" />
+    <Compile Include="Scripts\v2\QueryDropEffects.cs" />
     <Compile Include="Scripts\v2\UpdateDragDropAdorner.cs" />
     <Compile Include="Scripts\v2\AssignDragDropAdorner.cs" />
     <Compile Include="Scripts\v2\AssignItemUnderMouse.cs" />
@@ -123,7 +126,7 @@
     <Compile Include="Scripts\v2\CaptureMouse.cs" />
     <Compile Include="Scripts\v2\AssignDataContext.cs" />
     <Compile Include="Implements\DiskParameterDicStore.cs" />
-    <Compile Include="Scripts\v2\DragDropCommand.cs" />
+    <Compile Include="Scripts\v2\QueryDrag.cs" />
     <Compile Include="Scripts\v2\DragDropLiteCommand.cs" />
     <Compile Include="Scripts\v2\EventArgsHandledCommand.cs" />
     <Compile Include="Scripts\v2\FindUIElement.cs" />

@@ -154,6 +154,7 @@ namespace FileExplorer.Script
             return SetProperty(sourceObjectVariable, property, valueVariable, nextCommand);
         }
 
+
         /// <summary>
         /// Set property of an object in ParameterDic to a value.
         /// </summary>

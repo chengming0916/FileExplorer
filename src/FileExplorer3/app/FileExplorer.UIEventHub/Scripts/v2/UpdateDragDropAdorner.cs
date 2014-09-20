@@ -1,4 +1,5 @@
-﻿//using FileExplorer.Defines;
+﻿//using FileExplorer;
+//using FileExplorer.Defines;
 //using FileExplorer.Script;
 //using FileExplorer.WPF.BaseControls;
 //using FileExplorer.WPF.Utils;
@@ -12,35 +13,35 @@
 
 //namespace FileExplorer.UIEventHub
 //{
-//    public static partial class HubScriptCommands
-//    {
-//        //{        
-//        //    public static IScriptCommand AttachDragDropAdorner(
-//        //        IScriptCommand nextCommand = null)
-//        //    {
-//        //        return AssignAdornerLayer("PART_DragDropAdorner", AssignDragDropAdorner.AdornerLayerKey, false,
-//        //              new AssignDragDropAdorner()
-//        //              {
-//        //                    NextCommand = (ScriptCommandBase)
-//        //                    HubScriptCommands.AttachAdorner(AssignDragDropAdorner.AdornerLayerKey, AssignDragDropAdorner.AdornerKey)
-//        //              });
+////    public static partial class HubScriptCommands
+////    {
+////        //{        
+////        //    public static IScriptCommand AttachDragDropAdorner(
+////        //        IScriptCommand nextCommand = null)
+////        //    {
+////        //        return AssignAdornerLayer("PART_DragDropAdorner", AssignDragDropAdorner.AdornerLayerKey, false,
+////        //              new AssignDragDropAdorner()
+////        //              {
+////        //                    NextCommand = (ScriptCommandBase)
+////        //                    HubScriptCommands.AttachAdorner(AssignDragDropAdorner.AdornerLayerKey, AssignDragDropAdorner.AdornerKey)
+////        //              });
 
-//        //    }
+////        //    }
 
-//        //    public static IScriptCommand DetachDragDropAdorner(
-//        //        IScriptCommand nextCommand = null)
-//        //    {
-//        //        return ScriptCommands.IfAssigned(AssignDragDropAdorner.AdornerKey,
-//        //                AssignAdornerLayer("PART_DragDropAdorner", AssignDragDropAdorner.AdornerLayerKey, false,
-//        //                HubScriptCommands.DetachAdorner(AssignDragDropAdorner.AdornerLayerKey, AssignDragDropAdorner.AdornerKey)));
-//        //    }
-//    }
+////        //    public static IScriptCommand DetachDragDropAdorner(
+////        //        IScriptCommand nextCommand = null)
+////        //    {
+////        //        return ScriptCommands.IfAssigned(AssignDragDropAdorner.AdornerKey,
+////        //                AssignAdornerLayer("PART_DragDropAdorner", AssignDragDropAdorner.AdornerLayerKey, false,
+////        //                HubScriptCommands.DetachAdorner(AssignDragDropAdorner.AdornerLayerKey, AssignDragDropAdorner.AdornerKey)));
+////        //    }
+////    }
 
-//    public enum UpdateAdornerMode : int {  Draggables = 0 << 1, Text = 0 << 2, DraggableAndText = Draggables | Text };
+//    //public enum UpdateAdornerMode : int {  Draggables = 0 << 1, Label = 0 << 2, DraggableAndLabel = Draggables | Label };
 
 //    public class UpdateDragDropAdorner : UIScriptCommandBase<UIElement, RoutedEventArgs>
 //    {
-//        UpdateAdornerMode Mode { get; set; }
+//        //UpdateAdornerMode Mode { get; set; }
 
 //        /// <summary>
 //        /// Point to draggables thats i that support ISupportShellDrop or ISupportDrop, Default={Draggables}
@@ -48,20 +49,23 @@
 //        public string DraggablesKey { get; set; }
 
 //        /// <summary>
-//        /// Point to where to store the DragDropAdorner, default={DragDrop.DragDropAdorner}, 
+//        /// Point to label of the adorner, Default={Label}
+//        /// </summary>
+//        public string LabelKey { get; set; }
+
+//        /// <summary>
+//        /// Point to where to store the DragDropAdorner, default={DragDropAdorner}, 
 //        /// shared with AssignDragDropAdorner command.
 //        /// </summary>
-//        public static string AdornerKey { get { return FileExplorer.UIEventHub.AssignDragDropAdorner.AdornerKey; }
-//            set { FileExplorer.UIEventHub.AssignDragDropAdorner.AdornerKey = value; }
-//        }
-
-    
+//        public string AdornerKey { get; set; }
 
 //        public UpdateDragDropAdorner()
 //            : base("UpdateDragDropAdorner")
 //        {
-//            Mode = UpdateAdornerMode.DraggableAndText;
+//            //Mode = UpdateAdornerMode.DraggableAndLabel;
 //            DraggablesKey = "{Draggables}";
+//            AdornerKey = "{DragDropAdorner}";
+//            LabelKey = "{Label}";
 //        }
 
 //        private static int _prevDataObjectId = -1;
@@ -69,11 +73,17 @@
 //        protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
 //        {            
 //            DragAdorner adorner = pm.GetValue<DragAdorner>(AdornerKey);
-//            IEnumerable<IDraggable> draggables = pm.GetValue<IEnumerable<IDraggable>>(DraggablesKey);
+//            IEnumerable<IDraggable> draggables = DraggablesKey == null ? null : pm.GetValue<IEnumerable<IDraggable>>(DraggablesKey);
+//            string label = LabelKey == null ? null : pm.GetValue<string>(LabelKey);
 
-//            if (adorner != null && draggables != null)
+//            if (adorner != null)
 //            {
+//                if (draggables != null)
 //                adorner.DraggingItems = draggables;
+//                if (label != null)
+//                    adorner.Text = label;
+
+
 //            }
 
 //            return NextCommand;

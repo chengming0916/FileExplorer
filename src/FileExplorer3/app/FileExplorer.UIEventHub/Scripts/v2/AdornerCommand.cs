@@ -10,20 +10,20 @@ namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand AttachAdorner(string adornerLayerVariable = "{AdornerLayer}", 
+        public static IScriptCommand AttachAdorner(string adornerLayerVariable = "{AdornerLayer}",
             string adornerVariable = "{Adorner}", IScriptCommand nextCommand = null)
         {
             return
                 new AdornerCommand()
                 {
-                    Mode = AdornerCommandMode.Attach, 
+                    Mode = AdornerCommandMode.Attach,
                     AdornerLayerKey = adornerLayerVariable,
                     AdornerKey = adornerVariable,
                     NextCommand = (ScriptCommandBase)nextCommand
                 };
         }
 
-        public static IScriptCommand DetachAdorner(string adornerLayerVariable = "{AdornerLayer}", 
+        public static IScriptCommand DetachAdorner(string adornerLayerVariable = "{AdornerLayer}",
             string adornerVariable = "{Adorner}", IScriptCommand nextCommand = null)
         {
             return
@@ -58,11 +58,12 @@ namespace FileExplorer.UIEventHub
             AdornerLayer adornerLayer = pm.GetValue<AdornerLayer>(AdornerLayerKey);
             Adorner adorner = pm.GetValue<Adorner>(AdornerKey);
 
-            switch (Mode)
-            {
-                case AdornerCommandMode.Attach: adornerLayer.Add(adorner); break;
-                case AdornerCommandMode.Detach: adornerLayer.Remove(adorner); break;
-            }
+            if (adornerLayer != null && adorner != null)
+                switch (Mode)
+                {
+                    case AdornerCommandMode.Attach: adornerLayer.Add(adorner); break;
+                    case AdornerCommandMode.Detach: adornerLayer.Remove(adorner); break;
+                }
 
             return NextCommand;
         }

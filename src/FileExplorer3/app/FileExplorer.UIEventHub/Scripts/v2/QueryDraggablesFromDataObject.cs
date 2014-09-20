@@ -18,34 +18,35 @@ namespace FileExplorer.UIEventHub
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand AssignDraggables(AssignDraggagablesMode mode = AssignDraggagablesMode.FromISupportShellDrop, 
-            string iSupportDropVariable = "{ISupportDrop}",
+        public static IScriptCommand QueryDraggablesFromDataObject(
+            string iSupportDropVariable = "{ISupportDrop}", string dataObjectVariable = "{DataObj}", 
             string destinationVariable = "{Draggables}", bool skipIfExists = false, IScriptCommand nextCommand = null)
         {
-            return new AssignDraggables()
+            return new QueryDraggablesFromDataObject()
             {
-                Mode = mode,
                 ISupportDropKey = iSupportDropVariable,
                 DestinationKey = destinationVariable,
+                DataObjectKey = dataObjectVariable,
                 SkipIfExists = skipIfExists,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
     }
-
-    public enum AssignDraggagablesMode {  FromISupportShellDrop }
-
+ 
     /// <summary>
     /// Obtain draggables array (IDraggable[]) and assign to a variable, or assign null if not found.
     /// </summary>
-    public class AssignDraggables : UIScriptCommandBase
+    public class QueryDraggablesFromDataObject : ScriptCommandBase
     {
-        public AssignDraggagablesMode Mode { get; set; }
-
         /// <summary>
         /// Point to a ViewModel that support ISupportShellDrop or ISupportDrop, Default = {ISupportDrop}.
         /// </summary>
         public string ISupportDropKey { get; set; }
+
+        /// <summary>
+        /// Point to DataObject, or obtain from  Default = {DataObj}.
+        /// </summary>
+        public string DataObjectKey { get; set; }
 
         /// <summary>
         /// Point to where draggable (IDraggable[]) is stored, Default = {Draggables}.
@@ -54,11 +55,11 @@ namespace FileExplorer.UIEventHub
 
         public bool SkipIfExists { get; set; }
 
-        public AssignDraggables()
+        public QueryDraggablesFromDataObject()
             : base("AssignDraggables")
         {
-            Mode = AssignDraggagablesMode.FromISupportShellDrop;
             ISupportDropKey = "{ISupportDrop}";
+            DataObjectKey = "{DataObj}";
             DestinationKey = "{Draggables}";
             SkipIfExists = false;
         }
@@ -68,23 +69,12 @@ namespace FileExplorer.UIEventHub
             if (SkipIfExists && pm.HasValue(DestinationKey))
                 return NextCommand;
 
-            object value = null;
-            switch (Mode)
-            {
-                case AssignDraggagablesMode.FromISupportShellDrop :
-                     ISupportShellDrop issd = pm.GetValue<ISupportShellDrop>(ISupportDropKey);
-                     IUIDragInput dragInp = pm.GetValue<IUIDragInput>(base.InputKey);
-
-                    if (issd is ISupportShellDrop && dragInp != null)
-                    {                        
-                        IDataObject dataObj = dragInp.Data;
-                        if (dataObj != null)
-                        {
-                            value = (issd.QueryDropDraggables(dataObj) ?? new IDraggable[] {}).ToArray();                            
-                        }
-                    }
-                    break;
-            }
+            IDraggable[] value = new IDraggable[] {};
+         
+            ISupportShellDrop issd = pm.GetValue<ISupportShellDrop>(ISupportDropKey);
+            IDataObject dataObj = pm.GetValue<IDataObject>(DataObjectKey);
+            if (issd != null && dataObj != null)
+                value = (issd.QueryDropDraggables(dataObj) ?? new IDraggable[] {}).ToArray();
 
             pm.SetValue(DestinationKey, value, SkipIfExists);
             return NextCommand;                                    
