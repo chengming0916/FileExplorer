@@ -38,5 +38,15 @@ namespace Test_ShellDragDemo
             get { return _isSelecting; }
             set { _isSelecting = value; NotifyOfPropertyChanged(() => IsSelecting); }
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is FileViewModel && obj.GetHashCode() == GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            return FileName.GetHashCode();
+        }
     }
 }

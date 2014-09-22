@@ -86,7 +86,7 @@ namespace FileExplorer.WPF.BaseControls
                                             //Assign IsSelecting attached property to {WasSelecting}
                                             HubScriptCommands.GetDependencyProperty("{Sender}", AttachedProperties.IsSelectingProperty, "{WasSelecting}",
                                             //Reset IsSelecting attached property.
-                                            HubScriptCommands.SetDependencyPropertyTyped("{Sender}", AttachedProperties.IsSelectingProperty, false,
+                                            HubScriptCommands.SetDependencyPropertyValue("{Sender}", AttachedProperties.IsSelectingProperty, false,
                                             ScriptCommands.IfTrue("{WasSelecting}",
                                                 //WasSelecting
                                                 HubScriptCommands.FindSelectedItems(HubScriptCommands.SelectItems()),
