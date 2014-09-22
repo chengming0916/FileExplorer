@@ -52,7 +52,7 @@ namespace Test_ShellDragDemo
         }
 
 
-        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
+        public IDataObject GetDataObject(IDraggable[] draggables)
         {
             var da = new DataObject();
             var fList = new StringCollection();
@@ -67,7 +67,7 @@ namespace Test_ShellDragDemo
             return da;
         }
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, System.Windows.DragDropEffects effect)
+        public void OnDragCompleted(IDraggable[] draggables, IDataObject da, System.Windows.DragDropEffects effect)
         {
             OnDragCompleted(draggables, effect);
         }
@@ -77,17 +77,17 @@ namespace Test_ShellDragDemo
             get { return Items.Any(f => f.IsSelected); }
         }
 
-        public IEnumerable<IDraggable> GetDraggables()
+        public IDraggable[] GetDraggables()
         {
-            return Items.Where(f => f.IsSelected);
+            return Items.Where(f => f.IsSelected).ToArray();
         }
 
-        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        public DragDropEffects QueryDrag(IDraggable[] draggables)
         {
-            return DragDropEffects.Copy;
+            return DragDropEffects.Link | DragDropEffects.Copy | DragDropEffects.Move;
         }
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, System.Windows.DragDropEffects effect)
+        public void OnDragCompleted(IDraggable[] draggables, System.Windows.DragDropEffects effect)
         {
             if (effect == DragDropEffects.Move)
                 foreach (var f in draggables.Cast<FileViewModel>())
@@ -102,20 +102,19 @@ namespace Test_ShellDragDemo
 
         #region ISupportShellDrop
 
-        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject dataObj)
+        public IDraggable[] QueryDropDraggables(IDataObject dataObj)
         {
+            List<IDraggable> retVal = new List<IDraggable>();
             DataObject da = dataObj as DataObject;
             if (da.ContainsFileDropList())
             {
-                foreach (var file in da.GetFileDropList())
-                {
-                    FileViewModel fvm = new FileViewModel(file);                    
-                        yield return fvm;
-                }
+                foreach (var file in da.GetFileDropList())                
+                    retVal.Add(new FileViewModel(file));                                                            
             }
+            return retVal.ToArray();
         }
 
-        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
+        public DragDropEffects Drop(IDraggable[] draggables, IDataObject da, DragDropEffects allowedEffects)
         {
             foreach (var fvm in draggables.Cast<FileViewModel>())
                 this.Items.Add(fvm);
@@ -143,15 +142,16 @@ namespace Test_ShellDragDemo
             set;
         }
 
-        public QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IDraggable[] draggables, DragDropEffects allowedEffects)
         {
             if (draggables.Any(d => Items.Contains(d)))
                 return QueryDropEffects.None;
 
-            return QueryDropEffects.CreateNew(DragDropEffects.Link | DragDropEffects.Move, DragDropEffects.Move);
+            return QueryDropEffects.CreateNew(allowedEffects & (DragDropEffects.Link | DragDropEffects.Move), 
+                allowedEffects & DragDropEffects.Move);
         }
 
-        public DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        public DragDropEffects Drop(IDraggable[] draggables, DragDropEffects allowedEffects)
         {
             if (draggables.Any(d => Items.Contains(d)))
                 return DragDropEffects.None;

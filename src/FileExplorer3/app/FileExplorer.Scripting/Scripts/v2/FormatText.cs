@@ -20,7 +20,7 @@ namespace FileExplorer.Script
         /// <param name="skipIfExists"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand FormatText(string value = "Variable1 is {Variable1}", string destinationVariable = "{Variable}", 
+        public static IScriptCommand FormatText(string destinationVariable = "{Variable}", string value = "Variable1 is {Variable1}", 
             bool skipIfExists = false, IScriptCommand nextCommand = null)
         {
             return new FormatText()
@@ -32,7 +32,7 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand FormatTextFunc(Func<string> valueFunc = null, string destinationVariable = "{Variable}",
+        public static IScriptCommand FormatTextFunc(string destinationVariable = "{Variable}", Func<string> valueFunc = null, 
             bool skipIfExists = false, IScriptCommand nextCommand = null)
         {
             valueFunc = valueFunc ?? (() => null);

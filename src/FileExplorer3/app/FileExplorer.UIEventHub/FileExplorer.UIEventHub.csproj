@@ -116,6 +116,7 @@
     <Compile Include="Scripts\v2\AssignAdornerLayer.cs" />
     <Compile Include="Scripts\v2\AssignCursorPosition.cs" />
     <Compile Include="Scripts\v2\AssignDataObject.cs" />
+    <Compile Include="Scripts\v2\DragDropScriptCommands.cs" />
     <Compile Include="Scripts\v2\QueryDraggablesFromDataObject.cs" />
     <Compile Include="Scripts\v2\QueryDrop.cs" />
     <Compile Include="Scripts\v2\QueryDropEffects.cs" />

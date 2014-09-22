@@ -51,9 +51,9 @@ namespace DiagramingDemo
         #region ISupportDrag
        
 
-        public IEnumerable<IDraggable> GetDraggables()
+        public IDraggable[] GetDraggables()
         {
-            return from i in Items where i.IsSelected select i;
+            return (from i in Items where i.IsSelected select i).ToArray();
         }
 
         public bool HasDraggables
@@ -61,12 +61,12 @@ namespace DiagramingDemo
             get { return Items.Any(i => i.IsSelected); }
         }
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, System.Windows.DragDropEffects effect)
+        public void OnDragCompleted(IDraggable[] draggables, System.Windows.DragDropEffects effect)
         {
            
         }
 
-        public System.Windows.DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        public System.Windows.DragDropEffects QueryDrag(IDraggable[] draggables)
         {
             return System.Windows.DragDropEffects.Move;
         }

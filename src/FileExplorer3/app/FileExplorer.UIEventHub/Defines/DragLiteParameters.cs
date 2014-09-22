@@ -18,8 +18,8 @@ namespace FileExplorer.UIEventHub
     public static class DragLiteParameters
     {
         public static DragMode DragMode = DragMode.None;
-        private static IEnumerable<IDraggable> _draggingItems = null;
-        public static IEnumerable<IDraggable> DraggingItems
+        private static IDraggable[] _draggingItems = null;
+        public static IDraggable[] DraggingItems
         {
             get { return _draggingItems; }
             set

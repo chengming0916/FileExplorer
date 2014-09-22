@@ -12,6 +12,8 @@ using System.Windows.Input;
 
 namespace FileExplorer.WPF.BaseControls
 {
+
+   
     public class DragDropEventProcessor : UIEventProcessorBase
     {
         public DragDropEventProcessor()
@@ -36,63 +38,61 @@ namespace FileExplorer.WPF.BaseControls
                 }
              );
         }
-
+                       
         protected override FileExplorer.Script.IScriptCommand onEvent(RoutedEvent eventId)
         {
             if (EnableDrag)
                 switch (eventId.Name)
                 {
                     case "PreviewMouseDown":
-                        return //Find a DataContext that implement SupportDrag.
-                        HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}",
-                            DataContextType.SupportShellDrag, "{ISupportDrag}", null, false,
-                            //And If there's one.
-                            ScriptCommands.IfAssigned("{ISupportDrag}",
-                            //Calculate a number of positions.
-                                HubScriptCommands.ObtainPointerPosition(
-                            //Assign the datacontext item to {ItemUnderMouse}
-                                    HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
-                            //And set Sender's StartDraggingItem to {ItemUnderMouse}        
-                                        ScriptCommands.IfAssigned("{ItemUnderMouse}",
-                                          ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}",
-                                        HubScriptCommands.SetDependencyProperty("{Sender}",
-                                            AttachedProperties.StartDraggingItemProperty, "{ItemUnderMouse}",
-                                            HubScriptCommands.SetRoutedEventHandled())))))));
-                    case "MouseDrag":
-                        return //If event not marked handled.
-                        HubScriptCommands.IfNotRoutedEventHandled(
-                        HubScriptCommands.IfDependencyPropertyEqualDefaultValue<object>("{Sender}",
-                                AttachedProperties.StartDraggingItemProperty,
-                            //If StartDraggingProperty = null, return.
-                            ResultCommand.NoError,
+                        return 
                             ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
-                            //If StartDraggingProperty != null, Check and set IsDraggingProperty to true.
-                            HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
-                                AttachedProperties.IsDraggingProperty, true,
-                            //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
-                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrag, "{ISupportDrag}", null, false,
-                                  ScriptCommands.RunSequence(null, 
-                                        HubScriptCommands.IfMouseGesture(new MouseGesture() { MouseAction = MouseAction.RightClick },
-                                            ScriptCommands.Assign(QueryDrag.DragMethodKey, DragMethod.Menu),
-                                            ScriptCommands.Assign(QueryDrag.DragMethodKey, DragMethod.Normal)),
-                                        HubScriptCommands.SetRoutedEventHandled(
-                            //Initialize shell based drag drop
-                                        HubScriptCommands.QueryDrag("{ISupportDrag}", "{DragResult}", 
-                                          ScriptCommands.PrintDebug("NotifyDragCompleted")))))))));
-                    //If ISupportDrag is assigned to a non-null value,                                     
-                    //Initialize DragLiteParameters (in {DragDrop} global parameterDic)
-                    //DoDragDrop
-                    //new NotifyDropCompleted(_isd, draggables, dataObj, resultEffect);
+                                //Set default value of CanDrag to false first.
+                                ScriptCommands.Assign("{DragDrop.CanDrag}", false, false, 
+                                    //Find a DataContext that implement SupportDrag.
+                                    HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrag, "{ISupportDrag}", null, false,
+                                        //And If there's one.
+                                        ScriptCommands.IfAssigned("{ISupportDrag}",
+                                            //Calculate a number of positions.
+                                            HubScriptCommands.ObtainPointerPosition(
+                                                //Assign the datacontext item of the UIelement that's undermouse to {ItemUnderMouse}
+                                                HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
+                                                    //And If it's exists and selected,
+                                                    ScriptCommands.IfAssigned("{ItemUnderMouse}",
+                                                        ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}",
+                                                            //Tell the commands in MouseDrag event to proceed drag.
+                                                            ScriptCommands.Assign("{DragDrop.CanDrag}", true, false, 
+                                                                //Prevent MultiSelect from starting.
+                                                                HubScriptCommands.SetRoutedEventHandled())))))))));
+                    case "MouseDrag":
+                        return                             
+                            ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
+                                //If not handled.
+                                HubScriptCommands.IfNotRoutedEventHandled(
+                                    //IfCanDrag
+                                    ScriptCommands.IfTrue("{DragDrop.CanDrag}", 
+                                        //Reset CanDrag
+                                        ScriptCommands.Assign("{DragDrop.CanDrag}", false, false,                                                             
+                                            //If CanDrag (ItemUnderMouse is selected), Check and set IsDraggingProperty to true.
+                                            HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", 
+                                                AttachedProperties.IsDraggingProperty, true,
+                                                //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
+                                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrag, "{ISupportDrag}", null, false,                                                
+                                                    //If RightMouse, then Set DragMethod to Menu, otherwise Normal
+                                                    HubScriptCommands.AssignDragMethod(QueryDrag.DragMethodKey,                                                     
+                                                        //Mark handled.
+                                                        HubScriptCommands.SetRoutedEventHandled(
+                                                            //Initialize shell based drag drop
+                                                            HubScriptCommands.QueryDrag("{ISupportDrag}", "{DragResult}")))))))));                    
 
                     case "PreviewMouseUp":
                         return
-                            ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
-                                HubScriptCommands.SetDependencyProperty("{Sender}", AttachedProperties.StartDraggingItemProperty, null,
+                            ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,                                
                                     HubScriptCommands.SetDependencyPropertyValue("{Sender}", AttachedProperties.IsDraggingProperty, false,
                                         ScriptCommands.IfEquals(QueryDrag.DragMethodKey, DragMethod.Menu,
                                             ResultCommand.NoError,
-                            //This is defined in drop.
-                                            HubScriptCommands.DetachDragDropAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}")))));
+                                            //This is defined in drop.
+                                            DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}"))));
                     case "MouseMove":
                         return HubScriptCommands.IfDependencyProperty("{Sender}", AttachedProperties.IsDraggingProperty,
                                     ComparsionOperator.Equals, true,
@@ -100,116 +100,90 @@ namespace FileExplorer.WPF.BaseControls
                 }
 
             if (EnableDrop)
-            {
-                FileExplorer.Script.Print.PrintConsoleAction = t => Console.WriteLine(t);
-                IScriptCommand updateAdornerPosition = HubScriptCommands.AssignCursorPosition(PositionRelativeToType.Window, "{DragDrop.CursorPosition}", false,
-                             ScriptCommands.SetProperty("{DragDrop.Adorner}", (DragAdorner a) => a.PointerPosition, "{DragDrop.CursorPosition}"));
-
-                IScriptCommand updateAdornerText =
-                            ScriptCommands.RunSequence(null, 
-                                ScriptCommands.IfEquals(QueryDrag.DragMethodKey, DragMethod.Menu,
-                                    ScriptCommands.FormatText("{DragDrop.QueryDropResult.SupportedEffects} " + 
-                                                          "{DragDrop.Draggables.Length} items " +
-                                                      "to {ISupportDrop.DropTargetLabel}", "{DragDrop.Adorner.Text}", false),
-                                    ScriptCommands.FormatText("{DragDrop.QueryDropResult.PreferredEffect} " + 
-                                                          "{DragDrop.Draggables.Length} items " +
-                                                          "to {ISupportDrop.DropTargetLabel}", "{DragDrop.Adorner.Text}", false)));
-
-
-                IScriptCommand updateAdornerDraggables =
-                            ScriptCommands.SetProperty("{DragDrop.Adorner}", (DragAdorner a) => a.DraggingItems, "{DragDrop.Draggables}");
-                IScriptCommand updateAdorner = ScriptCommands.RunSequence(null,
-                        updateAdornerPosition,
-                        updateAdornerDraggables,
-                        updateAdornerText);
-                IScriptCommand detachAdorner = HubScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}",
-                    ScriptCommands.Reset(null, "{DragDrop.Adorner}", "{DragDrop.AdornerLayer}"));
-                IScriptCommand resetDragDrop =
-                    ScriptCommands.Reset(null, "{DragDrop.Adorner}", "{DragDrop.AdornerLayer}",
-                    "{DragDrop.SupportDrop}", "{DragDrop.Draggables}");
-                IScriptCommand detachAdornerAndResetDragDrop = 
-                    ScriptCommands.RunSequence(null, detachAdorner, resetDragDrop);
-                IScriptCommand attachAdorner =
-                    ScriptCommands.RunSequence(null,
-                    detachAdorner,
-                    HubScriptCommands.AttachDragDropAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}",
-                        HubScriptCommands.SetDependencyPropertyValue("{DragDrop.Adorner}", DragAdorner.IsDraggingProperty, true, 
-                        updateAdorner)));
-
-
+            {                               
                 switch (eventId.Name)
-                {
-                   
+                {                   
                     case "DragEnter": return
                     ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                         //Find DataContext that support IShellDrop
                         HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrop, "{ISupportDrop}", "{ElementSupportDrop}", false,
                             //And if there's one,
-                            ScriptCommands.IfAssigned("{ISupportDrop}",
-                                //Obtain Dataobject from DragEventArgs
-                                HubScriptCommands.AssignDataObject("{DataObj}", false,
-                                //Call ISupportDrop.QueryDrop() to get IDraggables[] 
-                                HubScriptCommands.QueryDraggablesFromDataObject("{ISupportDrop}", "{DataObj}", "{DragDrop.Draggables}", false,
+                            ScriptCommands.IfAssigned("{ISupportDrop}",                                
+                                //Obtain DataObject from event and Call ISupportDrop.QueryDrop() to get IDraggables[] 
+                                HubScriptCommands.QueryDraggablesAndDataObject("{ISupportDrop}", "{DataObj}", "{DragDrop.Draggables}", false,
                                 //And if there's draggables,
                                 ScriptCommands.IfAssigned("{DragDrop.Draggables}",
                                     //Call ISupportDrop.QueryDropEffects() to get QueryDropEffect.
                                     HubScriptCommands.QueryDropEffects("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", "{DragDrop.QueryDropResult}", false,
                                         //And Check if QueryDropEffect is None,
                                         ScriptCommands.IfEquals("{DragDrop.QueryDropResult}", QueryDropEffects.None,                                          
-                                            //If so, Detach adorner if attached.
-                                            detachAdorner, 
+                                            //If no match effect, Detach adorner if attached.
+                                            DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}"), 
                                             //Otherwise, 
                                             ScriptCommands.Assign(new Dictionary<string, object>()
                                             {
                                                 { "{DragDrop.SupportDrop}", "{ISupportDrop}" }, //Store SupportDrop property to global for future use.
                                                 { "{ISupportDrop.IsDraggingOver}", true }, //Set DataContext.IsDraggingOver to true.                                                
-                                                { "{EventArgs.Handled}", true }  //Set RoutedEvent handled.
-                                                //{ "{DragDrop.ElementSupportDrop}", "{ElementSupportDrop}" },                                                 
-                                            }, false,                                                                              
-                                         attachAdorner)))))))));
+                                                { "{EventArgs.Handled}", true }  //Mark RoutedEvent handled.                                                                                           
+                                            }, false,   
+                                                //Attach DragAdorner and update it.                               
+                                                DragDropScriptCommands.AttachAdorner(                                                    
+                                                    "{DragDrop.AdornerLayer}", "{DragDrop.Adorner}", 
+                                                    "{ISupportDrop}", "{DragDrop.DragMethod}", "{DragDrop.Draggables}")))))))));
 
                     case "GiveFeedback": return
                         ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
+                            //If QueryDropResult returns none, set cursor to not droppable.
                             ScriptCommands.IfEquals("{DragDrop.QueryDropResult}", QueryDropEffects.None,
                                 HubScriptCommands.SetCustomCursor(Cursors.No)));
 
-                    case "DragOver": return
-                        ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
-                            HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrop, "{ISupportDrop}", "{ElementSupportDrop}", false,
-                            //And if so,                            
-                                ScriptCommands.IfEquals("{ISupportDrop}", "{DragDrop.SupportDrop}",
-                                    updateAdornerPosition,
-                                    updateAdorner
-                             )));
+                    case "DragOver": return ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
+                                        DragDropScriptCommands.UpdateAdornerPointerPosition("{DragDrop.Adorner}"));
 
                     case "DragLeave": return
-                        ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
-                          ScriptCommands.IfAssigned("{DragDrop.SupportDrop}",
-                        ScriptCommands.RunSequence(null,
-                            detachAdorner,
-                            resetDragDrop)));
+                         ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
+                            //Detach adorner if DragLeave current element.
+                            ScriptCommands.IfAssigned("{DragDrop.SupportDrop}",                                
+                                    DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}")));
 
-                    case "Drop": return
+                    case "Drop": 
+                        IScriptCommand detachAdornerAndResetDragDrop = 
+                            DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}", 
+                                                DragDropScriptCommands.ResetDragDropVariables());
+
+                        return
                         ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
-                           HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrop,
-                                "{ISupportDrop}", "{ElementSupportDrop}", false,
-                            ScriptCommands.IfAssigned("{ISupportDrop}",                            
-                            HubScriptCommands.AssignDataObject("{DataObj}", false, 
-                                  HubScriptCommands.QueryDraggablesFromDataObject("{ISupportDrop}", "{DataObj}", "{DragDrop.Draggables}", false,
-                                  //Call ISupportDrop.QueryDropEffects() to get QueryDropEffect.
-                                    HubScriptCommands.QueryDropEffects("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", "{DragDrop.QueryDropResult}", false,
-                                    ScriptCommands.IfEquals("{DragDrop.QueryDropResult}", QueryDropEffects.None,   
-                                        detachAdornerAndResetDragDrop, 
-                                        ScriptCommands.IfEquals(QueryDrag.DragMethodKey, DragMethod.Menu, 
-                                            HubScriptCommands.ShowDragAdornerContextMenu("{DragDrop.Adorner}", 
-                                                "{DragDrop.QueryDropResult.SupportedEffects}", 
-                                                "{DragDrop.QueryDropResult.PreferredEffect}", 
-                                                "{ResultEffect}", 
+                            //Find DataContext that support ISupportShellDrop
+                            HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrop, "{ISupportDrop}", "{ElementSupportDrop}", false,
+                                //If ISupportDrop found.
+                                ScriptCommands.IfAssigned("{ISupportDrop}",                                                                
+                                    ////Obtain DataObject from event and Call ISupportDrop.QueryDrop() to get IDraggables[] 
+                                    HubScriptCommands.QueryDraggablesAndDataObject("{ISupportDrop}", "{DataObj}", "{DragDrop.Draggables}", false,
+                                        //Call ISupportDrop.QueryDropEffects() to get QueryDropEffect.
+                                        HubScriptCommands.QueryDropEffects("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", "{DragDrop.QueryDropResult}", false,
+                                            ScriptCommands.IfEquals("{DragDrop.QueryDropResult}", QueryDropEffects.None,   
+                                                //If QueryDropEffects is None, drag failed, detach adorner.
+                                                detachAdornerAndResetDragDrop,                                                    
+                                                //Otherwise, if DragMethod...
+                                                ScriptCommands.IfEquals(QueryDrag.DragMethodKey, DragMethod.Menu, 
+                                                    //is Menu, then Show Menu.
+                                                    HubScriptCommands.ShowDragAdornerContextMenu("{DragDrop.Adorner}", 
+                                                        "{DragDrop.QueryDropResult.SupportedEffects}", 
+                                                        "{DragDrop.QueryDropResult.PreferredEffect}", 
+                                                        "{ResultEffect}", 
+                                                        //After menu closed...
+                                                        ScriptCommands.IfEquals("{ResultEffect}", DragDropEffects.None, 
+                                                            //If User choose None, detach and reset.
+                                                            detachAdornerAndResetDragDrop, 
+                                                            //Otherwise, call ISupportDrop.Drop()
+                                                            HubScriptCommands.QueryDrop("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", 
+                                                                "{ResultEffect}", "{DragDrop.DropResult}", false, 
+                                                                    //And detach adorner.
+                                                                    detachAdornerAndResetDragDrop))),
+                                                    //otherwise, Call ISupportDrop.Drop() immediately.
                                                     HubScriptCommands.QueryDrop("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", 
-                                                        "{ResultEffect}", "{DragDrop.DropResult}", false, detachAdornerAndResetDragDrop)),                                                                                                                
-                                        HubScriptCommands.QueryDrop("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", 
-                                            "{DragDrop.QueryDropResult.PreferredEffect}", "{DragDrop.DropResult}", false, detachAdornerAndResetDragDrop)))))
-                                ))));
+                                                    "{DragDrop.QueryDropResult.PreferredEffect}", "{DragDrop.DropResult}", false, detachAdornerAndResetDragDrop)))))
+                                )));
 
                 }
             }

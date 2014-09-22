@@ -27,6 +27,20 @@ namespace FileExplorer.UIEventHub
 
             };
         }
+
+        /// <summary>
+        /// Assign destination to DragMethod.Menu if Mouse action is right click, otherwise DragMethod.Normal.
+        /// </summary>
+        /// <returns></returns>
+        public static IScriptCommand AssignDragMethod(string variable, IScriptCommand nextCommand = null)
+        {
+            return
+                ScriptCommands.RunSequence(nextCommand,
+                HubScriptCommands.IfMouseGesture(new MouseGesture() { MouseAction = MouseAction.RightClick },
+                     ScriptCommands.Assign(variable, DragMethod.Menu),
+                         ScriptCommands.Assign(variable, DragMethod.Normal))
+                         );
+        }
     }
 
     public enum DragMethod { None, Normal, Menu }
@@ -81,7 +95,7 @@ namespace FileExplorer.UIEventHub
             //Debug.WriteLine(String.Format("DoDragDrop"));
 
             ISupportShellDrag _isd = pm.GetValue<ISupportShellDrag>(DragSourceKey);
-            var draggables = _isd.GetDraggables().ToList();
+            IDraggable[] draggables = _isd.GetDraggables();
             _dataObj = _isd.GetDataObject(draggables);
 
             if (_dataObj == null)
@@ -115,12 +129,12 @@ namespace FileExplorer.UIEventHub
                 System.Windows.DragDrop.RemoveQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
                 //Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
             }
-            
+
             _isd.OnDragCompleted(draggables, _dataObj, resultEffect);
             var dataObj = _dataObj;
             _dataObj = null;
             pm.SetValue(DestinationKey, resultEffect, false);
-            
+
             return NextCommand;
         }
 

@@ -31,6 +31,27 @@ namespace FileExplorer.UIEventHub
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
+
+        /// <summary>
+        /// Find DataObject (IDataObject) and then Draggables (IDraggables[]) from IShellSupportDrop and assign them.
+        /// </summary>
+        /// <param name="iSupportDropVariable"></param>
+        /// <param name="destinationDataObjectVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="skipIfExists"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+         public static IScriptCommand QueryDraggablesAndDataObject(
+            string iSupportDropVariable = "{ISupportDrop}", string destinationDataObjectVariable = "{DataObj}", 
+            string destinationVariable = "{Draggables}", bool skipIfExists = false, IScriptCommand nextCommand = null)
+         {
+             return HubScriptCommands.AssignDataObject(destinationDataObjectVariable, false,
+                  HubScriptCommands.QueryDraggablesFromDataObject(iSupportDropVariable, 
+                  destinationDataObjectVariable, destinationVariable, false, nextCommand));
+         }
+
+           
+                                       
     }
  
     /// <summary>

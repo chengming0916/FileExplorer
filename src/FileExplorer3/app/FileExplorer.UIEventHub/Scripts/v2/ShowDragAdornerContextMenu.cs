@@ -13,10 +13,10 @@ namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand ShowDragAdornerContextMenu(string adornerVariable="{DragDropAdorner}", 
+        public static IScriptCommand ShowDragAdornerContextMenu(string adornerVariable = "{DragDropAdorner}",
             string supportedEffectsVariable = "{SupportedEffects}",
             string defaultEffectVariable = "{DefaultEffect}",
-            string resultEffectVariable = "{ResultEffect}", 
+            string resultEffectVariable = "{ResultEffect}",
             IScriptCommand onCloseCommand = null, IScriptCommand nextCommand = null)
         {
             return new ShowDragAdornerContextMenu()
@@ -55,7 +55,7 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         public string ResultEffectKey { get; set; }
 
-         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ShowDragAdornerContextMenu>();
+        private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<ShowDragAdornerContextMenu>();
 
         public ShowDragAdornerContextMenu()
             : base("ShowDragAdornerContextMenu")
