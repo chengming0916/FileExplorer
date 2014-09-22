@@ -1,4 +1,5 @@
 ﻿using FileExplorer;
+using FileExplorer.Script;
 using FileExplorer.UIEventHub;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Utils;
@@ -26,8 +27,7 @@ namespace DiagramingDemo
     public partial class MainWindow : Window
     {
         public MainWindow()
-        {
-
+        {          
             InitializeComponent();
             ic1.DataContext = new CanvasViewModel();            
         }
