@@ -77,7 +77,7 @@ namespace FileExplorer.WPF.BaseControls
                             //If StartDraggingProperty = null, return.
                             ResultCommand.NoError,
                             //If StartDraggingProperty != null, Check and set IsDraggingProperty to true.
-                            HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
+                            HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}",
                                 AttachedProperties.IsDraggingProperty, true,
                                 //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
                                 HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", null, false,
@@ -103,7 +103,7 @@ namespace FileExplorer.WPF.BaseControls
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
                     return 
-                         HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", AttachedProperties.IsDraggingProperty, false,
+                         HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}", AttachedProperties.IsDraggingProperty, false,
                             HubScriptCommands.SetDependencyPropertyValue<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,
                                 //Update position of each IPostionAware and clear {DragDrop} parameters)
                                 HubScriptCommands.EndDragDropCanvas( 

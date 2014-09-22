@@ -127,7 +127,8 @@ namespace FileExplorer.UIEventHub
                 //Notify draggables not IsDragging.
                 foreach (var d in draggables) d.IsDragging = false;
                 System.Windows.DragDrop.RemoveQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
-                //Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));
+                //Debug.WriteLine(String.Format("NotifyDropCompleted {0}", resultEffect));                
+                (inpProcs.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
             }
 
             _isd.OnDragCompleted(draggables, _dataObj, resultEffect);
