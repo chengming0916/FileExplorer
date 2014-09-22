@@ -30,17 +30,14 @@ namespace FileExplorer.WPF.BaseControls
                     FrameworkElement.DragLeaveEvent,
                     FrameworkElement.DropEvent,
                     FrameworkElement.GiveFeedbackEvent
-
-                    
-                    //FrameworkElement.PreviewTouchDownEvent,
-                    //FrameworkElement.TouchMoveEvent,
-                    //FrameworkElement.PreviewTouchUpEvent
                 }
              );
+
+            Print.PrintConsoleAction = c => Console.WriteLine(c);
         }
                        
         protected override FileExplorer.Script.IScriptCommand onEvent(RoutedEvent eventId)
-        {
+        {            
             if (EnableDrag)
                 switch (eventId.Name)
                 {
@@ -57,7 +54,7 @@ namespace FileExplorer.WPF.BaseControls
                                             HubScriptCommands.ObtainPointerPosition(
                                                 //Assign the datacontext item of the UIelement that's undermouse to {ItemUnderMouse}
                                                 HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
-                                                    //And If it's exists and selected,
+                                                    //And If it's exists and selected,                                                    
                                                     ScriptCommands.IfAssigned("{ItemUnderMouse}",
                                                         ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}",
                                                             //Tell the commands in MouseDrag event to proceed drag.
@@ -65,25 +62,27 @@ namespace FileExplorer.WPF.BaseControls
                                                                 //Prevent MultiSelect from starting.
                                                                 HubScriptCommands.SetRoutedEventHandled())))))))));
                     case "MouseDrag":
-                        return                             
+                        return                            
                             ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                                 //If not handled.
-                                HubScriptCommands.IfNotRoutedEventHandled(
-                                    //IfCanDrag
+                                HubScriptCommands.IfNotRoutedEventHandled(                                
+                                    //IfCanDrag (assigned from PreviewMouseDown)
                                     ScriptCommands.IfTrue("{DragDrop.CanDrag}", 
                                         //Reset CanDrag
-                                        ScriptCommands.Assign("{DragDrop.CanDrag}", false, false,                                                             
+                                        ScriptCommands.Assign("{DragDrop.CanDrag}", false, false,                                                       
                                             //If CanDrag (ItemUnderMouse is selected), Check and set IsDraggingProperty to true.
-                                            HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", 
-                                                AttachedProperties.IsDraggingProperty, true,
+                                            HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}", 
+                                                AttachedProperties.IsDraggingProperty, true,                                                
                                                 //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
                                                 HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrag, "{ISupportDrag}", null, false,                                                
                                                     //If RightMouse, then Set DragMethod to Menu, otherwise Normal
                                                     HubScriptCommands.AssignDragMethod(QueryDrag.DragMethodKey,                                                     
                                                         //Mark handled.
-                                                        HubScriptCommands.SetRoutedEventHandled(
+                                                        HubScriptCommands.SetRoutedEventHandled(                                                        
                                                             //Initialize shell based drag drop
-                                                            HubScriptCommands.QueryDrag("{ISupportDrag}", "{DragResult}")))))))));                    
+                                                            HubScriptCommands.QueryDrag("{ISupportDrag}", "{DragResult}", 
+                                                            HubScriptCommands.SetDependencyPropertyValue("{Sender}", 
+                                                                AttachedProperties.IsDraggingProperty, false))))))))));                    
 
                     case "PreviewMouseUp":
                         return

@@ -55,7 +55,7 @@ namespace FileExplorer.UIEventHub
         /// <param name="ifChanged"></param>
         /// <param name="ifUnchanged"></param>
         /// <returns></returns>
-        public static IScriptCommand SetDependencyPropertyIfDifferent(string elementVariable,
+        public static IScriptCommand SetDependencyPropertyIfDifferentValue(string elementVariable,
             DependencyProperty property, object value, IScriptCommand ifChanged, IScriptCommand ifUnchanged = null)
         {                       
             string valueVariable = ParameterDic.CombineVariable(elementVariable, "Value");

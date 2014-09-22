@@ -9,11 +9,10 @@ using System.Windows.Input;
 
 namespace FileExplorer.UIEventHub
 {
+    public enum DragState { Normal, Touched, Pressed, TouchDragging, Dragging, Released }
     public class DragInputProcessor : InputProcessorBase
     {
-        #region Constructors
-
-        public enum DragState { Normal, Touched, Pressed, TouchDragging, Dragging, Released }
+        #region Constructors        
 
         public DragInputProcessor()
         {
@@ -164,6 +163,8 @@ namespace FileExplorer.UIEventHub
 
         //public Func<Point, Point> PositionAdjustFunc { get { return _positionAdjustFunc; } set { _positionAdjustFunc = value; } }
 
+        public DragState DragState { get { return _dragState; } set { _dragState = value; } }
+
         public IUIInput StartInput
         {
             get { return _startInput; }
@@ -173,7 +174,7 @@ namespace FileExplorer.UIEventHub
         {
             get { return _isDragging; }
             set
-            {
+            {                
                 _isDragging = value;
                 if (!value && _dragState == DragState.Dragging)
                     StartInput = InvalidInput.Instance;

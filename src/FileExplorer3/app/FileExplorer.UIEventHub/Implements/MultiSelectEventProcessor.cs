@@ -52,7 +52,7 @@ namespace FileExplorer.WPF.BaseControls
                                 ScriptCommands.RunICommand(UnselectAllCommand, null, false, 
                                 HubScriptCommands.CaptureMouse(CaptureMouseMode.ScrollContentPresenter,
                                     HubScriptCommands.SetRoutedEventHandled(
-                                    HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}",
+                                    HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}",
                                         AttachedProperties.IsSelectingProperty, true,
                                         HubScriptCommands.ObtainPointerPosition(
                                             HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",

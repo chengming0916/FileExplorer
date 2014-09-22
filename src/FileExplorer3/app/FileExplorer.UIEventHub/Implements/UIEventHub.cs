@@ -54,7 +54,7 @@ namespace FileExplorer.WPF.BaseControls
                 new DragInputProcessor()
                         {
                             DragStartedFunc = inp =>
-                              {
+                              {                                  
                                   if (inp.InputType == UIInputType.Touch)
                                       Control_TouchDrag(inp.Sender, inp.EventArgs as InputEventArgs);
                                   else Control_MouseDrag(inp.Sender, inp.EventArgs as InputEventArgs);
