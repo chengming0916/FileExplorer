@@ -119,6 +119,8 @@
     <Compile Include="Scripts\v2\QueryDraggablesFromDataObject.cs" />
     <Compile Include="Scripts\v2\QueryDrop.cs" />
     <Compile Include="Scripts\v2\QueryDropEffects.cs" />
+    <Compile Include="Scripts\v2\SetCustomCursor.cs" />
+    <Compile Include="Scripts\v2\ShowDragAdornerContextMenu.cs" />
     <Compile Include="Scripts\v2\UpdateDragDropAdorner.cs" />
     <Compile Include="Scripts\v2\AssignDragDropAdorner.cs" />
     <Compile Include="Scripts\v2\AssignItemUnderMouse.cs" />

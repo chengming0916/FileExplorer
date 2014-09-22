@@ -4,33 +4,33 @@
         xmlns:bc="http://www.quickzip.org/BaseControls"
         xmlns:local="clr-namespace:Test_ShellDragDemo"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <Grid.Resources>
-            <DataTemplate x:Key="fileViewModelTemplate" DataType="local:FileViewModel">
-                <Border Width="{Binding Width}" Height="{Binding Height}" x:Name="border"
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:FileViewModel}">
+            <Border Width="{Binding Width}" Height="{Binding Height}" x:Name="border"
                             Background="Transparent">
-                    <TextBlock Text="{Binding DisplayName}" />
-                </Border>
-                <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding IsSelecting}" Value="True">
-                        <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                        <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
-                    </DataTrigger>
-                </DataTemplate.Triggers>
-            </DataTemplate>
+                <TextBlock Text="{Binding DisplayName}" />
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsSelecting}" Value="True">
+                    <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
 
-            <Style TargetType="ListViewItem">
-                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-            </Style>
-        </Grid.Resources>
+        <Style TargetType="ListViewItem">
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+        </Style>
+    </Window.Resources>
+    <Grid>      
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="lv1" ItemsSource="{Binding Items}" AllowDrop="True" ItemTemplate="{StaticResource fileViewModelTemplate}">
+        <ListView x:Name="lv1" ItemsSource="{Binding Items}" AllowDrop="True">
             <bc:UIEventAdapter.Processors>
                 <!--<bc:CanvasDragEventProcessor />-->
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
@@ -43,7 +43,7 @@
         </ListView>
 
 
-        <ListView x:Name="lv2" ItemsSource="{Binding Items}" AllowDrop="True" Grid.Column="1" ItemTemplate="{StaticResource fileViewModelTemplate}">
+        <ListView x:Name="lv2" ItemsSource="{Binding Items}" AllowDrop="True" Grid.Column="1">
             <bc:UIEventAdapter.Processors>
                 <!--<bc:CanvasDragEventProcessor />-->
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />

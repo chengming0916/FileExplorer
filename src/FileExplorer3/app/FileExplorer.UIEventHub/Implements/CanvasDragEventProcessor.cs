@@ -104,7 +104,7 @@ namespace FileExplorer.WPF.BaseControls
                 case "PreviewMouseUp":
                     return 
                          HubScriptCommands.SetDependencyPropertyIfDifferent("{Sender}", AttachedProperties.IsDraggingProperty, false,
-                            HubScriptCommands.SetDependencyPropertyTyped<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,
+                            HubScriptCommands.SetDependencyPropertyValue<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,
                                 //Update position of each IPostionAware and clear {DragDrop} parameters)
                                 HubScriptCommands.EndDragDropCanvas( 
                                     //Set {EventArgs.Handled} to true.

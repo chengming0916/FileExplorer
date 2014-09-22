@@ -68,9 +68,16 @@ namespace FileExplorer.UIEventHub
                 gesture = (MouseGesture)converter.ConvertFrom(MouseGestureObject);
 
 
-            return gesture != null && 
-                gesture.Modifiers == Keyboard.Modifiers && gesture.MouseAction == GetMouseAction(mouseEvent) ?                        
-                NextCommand : OtherwiseCommand;
+            bool match = false;
+            if (gesture != null && gesture.Modifiers == Keyboard.Modifiers)
+                switch (gesture.MouseAction)
+                {
+                    case MouseAction.LeftClick : match = mouseEvent.LeftButton == MouseButtonState.Pressed; break;
+                        case MouseAction.RightClick : match = mouseEvent.RightButton == MouseButtonState.Pressed; break;
+                    case MouseAction.MiddleClick : match = mouseEvent.MiddleButton == MouseButtonState.Pressed; break;
+                    default : match = gesture.MouseAction == GetMouseAction(mouseEvent); break;
+                }
+            return match ? NextCommand : OtherwiseCommand;
         }
 
 
@@ -122,7 +129,7 @@ namespace FileExplorer.UIEventHub
             }
             return MouseAction;
         }
- 
+
     }
 
 

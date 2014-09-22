@@ -73,10 +73,7 @@ namespace FileExplorer.Script
                 value = value.ToString();
             else value = pm.ReplaceVariableInsideBracketed((string)value);
 
-            if (pm.SetValue<Object>(VariableKey, value, SkipIfExists))
-                logger.Debug(String.Format("{0} = {1}", VariableKey, value));
-
-            return NextCommand;
+            return ScriptCommands.Assign(VariableKey, value, SkipIfExists, NextCommand);         
         }
     }
 

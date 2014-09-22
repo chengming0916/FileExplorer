@@ -26,7 +26,7 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand SetDependencyPropertyTyped<T>(string elementVariable,
+        public static IScriptCommand SetDependencyPropertyValue<T>(string elementVariable,
             DependencyProperty property, T value, IScriptCommand nextCommand = null)
         {
             string propertyVariable = ParameterDic.CombineVariable(elementVariable, "Property");
@@ -62,7 +62,7 @@ namespace FileExplorer.UIEventHub
             return HubScriptCommands.GetDependencyProperty(elementVariable, property, valueVariable,
                      ScriptCommands.IfEquals(valueVariable, value,
                         ifUnchanged,
-                        SetDependencyPropertyTyped(elementVariable, property, value, ifChanged)));
+                        SetDependencyPropertyValue(elementVariable, property, value, ifChanged)));
         }
     }
 

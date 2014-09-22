@@ -108,7 +108,10 @@ namespace Test_ShellDragDemo
             if (da.ContainsFileDropList())
             {
                 foreach (var file in da.GetFileDropList())
-                    yield return new FileViewModel(file);
+                {
+                    FileViewModel fvm = new FileViewModel(file);                    
+                        yield return fvm;
+                }
             }
         }
 
@@ -142,11 +145,17 @@ namespace Test_ShellDragDemo
 
         public QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
         {
+            if (draggables.Any(d => Items.Contains(d)))
+                return QueryDropEffects.None;
+
             return QueryDropEffects.CreateNew(DragDropEffects.Link | DragDropEffects.Move, DragDropEffects.Move);
         }
 
         public DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
         {
+            if (draggables.Any(d => Items.Contains(d)))
+                return DragDropEffects.None;
+
             return Drop(draggables, null, allowedEffects);
         }
         #endregion
