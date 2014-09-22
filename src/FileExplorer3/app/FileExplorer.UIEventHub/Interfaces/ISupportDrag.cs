@@ -16,9 +16,9 @@ namespace FileExplorer.UIEventHub
     public interface ISupportDrag
     {        
         bool HasDraggables { get; }
-        IEnumerable<IDraggable> GetDraggables();
-        DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables);
-        void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect);
+        IDraggable[] GetDraggables();
+        DragDropEffects QueryDrag(IDraggable[] draggables);
+        void OnDragCompleted(IDraggable[] draggables, DragDropEffects effect);
     }
 
     public class NullSupportDrag : ISupportDrag
@@ -26,22 +26,22 @@ namespace FileExplorer.UIEventHub
         public static NullSupportDrag Instance = new NullSupportDrag();
         public bool HasDraggables { get { return false; } }
 
-        public IEnumerable<IDraggable> GetDraggables()
+        public IDraggable[] GetDraggables()
         {
-            return new List<IDraggable>();
+            return new List<IDraggable>().ToArray();
         }
 
-        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        public DragDropEffects QueryDrag(IDraggable[] draggables)
         {
             return DragDropEffects.None;
         }
 
-        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
+        public IDataObject GetDataObject(IDraggable[] draggables)
         {
             return null;
         }
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect)
+        public void OnDragCompleted(IDraggable[] draggables, DragDropEffects effect)
         {
            
         }
