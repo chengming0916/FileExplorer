@@ -331,6 +331,8 @@ namespace FileExplorer.Script
                         (Action<Object, Object>)((o, v) => { }) :
                         (Action<Object, Object>)((o, v) =>
                             {
+                                if (o == null)
+                                    return;
                                 var typeInfo = o is Array ? typeof(Array).GetTypeInfo() : o.GetType().GetTypeInfo();
                                 var propertyInfo = typeInfo.GetPropertyInfoRecursive(property1);
                                 if (propertyInfo == null)

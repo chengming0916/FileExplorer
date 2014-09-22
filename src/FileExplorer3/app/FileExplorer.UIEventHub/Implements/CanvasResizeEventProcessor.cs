@@ -43,7 +43,7 @@ namespace FileExplorer.WPF.BaseControls
 
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
-                    return ScriptCommands.FilterArray("{Sender.Items}", "IsSelected", ComparsionOperator.Equals, true, "{SelectedItems}", 
+                    return ScriptCommands.FilterArray("{Sender.Items}", "IsSelected", ComparsionOperator.Equals, true, "{SelectedItems}",                        
                         ScriptCommands.AssignGlobalParameterDic("{CanvasResize}", false,
                         HubScriptCommands.DettachResizeItemAdorner("{CanvasResize.AdornerLayer}","{CanvasResize.ResizeItemAdorner}", 
                             ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{SelectedItems}", 1,
