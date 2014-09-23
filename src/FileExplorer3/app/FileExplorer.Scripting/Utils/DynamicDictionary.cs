@@ -16,18 +16,18 @@ namespace FileExplorer.WPF.Utils
         protected IEqualityComparer<string> _comparer;
 
         public Dictionary<string, TValue> Dictionary { get { return _dictionary; } }
-        
 
-        public DynamicDictionary(IEqualityComparer<string> comparer)
+
+        public DynamicDictionary(IEqualityComparer<string> comparer, bool throwIfNotAssigned = false)
         {
             _dictionary = new Dictionary<string, TValue>(comparer);
             _comparer = comparer;
+            _throwIfNotAssigned = throwIfNotAssigned;
         }
 
-        public DynamicDictionary()
-            : this(StringComparer.CurrentCulture)
-        {
-
+        public DynamicDictionary(bool throwIfNotAssigned = false)
+            : this(StringComparer.CurrentCulture, throwIfNotAssigned)
+        {            
         }
 
         public TValue this[string key] { get { return _dictionary[key]; }
@@ -44,9 +44,10 @@ namespace FileExplorer.WPF.Utils
             TValue data;
             if (!_dictionary.TryGetValue(binder.Name, out data))
             {
-                throw new KeyNotFoundException("There's no key by that name");
+                if (_throwIfNotAssigned)
+                    throw new KeyNotFoundException("There's no key by that name");
             }
-            result = (TValue)data;
+            result = data;
             return true;
         }
 
@@ -74,5 +75,6 @@ namespace FileExplorer.WPF.Utils
         }
 
          public event PropertyChangedEventHandler PropertyChanged;
+         private bool _throwIfNotAssigned;
     }
 }
