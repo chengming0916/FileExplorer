@@ -1,6 +1,7 @@
 ﻿using FileExplorer.Defines;
 using FileExplorer.Script;
 using FileExplorer.UIEventHub;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace FileExplorer.WPF.BaseControls
             );
         }
 
+        private static dynamic _cmdDic = new DynamicDictionary<IScriptCommand>(false);
+       
+
         protected override FileExplorer.Script.IScriptCommand onEvent(RoutedEvent eventId)
         {
 
@@ -38,12 +42,13 @@ namespace FileExplorer.WPF.BaseControls
             {
                 case "PreviewTouchDown":
                 case "PreviewMouseDown":
-                    return HubScriptCommands.ObtainPointerPosition(
-                        HubScriptCommands.SetHandledIfNotFocused());
+                    return _cmdDic.PreviewMouseDown ?? (_cmdDic.PreviewMouseDown = 
+                        HubScriptCommands.ObtainPointerPosition(
+                        HubScriptCommands.SetHandledIfNotFocused()));
                 case "MouseDrag":
                 case "TouchDrag":
                     if (EnableMultiSelect)
-                        return
+                        return _cmdDic.MouseDrag ?? (_cmdDic.MouseDrag = 
                             //Ignore if Handled
                             HubScriptCommands.IfNotRoutedEventHandled(
                             //Ignore If initiator by an element over AdornerLayer
@@ -58,11 +63,11 @@ namespace FileExplorer.WPF.BaseControls
                                             HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",
                                                 HubScriptCommands.FindSelectedItems( 
                                                     HubScriptCommands.HighlightItems()))),
-                                    ResultCommand.NoError))))));
+                                    ResultCommand.NoError)))))));
                     break;
                 case "TouchMove":
                 case "MouseMove":
-                    return
+                    return _cmdDic.MouseMove ?? (_cmdDic.MouseMove = 
                          HubScriptCommands.ThrottleTouchDrag(5, 
                         HubScriptCommands.IfDependencyPropertyEquals("{Sender}",
                         AttachedProperties.IsSelectingProperty, true,
@@ -70,10 +75,10 @@ namespace FileExplorer.WPF.BaseControls
                             HubScriptCommands.UpdateSelectionAdorner("{SelectionAdorner}",
                                         HubScriptCommands.FindSelectedItems( 
                                             HubScriptCommands.HighlightItems(
-                                                HubScriptCommands.AutoScroll()))))));
+                                                HubScriptCommands.AutoScroll())))))));
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
-                    return
+                    return _cmdDic.PreviewMouseUp ?? (_cmdDic.PreviewMouseUp = 
                         //Ignore if Handled
                         HubScriptCommands.IfNotRoutedEventHandled(
                         //Ignore If initiator by an element over AdornerLayer
@@ -98,7 +103,7 @@ namespace FileExplorer.WPF.BaseControls
                                                             ScriptCommands.SetPropertyValue("{ItemUnderMouse}", "IsSelected", true)),
                                                         //If click on empty area
                                                         ScriptCommands.RunICommand(UnselectAllCommand, null, false))
-                        ))))))))));
+                        )))))))))));
             }
 
             return base.onEvent(eventId);

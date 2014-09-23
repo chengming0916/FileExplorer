@@ -49,7 +49,8 @@ namespace DiagramingDemo
         }
 
         #region ISupportDrag
-       
+
+        public bool IsDraggingFrom { get; set; }
 
         public IDraggable[] GetDraggables()
         {

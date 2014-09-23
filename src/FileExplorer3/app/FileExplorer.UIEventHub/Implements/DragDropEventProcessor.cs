@@ -2,6 +2,7 @@
 using FileExplorer.Script;
 using FileExplorer.UIEventHub;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +39,8 @@ namespace FileExplorer.WPF.BaseControls
         }
         #endregion
 
+        private static dynamic _cmdDic = new DynamicDictionary<IScriptCommand>(false);        
 
-       
 
         protected override FileExplorer.Script.IScriptCommand onEvent(RoutedEvent eventId)
         {            
@@ -47,7 +48,7 @@ namespace FileExplorer.WPF.BaseControls
                 switch (eventId.Name)
                 {
                     case "PreviewMouseDown":
-                        return 
+                        return _cmdDic.PreviewMouseDown ?? (_cmdDic.PreviewMouseDown = 
                             ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,                                
                                 //Set Default value for CanDrag first.
                                 ScriptCommands.Assign("{DragDrop.CanDrag}", false, false,                                        
@@ -59,9 +60,9 @@ namespace FileExplorer.WPF.BaseControls
                                                 ScriptCommands.Assign("{DragDrop.CanDrag}", true, false, 
                                                     //Prevent MultiSelect from starting.
                                                     HubScriptCommands.SetRoutedEventHandled())
-                                                ))));
+                                                )))));
                     case "MouseDrag":
-                        return                            
+                        return _cmdDic.MouseDrag ?? (_cmdDic.MouseDrag =                             
                             ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                                 //If not handled.
                                 HubScriptCommands.IfNotRoutedEventHandled(                                
@@ -71,31 +72,32 @@ namespace FileExplorer.WPF.BaseControls
                                         ScriptCommands.Assign("{DragDrop.CanDrag}", false, false,                                                       
                                             //Mark handled, prevent MultiSelect from processing.
                                             HubScriptCommands.SetRoutedEventHandled(                     
-                                                //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
+                                                //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.                                                
                                                 HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrag, "{DragDrop.SupportDrag}", null, false,                                                     
                                                     //Determine DragMethod and call QueryDrag().
                                                     DragDropScriptCommands.StartShellDrag("{DragDrop.SupportDrag}")
-                                                   ))))));                    
+                                                   )))))));                    
 
                     case "PreviewMouseUp":
-                        return
+                        return _cmdDic.PreviewMouseUp ?? (_cmdDic.PreviewMouseUp =     
                             ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,                                
                                     //HubScriptCommands.SetDependencyPropertyValue("{Sender}", AttachedProperties.IsDraggingProperty, false,
                                         ScriptCommands.IfEquals(QueryDrag.DragMethodKey, DragMethod.Menu,
                                             ResultCommand.NoError,
                                             //This is defined in drop, detach if there's an adorner.
-                                            DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}")));
+                                            DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}"))));
                     case "MouseMove":
-                        return HubScriptCommands.IfDependencyProperty("{Sender}", AttachedProperties.IsDraggingProperty,
+                        return _cmdDic.MouseMove ?? (_cmdDic.MouseMove =     
+                            HubScriptCommands.IfDependencyProperty("{Sender}", AttachedProperties.IsDraggingProperty,
                                     ComparsionOperator.Equals, true,
-                                    HubScriptCommands.SetRoutedEventHandled());
+                                    HubScriptCommands.SetRoutedEventHandled()));
                 }
 
             if (EnableDrop)
             {                               
                 switch (eventId.Name)
                 {                   
-                    case "DragEnter": return
+                    case "DragEnter": return _cmdDic.DragEnter ?? (_cmdDic.DragEnter =     
                     ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                         //Find DataContext that support IShellDrop
                         HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrop, "{ISupportDrop}", "{ElementSupportDrop}", false,
@@ -110,29 +112,28 @@ namespace FileExplorer.WPF.BaseControls
                                                 { "{ISupportDrop.IsDraggingOver}", true }, //Set DataContext.IsDraggingOver to true.                                                
                                                 { "{EventArgs.Handled}", true }  //Mark RoutedEvent handled.                                                                                           
                                             }, false,   
-                                                //Set ElementSupportDrop.IsDraggingOver to true
-                                                //HubScriptCommands.SetDependencyPropertyValue("{DragDrop.ElementSupportDrop}", AttachedProperties.IsDraggingOverProperty, true, 
                                                 //Attach DragAdorner and update it.                               
                                                 DragDropScriptCommands.AttachAdorner(                                                    
                                                     "{DragDrop.AdornerLayer}", "{DragDrop.Adorner}", 
                                                     "{ISupportDrop}", "{DragDrop.DragMethod}", "{DragDrop.Draggables}"))), 
-                                            DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}"))));
+                                            DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}")))));
 
-                    case "GiveFeedback": return
+                    case "GiveFeedback": return _cmdDic.GiveFeedback ?? (_cmdDic.GiveFeedback =     
                         ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                             //If QueryDropResult returns none, set cursor to not droppable.
                             ScriptCommands.IfEquals("{DragDrop.QueryDropResult}", QueryDropEffects.None,
-                                HubScriptCommands.SetCustomCursor(Cursors.No)));
+                                HubScriptCommands.SetCustomCursor(Cursors.No))));
 
-                    case "DragOver": return ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
-                                        DragDropScriptCommands.UpdateAdornerPointerPosition("{DragDrop.Adorner}"));
+                    case "DragOver": return _cmdDic.DragOver ?? (_cmdDic.DragOver =     
+                        ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
+                                        DragDropScriptCommands.UpdateAdornerPointerPosition("{DragDrop.Adorner}")));
 
-                    case "DragLeave": return
+                    case "DragLeave": return _cmdDic.DragLeave ?? (_cmdDic.DragLeave =     
                          ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                          ScriptCommands.SetPropertyValue("{DragDrop.SupportDrop}", "IsDraggingOver", false, 
                             //Detach adorner if DragLeave current element.
                             ScriptCommands.IfAssigned("{DragDrop.SupportDrop}",                                
-                                    DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}"))));
+                                    DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}")))));
 
                     case "Drop": 
                         IScriptCommand detachAdornerAndResetDragDrop =
@@ -141,7 +142,7 @@ namespace FileExplorer.WPF.BaseControls
                                 ScriptCommands.Reset(null, "{DragDrop.Adorner}", "{DragDrop.AdornerLayer}",
                                 "{DragDrop.SupportDrop}", "{DragDrop.Draggables}")));
 
-                        return
+                        return _cmdDic.Drop ?? (_cmdDic.Drop =     
                         ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                             //Find DataContext that support ISupportShellDrop
                             HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrop, "{ISupportDrop}", "{ElementSupportDrop}", false,
@@ -172,7 +173,7 @@ namespace FileExplorer.WPF.BaseControls
                                                 detachAdornerAndResetDragDrop)), 
                                                     
                                         //If QueryDropEffects is None, drag failed, detach adorner.
-                                        detachAdornerAndResetDragDrop))));
+                                        detachAdornerAndResetDragDrop)))));
 
                 }
             }
