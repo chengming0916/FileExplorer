@@ -16,6 +16,28 @@ namespace FileExplorer.WPF.BaseControls
     public static partial class DragDropScriptCommands
     {
         /// <summary>
+        /// Find ISelectable under cursor over element's datacontext, if it's ISelectable.IsSelected, 
+        /// assign canDragKey to true, otherwise false.
+        /// </summary>
+        /// <param name="canDragKey"></param>
+        /// <returns></returns>
+        public static IScriptCommand IfItemUnderMouseIsSelected(IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+           
+            return
+                //Calculate a number of positions.
+                    HubScriptCommands.ObtainPointerPosition(
+                    //Assign the datacontext item of the UIelement that's undermouse to {ItemUnderMouse}
+                    HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
+                        //And If it's exists and selected,                                                    
+                        ScriptCommands.IfAssigned("{ItemUnderMouse}",
+                            ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}",
+                                //Tell the commands in MouseDrag event to proceed drag.
+                                trueCommand, 
+                                otherwiseCommand), otherwiseCommand)));
+        }
+
+        /// <summary>
         /// Update the DragAdorner's PointerPosition so selected Items will be shown at the spot.
         /// </summary>
         public static IScriptCommand UpdateAdornerPointerPosition(string adornerVariable = "{DragDrop.Adorner}",IScriptCommand nextCommand = null)

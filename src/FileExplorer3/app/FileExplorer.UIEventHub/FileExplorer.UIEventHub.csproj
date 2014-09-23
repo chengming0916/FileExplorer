@@ -75,6 +75,7 @@
     <Compile Include="Implements\CanvasDragEventProcessor.cs" />
     <Compile Include="Implements\CanvasResizeEventProcessor.cs" />
     <Compile Include="Implements\DragDropEventProcessor.cs" />
+    <Compile Include="Implements\DragDropLiteEventProcessor.cs" />
     <Compile Include="Implements\ResizeAdornerEventProcessor.cs" />
     <Compile Include="Implements\TouchDragMoveCountInputProcessor.cs" />
     <Compile Include="Implements\ClickCountInputProcessor.cs" />

@@ -66,7 +66,7 @@ var setPropertyCommand =
     ScriptCommands.PrintDebug("{PSI.FileName}", 
 		ScriptCommands.SetProperty("{PSI}", "FileName", "{Value}", 
 			ScriptCommands.PrintDebug("{PSI.FileName}", 
-				ScriptCommands.SetPropertyValue<ProcessStartInfo, string>("{PSI}", p => p.FileName, "GHI.txt", 
+				ScriptCommands.SetPropertyValue("{PSI}", (ProcessStartInfo p) => p.FileName, "GHI.txt", 
 					ScriptCommands.PrintDebug("{PSI.FileName}")
 	))));  
 
@@ -74,5 +74,3 @@ await ScriptRunner.RunScriptAsync(new ParameterDic() {
                 { "PSI", new ProcessStartInfo() { FileName = "ABC.txt" } },
 				{ "Value", "DEF.txt" }
             }, setPropertyCommand);
-
-					
