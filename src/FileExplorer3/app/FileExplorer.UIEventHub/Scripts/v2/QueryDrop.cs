@@ -15,7 +15,7 @@ namespace FileExplorer.UIEventHub
 
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand QueryDrop(string dropTargetVariable = "{ISupportDrop}", string draggablesVariable = "{Draggables}", 
+        public static IScriptCommand QueryDrop(string dragSourceVariable = null, string dropTargetVariable = "{ISupportDrop}", string draggablesVariable = "{Draggables}", 
             string dataObjVariable = "{DataObj}", string dropEffectVariable = "{Effect}", 
             string destinationVariable = "{ResultEffect}",
             bool skipIfExists = false, 
@@ -23,6 +23,7 @@ namespace FileExplorer.UIEventHub
         {
             return new QueryDropCommand()
             {
+                DragSourceKey = dragSourceVariable,
                 DropTargetKey = dropTargetVariable,
                 DraggablesKey = draggablesVariable,
                 DataObjectKey = dataObjVariable,
@@ -39,7 +40,11 @@ namespace FileExplorer.UIEventHub
     /// PreferredEffect and SupportedEffects
     /// </summary>
     public class QueryDropCommand : UIScriptCommandBase<UIElement, RoutedEventArgs>
-    {        
+    {
+        /// <summary>
+        /// Point to DataContext (ISupportDrag) to initialize the drag, for notify the drag completed with effect, optional, default = null.
+        /// </summary>
+        public string DragSourceKey { get; set; }
         /// <summary>
         /// Point to DataContext (ISupportDrop) to initialize the drag, default = "{ISupportDrop}".
         /// </summary>
@@ -69,6 +74,7 @@ namespace FileExplorer.UIEventHub
         public QueryDropCommand()
             : base("QueryDropCommand")
         {
+            DragSourceKey = null;
             DropTargetKey = "{ISupportDrop}";
             DraggablesKey = "{Draggables}";
             DataObjectKey = "{DataObj}";
@@ -81,6 +87,7 @@ namespace FileExplorer.UIEventHub
         protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             DragEventArgs devnt = evnt as DragEventArgs;
+            ISupportDrag dragSource = pm.GetValue<ISupportDrag>(DragSourceKey);
             ISupportDrop dropTarget = pm.GetValue<ISupportDrop>(DropTargetKey);
             IDraggable[] draggables = pm.GetValue<IDraggable[]>(DraggablesKey);
             if (devnt != null && dropTarget != null && draggables != null)
@@ -90,12 +97,13 @@ namespace FileExplorer.UIEventHub
                     pm.GetValue<DragDropEffects>(DropEffectKey) : devnt.AllowedEffects;
                 var dataObj = pm.GetValue<IDataObject>(DataObjectKey);
 
-                if (dropTarget is ISupportShellDrop)               
-                    devnt.Effects = (dropTarget as ISupportShellDrop).Drop(draggables, dataObj, effect);                
+                if (dropTarget is ISupportShellDrop)
+                    devnt.Effects = (dropTarget as ISupportShellDrop).Drop(draggables, dataObj, effect);
                 else devnt.Effects = dropTarget.Drop(draggables, devnt.AllowedEffects);
 
-                devnt.Effects = effect;
-                pm.SetValue(DestinationKey, effect, SkipIfExists);
+                pm.SetValue(DestinationKey, devnt.Effects, SkipIfExists);
+                if (dragSource != null)
+                    dragSource.OnDragCompleted(draggables, devnt.Effects);
             }
     
             return NextCommand;

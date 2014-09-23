@@ -14,13 +14,13 @@ namespace FileExplorer.UIEventHub
 
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand AssignDataContext(     
+        public static IScriptCommand AssignDataContext(
             string sourceElementVariable = "{EventArgs.OriginalSource}",
-            DataContextType type = DataContextType.SupportDrag,             
-            string destVariable = "{Variable}", 
-            string destEleVariable = null, 
-            bool skipIfExists = false, 
-            IScriptCommand thenCommand = null, IScriptCommand notFoundCommand = null)
+            DataContextType type = DataContextType.SupportDrag,
+            string destVariable = "{Variable}",
+            string destEleVariable = null,
+            bool skipIfExists = false,
+            IScriptCommand nextCommand = null)
         {
             return new AssignDataContext()
             {
@@ -29,11 +29,21 @@ namespace FileExplorer.UIEventHub
                 VariableKey = destVariable,
                 DataContextElementKey = destEleVariable,
                 SkipIfExists = skipIfExists,
-                NextCommand = (ScriptCommandBase)thenCommand,
-                NotFoundCommand = (ScriptCommandBase)notFoundCommand
+                NextCommand = (ScriptCommandBase)nextCommand
             };
         }
-      
+
+        public static IScriptCommand IfAssignedDataContext(
+           string sourceElementVariable = "{EventArgs.OriginalSource}",
+           DataContextType type = DataContextType.SupportDrag,
+           string destVariable = "{Variable}",
+           string destEleVariable = null,
+           IScriptCommand nextCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            return AssignDataContext(sourceElementVariable, type, destVariable, destEleVariable, false,
+                ScriptCommands.IfAssigned(destVariable, nextCommand, otherwiseCommand));
+        }
+
     }
 
     public enum DataContextType { Any, SupportDrag, SupportShellDrag, SupportDrop, SupportShellDrop }
@@ -54,7 +64,6 @@ namespace FileExplorer.UIEventHub
         /// </summary>
         public string DataContextElementKey { get; set; }
 
-        public ScriptCommandBase NotFoundCommand { get; set; }
 
         public DataContextType DataContextType { get; set; }
 
@@ -70,46 +79,40 @@ namespace FileExplorer.UIEventHub
         public override IScriptCommand Execute(ParameterDic pm)
         {
             FrameworkElement origSource = pm.GetValue<FrameworkElement>(SourceElementKey);
-            if (origSource == null)
-                return NotFoundCommand;
-            
             Value = null;
             FrameworkElement ele = null;
-            switch (DataContextType)
+
+            if (origSource != null)
             {
-                case UIEventHub.DataContextType.Any : 
-                    Value = origSource.DataContext;
-                    ele = origSource;
-                    break;
-                case UIEventHub.DataContextType.SupportDrag:
-                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportDrag);
-                    break;
-                case UIEventHub.DataContextType.SupportShellDrag:
-                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportShellDrag);
-                    break;
-                case UIEventHub.DataContextType.SupportShellDrop:
-                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportShellDrop);
-                    break;
-                case UIEventHub.DataContextType.SupportDrop:
-                    Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportDrop);
-                    break;
-                default:
-                    return ResultCommand.Error(new NotSupportedException("DataContextType"));
+                switch (DataContextType)
+                {
+                    case UIEventHub.DataContextType.Any:
+                        Value = origSource.DataContext;
+                        ele = origSource;
+                        break;
+                    case UIEventHub.DataContextType.SupportDrag:
+                        Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportDrag);
+                        break;
+                    case UIEventHub.DataContextType.SupportShellDrag:
+                        Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportShellDrag);
+                        break;
+                    case UIEventHub.DataContextType.SupportShellDrop:
+                        Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportShellDrop);
+                        break;
+                    case UIEventHub.DataContextType.SupportDrop:
+                        Value = DataContextFinder.GetDataContext(origSource, out ele, DataContextFinder.SupportDrop);
+                        break;
+                    default:
+                        return ResultCommand.Error(new NotSupportedException("DataContextType"));
+                }
             }
 
-            if (Value != null)
-            {
-                if (VariableKey != null)
-                    pm.SetValue(VariableKey, Value, SkipIfExists);
-                if (DataContextElementKey != null)
-                    pm.SetValue(DataContextElementKey, ele, SkipIfExists);
-
-                return NextCommand;
-            }
-            else return NotFoundCommand;            
+            pm.SetValue(VariableKey, Value, SkipIfExists);
+            pm.SetValue(DataContextElementKey, ele, SkipIfExists);
+            return NextCommand;
         }
 
-     
+
 
     }
 }

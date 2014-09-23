@@ -131,7 +131,7 @@ namespace FileExplorer.UIEventHub
                 (inpProcs.First(p => p is DragInputProcessor) as DragInputProcessor).IsDragging = false;
             }
 
-            _isd.OnDragCompleted(draggables, _dataObj, resultEffect);
+            //_isd.OnDragCompleted(draggables, _dataObj, resultEffect);
             var dataObj = _dataObj;
             _dataObj = null;
             pm.SetValue(DestinationKey, resultEffect, false);
