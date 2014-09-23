@@ -18,7 +18,7 @@ namespace Test_ShellDragDemo
     public class FileListViewModel : NotifyPropertyChanged, ISupportShellDrag, ISupportShellDrop, IContainer<ISelectable>
     {
         private ObservableCollection<FileViewModel> _items = new ObservableCollection<FileViewModel>();
-        private bool _isDraggingOver;
+        private bool _isDraggingOver, _isDraggingFrom;
 
         public ObservableCollection<FileViewModel> Items { get { return _items; } }
         public dynamic Commands { get; private set; }
@@ -123,6 +123,12 @@ namespace Test_ShellDragDemo
             if (allowedEffects.HasFlag(DragDropEffects.Copy))
                 return DragDropEffects.Copy;
             return DragDropEffects.Link;
+        }
+
+        public bool IsDraggingFrom
+        {
+            get { return _isDraggingFrom; }
+            set { _isDraggingFrom = value; NotifyOfPropertyChanged(() => IsDraggingFrom); }
         }
 
         public bool IsDraggingOver

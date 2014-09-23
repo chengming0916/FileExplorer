@@ -33,13 +33,13 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand IfAssignedDataContext(
+        public static IScriptCommand IfHasDataContext(
            string sourceElementVariable = "{EventArgs.OriginalSource}",
-           DataContextType type = DataContextType.SupportDrag,
-           string destVariable = "{Variable}",
-           string destEleVariable = null,
+           DataContextType type = DataContextType.SupportDrag,           
            IScriptCommand nextCommand = null, IScriptCommand otherwiseCommand = null)
         {
+            string destVariable = "{Temp_DataContextDest}";
+            string destEleVariable = "{Temp_DataContextDestEle}";
             return AssignDataContext(sourceElementVariable, type, destVariable, destEleVariable, false,
                 ScriptCommands.IfAssigned(destVariable, nextCommand, otherwiseCommand));
         }

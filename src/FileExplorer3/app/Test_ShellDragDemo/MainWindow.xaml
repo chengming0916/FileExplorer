@@ -23,6 +23,19 @@
         <Style TargetType="ListViewItem">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         </Style>
+        
+        <Style TargetType="ListView">
+            <Setter Property="bc:AttachedProperties.IsDraggingOver" Value="{Binding IsDraggingOver}" />
+            <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDraggingFrom}" />
+            <Style.Triggers>
+                <Trigger Property="bc:AttachedProperties.IsDragging" Value="True">
+                    <Setter Property="Background" Value="Silver" />
+                </Trigger>
+                <Trigger Property="bc:AttachedProperties.IsDraggingOver" Value="True">
+                    <Setter Property="Background" Value="Gold" />
+                </Trigger>                
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>      
         <Grid.ColumnDefinitions>
@@ -31,26 +44,21 @@
         </Grid.ColumnDefinitions>
 
         <ListView x:Name="lv1" ItemsSource="{Binding Items}" AllowDrop="True">
-            <bc:UIEventAdapter.Processors>
-                <!--<bc:CanvasDragEventProcessor />-->
+            <bc:UIEventAdapter.Processors>                
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="True" 
-                                              UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
-                
-                <!--<bc:CanvasResizeEventProcessor />-->
+                                              UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />                                
             </bc:UIEventAdapter.Processors>
             
         </ListView>
 
 
         <ListView x:Name="lv2" ItemsSource="{Binding Items}" AllowDrop="True" Grid.Column="1">
-            <bc:UIEventAdapter.Processors>
-                <!--<bc:CanvasDragEventProcessor />-->
+            <bc:UIEventAdapter.Processors>                
                 <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="True" 
                                               UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
-
-                <!--<bc:CanvasResizeEventProcessor />-->
+                
             </bc:UIEventAdapter.Processors>
         
         </ListView>
