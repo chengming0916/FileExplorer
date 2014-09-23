@@ -23,24 +23,36 @@ namespace FileExplorer.WPF.BaseControls
         /// <returns></returns>
         public static IScriptCommand IfItemUnderMouseIsSelected(IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
-           
             return
                 //Calculate a number of positions.
-                    HubScriptCommands.ObtainPointerPosition(
-                    //Assign the datacontext item of the UIelement that's undermouse to {ItemUnderMouse}
-                    HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
-                        //And If it's exists and selected,                                                    
-                        ScriptCommands.IfAssigned("{ItemUnderMouse}",
-                            ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}",
-                                //Tell the commands in MouseDrag event to proceed drag.
-                                trueCommand, 
-                                otherwiseCommand), otherwiseCommand)));
+                HubScriptCommands.ObtainPointerPosition(
+                //Assign the datacontext item of the UIelement that's undermouse to {ItemUnderMouse}
+                HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
+                //And If it's exists and selected,                                                    
+                ScriptCommands.IfAssigned("{ItemUnderMouse}",
+                ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}", trueCommand,
+                otherwiseCommand), otherwiseCommand)));
+        }
+
+        public static IScriptCommand StartShellDrag(string iShellDragVariable = "{DragDrop.SupportDrag}", IScriptCommand nextCommand = null)
+        {
+            return
+                //If CanDrag (ItemUnderMouse is selected), Check and set IsDraggingProperty to true.
+                ScriptCommands.SetPropertyValue(iShellDragVariable, (ISupportDrag d) => d.IsDraggingFrom, true, 
+                HubScriptCommands.AssignDragMethod(QueryDrag.DragMethodKey,
+                //Initialize shell based drag drop
+                HubScriptCommands.QueryDrag(iShellDragVariable, "{DragResult}",                
+                //Reset IsDragging property.
+                ScriptCommands.SetPropertyValue(iShellDragVariable, (ISupportDrag d) => d.IsDraggingFrom, false,
+                //Reset IShellDrag variable.
+                ScriptCommands.Assign(iShellDragVariable, null, false,
+                nextCommand)))));
         }
 
         /// <summary>
         /// Update the DragAdorner's PointerPosition so selected Items will be shown at the spot.
         /// </summary>
-        public static IScriptCommand UpdateAdornerPointerPosition(string adornerVariable = "{DragDrop.Adorner}",IScriptCommand nextCommand = null)
+        public static IScriptCommand UpdateAdornerPointerPosition(string adornerVariable = "{DragDrop.Adorner}", IScriptCommand nextCommand = null)
         {
             string cursorPositionVariable = "{DragDrop.CursorPosition}";
             return HubScriptCommands.AssignCursorPosition(PositionRelativeToType.Window, cursorPositionVariable, false,
@@ -85,47 +97,43 @@ namespace FileExplorer.WPF.BaseControls
             return ScriptCommands.SetProperty(adornerVariable, (DragAdorner a) => a.DraggingItems, draggablesVariable, nextCommand);
         }
 
-        public static IScriptCommand UpdateAdorner(string adornerVariable = "{DragDrop.Adorner}", 
-            string iSupportDropVariable = "{ISupportDrop}",      
+        public static IScriptCommand UpdateAdorner(string adornerVariable = "{DragDrop.Adorner}",
+            string iSupportDropVariable = "{ISupportDrop}",
             string dragMethodVariable = "{DragDrop.DragMethod}",
-            string draggablesVariable = "{DragDrop.Draggables}", 
+            string draggablesVariable = "{DragDrop.Draggables}",
             IScriptCommand nextCommand = null)
         {
             string queryDropResultVariable = "{DragDrop.QueryDropResult}";
             return DragDropScriptCommands.UpdateAdornerPointerPosition(adornerVariable,
               DragDropScriptCommands.UpdateAdornerDraggables(adornerVariable, draggablesVariable,
-              HubScriptCommands.QueryDropEffects(iSupportDropVariable, draggablesVariable, null, queryDropResultVariable, false, 
-              DragDropScriptCommands.UpdateAdornerText(adornerVariable, dragMethodVariable, draggablesVariable, 
+              HubScriptCommands.QueryDropEffects(iSupportDropVariable, draggablesVariable, null, queryDropResultVariable, false,
+              DragDropScriptCommands.UpdateAdornerText(adornerVariable, dragMethodVariable, draggablesVariable,
                 queryDropResultVariable, iSupportDropVariable, nextCommand))));
         }
 
-         public static IScriptCommand DetachAdorner(string adornerLayerVariable = "{DragDrop.AdornerLayer}", 
-             string adornerVariable = "{DragDrop.Adorner}", IScriptCommand nextCommand = null)
+        public static IScriptCommand DetachAdorner(string adornerLayerVariable = "{DragDrop.AdornerLayer}",
+            string adornerVariable = "{DragDrop.Adorner}", IScriptCommand nextCommand = null)
         {
             return HubScriptCommands.DetachAdorner(adornerLayerVariable, adornerVariable,
                 ScriptCommands.Reset(nextCommand, adornerVariable, adornerLayerVariable));
         }
-    
-        public static IScriptCommand AttachAdorner(string adornerLayerVariable = "{DragDrop.AdornerLayer}", 
-             string adornerVariable = "{DragDrop.Adorner}", 
-            string iSupportDropVariable = "{ISupportDrop}",      
+
+        public static IScriptCommand AttachAdorner(string adornerLayerVariable = "{DragDrop.AdornerLayer}",
+             string adornerVariable = "{DragDrop.Adorner}",
+            string iSupportDropVariable = "{ISupportDrop}",
             string dragMethodVariable = "{DragDrop.DragMethod}",
             string draggablesVariable = "{DragDrop.Draggables}",
-            
+
             IScriptCommand nextCommand = null)
-        {                            
-            return DragDropScriptCommands.DetachAdorner(adornerLayerVariable, adornerVariable, 
+        {
+            return DragDropScriptCommands.DetachAdorner(adornerLayerVariable, adornerVariable,
                     HubScriptCommands.AttachDragDropAdorner(adornerLayerVariable, adornerVariable,
                         HubScriptCommands.SetDependencyPropertyValue(adornerVariable, DragAdorner.IsDraggingProperty, true,
                             DragDropScriptCommands.UpdateAdorner(adornerVariable, iSupportDropVariable,
                             dragMethodVariable, draggablesVariable, nextCommand))));
         }
 
-        public static IScriptCommand ResetDragDropVariables(IScriptCommand nextCommand = null)
-        {
-            return ScriptCommands.Reset(nextCommand, "{DragDrop.Adorner}", "{DragDrop.AdornerLayer}",
-            "{DragDrop.SupportDrop}", "{DragDrop.Draggables}");
-        }
+     
     }
 
 }

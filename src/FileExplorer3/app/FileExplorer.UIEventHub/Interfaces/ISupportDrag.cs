@@ -16,6 +16,7 @@ namespace FileExplorer.UIEventHub
     public interface ISupportDrag
     {        
         bool HasDraggables { get; }
+        bool IsDraggingFrom { get; set; }
         IDraggable[] GetDraggables();
         DragDropEffects QueryDrag(IDraggable[] draggables);
         void OnDragCompleted(IDraggable[] draggables, DragDropEffects effect);
@@ -25,6 +26,7 @@ namespace FileExplorer.UIEventHub
     {
         public static NullSupportDrag Instance = new NullSupportDrag();
         public bool HasDraggables { get { return false; } }
+        public bool IsDraggingFrom { get; set; }
 
         public IDraggable[] GetDraggables()
         {

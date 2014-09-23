@@ -32,8 +32,27 @@ namespace FileExplorer.UIEventHub
             };
         }
 
+        ///// <summary>
+        ///// Find DataObject (IDataObject) and then Draggables (IDraggables[]) from IShellSupportDrop and assign them.
+        ///// </summary>
+        ///// <param name="iSupportDropVariable"></param>
+        ///// <param name="destinationDataObjectVariable"></param>
+        ///// <param name="destinationVariable"></param>
+        ///// <param name="skipIfExists"></param>
+        ///// <param name="nextCommand"></param>
+        ///// <returns></returns>
+        // public static IScriptCommand QueryDraggablesAndDataObject(
+        //    string iSupportDropVariable = "{ISupportDrop}", string destinationDataObjectVariable = "{DataObj}", 
+        //    string destinationVariable = "{Draggables}", bool skipIfExists = false, IScriptCommand nextCommand = null)
+        // {
+        //     return HubScriptCommands.AssignDataObject(destinationDataObjectVariable, false,
+        //          HubScriptCommands.QueryDraggablesFromDataObject(iSupportDropVariable, 
+        //          destinationDataObjectVariable, destinationVariable, false, nextCommand));
+        // }
+
         /// <summary>
-        /// Find DataObject (IDataObject) and then Draggables (IDraggables[]) from IShellSupportDrop and assign them.
+        /// Obtain DataObject, Draggables and DropEffects, by calling AssignDataObject, QuerryDraggablesFromDataObject
+        /// and QueryDropEffects() script commands.
         /// </summary>
         /// <param name="iSupportDropVariable"></param>
         /// <param name="destinationDataObjectVariable"></param>
@@ -41,16 +60,23 @@ namespace FileExplorer.UIEventHub
         /// <param name="skipIfExists"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-         public static IScriptCommand QueryDraggablesAndDataObject(
-            string iSupportDropVariable = "{ISupportDrop}", string destinationDataObjectVariable = "{DataObj}", 
-            string destinationVariable = "{Draggables}", bool skipIfExists = false, IScriptCommand nextCommand = null)
+         public static IScriptCommand QueryShellDragInfo(
+             string iSupportDropVariable = "{ISupportDrop}", string destinationDataObjectVariable = "{DataObj}",
+            string destinationVariable = "{Draggables}", string queryDropResultVariable = "{QueryDropResult}", 
+             bool skipIfExists = false, IScriptCommand successCommand = null, IScriptCommand otherwiseCommand = null)
          {
-             return HubScriptCommands.AssignDataObject(destinationDataObjectVariable, false,
-                  HubScriptCommands.QueryDraggablesFromDataObject(iSupportDropVariable, 
-                  destinationDataObjectVariable, destinationVariable, false, nextCommand));
-         }
 
-           
+             return HubScriptCommands.AssignDataObject(destinationDataObjectVariable, false,
+                         HubScriptCommands.QueryDraggablesFromDataObject(iSupportDropVariable, destinationDataObjectVariable, destinationVariable, false,
+                         //And if there's draggables,
+                             ScriptCommands.IfAssigned("{DragDrop.Draggables}",
+                                //Call ISupportDrop.QueryDropEffects() to get QueryDropEffect.
+                                HubScriptCommands.QueryDropEffects(iSupportDropVariable, destinationVariable, destinationDataObjectVariable,
+                                   queryDropResultVariable, false, 
+                                   ScriptCommands.IfEquals(queryDropResultVariable, FileExplorer.UIEventHub.QueryDropEffects.None, 
+                                   otherwiseCommand, 
+                                   successCommand)), otherwiseCommand)));
+         }
                                        
     }
  
