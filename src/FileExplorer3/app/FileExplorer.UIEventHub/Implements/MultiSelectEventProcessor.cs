@@ -30,6 +30,8 @@ namespace FileExplorer.WPF.BaseControls
                     FrameworkElement.PreviewTouchUpEvent
                 }
             );
+
+            Print.PrintConsoleAction = t => Console.WriteLine(t);
         }
 
         private static dynamic _cmdDic = new DynamicDictionary<IScriptCommand>(false);
@@ -60,7 +62,7 @@ namespace FileExplorer.WPF.BaseControls
                                     HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}",
                                         AttachedProperties.IsSelectingProperty, true,
                                         HubScriptCommands.ObtainPointerPosition(
-                                            HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",
+                                            HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",                                              
                                                 HubScriptCommands.FindSelectedItems( 
                                                     HubScriptCommands.HighlightItems()))),
                                     ResultCommand.NoError)))))));

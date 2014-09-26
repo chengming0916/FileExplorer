@@ -84,6 +84,7 @@
     <Compile Include="Scripts\v2\AssignParameterDic.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />
     <Compile Include="Scripts\v2\Delay.cs" />
+    <Compile Include="Scripts\v2\Dump.cs" />
     <Compile Include="Scripts\v2\Filter.cs" />
     <Compile Include="Scripts\v2\ForEach.cs" />
     <Compile Include="Scripts\v2\FormatText.cs" />

@@ -72,6 +72,12 @@ namespace FileExplorer.Script
                     IfValue(ComparsionOperator.Equals, variable, ifEqualValueProperty, trueCommand, otherwiseCommand));
         }
 
+        public static IScriptCommand IfNotEquals<T>(string variable = "{variable}", T value = default(T), IScriptCommand trueCommand = null,
+            IScriptCommand otherwiseCommand = null)
+        {
+            return IfEquals<T>(variable, value, otherwiseCommand, trueCommand);
+        }       
+
         public static IScriptCommand IfAssigned(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
             return IfEquals<Object>(variable, null, otherwiseCommand, trueCommand);
@@ -233,7 +239,7 @@ namespace FileExplorer.Script
 
                 return result ? NextCommand : OtherwiseCommand;
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
                 return OtherwiseCommand;
             }

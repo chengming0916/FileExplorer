@@ -14,9 +14,15 @@
                 <DataTrigger Binding="{Binding IsSelecting}" Value="True">
                     <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                    <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
-                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsSelected}" Value="True" />
+                        <Condition Binding="{Binding IsDragging}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>                
             </DataTemplate.Triggers>
         </DataTemplate>
 
@@ -44,21 +50,24 @@
         </Grid.ColumnDefinitions>
 
         <ListView x:Name="lv1" ItemsSource="{Binding Items}" AllowDrop="True">
-            <bc:UIEventAdapter.Processors>                
-                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+            <bc:UIEventAdapter.Processors>
+                <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" EnableMouse="True" EnableTouch="True" />
+                <!--<bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />-->
                 <bc:MultiSelectEventProcessor EnableMultiSelect="True" 
-                                              UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />                                
+                                              UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
+
+             
             </bc:UIEventAdapter.Processors>
             
         </ListView>
 
 
         <ListView x:Name="lv2" ItemsSource="{Binding Items}" AllowDrop="True" Grid.Column="1">
-            <bc:UIEventAdapter.Processors>                
-                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+            <bc:UIEventAdapter.Processors>
+                <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" EnableMouse="True" EnableTouch="True" />
+                <!--<bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />-->
                 <bc:MultiSelectEventProcessor EnableMultiSelect="True" 
-                                              UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
-                
+                                              UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />                
             </bc:UIEventAdapter.Processors>
         
         </ListView>

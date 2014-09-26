@@ -62,7 +62,7 @@ namespace FileExplorer.Script
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand AssignMethodResult(string sourceObjectVariable = "{Source}",
+        public static IScriptCommand ExecuteFunc(string sourceObjectVariable = "{Source}",
             string methodName = "Method", object[] parameters = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -78,8 +78,42 @@ namespace FileExplorer.Script
                     destinationVariable, false, nextCommand), methodParams.ToArray());
         }
 
+        [Obsolete("ExecuteFunc")]
+        public static IScriptCommand AssignMethodResult(string sourceObjectVariable = "{Source}",
+            string methodName = "Method", object[] parameters = null,
+            string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            return ExecuteFunc(sourceObjectVariable, methodName, parameters, destinationVariable, nextCommand);
+        }
+
         /// <summary>
-        /// Serializable, AssignMethodResult but no return variable.
+        /// Serializable, shortcut method for [AssignValueConverter], which obtains method result of a property from a variable and assign to another variable.
+        /// </summary>
+        /// <example>
+        ///  IScriptCommand cmd = ScriptCommands.AssignMethodResult(iSupportDragVariable,
+        ///        (ISupportShellDrop isd) => isd.QueryDropDraggables(null), 
+        ///         new object[] { }, destinationVariable, nextCommand);;
+        ///</example>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="expression"></param>
+        /// <param name="parameters"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand ExecuteFunc<T,R>(string sourceObjectVariable = "{Source}",
+            Expression<Func<T, R>> expression = null, object[] parameters = null,
+            string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            var exp = expression.Body as MethodCallExpression;
+            string methodName = exp.Method.Name;
+
+            return ExecuteFunc(sourceObjectVariable,
+                methodName, parameters, destinationVariable, nextCommand);
+        }
+
+        /// <summary>
+        /// Serializable, ExecuteFunc but no return variable.
         /// </summary>
         /// <param name="sourceObjectVariable"></param>
         /// <param name="methodName"></param>
@@ -89,8 +123,27 @@ namespace FileExplorer.Script
         public static IScriptCommand ExecuteMethod(string sourceObjectVariable = "{Source}",
             string methodName = "Method", object[] parameters = null, IScriptCommand nextCommand = null)
         {
-            return AssignMethodResult(sourceObjectVariable, methodName, parameters, null, nextCommand);
+            return ExecuteFunc(sourceObjectVariable, methodName, parameters, null, nextCommand);
         }
+
+        /// <summary>
+        /// Serializable, ExecuteFunc but no return variable.
+        /// </summary>
+        ///  IScriptCommand cmd = ScriptCommands.ExecuteMethod(iSupportDragVariable,
+        ///         (ISupportShellDrop isd) => isd.QueryDropDraggables(null), 
+        ///         new object[] { }, nextCommand);;
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="methodName"></param>
+        /// <param name="parameters"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand ExecuteMethod<T,R>(string sourceObjectVariable = "{Source}",
+            Expression<Func<T, R>> expression = null, object[] parameters = null, IScriptCommand nextCommand = null)
+        {
+            return ExecuteFunc<T,R>(sourceObjectVariable,
+              expression, parameters, null, nextCommand);
+        }
+
 
         /// <summary>
         /// Serializable, shortcut method for [AssignValueConverter], which obtains value of a property from a variable and assign to another variable.
@@ -145,7 +198,7 @@ namespace FileExplorer.Script
         /// <param name="nextCommand"></param>
         /// <returns></returns>
         public static IScriptCommand SetProperty<C, T>(string sourceObjectVariable = "{Source}",
-           Expression<Func<C, T>> expression = null, 
+           Expression<Func<C, T>> expression = null,
            string valueVariable = "{Value}", IScriptCommand nextCommand = null)
         {
             MemberExpression memberExpression = (MemberExpression)expression.Body;

@@ -48,5 +48,10 @@ namespace Test_ShellDragDemo
         {
             return FileName.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return "FVM - " + DisplayName;
+        }
     }
 }

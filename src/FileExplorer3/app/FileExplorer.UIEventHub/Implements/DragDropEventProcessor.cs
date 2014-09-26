@@ -152,9 +152,10 @@ namespace FileExplorer.WPF.BaseControls
                                     HubScriptCommands.QueryShellDragInfo("{ISupportDrop}", "{DataObj}", "{DragDrop.Draggables}", "{DragDrop.QueryDropResult}", false,                                                   
                                         //If QueryShellDragInfo Success, if DragMethod...
                                         ScriptCommands.IfEquals(QueryDrag.DragMethodKey, DragMethod.Menu,                                                     
-                                            //is Menu, then Show Menu.
-                                            ScriptCommands.Assign("{DragDrop.SupportDragBackup}", "{DragDrop.SupportDrag}", false, 
-                                                        HubScriptCommands.ShowDragAdornerContextMenu("{DragDrop.Adorner}", 
+                                            //Backup because ISupportDrag parameter is reset after this command is completed.
+                                            ScriptCommands.Assign("{DragDrop.SupportDragBackup}", "{DragDrop.SupportDrag}", false,
+                                                //is Menu, then Show Menu.
+                                                HubScriptCommands.ShowDragAdornerContextMenu("{DragDrop.Adorner}", 
                                                             "{DragDrop.QueryDropResult.SupportedEffects}", 
                                                             "{DragDrop.QueryDropResult.PreferredEffect}", 
                                                             "{ResultEffect}", 

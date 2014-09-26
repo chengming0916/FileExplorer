@@ -15,7 +15,7 @@ namespace FileExplorer.UIEventHub
 
     public interface ISupportDrop
     {
-        bool IsDraggingOver { set; }
+        bool IsDraggingOver { get;  set; }
         bool IsDroppable { get; }
         string DropTargetLabel { get; }
         QueryDropEffects QueryDrop(IDraggable[] draggables, DragDropEffects allowedEffects);        
@@ -25,7 +25,7 @@ namespace FileExplorer.UIEventHub
     public class NullSupportDrop : ISupportDrop
     {
         public static ISupportDrop Instance = new NullSupportDrop();
-        public bool IsDraggingOver { set { } }
+        public bool IsDraggingOver { get; set; }
         public bool IsDroppable { get { return false; }}
         public string DropTargetLabel { get { return null; }}
         public QueryDropEffects QueryDrop(IDataObject da, DragDropEffects allowedEffects)

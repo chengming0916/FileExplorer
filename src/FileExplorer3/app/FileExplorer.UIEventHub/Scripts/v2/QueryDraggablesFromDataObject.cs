@@ -30,25 +30,31 @@ namespace FileExplorer.UIEventHub
                 SkipIfExists = skipIfExists,
                 NextCommand = (ScriptCommandBase)nextCommand
             };
+
+            //IScriptCommand cmd = ScriptCommands.ExecuteFunc(iSupportDropVariable,
+            //   (ISupportShellDrop isd) => isd.QueryDropDraggables(null), 
+            //   new object[] { dataObjectVariable }, destinationVariable, nextCommand);
+            //return skipIfExists ? ScriptCommands.IfNotAssigned(destinationVariable, cmd) : cmd;
         }
 
-        ///// <summary>
-        ///// Find DataObject (IDataObject) and then Draggables (IDraggables[]) from IShellSupportDrop and assign them.
-        ///// </summary>
-        ///// <param name="iSupportDropVariable"></param>
-        ///// <param name="destinationDataObjectVariable"></param>
-        ///// <param name="destinationVariable"></param>
-        ///// <param name="skipIfExists"></param>
-        ///// <param name="nextCommand"></param>
-        ///// <returns></returns>
-        // public static IScriptCommand QueryDraggablesAndDataObject(
-        //    string iSupportDropVariable = "{ISupportDrop}", string destinationDataObjectVariable = "{DataObj}", 
-        //    string destinationVariable = "{Draggables}", bool skipIfExists = false, IScriptCommand nextCommand = null)
-        // {
-        //     return HubScriptCommands.AssignDataObject(destinationDataObjectVariable, false,
-        //          HubScriptCommands.QueryDraggablesFromDataObject(iSupportDropVariable, 
-        //          destinationDataObjectVariable, destinationVariable, false, nextCommand));
-        // }
+        /// <summary>
+        /// Obtain DataObject (IDataObject) and assign to a variable, or assign null if not found.
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="iSupportDropVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+        public static IScriptCommand QueryDataObjectFromDraggables(
+            string iSupportDragVariable = "{ISupportDrag}", string draggablesVariable = "{Draggables}",
+            string destinationVariable = "{DataObj}", bool skipIfExists = false, IScriptCommand nextCommand = null)
+        {
+            IScriptCommand cmd = ScriptCommands.ExecuteFunc(iSupportDragVariable,
+                (ISupportDrag isd) => isd.GetDraggables(),
+                new object[] { }, destinationVariable, nextCommand);
+            return skipIfExists ? ScriptCommands.IfNotAssigned(destinationVariable, cmd) : cmd;
+        }
+
 
         /// <summary>
         /// Obtain DataObject, Draggables and DropEffects, by calling AssignDataObject, QuerryDraggablesFromDataObject
@@ -71,7 +77,7 @@ namespace FileExplorer.UIEventHub
                          //And if there's draggables,
                              ScriptCommands.IfAssigned("{DragDrop.Draggables}",
                                 //Call ISupportDrop.QueryDropEffects() to get QueryDropEffect.
-                                HubScriptCommands.QueryDropEffects(iSupportDropVariable, destinationVariable, destinationDataObjectVariable,
+                                HubScriptCommands.QueryDropEffects(iSupportDropVariable, destinationVariable, destinationDataObjectVariable, null,
                                    queryDropResultVariable, false, 
                                    ScriptCommands.IfEquals(queryDropResultVariable, FileExplorer.UIEventHub.QueryDropEffects.None, 
                                    otherwiseCommand, 

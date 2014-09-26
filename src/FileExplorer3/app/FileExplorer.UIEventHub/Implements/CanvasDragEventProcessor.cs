@@ -44,7 +44,7 @@ namespace FileExplorer.WPF.BaseControls
                                 //And Escape is pressed.
                                 HubScriptCommands.IfKeyGesture("Esc",
                                    //Cancel Canvas drop (by clear {DragDrop} parameters)
-                                    HubScriptCommands.CancelDragDropCanvas(
+                                    DragDropScriptCommands.CancelCanvasDrag(
                                         //Set {EventArgs.Handled} to true.
                                         HubScriptCommands.SetRoutedEventHandled(
                                            //and Detach adorner.
@@ -83,7 +83,7 @@ namespace FileExplorer.WPF.BaseControls
                                 HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", null, false,
                                     //If ISupportDrag is assigned to a non-null value,                                     
                                     //Initialize DragLiteParameters (in {DragDrop} global parameterDic).
-                                        HubScriptCommands.StartDragDropLite("{ISupportDrag}",
+                                        DragDropScriptCommands.StartCanvasDrag("{ISupportDrag}",
                                         //then set {EventArgs.Handled} to true.
                                         HubScriptCommands.SetRoutedEventHandled( 
                                             //And attach/update adorner.
@@ -106,7 +106,7 @@ namespace FileExplorer.WPF.BaseControls
                          HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}", AttachedProperties.IsDraggingProperty, false,
                             HubScriptCommands.SetDependencyPropertyValue<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,
                                 //Update position of each IPostionAware and clear {DragDrop} parameters)
-                                HubScriptCommands.EndDragDropCanvas( 
+                                DragDropScriptCommands.EndCanvasDrag( 
                                     //Set {EventArgs.Handled} to true.
                                     HubScriptCommands.SetRoutedEventHandled(
                                         //Detach adorner.
