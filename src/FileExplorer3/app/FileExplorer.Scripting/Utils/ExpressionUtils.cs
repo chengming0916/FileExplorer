@@ -15,7 +15,7 @@ namespace FileExplorer.Utils
             var mInfo = typeof(Math)
                 .GetRuntimeMethods().First(m => m.Name == "Abs" && m.GetParameters().First().ParameterType == typeof(T));
             return (T)mInfo.Invoke(null, new object[] { a });
-        }
+        }        
 
         //http://www.yoda.arachsys.com/csharp/genericoperators.html
         public static T Add<T>(T a, T b)

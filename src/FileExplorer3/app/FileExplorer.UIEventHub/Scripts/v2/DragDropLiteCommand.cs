@@ -14,9 +14,9 @@ using System.Windows.Documents;
 
 namespace FileExplorer.UIEventHub
 {
-    public static partial class HubScriptCommands
+    public static partial class DragDropScriptCommands
     {
-        public static IScriptCommand StartDragDropLite(string dragSourceVariable = "{ISupportDrag}",
+        public static IScriptCommand StartCanvasDrag(string dragSourceVariable = "{ISupportDrag}",
             IScriptCommand nextCommand = null, IScriptCommand failCommand = null)
         {
             return new DragDropLiteCommand()
@@ -29,7 +29,22 @@ namespace FileExplorer.UIEventHub
         }
 
 
-        public static IScriptCommand EndDragDropCanvas(IScriptCommand nextCommand = null)
+        public static IScriptCommand StartLiteDrag(string dragSourceVariable = "{ISupportDrag}",
+            IScriptCommand nextCommand = null, IScriptCommand failCommand = null)
+        {
+            return
+                HubScriptCommands.AssignDragMethod(QueryDrag.DragMethodKey,
+                new DragDropLiteCommand()
+            {
+                State = DragDropLiteState.StartLite,
+                DragSourceKey = dragSourceVariable,
+                NextCommand = (ScriptCommandBase)nextCommand,
+                FailCommand = (ScriptCommandBase)failCommand
+            });
+        }
+
+
+        public static IScriptCommand EndCanvasDrag(IScriptCommand nextCommand = null)
         {
             return new DragDropLiteCommand()
             {
@@ -38,7 +53,7 @@ namespace FileExplorer.UIEventHub
             };
         }
 
-        public static IScriptCommand CancelDragDropCanvas(IScriptCommand nextCommand = null)
+        public static IScriptCommand CancelCanvasDrag(IScriptCommand nextCommand = null)
         {
             return new DragDropLiteCommand()
             {
@@ -48,7 +63,7 @@ namespace FileExplorer.UIEventHub
         }
     }
 
-    public enum DragDropLiteState { StartCanvas, EndCanvas, CancelCanvas }
+    public enum DragDropLiteState { StartCanvas, EndCanvas, CancelCanvas, StartLite }
 
     public class DragDropLiteCommand : UIScriptCommandBase<Control, RoutedEventArgs>
     {
@@ -81,9 +96,9 @@ namespace FileExplorer.UIEventHub
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<DragDropLiteCommand>();
 
         static DragDropLiteCommand()
-        {            
+        {
             DragDropModeKey = "{DragDrop.Mode}";
-            DragDropDraggingItemsKey = "{DragDrop.DraggingItems}";
+            DragDropDraggingItemsKey = "{DragDrop.Draggables}";
             DragDropEffectsKey = "{DragDrop.Effects}";
             DragDropDragSourceKey = "{DragDrop.DragSource}";
             DragDropStartPositionKey = "{DragDrop.StartPosition}";
@@ -103,14 +118,14 @@ namespace FileExplorer.UIEventHub
             ISupportDrag isd = pm.GetValue<ISupportDrag>(DragSourceKey);
             if (DragLiteParameters.DragMode == DragMode.None && isd != null)
             {
-
-
-                IDataObject dataObj = DragLiteParameters.DragSource is ISupportShellDrag ?
-                    (DragLiteParameters.DragSource as ISupportShellDrag).GetDataObject(DragLiteParameters.DraggingItems) : null;
+                var draggables = isd.GetDraggables();
+                IDataObject dataObj = isd is ISupportShellDrag ?
+                    (isd as ISupportShellDrag).GetDataObject(draggables) : null;
+                DragDropEffects effect = isd.QueryDrag(draggables);
 
                 pm.SetValue(DragDropModeKey, mode);
-                pm.SetValue(DragDropDraggingItemsKey, isd.GetDraggables());
-                pm.SetValue(DragDropEffectsKey, isd.QueryDrag(DragLiteParameters.DraggingItems));
+                pm.SetValue(DragDropDraggingItemsKey, draggables);
+                pm.SetValue(DragDropEffectsKey, effect);
                 pm.SetValue(DragDropDragSourceKey, isd);
                 pm.SetValue(DragDropStartPositionKey, pm.GetValue<Point>(CurrentPositionAdjustedKey));
                 pm.SetValue(InputKey, new DragInput(input, dataObj, DragDropEffects.Copy, (eff) => { }));
@@ -141,12 +156,14 @@ namespace FileExplorer.UIEventHub
             logger.Debug(State.ToString());
             switch (State)
             {
+                case DragDropLiteState.StartLite:
                 case DragDropLiteState.StartCanvas:
-                    if (dragStart(pm, input, "Canvas"))
+                    string mode = State == DragDropLiteState.StartLite ? "Lite" : "Canvas";
+                    if (dragStart(pm, input, mode))
                     {
                         foreach (var item in
                              pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey)
-                             .Where(i => i is IPositionAware))
+                             .Where(i => (State == DragDropLiteState.StartLite) || i is IPositionAware))
                             item.IsDragging = true;
                         return NextCommand;
                     }
@@ -170,7 +187,7 @@ namespace FileExplorer.UIEventHub
 
                         if (State == DragDropLiteState.EndCanvas)
                             foreach (var posAwareItem in items.Cast<IPositionAware>())
-                                posAwareItem.OffsetPosition(movePt);                                
+                                posAwareItem.OffsetPosition(movePt);
 
                     }
 

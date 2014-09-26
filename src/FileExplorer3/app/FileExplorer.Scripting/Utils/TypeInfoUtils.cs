@@ -76,6 +76,15 @@ namespace FileExplorer.WPF.Utils
             return retVal;
         }
 
+        public static IEnumerable<PropertyInfo> EnumeratePropertyInfoRecursive(this TypeInfo typeInfo)
+        {
+            List<PropertyInfo> retVal = new List<PropertyInfo>();
+            retVal.AddRange(typeInfo.DeclaredProperties);                
+            if (typeInfo.BaseType != null)            
+                retVal.AddRange(EnumeratePropertyInfoRecursive(typeInfo.BaseType.GetTypeInfo()));            
+            return retVal;
+        }
+
         public static MethodInfo GetMethodInfoRecursive(this TypeInfo typeInfo, string methodName)
         {
             var retVal = typeInfo.DeclaredMethods.FirstOrDefault(pi => pi.Name.Equals(methodName));

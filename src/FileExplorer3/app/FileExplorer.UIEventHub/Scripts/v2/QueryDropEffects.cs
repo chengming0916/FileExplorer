@@ -15,14 +15,25 @@ namespace FileExplorer.UIEventHub
 
     public static partial class HubScriptCommands
     {
+        /// <summary>
+        /// Get DropEffects by calling ISupportDrop.QueryDrop(Draggables,[DataObject]), and store it to destinationVariable.
+        /// </summary>
+        /// <param name="dropTargetVariable"></param>
+        /// <param name="draggablesVariable"></param>
+        /// <param name="dataObjVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="skipIfExists"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand QueryDropEffects(string dropTargetVariable = "{ISupportDrop}", string draggablesVariable = "{Draggables}", 
-            string dataObjVariable = "{DataObj}", string destinationVariable = "{Effects}", bool skipIfExists = false, IScriptCommand nextCommand = null)
+            string dataObjVariable = "{DataObj}", string allowedEffectVariable = null, string destinationVariable = "{Effects}", bool skipIfExists = false, IScriptCommand nextCommand = null)
         {
             return new QueryDropEffectsCommand()
             {
                 DropTargetKey = dropTargetVariable,
                 DraggablesKey = draggablesVariable,
                 DataObjectKey = dataObjVariable,
+                AllowedEffectsKey = allowedEffectVariable,
                 DestinationKey = destinationVariable,
                 SkipIfExists = skipIfExists,
                 NextCommand = (ScriptCommandBase)nextCommand
@@ -46,6 +57,11 @@ namespace FileExplorer.UIEventHub
         public string DataObjectKey { get; set; }
 
         /// <summary>
+        /// If specified, use as AllowedEffect when query.
+        /// </summary>
+        public string AllowedEffectsKey { get; set; }
+
+        /// <summary>
         /// Point to returned value (QueryDropResult) from DropTarget.QueryDrop() method, Default={Effects}.
         /// </summary>
         public string DestinationKey { get; set; }
@@ -57,11 +73,12 @@ namespace FileExplorer.UIEventHub
 
 
         public QueryDropEffectsCommand()
-            : base("QueryDropResultCommand")
+            : base("QueryDropEffectsCommand")
         {
             DropTargetKey = "{ISupportDrop}";
             DraggablesKey = "{Draggables}";
             DataObjectKey = "{DataObj}";
+            AllowedEffectsKey = null;
             DestinationKey = "{Effects}";
             SkipIfExists = false;
         }
@@ -73,10 +90,19 @@ namespace FileExplorer.UIEventHub
             DragEventArgs devnt = evnt as DragEventArgs;
             ISupportDrop dropTarget = pm.GetValue<ISupportDrop>(DropTargetKey);
             IDraggable[] draggables = pm.GetValue<IDraggable[]>(DraggablesKey);
-            if (devnt != null && dropTarget != null && draggables != null)
+            DragDropEffects allowedEffects = pm.HasValue(AllowedEffectsKey) ? pm.GetValue<DragDropEffects>(AllowedEffectsKey)
+                : devnt != null ? devnt.AllowedEffects : DragDropEffects.All;
+
+            if (dropTarget != null && draggables != null)
             {
-                var queryDropEffect = dropTarget.QueryDrop(draggables, devnt.AllowedEffects);
-                devnt.Effects = queryDropEffect.SupportedEffects;
+                QueryDropEffects queryDropEffect = QueryDropEffects.None;
+                if (devnt != null)
+                {
+                    queryDropEffect = dropTarget.QueryDrop(draggables, allowedEffects);
+                    devnt.Effects = queryDropEffect.SupportedEffects;
+                }
+                else queryDropEffect = dropTarget.QueryDrop(draggables, allowedEffects);
+
                 pm.SetValue(DestinationKey, queryDropEffect, SkipIfExists);
             }
             return NextCommand;

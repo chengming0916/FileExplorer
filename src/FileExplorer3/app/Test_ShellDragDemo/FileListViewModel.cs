@@ -20,7 +20,7 @@ namespace Test_ShellDragDemo
         private ObservableCollection<FileViewModel> _items = new ObservableCollection<FileViewModel>();
         private bool _isDraggingOver, _isDraggingFrom;
 
-        public ObservableCollection<FileViewModel> Items { get { return _items; } }
+        public ObservableCollection<FileViewModel> Items { get { return _items; } }        
         public dynamic Commands { get; private set; }
 
         public FileListViewModel(string label)
@@ -116,6 +116,8 @@ namespace Test_ShellDragDemo
 
         public DragDropEffects Drop(IDraggable[] draggables, IDataObject da, DragDropEffects allowedEffects)
         {
+            foreach (var fvm in Items)
+                fvm.IsSelected = false;
             foreach (var fvm in draggables.Cast<FileViewModel>())
                 this.Items.Add(fvm);
             if (allowedEffects.HasFlag(DragDropEffects.Move))

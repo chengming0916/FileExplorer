@@ -12,7 +12,7 @@ namespace FileExplorer.UIEventHub
     public static partial class HubScriptCommands
     {
         /// <summary>
-        /// Serializable, Set cursor during UIElement.GiveFeedback event.
+        /// Serializable, Set cursor during UIElement.GiveFeedback/QueryCursor event.
         /// </summary>
         /// <param name="cursor"></param>
         /// <param name="nextCommand"></param>
@@ -30,7 +30,7 @@ namespace FileExplorer.UIEventHub
     /// <summary>
     /// Serializable, Set cursor during UIElement.GiveFeedback event.
     /// </summary>
-    public class SetCustomCursor : UIScriptCommandBase<UIElement, GiveFeedbackEventArgs>
+    public class SetCustomCursor : UIScriptCommandBase<UIElement, RoutedEventArgs>
     {
         public Cursor CursorType { get; set; }
 
@@ -40,15 +40,28 @@ namespace FileExplorer.UIEventHub
 
         }
 
-        protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, GiveFeedbackEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
+        protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-            if (CursorType != null)
+            if (evnt is GiveFeedbackEventArgs)
             {
-                evnt.UseDefaultCursors = false;
-                Mouse.SetCursor(CursorType);
-                evnt.Handled = true;
+                GiveFeedbackEventArgs gevnt = evnt as GiveFeedbackEventArgs;
+                if (CursorType != null)
+                {
+                    gevnt.UseDefaultCursors = false;
+                    Mouse.SetCursor(CursorType);
+                    gevnt.Handled = true;
+                }
+                else gevnt.UseDefaultCursors = true;
             }
-            else evnt.UseDefaultCursors = true;
+            else if (evnt is QueryCursorEventArgs)
+            {
+                QueryCursorEventArgs qevnt = evnt as QueryCursorEventArgs;
+                if (CursorType != null)
+                {
+                    qevnt.Cursor = CursorType;
+                    qevnt.Handled = true;
+                }
+            }
 
             return NextCommand;
         }

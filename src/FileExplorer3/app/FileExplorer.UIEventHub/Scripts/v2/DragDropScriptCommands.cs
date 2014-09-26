@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace FileExplorer.WPF.BaseControls
+namespace FileExplorer.UIEventHub
 {
 
     public static partial class DragDropScriptCommands
@@ -40,6 +40,7 @@ namespace FileExplorer.WPF.BaseControls
                 //If CanDrag (ItemUnderMouse is selected), Check and set IsDraggingProperty to true.
                 ScriptCommands.SetPropertyValue(iShellDragVariable, (ISupportDrag d) => d.IsDraggingFrom, true, 
                 HubScriptCommands.AssignDragMethod(QueryDrag.DragMethodKey,
+                
                 //Initialize shell based drag drop
                 HubScriptCommands.QueryDrag(iShellDragVariable, "{DragResult}",                
                 //Reset IsDragging property.
@@ -84,7 +85,9 @@ namespace FileExplorer.WPF.BaseControls
                        ScriptCommands.Assign("{MethodLabel}", queryDropSupportedEffectsVariable),
                        ScriptCommands.Assign("{MethodLabel}", queryDropPreferredEffectVariable)),
 
-                   ScriptCommands.FormatText(adornerTextVariable, "{MethodLabel} {ItemLabel} " + iSupportDropLabelVariable)
+                   ScriptCommands.IfEquals(queryDropResultVariable, QueryDropEffects.None,                                        
+                       ScriptCommands.FormatText(adornerTextVariable, "{ItemLabel}"), 
+                       ScriptCommands.FormatText(adornerTextVariable, "{MethodLabel} {ItemLabel} " + iSupportDropLabelVariable))
                    );
         }
 
@@ -106,7 +109,7 @@ namespace FileExplorer.WPF.BaseControls
             string queryDropResultVariable = "{DragDrop.QueryDropResult}";
             return DragDropScriptCommands.UpdateAdornerPointerPosition(adornerVariable,
               DragDropScriptCommands.UpdateAdornerDraggables(adornerVariable, draggablesVariable,
-              HubScriptCommands.QueryDropEffects(iSupportDropVariable, draggablesVariable, null, queryDropResultVariable, false,
+              HubScriptCommands.QueryDropEffects(iSupportDropVariable, draggablesVariable, null, null, queryDropResultVariable, false,
               DragDropScriptCommands.UpdateAdornerText(adornerVariable, dragMethodVariable, draggablesVariable,
                 queryDropResultVariable, iSupportDropVariable, nextCommand))));
         }

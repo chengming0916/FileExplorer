@@ -73,7 +73,7 @@ namespace FileExplorer.UIEventHub
         {
             DragAdorner dragAdorner = pm.GetValue<DragAdorner>(AdornerKey);
             DragDropEffects supportedEffects = pm.GetValue<DragDropEffects>(SupportedEffectsKey, DragDropEffects.All);
-            DragDropEffects defaultEffect = pm.GetValue<DragDropEffects>(SupportedEffectsKey, DragDropEffects.Copy);
+            DragDropEffects defaultEffect = pm.GetValue<DragDropEffects>(DefaultEffectKey, DragDropEffects.Copy);
 
             RoutedEventHandler ContextMenu_Closed = null;
             ContextMenu_Closed = (o, e) =>

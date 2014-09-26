@@ -138,6 +138,8 @@ namespace FileExplorer
             if (_store.ContainsKey(varName))
             {
                 object initValue = _store[varName];
+                if (initValue == null)
+                    return default(T);
                 if (initValue is ParameterDic && idx == -1 && variableSplit.Length > 1)
                 {
                     //Omit the first variable.

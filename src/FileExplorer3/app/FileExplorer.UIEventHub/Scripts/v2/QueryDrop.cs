@@ -15,10 +15,10 @@ namespace FileExplorer.UIEventHub
 
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand QueryDrop(string dragSourceVariable = null, string dropTargetVariable = "{ISupportDrop}", string draggablesVariable = "{Draggables}", 
-            string dataObjVariable = "{DataObj}", string dropEffectVariable = "{Effect}", 
+        public static IScriptCommand QueryDrop(string dragSourceVariable = null, string dropTargetVariable = "{ISupportDrop}", string draggablesVariable = "{Draggables}",
+            string dataObjVariable = "{DataObj}", string dropEffectVariable = "{Effect}",
             string destinationVariable = "{ResultEffect}",
-            bool skipIfExists = false, 
+            bool skipIfExists = false,
             IScriptCommand nextCommand = null)
         {
             return new QueryDropCommand()
@@ -68,7 +68,7 @@ namespace FileExplorer.UIEventHub
         public bool SkipIfExists { get; set; }
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<QueryDrag>();
-        
+
 
 
         public QueryDropCommand()
@@ -90,22 +90,28 @@ namespace FileExplorer.UIEventHub
             ISupportDrag dragSource = pm.GetValue<ISupportDrag>(DragSourceKey);
             ISupportDrop dropTarget = pm.GetValue<ISupportDrop>(DropTargetKey);
             IDraggable[] draggables = pm.GetValue<IDraggable[]>(DraggablesKey);
-            if (devnt != null && dropTarget != null && draggables != null)
+            if (dropTarget != null && draggables != null)
             {
                 DragDropEffects effect =
-                    pm.HasValue<DragDropEffects>(DropEffectKey) ?
-                    pm.GetValue<DragDropEffects>(DropEffectKey) : devnt.AllowedEffects;
+                    pm.HasValue<DragDropEffects>(DropEffectKey) ? pm.GetValue<DragDropEffects>(DropEffectKey) :
+                    devnt != null ? devnt.AllowedEffects : DragDropEffects.All;
+                DragDropEffects resultEffect = DragDropEffects.None;
+
                 var dataObj = pm.GetValue<IDataObject>(DataObjectKey);
 
-                if (dropTarget is ISupportShellDrop)
-                    devnt.Effects = (dropTarget as ISupportShellDrop).Drop(draggables, dataObj, effect);
-                else devnt.Effects = dropTarget.Drop(draggables, devnt.AllowedEffects);
+                if (effect != DragDropEffects.None)
+                    if (dropTarget is ISupportShellDrop)
+                        resultEffect = (dropTarget as ISupportShellDrop).Drop(draggables, dataObj, effect);
+                    else resultEffect = dropTarget.Drop(draggables, effect);
 
-                pm.SetValue(DestinationKey, devnt.Effects, SkipIfExists);
+                if (devnt != null)
+                    devnt.Effects = resultEffect;
+
+                pm.SetValue(DestinationKey, resultEffect, SkipIfExists);
                 if (dragSource != null)
-                    dragSource.OnDragCompleted(draggables, devnt.Effects);
+                    dragSource.OnDragCompleted(draggables, resultEffect);
             }
-    
+
             return NextCommand;
         }
 
