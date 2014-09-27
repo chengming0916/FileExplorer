@@ -1,6 +1,7 @@
 ﻿using FileExplorer.Defines;
 using FileExplorer.Script;
 using FileExplorer.UIEventHub;
+using FileExplorer.UIEventHub.Defines;
 using FileExplorer.WPF.BaseControls;
 using System;
 using System.Collections.Generic;
@@ -53,11 +54,14 @@ namespace FileExplorer.UIEventHub
         /// <summary>
         /// Update the DragAdorner's PointerPosition so selected Items will be shown at the spot.
         /// </summary>
-        public static IScriptCommand UpdateAdornerPointerPosition(string adornerVariable = "{DragDrop.Adorner}", IScriptCommand nextCommand = null)
+        public static IScriptCommand UpdateAdornerPointerPosition(string adornerVariable = "{DragDrop.Adorner}",  IScriptCommand nextCommand = null)
         {
             string cursorPositionVariable = "{DragDrop.CursorPosition}";
             return HubScriptCommands.AssignCursorPosition(PositionRelativeToType.Window, cursorPositionVariable, false,
-              ScriptCommands.SetProperty(adornerVariable, (DragAdorner a) => a.PointerPosition, cursorPositionVariable, nextCommand));
+                    ScriptCommands.RunSequence(null, 
+                        ScriptCommands.IfEquals(DragDropLiteCommand.DragDropDeviceKey, UIInputType.Touch,  
+                            HubScriptCommands.OffsetPositionValue("{DragDrop.CursorPosition}", new Point(-100,-100), "{DragDrop.CursorPosition}")),
+                        ScriptCommands.SetProperty(adornerVariable, (DragAdorner a) => a.PointerPosition, cursorPositionVariable, nextCommand)));
         }
         /// <summary>
         /// Update DragAdorner's Text to Move xyz.txt to Dest, syntax =

@@ -45,7 +45,7 @@ namespace FileExplorer.WPF.BaseControls
 
 
         protected override IScriptCommand onEvent(RoutedEvent eventId)
-        {
+        {            
             if (eventId.Name.Contains("Mouse") && !EnableMouse)
                 return base.onEvent(eventId);
             if (eventId.Name.Contains("Touch") && !EnableTouch)
@@ -88,16 +88,16 @@ namespace FileExplorer.WPF.BaseControls
                     return _cmdDic.MouseDrag ?? (_cmdDic.MouseDrag =
                             ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                                 //If not handled.
-                                HubScriptCommands.IfNotRoutedEventHandled(
-                                    //IfCanDrag (assigned from PreviewMouseDown)
-                                    ScriptCommands.IfTrue("{DragDrop.CanDrag}",
+                                HubScriptCommands.IfNotRoutedEventHandled(                                    
+                                    //IfCanDrag (assigned from PreviewMouseDown)                                    
+                                    ScriptCommands.IfTrue("{DragDrop.CanDrag}",                                        
                                         //Reset CanDrag
                                         ScriptCommands.Assign("{DragDrop.CanDrag}", false, false,
                                             //Mark handled, prevent MultiSelect from processing.
                                             HubScriptCommands.SetRoutedEventHandled(
                                                 //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.                                                
-                                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{DragDrop.SupportDrag}", null, false,
-                                                    //Determine DragMethod and call QueryDrag().
+                                                HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportShellDrag, "{DragDrop.SupportDrag}", null, false,
+                                                    //Determine DragMethod and call QueryDrag().                                                       
                                                     DragDropScriptCommands.StartLiteDrag("{DragDrop.SupportDrag}")
                                                    )))))));
             }
@@ -105,15 +105,15 @@ namespace FileExplorer.WPF.BaseControls
             if (EnableDrop)
                 switch (eventId.Name)
                 {
-                
-                //case "QueryCursor": return _cmdDic.GiveFeedback ?? (_cmdDic.GiveFeedback =
-                //       ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
-                //        //If QueryDropResult returns none, set cursor to not droppable.
-                //         ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Lite", 
-                //            HubScriptCommands.QueryDropEffects("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", DragDropLiteCommand.DragDropEffectsKey, "{DragDrop.QueryDropResult}", false,
-                //                ScriptCommands.IfEquals("{DragDrop.QueryDropResult}", QueryDropEffects.None,
-                //                    HubScriptCommands.SetCustomCursor(Cursors.No), 
-                //                    HubScriptCommands.SetCustomCursor(Cursors.Arrow) )))));
+
+                    case "QueryCursor": return _cmdDic.GiveFeedback ?? (_cmdDic.GiveFeedback =
+                           ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
+                            //If QueryDropResult returns none, set cursor to not droppable.
+                             ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Lite",
+                                HubScriptCommands.QueryDropEffects("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", DragDropLiteCommand.DragDropEffectsKey, "{DragDrop.QueryDropResult}", false,
+                                    ScriptCommands.IfEquals("{DragDrop.QueryDropResult}", QueryDropEffects.None,
+                                        HubScriptCommands.SetCustomCursor(Cursors.No),
+                                        HubScriptCommands.SetCustomCursor(Cursors.Arrow))))));
                 
                 case "TouchMove":
                 case "MouseMove":
@@ -121,13 +121,13 @@ namespace FileExplorer.WPF.BaseControls
                         HubScriptCommands.ThrottleTouchDrag(5, 
                         ScriptCommands.AssignGlobalParameterDic("{DragDrop}", false,
                         //If not handled.
-                                HubScriptCommands.IfNotRoutedEventHandled(
-                                    ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Lite",
+                                HubScriptCommands.IfNotRoutedEventHandled(                                
+                                    ScriptCommands.IfEquals(DragDropLiteCommand.DragDropModeKey, "Lite",                                    
                                      HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrop, "{ISupportDrop}", "{ElementSupportDrop}", false,
                         //And if there's one,             
                         //If Moved to different support drop.                                                                                
-                                ScriptCommands.IfEquals("{ISupportDrop}", "{DragDrop.SupportDrop}",
-                                     DragDropScriptCommands.UpdateAdornerPointerPosition("{DragDrop.Adorner}"),
+                                ScriptCommands.IfEquals("{ISupportDrop}", "{DragDrop.SupportDrop}",                                
+                                     DragDropScriptCommands.UpdateAdornerPointerPosition("{DragDrop.Adorner}"),                                     
                                      HubScriptCommands.QueryDropEffects("{ISupportDrop}", "{DragDrop.Draggables}", "{DataObj}", DragDropLiteCommand.DragDropEffectsKey, "{DragDrop.QueryDropResult}", false,
                                             ScriptCommands.SetPropertyValue("{DragDrop.SupportDrop}", (ISupportDrop p) => p.IsDraggingOver, false,
                                                 ScriptCommands.Assign(new Dictionary<string, object>()

@@ -71,6 +71,7 @@
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\QueryDropEffects.cs" />
     <Compile Include="Defines\MultiSelectAttachedProperties.cs" />
+    <Compile Include="Defines\TouchGesture.cs" />
     <Compile Include="Defines\UIAttachedProperties.cs" />
     <Compile Include="Implements\CanvasDragEventProcessor.cs" />
     <Compile Include="Implements\CanvasResizeEventProcessor.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Scripts\v2\AssignCursorPosition.cs" />
     <Compile Include="Scripts\v2\AssignDataObject.cs" />
     <Compile Include="Scripts\v2\DragDropScriptCommands.cs" />
+    <Compile Include="Scripts\v2\IfTouchGesture.cs" />
+    <Compile Include="Scripts\v2\OffsetPosition.cs" />
     <Compile Include="Scripts\v2\QueryDraggablesFromDataObject.cs" />
     <Compile Include="Scripts\v2\QueryDrop.cs" />
     <Compile Include="Scripts\v2\QueryDropEffects.cs" />

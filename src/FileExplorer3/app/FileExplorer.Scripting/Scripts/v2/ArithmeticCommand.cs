@@ -48,7 +48,7 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand Add<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand AddValue<T>(string value1Variable = "{Value1}",
             T[] value2 = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -58,11 +58,11 @@ namespace FileExplorer.Script
                  Add(value1Variable, value2Variable, destinationVariable, nextCommand));                
         }
 
-        public static IScriptCommand Add<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand AddValue<T>(string value1Variable = "{Value1}",
             T value2 = default(T),
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
-            return Add<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
+            return AddValue<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
         }
         #endregion 
 
@@ -98,7 +98,7 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand Subtract<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand SubtractValue<T>(string value1Variable = "{Value1}",
             T[] value2 = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -108,11 +108,11 @@ namespace FileExplorer.Script
                  Subtract(value1Variable, value2Variable, destinationVariable, nextCommand));
         }
 
-        public static IScriptCommand Subtract<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand SubtractValue<T>(string value1Variable = "{Value1}",
             T value2 = default(T),
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
-            return Subtract<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
+            return SubtractValue<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
         }
         #endregion
 
@@ -148,7 +148,7 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand Multiply<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand MultiplyValue<T>(string value1Variable = "{Value1}",
             T[] value2 = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -158,11 +158,11 @@ namespace FileExplorer.Script
                  Multiply(value1Variable, value2Variable, destinationVariable, nextCommand));
         }
 
-        public static IScriptCommand Multiply<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand MultiplyValue<T>(string value1Variable = "{Value1}",
             T value2 = default(T),
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
-            return Multiply<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
+            return MultiplyValue<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
         }
         #endregion 
 
@@ -198,7 +198,7 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand Divide<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand DivideValue<T>(string value1Variable = "{Value1}",
             T[] value2 = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -208,11 +208,11 @@ namespace FileExplorer.Script
                  Divide(value1Variable, value2Variable, destinationVariable, nextCommand));
         }
 
-        public static IScriptCommand Divide<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand DivideValue<T>(string value1Variable = "{Value1}",
             T value2 = default(T),
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
-            return Divide<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
+            return DivideValue<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
         }
         #endregion 
 
@@ -248,7 +248,7 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand Modulo<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand ModuloValue<T>(string value1Variable = "{Value1}",
             T[] value2 = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -258,11 +258,11 @@ namespace FileExplorer.Script
                  Modulo(value1Variable, value2Variable, destinationVariable, nextCommand));
         }
 
-        public static IScriptCommand Modulo<T>(string value1Variable = "{Value1}",
+        public static IScriptCommand ModuloValue<T>(string value1Variable = "{Value1}",
             T value2 = default(T),
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
-            return Modulo<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
+            return ModuloValue<T>(value1Variable, new[] { value2 }, destinationVariable, nextCommand);
         }
         #endregion 
 

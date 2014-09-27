@@ -124,12 +124,14 @@ namespace FileExplorer.Script
                     await Task.WhenAll(ScriptCommands.Select(cmd => ScriptRunner.RunScriptAsync(pm.Clone(), cmd)));
                     break;
                 case RunMode.Queue:
-                    await ScriptRunner.RunScriptAsync(pm, ScriptCommands);
+                    await ScriptRunner.RunScriptAsync(pm, ScriptCommands)
+                        .ConfigureAwait(this.ContinueOnCaptureContext);
                     break;
                 case RunMode.Sequence:
                     foreach (var cmd in ScriptCommands)
                     {
-                        await ScriptRunner.RunScriptAsync(pm, cmd);                         
+                        await ScriptRunner.RunScriptAsync(pm, cmd)    
+                            .ConfigureAwait(this.ContinueOnCaptureContext);
                         if (pm.Error != null)
                             return ResultCommand.Error(pm.Error);
                     }

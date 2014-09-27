@@ -74,7 +74,7 @@ namespace FileExplorer.UIEventHub
                 return new TouchInput(sender, args as TouchEventArgs);
             if (args is StylusEventArgs)
                 return new StylusInput(sender, args as StylusEventArgs);
-            
+
             return new OtherInput(sender, args);
         }
 
@@ -225,6 +225,10 @@ namespace FileExplorer.UIEventHub
                 UIInputType.Touch;
             switch (touchPoint.Action)
             {
+                case TouchAction.Move:
+                    _inputState = UIInputState.Hold;
+
+                    break;
                 case TouchAction.Down:
                     _inputState = UIInputState.Pressed;
 

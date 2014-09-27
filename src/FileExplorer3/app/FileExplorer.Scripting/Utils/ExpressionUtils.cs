@@ -19,7 +19,7 @@ namespace FileExplorer.Utils
 
         //http://www.yoda.arachsys.com/csharp/genericoperators.html
         public static T Add<T>(T a, T b)
-        {
+        {        
             // declare the parameters
             ParameterExpression paramA = System.Linq.Expressions.Expression.Parameter(typeof(T), "a"),
                 paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");

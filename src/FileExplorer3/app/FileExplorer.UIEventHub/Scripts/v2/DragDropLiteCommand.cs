@@ -86,6 +86,7 @@ namespace FileExplorer.UIEventHub
         public string CurrentPositionAdjustedKey { get; set; }
 
         public static string DragDropModeKey { get; set; }
+        public static string DragDropDeviceKey { get; set; }
         public static string DragDropDraggingItemsKey { get; set; }
         public static string DragDropEffectsKey { get; set; }
         public static string DragDropDragSourceKey { get; set; }
@@ -98,6 +99,7 @@ namespace FileExplorer.UIEventHub
         static DragDropLiteCommand()
         {
             DragDropModeKey = "{DragDrop.Mode}";
+            DragDropDeviceKey = "{DragDrop.Device}";
             DragDropDraggingItemsKey = "{DragDrop.Draggables}";
             DragDropEffectsKey = "{DragDrop.Effects}";
             DragDropDragSourceKey = "{DragDrop.DragSource}";
@@ -122,8 +124,9 @@ namespace FileExplorer.UIEventHub
                 IDataObject dataObj = isd is ISupportShellDrag ?
                     (isd as ISupportShellDrag).GetDataObject(draggables) : null;
                 DragDropEffects effect = isd.QueryDrag(draggables);
-
+                
                 pm.SetValue(DragDropModeKey, mode);
+                pm.SetValue(DragDropDeviceKey, input.InputType);
                 pm.SetValue(DragDropDraggingItemsKey, draggables);
                 pm.SetValue(DragDropEffectsKey, effect);
                 pm.SetValue(DragDropDragSourceKey, isd);
@@ -139,6 +142,7 @@ namespace FileExplorer.UIEventHub
         private void dragEnd(ParameterDic pm)
         {
             pm.SetValue<object>(DragDropModeKey, null);
+            pm.SetValue<object>(DragDropDeviceKey, null);
             pm.SetValue<object>(DragDropDraggingItemsKey, null);
             pm.SetValue<object>(DragDropEffectsKey, null);
             pm.SetValue<object>(DragDropDragSourceKey, null);

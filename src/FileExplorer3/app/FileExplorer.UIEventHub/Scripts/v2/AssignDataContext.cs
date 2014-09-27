@@ -73,7 +73,7 @@ namespace FileExplorer.UIEventHub
             : base("AssignDataContext")
         {
             SourceElementKey = "{EventArgs.OriginalSource}";
-            DataContextElementKey = null;
+            DataContextElementKey = null;            
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
