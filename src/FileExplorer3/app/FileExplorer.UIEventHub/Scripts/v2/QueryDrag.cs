@@ -38,8 +38,10 @@ namespace FileExplorer.UIEventHub
                 ScriptCommands.RunSequence(nextCommand,
                 HubScriptCommands.IfMouseGesture(new MouseGesture() { MouseAction = MouseAction.RightClick },
                      ScriptCommands.Assign(variable, DragMethod.Menu),
+                     HubScriptCommands.IfTouchGesture(new TouchGesture() { TouchAction =  UITouchGesture.Drag },
+                        ScriptCommands.Assign(variable, DragMethod.Menu),
                          ScriptCommands.Assign(variable, DragMethod.Normal))
-                         );
+                         ));
         }
     }
 

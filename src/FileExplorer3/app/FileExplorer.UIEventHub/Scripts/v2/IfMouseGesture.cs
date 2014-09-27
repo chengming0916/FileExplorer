@@ -56,7 +56,7 @@ namespace FileExplorer.UIEventHub
             MouseEventArgs mouseEvent = pm.GetValue<MouseEventArgs>(RoutedEventArgsKey);            
             UIElement sender  = pm.GetValue<UIElement>(SenderKey);
             if (mouseEvent == null)
-                return ResultCommand.Error(new ArgumentException("EventArgs"));
+                return OtherwiseCommand;
 
             object MouseGestureObject = !MouseGestureKey.StartsWith("{") ? MouseGestureKey : pm.GetValue(MouseGestureKey);
             MouseGesture gesture = null;

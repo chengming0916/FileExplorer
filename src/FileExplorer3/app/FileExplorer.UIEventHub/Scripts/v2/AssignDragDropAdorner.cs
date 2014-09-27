@@ -61,7 +61,7 @@ namespace FileExplorer.UIEventHub
         protected override IScriptCommand executeInner(ParameterDic pm, UIElement sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             var adornerLayer = pm.GetValue<AdornerLayer>(AdornerLayerKey);
-            DragAdorner adorner = new DragAdorner(adornerLayer);
+            DragAdorner adorner = new DragAdorner(adornerLayer) { IsHitTestVisible = false };            
             pm.SetValue(AdornerKey, adorner);
             return NextCommand;
         }

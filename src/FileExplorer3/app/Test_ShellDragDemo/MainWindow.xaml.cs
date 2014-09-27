@@ -24,6 +24,7 @@ namespace Test_ShellDragDemo
         public MainWindow()
         {
             InitializeComponent();
+            LogManagerFactory.DefaultConfiguration.IsEnabled = false;
             FileListViewModel flvm1 = new FileListViewModel("FileList#1");
             FileListViewModel flvm2 = new FileListViewModel("FileList#2");
             lv1.DataContext = flvm1;

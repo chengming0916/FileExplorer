@@ -54,7 +54,7 @@ namespace FileExplorer.UIEventHub
         {
             KeyEventArgs keyEvent = pm.GetValue<KeyEventArgs>(RoutedEventArgsKey);
             if (keyEvent == null)
-                return ResultCommand.Error(new ArgumentException("EventArgs"));
+                return OtherwiseCommand;
 
             object keygestureObject = !KeyGestureKey.StartsWith("{") ? KeyGestureKey : pm.GetValue(KeyGestureKey);
             KeyGesture gesture = null;

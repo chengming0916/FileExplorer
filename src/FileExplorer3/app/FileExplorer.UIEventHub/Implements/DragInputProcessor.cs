@@ -50,6 +50,8 @@ namespace FileExplorer.UIEventHub
                     break;
             }
             input.IsDragging = IsDragging;
+            if (IsDragging)
+                input.TouchGesture = UITouchGesture.Drag;
         }
 
         public void UpdateInputPosition(IUIInput input)
@@ -74,14 +76,17 @@ namespace FileExplorer.UIEventHub
                     }
                 }
 
+              
             }
+
+            
 
             //Console.WriteLine(String.Format("UpdateInputPosition - {0}", _dragState));
             if (_dragState == DragState.Pressed && input.IsDragThresholdReached(_startInput))
             {
                 _dragState = DragState.Dragging;
-                _isDragging = true;
-                DragStartedFunc(input);
+                _isDragging = true;                
+                DragStartedFunc(input);                
             }
         }
 
@@ -92,7 +97,7 @@ namespace FileExplorer.UIEventHub
             {
                 if (_isDragging && _dragState == DragState.Dragging)
                 {
-                    DragStoppedFunc(input);
+                    DragStoppedFunc(input);                    
                 }
                 _isDragging = false;
                 _dragState = DragState.Released;
@@ -122,7 +127,7 @@ namespace FileExplorer.UIEventHub
                     {
                         case UIInputType.Touch:
                             _startTouchInput = input;
-                            _dragState = DragState.Touched;
+                            _dragState = DragState.Touched;                            
                             _touchTime = DateTime.UtcNow;
                             //input.EventArgs.Handled = true;
                             break;

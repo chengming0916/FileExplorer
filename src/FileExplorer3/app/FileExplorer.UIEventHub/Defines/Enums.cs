@@ -8,8 +8,8 @@ namespace FileExplorer.UIEventHub.Defines
 {
 
     public enum UIInputType { None, Mouse, MouseLeft, MouseRight, Touch, Stylus }
-    public enum UIInputState { NotApplied, Pressed, Released }
-    public enum UITouchGesture { NotApplied, FlickLeft, FlickRight, FlickUp, FlickDown }
+    public enum UIInputState { NotApplied, Pressed, Hold, Released }
+    public enum UITouchGesture { NotApplied, Drag, FlickLeft, FlickRight, FlickUp, FlickDown }
 
     public static class ShellClipboardFormats
     {
