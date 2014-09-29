@@ -281,7 +281,7 @@ namespace FileExplorer.UIEventHub
             {
                 
                 FrameworkElement item = ic.ItemContainerGenerator.ContainerFromIndex(i) as FrameworkElement;
-                if (item != null && AttachedProperties.GetIsSelecting(item))
+                if (item != null && (item.DataContext as ISelectable).IsSelected)
                 {
                     selectedList.Add(item);
                     selectedIdList.Add(i);
