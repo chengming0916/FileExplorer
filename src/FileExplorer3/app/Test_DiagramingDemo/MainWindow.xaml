@@ -59,7 +59,7 @@
             </ItemsControl.Template>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas IsItemsHost="true" Width="1000" Height="1000" />
+                    <Canvas IsItemsHost="true" MinWidth="1000" MinHeight="1000" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
