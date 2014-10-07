@@ -192,8 +192,8 @@
     <Compile Include="Themes\ThirdParty\LoadingAdorner\FrameworkElementAdorner.cs" />
     <Compile Include="Themes\ThirdParty\LoadingAdorner\LoadingWait.xaml.cs" />
     <Compile Include="UserControls\Explorer.cs" />
-    <Compile Include="UserControls\UIEvent\DropHelperImpl.cs" />
-    <Compile Include="UserControls\UIEvent\DragHelperImpl.cs" />
+    <None Include="UserControls\UIEvent\DropHelperImpl.cs" />
+    <None Include="UserControls\UIEvent\DragHelperImpl.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\ConsoleProgress.cs" />
     <Compile Include="Utils\ConsoleTarget.cs" />
@@ -206,22 +206,22 @@
     <Compile Include="ViewModels\SelectProfileViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbCommandManager.cs" />
     <Compile Include="ViewModels\Initializers\ExplorerInitializers.cs" />
-    <Compile Include="UserControls\InputProcesor\ExtensionMethods.cs" />
-    <Compile Include="UserControls\InputProcesor\IUIDragInput.cs" />
-    <Compile Include="UserControls\InputProcesor\IUIInput.cs" />
-    <Compile Include="UserControls\InputProcesor\IUIInputProcessor.cs" />
-    <Compile Include="UserControls\InputProcesor\IUIInputManager.cs" />
+    <None Include="UserControls\InputProcesor\ExtensionMethods.cs" />
+    <None Include="UserControls\InputProcesor\IUIDragInput.cs" />
+    <None Include="UserControls\InputProcesor\IUIInput.cs" />
+    <None Include="UserControls\InputProcesor\IUIInputProcessor.cs" />
+    <None Include="UserControls\InputProcesor\IUIInputManager.cs" />
     <Compile Include="UserControls\TabControlEx.cs" />
     <Compile Include="UserControls\Titlebar.cs" />
     <Compile Include="BaseControls\TitlebarContainer.cs" />
     <Compile Include="BaseControls\TitlebarControlButton.cs" />
     <Compile Include="UserControls\ToolBarEx.cs" />
-    <Compile Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
-    <Compile Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
-    <Compile Include="UserControls\UIEvent\DragDropLiteEventProcessor.cs" />
-    <Compile Include="UserControls\UIEvent\DragDropLiteScriptCommands.cs" />
-    <Compile Include="UserControls\UIEvent\ExtensionMethods.cs" />
-    <Compile Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
+    <None Include="UserControls\UIEvent\ContextMenuEventProcessor.cs" />
+    <None Include="UserControls\UIEvent\ContextMenuScriptCommands.cs" />
+    <None Include="UserControls\UIEvent\DragDropLiteEventProcessor.cs" />
+    <None Include="UserControls\UIEvent\DragDropLiteScriptCommands.cs" />
+    <None Include="UserControls\UIEvent\ExtensionMethods.cs" />
+    <None Include="UserControls\UIEvent\InputBindingsEventProcessor.cs" />
     <Compile Include="Utils\AsyncLock.cs" />
     <Compile Include="Utils\AsyncSemaphore.cs" />
     <Compile Include="Utils\ParamStringUtils.cs" />
@@ -370,15 +370,15 @@
     <Compile Include="UserControls\BreadcrumbBase.cs" />
     <Compile Include="BaseControls\DragAdorner.cs" />
     <Compile Include="Defines\AttachedProperties.cs" />
-    <Compile Include="UserControls\UIEvent\CommonCommands.cs" />
-    <Compile Include="UserControls\UIEvent\ISupportDrop.cs" />
-    <Compile Include="UserControls\UIEvent\ISupportDrag.cs" />
-    <Compile Include="UserControls\UIEvent\DragScriptCommands.cs" />
-    <Compile Include="UserControls\UIEvent\IFileDropItem.cs" />
-    <Compile Include="UserControls\UIEvent\NonsealedDataObject.cs" />
-    <Compile Include="UserControls\UIEvent\UIEventAdapter.cs" />
-    <Compile Include="UserControls\UIEvent\DragDropEventProcessor.cs" />
-    <Compile Include="UserControls\UIEvent\IDraggable.cs" />
+    <None Include="UserControls\UIEvent\CommonCommands.cs" />
+    <None Include="UserControls\UIEvent\ISupportDrop.cs" />
+    <None Include="UserControls\UIEvent\ISupportDrag.cs" />
+    <None Include="UserControls\UIEvent\DragScriptCommands.cs" />
+    <None Include="UserControls\UIEvent\IFileDropItem.cs" />
+    <None Include="UserControls\UIEvent\NonsealedDataObject.cs" />
+    <None Include="UserControls\UIEvent\UIEventAdapter.cs" />
+    <None Include="UserControls\UIEvent\DragDropEventProcessor.cs" />
+    <None Include="UserControls\UIEvent\IDraggable.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
     <Compile Include="BaseControls\GridViewColumnEx.cs" />
@@ -393,16 +393,16 @@
     <Compile Include="UserControls\ListViewEx.cs" />
     <Compile Include="UserControls\ListViewColumnUtils.cs" />
     <Compile Include="UserControls\SelectionHelper.cs" />
-    <Compile Include="UserControls\UIEvent\UIAttachedProperties.cs" />
-    <Compile Include="UserControls\UIEvent\DragnDropAttachedProperties.cs" />
-    <Compile Include="UserControls\UIEvent\DropScriptCommands.cs" />
-    <Compile Include="UserControls\UIEvent\MultiSelectAttachedProperties.cs" />
-    <Compile Include="UserControls\UIEvent\MultiSelectEventProcessor.cs" />
-    <Compile Include="UserControls\UIEvent\MultiSelectScriptCommands.cs" />
-    <Compile Include="UserControls\UIEvent\ScriptCommands.cs" />
-    <Compile Include="UserControls\UIEvent\UIEventHub.cs" />
-    <Compile Include="UserControls\UIEvent\UIEventProcessor.cs" />
-    <Compile Include="UserControls\UIEvent\VirtualDataObject.cs" />
+    <None Include="UserControls\UIEvent\UIAttachedProperties.cs" />
+    <None Include="UserControls\UIEvent\DragnDropAttachedProperties.cs" />
+    <None Include="UserControls\UIEvent\DropScriptCommands.cs" />
+    <None Include="UserControls\UIEvent\MultiSelectAttachedProperties.cs" />
+    <None Include="UserControls\UIEvent\MultiSelectEventProcessor.cs" />
+    <None Include="UserControls\UIEvent\MultiSelectScriptCommands.cs" />
+    <None Include="UserControls\UIEvent\ScriptCommands.cs" />
+    <None Include="UserControls\UIEvent\UIEventHub.cs" />
+    <None Include="UserControls\UIEvent\UIEventProcessor.cs" />
+    <None Include="UserControls\UIEvent\VirtualDataObject.cs" />
     <Compile Include="UserControls\UITools.cs" />
     <Compile Include="BaseControls\VirtualWrapPanel.cs" />
     <Compile Include="BaseControls\VirutalStackPanel.cs" />
@@ -854,6 +854,10 @@
     <ProjectReference Include="..\FileExplorer.Scripting\FileExplorer.Scripting.csproj">
       <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
       <Name>FileExplorer.Scripting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileExplorer.UIEventHub\FileExplorer.UIEventHub.csproj">
+      <Project>{528f0c1a-38b5-4a42-a8bd-702f052cdf2f}</Project>
+      <Name>FileExplorer.UIEventHub</Name>
     </ProjectReference>
     <ProjectReference Include="..\FileExplorer3\FileExplorer3 [WPF].csproj">
       <Project>{b876634c-850c-4678-a1a1-34f6ffea6d52}</Project>

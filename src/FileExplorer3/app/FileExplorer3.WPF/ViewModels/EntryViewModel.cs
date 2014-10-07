@@ -17,6 +17,7 @@ using System.Threading;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.WPF.ViewModels
 {

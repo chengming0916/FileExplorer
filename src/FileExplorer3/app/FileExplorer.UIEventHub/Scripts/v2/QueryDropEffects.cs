@@ -89,7 +89,7 @@ namespace FileExplorer.UIEventHub
         {
             DragEventArgs devnt = evnt as DragEventArgs;
             ISupportDrop dropTarget = pm.GetValue<ISupportDrop>(DropTargetKey);
-            IDraggable[] draggables = pm.GetValue<IDraggable[]>(DraggablesKey);
+            IEnumerable<IDraggable> draggables = pm.GetValue<IEnumerable<IDraggable>>(DraggablesKey);
             DragDropEffects allowedEffects = pm.HasValue(AllowedEffectsKey) ? pm.GetValue<DragDropEffects>(AllowedEffectsKey)
                 : devnt != null ? devnt.AllowedEffects : DragDropEffects.All;
 

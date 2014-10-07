@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace FileExplorer.WPF.Utils
 {
@@ -24,7 +25,7 @@ namespace FileExplorer.WPF.Utils
             if (propertyInfo == null)
                 throw new KeyNotFoundException(name);
 
-            propertyInfo.SetValue(obj, value);            
+            propertyInfo.SetValue(obj, value);
         }
 
         public static object GetPropertyOrMethod(object obj, string name)
@@ -36,10 +37,22 @@ namespace FileExplorer.WPF.Utils
 
             if (name.EndsWith("()"))
             {
-                var methodInfo = obj.GetType().GetTypeInfo().GetMethodInfoRecursive(name.TrimEnd('(', ')'));
+                TypeInfo typInfo = obj.GetType().GetTypeInfo();
+                string methodName = name.TrimEnd('(', ')');
+                var methodInfo = typInfo.GetMethodInfoRecursive(methodName);
                 if (methodInfo == null)
-                    throw new KeyNotFoundException(name);
-                else return methodInfo.Invoke(obj, new object[] { });
+                {
+                    Assembly assembly = obj is System.Collections.IEnumerable ? typeof(System.Linq.Enumerable).GetTypeInfo().Assembly :
+                        typInfo.Assembly;
+                    methodInfo = typInfo.GetMethodInfoFromExtension(mi => mi.Name.Equals(methodName), assembly).FirstOrDefault();
+                    if (methodInfo != null)
+                        return methodInfo.Invoke(null, new object[] { obj });
+                    else throw new KeyNotFoundException(name);
+                }
+                else
+                {
+                    return methodInfo.Invoke(obj, new object[] { });
+                }
             }
             else
             {
@@ -79,9 +92,9 @@ namespace FileExplorer.WPF.Utils
         public static IEnumerable<PropertyInfo> EnumeratePropertyInfoRecursive(this TypeInfo typeInfo)
         {
             List<PropertyInfo> retVal = new List<PropertyInfo>();
-            retVal.AddRange(typeInfo.DeclaredProperties);                
-            if (typeInfo.BaseType != null)            
-                retVal.AddRange(EnumeratePropertyInfoRecursive(typeInfo.BaseType.GetTypeInfo()));            
+            retVal.AddRange(typeInfo.DeclaredProperties);
+            if (typeInfo.BaseType != null)
+                retVal.AddRange(EnumeratePropertyInfoRecursive(typeInfo.BaseType.GetTypeInfo()));
             return retVal;
         }
 
@@ -91,6 +104,37 @@ namespace FileExplorer.WPF.Utils
             if (retVal == null && typeInfo.BaseType != null)
             {
                 return GetMethodInfoRecursive(typeInfo.BaseType.GetTypeInfo(), methodName);
+            }
+            return retVal;
+        }
+
+        public static IEnumerable<MethodInfo> GetMethodInfoFromExtension(this TypeInfo typeInfo,
+            Func<MethodInfo, bool> methodFilter, Assembly assembly)
+        {
+            IEnumerable<MethodInfo> retVal;
+
+            if (typeInfo.GenericTypeArguments.FirstOrDefault() == null)
+            {
+                retVal = assembly.DefinedTypes
+                  .Where(typ => typ.IsSealed && !typ.IsGenericType && !typ.IsNested)
+                  .SelectMany(typ => typ.DeclaredMethods)
+                  .Where(method => method.IsStatic &&
+                      (method.GetParameters().FirstOrDefault() != null &&
+                          method.GetParameters().FirstOrDefault().ParameterType.GetTypeInfo().Equals(typeInfo)))
+                  .Where(method => methodFilter(method));
+            }
+            else
+            {
+                Type argumentType = typeInfo.GenericTypeArguments.FirstOrDefault();
+                retVal = assembly.DefinedTypes
+                .Where(typ => typ.IsSealed && !typ.IsNested)
+                .SelectMany(typ => typ.DeclaredMethods)
+                .Where(mi => mi.IsStatic && mi.IsGenericMethod)
+                .Where(mi => mi.GetGenericArguments().Count() == 1) //Only one argument
+                .Where(mi => mi.GetParameters().Count() == 1) //Only one parameter.
+                .Select(mi => mi.MakeGenericMethod(argumentType)) //Make Generic
+                .Where(mi => mi.GetParameters().FirstOrDefault().ParameterType.GetTypeInfo().IsAssignableFrom(typeInfo))
+                .Where(mi => methodFilter(mi));
             }
             return retVal;
         }

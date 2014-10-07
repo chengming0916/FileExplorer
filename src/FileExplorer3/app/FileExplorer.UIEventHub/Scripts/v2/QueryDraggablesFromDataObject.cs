@@ -122,12 +122,12 @@ namespace FileExplorer.UIEventHub
             if (SkipIfExists && pm.HasValue(DestinationKey))
                 return NextCommand;
 
-            IDraggable[] value = new IDraggable[] {};
+            IEnumerable<IDraggable> value = new List<IDraggable>();
          
             ISupportShellDrop issd = pm.GetValue<ISupportShellDrop>(ISupportDropKey);
             IDataObject dataObj = pm.GetValue<IDataObject>(DataObjectKey);
             if (issd != null && dataObj != null)
-                value = (issd.QueryDropDraggables(dataObj) ?? new IDraggable[] {}).ToArray();
+                value = (issd.QueryDropDraggables(dataObj) ?? new List<IDraggable>());
 
             pm.SetValue(DestinationKey, value, SkipIfExists);
             return NextCommand;                                    

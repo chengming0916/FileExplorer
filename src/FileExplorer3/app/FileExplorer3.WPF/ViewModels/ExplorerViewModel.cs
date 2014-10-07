@@ -19,6 +19,7 @@ using System.Windows.Input;
 using System.Windows;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.WPF.ViewModels
 {

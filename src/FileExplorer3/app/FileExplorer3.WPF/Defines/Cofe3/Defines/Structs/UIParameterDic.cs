@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using FileExplorer;
-using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.Script
 {
@@ -37,6 +37,7 @@ namespace FileExplorer.WPF.BaseControls
     /// <summary>
     /// Specialized for IUIEventHub uses.
     /// </summary>
+    [Obsolete]
     public class UIParameterDic : ParameterDic
     {
         public string EventName

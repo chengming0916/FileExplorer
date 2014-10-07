@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using FileExplorer.Models;
+using FileExplorer.UIEventHub;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Helpers;
 using System;

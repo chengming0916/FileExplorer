@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using FileExplorer.WPF.ViewModels;
-using FileExplorer.WPF.UserControls.InputProcesor;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.Script
 {

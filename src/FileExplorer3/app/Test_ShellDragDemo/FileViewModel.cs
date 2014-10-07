@@ -11,14 +11,21 @@ namespace Test_ShellDragDemo
 {
     public class FileViewModel : NotifyPropertyChanged, IDraggable, ISelectable
     {
-        public FileViewModel(string fileName)
+        public FileViewModel(FileModel model)
         {
-            FileName = fileName;
-            DisplayName = Path.GetFileName(fileName);
+            Model = model;
+
         }
 
-        public string FileName { get; set; }
-        public string DisplayName { get; set; }
+        public FileViewModel(string fileName)
+            : this(new FileModel(fileName))
+        {
+            
+        }
+
+        public FileModel Model { get; set; }
+        public string DisplayName { get { return Path.GetFileName(Model.FileName); } }
+        
         private bool _isDragging = false;
         public bool IsDragging
         {
@@ -41,12 +48,12 @@ namespace Test_ShellDragDemo
 
         public override bool Equals(object obj)
         {
-            return obj is FileViewModel && obj.GetHashCode() == GetHashCode();
+            return obj is FileViewModel && (obj as FileViewModel).Model.Equals(Model);
         }
 
         public override int GetHashCode()
         {
-            return FileName.GetHashCode();
+            return Model.GetHashCode();
         }
 
         public override string ToString()

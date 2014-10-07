@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FileExplorer.UIEventHub;
+using FileExplorer.WPF.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +9,7 @@ using System.Windows;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
-    public class TreeDragHelper<T> : ISupportDrag       
+    public class TreeDragHelper<T> : NotifyPropertyChanged, ISupportDrag       
     {
 
         #region Constructor
@@ -53,6 +55,11 @@ namespace FileExplorer.WPF.ViewModels.Helpers
             return _dataObjectFunc(entryModels);
         }
 
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect)
+        {
+            OnDragCompleted(draggables, null, effect);
+        }
+
         public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
         {
             if (_dragCompletedAction == null)
@@ -70,12 +77,26 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         private Func<IEnumerable<T>, IDataObject> _dataObjectFunc;
         private Action<IEnumerable<T>, IDataObject, DragDropEffects> _dragCompletedAction;
         private Func<IEnumerable<IDraggable>> _getDraggableFunc;
+        private bool _isDraggingFrom = false;
 
         #endregion
 
         #region Public Properties
 
+        public bool IsDraggingFrom
+        {
+            get { return _isDraggingFrom; }
+            set { _isDraggingFrom = value; NotifyOfPropertyChanged(() => IsDraggingFrom); }
+        }
+
         #endregion
 
+
+
+
+
+
+
+        
     }
 }

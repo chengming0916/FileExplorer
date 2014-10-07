@@ -9,9 +9,9 @@ namespace FileExplorer.UIEventHub
 {
     
     public interface ISupportShellDrop : ISupportDrop
-    {        
-        IDraggable[] QueryDropDraggables(IDataObject da);
-        DragDropEffects Drop(IDraggable[] draggables, IDataObject da, DragDropEffects allowedEffects);
+    {
+        IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
+        DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects);
     }
 
 }
