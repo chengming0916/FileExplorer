@@ -76,7 +76,7 @@ namespace FileExplorer.UIEventHub
             string adornerTextVariable = ParameterDic.CombineVariable(adornerVariable, ".Text", false);
             string queryDropSupportedEffectsVariable = ParameterDic.CombineVariable(queryDropResultVariable, ".SupportedEffects", false);
             string queryDropPreferredEffectVariable = ParameterDic.CombineVariable(queryDropResultVariable, ".PreferredEffect", false);
-            string draggablesLengthVariable = ParameterDic.CombineVariable(draggablesVariable, ".Length", false);
+            string draggablesLengthVariable = ParameterDic.CombineVariable(draggablesVariable, ".Count()", false);
             string draggablesFirstVariable = ParameterDic.CombineVariable(draggablesVariable, "[0].DisplayName", false);
             string iSupportDropLabelVariable = ParameterDic.CombineVariable(ISupportDropVariable, ".DropTargetLabel", false);
 

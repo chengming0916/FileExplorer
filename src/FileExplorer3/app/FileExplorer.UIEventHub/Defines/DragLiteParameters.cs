@@ -15,26 +15,26 @@ namespace FileExplorer.UIEventHub
         Lite //By setting DraggingDataObject
     }
 
-    public static class DragLiteParameters
-    {
-        public static DragMode DragMode = DragMode.None;
-        private static IDraggable[] _draggingItems = null;
-        public static IDraggable[] DraggingItems
-        {
-            get { return _draggingItems; }
-            set
-            {
-                if (_draggingItems != null)
-                    foreach (var d in _draggingItems) d.IsDragging = false;
-                _draggingItems = value;
-                if (_draggingItems != null)
-                    foreach (var d in _draggingItems) d.IsDragging = true;
-            }
-        }
+    //public static class DragLiteParameters
+    //{
+    //    public static DragMode DragMode = DragMode.None;
+    //    private static IDraggable[] _draggingItems = null;
+    //    public static IDraggable[] DraggingItems
+    //    {
+    //        get { return _draggingItems; }
+    //        set
+    //        {
+    //            if (_draggingItems != null)
+    //                foreach (var d in _draggingItems) d.IsDragging = false;
+    //            _draggingItems = value;
+    //            if (_draggingItems != null)
+    //                foreach (var d in _draggingItems) d.IsDragging = true;
+    //        }
+    //    }
 
-        public static UIInputType DragInputType = UIInputType.None;
-        public static ISupportDrag DragSource = null;
-        public static DragDropEffects Effects;
-    }
+    //    public static UIInputType DragInputType = UIInputType.None;
+    //    public static ISupportDrag DragSource = null;
+    //    public static DragDropEffects Effects;
+    //}
 
 }

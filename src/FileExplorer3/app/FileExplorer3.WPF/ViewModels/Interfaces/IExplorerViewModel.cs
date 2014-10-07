@@ -9,6 +9,7 @@ using FileExplorer.Defines;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.WPF.ViewModels
 {

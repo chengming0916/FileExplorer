@@ -97,7 +97,7 @@ namespace FileExplorer.UIEventHub
             //Debug.WriteLine(String.Format("DoDragDrop"));
 
             ISupportShellDrag _isd = pm.GetValue<ISupportShellDrag>(DragSourceKey);
-            IDraggable[] draggables = _isd.GetDraggables();
+            var draggables = _isd.GetDraggables();
             _dataObj = _isd.GetDataObject(draggables);
 
             if (_dataObj == null)

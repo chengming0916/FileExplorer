@@ -14,8 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.BaseControls.DragnDrop;
-using FileExplorer.WPF.BaseControls.MultiSelect;
+
 
 namespace FileExplorer.WPF.Views
 {

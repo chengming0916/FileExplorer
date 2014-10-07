@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Utils;
+﻿using FileExplorer.UIEventHub;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
         #region Methods
 
-        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
             throw new NotImplementedException();
         }
@@ -43,6 +44,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
         public bool IsDraggingOver
         {
+            get { return true; }
             set { }
         }
 
@@ -57,10 +59,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         }
 
         #endregion
-
-
-
-     
+   
     }
 
     public class DropHelper<T> : NotifyPropertyChanged, ISupportDrop
@@ -68,8 +67,8 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         #region Constructor
 
         public DropHelper(
-            Func<string> dropTargetFunc,            
-            Func<IEnumerable<T>, DragDropEffects, QueryDropResult> queryDropFunc,            
+            Func<string> dropTargetFunc,
+            Func<IEnumerable<T>, DragDropEffects, QueryDropEffects> queryDropFunc,            
             Func<IDataObject, IEnumerable<T>> dataobjectFunc,
             Func<IEnumerable<T>, IDataObject, DragDropEffects, DragDropEffects> dropFunc,
             Func<T, IDraggable> convertFunc
@@ -88,7 +87,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
         #region Methods
 
-        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IDataObject da, DragDropEffects allowedEffects)
         {
             var entries = _dataObjectFunc(da);
             return _queryDropFunc(entries, allowedEffects);
@@ -114,7 +113,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         private Func<IDataObject, IEnumerable<T>> _dataObjectFunc;
         private bool _isDroppable = true, _isDraggingOver = false;
         private Func<T, IDraggable> _convertFunc;
-        private Func<IEnumerable<T>, DragDropEffects, QueryDropResult> _queryDropFunc;
+        private Func<IEnumerable<T>, DragDropEffects, QueryDropEffects> _queryDropFunc;
         private Func<IEnumerable<T>, IDataObject, DragDropEffects, DragDropEffects> _dropFunc;
 
         #endregion

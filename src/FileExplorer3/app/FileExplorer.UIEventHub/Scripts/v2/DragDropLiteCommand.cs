@@ -118,7 +118,7 @@ namespace FileExplorer.UIEventHub
         private bool dragStart(ParameterDic pm, IUIInput input, string mode)
         {
             ISupportDrag isd = pm.GetValue<ISupportDrag>(DragSourceKey);
-            if (DragLiteParameters.DragMode == DragMode.None && isd != null)
+            if (pm.GetValue<string>(DragDropModeKey) == null &&  isd != null)
             {
                 var draggables = isd.GetDraggables();
                 IDataObject dataObj = isd is ISupportShellDrag ?

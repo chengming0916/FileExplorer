@@ -77,7 +77,11 @@
     <Compile Include="Implements\CanvasResizeEventProcessor.cs" />
     <Compile Include="Implements\DragDropEventProcessor.cs" />
     <Compile Include="Implements\DragDropLiteEventProcessor.cs" />
+    <Compile Include="Implements\DragHelper.cs" />
     <Compile Include="Implements\ResizeAdornerEventProcessor.cs" />
+    <Compile Include="Implements\DropHelper.cs" />
+    <Compile Include="Implements\ShellDragHelper.cs" />
+    <Compile Include="Implements\ShellDropHelper.cs" />
     <Compile Include="Implements\TouchDragMoveCountInputProcessor.cs" />
     <Compile Include="Implements\ClickCountInputProcessor.cs" />
     <Compile Include="Implements\DebugInputProcessor.cs" />
@@ -158,6 +162,7 @@
     <Compile Include="Utils\ControlUtils.cs" />
     <Compile Include="BaseControls\NonsealedDataObject.cs" />
     <Compile Include="Utils\DataContextFinder.cs" />
+    <Compile Include="Utils\LambdaValueConverter.cs" />
     <Compile Include="Utils\LBSelectable.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
     <Compile Include="Utils\UITools.cs" />
