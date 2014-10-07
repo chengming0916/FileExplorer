@@ -54,8 +54,7 @@ namespace FileExplorer.WPF.BaseControls
             IScriptCommand detachAdornerAndResetDragDrop =
                           ScriptCommands.SetPropertyValue("{DragDrop.SupportDrop}", "IsDraggingOver", false,
                           DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}",
-                              ScriptCommands.Reset(null, "{DragDrop.Adorner}", "{DragDrop.AdornerLayer}",
-                              "{DragDrop.SupportDrop}", "{DragDrop.Draggables}", DragDropLiteCommand.DragDropModeKey)));
+                          DragDropScriptCommands.EndLiteDrag("{DragDrop.SupportDrag}")));
 
           
 

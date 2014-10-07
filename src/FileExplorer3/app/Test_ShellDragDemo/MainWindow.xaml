@@ -32,7 +32,7 @@
 
         <Style TargetType="ListView">
             <Setter Property="bc:AttachedProperties.IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver}" />
-            <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding IsDraggingFrom}" />
+            <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding DragHelper.IsDraggingFrom}" />
             <Style.Triggers>
                 <Trigger Property="bc:AttachedProperties.IsDragging" Value="True">
                     <Setter Property="Background" Value="Silver" />

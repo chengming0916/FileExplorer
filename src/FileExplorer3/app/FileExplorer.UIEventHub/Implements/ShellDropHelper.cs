@@ -97,4 +97,51 @@ namespace FileExplorer.UIEventHub
         #endregion
     }
     #endregion
+
+
+    #region LambdaShellDropHelper
+
+    public class LambdaShellDropHelper<M> : ShellDropHelper<M>
+        where M : class
+    {
+        private Func<IEnumerable<M>, DragDropEffects, QueryDropEffects> _queryDropFunc;
+        private Func<IEnumerable<M>, IDataObject, DragDropEffects, DragDropEffects> _dropFunc;
+        private IValueConverter _dataObjectConverter;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="converter">Convert from IDraggable to M, you can use LambdaConverter or other IValueConverter.</param>
+        /// /// <param name="dataObjectConverter">Convert from IEnumerable[M] to IDataObject, ConvertBack is used in this class, you can use LambdaConverter or other IValueConverter.</param>
+        /// <param name="queryDropFunc">Called when QueryDrop, with models and allowEffects as parameter, return supported effect.</param>
+        /// <param name="dropFunc">Call when Drop, with models, dataObject and allowedEffects as parameter, return actual effect.</param>
+        public LambdaShellDropHelper(IValueConverter converter,
+            IValueConverter dataObjectConverter,
+            Func<IEnumerable<M>, DragDropEffects, QueryDropEffects> queryDropFunc,
+            Func<IEnumerable<M>, IDataObject, DragDropEffects, DragDropEffects> dropFunc)
+            : base(converter)
+        {
+            _dataObjectConverter = dataObjectConverter;
+            _queryDropFunc = queryDropFunc;
+            _dropFunc = dropFunc;
+        }
+
+        public override IEnumerable<M> QueryDropModels(IDataObject da)
+        {
+            return _dataObjectConverter.ConvertBack(da, typeof(IEnumerable<M>), null, Thread.CurrentThread.CurrentUICulture)
+                as IEnumerable<M>;
+        }
+
+        public override QueryDropEffects QueryDrop(IEnumerable<M> models, DragDropEffects allowedEffects)
+        {
+            return _queryDropFunc(models, allowedEffects);
+        }
+
+        public override DragDropEffects Drop(IEnumerable<M> models, IDataObject da, DragDropEffects allowedEffects)
+        {
+            return _dropFunc(models, da, allowedEffects);
+        }
+    }
+
+    #endregion
 }
