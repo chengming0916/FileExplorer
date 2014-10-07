@@ -43,6 +43,20 @@ namespace FileExplorer.UIEventHub
             });
         }
 
+        public static IScriptCommand EndLiteDrag(string dragSourceVariable = "{ISupportDrag}",
+           IScriptCommand nextCommand = null, IScriptCommand failCommand = null)
+        {
+            return
+                HubScriptCommands.AssignDragMethod(QueryDrag.DragMethodKey,
+                new DragDropLiteCommand()
+                {
+                    State = DragDropLiteState.EndLite,
+                    DragSourceKey = dragSourceVariable,
+                    NextCommand = (ScriptCommandBase)nextCommand,
+                    FailCommand = (ScriptCommandBase)failCommand
+                });
+        }
+
 
         public static IScriptCommand EndCanvasDrag(IScriptCommand nextCommand = null)
         {
@@ -63,7 +77,7 @@ namespace FileExplorer.UIEventHub
         }
     }
 
-    public enum DragDropLiteState { StartCanvas, EndCanvas, CancelCanvas, StartLite }
+    public enum DragDropLiteState { StartCanvas, EndCanvas, CancelCanvas, StartLite, EndLite }
 
     public class DragDropLiteCommand : UIScriptCommandBase<Control, RoutedEventArgs>
     {
@@ -130,6 +144,7 @@ namespace FileExplorer.UIEventHub
                 pm.SetValue(DragDropDraggingItemsKey, draggables);
                 pm.SetValue(DragDropEffectsKey, effect);
                 pm.SetValue(DragDropDragSourceKey, isd);
+                pm.SetValue(ParameterDic.CombineVariable(DragDropDragSourceKey, ".IsDraggingFrom", false), true);
                 pm.SetValue(DragDropStartPositionKey, pm.GetValue<Point>(CurrentPositionAdjustedKey));
                 pm.SetValue(InputKey, new DragInput(input, dataObj, DragDropEffects.Copy, (eff) => { }));
 
@@ -145,6 +160,7 @@ namespace FileExplorer.UIEventHub
             pm.SetValue<object>(DragDropDeviceKey, null);
             pm.SetValue<object>(DragDropDraggingItemsKey, null);
             pm.SetValue<object>(DragDropEffectsKey, null);
+            pm.SetValue(ParameterDic.CombineVariable(DragDropDragSourceKey, ".IsDraggingFrom", false), false);
             pm.SetValue<object>(DragDropDragSourceKey, null);
             pm.SetValue<object>(DragDropStartPositionKey, null);
         }
@@ -173,6 +189,7 @@ namespace FileExplorer.UIEventHub
                     }
                     else return FailCommand;
 
+                case DragDropLiteState.EndLite:
                 case DragDropLiteState.EndCanvas:
                 case DragDropLiteState.CancelCanvas:
                     //foreach (var item in pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey))

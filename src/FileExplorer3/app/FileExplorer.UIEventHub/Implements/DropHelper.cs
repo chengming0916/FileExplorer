@@ -91,14 +91,14 @@ namespace FileExplorer.UIEventHub
     /// </summary>
     /// <typeparam name="M">Model of entry to be dropped.</typeparam>
     public abstract class DropHelper<M> : NotifyPropertyChanged, ISupportDrop
-        where M : class 
-    {             
+        where M : class
+    {
         #region Constructor
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="converter">Convert from IDraggable to M</param>
+        /// <param name="converter">Convert from IDraggable to M, you can use LambdaConverter or other IValueCinverter</param>
         public DropHelper(IValueConverter converter)
         {
             _converter = converter;
@@ -114,7 +114,7 @@ namespace FileExplorer.UIEventHub
 
         public virtual M Convert(IDraggable draggable)
         {
-            return _converter.Convert(draggable, typeof(M), null, Thread.CurrentThread.CurrentUICulture) as M;                
+            return _converter.Convert(draggable, typeof(M), null, Thread.CurrentThread.CurrentUICulture) as M;
         }
 
         public virtual IEnumerable<M> Convert(IEnumerable<IDraggable> draggables, bool ignoreNull = true)
@@ -199,6 +199,42 @@ namespace FileExplorer.UIEventHub
 
 
         #endregion
+    }
+
+    #endregion
+
+    #region LambdaDropHelper
+
+    public abstract class LambdaDropHelper<M> : DropHelper<M>
+        where M : class
+    {
+        private Func<IEnumerable<M>, DragDropEffects, QueryDropEffects> _queryDropFunc;
+        private Func<IEnumerable<M>, DragDropEffects, DragDropEffects> _dropFunc;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="converter">Convert from IDraggable to M, you can use LambdaConverter or other IValueCinverter.</param>
+        /// <param name="queryDropFunc">Called when QueryDrop, with models and allowEffects as parameter, return supported effect.</param>
+        /// <param name="dropFunc">Call when Drop, with models and allowedEffects as parameter, return actual effect.</param>
+        public LambdaDropHelper(IValueConverter converter, 
+            Func<IEnumerable<M>, DragDropEffects, QueryDropEffects> queryDropFunc,
+            Func<IEnumerable<M>, DragDropEffects, DragDropEffects> dropFunc)
+            : base(converter)
+        {
+            _queryDropFunc = queryDropFunc;
+            _dropFunc = dropFunc;
+        }
+
+        public override QueryDropEffects QueryDrop(IEnumerable<M> models, DragDropEffects allowedEffects)
+        {
+            return _queryDropFunc(models, allowedEffects);
+        }
+
+        public override DragDropEffects Drop(IEnumerable<M> models, DragDropEffects allowedEffects)
+        {
+            return _dropFunc(models, allowedEffects);
+        }
     }
 
     #endregion
