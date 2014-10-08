@@ -88,7 +88,7 @@ namespace FileExplorer.WPF.BaseControls
                                             DragDropScriptCommands.DetachAdorner("{DragDrop.AdornerLayer}", "{DragDrop.Adorner}"))));
                     case "MouseMove":
                         return _cmdDic.MouseMove ?? (_cmdDic.MouseMove =     
-                            HubScriptCommands.IfDependencyProperty("{Sender}", AttachedProperties.IsDraggingProperty,
+                            HubScriptCommands.IfDependencyProperty("{Sender}", UIEventHubProperties.IsDraggingProperty,
                                     ComparsionOperator.Equals, true,
                                     HubScriptCommands.SetRoutedEventHandled()));
                 }

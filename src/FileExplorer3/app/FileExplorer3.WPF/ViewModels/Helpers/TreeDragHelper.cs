@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
-    public class TreeDragHelper<T> : NotifyPropertyChanged, ISupportDrag       
+    public class TreeDragHelper<T> : NotifyPropertyChanged, ISupportShellDrag       
     {
 
         #region Constructor

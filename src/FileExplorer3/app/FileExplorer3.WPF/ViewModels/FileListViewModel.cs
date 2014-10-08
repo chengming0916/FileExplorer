@@ -43,13 +43,21 @@ namespace FileExplorer.WPF.ViewModels
     {
 
         #region FileListDrag/DropHelper
-        internal class FileListDropHelper : DropHelper<IEntryModel>
+        internal class FileListDropHelper : LambdaShellDropHelper<IEntryModel>
         {
             public FileListDropHelper(FileListViewModel flvm)
-                : base(() => flvm.CurrentDirectory.Label,
-                (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop().QueryDrop(ems, flvm.CurrentDirectory, eff),
-                    da => flvm.CurrentDirectory.Profile.DragDrop().GetEntryModels(da),
-                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop().OnDropCompleted(ems, da, flvm.CurrentDirectory, eff), em => EntryViewModel.FromEntryModel(em))
+                : base(
+
+                 new LambdaValueConverter<IEntryViewModel, IEntryModel>(
+                    (evm) => evm.EntryModel,
+                    (em) => EntryViewModel.FromEntryModel(em)),
+
+                new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
+                        ems => AsyncUtils.RunSync(() => flvm.CurrentDirectory.Profile.DragDrop().GetDataObject(ems)),
+                        da => flvm.CurrentDirectory.Profile.DragDrop().GetEntryModels(da)), 
+
+                (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop().QueryDrop(ems, flvm.CurrentDirectory, eff),                
+                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop().OnDropCompleted(ems, da, flvm.CurrentDirectory, eff))
             { }
 
         }

@@ -254,6 +254,10 @@
       <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
       <Name>FileExplorer.Scripting</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileExplorer.UIEventHub\FileExplorer.UIEventHub.csproj">
+      <Project>{528f0c1a-38b5-4a42-a8bd-702f052cdf2f}</Project>
+      <Name>FileExplorer.UIEventHub</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileExplorer3.WPF\FileExplorer3.WPF.csproj">
       <Project>{78b3e601-2449-4600-af48-94ac53fbee22}</Project>
       <Name>FileExplorer3.WPF</Name>

@@ -2,7 +2,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"
     xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"
-    xmlns:def="clr-namespace:FileExplorer.WPF.Defines"
+    xmlns:localDef="clr-namespace:FileExplorer.WPF.Defines"
+    xmlns:def="http://www.quickzip.org/Defines"
     xmlns:cali ="http://www.caliburnproject.org"
     >
     <ResourceDictionary.MergedDictionaries>
@@ -28,8 +29,8 @@
             <Grid>
                
                 <bc:HotTrack IsEnabled="{TemplateBinding IsEnabled}" 
-                         IsDragging="{Binding (def:AttachedProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
-                         IsDraggingOver="{Binding (def:AttachedProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"
+                         IsDragging="{Binding (def:UIEventHubProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
+                         IsDraggingOver="{Binding (def:UIEventHubProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"
                          IsSelected="{TemplateBinding IsSelected}"                           
                          >
                     <Grid>
@@ -80,7 +81,7 @@
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         <Setter Property="BorderThickness" Value="1" />
         <Style.Triggers>
-            <Trigger Property="def:AttachedProperties.IsSelecting" Value="True">
+            <Trigger Property="def:UIEventHubProperties.IsSelecting" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
             </Trigger>
         </Style.Triggers>

@@ -66,19 +66,19 @@ namespace FileExplorer.WPF.BaseControls
                                         ScriptCommands.IfAssigned("{ItemUnderMouse}", 
                                           ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}", 
                                         HubScriptCommands.SetDependencyProperty("{Sender}",
-                                            AttachedProperties.StartDraggingItemProperty, "{ItemUnderMouse}")))))));
+                                            UIEventHubProperties.StartDraggingItemProperty, "{ItemUnderMouse}")))))));
                 case "TouchDrag":
                 case "MouseDrag":
                     return 
                         //If event not marked handled.
                         HubScriptCommands.IfNotRoutedEventHandled(
                         HubScriptCommands.IfDependencyPropertyEqualDefaultValue<object>("{Sender}", 
-                                AttachedProperties.StartDraggingItemProperty, 
+                                UIEventHubProperties.StartDraggingItemProperty, 
                             //If StartDraggingProperty = null, return.
                             ResultCommand.NoError,
                             //If StartDraggingProperty != null, Check and set IsDraggingProperty to true.
                             HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}",
-                                AttachedProperties.IsDraggingProperty, true,
+                                UIEventHubProperties.IsDraggingProperty, true,
                                 //If changed IsDraggingProperty, Find DataContext that support ISupportDrag to {ISupportDrag} variable.
                                 HubScriptCommands.AssignDataContext("{EventArgs.OriginalSource}", DataContextType.SupportDrag, "{ISupportDrag}", null, false,
                                     //If ISupportDrag is assigned to a non-null value,                                     
@@ -103,8 +103,8 @@ namespace FileExplorer.WPF.BaseControls
                 case "PreviewTouchUp":
                 case "PreviewMouseUp":
                     return 
-                         HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}", AttachedProperties.IsDraggingProperty, false,
-                            HubScriptCommands.SetDependencyPropertyValue<object>("{Sender}", AttachedProperties.StartDraggingItemProperty, null,
+                         HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}", UIEventHubProperties.IsDraggingProperty, false,
+                            HubScriptCommands.SetDependencyPropertyValue<object>("{Sender}", UIEventHubProperties.StartDraggingItemProperty, null,
                                 //Update position of each IPostionAware and clear {DragDrop} parameters)
                                 DragDropScriptCommands.EndCanvasDrag( 
                                     //Set {EventArgs.Handled} to true.

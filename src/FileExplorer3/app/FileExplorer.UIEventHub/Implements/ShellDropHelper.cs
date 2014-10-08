@@ -41,6 +41,36 @@ namespace FileExplorer.UIEventHub
     }
     #endregion
 
+    #region NoDropHelper
+
+    public class NoShellDropHelper : ShellDropHelper
+    {
+        public static ISupportShellDrop Instance = new NoShellDropHelper();
+
+        public NoShellDropHelper()
+            : base()
+        {
+            IsDroppable = false;
+        }
+
+        public override IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
+        {
+            yield break;
+        }
+
+        public override QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        {
+            return QueryDropEffects.None;
+        }
+
+        public override DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
+        {
+            return DragDropEffects.None;
+        }
+    }
+
+    #endregion
+
     #region ShellDropHelper<T>
     public abstract class ShellDropHelper<M> : DropHelper<M>, ISupportShellDrop
         where M : class

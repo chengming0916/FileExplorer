@@ -57,7 +57,7 @@ namespace FileExplorer.WPF.Utils
 
                 obj = VisualTreeHelper.GetParent(obj);
 
-                if (obj != null && AttachedProperties.GetSkipLookup(obj))
+                if (obj != null && UIEventHubProperties.GetSkipLookup(obj))
                     obj = null;
             }
             return default(T);
@@ -77,7 +77,7 @@ namespace FileExplorer.WPF.Utils
 
                 obj = LogicalTreeHelper.GetParent(obj);
 
-                if (obj != null && AttachedProperties.GetSkipLookup(obj))
+                if (obj != null && UIEventHubProperties.GetSkipLookup(obj))
                     obj = null;
             }
             return default(T);
@@ -101,7 +101,7 @@ namespace FileExplorer.WPF.Utils
                 else
                 {
                     if (level == -1 || level > 0)
-                        if (!AttachedProperties.GetSkipLookup(child))
+                        if (!UIEventHubProperties.GetSkipLookup(child))
                         {
                             T childOfChild = FindLogicalChild<T>(child, filter, level == -1 ? -1 : level - 1);
 
@@ -148,7 +148,7 @@ namespace FileExplorer.WPF.Utils
                 else
                 {
                     if (level == -1 || level > 0)
-                        if (!AttachedProperties.GetSkipLookup(child))
+                        if (!UIEventHubProperties.GetSkipLookup(child))
                         {
                             T childOfChild = FindVisualChild<T>(child, filter, level == -1 ? -1 : level - 1);
 

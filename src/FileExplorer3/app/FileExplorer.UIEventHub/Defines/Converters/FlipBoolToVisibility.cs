@@ -7,7 +7,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows;
 
-namespace QuickZip.Converters
+namespace FileExplorer.UIEventHub.Converters
 {
     [ValueConversion(typeof(string), typeof(Visibility))]
     public class FlipBoolToVisibilityConverter : IValueConverter

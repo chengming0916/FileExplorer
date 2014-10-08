@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.ComponentModel;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.BaseControls
 {

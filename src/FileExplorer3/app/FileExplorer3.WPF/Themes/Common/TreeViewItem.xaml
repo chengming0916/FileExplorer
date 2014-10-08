@@ -4,6 +4,7 @@
     xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"
     xmlns:def="clr-namespace:FileExplorer.WPF.Defines"
     xmlns:anim="clr-namespace:FileExplorer.WPF.Animations"
+     xmlns:hub="http://www.quickzip.org/UIEventHub"               
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Default/Colors.xaml" />
@@ -28,8 +29,8 @@
             </Grid.RowDefinitions>
 
             <bc:HotTrack Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="2" 
-                         IsDragging="{Binding (def:AttachedProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
-                         IsDraggingOver="{Binding (def:AttachedProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"                    
+                         IsDragging="{Binding (hub:UIEventHubProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
+                         IsDraggingOver="{Binding (hub:UIEventHubProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"                    
                          IsSelected="{TemplateBinding IsSelected}" FillFullRow="True">
                 <StackPanel Orientation="Horizontal">
                     <ContentPresenter x:Name="PART_Header" HorizontalAlignment="Stretch"  

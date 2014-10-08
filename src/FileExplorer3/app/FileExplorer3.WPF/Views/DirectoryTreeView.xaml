@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"
-             xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"
+             xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"             
+             xmlns:hub="http://www.quickzip.org/UIEventHub"
              xmlns:def="clr-namespace:FileExplorer.WPF.Defines"
              xmlns:m="clr-namespace:FileExplorer.WPF.Models"
              mc:Ignorable="d" 
@@ -33,7 +34,7 @@
         </StackPanel>-->
         <uc:ToolbarEx DockPanel.Dock="Bottom"
                     ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}"                                  
-                                  def:AttachedProperties.SkipLookup="True" >
+                                  hub:UIEventHubProperties.SkipLookup="True" >
             <uc:ToolbarEx.Resources>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/ExplorerToolbar.xaml" />
             </uc:ToolbarEx.Resources>
@@ -41,7 +42,7 @@
 
 
         <uc:TreeViewEx ItemsSource="{Binding Entries.All}" Grid.Row="0" BorderBrush="Transparent"                       
-                       def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"  
+                       hub:UIEventHubProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"  
                        ScrollViewer.PanningMode="Both"
                        >
             <uc:TreeViewEx.ItemContainerStyle>
@@ -53,31 +54,31 @@
                     <Setter Property="IsSelected" Value="{Binding Selection.IsSelected, Mode=TwoWay}"  />
                     <Setter Property="IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver, Mode=OneWay}" />
                     <Setter Property="AllowDrop" Value="True" />
-                    <Setter Property="def:AttachedProperties.DragItemTemplate" Value="{StaticResource GridLabelTemplate}" />
+                    <Setter Property="hub:UIEventHubProperties.DragItemTemplate" Value="{StaticResource GridLabelTemplate}" />
                 </Style>
             </uc:TreeViewEx.ItemContainerStyle>
-            <bc:UIEventAdapter.Processors>
-                <bc:InputBindingsEventProcessor >
-                    <bc:InputBindingsEventProcessor.InputBindings>
+            <hub:UIEventAdapter.Processors>
+                <hub:InputBindingsEventProcessor >
+                    <hub:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <KeyBinding Command="def:ExplorerCommands.OpenTab" Key="T" Modifiers="Control" />
-                    </bc:InputBindingsEventProcessor.InputBindings>
-                </bc:InputBindingsEventProcessor>
-                <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
-                <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
+                    </hub:InputBindingsEventProcessor.InputBindings>
+                </hub:InputBindingsEventProcessor>
+                <hub:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
+                <hub:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
                                                EnableMouse="False" EnableTouch="True" />
-                <bc:ContextMenuEventProcessor>
-                    <bc:ContextMenuEventProcessor.ContextMenu>
+                <hub:ContextMenuEventProcessor>
+                    <hub:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                      ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
-                    </bc:ContextMenuEventProcessor.ContextMenu>
-                </bc:ContextMenuEventProcessor>
-            </bc:UIEventAdapter.Processors>
+                    </hub:ContextMenuEventProcessor.ContextMenu>
+                </hub:ContextMenuEventProcessor>
+            </hub:UIEventAdapter.Processors>
             
             <!--<uc:TreeViewEx.BottomContent>
                 <uc:ToolbarEx 
                     ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}"                                  
-                                  def:AttachedProperties.SkipLookup="True" >
+                                  def:UIEventHubProperties.SkipLookup="True" >
                     <uc:ToolbarEx.Resources>
                         <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/ExplorerToolbar.xaml" />
                     </uc:ToolbarEx.Resources>

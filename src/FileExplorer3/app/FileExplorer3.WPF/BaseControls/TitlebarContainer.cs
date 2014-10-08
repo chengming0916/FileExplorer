@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Diagnostics;
 using System.ComponentModel;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.BaseControls
 {

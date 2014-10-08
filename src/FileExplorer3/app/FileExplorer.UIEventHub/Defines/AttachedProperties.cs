@@ -8,14 +8,14 @@ using System.Windows.Controls;
 
 namespace FileExplorer.Defines
 {
-    public static partial class AttachedProperties
+    public static partial class UIEventHubProperties
     {
 
         /// <summary>
         /// Skip lookup in UITools.FindAncestor, FindLogicalAncestor and FindVisualChild
         /// </summary>
         public static DependencyProperty SkipLookupProperty =
-            DependencyProperty.RegisterAttached("SkipLookup", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
+            DependencyProperty.RegisterAttached("SkipLookup", typeof(bool), typeof(UIEventHubProperties), new PropertyMetadata(false));
 
         public static bool GetSkipLookup(DependencyObject target)
         {
@@ -35,7 +35,7 @@ namespace FileExplorer.Defines
         /// </summary>
         public static DependencyProperty ScrollContentPresenterProperty =
             DependencyProperty.RegisterAttached("ScrollContentPresenter", typeof(ScrollContentPresenter), 
-            typeof(AttachedProperties), new PropertyMetadata(null));
+            typeof(UIEventHubProperties), new PropertyMetadata(null));
 
         public static ScrollContentPresenter GetScrollContentPresenter(DependencyObject target)
         {
@@ -51,7 +51,7 @@ namespace FileExplorer.Defines
         #region EnableDrag / Drop
 
         public static DependencyProperty EnableDragProperty =
-           DependencyProperty.RegisterAttached("EnableDrag", typeof(bool), typeof(AttachedProperties));
+           DependencyProperty.RegisterAttached("EnableDrag", typeof(bool), typeof(UIEventHubProperties));
 
         public static bool GetEnableDrag(DependencyObject target)
         {
@@ -65,7 +65,7 @@ namespace FileExplorer.Defines
 
 
         public static DependencyProperty EnableDropProperty =
-            DependencyProperty.RegisterAttached("EnableDrop", typeof(bool), typeof(AttachedProperties));
+            DependencyProperty.RegisterAttached("EnableDrop", typeof(bool), typeof(UIEventHubProperties));
 
 
         public static bool GetEnableDrop(DependencyObject target)

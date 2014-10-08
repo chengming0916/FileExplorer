@@ -31,13 +31,13 @@
         </Style>
 
         <Style TargetType="ListView">
-            <Setter Property="bc:AttachedProperties.IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver}" />
-            <Setter Property="bc:AttachedProperties.IsDragging" Value="{Binding DragHelper.IsDraggingFrom}" />
+            <Setter Property="bc:UIEventHubProperties.IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver}" />
+            <Setter Property="bc:UIEventHubProperties.IsDragging" Value="{Binding DragHelper.IsDraggingFrom}" />
             <Style.Triggers>
-                <Trigger Property="bc:AttachedProperties.IsDragging" Value="True">
+                <Trigger Property="bc:UIEventHubProperties.IsDragging" Value="True">
                     <Setter Property="Background" Value="Silver" />
                 </Trigger>
-                <Trigger Property="bc:AttachedProperties.IsDraggingOver" Value="True">
+                <Trigger Property="bc:UIEventHubProperties.IsDraggingOver" Value="True">
                     <Setter Property="Background" Value="Gold" />
                 </Trigger>
             </Style.Triggers>
@@ -79,7 +79,13 @@
                                            EnableDrop="{Binding DataContext.EnableDragDrop, ElementName=SettingsPanel}" />
                 <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding DataContext.EnableMultiSelect, ElementName=SettingsPanel}" 
                                               UnselectAllCommand="{Binding Commands.UnselectAllCommand}" />
-
+                <bc:ContextMenuEventProcessor>
+                    <bc:ContextMenuEventProcessor.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Test" />
+                        </ContextMenu>
+                    </bc:ContextMenuEventProcessor.ContextMenu>
+                </bc:ContextMenuEventProcessor>
 
             </bc:UIEventAdapter.Processors>
 

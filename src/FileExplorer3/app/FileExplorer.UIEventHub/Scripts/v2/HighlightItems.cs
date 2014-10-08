@@ -57,7 +57,7 @@ namespace FileExplorer.UIEventHub
                     if (item != null)
                     {
                         bool isSelecting = selectedIdList.Contains(i);
-                        AttachedProperties.SetIsSelecting(item, isSelecting);
+                        UIEventHubProperties.SetIsSelecting(item, isSelecting);
                         var selectable = (item as FrameworkElement).DataContext as ISelectable;
                         if (selectable != null)
                             selectable.IsSelecting = isSelecting;
@@ -85,7 +85,7 @@ namespace FileExplorer.UIEventHub
                     if (ele != null)
                     {
 
-                        bool isSelecting = AttachedProperties.GetIsSelecting(ele);
+                        bool isSelecting = UIEventHubProperties.GetIsSelecting(ele);
                         if (isSelecting && unselectedList.Contains(ele))
                             item.IsSelecting = false;
                         //AttachedProperties.SetIsSelecting(item, false);

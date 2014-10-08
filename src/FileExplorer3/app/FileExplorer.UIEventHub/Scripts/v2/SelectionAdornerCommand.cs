@@ -97,14 +97,14 @@ namespace FileExplorer.UIEventHub
                     case UIEventHub.AdornerMode.Attach:
                         if (adornerLayer == null)
                             return ResultCommand.Error(new Exception("Adorner layer not found."));
-                        if (AttachedProperties.GetSelectionAdorner(scp) == null)
+                        if (UIEventHubProperties.GetSelectionAdorner(scp) == null)
                         {
 
                             //Create and register adorner.
                             SelectionAdorner adorner = new SelectionAdorner(scp);
                             pm.SetValue(SelectionAdornerKey, adorner);
-                            AttachedProperties.SetSelectionAdorner(scp, adorner);
-                            AttachedProperties.SetLastScrollContentPresenter(sender, scp); //For used when detach.
+                            UIEventHubProperties.SetSelectionAdorner(scp, adorner);
+                            UIEventHubProperties.SetLastScrollContentPresenter(sender, scp); //For used when detach.
 
                             adornerLayer.Add(adorner);
                         }
@@ -112,24 +112,24 @@ namespace FileExplorer.UIEventHub
 
                     case UIEventHub.AdornerMode.Detach:
 
-                        var lastScp = AttachedProperties.GetLastScrollContentPresenter(sender); //For used when detach.
-                        var lastAdorner = AttachedProperties.GetSelectionAdorner(scp);
+                        var lastScp = UIEventHubProperties.GetLastScrollContentPresenter(sender); //For used when detach.
+                        var lastAdorner = UIEventHubProperties.GetSelectionAdorner(scp);
                         if (lastAdorner != null)
                             adornerLayer.Remove(lastAdorner);
 
-                        AttachedProperties.SetLastScrollContentPresenter(sender, null);
-                        AttachedProperties.SetSelectionAdorner(scp, null);
+                        UIEventHubProperties.SetLastScrollContentPresenter(sender, null);
+                        UIEventHubProperties.SetSelectionAdorner(scp, null);
                         pm.SetValue<Object>(SelectionAdornerKey, null);
                         break;
 
                     case UIEventHub.AdornerMode.Update:
                         var updateAdorner = pm.GetValue<SelectionAdorner>(SelectionAdornerKey) ??
-                            AttachedProperties.GetSelectionAdorner(scp);
+                            UIEventHubProperties.GetSelectionAdorner(scp);
 
                         if (updateAdorner == null)
                             return ResultCommand.Error(new Exception("Adorner not found."));
 
-                        updateAdorner.IsSelecting = AttachedProperties.GetIsSelecting(sender);                        
+                        updateAdorner.IsSelecting = UIEventHubProperties.GetIsSelecting(sender);                        
                         Point startAdjusted = pm.GetValue<Point>("{StartPosition}");
                         Point current = pm.GetValue<Point>(CurrentPositionKey);
                         updateAdorner.SetValue(SelectionAdorner.StartPositionProperty, startAdjusted);

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"
              xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"
+             xmlns:hub="http://www.quickzip.org/UIEventHub"
              xmlns:cal="http://www.caliburnproject.org"  
              xmlns:def="clr-namespace:FileExplorer.WPF.Defines"
              mc:Ignorable="d" 
@@ -40,17 +41,17 @@
                     <Setter Property="HeaderOpacity" Value="{Binding HeaderOpacity}" />
                 </Style>
             </uc:TabControlEx.ItemContainerStyle>
-            <bc:UIEventAdapter.Processors>
-                <bc:InputBindingsEventProcessor >
-                    <bc:InputBindingsEventProcessor.InputBindings>
+            <hub:UIEventAdapter.Processors>
+                <hub:InputBindingsEventProcessor >
+                    <hub:InputBindingsEventProcessor.InputBindings>
                         <KeyBinding Command="def:ExplorerCommands.NewTab" Key="T" Modifiers="Control" />
                         <KeyBinding Command="def:ExplorerCommands.CloseTab" Key="F4" Modifiers="Control" />
-                    </bc:InputBindingsEventProcessor.InputBindings>
-                </bc:InputBindingsEventProcessor>
-                <bc:DragDropLiteEventProcessor EnableMouse="False" EnableTouch="True" 
+                    </hub:InputBindingsEventProcessor.InputBindings>
+                </hub:InputBindingsEventProcessor>
+                <hub:DragDropLiteEventProcessor EnableMouse="False" EnableTouch="True" 
                                                EnableDrag="True" EnableDrop="True" />
-                <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
-            </bc:UIEventAdapter.Processors>
+                <hub:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+            </hub:UIEventAdapter.Processors>
             
             <uc:TabControlEx.RightTabHeaderContent>
                 <StackPanel Orientation="Horizontal">

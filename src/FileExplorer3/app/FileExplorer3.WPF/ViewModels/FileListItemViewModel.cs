@@ -8,6 +8,7 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.Models;
 using FileExplorer.UIEventHub;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -17,15 +18,24 @@ namespace FileExplorer.WPF.ViewModels
 
         #region MyRegion
 
-        internal class FileListItemDropHelper : DropHelper<IEntryModel>
+        internal class FileListItemDropHelper : LambdaShellDropHelper<IEntryModel>
         {
             
             public FileListItemDropHelper(FileListItemViewModel flvm)
-                : base( () => flvm.EntryModel.Label,
+                : base(
+                new LambdaValueConverter<IEntryViewModel, IEntryModel>(
+                    (evm) => evm.EntryModel, 
+                    (em) => EntryViewModel.FromEntryModel(em)),
+
+                new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
+                        ems => AsyncUtils.RunSync(() => flvm.EntryModel.Profile.DragDrop().GetDataObject(ems)), 
+                        da => flvm.EntryModel.Profile.DragDrop().GetEntryModels(da)), 
+
                 (ems, eff) => flvm.EntryModel.Profile.DragDrop().QueryDrop(ems, flvm.EntryModel, eff),
-                da => flvm.EntryModel.Profile.DragDrop().GetEntryModels(da),
-                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop().OnDropCompleted(ems, da, flvm.EntryModel, eff), em => EntryViewModel.FromEntryModel(em))
-            {                 
+                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop().OnDropCompleted(ems, da, flvm.EntryModel, eff))
+
+            {   
+                
             }
         }
 

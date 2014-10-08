@@ -29,7 +29,7 @@
                     <Setter Property="ItemsSource" Value="{Binding SubCommands}" />
                     <Setter Property="IsHeaderVisible" Value="{Binding CommandModel.IsHeaderVisible, Mode=TwoWay}" />
                     <!--<Setter Property="AllowDrop" Value="True" />-->
-                    <!--<Setter Property="def:AttachedProperties.DragItemTemplate" Value="{StaticResource GridLabelTemplate}" />-->
+                    <!--<Setter Property="def:UIEventHubProperties.DragItemTemplate" Value="{StaticResource GridLabelTemplate}" />-->
                 </Style>
             </uc:ToolbarEx.ItemContainerStyle>
 

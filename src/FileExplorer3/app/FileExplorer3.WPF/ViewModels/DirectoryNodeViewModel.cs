@@ -14,6 +14,7 @@ using System.Windows;
 using System.Threading;
 using FileExplorer.Models;
 using FileExplorer.UIEventHub;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -25,7 +26,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Cosntructor
 
         #region DirectoryNodeDropHelper
-        internal class DirectoryNodeDropHelper : DropHelper<IEntryModel>
+        internal class DirectoryNodeDropHelper : LambdaShellDropHelper<IEntryModel>
         {
             private static IEnumerable<IEntryModel> dataObjectFunc(IDataObject da,
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
@@ -39,16 +40,20 @@ namespace FileExplorer.WPF.ViewModels
                 }
                 return null;
             }
-
-          
-
+         
             public DirectoryNodeDropHelper(IEntryModel curDir, IEntriesHelper<IDirectoryNodeViewModel> entries,
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
-                () => curDir.Label,
-                (ems, eff) => curDir.Profile.DragDrop().QueryDrop(ems, curDir, eff),                
-                da => dataObjectFunc(da, selection),
-                (ems, da, eff) => curDir.Profile.DragDrop().OnDropCompleted(ems, da, curDir, eff), em => EntryViewModel.FromEntryModel(em))
+                 new LambdaValueConverter<IEntryViewModel, IEntryModel>(
+                    (evm) => evm.EntryModel,
+                    (em) => EntryViewModel.FromEntryModel(em)),
+
+                new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
+                        ems => AsyncUtils.RunSync(() => curDir.Profile.DragDrop().GetDataObject(ems)),
+                        da => dataObjectFunc(da, selection)), 
+
+                (ems, eff) => curDir.Profile.DragDrop().QueryDrop(ems, curDir, eff),                                
+                (ems, da, eff) => curDir.Profile.DragDrop().OnDropCompleted(ems, da, curDir, eff))
             {
                 
             }

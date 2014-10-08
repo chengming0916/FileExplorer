@@ -48,7 +48,7 @@ namespace FileExplorer.UIEventHub
         {
 
             var scp = ControlUtils.GetScrollContentPresenter(ic);
-            bool isSelecting = AttachedProperties.GetIsSelecting(ic);
+            bool isSelecting = UIEventHubProperties.GetIsSelecting(ic);
             
             FindSelectionMode fsMode = FindSelectionMode.HitTest;
 

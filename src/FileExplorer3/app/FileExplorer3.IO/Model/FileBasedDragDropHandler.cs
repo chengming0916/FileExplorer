@@ -11,9 +11,10 @@ using FileExplorer;
 using FileExplorer.Script;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
-using FileExplorer.WPF.UserControls.DragDrop;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.IO;
+using FileExplorer.WPF.BaseControls;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.Models
 {
@@ -148,14 +149,14 @@ namespace FileExplorer.Models
             return destDir.IsDirectory;
         }
 
-        public QueryDropResult QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IEnumerable<IEntryModel> entries, IEntryModel destDir, DragDropEffects allowedEffects)
         {
             if (entries.Any(e => e.Equals(destDir) || e.Parent.Equals(destDir)))
-                return QueryDropResult.None;
+                return QueryDropEffects.None;
 
             if (destDir.IsDirectory)
-                return QueryDropResult.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
-            else return QueryDropResult.None;
+                return QueryDropEffects.CreateNew(DragDropEffects.Copy | DragDropEffects.Move, DragDropEffects.Copy);
+            else return QueryDropEffects.None;
         }
 
 

@@ -77,13 +77,13 @@ namespace FileExplorer.UIEventHub
             string queryDropSupportedEffectsVariable = ParameterDic.CombineVariable(queryDropResultVariable, ".SupportedEffects", false);
             string queryDropPreferredEffectVariable = ParameterDic.CombineVariable(queryDropResultVariable, ".PreferredEffect", false);
             string draggablesLengthVariable = ParameterDic.CombineVariable(draggablesVariable, ".Count()", false);
-            string draggablesFirstVariable = ParameterDic.CombineVariable(draggablesVariable, "[0].DisplayName", false);
+            string draggablesFirstLabelVariable = ParameterDic.CombineVariable(draggablesVariable, ".First().DisplayName", false);
             string iSupportDropLabelVariable = ParameterDic.CombineVariable(ISupportDropVariable, ".DropTargetLabel", false);
 
             return
                 ScriptCommands.RunSequence(nextCommand,
                    ScriptCommands.IfEquals(draggablesLengthVariable, 1,
-                       ScriptCommands.FormatText("{ItemLabel}", draggablesFirstVariable),
+                       ScriptCommands.FormatText("{ItemLabel}", draggablesFirstLabelVariable),
                        ScriptCommands.FormatText("{ItemLabel}", draggablesLengthVariable + " items")),
                    ScriptCommands.IfEquals(dragMethodVariable, DragMethod.Menu,
                        ScriptCommands.Assign("{MethodLabel}", queryDropSupportedEffectsVariable),

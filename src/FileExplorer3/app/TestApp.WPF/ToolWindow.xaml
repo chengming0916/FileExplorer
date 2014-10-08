@@ -5,6 +5,7 @@
         xmlns:uc="http://www.quickzip.org/UserControls"
         xmlns:bc="http://www.quickzip.org/BaseControls"
         xmlns:conv="http://www.quickzip.org/Converters"
+        xmlns:hub="http://www.quickzip.org/UIEventHub"
         xmlns:cal="http://www.caliburnproject.org"
         Title="ToolWindowTest" Height="300" Width="300">
     <Grid>
@@ -26,9 +27,9 @@
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       ResizeBehavior="PreviousAndNext" Grid.Column="1" />
         <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" Grid.Column="2">
-            <bc:UIEventAdapter.Processors>
-                <bc:DragDropLiteEventProcessor />
-            </bc:UIEventAdapter.Processors>
+            <hub:UIEventAdapter.Processors>
+                <hub:DragDropLiteEventProcessor />
+            </hub:UIEventAdapter.Processors>
             <TextBlock Text="CurrentDirectory" FontWeight="Bold" />
             <!--ViewModel.FileList.Selection.SelectedItems is IEntryModel-->
             <TextBlock Text="{Binding ViewModel.FileList.CurrentDirectory, 
@@ -45,11 +46,11 @@
             <TextBlock x:Name="testDroppable" 
                    AllowDrop="True"
                    Text="{Binding Label}" >
-              <bc:UIEventAdapter.Processors>
-                <bc:DragDropEventProcessor EnableDrag="false" EnableDrop="true" />
-                <bc:DragDropLiteEventProcessor EnableDrag="false" EnableDrop="true"
+              <hub:UIEventAdapter.Processors>
+                <hub:DragDropEventProcessor EnableDrag="false" EnableDrop="true" />
+                <hub:DragDropLiteEventProcessor EnableDrag="false" EnableDrop="true"
                                                EnableMouse="False" EnableTouch="True" />
-              </bc:UIEventAdapter.Processors>
+              </hub:UIEventAdapter.Processors>
 
             </TextBlock>
         </StackPanel>

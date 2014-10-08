@@ -10,12 +10,12 @@ using FileExplorer.UIEventHub;
 
 namespace FileExplorer.Defines
 {
-    public static partial class AttachedProperties
+    public static partial class UIEventHubProperties
     {
         #region DragAdorner
 
         public static readonly DependencyProperty DragAdornerProperty =
-         DependencyProperty.RegisterAttached("DragAdorner", typeof(DragAdorner), typeof(AttachedProperties), new UIPropertyMetadata(null));
+         DependencyProperty.RegisterAttached("DragAdorner", typeof(DragAdorner), typeof(UIEventHubProperties), new UIPropertyMetadata(null));
 
         public static DragAdorner GetDragAdorner(DependencyObject obj)
         {
@@ -36,7 +36,7 @@ namespace FileExplorer.Defines
         /// DataContext item when start dragging.
         /// </summary>
         public static DependencyProperty StartDraggingItemProperty =
-          DependencyProperty.RegisterAttached("StartDraggingItem", typeof(object), typeof(AttachedProperties));
+          DependencyProperty.RegisterAttached("StartDraggingItem", typeof(object), typeof(UIEventHubProperties));
 
         public static object GetStartDraggingItem(DependencyObject target)
         {
@@ -51,7 +51,7 @@ namespace FileExplorer.Defines
 
         #region DragItemTemplate
         public static readonly DependencyProperty DragItemTemplateProperty =
-                 DependencyProperty.RegisterAttached("DragItemTemplate", typeof(DataTemplate), typeof(AttachedProperties),
+                 DependencyProperty.RegisterAttached("DragItemTemplate", typeof(DataTemplate), typeof(UIEventHubProperties),
                  new UIPropertyMetadata(null));
 
 
@@ -69,7 +69,7 @@ namespace FileExplorer.Defines
         #region IsDragging
 
         public static DependencyProperty IsDraggingProperty =
-       DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
+       DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(UIEventHubProperties), new PropertyMetadata(false));
 
 
         public static bool GetIsDragging(DependencyObject target)
@@ -93,7 +93,7 @@ namespace FileExplorer.Defines
         /// EndDrag access this, if it's not None (drag to elsewhere), 
         /// </summary>
         public static DependencyProperty DragMethodProperty =
-       DependencyProperty.RegisterAttached("DragMethod", typeof(DragMethod), typeof(AttachedProperties), new PropertyMetadata(DragMethod.Normal));
+       DependencyProperty.RegisterAttached("DragMethod", typeof(DragMethod), typeof(UIEventHubProperties), new PropertyMetadata(DragMethod.Normal));
 
 
         public static DragMethod GetDragMethod(DependencyObject target)
@@ -141,7 +141,7 @@ namespace FileExplorer.Defines
         /// EndDrag access this, if it's not None (drag to elsewhere), 
         /// </summary>
         public static DependencyProperty DragStateProperty =
-       DependencyProperty.RegisterAttached("DragState", typeof(DragState), typeof(AttachedProperties), new PropertyMetadata(DragState.None));
+       DependencyProperty.RegisterAttached("DragState", typeof(DragState), typeof(UIEventHubProperties), new PropertyMetadata(DragState.None));
 
 
         public static DragState GetDragState(DependencyObject target)
@@ -178,7 +178,7 @@ namespace FileExplorer.Defines
         /// EndDrag access this, if it's not None (drag to elsewhere), 
         /// </summary>
         public static DependencyProperty DropStateProperty =
-            DependencyProperty.RegisterAttached("DropState", typeof(DropState), typeof(AttachedProperties),
+            DependencyProperty.RegisterAttached("DropState", typeof(DropState), typeof(UIEventHubProperties),
                 new PropertyMetadata(DropState.None));
 
 
@@ -198,7 +198,7 @@ namespace FileExplorer.Defines
         #region IsDraggingOver
 
         public static DependencyProperty IsDraggingOverProperty =
-       DependencyProperty.RegisterAttached("IsDraggingOver", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
+       DependencyProperty.RegisterAttached("IsDraggingOver", typeof(bool), typeof(UIEventHubProperties), new PropertyMetadata(false));
 
 
         public static bool GetIsDraggingOver(DependencyObject target)
@@ -216,7 +216,7 @@ namespace FileExplorer.Defines
         #region DraggingOverItem
 
         public static DependencyProperty DraggingOverItemProperty =
-       DependencyProperty.RegisterAttached("DraggingOverItem", typeof(FrameworkElement), typeof(AttachedProperties),
+       DependencyProperty.RegisterAttached("DraggingOverItem", typeof(FrameworkElement), typeof(UIEventHubProperties),
        new PropertyMetadata(null, OnLastDraggingOverPropertyChange));
 
         public static void OnLastDraggingOverPropertyChange
@@ -244,7 +244,7 @@ namespace FileExplorer.Defines
 
         public static DependencyProperty SelectedDraggablesProperty =
        DependencyProperty.RegisterAttached("SelectedDraggables", typeof(IEnumerable<IDraggable>),
-       typeof(AttachedProperties), new PropertyMetadata(null));
+       typeof(UIEventHubProperties), new PropertyMetadata(null));
 
 
         public static IEnumerable<IDraggable> GetSelectedDraggables(DependencyObject target)

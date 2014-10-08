@@ -31,11 +31,11 @@ namespace FileExplorer.UIEventHub
         {
             get
             {
-                return (bool)_lbItem.GetValue(AttachedProperties.IsSelectingProperty);
+                return (bool)_lbItem.GetValue(UIEventHubProperties.IsSelectingProperty);
             }
             set
             {
-                _lbItem.SetValue(AttachedProperties.IsSelectingProperty, value);
+                _lbItem.SetValue(UIEventHubProperties.IsSelectingProperty, value);
             }
         }
     }
