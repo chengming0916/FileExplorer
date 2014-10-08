@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Windows.Data;
 using QuickZip.Converters;
 using System.Threading;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.BaseControls
 {

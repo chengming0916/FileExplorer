@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows.Threading;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.UserControls
 {

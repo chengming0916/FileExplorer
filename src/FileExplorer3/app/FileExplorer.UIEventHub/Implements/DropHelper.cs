@@ -85,6 +85,31 @@ namespace FileExplorer.UIEventHub
 
     #endregion
 
+    #region NoDropHelper
+
+    public class NoDropHelper : DropHelper
+    {
+        public static ISupportDrop Instance = new NoDropHelper();
+
+        public NoDropHelper()
+            : base()
+        {
+            IsDroppable = false;
+        }
+
+        public override QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        {
+            return QueryDropEffects.None;
+        }
+
+        public override DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        {
+            return DragDropEffects.None;
+        }
+    }
+
+    #endregion
+
     #region DropHelper<T>
     /// <summary>
     /// 

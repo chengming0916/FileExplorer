@@ -131,7 +131,7 @@ namespace FileExplorer.UIEventHub
             RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
             Point posRelToScp = pm.GetValue<Point>(CurrentRelativePositionKey);
-            var startSelected = AttachedProperties.GetStartSelectedItem(ic);
+            var startSelected = UIEventHubProperties.GetStartSelectedItem(ic);
             List<object> selectedList = new List<object>();
             List<int> selectedIdList = new List<int>();
             var scp = ControlUtils.GetScrollContentPresenter(ic);
@@ -150,22 +150,22 @@ namespace FileExplorer.UIEventHub
             }
 
             //UpdateStartSelectedItems, or clear it if no longer selecting.
-            if (AttachedProperties.GetIsSelecting(ic))
+            if (UIEventHubProperties.GetIsSelecting(ic))
             {
-                if (AttachedProperties.GetStartSelectedItem(ic) == null)
+                if (UIEventHubProperties.GetStartSelectedItem(ic) == null)
                 {
                     var itemUnderMouse = UITools.GetSelectedListBoxItem(scp, posRelToScp);
-                    AttachedProperties.SetStartSelectedItem(ic, itemUnderMouse);
+                    UIEventHubProperties.SetStartSelectedItem(ic, itemUnderMouse);
                 }
             }
             else
-                AttachedProperties.SetStartSelectedItem(ic, null);
+                UIEventHubProperties.SetStartSelectedItem(ic, null);
 
-            if (AttachedProperties.GetIsSelecting(ic))
+            if (UIEventHubProperties.GetIsSelecting(ic))
             {
-                if (AttachedProperties.GetStartSelectedItem(ic) == null)
+                if (UIEventHubProperties.GetStartSelectedItem(ic) == null)
                     UITools.SetItemUnderMouseToAttachedProperty(ic, posRelToScp,
-                        AttachedProperties.StartSelectedItemProperty);
+                        UIEventHubProperties.StartSelectedItemProperty);
             }
 
             pm.SetValue(SelectedListKey, selectedList);

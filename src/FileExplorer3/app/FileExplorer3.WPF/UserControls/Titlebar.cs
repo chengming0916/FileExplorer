@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.UserControls
 {

@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using FileExplorer;
 using FileExplorer.Script;
 using FileExplorer.WPF.Models;
+using FileExplorer.UIEventHub;
 
 namespace TestApp
 {
@@ -100,19 +101,19 @@ namespace TestApp
         public TestDroppableViewModel()
         {
             IProfile exProfile = new FileSystemInfoExProfile(null, null);
-            DropHelper = new DropHelper<IEntryModel>(
-                 () => "Test Droppable",
-                 (ems, eff) =>
-                     QueryDropResult.CreateNew(DragDropEffects.Copy),
-                da =>
-                    exProfile.DragDrop().GetEntryModels(da),
-                (ems, da, eff) =>
-                {
-                    if (ems.Count() > 1)
-                        Label = ems.Count() + " items.";
-                    else Label = ems.First().FullPath;
-                    return DragDropEffects.Copy;
-                }, em => EntryViewModel.FromEntryModel(em));
+            //DropHelper = new LambdaDropHelper<IEntryModel>(
+            //     new LambdaValueConverter<IDraggable, ,
+            //     (ems, eff) =>
+            //         QueryDropEffects.CreateNew(DragDropEffects.Copy),
+            //    da =>
+            //        exProfile.DragDrop().GetEntryModels(da),
+            //    (ems, da, eff) =>
+            //    {
+            //        if (ems.Count() > 1)
+            //            Label = ems.Count() + " items.";
+            //        else Label = ems.First().FullPath;
+            //        return DragDropEffects.Copy;
+            //    }, em => EntryViewModel.FromEntryModel(em));
         }
 
         #endregion

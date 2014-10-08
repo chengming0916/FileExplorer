@@ -64,7 +64,7 @@ namespace FileExplorer.UIEventHub
 
         #region Data
 
-        private Point _touchDownPosition = AttachedProperties.InvalidPoint;
+        private Point _touchDownPosition = UIEventHubProperties.InvalidPoint;
         private DateTime _touchTime = DateTime.MinValue;
 
         #endregion

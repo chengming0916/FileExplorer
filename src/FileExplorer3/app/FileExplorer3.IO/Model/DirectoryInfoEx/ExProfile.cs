@@ -11,7 +11,6 @@ using System.Windows;
 using System.Windows.Media;
 using Caliburn.Micro;
 using FileExplorer.WPF.Defines;
-using FileExplorer.WPF.UserControls.DragDrop;
 using FileExplorer.WPF.ViewModels.Helpers;
 //using FileExplorer.WPF.UserControls.DragDrop;
 using QuickZip.Converters;
@@ -19,10 +18,8 @@ using QuickZip.UserControls.Logic.Tools.IconExtractor;
 using System.Collections.Concurrent;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Models;
-using FileExplorer.WPF.Defines;
 using FileExplorer.WPF;
 using FileExplorer.Defines;
-using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.Models
 {

@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace FileExplorer.Defines
 {
-    public static partial class AttachedProperties
+    public static partial class UIEventHubProperties
     {
         #region IsMouseDragging
                 

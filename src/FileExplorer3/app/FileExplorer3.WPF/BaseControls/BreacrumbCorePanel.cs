@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.UserControls;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.BaseControls
 {

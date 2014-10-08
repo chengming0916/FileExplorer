@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.Defines;
 using System.Windows.Media;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.UserControls
 {

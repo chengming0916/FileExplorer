@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
-namespace QuickZip.Converters
+namespace FileExplorer.UIEventHub.Converters
 {
     /// <summary>
     /// This class simply converts a Boolean to a Visibility

@@ -60,7 +60,7 @@ namespace FileExplorer.WPF.BaseControls
                                 HubScriptCommands.CaptureMouse(CaptureMouseMode.ScrollContentPresenter,
                                     HubScriptCommands.SetRoutedEventHandled(
                                     HubScriptCommands.SetDependencyPropertyIfDifferentValue("{Sender}",
-                                        AttachedProperties.IsSelectingProperty, true,
+                                        UIEventHubProperties.IsSelectingProperty, true,
                                         HubScriptCommands.ObtainPointerPosition(
                                             HubScriptCommands.AttachSelectionAdorner("{SelectionAdorner}",                                              
                                                 HubScriptCommands.FindSelectedItems( 
@@ -72,7 +72,7 @@ namespace FileExplorer.WPF.BaseControls
                     return _cmdDic.MouseMove ?? (_cmdDic.MouseMove = 
                          HubScriptCommands.ThrottleTouchDrag(5, 
                         HubScriptCommands.IfDependencyPropertyEquals("{Sender}",
-                        AttachedProperties.IsSelectingProperty, true,
+                        UIEventHubProperties.IsSelectingProperty, true,
                         HubScriptCommands.ObtainPointerPosition(
                             HubScriptCommands.UpdateSelectionAdorner("{SelectionAdorner}",
                                         HubScriptCommands.FindSelectedItems( 
@@ -91,9 +91,9 @@ namespace FileExplorer.WPF.BaseControls
                                     HubScriptCommands.ObtainPointerPosition(
                                         HubScriptCommands.DettachSelectionAdorner("{SelectionAdorner}",
                                             //Assign IsSelecting attached property to {WasSelecting}
-                                            HubScriptCommands.GetDependencyProperty("{Sender}", AttachedProperties.IsSelectingProperty, "{WasSelecting}",
+                                            HubScriptCommands.GetDependencyProperty("{Sender}", UIEventHubProperties.IsSelectingProperty, "{WasSelecting}",
                                             //Reset IsSelecting attached property.
-                                            HubScriptCommands.SetDependencyPropertyValue("{Sender}", AttachedProperties.IsSelectingProperty, false,
+                                            HubScriptCommands.SetDependencyPropertyValue("{Sender}", UIEventHubProperties.IsSelectingProperty, false,
                                             ScriptCommands.IfTrue("{WasSelecting}",
                                                 //WasSelecting
                                                 HubScriptCommands.FindSelectedItems(HubScriptCommands.SelectItems()),

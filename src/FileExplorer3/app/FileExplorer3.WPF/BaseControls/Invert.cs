@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.BaseControls
 {

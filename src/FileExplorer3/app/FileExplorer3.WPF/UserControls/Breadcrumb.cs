@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Models;
 using FileExplorer.Models;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.UserControls
 {

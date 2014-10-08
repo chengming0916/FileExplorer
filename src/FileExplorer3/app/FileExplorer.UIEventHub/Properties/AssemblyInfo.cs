@@ -36,10 +36,16 @@ using System.Windows.Markup;
 // [assembly: AssemblyVersion("3.0.19.4")]
 [assembly: AssemblyVersion("3.0.19.4")]
 [assembly: AssemblyFileVersion("3.0.19.4")]
-[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.WPF.UserControls")]
+
+
+[assembly: XmlnsDefinition("http://www.quickzip.org/UIEventHub", "FileExplorer.WPF.BaseControls")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/UIEventHub", "FileExplorer.Defines")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/UIEventHub", "FileExplorer.UIEventHub.Converters")]
+
 [assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.WPF.BaseControls")]
 [assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.Defines")]
-[assembly: XmlnsDefinition("http://www.quickzip.org/Converters", "QuickZip.Converters")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/Defines", "FileExplorer.Defines")]
+[assembly: XmlnsDefinition("http://www.quickzip.org/Converters", "FileExplorer.UIEventHub.Converters")]
 
 [assembly: ThemeInfo(
     ResourceDictionaryLocation.None, //where theme specific resource dictionaries are located

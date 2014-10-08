@@ -5,6 +5,7 @@
              xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"
              xmlns:def="clr-namespace:FileExplorer.WPF.Defines"
              xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"
+             xmlns:hub="http://www.quickzip.org/UIEventHub"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
@@ -18,17 +19,17 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <bc:UIEventAdapter.Processors>
-            <bc:InputBindingsEventProcessor >
-                <bc:InputBindingsEventProcessor.InputBindings>
-                    <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlUp}" />
-                    <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlDown}" />
+        <hub:UIEventAdapter.Processors>
+            <hub:InputBindingsEventProcessor >
+                <hub:InputBindingsEventProcessor.InputBindings>
+                    <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static hub:MouseWheelGesture.CtrlUp}" />
+                    <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static hub:MouseWheelGesture.CtrlDown}" />
                     <!--<KeyBinding Command="def:ExplorerCommands.NewTab" Key="T" Modifiers="Control" />-->
                     <KeyBinding Command="def:ExplorerCommands.CloseTab" Key="F4" Modifiers="Control" />
-                </bc:InputBindingsEventProcessor.InputBindings>
-            </bc:InputBindingsEventProcessor>
-            <bc:DragDropLiteEventProcessor />
-        </bc:UIEventAdapter.Processors>
+                </hub:InputBindingsEventProcessor.InputBindings>
+            </hub:InputBindingsEventProcessor>
+            <hub:DragDropLiteEventProcessor />
+        </hub:UIEventAdapter.Processors>
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
             <RowDefinition Height="Auto" />

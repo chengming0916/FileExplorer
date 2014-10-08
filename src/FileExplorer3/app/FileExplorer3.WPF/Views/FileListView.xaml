@@ -8,6 +8,7 @@
              xmlns:uc="clr-namespace:FileExplorer.WPF.UserControls"
              xmlns:bc="clr-namespace:FileExplorer.WPF.BaseControls"
              xmlns:def="clr-namespace:FileExplorer.WPF.Defines"
+             xmlns:hub="http://www.quickzip.org/UIEventHub"
              xmlns:m="clr-namespace:FileExplorer.WPF.Models"
              xmlns:v="clr-namespace:FileExplorer.WPF.Views"
              mc:Ignorable="d" 
@@ -48,41 +49,41 @@
                      SortBy="{Binding Columns.SortBy}"
                      AllowDrop="True"
                      cal:View.ApplyConventions="True"                                            
-                     def:AttachedProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
+                     hub:UIEventHubProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
                        >
-            <bc:UIEventAdapter.Processors>
-                <bc:TouchGestureEventProcessor Gesture="FlickLeft" Command="NavigationCommands.BrowseBack" />
-                <bc:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
-                <bc:TouchGestureEventProcessor Gesture="FlickUp" Command="NavigationCommands.BrowseHome" />
+            <hub:UIEventAdapter.Processors>
+                <hub:TouchGestureEventProcessor Gesture="FlickLeft" Command="NavigationCommands.BrowseBack" />
+                <hub:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
+                <hub:TouchGestureEventProcessor Gesture="FlickUp" Command="NavigationCommands.BrowseHome" />
 
-                <bc:InputBindingsEventProcessor >
+                <hub:InputBindingsEventProcessor >
                     <!-- In ListView.xaml -->
-                    <bc:InputBindingsEventProcessor.InputBindings>
+                    <hub:InputBindingsEventProcessor.InputBindings>
                         <MouseBinding Command="ApplicationCommands.Open" MouseAction="LeftDoubleClick" />
                         <KeyBinding Key="Back" Modifiers="Control" Command="NavigationCommands.BrowseHome" />
-                        <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlUp}" />
-                        <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static bc:MouseWheelGesture.CtrlDown}" />
+                        <MouseBinding Command="NavigationCommands.IncreaseZoom" Gesture="{x:Static hub:MouseWheelGesture.CtrlUp}" />
+                        <MouseBinding Command="NavigationCommands.DecreaseZoom" Gesture="{x:Static hub:MouseWheelGesture.CtrlDown}" />
                         <KeyBinding Command="def:ExplorerCommands.OpenTab" Key="T" Modifiers="Control" />
-                    </bc:InputBindingsEventProcessor.InputBindings>
-                </bc:InputBindingsEventProcessor>
+                    </hub:InputBindingsEventProcessor.InputBindings>
+                </hub:InputBindingsEventProcessor>
 
-                <bc:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
-                <bc:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
+                <hub:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
+                <hub:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
                                                EnableMouse="False" EnableTouch="True" />
-                <bc:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
+                <hub:MultiSelectEventProcessor EnableMultiSelect="{Binding EnableMultiSelect}"  
                                               UnselectAllCommand="{x:Static def:ExplorerCommands.UnselectAll}"
                                             IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
                 />
 
-                <bc:ContextMenuEventProcessor>
-                    <bc:ContextMenuEventProcessor.ContextMenu>
+                <hub:ContextMenuEventProcessor>
+                    <hub:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                     ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
-                    </bc:ContextMenuEventProcessor.ContextMenu>
-                </bc:ContextMenuEventProcessor>
+                    </hub:ContextMenuEventProcessor.ContextMenu>
+                </hub:ContextMenuEventProcessor>
 
 
-            </bc:UIEventAdapter.Processors>
+            </hub:UIEventAdapter.Processors>
             <!--<MouseBinding Command="ApplicationCommands.ContextMenu" MouseAction="MiddleClick" />-->
             <!--<i:Interaction.Triggers>                
                 <uc:InputBindingTrigger>                                        
@@ -98,7 +99,7 @@
                          bc:DockableScrollViewer.IsContentVisible="{Binding ShowToolbar}"
                         >
                     <uc:ToolbarEx ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All, Mode=OneTime}"                                  
-                                  def:AttachedProperties.SkipLookup="True" VerticalAlignment="Top" >
+                                  hub:UIEventHubProperties.SkipLookup="True" VerticalAlignment="Top" >
                         <uc:ToolbarEx.Resources>
                             <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/ExplorerToolbar.xaml" />
                         </uc:ToolbarEx.Resources>

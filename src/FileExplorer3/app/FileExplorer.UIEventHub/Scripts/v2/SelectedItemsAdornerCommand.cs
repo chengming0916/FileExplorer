@@ -89,14 +89,14 @@ namespace FileExplorer.UIEventHub
                     case UIEventHub.AdornerMode.Attach:
                         if (adornerLayer == null)
                             return ResultCommand.Error(new Exception("Adorner layer not found."));
-                        if (AttachedProperties.GetSelectedItemsAdorner(scp) == null)
+                        if (UIEventHubProperties.GetSelectedItemsAdorner(scp) == null)
                         {
 
                             //Create and register adorner.
                             SelectedItemsAdorner adorner = new SelectedItemsAdorner(scp);
                             pm.SetValue(SelectedItemsAdornerKey, adorner);
-                            AttachedProperties.SetSelectedItemsAdorner(scp, adorner);
-                            AttachedProperties.SetLastScrollContentPresenter(ic, scp); //For used when detach.
+                            UIEventHubProperties.SetSelectedItemsAdorner(scp, adorner);
+                            UIEventHubProperties.SetLastScrollContentPresenter(ic, scp); //For used when detach.
 
                             adornerLayer.Add(adorner);
                         }
@@ -104,19 +104,19 @@ namespace FileExplorer.UIEventHub
 
                     case UIEventHub.AdornerMode.Detach:
 
-                        var lastScp = AttachedProperties.GetLastScrollContentPresenter(ic); //For used when detach.
-                        var lastAdorner = AttachedProperties.GetSelectedItemsAdorner(scp);
+                        var lastScp = UIEventHubProperties.GetLastScrollContentPresenter(ic); //For used when detach.
+                        var lastAdorner = UIEventHubProperties.GetSelectedItemsAdorner(scp);
                         if (lastAdorner != null)
                             adornerLayer.Remove(lastAdorner);
 
-                        AttachedProperties.SetLastScrollContentPresenter(ic, null);
-                        AttachedProperties.SetSelectedItemsAdorner(scp, null);
+                        UIEventHubProperties.SetLastScrollContentPresenter(ic, null);
+                        UIEventHubProperties.SetSelectedItemsAdorner(scp, null);
                         pm.SetValue<Object>(SelectedItemsAdornerKey, null);
                         break;
 
                     case UIEventHub.AdornerMode.Update:
                         var updateAdorner = pm.GetValue<SelectedItemsAdorner>(SelectedItemsAdornerKey) ??
-                            AttachedProperties.GetSelectedItemsAdorner(scp);
+                            UIEventHubProperties.GetSelectedItemsAdorner(scp);
 
                         if (updateAdorner == null)
                             return ResultCommand.Error(new Exception("Adorner not found."));

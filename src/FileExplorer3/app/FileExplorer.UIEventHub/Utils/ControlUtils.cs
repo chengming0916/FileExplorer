@@ -24,7 +24,7 @@ namespace FileExplorer.WPF.Utils
         public static Point GetScrollbarPosition(Control c)
         {
             var scp = c == null ? null : GetScrollContentPresenter(c);
-            return scp == null ? AttachedProperties.InvalidPoint : GetScrollbarPosition(scp);
+            return scp == null ? UIEventHubProperties.InvalidPoint : GetScrollbarPosition(scp);
         }
 
         public static ScrollContentPresenter GetScrollContentPresenter(ItemsPresenter ip)
@@ -34,12 +34,12 @@ namespace FileExplorer.WPF.Utils
 
         public static ScrollContentPresenter GetScrollContentPresenter(Control c)
         {
-            var retVal = AttachedProperties.GetScrollContentPresenter(c);
+            var retVal = UIEventHubProperties.GetScrollContentPresenter(c);
             if (retVal == null)
             {
                 retVal = UITools.FindAncestor<ScrollContentPresenter>(
                 GetItemsPresenter(c));
-                AttachedProperties.SetScrollContentPresenter(c, retVal);
+                UIEventHubProperties.SetScrollContentPresenter(c, retVal);
             }
             return retVal;
         }

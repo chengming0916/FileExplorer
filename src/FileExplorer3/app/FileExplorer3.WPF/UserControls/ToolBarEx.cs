@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 
 namespace FileExplorer.WPF.UserControls
 {

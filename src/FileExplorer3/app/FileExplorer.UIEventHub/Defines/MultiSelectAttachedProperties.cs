@@ -16,11 +16,11 @@ namespace FileExplorer.Defines
 {
 
 
-    public static partial class AttachedProperties
+    public static partial class UIEventHubProperties
     {
         #region SelectionAdorner
         public static DependencyProperty SelectionAdornerProperty =
-            DependencyProperty.RegisterAttached("SelectionAdorner", typeof(SelectionAdorner), typeof(AttachedProperties));
+            DependencyProperty.RegisterAttached("SelectionAdorner", typeof(SelectionAdorner), typeof(UIEventHubProperties));
 
         public static SelectionAdorner GetSelectionAdorner(DependencyObject target)
         {
@@ -36,7 +36,7 @@ namespace FileExplorer.Defines
 
         #region SelectedItemsAdorner
         public static DependencyProperty SelectedItemsAdornerProperty =
-            DependencyProperty.RegisterAttached("SelectedItemsAdorner", typeof(SelectedItemsAdorner), typeof(AttachedProperties));
+            DependencyProperty.RegisterAttached("SelectedItemsAdorner", typeof(SelectedItemsAdorner), typeof(UIEventHubProperties));
 
         public static SelectedItemsAdorner GetSelectedItemsAdorner(DependencyObject target)
         {
@@ -52,7 +52,7 @@ namespace FileExplorer.Defines
 
         #region ResizeItemAdorner
         public static DependencyProperty ResizeItemAdornerProperty =
-            DependencyProperty.RegisterAttached("ResizeItemAdorner", typeof(ResizeItemAdorner), typeof(AttachedProperties));
+            DependencyProperty.RegisterAttached("ResizeItemAdorner", typeof(ResizeItemAdorner), typeof(UIEventHubProperties));
 
         public static ResizeItemAdorner GetResizeItemAdorner(DependencyObject target)
         {
@@ -69,7 +69,7 @@ namespace FileExplorer.Defines
         #region LastScrollContentPresenter
 
         public static DependencyProperty LastScrollContentPresenterProperty =
-           DependencyProperty.RegisterAttached("LastScrollContentPresenter", typeof(ScrollContentPresenter), typeof(AttachedProperties));
+           DependencyProperty.RegisterAttached("LastScrollContentPresenter", typeof(ScrollContentPresenter), typeof(UIEventHubProperties));
 
         public static ScrollContentPresenter GetLastScrollContentPresenter(DependencyObject target)
         {
@@ -85,7 +85,7 @@ namespace FileExplorer.Defines
         #region StartSelectedItem
 
         public static DependencyProperty StartSelectedItemProperty =
-          DependencyProperty.RegisterAttached("StartSelectedItem", typeof(Control), typeof(AttachedProperties));
+          DependencyProperty.RegisterAttached("StartSelectedItem", typeof(Control), typeof(UIEventHubProperties));
 
         public static Control GetStartSelectedItem(DependencyObject target)
         {
@@ -101,7 +101,7 @@ namespace FileExplorer.Defines
         #region IsSelecting
 
         public static DependencyProperty IsSelectingProperty =
-       DependencyProperty.RegisterAttached("IsSelecting", typeof(bool), typeof(AttachedProperties), new PropertyMetadata(false));
+       DependencyProperty.RegisterAttached("IsSelecting", typeof(bool), typeof(UIEventHubProperties), new PropertyMetadata(false));
 
 
         public static bool GetIsSelecting(DependencyObject target)

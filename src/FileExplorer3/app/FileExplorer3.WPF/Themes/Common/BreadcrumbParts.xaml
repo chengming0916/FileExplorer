@@ -201,7 +201,7 @@
                                                     RelativeSource={RelativeSource AncestorType={x:Type bc:BreadcrumbCore}}}" />
     </Style>
 
-    <conv:BoolToVisibilityConverter x:Key="btv" />
+    <!--<conv:BoolToVisibilityConverter x:Key="btv" />-->
 
     <Style x:Key="{x:Type bc:BreadcrumbCore}"                       
            TargetType="{x:Type bc:BreadcrumbCore}" >

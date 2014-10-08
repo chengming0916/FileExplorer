@@ -31,7 +31,7 @@ namespace FileExplorer.WPF.ViewModels
         [ImportingConstructor]
         public TabbedExplorerViewModel(IWindowManager windowManager, IEventAggregator events)
         {
-            DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
+            //DragHelper = new TabControlDragHelper<IExplorerViewModel>(this);
 
             _events = events;
             _windowManager = windowManager;
@@ -80,7 +80,7 @@ namespace FileExplorer.WPF.ViewModels
             //    {
             //        {"TabbedExplorer", this }
             //    });
-            expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
+            //expvm.DropHelper = new TabDropHelper<IExplorerViewModel>(expvm, this);
 
             //expvm.FileList.Commands.CommandDictionary.CloseTab =
             //    UIScriptCommands.TabExplorerCloseTab("{TabbedExplorer}", "{Explorer}");

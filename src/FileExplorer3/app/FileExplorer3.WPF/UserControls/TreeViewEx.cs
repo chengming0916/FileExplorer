@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using FileExplorer.WPF.BaseControls;
+using FileExplorer.WPF.Utils;
 
 
 namespace FileExplorer.WPF.UserControls

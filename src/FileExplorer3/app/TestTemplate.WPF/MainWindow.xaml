@@ -5,6 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
         xmlns:uc="http://www.quickzip.org/UserControls"
         xmlns:bc="http://www.quickzip.org/BaseControls"
+        xmlns:hub="http://www.quickzip.org/UIEventHub"
         Title="Control Test" Height="350" Width="525">
     <Window.Resources>
         <ResourceDictionary>
@@ -394,17 +395,16 @@
         </TabItem>
 
         <TabItem Header="UIEventHub" >
-            <bc:UIEventAdapter.Processors>
-                <bc:DragDropLiteEventProcessor EnableDrag="False" EnableDrop="False" />
-            </bc:UIEventAdapter.Processors>
+            <hub:UIEventAdapter.Processors>
+                <hub:DragDropLiteEventProcessor EnableDrag="False" EnableDrop="False" />
+            </hub:UIEventAdapter.Processors>
             <Grid>
                 <Grid.Resources>
                     <DataTemplate x:Key="dragnDropItemTemplate">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Value}" />
                             <TextBlock Text="[ing]" Foreground="Blue"
-                                    Visibility="{Binding (bc:AttachedProperties.IsSelecting),
-                                        RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}},
+                                    Visibility="{Binding IsSelecting,
                                         Converter={StaticResource btvc}}" />
                             <TextBlock Text="[ed]" Foreground="Green"
                                     Visibility="{Binding IsSelected, Converter={StaticResource btvc}}" />
@@ -441,7 +441,7 @@
                         <Setter Property="ItemTemplate" Value="{StaticResource dragnDropItemTemplate}" />
                         <Setter Property="ItemsSource" Value="{Binding Items}" />
                         <Setter Property="AllowDrop" Value="True" />
-                        <Setter Property="bc:AttachedProperties.DragItemTemplate" 
+                        <Setter Property="hub:UIEventHubProperties.DragItemTemplate" 
                                 Value="{StaticResource dragnDropHintTemplate}" />
                     </Style>
                     <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}" >
@@ -451,7 +451,7 @@
                         <Setter Property="ItemTemplate" Value="{StaticResource dragnDropTreeItemTemplate}" />
                         <Setter Property="ItemsSource" Value="{Binding Items}" />
                         <Setter Property="AllowDrop" Value="True" />
-                        <Setter Property="bc:AttachedProperties.DragItemTemplate" 
+                        <Setter Property="hub:UIEventHubProperties.DragItemTemplate" 
                                 Value="{StaticResource dragnDropHintTemplate}" />
                     </Style>
                 </Grid.Resources>

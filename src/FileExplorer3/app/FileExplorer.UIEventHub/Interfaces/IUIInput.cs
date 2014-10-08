@@ -98,8 +98,8 @@ namespace FileExplorer.UIEventHub
 
         protected RoutedEventArgs _args;
         protected int _clickCount = 0;
-        protected Point _position = AttachedProperties.InvalidPoint;
-        protected Point _sbPosition = AttachedProperties.InvalidPoint;
+        protected Point _position = UIEventHubProperties.InvalidPoint;
+        protected Point _sbPosition = UIEventHubProperties.InvalidPoint;
         protected UIInputType _inputType = UIInputType.None;
         protected UIInputState _inputState = UIInputState.NotApplied;
         protected UIInputState _touchInputState = UIInputState.NotApplied;
@@ -137,7 +137,7 @@ namespace FileExplorer.UIEventHub
 
         public override Point PositionRelativeTo(IInputElement inputElement)
         {
-            return AttachedProperties.InvalidPoint;
+            return UIEventHubProperties.InvalidPoint;
         }
     }
 
@@ -149,7 +149,7 @@ namespace FileExplorer.UIEventHub
         { }
         public override Point PositionRelativeTo(IInputElement inputElement)
         {
-            return AttachedProperties.InvalidPoint;
+            return UIEventHubProperties.InvalidPoint;
         }
     }
 
