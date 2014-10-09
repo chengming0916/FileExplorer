@@ -12,6 +12,7 @@ using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Utils;
+using FileExplorer.UIEventHub;
 
 namespace TestTemplate.WPF
 {
@@ -74,11 +75,11 @@ namespace TestTemplate.WPF
             return Items.Where(i => i.IsSelected).Cast<IDraggable>();
         }
 
-        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
-        {
-            return new DataObject(Format_DragDropItem,
-                (from i in draggables.Cast<DragDropItemViewModel>() where i.IsSelected select i.Value).ToArray());
-        }
+        //public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
+        //{
+        //    return new DataObject(Format_DragDropItem,
+        //        (from i in draggables.Cast<DragDropItemViewModel>() where i.IsSelected select i.Value).ToArray());
+        //}
 
         public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
         {
@@ -86,7 +87,7 @@ namespace TestTemplate.WPF
         }
 
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect)
         {
             if (effect == DragDropEffects.Move)
             {
@@ -98,28 +99,27 @@ namespace TestTemplate.WPF
 
 
 
-        public QueryDropResult QueryDrop(IDataObject da, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
         {
-            var draggableModels = QueryDropDraggables(da).Cast<DragDropItemViewModel>();
-            if (draggableModels.Count() == 0)
-                return QueryDropResult.None;
-            foreach (var dm in draggableModels)
+            if (draggables.Count() == 0)
+                return QueryDropEffects.None;
+            foreach (var dm in draggables.Cast<DragDropItemViewModel>())
                 if (dm.Value == this.Value)
-                    return QueryDropResult.None;
-            return QueryDropResult.CreateNew(DragDropEffects.Move | DragDropEffects.Copy, DragDropEffects.Move);            
+                    return QueryDropEffects.None;
+            return QueryDropEffects.CreateNew(DragDropEffects.Move | DragDropEffects.Copy, DragDropEffects.Move);            
         }      
 
-        public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
-        {
-            if (da.GetDataPresent(Format_DragDropItem))
-            {
-                var data = da.GetData(Format_DragDropItem) as int[];
-                for (int i = 0; i < data.Length; i++)
-                    yield return new DragDropItemViewModel(data[i], IsChildDroppable, IsChildDroppable);
-            }
-        }
+        //public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
+        //{
+        //    if (da.GetDataPresent(Format_DragDropItem))
+        //    {
+        //        var data = da.GetData(Format_DragDropItem) as int[];
+        //        for (int i = 0; i < data.Length; i++)
+        //            yield return new DragDropItemViewModel(data[i], IsChildDroppable, IsChildDroppable);
+        //    }
+        //}
 
-        public DragDropEffects Drop(IEnumerable<IDraggable> draggable, IDataObject da, DragDropEffects allowedEffects)
+        public DragDropEffects Drop(IEnumerable<IDraggable> draggable, DragDropEffects allowedEffects)
         {
             if (allowedEffects.HasFlag(DragDropEffects.Move) ||
                 allowedEffects.HasFlag(DragDropEffects.Copy))
@@ -147,8 +147,9 @@ namespace TestTemplate.WPF
 
         private bool _isSelected = false;
         private ObservableCollection<DragDropItemViewModel> _items = new ObservableCollection<DragDropItemViewModel>();
-        private bool _isDraggingOver;
+        private bool _isDraggingOver, _isDraggingFrom;
         private bool _isDragging = false;
+        private bool _isSelecting = false;
 
         #endregion
 
@@ -162,12 +163,25 @@ namespace TestTemplate.WPF
             get { return _isDraggingOver; }
             set { _isDraggingOver = value; NotifyOfPropertyChanged(() => IsDraggingOver); }
         }
+
+        public bool IsDraggingFrom
+        {
+            get { return _isDraggingFrom; }
+            set { _isDraggingFrom = value; NotifyOfPropertyChanged(() => IsDraggingFrom); }
+        }
         public int Value { get; set; }
         public bool IsSelected
         {
             get { return _isSelected; }
             set { _isSelected = value; NotifyOfPropertyChanged(() => IsSelected); }
         }
+
+        public bool IsSelecting
+        {
+            get { return _isSelecting; }
+            set { _isSelecting = value; NotifyOfPropertyChanged(() => IsSelecting); }
+        }
+
 
         public string DropTargetLabel
         {
@@ -192,7 +206,9 @@ namespace TestTemplate.WPF
 
 
 
-        
+
+
+
     }
 
 
