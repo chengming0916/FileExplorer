@@ -20,14 +20,14 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF;
 using FileExplorer.Script;
 
-using FileExplorer.WPF.BaseControls.DragnDrop;
-using FileExplorer.WPF.BaseControls.MultiSelect;
+
 using System.Windows.Media.Animation;
-using FileExplorer.WPF.UserControls.InputProcesor;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.UnitTests;
 using FileExplorer.WPF.Models;
 using FileExplorer.Models;
+using FileExplorer.UIEventHub;
+using FileExplorer.UIEventHub.Defines;
 
 namespace TestTemplate.WPF
 {
@@ -95,7 +95,7 @@ namespace TestTemplate.WPF
                     IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
                     // e.Handled = true;
                     _inputProcessors.Update(ref input);
-                    if (input.InputState != FileExplorer.Defines.UIInputState.NotApplied)
+                    if (input.InputState != UIInputState.NotApplied)
                         inputProcessorOutput.Items.Add(input.ToString());
                     while (inputProcessorOutput.Items.Count > 10)
                         inputProcessorOutput.Items.RemoveAt(0);

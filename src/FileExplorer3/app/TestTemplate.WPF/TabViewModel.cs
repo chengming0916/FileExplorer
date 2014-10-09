@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Utils;
+﻿using FileExplorer.UIEventHub;
+using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using FileExplorer.WPF.ViewModels.Helpers;
 using System;
@@ -22,7 +23,7 @@ namespace TestTemplate.WPF
             Items = new ObservableCollection<TabViewModel>();
             for (int i = 0; i < numberOfTabs; i++)
                 Items.Add(new TabViewModel(this, String.Format("Tab {0}", i)));
-            DragHelper = new TabControlDragHelper<TabViewModel>(this);
+            //DragHelper = new TabControlDragHelper<TabViewModel>(this);
         }
 
         public ObservableCollection<TabViewModel> Items { get; set; }
@@ -85,7 +86,7 @@ namespace TestTemplate.WPF
         {
             _tcvm = tcvm;
             Header = header;
-            DropHelper = new TabDropHelper<TabViewModel>(this, tcvm);
+            //DropHelper = new TabDropHelper<TabViewModel>(this, tcvm);
         }
 
         public string Header { get; set; }
