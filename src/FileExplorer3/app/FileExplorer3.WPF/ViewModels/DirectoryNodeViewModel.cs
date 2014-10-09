@@ -92,7 +92,7 @@ namespace FileExplorer.WPF.ViewModels
             Entries = new EntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask) { ClearBeforeLoad = true };
             Selection = new TreeSelector<IDirectoryNodeViewModel, IEntryModel>(curDirModel, this, 
                 parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
-            DropHelper = new DirectoryNodeDropHelper(curDirModel, Entries, Selection);
+            DropHelper = new DirectoryNodeDropHelper(curDirModel, Entries, Selection) { DropTargetLabel = curDirModel.Label };
         }
 
 
