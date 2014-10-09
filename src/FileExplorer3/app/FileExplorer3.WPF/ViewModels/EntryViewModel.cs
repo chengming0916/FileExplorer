@@ -139,6 +139,7 @@ namespace FileExplorer.WPF.ViewModels
         private ImageSource _icon = null;
         private IEnumerable<IModelIconExtractor<IEntryModel>> _iconExtractSequences;
         private bool _isDragging = false;
+        private bool _isSelecting = false;
 
         #endregion
 
@@ -189,6 +190,15 @@ namespace FileExplorer.WPF.ViewModels
             set
             {
                 if (_isSelected != value) { _isSelected = value; NotifyOfPropertyChange(() => IsSelected); }
+            }
+        }
+
+        public bool IsSelecting
+        {
+            get { return _isSelecting; }
+            set
+            {
+                if (_isSelecting != value) { _isSelecting = value; NotifyOfPropertyChange(() => IsSelecting); }
             }
         }
 

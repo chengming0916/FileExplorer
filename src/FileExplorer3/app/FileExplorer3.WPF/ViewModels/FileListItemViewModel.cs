@@ -46,7 +46,8 @@ namespace FileExplorer.WPF.ViewModels
         {
             _reportSelected = reportSelected;
             DropHelper =
-                model.Profile.DragDrop().QueryCanDrop(model) ? (ISupportDrop)new FileListItemDropHelper(this) : NoDropHelper.Instance;
+                model.Profile.DragDrop().QueryCanDrop(model) ? (ISupportDrop)new FileListItemDropHelper(this) {  DropTargetLabel = model.Label }
+                : NoDropHelper.Instance;
             
         }
 

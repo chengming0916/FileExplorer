@@ -1,6 +1,7 @@
 ﻿using FileExplorer;
 using FileExplorer.Script;
 using FileExplorer.WPF.Utils;
+using MetroLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -20,7 +21,7 @@ namespace TestApp
         protected override void OnStartup(StartupEventArgs e)
         {            
             base.OnStartup(e);
-
+            LogManagerFactory.DefaultConfiguration.IsEnabled = false;
             //PresentationTraceSources.DataBindingSource.Listeners.Add(
             //        new ConsoleTraceListener());
 

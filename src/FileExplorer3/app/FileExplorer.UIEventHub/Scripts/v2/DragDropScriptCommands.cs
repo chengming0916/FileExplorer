@@ -91,7 +91,10 @@ namespace FileExplorer.UIEventHub
 
                    ScriptCommands.IfEquals(queryDropResultVariable, QueryDropEffects.None,                                        
                        ScriptCommands.FormatText(adornerTextVariable, "{ItemLabel}"), 
-                       ScriptCommands.FormatText(adornerTextVariable, "{MethodLabel} {ItemLabel} " + iSupportDropLabelVariable))
+                       ScriptCommands.IfAssigned(iSupportDropLabelVariable, 
+                        ScriptCommands.FormatText(adornerTextVariable, "{MethodLabel} {ItemLabel} to " + iSupportDropLabelVariable), 
+                        ScriptCommands.FormatText(adornerTextVariable, "{MethodLabel} {ItemLabel}")
+                        ))
                    );
         }
 

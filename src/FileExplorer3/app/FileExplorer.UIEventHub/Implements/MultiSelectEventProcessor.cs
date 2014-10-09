@@ -87,7 +87,7 @@ namespace FileExplorer.WPF.BaseControls
                         HubScriptCommands.IfExistsVisualParent("{EventArgs.OriginalSource}", FindMethodType.Type,  "AdornerLayer", 
                             ResultCommand.NoError, 
                             HubScriptCommands.ReleaseMouse(
-                                HubScriptCommands.SetRoutedEventHandled(
+                                //HubScriptCommands.SetRoutedEventHandled(
                                     HubScriptCommands.ObtainPointerPosition(
                                         HubScriptCommands.DettachSelectionAdorner("{SelectionAdorner}",
                                             //Assign IsSelecting attached property to {WasSelecting}
@@ -105,7 +105,7 @@ namespace FileExplorer.WPF.BaseControls
                                                             ScriptCommands.SetPropertyValue("{ItemUnderMouse}", "IsSelected", true)),
                                                         //If click on empty area
                                                         ScriptCommands.RunICommand(UnselectAllCommand, null, false))
-                        )))))))))));
+                        ))))))))));
             }
 
             return base.onEvent(eventId);
