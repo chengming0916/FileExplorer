@@ -199,8 +199,8 @@
     <Compile Include="Utils\ResourceUtils.cs" />
     <Compile Include="ViewModels\Helpers\CommandManagerBase.cs" />
     <Compile Include="ViewModels\Helpers\ExtensionMethods_Scripts.cs" />
-    <Compile Include="ViewModels\Helpers\TabDropHelper.cs" />
     <Compile Include="ViewModels\Interfaces\IStartupWindowSize.cs" />
+    <Compile Include="ViewModels\Interfaces\ITabbedExplorerViewModel.cs" />
     <Compile Include="ViewModels\SelectProfileViewModel.cs" />
     <Compile Include="ViewModels\BreadcrumbCommandManager.cs" />
     <Compile Include="ViewModels\Initializers\ExplorerInitializers.cs" />
@@ -235,7 +235,6 @@
     <Compile Include="ViewModels\Interfaces\ExtensionMethods.cs" />
     <Compile Include="ViewModels\Interfaces\IExplorerInitializer.cs" />
     <Compile Include="ViewModels\Interfaces\ISidebarViewModel.cs" />
-    <Compile Include="ViewModels\Interfaces\ITabbedExplorerViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IViewModelInitializer.cs" />
     <Compile Include="ViewModels\Interfaces\ViewAttached.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />

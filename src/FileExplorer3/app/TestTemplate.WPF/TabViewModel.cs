@@ -23,7 +23,7 @@ namespace TestTemplate.WPF
             Items = new ObservableCollection<TabViewModel>();
             for (int i = 0; i < numberOfTabs; i++)
                 Items.Add(new TabViewModel(this, String.Format("Tab {0}", i)));
-            //DragHelper = new TabControlDragHelper<TabViewModel>(this);
+            DragHelper = new TabControlDragHelper<TabViewModel>(this);
         }
 
         public ObservableCollection<TabViewModel> Items { get; set; }
@@ -80,13 +80,13 @@ namespace TestTemplate.WPF
 
 
     
-    public class TabViewModel : NotifyPropertyChanged, IDraggable, ISupportDropHelper
+    public class TabViewModel : NotifyPropertyChanged, IDraggable, ISelectable, ISupportDropHelper
     {
         public TabViewModel(TabControlViewModel tcvm, string header)
         {
             _tcvm = tcvm;
             Header = header;
-            //DropHelper = new TabDropHelper<TabViewModel>(this, tcvm);
+            DropHelper = new TabDropHelper<TabViewModel>(this, tcvm);
         }
 
         public string Header { get; set; }
@@ -111,6 +111,8 @@ namespace TestTemplate.WPF
 
         private TabControlViewModel _tcvm;
         private bool _isDragging = false;
+        private bool _isSelected = false;
+        private bool _isSelecting = false;
 
 
         public ISupportDrop DropHelper
@@ -125,8 +127,28 @@ namespace TestTemplate.WPF
         {
             return Header;
         }
-    
 
-        
+
+
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                NotifyOfPropertyChanged(() => IsSelected);                
+            }
+        }
+
+        public bool IsSelecting
+        {
+            get { return _isSelecting; }
+            set
+            {
+                _isSelecting = value;
+                NotifyOfPropertyChanged(() => IsSelecting);
+            }
+        }
     }
 }
