@@ -10,8 +10,9 @@ namespace FileExplorer.UIEventHub
     /// <summary>
     /// Implemented by TabControl's ViewModel to handle Drop.
     /// </summary>
+    /// <typeparam name="T">Tab View Model</typeparam>
     public class TabDropHelper<T> : ShellDropHelper<T>
-        where T : class, IDraggable
+        where T : class, IDraggable, ISelectable
     {
         #region Constructors
 

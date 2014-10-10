@@ -10,15 +10,15 @@ namespace FileExplorer.UIEventHub
     /// <summary>
     /// Implemented by both Tab and TabControl's ViewModel, allow re-index tab using Drag n Drop.
     /// </summary>
-    /// <typeparam name="M"></typeparam>
-    public class TabControlDragHelper<M> : ShellDragHelper<M>
-       where M : class, IDraggable
+    /// <typeparam name="T">Tab View Model</typeparam>
+    public class TabControlDragHelper<T> : ShellDragHelper<T>
+       where T : class, IDraggable, ISelectable
     {
         
         #region Constructors
 
-        public TabControlDragHelper(ITabControlViewModel<M> tcvm)            
-            : base(LambdaValueConverter.ConvertUsingCast<IDraggable, M>())
+        public TabControlDragHelper(ITabControlViewModel<T> tcvm)            
+            : base(LambdaValueConverter.ConvertUsingCast<IDraggable, T>())
         {
             _tcvm = tcvm;
             HasDraggables = true;
@@ -28,22 +28,22 @@ namespace FileExplorer.UIEventHub
 
         #region Methods
 
-        public override IEnumerable<M> GetModels()
+        public override IEnumerable<T> GetModels()
         {
             yield return _tcvm.SelectedItem;
         }
 
-        public override IDataObject GetDataObject(IEnumerable<M> models)
+        public override IDataObject GetDataObject(IEnumerable<T> models)
         {
-            return new DataObject(typeof(IEnumerable<M>), models);
+            return new DataObject(typeof(IEnumerable<T>), models);
         }
 
-        public override DragDropEffects QueryDrag(IEnumerable<M> models)
+        public override DragDropEffects QueryDrag(IEnumerable<T> models)
         {
             return DragDropEffects.Move;
         }
 
-        public override void OnDragCompleted(IEnumerable<M> models, IDataObject da, DragDropEffects effect)
+        public override void OnDragCompleted(IEnumerable<T> models, IDataObject da, DragDropEffects effect)
         {            
         }
 
@@ -51,7 +51,7 @@ namespace FileExplorer.UIEventHub
 
         #region Data
 
-        private ITabControlViewModel<M> _tcvm;
+        private ITabControlViewModel<T> _tcvm;
 
 
         #endregion
