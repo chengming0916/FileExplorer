@@ -7,10 +7,23 @@ using System.Windows.Data;
 
 namespace FileExplorer.UIEventHub
 {
+
+    public static class LambdaValueConverter
+    {
+        public static IValueConverter ConvertUsingCast<T, T1>()
+            where T : class
+            where T1 : class
+        {
+            return new LambdaValueConverter<T, T1>(t => t as T1, t1 => t1 as T);
+        }
+    }
+
     public class LambdaValueConverter<T, T1> : IValueConverter
     {
         private Func<T, Type, object, T1> _convertFunc;
         private Func<T1, Type, object, T> _convertBackFunc;
+
+       
 
         public LambdaValueConverter(Func<T, Type, object, T1> convertFunc, 
             Func<T1, Type, object, T> convertBackFunc)

@@ -84,6 +84,8 @@
     <Compile Include="Implements\DropHelper.cs" />
     <Compile Include="Implements\ShellDragHelper.cs" />
     <Compile Include="Implements\ShellDropHelper.cs" />
+    <Compile Include="Implements\TabControlDragHelper.cs" />
+    <Compile Include="Implements\TabDropHelper.cs" />
     <Compile Include="Implements\TouchDragMoveCountInputProcessor.cs" />
     <Compile Include="Implements\ClickCountInputProcessor.cs" />
     <Compile Include="Implements\DebugInputProcessor.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Interfaces\ISelectable.cs" />
     <Compile Include="Interfaces\ISupportShellDrop.cs" />
     <Compile Include="Interfaces\ISupportShellDrag.cs" />
+    <Compile Include="Interfaces\ITabControlVeiwModel.cs" />
     <Compile Include="Interfaces\IUIDragInput.cs" />
     <Compile Include="Interfaces\IUIEventHub.cs" />
     <Compile Include="Interfaces\IUIEventProcessor.cs" />
