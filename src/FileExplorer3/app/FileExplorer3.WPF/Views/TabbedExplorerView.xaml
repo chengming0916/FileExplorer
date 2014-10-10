@@ -39,6 +39,7 @@
                 <Style TargetType="{x:Type uc:TabItemEx}" BasedOn="{StaticResource TabItemExStyle}">
                     <Setter Property="ShowPlaceHolder" Value="{Binding DropHelper.ShowPlaceHolder}" />
                     <Setter Property="HeaderOpacity" Value="{Binding HeaderOpacity}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                 </Style>
             </uc:TabControlEx.ItemContainerStyle>
             <hub:UIEventAdapter.Processors>

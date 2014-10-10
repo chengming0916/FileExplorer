@@ -232,7 +232,7 @@ namespace FileExplorer.WPF.ViewModels
                 cmds.Enqueue(UIScriptCommands.ExplorerGoTo(CurrentDirectory.EntryModel));
             else
                 switch (message.ChangeType)
-                {                    
+                {
                     case ChangeType.Changed:
                         cmds.Enqueue(UIScriptCommands.ExplorerGoTo(message.AppliedRootDirectories.First()));
                         break;
@@ -321,6 +321,8 @@ namespace FileExplorer.WPF.ViewModels
         private bool _isDragging = false;
         private string _filterStr;
         private string _selectedFilter = null;
+        private bool _isSelected = false;
+        private bool _isSelecting = false;
 
         #endregion
 
@@ -386,7 +388,7 @@ namespace FileExplorer.WPF.ViewModels
         public ISupportDrag DragHelper { get; set; }
         public ISupportDrop DropHelper { get; set; }
 
-        //For TabExplorer
+        #region For TabExplorer
         public bool IsDragging
         {
             get { return _isDragging; }
@@ -397,6 +399,30 @@ namespace FileExplorer.WPF.ViewModels
                 NotifyOfPropertyChange(() => HeaderOpacity);
             }
         }
+
+
+
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                NotifyOfPropertyChange(() => IsSelected);
+            }
+        }
+
+        public bool IsSelecting
+        {
+            get { return _isSelecting; }
+            set
+            {
+                _isSelecting = value;
+                NotifyOfPropertyChange(() => IsSelecting);
+            }
+        }
+        #endregion
         public float HeaderOpacity { get { return _isDragging ? 0.5f : 1f; } }
 
         public IEventAggregator Events

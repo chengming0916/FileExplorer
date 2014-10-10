@@ -14,7 +14,7 @@ using FileExplorer.UIEventHub;
 namespace FileExplorer.WPF.ViewModels
 {
     public interface IExplorerViewModel : ISupportCommandManager, 
-        IScreen, IDraggable
+        IScreen, IDraggable, ISelectable
     {
         IExplorerInitializer Initializer { get; set; }
 
