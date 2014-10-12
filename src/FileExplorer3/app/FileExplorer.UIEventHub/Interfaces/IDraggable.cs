@@ -7,9 +7,14 @@ using System.Windows;
 
 namespace FileExplorer.UIEventHub
 {
-    public interface IDraggable
-    {
-        string DisplayName { get; }
+    /// <summary>
+    /// Indicate an item is draggable.
+    /// </summary>
+    public interface IDraggable : IUIAware
+    {        
+        /// <summary>
+        /// Whether the item is dragging, set by UIEventHub.
+        /// </summary>
         bool IsDragging { get;  set; }
     }
 

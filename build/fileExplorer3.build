@@ -23,7 +23,7 @@
 
   </target>
 
-  <target name="build">  
+  <target name="build">
     <call target="setversionstring" />
     <property name="dest.path" value="..\release\v${version}\" />
     <property name="dest.current.path" value="..\release\current\3.0" />
@@ -33,11 +33,11 @@
     <property name="msbuild.csproj.path" value="${src.fileexplorer.scripting.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
-    
+
     <property name="msbuild.csproj.path" value="${src.fileexplorer.uieventhub.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
-    
+
     <property name="msbuild.csproj.path" value="${src.fileexplorer3.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
@@ -57,12 +57,21 @@
     <property name="msbuild.csproj.path" value="${src.testtemplate.wpf.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
-  
-   <property name="msbuild.csproj.path" value="${src.test_diagramingdemo.csproj}" />
+
+    <property name="msbuild.csproj.path" value="${src.test_diagramingdemo.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
-  
-  <property name="msbuild.csproj.path" value="${src.test_shelldragdemo.csproj}" />
+
+    <property name="msbuild.csproj.path" value="${src.test_shelldragdemo.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+    
+     <property name="msbuild.csproj.path" value="${src.test_nonshelldragdemo.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+
+
+    <property name="msbuild.csproj.path" value="${src.test_tabdragdemo.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
   </target>
@@ -85,7 +94,7 @@
     <property name="dest.path" value="..\release\v${version}\" />
     <!--<delete dir="..\release\v${version}" />-->
     <property name="dest.current.path" value="..\release\current\3.0" />
-    
+
     <echo message="copy.bin: ${dest.current.path} dlls -> ${dest.path}\lib\net45" />
     <copy todir="${dest.path}\lib\net45">
       <fileset basedir="${dest.current.path}">
@@ -121,15 +130,15 @@
         <exclude name="obj/**" />
       </fileset>
     </copy>
-    
-     <echo message="copy.source: FileExplorer.UIEventHub -> ${dest.path}\src\app" />
+
+    <echo message="copy.source: FileExplorer.UIEventHub -> ${dest.path}\src\app" />
     <copy todir="${dest.path}\src\FileExplorer3\app\FileExplorer.UIEventHub">
       <fileset basedir="${src.path}\app\FileExplorer.UIEventHub">
         <include name="*/**" />
         <exclude name="obj/**" />
       </fileset>
     </copy>
-    
+
     <echo message="copy.source: FileExplorer3 -> ${dest.path}\src\app" />
     <copy todir="${dest.path}\src\FileExplorer3\app\FileExplorer3">
       <fileset basedir="${src.path}\app\FileExplorer3">
@@ -155,7 +164,7 @@
         <exclude name="obj/**" />
       </fileset>
     </copy>
-    
+
     <echo message="copy.source: TestApp.WPF -> ${dest.path}\src\app" />
     <copy todir="${dest.path}\src\FileExplorer3\app\TestApp.WPF">
       <fileset basedir="${src.path}\app\TestApp.WPF">
@@ -177,7 +186,7 @@
         <include name="Properties/*" />
       </fileset>
     </copy>
-    
+
     <echo message="copy.source: Test_DiagramingDemo -> ${dest.path}\src\app" />
     <copy todir="${dest.path}\src\FileExplorer3\app\Test_DiagramingDemo">
       <fileset basedir="${src.path}\app\Test_DiagramingDemo">
@@ -186,10 +195,28 @@
         <exclude name="obj/**" />
       </fileset>
     </copy>
-    
+
     <echo message="copy.source: Test_ShellDragDemo -> ${dest.path}\src\app" />
     <copy todir="${dest.path}\src\FileExplorer3\app\Test_ShellDragDemo">
       <fileset basedir="${src.path}\app\Test_ShellDragDemo">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+
+ <echo message="copy.source: Test_NonShellDragDemo -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\Test_NonShellDragDemo">
+      <fileset basedir="${src.path}\app\Test_NonShellDragDemo">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+    
+    <echo message="copy.source: Test_TabDragDemo -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\Test_TabDragDemo">
+      <fileset basedir="${src.path}\app\Test_TabDragDemo">
         <include name="*/**" />
         <exclude name="bin/**" />
         <exclude name="obj/**" />
@@ -204,15 +231,15 @@
     <copy file="${src.path}\app\packages\Microsoft.Bcl.Build.1.0.7\tools\Microsoft.Bcl.Build.targets"
         tofile="${dest.path}\src\FileExplorer3\app\packages\Microsoft.Bcl.Build.1.0.7\tools\Microsoft.Bcl.Build.targets" />
     <copy file="${src.path}\app\FileExplorer3 - 2013.sln"
-        tofile="${dest.path}\src\FileExplorer3\app\FileExplorer3 - 2013.sln" />    
-    
+        tofile="${dest.path}\src\FileExplorer3\app\FileExplorer3 - 2013.sln" />
+
     <echo message="copy.bin: demos -> ${dest.path}\demo\net45\bin" />
     <copy todir="${dest.path}\demo\net45\bin">
       <fileset basedir="${dest.current.path}">
         <include name="${dest.fileexplorer.scripting.dll}" />
-        <include name="${dest.fileexplorer.scripting.pdb}" />   
+        <include name="${dest.fileexplorer.scripting.pdb}" />
         <include name="${dest.fileexplorer.uieventhub.dll}" />
-        <include name="${dest.fileexplorer.uieventhub.pdb}" />   
+        <include name="${dest.fileexplorer.uieventhub.pdb}" />
         <include name="${dest.fileexplorer3.dll}" />
         <include name="${dest.fileexplorer3.pdb}" />
         <include name="${dest.fileexplorer3.wpf.dll}" />
@@ -227,6 +254,8 @@
         <include name="${dest.test_diagramingdemo.pdb}" />
         <include name="${dest.test_shelldragdemo.exe}" />
         <include name="${dest.test_shelldragdemo.pdb}" />
+        <include name="${dest.test_tabdragdemo.exe}" />
+        <include name="${dest.test_tabdragdemo.pdb}" />
         <include name="*.dll" />
       </fileset>
     </copy>

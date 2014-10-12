@@ -214,7 +214,8 @@ namespace FileExplorer.UIEventHub
             HitTestFilterCallback selectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
             {
                 var frameworkElement = potentialHitTestTarget as FrameworkElement;
-                if (frameworkElement != null && frameworkElement.DataContext is ISelectable)
+                if (frameworkElement != null && frameworkElement.DataContext is ISelectable && 
+                    !frameworkElement.DataContext.Equals(ic.DataContext))
                 {
                     selectedList.Add(potentialHitTestTarget);
                     int id = ic.ItemContainerGenerator.IndexFromContainer(potentialHitTestTarget);
@@ -233,7 +234,8 @@ namespace FileExplorer.UIEventHub
             HitTestFilterCallback unselectFilter = (HitTestFilterCallback)((potentialHitTestTarget) =>
             {
                 var frameworkElement = potentialHitTestTarget as FrameworkElement;
-                if (frameworkElement != null && frameworkElement.DataContext is ISelectable)
+                if (frameworkElement != null && frameworkElement.DataContext is ISelectable &&
+                    !frameworkElement.DataContext.Equals(ic.DataContext))
                 {
                     unselectedList.Add(potentialHitTestTarget);
                     unselectedIdList.Add(ic.ItemContainerGenerator.IndexFromContainer(potentialHitTestTarget));

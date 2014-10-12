@@ -41,12 +41,26 @@ namespace FileExplorer.UIEventHub
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return _convertFunc((T)value, targetType, parameter);
+            try
+            {
+                return _convertFunc((T)value, targetType, parameter);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+             try
+            {
             return _convertBackFunc((T1)value, targetType, parameter);
+            }
+             catch (Exception ex)
+             {
+                 throw ex;
+             }
         }
     }
 }

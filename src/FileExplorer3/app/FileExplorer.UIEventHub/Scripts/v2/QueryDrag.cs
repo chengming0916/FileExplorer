@@ -96,18 +96,21 @@ namespace FileExplorer.UIEventHub
         {
             //Debug.WriteLine(String.Format("DoDragDrop"));
 
-            ISupportShellDrag _isd = pm.GetValue<ISupportShellDrag>(DragSourceKey);
+            ISupportDrag _isd = pm.GetValue<ISupportDrag>(DragSourceKey);
             var draggables = _isd.GetDraggables();
-            _dataObj = _isd.GetDataObject(draggables);
-
-            if (_dataObj == null)
-                return ResultCommand.NoError; //Nothing to drag.
-
+            
             var effect = _isd.QueryDrag(draggables);
 
-            System.Windows.DragDrop.AddQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
+            if (_isd is ISupportShellDrag)
+            {
+                _dataObj = (_isd as ISupportShellDrag).GetDataObject(draggables);
+                if (_dataObj == null)
+                    return ResultCommand.NoError; //Nothing to drag.
+                _dataObj.SetData(typeof(ISupportDrag), _isd);
+            }
 
-            _dataObj.SetData(typeof(ISupportDrag), _isd);
+
+            System.Windows.DragDrop.AddQueryContinueDragHandler(sender, new QueryContinueDragEventHandler(OnQueryContinueDrag));
 
             //Determine and set the desired drag method. (Normal, Menu)            
             _dataObj.SetData(typeof(DragMethod), pm.GetValue(DragMethodKey, DragMethod.Normal));

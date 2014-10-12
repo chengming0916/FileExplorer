@@ -21,7 +21,8 @@ namespace FileExplorer.UIEventHub
         {
             _tvm = tvm;
             _tcvm = tcvm;
-            this.DropTargetLabel = _tvm.DisplayName;
+            this.DropTargetLabel = "{ISupportDrop.DisplayName}";
+            this.DisplayName = _tvm.DisplayName;
         }
 
         #endregion
@@ -39,7 +40,7 @@ namespace FileExplorer.UIEventHub
         {
             if (models.Count() > 0)
                 return QueryDropEffects.CreateNew(DragDropEffects.Move);
-            
+
             _tcvm.SelectedItem = _tvm;
             return QueryDropEffects.None;
         }
@@ -54,8 +55,11 @@ namespace FileExplorer.UIEventHub
                 if (srcIdx != -1 && thisIdx != -1)
                 {
                     int destIdx = thisIdx > srcIdx ? thisIdx - 1 : thisIdx;
-                    _tcvm.MoveTab(srcIdx, destIdx);
-                    return DragDropEffects.Move;
+                    if (destIdx != -1 && srcIdx != destIdx)
+                    {
+                        _tcvm.MoveTab(srcIdx, destIdx);
+                        return DragDropEffects.Move;
+                    }
                 }
             }
             return DragDropEffects.None;

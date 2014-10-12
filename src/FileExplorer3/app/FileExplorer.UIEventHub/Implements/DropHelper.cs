@@ -18,6 +18,7 @@ namespace FileExplorer.UIEventHub
         public DropHelper()
         {
             IsDroppable = true;
+            DropTargetLabel = "{MethodLabel} {ItemLabel} to {ISupportDrop.DisplayName}";
         }
 
         #endregion
@@ -79,8 +80,15 @@ namespace FileExplorer.UIEventHub
             set;
         }
 
+        public string DisplayName
+        {
+            get;
+            set;
+        }
 
         #endregion
+
+       
     }
 
     #endregion
@@ -128,6 +136,7 @@ namespace FileExplorer.UIEventHub
         {
             _converter = converter;
             IsDroppable = true;
+            DropTargetLabel = "{MethodLabel} {ItemLabel} to {ISupportDrop.DisplayName}";
         }
 
         #endregion
@@ -222,6 +231,12 @@ namespace FileExplorer.UIEventHub
             set;
         }
 
+        public string DisplayName
+        {
+            get;
+            set;
+        }
+
 
         #endregion
     }
@@ -230,7 +245,7 @@ namespace FileExplorer.UIEventHub
 
     #region LambdaDropHelper
 
-    public abstract class LambdaDropHelper<M> : DropHelper<M>
+    public class LambdaDropHelper<M> : DropHelper<M>
         where M : class
     {
         private Func<IEnumerable<M>, DragDropEffects, QueryDropEffects> _queryDropFunc;

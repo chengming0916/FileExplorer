@@ -415,12 +415,10 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Value}" />
                             <TextBlock Text="[ing]" Foreground="Blue"
-                                    Visibility="{Binding (bc:AttachedProperties.IsSelecting),
-                                        RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}},
+                                    Visibility="{Binding IsSelecting,
                                         Converter={StaticResource btvc}}" />
                             <TextBlock Text="[over]" Foreground="Tomato"
-                                    Visibility="{Binding (bc:AttachedProperties.IsDraggingOver),
-                                        RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}},
+                                    Visibility="{Binding IsDraggingOver,
                                         Converter={StaticResource btvc}}" />
                             <TextBlock Text="[ed]" Foreground="Green"
                                     Visibility="{Binding IsSelected, Converter={StaticResource btvc}}" />
@@ -475,15 +473,13 @@
                 <TextBlock Grid.Column="1" Grid.Row="3">GridView (select using GridView)</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="3">StackPanel (select using HitTest)</TextBlock>
                 <TreeView x:Name="tvDnd1" Grid.Column="0" Grid.Row="2" Grid.RowSpan="3" >
-                    <bc:UIEventAdapter.Processors>
-                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                    <bc:UIEventAdapter.Processors>                        
                         <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" />
                     </bc:UIEventAdapter.Processors>
                 </TreeView>
 
                 <ListView x:Name="lvDnd1" Grid.Column="1" Grid.Row="2" >
-                    <bc:UIEventAdapter.Processors>
-                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                    <bc:UIEventAdapter.Processors>                        
                         <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" />
                         <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
                     </bc:UIEventAdapter.Processors>
@@ -496,8 +492,7 @@
                     </ListView.ItemsPanel>
                 </ListView>
                 <ListView x:Name="lvDnd2" Grid.Column="2" Grid.Row="2">
-                    <bc:UIEventAdapter.Processors>
-                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                    <bc:UIEventAdapter.Processors>                        
                         <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" />
                         <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
                     </bc:UIEventAdapter.Processors>
@@ -509,8 +504,7 @@
                     </ListView.ItemsPanel>
                 </ListView>
                 <ListView x:Name="lvDnd3" Grid.Column="1" Grid.Row="4">
-                    <bc:UIEventAdapter.Processors>
-                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                    <bc:UIEventAdapter.Processors>                        
                         <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" />
                         <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
                     </bc:UIEventAdapter.Processors>
@@ -522,8 +516,7 @@
                     </ListView.View>
                 </ListView>
                 <ListView x:Name="lvDnd4" Grid.Column="2" Grid.Row="4">
-                    <bc:UIEventAdapter.Processors>
-                        <bc:DragDropEventProcessor EnableDrag="True" EnableDrop="True" />
+                    <bc:UIEventAdapter.Processors>                        
                         <bc:DragDropLiteEventProcessor EnableDrag="True" EnableDrop="True" />
                         <bc:MultiSelectEventProcessor UnselectAllCommand="{Binding UnselectAllCommand}" />
                     </bc:UIEventAdapter.Processors>

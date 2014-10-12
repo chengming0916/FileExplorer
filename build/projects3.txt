@@ -6,4 +6,6 @@ fileExplorer3.WPF
 TestApp.WPF
 TestTemplate.WPF
 Test_DiagramingDemo
+Test_NonShellDragDemo
 Test_ShellDragDemo
+Test_TabDragDemo

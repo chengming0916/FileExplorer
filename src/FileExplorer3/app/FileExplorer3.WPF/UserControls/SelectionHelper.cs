@@ -17,11 +17,7 @@ using FileExplorer.WPF.Utils;
 namespace FileExplorer.WPF.UserControls
 {
     #region Enums and Interfaces
-
-    public interface IChildInfo
-    {
-        Rect GetChildRect(int itemIndex);
-    }
+   
 
     public interface IVirtualListView
     {

@@ -185,7 +185,7 @@ namespace TestTemplate.WPF
 
         public string DropTargetLabel
         {
-            get { return Value.ToString(); }
+            get { return "CustomDropTargetLabel: {MethodLabel} {ItemLabel} to {ISupportDrop.DisplayName}"; }
         }
 
         public string DisplayName
