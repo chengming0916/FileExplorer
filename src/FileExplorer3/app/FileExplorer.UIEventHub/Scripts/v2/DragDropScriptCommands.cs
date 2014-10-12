@@ -79,6 +79,7 @@ namespace FileExplorer.UIEventHub
             string draggablesLengthVariable = ParameterDic.CombineVariable(draggablesVariable, ".Count()", false);
             string draggablesFirstLabelVariable = ParameterDic.CombineVariable(draggablesVariable, ".First().DisplayName", false);
             string iSupportDropLabelVariable = ParameterDic.CombineVariable(ISupportDropVariable, ".DropTargetLabel", false);
+            string iSupportDropDisplayNameVariable = ParameterDic.CombineVariable(ISupportDropVariable, ".DisplayName", false);
 
             return
                 ScriptCommands.RunSequence(nextCommand,
@@ -91,9 +92,9 @@ namespace FileExplorer.UIEventHub
 
                    ScriptCommands.IfEquals(queryDropResultVariable, QueryDropEffects.None,                                        
                        ScriptCommands.FormatText(adornerTextVariable, "{ItemLabel}"), 
-                       ScriptCommands.IfAssigned(iSupportDropLabelVariable, 
-                        ScriptCommands.FormatText(adornerTextVariable, "{MethodLabel} {ItemLabel} to " + iSupportDropLabelVariable), 
-                        ScriptCommands.FormatText(adornerTextVariable, "{MethodLabel} {ItemLabel}")
+                       ScriptCommands.IfAssigned(iSupportDropLabelVariable,
+                        ScriptCommands.FormatText(adornerTextVariable, iSupportDropLabelVariable),
+                        ScriptCommands.SetProperty(adornerTextVariable, iSupportDropDisplayNameVariable)
                         ))
                    );
         }

@@ -79,7 +79,7 @@ namespace Test_ShellDragDemo
                     if (eff.HasFlag(DragDropEffects.Copy))
                         return DragDropEffects.Copy;
                     return DragDropEffects.Link;
-                }) { DropTargetLabel = label };
+                }) { DisplayName = label };
 
             #endregion
         }

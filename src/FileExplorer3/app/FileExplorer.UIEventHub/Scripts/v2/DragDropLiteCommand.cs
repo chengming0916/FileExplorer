@@ -104,6 +104,11 @@ namespace FileExplorer.UIEventHub
         public static string DragDropDraggingItemsKey { get; set; }
         public static string DragDropEffectsKey { get; set; }
         public static string DragDropDragSourceKey { get; set; }
+        
+        /// <summary>
+        /// Destination of drop Default={DragDrop.DropTarget}, assigned by DragDropLiteEventProcessor during PointerMove and Up.
+        /// </summary>
+        public static string DragDropDropTargetKey { get; set; }
         public static string DragDropStartPositionKey { get; set; }
 
         public ScriptCommandBase FailCommand { get; set; }
@@ -117,6 +122,7 @@ namespace FileExplorer.UIEventHub
             DragDropDraggingItemsKey = "{DragDrop.Draggables}";
             DragDropEffectsKey = "{DragDrop.Effects}";
             DragDropDragSourceKey = "{DragDrop.DragSource}";
+            DragDropDropTargetKey = "{DragDrop.DropTarget}";
             DragDropStartPositionKey = "{DragDrop.StartPosition}";
         }
 
@@ -162,6 +168,7 @@ namespace FileExplorer.UIEventHub
             pm.SetValue<object>(DragDropEffectsKey, null);
             pm.SetValue(ParameterDic.CombineVariable(DragDropDragSourceKey, ".IsDraggingFrom", false), false);
             pm.SetValue<object>(DragDropDragSourceKey, null);
+            pm.SetValue<object>(DragDropDropTargetKey, null);
             pm.SetValue<object>(DragDropStartPositionKey, null);
         }
 
@@ -201,8 +208,7 @@ namespace FileExplorer.UIEventHub
                         Point startPosition = pm.GetValue<Point>(DragDropStartPositionKey);
                         Vector movePt = currentPosition - startPosition;
 
-                        var items = pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey)
-                            .Where(i => i is IPositionAware);
+                        var items = pm.GetValue<IEnumerable<IDraggable>>(DragDropDraggingItemsKey);                            
                         foreach (var item in items)
                             item.IsDragging = false;
 

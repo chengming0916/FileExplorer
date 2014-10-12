@@ -18,7 +18,7 @@ namespace FileExplorer.Script
         /// <param name="throwIfError"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand RunICommand(string commandVariable, 
+        public static IScriptCommand RunICommand(string commandVariable,
             string parameterVariable,
             bool throwIfError = false, IScriptCommand nextCommand = null)
         {
@@ -31,11 +31,11 @@ namespace FileExplorer.Script
             };
         }
 
-        public static IScriptCommand RunICommand(ICommand command, 
-            string parameterVariable, 
+        public static IScriptCommand RunICommand(ICommand command,
+            string parameterVariable,
             bool throwIfError = false, IScriptCommand nextCommand = null)
         {
-            string commandVariable = "{" +  string.Format("Command{0}", new Random().Next()) + "}";
+            string commandVariable = "{" + string.Format("Command{0}", new Random().Next()) + "}";
 
             return ScriptCommands.Assign(commandVariable, command, false,
                 ScriptCommands.RunICommand(commandVariable, parameterVariable, throwIfError, nextCommand));
@@ -70,13 +70,16 @@ namespace FileExplorer.Script
             ICommand command = pm.GetValue<ICommand>(CommandKey);
             object parameter = pm.GetValue<object>(ParameterKey);
             if (command == null && ThrowIfError)
-                return ResultCommand.Error(new ArgumentNullException(CommandKey));            
-            logger.Debug("Running " + CommandKey);
+                return ResultCommand.Error(new ArgumentNullException(CommandKey));
 
-            if (!(command.CanExecute(parameter)) && ThrowIfError)
+            if ((command == null || !command.CanExecute(parameter)) && ThrowIfError)
+            {
+                logger.Debug("Running " + CommandKey);
                 return ResultCommand.Error(new ArgumentException("CanExecute = false."));
+            }
 
-            command.Execute(parameter);
+            if (command != null)
+                command.Execute(parameter);
 
             return NextCommand;
         }

@@ -24,7 +24,7 @@ namespace FileExplorer.UIEventHub
     }
 
 
-    public class ObtainPointerPosition : UIScriptCommandBase<Control, RoutedEventArgs>
+    public class ObtainPointerPosition : UIScriptCommandBase<FrameworkElement, RoutedEventArgs>
     {
         ///// <summary>
         ///// If set, Point to output of GridViewHeader width and length (Size), if it's exists.
@@ -117,12 +117,12 @@ namespace FileExplorer.UIEventHub
             return point;
         }
 
-        protected override IScriptCommand executeInner(ParameterDic pm, Control c,
+        protected override IScriptCommand executeInner(ParameterDic pm, FrameworkElement ele,
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-            var scp = ControlUtils.GetScrollContentPresenter(c);       
+            var scp = ControlUtils.GetScrollContentPresenter(ele is Control ? (Control)ele : UITools.FindAncestor<Control>(ele));       
 
-            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(c);
+            var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(ele);
             var gridViewHeaderSize = gvhrp == null ?
                                  new Size(0, 0) : new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
 
