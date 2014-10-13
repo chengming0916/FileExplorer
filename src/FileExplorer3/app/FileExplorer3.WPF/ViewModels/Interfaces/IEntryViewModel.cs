@@ -12,7 +12,7 @@ using FileExplorer.UIEventHub;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    public interface IEntryViewModel : INotifyPropertyChangedEx, IDraggable, ISelectable
+    public interface IEntryViewModel : INotifyPropertyChangedEx, IDraggable, ISelectable, IUIAware
     {
         IEntryModel EntryModel { get; }
 

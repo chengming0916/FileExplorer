@@ -14,14 +14,13 @@ namespace Test_NonShellDragDemo
     {
         public static NumberListViewModel GenerateRange(string displayName, int start, int end)
         {
-            NumberListViewModel nvm = new NumberListViewModel();
+            NumberListViewModel nvm = new NumberListViewModel(displayName);
             for (int i = start; i <= end; i++)
-                nvm.Items.Add(new NumberViewModel(i));
-            nvm.DropHelper.DisplayName = displayName;            
+                nvm.Items.Add(new NumberViewModel(i));            
             return nvm;
         }
 
-        public NumberListViewModel()
+        public NumberListViewModel(string displayName)
         {
             Items = new ObservableCollection<NumberViewModel>();
 
@@ -51,7 +50,7 @@ namespace Test_NonShellDragDemo
                     foreach (var nm in nms)
                         Items.Add(new NumberViewModel(nm));
                     return DragDropEffects.Move;
-                }) { DisplayName = "Unspecified" };
+                }) { DisplayName = displayName };
         }
 
         public ObservableCollection<NumberViewModel> Items { get; set; }

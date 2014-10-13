@@ -191,6 +191,7 @@ namespace TestTemplate.WPF
         public string DisplayName
         {
             get { return Value.ToString(); }
+            set { }
         }
 
 

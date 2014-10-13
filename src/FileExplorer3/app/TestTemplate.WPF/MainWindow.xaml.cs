@@ -83,35 +83,50 @@ namespace TestTemplate.WPF
         private static IUIInputManager _inputProcessors;
         private void setupInputProcessor()
         {
-            _inputProcessors =
-                new UIInputManager(
-                new DragInputProcessor()
-                {
-                    DragStartedFunc = inp => inputProcessorOutput.Items.Add("*DragStarted* " + inp.ToString()),
-                    DragStoppedFunc = inp => inputProcessorOutput.Items.Add("*DragStopped* " + inp.ToString())
-                });
-            RoutedEventHandler handler = (o, e) =>
-                {
-                    IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
-                    // e.Handled = true;
-                    _inputProcessors.Update(ref input);
-                    if (input.InputState != UIInputState.NotApplied)
-                        inputProcessorOutput.Items.Add(input.ToString());
-                    while (inputProcessorOutput.Items.Count > 10)
-                        inputProcessorOutput.Items.RemoveAt(0);
-                };
+            #region Moved to Test_InputProcessor, See FileExplorer3 - UIEventHub solution.
 
-            inputProcessorOutput.MouseDoubleClick += (o, e) =>
-                inputProcessorOutput.Items.Clear();
-            inputProcessorCanvas.AddHandler(UIElement.MouseDownEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.MouseMoveEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.MouseUpEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.TouchDownEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.TouchMoveEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.TouchUpEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.StylusDownEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.StylusMoveEvent, handler);
-            inputProcessorCanvas.AddHandler(UIElement.StylusUpEvent, handler);
+            //_inputProcessors =
+            //    new UIInputManager(
+            //    new DragInputProcessor()
+            //    {
+            //        DragStartedFunc = inp => inputProcessorOutput.Items.Add("*DragStarted* " + inp.ToString()),
+            //        DragStoppedFunc = inp => inputProcessorOutput.Items.Add("*DragStopped* " + inp.ToString())
+            //    });
+
+
+            //string _lastItem = null;
+            //RoutedEventHandler handler = (o, e) =>
+            //    {
+            //        IUIInput input = UIInputBase.FromEventArgs(o, e as InputEventArgs);
+            //        // e.Handled = true;
+            //        _inputProcessors.Update(ref input);
+            //        if (input.InputState != UIInputState.NotApplied)
+            //        {
+            //            string currentItem = input.ToString();
+            //            if (currentItem != _lastItem)
+            //            {
+            //                _lastItem = currentItem;
+            //                inputProcessorOutput.Items.Add(_lastItem);
+            //            }
+            //        }
+            //        while (inputProcessorOutput.Items.Count > 15)
+            //            inputProcessorOutput.Items.RemoveAt(0);
+            //    };
+
+            //inputProcessorOutput.MouseDoubleClick += (o, e) =>
+            //    inputProcessorOutput.Items.Clear();
+            //inputProcessorCanvas.AddHandler(UIElement.MouseDownEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.MouseMoveEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.MouseUpEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.TouchDownEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.TouchMoveEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.TouchUpEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.StylusDownEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.StylusMoveEvent, handler);
+            //inputProcessorCanvas.AddHandler(UIElement.StylusUpEvent, handler);
+
+            #endregion
+
         }
 
         private void setupDropDownList()
@@ -121,43 +136,45 @@ namespace TestTemplate.WPF
 
         private void setupDragAndDrop()
         {
+            #region moved to Test_NonShellDragDemo project, see FileExplorer - UIEventHub solution
             //ScriptRunner runner = new ScriptRunner();
 
-            DragDropItemViewModel vm0, vm1, vm2, vm3, vm4;
+            //DragDropItemViewModel vm0, vm1, vm2, vm3, vm4;
 
-            //StartIdx, child count, droppable, child droppable
-            tvDnd1.DataContext = vm0 = new DragDropItemViewModel(1, 10, true, true);
-            lvDnd1.DataContext = vm1 = new DragDropItemViewModel(20, 20, true, false);
-            lvDnd2.DataContext = vm2 = new DragDropItemViewModel(41, 20, true, false);
-            lvDnd3.DataContext = vm3 = new DragDropItemViewModel(61, 20, true, false);
-            lvDnd4.DataContext = vm4 = new DragDropItemViewModel(81, 20, true, false);
+            ////StartIdx, child count, droppable, child droppable
+            //tvDnd1.DataContext = vm0 = new DragDropItemViewModel(1, 10, true, true);
+            //lvDnd1.DataContext = vm1 = new DragDropItemViewModel(20, 20, true, false);
+            //lvDnd2.DataContext = vm2 = new DragDropItemViewModel(41, 20, true, false);
+            //lvDnd3.DataContext = vm3 = new DragDropItemViewModel(61, 20, true, false);
+            //lvDnd4.DataContext = vm4 = new DragDropItemViewModel(81, 20, true, false);
 
-            #region To register manually
-            //tvDnd1.RegisterEventProcessors(new DragDropEventProcessor());            
-            //lvDnd1.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm1.UnselectAllCommand));
-            //lvDnd2.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm2.UnselectAllCommand));
-            //lvDnd3.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm3.UnselectAllCommand));
-            //lvDnd4.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm4.UnselectAllCommand));        
+            //#region To register manually
+            ////tvDnd1.RegisterEventProcessors(new DragDropEventProcessor());            
+            ////lvDnd1.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm1.UnselectAllCommand));
+            ////lvDnd2.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm2.UnselectAllCommand));
+            ////lvDnd3.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm3.UnselectAllCommand));
+            ////lvDnd4.RegisterEventProcessors(new DragDropEventProcessor(), new MultiSelectEventProcessor(vm4.UnselectAllCommand));        
 
-            //lvDnd1.Loaded += (o, e) =>
-            //    {
-            //        var pd = new UIParameterDic() { Sender = lvDnd1 };
-            //        pd["IsSelecting"] = true;
-            //        pd["StartPosition"] = new Point(30, 30);
-            //        pd["EndPosition"] = new Point(100, 100);
+            ////lvDnd1.Loaded += (o, e) =>
+            ////    {
+            ////        var pd = new UIParameterDic() { Sender = lvDnd1 };
+            ////        pd["IsSelecting"] = true;
+            ////        pd["StartPosition"] = new Point(30, 30);
+            ////        pd["EndPosition"] = new Point(100, 100);
 
-            //        MultiSelectScriptCommands.AttachAdorner.Execute(pd);
+            ////        MultiSelectScriptCommands.AttachAdorner.Execute(pd);
 
-            //        if (pd["SelectionAdorner"] == null)
-            //            throw new Exception();
+            ////        if (pd["SelectionAdorner"] == null)
+            ////            throw new Exception();
 
-            //        lvDnd1.Dispatcher.BeginInvoke(new System.Action(() =>
-            //            {
-            //                MultiSelectScriptCommands.UpdateAdorner.Execute(pd);
-            //            }));
+            ////        lvDnd1.Dispatcher.BeginInvoke(new System.Action(() =>
+            ////            {
+            ////                MultiSelectScriptCommands.UpdateAdorner.Execute(pd);
+            ////            }));
 
-            //        //MultiSelectScriptCommands.DetachAdorner.Execute(pd);
-            //    };
+            ////        //MultiSelectScriptCommands.DetachAdorner.Execute(pd);
+            ////    };
+            //#endregion
             #endregion
         }
 

@@ -9,3 +9,4 @@ Test_DiagramingDemo
 Test_NonShellDragDemo
 Test_ShellDragDemo
 Test_TabDragDemo
+Test_InputProcessor
