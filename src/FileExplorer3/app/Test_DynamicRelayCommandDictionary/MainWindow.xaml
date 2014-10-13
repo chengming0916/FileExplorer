@@ -3,7 +3,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Test_DynamicRelayCommandDictionary"
-        Title="MainWindow" Height="350" Width="525">
+        Title="DynamicRelayCommandDictionary Test" Height="350" Width="525">
     <Window.Resources>
         <local:StringToIntConverter x:Key="stringToInt" />
     </Window.Resources>
@@ -11,12 +11,22 @@
         <KeyBinding Command="{Binding Commands.AddRandomCommand}" Key="A" Modifiers="Control" />
     </Window.InputBindings>
 <Grid>
-        
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ListView x:Name="listView" Grid.Column="0" ItemsSource="{Binding Items}" >
+        <TextBlock Grid.ColumnSpan="2" TextWrapping="Wrap">
+            This demo demonstrate how to use scripting in view model.  
+            A DynamicRelayCommandDictionary is defined in each view model in this demo (named Commands), which is dynamic.
+            At compile time or run time, when you set a IScriptCommand to this dictionary (e.g. Commands.AddOne), 
+            a relay command is created (e.g. Commands.AddOneCommand) and you can bind it in the UI.
+        </TextBlock>
+        <ListView x:Name="listView" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Items}" >
             <ListView.ItemTemplate>
                 <DataTemplate DataType="local:ItemViewModel">
                     <StackPanel Orientation="Horizontal">
@@ -38,7 +48,7 @@
                 </Style>
             </ListView.Resources>
         </ListView>
-        <StackPanel Orientation="Vertical" Grid.Column="1">
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
             <Button Command="{Binding Commands.AddRandomCommand}" Content="AddRandom" />
             <TextBox x:Name="ParameterBox" Text="10" />
             <Button Command="{Binding Commands.AddCommand}" 

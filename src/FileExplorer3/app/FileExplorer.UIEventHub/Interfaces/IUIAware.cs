@@ -11,6 +11,6 @@ namespace FileExplorer.UIEventHub
     /// </summary>
     public interface IUIAware
     {
-        string DisplayName { get; set;  }
+        string DisplayName { get;  }
     }
 }

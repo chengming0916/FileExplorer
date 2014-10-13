@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DiagramingDemo"
         xmlns:bc="http://www.quickzip.org/BaseControls"        
-        Title="MainWindow" Height="350" Width="525">
+        Title="Diagraming Demo" Height="350" Width="525">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

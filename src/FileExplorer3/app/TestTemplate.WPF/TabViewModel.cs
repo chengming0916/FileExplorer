@@ -93,6 +93,7 @@ namespace TestTemplate.WPF
         public string DisplayName
         {
             get { return Header; }
+            set { }
         }
 
 

@@ -145,7 +145,7 @@ namespace FileExplorer.WPF.ViewModels
 
         #region Public Properties
 
-        public string DisplayName { get { return EntryModel.Label; } }
+        public string DisplayName { get { return EntryModel.Label; } set { } }
 
         public bool IsRenaming
         {

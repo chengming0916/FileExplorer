@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_TabDragDemo", "Test_Ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_NonShellDragDemo", "Test_NonShellDragDemo\Test_NonShellDragDemo.csproj", "{DE13A158-F5C2-45AF-8935-6BB72722E50E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_InputProcessor", "Test_InputProcessor\Test_InputProcessor.csproj", "{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,16 @@ Global
 		{DE13A158-F5C2-45AF-8935-6BB72722E50E}.Release|ARM.ActiveCfg = Release|Any CPU
 		{DE13A158-F5C2-45AF-8935-6BB72722E50E}.Release|x64.ActiveCfg = Release|Any CPU
 		{DE13A158-F5C2-45AF-8935-6BB72722E50E}.Release|x86.ActiveCfg = Release|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Release|x64.ActiveCfg = Release|Any CPU
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,5 +148,6 @@ Global
 		{ED896C59-0189-481B-A5FA-FDFA8BA1AA86} = {D622EB0C-6628-47E5-AA41-7B14E121B64B}
 		{2CBC4CE6-3B17-4E22-ABD9-98499C9D94E6} = {D622EB0C-6628-47E5-AA41-7B14E121B64B}
 		{DE13A158-F5C2-45AF-8935-6BB72722E50E} = {D622EB0C-6628-47E5-AA41-7B14E121B64B}
+		{086C5072-FFB3-4AA9-96A7-54D0AAA8693D} = {D622EB0C-6628-47E5-AA41-7B14E121B64B}
 	EndGlobalSection
 EndGlobal

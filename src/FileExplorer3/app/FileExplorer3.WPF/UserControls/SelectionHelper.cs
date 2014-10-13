@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Windows.Threading;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.WPF.Utils;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.WPF.UserControls
 {
@@ -26,6 +27,11 @@ namespace FileExplorer.WPF.UserControls
 
     #endregion
 
+
+    /// <summary>
+    /// For ListView's MultiSelect support.
+    /// Obsoluted, use UIEventHub instead.
+    /// </summary>
     public static class SelectionHelper
     {
         #region Attached Properties

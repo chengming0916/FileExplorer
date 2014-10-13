@@ -74,6 +74,10 @@
     <property name="msbuild.csproj.path" value="${src.test_tabdragdemo.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
+  
+    <property name="msbuild.csproj.path" value="${src.test_inputprocessor.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
   </target>
 
   <target name="build-revision">
@@ -222,6 +226,15 @@
         <exclude name="obj/**" />
       </fileset>
     </copy>
+    
+      <echo message="copy.source: Test_InputProcessor -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\Test_InputProcessor">
+      <fileset basedir="${src.path}\app\Test_InputProcessor">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
 
     <copy todir="${dest.path}\src\FileExplorer3\app\.nuget">
       <fileset basedir="${src.path}\app\.nuget">
@@ -254,8 +267,12 @@
         <include name="${dest.test_diagramingdemo.pdb}" />
         <include name="${dest.test_shelldragdemo.exe}" />
         <include name="${dest.test_shelldragdemo.pdb}" />
+        <include name="${dest.test_nonshelldragdemo.exe}" />
+        <include name="${dest.test_nonshelldragdemo.pdb}" />
         <include name="${dest.test_tabdragdemo.exe}" />
         <include name="${dest.test_tabdragdemo.pdb}" />
+        <include name="${dest.test_inputprocessor.exe}" />
+        <include name="${dest.test_inputprocessor.pdb}" />
         <include name="*.dll" />
       </fileset>
     </copy>
