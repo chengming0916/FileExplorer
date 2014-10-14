@@ -131,8 +131,8 @@ namespace FileExplorer.UIEventHub
         protected override IScriptCommand executeInner(ParameterDic pm, FrameworkElement ele,
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-            var scp = ControlUtils.GetScrollContentPresenter(ele is Control ? (Control)ele : UITools.FindAncestor<Control>(ele));
-            var scpRelativePos = scp.TranslatePoint(new Point(0, 0), ele);
+            var scp = ControlUtils.GetScrollContentPresenter(ele is Control ? (Control)ele : UITools.FindAncestor<Control>(ele));            
+            var scpRelativePos = scp == null ? new Point(0,0) : scp.TranslatePoint(new Point(0, 0), ele);
             var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(ele);
 
             DragInputProcessor dragInpProc = inpProcs.Where(p => p is DragInputProcessor).Cast<DragInputProcessor>().First();
@@ -140,8 +140,7 @@ namespace FileExplorer.UIEventHub
             var startPos = AdjustHeaderPosition(dragInpProc.StartInput.Position, pm, scpRelativePos, -1);
             var startScrollbarPos = dragInpProc.StartInput.ScrollBarPosition;
             var currentPos = AdjustHeaderPosition(input.Position, pm, scpRelativePos, -1);
-            var currentRelativePos = input.PositionRelativeTo(scp);
-            var scpPosNeg = Point.Multiply(scp.TranslatePoint(new Point(0, 0), ele), new Matrix(-1, 0, 0, -1, 0, 0));
+            var currentRelativePos = input.PositionRelativeTo(scp);            
             var currentScrollbarPos = input.ScrollBarPosition;
             var startAdjustedPos = add(startPos, startScrollbarPos);
             var currentAdjustedPos = add(currentPos, currentScrollbarPos);

@@ -92,8 +92,8 @@
 
     <Style x:Key="FileListItemStyle" TargetType="{x:Type uc:ListViewItemEx}" BasedOn="{StaticResource ItemContainerStyleBase}" >
         <Setter Property="Template" Value="{StaticResource lbControlTemplate}" />
-        <Setter Property="def:UIEventHubProperties.IsSelecting" Value="{Binding IsSelecting}" />
-        <Setter Property="def:UIEventHubProperties.IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver}" />
+        <Setter Property="def:UIEventHubProperties.IsSelecting" Value="{Binding IsSelecting, Mode=OneWay}" />
+        <Setter Property="def:UIEventHubProperties.IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver, Mode=OneWay}" />
     </Style>
 
 </ResourceDictionary>
