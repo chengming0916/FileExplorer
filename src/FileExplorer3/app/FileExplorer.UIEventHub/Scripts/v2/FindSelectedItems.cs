@@ -31,74 +31,13 @@ namespace FileExplorer.UIEventHub
                               HubScriptCommands.FindSelectedItemsUsingIChildInfo()  },
                           { FindSelectionMode.GridView, 
                               HubScriptCommands.FindSelectedItemsUsingGridView()  }
-                      },
+                      },                      
                       HubScriptCommands.FindSelectedItemsUsingHitTest(),
                       nextCommand));
         }
+
+
     }
-
-    //public enum PostFindSelectedItemAction { None, Select, Highlight }
-
-    ///// <summary>
-    ///// Call the appropriated FindSelectedItemsXYZ to poll a list of selected list (or selected + unselectedList)
-    ///// Then Select or highlight items based on if the ItemsControl IsSelecting.
-    ///// </summary>
-    //public class FindSelectedItems : UIScriptCommandBase<ItemsControl, RoutedEventArgs>
-    //{
-    //    /// <summary>
-    //    /// Action after selected items found, Default = None
-    //    /// </summary>
-    //    public PostFindSelectedItemAction ThenAction { get; set; }
-
-    //    /// <summary>
-    //    /// Point to output of find selection mode (FindSelectionMode).
-    //    /// </summary>
-    //    public string FindSelectionModeKey { get; set; }
-
-    //    public FindSelectedItems()
-    //        : base("FindSelectedItems")
-    //    {
-    //        ThenAction = PostFindSelectedItemAction.None;
-    //    }
-
-    //    protected override IScriptCommand executeInner(ParameterDic pm, ItemsControl ic, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
-    //    {
-    //        var scp = ControlUtils.GetScrollContentPresenter(ic);
-    //        bool isSelecting = AttachedProperties.GetIsSelecting(ic);
-
-    //        IScriptCommand findCommand = null;
-    //        IScriptCommand selectCommand = null;
-    //        FindSelectionMode fsMode = FindSelectionMode.HitTest;
-
-    //        IChildInfo icInfo = UITools.FindVisualChild<Panel>(scp) as IChildInfo;
-    //        if (icInfo != null)
-    //            fsMode = FindSelectionMode.IChildInfo;
-    //        else
-    //            if (ic is ListView && (ic as ListView).View is GridView)
-    //                fsMode = FindSelectionMode.GridView;
-
-    //        //IChildInfo icInfo = UITools.FindVisualChild<Panel>(scp) as IChildInfo;
-    //        //if (icInfo != null)
-    //        //{
-    //        //    findCommand = new FindSelectedItemsUsingIChildInfo(ic, icInfo);
-    //        //    selectCommand = isSelecting ? HubScriptCommands.SelectItems : HubScriptCommands.HighlightItems;
-    //        //}
-    //        //else
-    //        //    if (ic is ListView && (ic as ListView).View is GridView)
-    //        //    {
-    //        //        var gview = (ic as ListView).View as GridView;
-    //        //        findCommand = new FindSelectedItemsUsingGridView(ic, gview, scp);
-    //        //        selectCommand = isSelecting ? HubScriptCommands.SelectItems : HubScriptCommands.HighlightItems;
-    //        //    }
-    //        //    else
-    //        //    {
-    //        //        findCommand = new FindSelectedItemsUsingHitTest(ic);
-    //        //        selectCommand = isSelecting ? HubScriptCommands.SelectItemsByUpdate : HubScriptCommands.HighlightItemsByUpdate;
-    //        //    }
-
-    //        return ScriptCommands.RunCommandsInSequence(NextCommand, findCommand, selectCommand);
-    //    }
-    //}
 
 
 }

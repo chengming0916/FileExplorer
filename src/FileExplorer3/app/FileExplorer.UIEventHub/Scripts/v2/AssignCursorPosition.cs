@@ -14,13 +14,13 @@ namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
-        public static IScriptCommand AssignCursorPosition(PositionRelativeToType positionRelativeToType,
+        public static IScriptCommand AssignCursorPosition(PositionRelativeToType relativeTo, 
             string destinationVariable = "{Position}", bool skipIfExists = false,
             IScriptCommand nextCommand = null)
         {
             return new AssignCursorPosition()
             {
-                PositionRelativeTo = positionRelativeToType,
+                PositionRelativeTo = relativeTo,                
                 DestinationKey = destinationVariable,
                 SkipIfExists = skipIfExists,
                 NextCommand = (ScriptCommandBase)nextCommand                
@@ -32,6 +32,7 @@ namespace FileExplorer.UIEventHub
     public enum PositionRelativeToType
     {
         Null, 
+        Scp,
         Panel, 
         Sender, 
         Window
@@ -45,8 +46,7 @@ namespace FileExplorer.UIEventHub
         /// <summary>
         /// Calculate fixed position or relative position based on type.
         /// </summary>
-        public PositionRelativeToType PositionRelativeTo { get; set; }
-
+        public PositionRelativeToType PositionRelativeTo { get; set; }   
         /// <summary>
         /// Point to where to store the cursor position. Default = {Position}
         /// </summary>
@@ -75,6 +75,10 @@ namespace FileExplorer.UIEventHub
                 case PositionRelativeToType.Sender :
                     position = input.PositionRelativeTo(sender);
                     break;
+                case PositionRelativeToType.Scp:
+                    var scp = ControlUtils.GetScrollContentPresenter(sender is Control ? (Control)sender : UITools.FindAncestor<Control>(sender));
+                    position = input.PositionRelativeTo(scp);
+                    break;
                 case PositionRelativeToType.Panel:
                     var parentPanel = UITools.FindAncestor<Panel>(sender);
                     position = input.PositionRelativeTo(parentPanel);                    
@@ -84,6 +88,7 @@ namespace FileExplorer.UIEventHub
                     position = input.PositionRelativeTo(parentWindow);
                     break;
             }
+          
             //Console.WriteLine(position);
             return ScriptCommands.Assign(DestinationKey, position, SkipIfExists, NextCommand);
         }

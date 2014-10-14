@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace FileExplorer.UIEventHub
 {
@@ -105,33 +106,42 @@ namespace FileExplorer.UIEventHub
                 pt.Y - currentScrollbarPosition.Y + startScrollbarPosition.Y);
         }
 
-        protected virtual Point AdjustHeaderPosition(Point point, ParameterDic pd,
-            Size gridViewHeaderSize,
-            int offset = -1)
+        //protected virtual Point AdjustHeaderPosition(Point point, ParameterDic pd,
+        //    Size gridViewHeaderSize, 
+        //    int offset = -1)
+        //{
+        //    Point pt = new Point(point.X, point.Y);
+        //    //pt.Offset(0, offset * ((Size)pd["ContentBelowHeaderSize"]).Height);
+        //    ////Deduct Grid View Header from the position.
+        //    pt.Offset(0, offset * gridViewHeaderSize.Height);
+        //    //return pt;
+        //    return point;
+        //}
+
+        protected virtual Point AdjustHeaderPosition(Point point, ParameterDic pd, Point scpRelativePos,
+           int offset = -1)
         {
             Point pt = new Point(point.X, point.Y);
-            //pt.Offset(0, offset * ((Size)pd["ContentBelowHeaderSize"]).Height);
-            ////Deduct Grid View Header from the position.
-            pt.Offset(0, offset * gridViewHeaderSize.Height);
-            //return pt;
-            return point;
+            ////Deduct Grid View Header and other contents from the position.            
+            pt.Offset(offset * scpRelativePos.X, offset * scpRelativePos.Y);
+            return pt;
+            //return point;
         }
 
         protected override IScriptCommand executeInner(ParameterDic pm, FrameworkElement ele,
             RoutedEventArgs eventArgs, IUIInput input, IList<IUIInputProcessor> inpProcs)
         {
-            var scp = ControlUtils.GetScrollContentPresenter(ele is Control ? (Control)ele : UITools.FindAncestor<Control>(ele));       
-
+            var scp = ControlUtils.GetScrollContentPresenter(ele is Control ? (Control)ele : UITools.FindAncestor<Control>(ele));
+            var scpRelativePos = scp.TranslatePoint(new Point(0, 0), ele);
             var gvhrp = UITools.FindVisualChild<GridViewHeaderRowPresenter>(ele);
-            var gridViewHeaderSize = gvhrp == null ?
-                                 new Size(0, 0) : new Size(gvhrp.ActualWidth, gvhrp.ActualHeight);
 
             DragInputProcessor dragInpProc = inpProcs.Where(p => p is DragInputProcessor).Cast<DragInputProcessor>().First();
 
-            var startPos = AdjustHeaderPosition(dragInpProc.StartInput.Position, pm, gridViewHeaderSize, -1);
+            var startPos = AdjustHeaderPosition(dragInpProc.StartInput.Position, pm, scpRelativePos, -1);
             var startScrollbarPos = dragInpProc.StartInput.ScrollBarPosition;
-            var currentPos = AdjustHeaderPosition(input.Position, pm, gridViewHeaderSize, -1);
+            var currentPos = AdjustHeaderPosition(input.Position, pm, scpRelativePos, -1);
             var currentRelativePos = input.PositionRelativeTo(scp);
+            var scpPosNeg = Point.Multiply(scp.TranslatePoint(new Point(0, 0), ele), new Matrix(-1, 0, 0, -1, 0, 0));
             var currentScrollbarPos = input.ScrollBarPosition;
             var startAdjustedPos = add(startPos, startScrollbarPos);
             var currentAdjustedPos = add(currentPos, currentScrollbarPos);

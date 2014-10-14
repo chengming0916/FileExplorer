@@ -11,21 +11,21 @@ namespace FileExplorer.Utils
     public static class ExpressionUtils
     {
         public static T AbsoluteValue<T>(T a)
-        {            
+        {
             var mInfo = typeof(Math)
                 .GetRuntimeMethods().First(m => m.Name == "Abs" && m.GetParameters().First().ParameterType == typeof(T));
             return (T)mInfo.Invoke(null, new object[] { a });
-        }        
+        }
 
         //http://www.yoda.arachsys.com/csharp/genericoperators.html
         public static T Add<T>(T a, T b)
-        {        
+        {
             // declare the parameters
             ParameterExpression paramA = System.Linq.Expressions.Expression.Parameter(typeof(T), "a"),
                 paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");
             // add the parameters together
             BinaryExpression body;
-            
+
             body = System.Linq.Expressions.Expression.Add(paramA, paramB);
 
             // compile it
@@ -35,7 +35,7 @@ namespace FileExplorer.Utils
         }
 
         public static T Subtract<T>(T a, T b)
-        {            
+        {
             // declare the parameters
             ParameterExpression paramA = System.Linq.Expressions.Expression.Parameter(typeof(T), "a"),
                 paramB = System.Linq.Expressions.Expression.Parameter(typeof(T), "b");
@@ -86,6 +86,16 @@ namespace FileExplorer.Utils
             return modulo(a, b);
         }
 
-        
+        public static string GetPropertyName<C, T>(Expression<Func<C, T>> expression)
+        {
+            MemberExpression memberExpression = (MemberExpression)expression.Body;
+            return memberExpression.Member.Name;
+        }
+
+        public static string GetPropertyName<T>(Expression<Func<T>> expression)
+        {
+            MemberExpression memberExpression = (MemberExpression)expression.Body;
+            return memberExpression.Member.Name;
+        }
     }
 }

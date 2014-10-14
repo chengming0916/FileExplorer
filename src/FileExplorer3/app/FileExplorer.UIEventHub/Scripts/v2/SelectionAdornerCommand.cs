@@ -100,8 +100,15 @@ namespace FileExplorer.UIEventHub
                         if (UIEventHubProperties.GetSelectionAdorner(scp) == null)
                         {
 
+                            Window parentWindow = UITools.FindAncestor<Window>(sender);
+                            
+                            Point scpPos = scp.TranslatePoint(new Point(0, 0), sender);
+
                             //Create and register adorner.
-                            SelectionAdorner adorner = new SelectionAdorner(scp);
+                            SelectionAdorner adorner = new SelectionAdorner(scp)
+                                { 
+                                    //AdjustVector = new Vector(-scpPos.X, -scpPos.Y)                                    
+                                };
                             pm.SetValue(SelectionAdornerKey, adorner);
                             UIEventHubProperties.SetSelectionAdorner(scp, adorner);
                             UIEventHubProperties.SetLastScrollContentPresenter(sender, scp); //For used when detach.

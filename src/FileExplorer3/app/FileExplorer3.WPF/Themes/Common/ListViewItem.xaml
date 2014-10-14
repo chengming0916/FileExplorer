@@ -29,8 +29,8 @@
             <Grid>
                
                 <bc:HotTrack IsEnabled="{TemplateBinding IsEnabled}" 
-                         IsDragging="{Binding (def:UIEventHubProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
-                         IsDraggingOver="{Binding (def:UIEventHubProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"
+                         IsDragging="{Binding Path=(def:UIEventHubProperties.IsSelecting), RelativeSource={RelativeSource TemplatedParent} }"
+                         IsDraggingOver="{Binding Path=(def:UIEventHubProperties.IsDraggingOver), RelativeSource={RelativeSource TemplatedParent} }"
                          IsSelected="{TemplateBinding IsSelected}"                           
                          >
                     <Grid>
@@ -80,6 +80,8 @@
         <!-- Bind to ViewModel -->
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         <Setter Property="BorderThickness" Value="1" />
+         <Setter Property="def:UIEventHubProperties.IsSelecting" Value="{Binding IsSelecting}" />
+        <Setter Property="def:UIEventHubProperties.IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver}" />
         <Style.Triggers>
             <Trigger Property="def:UIEventHubProperties.IsSelecting" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
@@ -90,6 +92,8 @@
 
     <Style x:Key="FileListItemStyle" TargetType="{x:Type uc:ListViewItemEx}" BasedOn="{StaticResource ItemContainerStyleBase}" >
         <Setter Property="Template" Value="{StaticResource lbControlTemplate}" />
+        <Setter Property="def:UIEventHubProperties.IsSelecting" Value="{Binding IsSelecting}" />
+        <Setter Property="def:UIEventHubProperties.IsDraggingOver" Value="{Binding DropHelper.IsDraggingOver}" />
     </Style>
 
 </ResourceDictionary>
