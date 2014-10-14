@@ -1,4 +1,5 @@
 ﻿using FileExplorer.Defines;
+using FileExplorer.Utils;
 using FileExplorer.WPF.Utils;
 using MetroLog;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -87,6 +89,12 @@ namespace FileExplorer
             if (checkVariablekey)
                 variableKey = variableKey.Replace(".", "");
             return "{" + GetVariable(variableKey) + combineStr + "}";
+        }
+
+        public static string CombineVariable<C, T>(string variableKey, Expression<Func<C, T>> expression, bool checkVariablekey = true)
+        {
+            string combineStr = "." + ExpressionUtils.GetPropertyName(expression);
+            return CombineVariable(variableKey, combineStr, checkVariablekey);
         }
 
         public static string RandomVariable(string prefix = "")

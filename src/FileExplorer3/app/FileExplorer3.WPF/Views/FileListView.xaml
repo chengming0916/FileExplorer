@@ -18,6 +18,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Default/Brushes.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/ListView.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/ListViewItem.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/Views.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/ItemTemplates.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/Toolbar.xaml" />
@@ -50,7 +51,7 @@
                      AllowDrop="True"
                      cal:View.ApplyConventions="True"                                            
                      hub:UIEventHubProperties.DragItemTemplate="{StaticResource GridLabelTemplate}"
-                       >
+                       >            
             <hub:UIEventAdapter.Processors>
                 <hub:TouchGestureEventProcessor Gesture="FlickLeft" Command="NavigationCommands.BrowseBack" />
                 <hub:TouchGestureEventProcessor Gesture="FlickRight" Command="NavigationCommands.BrowseForward" />
@@ -93,7 +94,8 @@
                     <cal:ActionMessage MethodName="ToggleRename"/>
                 </uc:InputBindingTrigger>
             </i:Interaction.Triggers>-->
-
+          
+            
             <uc:ListViewEx.OuterTopContent>
                 <Border Margin="2" bc:DockableScrollViewer.IsResizable="True"
                          bc:DockableScrollViewer.IsContentVisible="{Binding ShowToolbar}"

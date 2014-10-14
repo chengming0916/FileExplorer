@@ -18,7 +18,7 @@ namespace FileExplorer.WPF.BaseControls
             IsHitTestVisible = false;
             IsSelecting = false;
             StartPosition = new Point(0, 0);
-            EndPosition = new Point(0, 0);
+            EndPosition = new Point(0, 0);            
         }
 
 
@@ -42,6 +42,10 @@ namespace FileExplorer.WPF.BaseControls
         public static DependencyProperty IsSelectingProperty = DependencyProperty.Register("IsSelecting", typeof(bool), typeof(SelectionAdorner),
            new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender, new PropertyChangedCallback(OnIsSelectingChanged)));
 
+        public static DependencyProperty AdjustVectorProperty = DependencyProperty.Register("AdjustVector", typeof(Vector), typeof(SelectionAdorner),
+           new FrameworkPropertyMetadata(new Vector(0, 0), FrameworkPropertyMetadataOptions.AffectsRender, null));
+
+
         public static DependencyProperty StartPositionProperty = DependencyProperty.Register("StartPosition", typeof(Point), typeof(SelectionAdorner),
            new FrameworkPropertyMetadata(new Point(0, 0), FrameworkPropertyMetadataOptions.AffectsRender, null, new CoerceValueCallback(PositionCheck)));
 
@@ -52,6 +56,12 @@ namespace FileExplorer.WPF.BaseControls
         {
             get { return (bool)GetValue(IsSelectingProperty); }
             set { SetValue(IsSelectingProperty, value); }
+        }
+
+        public Vector AdjustVector
+        {
+            get { return (Vector)GetValue(AdjustVectorProperty); }
+            set { SetValue(AdjustVectorProperty, value); }
         }
 
         public Point StartPosition
@@ -79,8 +89,12 @@ namespace FileExplorer.WPF.BaseControls
         {
             if (IsSelecting)
             {
-                drawingContext.DrawRectangle(SystemColors.HotTrackBrush, new Pen(Brushes.Black, 1),
-                    new Rect(StartPosition, EndPosition));
+                //drawingContext.DrawRectangle(Brushes.Transparent, new Pen(Brushes.Black, 1),
+                //    new Rect(0, 0, 1000, 1000));
+                Point startPos = new Point(StartPosition.X + AdjustVector.X, StartPosition.Y + AdjustVector.Y);
+                Point endPos = new Point(EndPosition.X + AdjustVector.X, EndPosition.Y + AdjustVector.Y);
+
+                drawingContext.DrawRectangle(SystemColors.HotTrackBrush, new Pen(Brushes.Black, 1), new Rect(startPos, endPos));
             }
             base.OnRender(drawingContext);
         }
