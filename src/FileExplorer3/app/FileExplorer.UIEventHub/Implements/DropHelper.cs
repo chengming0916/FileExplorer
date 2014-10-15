@@ -231,7 +231,7 @@ namespace FileExplorer.UIEventHub
             set;
         }
 
-        public string DisplayName
+        public virtual string DisplayName
         {
             get;
             set;

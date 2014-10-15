@@ -45,6 +45,7 @@ namespace FileExplorer.WPF.ViewModels
         #region FileListDrag/DropHelper
         internal class FileListDropHelper : LambdaShellDropHelper<IEntryModel>
         {
+            private FileListViewModel _flvm;
             public FileListDropHelper(FileListViewModel flvm)
                 : base(
 
@@ -58,8 +59,19 @@ namespace FileExplorer.WPF.ViewModels
 
                 (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop().QueryDrop(ems, flvm.CurrentDirectory, eff),                
                 (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop().OnDropCompleted(ems, da, flvm.CurrentDirectory, eff))
-            { }
+            { _flvm = flvm; }
 
+            public override string DisplayName
+            {
+                get
+                {
+                    return _flvm.CurrentDirectory == null ? "" : _flvm.CurrentDirectory.Label;
+                }
+                set
+                {
+                    
+                }
+            }
         }
         private class FileListDragHelper : TreeDragHelper<IEntryModel>
         {
@@ -191,7 +203,7 @@ namespace FileExplorer.WPF.ViewModels
         private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
         private IFileListParameters _parameters = new FileListParameters();
         private IColumnsHelper _columns;
-        private ICommandManager _commands;
+        private ICommandManager _commands;        
 
         #endregion
 
