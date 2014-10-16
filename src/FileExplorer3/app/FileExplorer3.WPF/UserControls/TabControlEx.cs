@@ -38,6 +38,10 @@ namespace FileExplorer.WPF.UserControls
         {
             base.OnApplyTemplate();
             _ancestorWindow = UITools.FindAncestor<Window>(this);
+            _ancestorWindow.AddValueChanged(Window.WindowStateProperty, (o, e) =>
+                {
+                    this.WindowState = _ancestorWindow.WindowState;
+                });
             //_titlebar = this.Template.FindName("PART_TitleBar", this) as Titlebar;
         }
 
@@ -55,6 +59,12 @@ namespace FileExplorer.WPF.UserControls
                     _ancestorWindow.WindowState = WindowState.Normal;
                 else
                     base.OnMouseDoubleClick(e);
+        }
+
+        private static void OnShowTabPanelPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            var tc = obj as TabControlEx;
+            tc.ShowTabPanelUI = tc.ShowTabPanel || tc.WindowState == WindowState.Maximized;
         }
 
         #endregion
@@ -86,13 +96,34 @@ namespace FileExplorer.WPF.UserControls
             set { SetValue(RightTabHeaderContentProperty, value); }
         }
 
+        public static DependencyProperty WindowStateProperty = DependencyProperty.Register(
+            "WindowState", typeof(WindowState), typeof(TabControlEx),
+            new PropertyMetadata(new PropertyChangedCallback(OnShowTabPanelPropertyChanged)));
+
+        public WindowState WindowState
+        {
+            get { return (WindowState)GetValue(WindowStateProperty); }
+            set { SetValue(WindowStateProperty, value); }
+        }
+
         public static DependencyProperty ShowTabPanelProperty = DependencyProperty.Register(
-            "ShowTabPanel", typeof(bool), typeof(TabControlEx), new PropertyMetadata(true));
+            "ShowTabPanel", typeof(bool), typeof(TabControlEx), 
+            new PropertyMetadata(new PropertyChangedCallback(OnShowTabPanelPropertyChanged)));
 
         public bool ShowTabPanel
         {
             get { return (bool)GetValue(ShowTabPanelProperty); }
             set { SetValue(ShowTabPanelProperty, value); }
+        }
+
+
+        public static DependencyProperty ShowTabPanelUIProperty = DependencyProperty.Register(
+            "ShowTabPanelUI", typeof(bool), typeof(TabControlEx), new PropertyMetadata(true));
+
+        public bool ShowTabPanelUI
+        {
+            get { return (bool)GetValue(ShowTabPanelUIProperty); }
+            set { SetValue(ShowTabPanelUIProperty, value); }
         }
 
         #endregion

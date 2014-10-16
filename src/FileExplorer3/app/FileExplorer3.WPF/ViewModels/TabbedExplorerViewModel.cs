@@ -84,16 +84,15 @@ namespace FileExplorer.WPF.ViewModels
 
             //expvm.FileList.Commands.CommandDictionary.CloseTab =
             //    UIScriptCommands.TabExplorerCloseTab("{TabbedExplorer}", "{Explorer}");
-            //    //ScriptCommands.ReassignToParameter("{Explorer}", TabbedExplorer.CloseTab(this));
-            //expvm.FileList.Commands.CommandDictionary.OpenTab =
-            //    ScriptCommands.Assign("{TabbedExplorer}", this,false, 
-            //    FileList.IfSelection(evm => evm.Count() >= 1,
-            //        FileList.AssignSelectionToParameter(
-            //        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Parameter}", null)), ResultCommand.NoError));
-            //expvm.DirectoryTree.Commands.CommandDictionary.OpenTab =
-            //    ScriptCommands.Assign("{TabbedExplorer}", this,false,
-            //        DirectoryTree.AssignSelectionToParameter(
-            //        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Parameter}", null)));
+            ////ScriptCommands.ReassignToParameter("{Explorer}", TabbedExplorer.CloseTab(this));
+            expvm.FileList.Commands.CommandDictionary.OpenTab =
+                ScriptCommands.Assign("{TabbedExplorer}", this, false,                
+                    FileList.AssignSelectionToParameter(
+                    UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Parameter}", null)));
+            expvm.DirectoryTree.Commands.CommandDictionary.OpenTab =
+                ScriptCommands.Assign("{TabbedExplorer}", this, false,
+                    DirectoryTree.AssignSelectionToParameter(
+                    UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Parameter}", null)));
 
             ActivateItem(expvm);
             checkTabs();

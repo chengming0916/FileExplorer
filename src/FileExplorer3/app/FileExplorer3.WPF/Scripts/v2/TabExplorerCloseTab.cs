@@ -68,9 +68,9 @@ namespace FileExplorer.Script
             if (tevm == null)
                 return ResultCommand.Error(new ArgumentNullException(TabbedExplorerKey));
 
-            var evm = 
-                TabKey == null ? tevm.ActiveItem as IExplorerViewModel : 
-                pm.GetValue<IExplorerViewModel>(TabKey);                        
+            var evm = pm.GetValue<IExplorerViewModel>("{Parameter}") ??
+                (TabKey == null ? tevm.ActiveItem as IExplorerViewModel : 
+                pm.GetValue<IExplorerViewModel>(TabKey));                        
             if (tevm == null)
                 return ResultCommand.Error(new ArgumentNullException(TabKey));
 

@@ -29,12 +29,19 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />            
+            <ColumnDefinition Width="*" />                    
         </Grid.ColumnDefinitions>
-
+        <StackPanel Orientation="Horizontal" >
+            <CheckBox x:Name="cbShowWhenDragging" IsChecked="False" Content="Show Item when Dragging" />
+        </StackPanel>
+        
         <ItemsControl x:Name="ic1"
-            Grid.Column="0"
+            Grid.Column="0" Grid.Row="1"
             ItemsSource="{Binding Items}" Background="Transparent">
 
             <bc:UIEventAdapter.Processors>
@@ -45,9 +52,20 @@
             </bc:UIEventAdapter.Processors>
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">                 
-                    <Setter Property="Visibility" Value="{Binding IsDragging, Converter={StaticResource fbtv}}" />
+                    <!--<Setter Property="Visibility" Value="{Binding IsDragging, Converter={StaticResource fbtv}}" />-->
                     <Setter Property="Canvas.Left" Value="{Binding Left}" />
                     <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ElementName=cbShowWhenDragging, Path=IsChecked}" Value="False" />
+                                <Condition Binding="{Binding IsDragging}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
                 </Style>
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.Template>

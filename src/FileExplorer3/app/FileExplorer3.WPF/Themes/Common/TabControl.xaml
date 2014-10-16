@@ -160,7 +160,7 @@
                                    Height="1" VerticalAlignment="Bottom" />
 
                         <Border Grid.Row="0" 
-                                Visibility="{Binding ShowTabPanel, 
+                                Visibility="{Binding ShowTabPanelUI, 
                                             RelativeSource={RelativeSource TemplatedParent}, 
                                             Converter={StaticResource btvc}}" >
                             <ScrollViewer x:Name="HeaderPanelScrollViewer" Grid.Row="0" ScrollViewer.PanningMode="HorizontalOnly"
