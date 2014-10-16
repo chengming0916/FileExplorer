@@ -149,6 +149,7 @@ namespace FileExplorer.WPF.BaseControls
                                 //If ISupportDrop found.
                                 ScriptCommands.IfAssigned("{ISupportDrop}",                                                                
                                     ////Obtain DataObject from event and Call ISupportDrop.QueryDrop() to get IDraggables[] and QueryDropResult.
+                                    HubScriptCommands.SetRoutedEventHandled(
                                     HubScriptCommands.QueryShellDragInfo("{ISupportDrop}", "{DataObj}", "{DragDrop.Draggables}", "{DragDrop.QueryDropResult}", false,                                                   
                                         //If QueryShellDragInfo Success, if DragMethod...
                                         ScriptCommands.IfEquals(QueryDrag.DragMethodKey, DragMethod.Menu,                                                     
@@ -174,7 +175,7 @@ namespace FileExplorer.WPF.BaseControls
                                                 detachAdornerAndResetDragDrop)), 
                                                     
                                         //If QueryDropEffects is None, drag failed, detach adorner.
-                                        detachAdornerAndResetDragDrop)))));
+                                        detachAdornerAndResetDragDrop))))));
 
                 }
             }

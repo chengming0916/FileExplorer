@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using FileExplorer.Script;
-using FileExplorer.WPF.Utils;
-using FileExplorer.WPF.BaseControls;
-using System.Windows.Input;
-using FileExplorer.WPF.ViewModels.Helpers;
-using FileExplorer.Defines;
 using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels.Helpers;
+using System;
+using System.Collections.Generic;
 
 namespace FileExplorer.WPF.ViewModels
 {

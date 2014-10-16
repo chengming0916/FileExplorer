@@ -70,6 +70,8 @@ namespace FileExplorer.Script
 
             var dm = DirectoryEntryKey == null ? null :
                 (await pm.GetValueAsEntryModelArrayAsync(DirectoryEntryKey)).FirstOrDefault();
+            if (dm != null && !dm.IsDirectory)
+                dm = null;
 
             var destTab = tevm.OpenTab(dm);
             logger.Info(String.Format("New Tab #{0}", tevm.GetTabIndex(destTab)));
