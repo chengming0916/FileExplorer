@@ -101,19 +101,26 @@ namespace TestApp
         public TestDroppableViewModel()
         {
             IProfile exProfile = new FileSystemInfoExProfile(null, null);
-            //DropHelper = new LambdaDropHelper<IEntryModel>(
-            //     new LambdaValueConverter<IDraggable, ,
-            //     (ems, eff) =>
-            //         QueryDropEffects.CreateNew(DragDropEffects.Copy),
-            //    da =>
-            //        exProfile.DragDrop().GetEntryModels(da),
-            //    (ems, da, eff) =>
-            //    {
-            //        if (ems.Count() > 1)
-            //            Label = ems.Count() + " items.";
-            //        else Label = ems.First().FullPath;
-            //        return DragDropEffects.Copy;
-            //    }, em => EntryViewModel.FromEntryModel(em));
+            DropHelper = new LambdaShellDropHelper<IEntryModel>(
+                 new LambdaValueConverter<IEntryViewModel, IEntryModel>(
+                    (evm) =>  evm.EntryModel,                    
+                    (em) => EntryViewModel.FromEntryModel(em)),
+
+                 new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
+                     (ems) => AsyncUtils.RunSync(() => exProfile.DragDrop().GetDataObject(ems)),
+                     (da) => exProfile.DragDrop().GetEntryModels(da)), 
+
+                 (ems, eff) =>
+                 {
+                     return QueryDropEffects.CreateNew(DragDropEffects.Copy);
+                 },
+                (ems, da, eff) =>
+                {
+                    if (ems.Count() > 1)
+                        Label = ems.Count() + " items.";
+                    else Label = ems.First().FullPath;
+                    return DragDropEffects.Copy;
+                }) { DisplayName = "TestLabel" };
         }
 
         #endregion
@@ -145,12 +152,12 @@ namespace TestApp
 
 
 
-
+        ISupportDrop _dropHelper;
 
         public ISupportDrop DropHelper
         {
-            get;
-            set;
+            get { return _dropHelper; }
+            set { _dropHelper = value; }
         }
     }
 }

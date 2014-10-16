@@ -100,7 +100,7 @@ namespace FileExplorer.UIEventHub
         public override IScriptCommand Execute(ParameterDic pm)
         {
             AdornerLayer value = null;
-            Control sender = pm.GetValue<Control>(SenderKey);
+            FrameworkElement sender = pm.GetValue<FrameworkElement>(SenderKey);
             if (sender == null)
                 return ResultCommand.Error(new KeyNotFoundException(SenderKey));
             switch (AssignAdornerType)
