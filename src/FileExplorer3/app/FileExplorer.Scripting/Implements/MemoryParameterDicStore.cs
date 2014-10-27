@@ -12,7 +12,7 @@ namespace FileExplorer
             : base(StringComparer.CurrentCultureIgnoreCase)
         {
             foreach (var ppair in ppairs)
-                this.Add(ppair.Key, ppair.Value);            
+                this.Add( ppair.Key, ppair.Value);            
         }
 
         public virtual Task SaveAsync()
@@ -27,7 +27,7 @@ namespace FileExplorer
 
         public IParameterDicStore Clone()
         {
-            return new MemoryParameterDicStore(this.Keys.Select(k => new ParameterPair(k, this[k])).ToArray());
+            return new MemoryParameterDicStore(this.Keys.Select(k => ParameterPair.FromKey(k, this[k])).ToArray());
         }       
     }
 }

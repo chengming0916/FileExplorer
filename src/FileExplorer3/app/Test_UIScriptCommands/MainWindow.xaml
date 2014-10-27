@@ -30,6 +30,10 @@
                     <ComboBoxItem x:Name="assignCurrent">UIScriptCommands.ExplorerAssignCurrentDirectory</ComboBoxItem>
                     <ComboBoxItem x:Name="assignScriptParam">UIScriptCommands.ExplorerAssignScriptParameters</ComboBoxItem>
                     <ComboBoxItem x:Name="setParameters">UIScriptCommands.ExplorerSet/GetParameter</ComboBoxItem>
+                    <ComboBoxItem x:Name="newWindow">UIScriptCommands.ExplorerNewWindow</ComboBoxItem>
+                    <ComboBoxItem x:Name="pick">UIScriptCommands.ExplorerPick</ComboBoxItem>
+                    <ComboBoxItem x:Name="select">UIScriptCommands.FileListAssignSelection</ComboBoxItem>
+                    
                 </ComboBox>
             </DockPanel>          
         </StackPanel>

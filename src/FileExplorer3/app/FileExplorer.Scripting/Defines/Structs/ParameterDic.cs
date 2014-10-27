@@ -18,9 +18,15 @@ namespace FileExplorer
 {
     public class ParameterPair
     {
+        public object Variable { get { return "{" + Key + "}"; } }
         public string Key { get; set; }
         public object Value { get; set; }
-        public ParameterPair(string key, object value) { Key = key; Value = value; }
+        private ParameterPair(string key, object value) { Key = key; Value = value; }
+
+        public static ParameterPair FromKey(string key, object value) { 
+            return new ParameterPair(key, value); }
+        public static ParameterPair FromVariable(string variable, object value) { 
+            return new ParameterPair(ParameterDic.GetVariable(variable), value); }
     }
 
     public static partial class ExtensionMethods
@@ -308,7 +314,7 @@ namespace FileExplorer
 
         public IParameterDicStore Store { get { return _store; } }
 
-        public IEnumerable<ParameterPair> Variables { get { return VariableNames.Select(v => new ParameterPair(v, GetValue(v))); } }
+        public IEnumerable<ParameterPair> Variables { get { return VariableNames.Select(v => ParameterPair.FromKey(v, GetValue(v))); } }
 
         /// <summary>
         /// Most exception is throw directly, if not, it will set the Error property, which will be thrown 

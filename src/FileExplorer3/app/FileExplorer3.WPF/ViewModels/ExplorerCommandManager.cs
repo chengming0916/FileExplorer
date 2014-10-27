@@ -18,9 +18,9 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region Constructor
 
-        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator globalEvents, IEventAggregator events,
+        public ExplorerCommandManager(IExplorerViewModel evm,
              params ISupportCommandManager[] cMs)
-            : this(evm, windowManager, globalEvents, events, cMs.Select(cm => cm.Commands).ToArray())
+            : this(evm, cMs.Select(cm => cm.Commands).ToArray())
         {
             //Workaround: Add all properties to sub-commandManager, 
             //e.g. Add Explorer to FileList.Commands.ParameterDicConverter
@@ -29,18 +29,14 @@ namespace FileExplorer.WPF.ViewModels
                 iscm.Commands.ParameterDicConverter.AddAdditionalParameters(paramDic);
         }
 
-        public ExplorerCommandManager(IExplorerViewModel evm, IWindowManager windowManager, IEventAggregator globalEvents, IEventAggregator events,
+        public ExplorerCommandManager(IExplorerViewModel evm, 
              params IExportCommandBindings[] additionalBindingExportSource)
             : base(additionalBindingExportSource)
         {
             _evm = evm;
-            _windowManager = windowManager;
-            _events = events;
-            _globalEvents = globalEvents;
-
-
+            
             InitCommandManager();
-            ToolbarCommands = new ToolbarCommandsHelper(events,
+            ToolbarCommands = new ToolbarCommandsHelper(_evm.Events,
                null,
                null)
                {
@@ -53,18 +49,28 @@ namespace FileExplorer.WPF.ViewModels
         #region Methods
 
         protected override IParameterDicConverter setupParamDicConverter()
-        {            
-
-     
+        {
             return ParameterDicConverters.ConvertVMParameter(
-               new Tuple<string, object>("Explorer", _evm),
-                 new Tuple<string, object>("DirectoryTree", _evm.DirectoryTree),
-                 new Tuple<string, object>("FileList", _evm.FileList),
-                 new Tuple<string, object>("Statusbar", _evm.Statusbar),
-                 new Tuple<string, object>("WindowManager", _windowManager),
-                 new Tuple<string, object>("Events", _events),
-                 new Tuple<string, object>("GlobalEvents", _globalEvents)
-                );
+                AddVariable.FromGetter("{WindowManager}", (pms) => _evm.WindowManager),
+                AddVariable.FromGetter("{Events}", (pms) => _evm.InternalEvents),
+                AddVariable.FromGetter("{GlobalEvents}", (pms) => _evm.Events),
+                AddVariable.FromParameterPairs(
+                    ParameterPair.FromVariable("{Explorer}", _evm),
+                    ParameterPair.FromVariable("{DirectoryTree}", _evm.DirectoryTree),
+                    ParameterPair.FromVariable("{FileList}", _evm.FileList),
+                    ParameterPair.FromVariable("{Statusbar}", _evm.Statusbar)                                
+                    ));
+                                
+     
+            //return ParameterDicConverters.ConvertVMParameter(
+            //   new Tuple<string, object>("Explorer", _evm),
+            //     new Tuple<string, object>("DirectoryTree", _evm.DirectoryTree),
+            //     new Tuple<string, object>("FileList", _evm.FileList),
+            //     new Tuple<string, object>("Statusbar", _evm.Statusbar),
+            //     new Tuple<string, object>("WindowManager", _windowManager),
+            //     new Tuple<string, object>("Events", _events),
+            //     new Tuple<string, object>("GlobalEvents", _globalEvents)
+            //    );
         }
 
         protected override IEnumerable<string> getScriptCommands()
@@ -109,9 +115,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         IExplorerViewModel _evm;
-        private IWindowManager _windowManager;
-        private IEventAggregator _events;
-        private IEventAggregator _globalEvents;
+
 
         #endregion
 

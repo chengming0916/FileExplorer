@@ -77,7 +77,7 @@ namespace FileExplorer.Script
 
         public static IParameterDicConverter ConvertVMParameter(params IParameterDicConvertRule[] rules)
         {
-            return new ParameterDicConverter(ParameterDicConvertRule.Combine(UIParameterDicConvertRule.ConvertUIInputParameters, rules));
+            return new ParameterDicConverter(ParameterDicConvertRule.Combine(UIParameterDicConvertRule.ConvertUIParameters, rules));
         }
 
         /// <summary>

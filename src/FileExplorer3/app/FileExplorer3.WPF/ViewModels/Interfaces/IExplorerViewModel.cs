@@ -34,6 +34,7 @@ namespace FileExplorer.WPF.ViewModels
         Task GoAsync(IEntryModel entryModel);
 
         IEventAggregator Events { get; set; }
+        IEventAggregator InternalEvents { get; set; }
         IWindowManager WindowManager { get; set;  }
     }
 }
