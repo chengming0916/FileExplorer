@@ -1,4 +1,5 @@
-﻿using FileExplorer.UIEventHub;
+﻿using FileExplorer.Script;
+using FileExplorer.UIEventHub;
 using FileExplorer.UIEventHub.Defines;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Test_InputProcessor
         public MainWindow()
         {
             InitializeComponent();
+
+                                
         }
 
         private void addOutput(string text)

@@ -11,6 +11,13 @@ namespace FileExplorer.Script
 {    
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, refresh file list.
+        /// </summary>
+        /// <param name="fileListVariable"></param>
+        /// <param name="force"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand FileListRefresh(string fileListVariable = "{FileList}", bool force = false, 
             IScriptCommand nextCommand = null)
         {
@@ -22,6 +29,12 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Serializable, refresh file list.
+        /// </summary>
+        /// <param name="force"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand FileListRefresh(bool force = false,
             IScriptCommand nextCommand = null)
         {

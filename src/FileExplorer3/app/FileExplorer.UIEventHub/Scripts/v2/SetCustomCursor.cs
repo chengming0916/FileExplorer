@@ -14,6 +14,7 @@ namespace FileExplorer.UIEventHub
         /// <summary>
         /// Serializable, Set cursor during UIElement.GiveFeedback/QueryCursor event.
         /// </summary>
+        /// <example>HubScriptCommands.SetCustomCursor(Cursors.No)</example>
         /// <param name="cursor"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>

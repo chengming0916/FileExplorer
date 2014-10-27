@@ -10,6 +10,15 @@ namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
+        /// <summary>
+        /// Create a rect object from two position.
+        /// </summary>
+        /// <param name="position1Variable"></param>
+        /// <param name="position2Variable"></param>
+        /// <param name="variable"></param>
+        /// <param name="skipIfExists"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand AssignRectFromPosition(string position1Variable, string position2Variable, string variable,
             bool skipIfExists = false,
             IScriptCommand nextCommand = null)
@@ -24,6 +33,15 @@ namespace FileExplorer.UIEventHub
             };
         }
 
+        /// <summary>
+        /// Create a rect object from a position and a size.
+        /// </summary>
+        /// <param name="position1Variable"></param>
+        /// <param name="sizeVariable"></param>
+        /// <param name="variable"></param>
+        /// <param name="skipIfExists"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand AssignRectFromSize(string position1Variable, string sizeVariable, string variable,
             bool skipIfExists = false,
             IScriptCommand nextCommand = null)

@@ -268,7 +268,7 @@ namespace FileExplorer.Script
 
         #region AbsoluteValue
         /// <summary>
-        /// Serializable, Absolute variables (using Expression) to destination.
+        /// Serializable, store Absolute value of source variable (using Expression) to destination.
         /// </summary>
         /// <example>
         /// IScriptCommand AbsCommand = ScriptCommands.Absolute("{Left}", "{Result}", 

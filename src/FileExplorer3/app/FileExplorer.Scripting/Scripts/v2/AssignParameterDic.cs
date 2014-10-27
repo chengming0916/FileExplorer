@@ -44,6 +44,8 @@ namespace FileExplorer.Script
                 NextCommand = (ScriptCommandBase)nextCommand
             };
         }
+
+
     }
 
     public class AssignParameterDic : Assign
@@ -72,4 +74,6 @@ namespace FileExplorer.Script
             return base.Execute(pm);
         }
     }
+
+  
 }

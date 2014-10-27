@@ -21,6 +21,11 @@ namespace FileExplorer
             AsyncUtils.RunSync(() => LoadAsync());
         }
 
+        ~DiskParameterDicStore()
+        {
+            AsyncUtils.RunSync(() => SaveAsync());
+        }
+
         public async Task LoadAsync()
         {
             string path = Path.Combine(
@@ -43,6 +48,7 @@ namespace FileExplorer
             string path = Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
               _fileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
 
             using (var writer = new XmlTextWriter(File.Create(path), Encoding.Unicode))
             {
@@ -54,7 +60,7 @@ namespace FileExplorer
 
         public IParameterDicStore Clone()
         {
-            throw new NotImplementedException();
+            return this;
         }
     }
 }

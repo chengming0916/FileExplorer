@@ -132,5 +132,8 @@ namespace FileExplorer.WPF.Utils
                 return this;
             }
         }
+
+
+        
     }
 }

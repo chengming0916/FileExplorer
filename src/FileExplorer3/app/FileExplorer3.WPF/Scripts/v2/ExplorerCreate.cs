@@ -12,6 +12,17 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, Create a new Explorer IExplorerViewModel instance in ParameterDic, but does not show it.
+        /// </summary>
+        /// <param name="explorerMode"></param>
+        /// <param name="onModelCreatedVariable"></param>
+        /// <param name="onViewAttachedVariable"></param>
+        /// <param name="windowManagerVariable"></param>
+        /// <param name="eventAggregatorVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand ExplorerCreate(ExplorerMode explorerMode,
             string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",

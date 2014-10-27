@@ -24,15 +24,19 @@ namespace Test_NonShellDragDemo
         {
             Items = new ObservableCollection<NumberViewModel>();
 
+            //Convert from IDraggable (implemented by ViewModel) 
+            //to Model (value transferred from dragsource to drop target).
             var converter = new LambdaValueConverter<IDraggable, NumberModel>(
                 d => (d is NumberViewModel) ? (d as NumberViewModel).Model : null,
                 nm => new NumberViewModel(nm));
 
             DragHelper = new LambdaDragHelper<NumberModel>(converter,
+                //GetModels()
                 () => Items.Where(nvm => nvm.IsSelected).Select(nvm => nvm.Model).ToList(),
-                nms => DragDropEffects.Move,
+                nms => DragDropEffects.Move, //OnQueryDrag(models)
                 (nms, eff) =>
                 {
+                    //OnDropCompleted(models, dropEffect)
                     foreach (var nm in nms)
                         Items.Remove(new NumberViewModel(nm));
                 }
@@ -40,6 +44,7 @@ namespace Test_NonShellDragDemo
             DropHelper = new LambdaDropHelper<NumberModel>(converter,
                 (nms, eff) =>
                 {
+                    //OnQueryDrop(models, possibleEffects)
                     foreach (var nm in nms)
                         if (Items.Any(ivm => ivm.Model.Equals(nm)))
                             return QueryDropEffects.None;
@@ -47,6 +52,7 @@ namespace Test_NonShellDragDemo
                 },
                 (nms, eff) =>
                 {
+                    //OnDrop(models, possibleEffects)
                     foreach (var nm in nms)
                         Items.Add(new NumberViewModel(nm));
                     return DragDropEffects.Move;

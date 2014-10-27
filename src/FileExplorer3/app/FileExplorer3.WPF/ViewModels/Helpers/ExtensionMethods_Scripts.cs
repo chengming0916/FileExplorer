@@ -88,5 +88,7 @@ namespace FileExplorer.Script
             await commandManager.ExecuteAsync(cmd, parameterDic, scriptRunner);
         }
 
+       
+
     }
 }

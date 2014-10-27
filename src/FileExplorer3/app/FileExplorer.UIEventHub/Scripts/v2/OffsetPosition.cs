@@ -10,6 +10,14 @@ namespace FileExplorer.UIEventHub
 {
     public static partial class HubScriptCommands
     {
+        /// <summary>
+        /// Store position plus offset (Point) to destination.
+        /// </summary>
+        /// <param name="positionVariable"></param>
+        /// <param name="offsetVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand OffsetPosition(string positionVariable = "{Position}", string offsetVariable = "{Offset}",
             string destinationVariable = "{Position}", IScriptCommand nextCommand = null)
         {
@@ -23,6 +31,14 @@ namespace FileExplorer.UIEventHub
             };
         }
 
+        /// <summary>
+        /// Store position minus offset (Point) to destination.
+        /// </summary>
+        /// <param name="positionVariable"></param>
+        /// <param name="offsetVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand OffsetPositionNeg(string positionVariable = "{Position}", string offsetVariable = "{Offset}",
             string destinationVariable = "{Position}", IScriptCommand nextCommand = null)
         {

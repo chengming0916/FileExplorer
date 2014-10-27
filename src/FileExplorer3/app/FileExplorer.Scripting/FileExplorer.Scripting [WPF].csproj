@@ -51,6 +51,7 @@
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Interfaces\ExtensionMethods.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicConverter.cs" />
+    <Compile Include="Defines\Interfaces\IParameterDicConvertRule.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicStore.cs" />
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
     <Compile Include="Defines\Interfaces\IScriptCommand.cs" />
@@ -64,7 +65,14 @@
     <Compile Include="Implements\ExtensionMethods.cs" />
     <Compile Include="Implements\MemoryParameterDicStore.cs" />
     <Compile Include="Implements\NullParameterDicConverter.cs" />
+    <Compile Include="Implements\ParameterDicConverter.cs" />
     <Compile Include="Implements\ParameterDicConverterBase.cs" />
+    <Compile Include="Implements\ParameterDicConvertRule\AddVariableFromGetter.cs" />
+    <Compile Include="Implements\ParameterDicConvertRule\AddVariableFromParameterDIc.cs" />
+    <Compile Include="Implements\ParameterDicConvertRule\ConvertParameterToVariable.cs" />
+    <None Include="Implements\ParameterDicConvertRule\ConvertSenderToVariable.cs" />
+    <Compile Include="Implements\ParameterDicConvertRule\ParameterDicConvertRule.cs" />
+    <Compile Include="Implements\ParameterDicConvertRule\UseAnotherParameterDicConverter.cs" />
     <Compile Include="Implements\PathHelper.cs" />
     <Compile Include="Implements\ScriptCommandBase.cs" />
     <Compile Include="Implements\ScriptCommandImpl.cs" />
@@ -79,7 +87,6 @@
     <Compile Include="Scripts\ScriptCommandsv1.cs" />
     <Compile Include="Scripts\v2\ArithmeticCommand.cs" />
     <Compile Include="Scripts\v2\Assign.cs" />
-    <Compile Include="Scripts\v2\AssignArray.cs" />
     <Compile Include="Scripts\v2\AssignCanExecuteCondition.cs" />
     <Compile Include="Scripts\v2\AssignParameterDic.cs" />
     <Compile Include="Scripts\v2\AssignValueConverter.cs" />

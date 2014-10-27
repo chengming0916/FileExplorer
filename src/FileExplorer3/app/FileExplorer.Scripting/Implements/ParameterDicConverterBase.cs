@@ -11,7 +11,7 @@ namespace FileExplorer.Script
         private Func<ParameterDic, object[], object> _convertBackFunc;
         private Func<object, object[], ParameterDic> _convertFunc;
         private IParameterDicConverter _baseConverter;
-        private ParameterDic _additionalParameters = new ParameterDic();
+        private ParameterDic _additionalParameters = new ParameterDic();        
 
         public ParameterDicConverterBase(Func<object, object[], ParameterDic> convertFunc,
             Func<ParameterDic, object[], object> convertBackFunc, IParameterDicConverter baseConverter = null)
@@ -40,14 +40,14 @@ namespace FileExplorer.Script
             return retVal;
         }
 
-        public object ConvertBack(ParameterDic pd, params object[] additionalParameters)
-        {
-            object retVal = _convertBackFunc(pd, additionalParameters);
+        //public object ConvertBack(ParameterDic pd, params object[] additionalParameters)
+        //{
+        //    object retVal = _convertBackFunc(pd, additionalParameters);
 
-            if (retVal == null && _baseConverter != null)
-                return _baseConverter.ConvertBack(pd, additionalParameters);
+        //    if (retVal == null && _baseConverter != null)
+        //        return _baseConverter.ConvertBack(pd, additionalParameters);
 
-            return retVal;
-        }
+        //    return retVal;
+        //}
     }
 }

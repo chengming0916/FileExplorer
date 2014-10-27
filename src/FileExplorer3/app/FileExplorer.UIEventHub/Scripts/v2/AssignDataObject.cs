@@ -11,7 +11,7 @@ namespace FileExplorer.UIEventHub
     public static partial class HubScriptCommands
     {
         /// <summary>
-        /// Obtain dataobject and assign to a variable, or assign null if not found.
+        /// Obtain dataobject from DragInputArgs and assign to a variable, or assign null if not found.
         /// </summary>
         /// <param name="mode"></param>
         /// <param name="iSupportDropVariable"></param>

@@ -68,7 +68,8 @@ namespace FileExplorer.Script
         public override IScriptCommand Execute(ParameterDic pm)
         {
             object source = pm.GetValue<object>(SourceVariableKey);
-            
+            if (source == null)
+                logger.Error("Source not found.");
             
             if (ValueConverterKey != null)
             {

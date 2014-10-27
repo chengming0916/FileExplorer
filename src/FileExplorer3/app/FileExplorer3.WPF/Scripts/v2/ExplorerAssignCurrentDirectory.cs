@@ -14,6 +14,10 @@ namespace FileExplorer.Script
         /// <summary>
         /// Serializable, assign current directory (IEntryModel) to a variable.
         /// </summary>
+        /// <example>
+        ///  cmd = UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}",                        
+        ///          ScriptCommands.SetProperty("{tbDirectory}", (TextBlock tb) => tb.Text, "{CurrentDirectory.FullPath}"));
+        /// </example> 
         /// <param name="fileListVariable"></param>
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
@@ -32,6 +36,10 @@ namespace FileExplorer.Script
         /// <summary>
         /// Serializable, assign current directory (IEntryModel) to a variable.
         /// </summary>
+        /// <example>
+        ///  cmd = UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}",                        
+        ///          ScriptCommands.SetProperty("{tbDirectory}", (TextBlock tb) => tb.Text, "{CurrentDirectory.FullPath}"));
+        /// </example>
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
@@ -74,8 +82,8 @@ namespace FileExplorer.Script
             if (em == null)
                 return ResultCommand.Error(new KeyNotFoundException(ExplorerKey));
 
-            return ScriptCommands.Assign(DestinationKey, 
-                em, false, NextCommand);
+            pm.SetValue(DestinationKey, em, true);
+            return NextCommand;                
         }
 
     }

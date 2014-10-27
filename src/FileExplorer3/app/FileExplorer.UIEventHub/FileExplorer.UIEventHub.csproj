@@ -80,6 +80,7 @@
     <Compile Include="Implements\DragDropLiteEventProcessor.cs" />
     <Compile Include="Implements\DragHelper.cs" />
     <Compile Include="Implements\InputBindingsEventProcessor.cs" />
+    <Compile Include="Implements\ParameterDicConvertRule\UIParameterDicConvertRule.cs" />
     <Compile Include="Implements\ResizeAdornerEventProcessor.cs" />
     <Compile Include="Implements\DropHelper.cs" />
     <Compile Include="Implements\ShellDragHelper.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Interfaces\IUIAware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\v2\AdornerCommand.cs" />
+    <Compile Include="Scripts\v2\AssignDiskParameterDic.cs" />
     <Compile Include="Scripts\v2\PointArithmeticCommand.cs" />
     <Compile Include="Scripts\v2\AssignAdornerLayer.cs" />
     <Compile Include="Scripts\v2\AssignCursorPosition.cs" />

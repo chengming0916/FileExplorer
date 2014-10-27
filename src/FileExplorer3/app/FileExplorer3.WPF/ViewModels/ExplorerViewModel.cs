@@ -229,15 +229,15 @@ namespace FileExplorer.WPF.ViewModels
             cmds.Enqueue(Explorer.ChangeRoot(message.ChangeType, message.AppliedRootDirectories));
 
             if (message.Sender != null && message.Sender != this)
-                cmds.Enqueue(UIScriptCommands.ExplorerGoTo(CurrentDirectory.EntryModel));
+                cmds.Enqueue(UIScriptCommands.ExplorerGoToValue(CurrentDirectory.EntryModel));
             else
                 switch (message.ChangeType)
                 {
                     case ChangeType.Changed:
-                        cmds.Enqueue(UIScriptCommands.ExplorerGoTo(message.AppliedRootDirectories.First()));
+                        cmds.Enqueue(UIScriptCommands.ExplorerGoToValue(message.AppliedRootDirectories.First()));
                         break;
                     case ChangeType.Deleted:
-                        cmds.Enqueue(UIScriptCommands.ExplorerGoTo(RootModels.FirstOrDefault()));
+                        cmds.Enqueue(UIScriptCommands.ExplorerGoToValue(RootModels.FirstOrDefault()));
                         break;
                 }
 

@@ -15,6 +15,13 @@ namespace FileExplorer.UIEventHub
 
     public static partial class HubScriptCommands
     {
+        /// <summary>
+        /// Call DragSource (ISupportDrag).QueryDrag and assign result to destination.
+        /// </summary>
+        /// <param name="dragSourceVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand QueryDrag(string dragSourceVariable = "{ISupportDrag}",
             string destinationVariable = "{DragResult}",
           IScriptCommand nextCommand = null)

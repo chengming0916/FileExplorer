@@ -62,7 +62,7 @@ namespace TestApp.Script
 
             var selection = _getSelectionFunc == null ? null : _getSelectionFunc(pm);
             if (selection != null && selection.Count() > 0)
-                return UIScriptCommands.ExplorerGoTo(selection.First());
+                return UIScriptCommands.ExplorerGoToValue(selection.First());
 
             return ResultCommand.NoError;
         }
