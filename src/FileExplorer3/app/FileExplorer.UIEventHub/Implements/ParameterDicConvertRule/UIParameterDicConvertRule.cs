@@ -9,6 +9,9 @@ namespace FileExplorer.UIEventHub
 {
     public static class UIParameterDicConvertRule 
     {
+        public static IParameterDicConvertRule ConvertParameter =
+            new ConvertParameterToVariable(0, "{Parameter}");        
+
         public static IParameterDicConvertRule ConvertUIParameters =
            ParameterDicConvertRule.Combine(
                new ConvertParameterToVariable(0, "{Parameter}"),

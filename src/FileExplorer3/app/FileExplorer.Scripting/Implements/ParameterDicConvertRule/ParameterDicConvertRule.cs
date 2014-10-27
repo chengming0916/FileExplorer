@@ -13,6 +13,13 @@ namespace FileExplorer.Script
             return new ParameterDicConvertRule(rules);
         }
 
+        public static IParameterDicConvertRule Combine(IParameterDicConvertRule rule, params IParameterDicConvertRule[] rules)
+        {
+            var ruleList = rules.ToList();
+            ruleList.Insert(0, rule);
+            return new ParameterDicConvertRule(ruleList.ToArray());
+        }
+
         private IParameterDicConvertRule[] _rules;
 
         private ParameterDicConvertRule(params IParameterDicConvertRule[] rules)
