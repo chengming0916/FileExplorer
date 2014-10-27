@@ -23,14 +23,14 @@ namespace FileExplorer.WPF.Utils
 
         public override bool CanExecute(ParameterDic pm)
         {
-            return _command.CanExecute(_parameterDicConverter.ConvertBack(pm));
+            return _command.CanExecute(pm.GetValue("{Parameter}"));
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
         {
             try
             {
-                _command.Execute(_parameterDicConverter.ConvertBack(pm));
+                _command.Execute(pm.GetValue("{Parameter}"));
             }
             catch (Exception ex) { return ResultCommand.Error(ex); }
 
