@@ -12,7 +12,7 @@ namespace FileExplorer.Script
     [XmlInclude(typeof(ExplorerGoTo))]
     [XmlInclude(typeof(ExplorerParam))]
     [XmlInclude(typeof(DirectoryTreeToggleNode))]
-    [XmlInclude(typeof(FileListAssignSelection))]
+    [XmlInclude(typeof(FileListAssignEntries))]
     [XmlInclude(typeof(NotifyDirectoryChanged))]
     [XmlInclude(typeof(MessageBoxShow))]
     public class FileExplorer3WPFCommands

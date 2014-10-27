@@ -25,10 +25,10 @@ namespace FileExplorer.UIEventHub
                    new ConvertParameterToVariable(0, "{Parameter}"),
                    new ConvertParameterToVariable(1, "{EventName}"),    
                    new ConvertParameterToVariable(2, "{Input}"),                   
-                   new AddVariableFromGetter<object>("{Sender}", (pms) => (pms[2] as IUIInput).Sender),
-                   new AddVariableFromGetter<EventArgs>("{EventArgs}", (pms) => (pms[2] as IUIInput).EventArgs),
+                   new AddVariableFromGetter<object>("{Sender}", (pms) => pms.Length > 2 ? (pms[2] as IUIInput).Sender : null),
+                   new AddVariableFromGetter<EventArgs>("{EventArgs}", (pms) =>  pms.Length > 2 ? (pms[2] as IUIInput).EventArgs : null),
                    new AddVariableFromGetter<List<IUIInputProcessor>>("{InputProcessors}", 
-                       (pms) => (pms[3] as UIInputManager).Processors.ToList())                   
+                       (pms) => pms.Length > 3  ? (pms[3] as UIInputManager).Processors.ToList() : null)                   
                );
 
     

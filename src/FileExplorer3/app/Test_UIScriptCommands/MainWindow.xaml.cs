@@ -93,13 +93,15 @@ namespace Test_UIScriptCommands
                 case "expand":
                     cmd = 
                        CoreScriptCommands.ParsePath("{Profiles}", tbDirectory.Text, "{Directory}",
-                           UIScriptCommands.DirectoryTreeToggleNode("{DirectoryTree}", "{Directory}", DirectoryTreeToggleMode.Expand));
+                            UIScriptCommands.DirectoryTreeToggleExpand("{Directory}"));
+                           //UIScriptCommands.DirectoryTreeToggleNode("{DirectoryTree}", "{Directory}", DirectoryTreeToggleMode.Expand));
                     break;
 
                 case "collapse":
                     cmd = 
-                    CoreScriptCommands.ParsePath("{Profiles}", tbDirectory.Text, "{Directory}",
-                           UIScriptCommands.DirectoryTreeToggleNode("{DirectoryTree}", "{Directory}", DirectoryTreeToggleMode.Collapse));
+                        CoreScriptCommands.ParsePath("{Profiles}", tbDirectory.Text, "{Directory}",
+                            UIScriptCommands.DirectoryTreeToggleCollapse("{Directory}"));
+                           //UIScriptCommands.DirectoryTreeToggleNode("{DirectoryTree}", "{Directory}", DirectoryTreeToggleMode.Collapse));
                     break;
                 case "assignCurrent":
 
@@ -120,10 +122,11 @@ namespace Test_UIScriptCommands
                             UIScriptCommands.ExplorerGetParameter(ExplorerParameterType.ExplorerHeight, "{Height}", 
                             ScriptCommands.AddValue("{Width}", -150, "{Width}",
                             ScriptCommands.AddValue("{Height}", -150, "{Height}",
+                               UIScriptCommands.MessageBoxOK("SetParameter", "Creating new window size {Width} x {Height}", 
                                 UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{Events}", 
                                     "{TestExplorer}", 
                                     UIScriptCommands.ExplorerSetParameter("{TestExplorer}", ExplorerParameterType.ExplorerWidth, "{Width}", 
-                                    UIScriptCommands.ExplorerSetParameter("{TestExplorer}", ExplorerParameterType.ExplorerHeight, "{Height}")))))));
+                                    UIScriptCommands.ExplorerSetParameter("{TestExplorer}", ExplorerParameterType.ExplorerHeight, "{Height}"))))))));
                               
                             ////UIScriptCommands.ExplorerGetParameter(ExplorerParameterType.ColumnFilters, "{Width}", 
                             ////UIScriptCommands.ExplorerGetParameter(ExplorerParameterType.ExplorerHeight, "{Height}", 
@@ -133,6 +136,30 @@ namespace Test_UIScriptCommands
                             //ScriptCommands.Assign("{ColumnList}", IOInitializeHelpers.FileList_ColumList_For_DiskBased_Items, false, 
                             //UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.ColumnFilters, "{ColumnFilters}", 
                             //UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.ColumnList, "{ColumnList}"))));
+                        break;
+                    case "newwindow":
+                        cmd =  //Warning, Parameter.Width/Height is binded in AppWindowManager.                                         
+                            ScriptCommands.Assign("{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default, true,
+                            ScriptCommands.Assign("{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(), true, 
+                            UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{Events}",
+                                "{TestExplorer}")));
+                              
+                        break;
+                    case "pick":
+                        cmd = 
+                        ScriptCommands.Assign("{OnModelCreated_Pick}", 
+                            ScriptCommands.RunSequence(    
+                                ScriptCommands.Assign("{Filter}", "Text File|*.txt", false, 
+                                    UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.FilterString, "{Filter}")), 
+                                IOInitializeHelpers.Explorer_Initialize_Default), true,
+                        UIScriptCommands.ExplorerPick(ExplorerMode.FileOpen, "{OnModelCreated_Pick}", "{OnViewAttached}", "{WindowManager}", "{Events}",
+                        "{SelectedEntries}", "{SelectedPaths}", 
+                            UIScriptCommands.MessageBoxOK("ExplorerPick", "{SelectedPaths[0]}")));
+                        break;
+                    case "select":
+                        cmd = //Select All.
+                            UIScriptCommands.FileListAssignAll("{CurrentFileList}",                               
+                                UIScriptCommands.FileListSelect("{CurrentFileList}", ResultCommand.NoError));
                         break;
             }
 

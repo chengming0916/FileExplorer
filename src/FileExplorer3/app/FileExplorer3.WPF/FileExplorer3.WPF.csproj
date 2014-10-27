@@ -156,6 +156,7 @@
     <Compile Include="Scripts\v2\ExplorerAssignCurrentDirectory.cs" />
     <Compile Include="Scripts\v2\ExplorerAssignScriptParameters.cs" />
     <Compile Include="Scripts\v2\ExplorerCreate.cs" />
+    <Compile Include="Scripts\v2\FileListAssignEntries.cs" />
     <Compile Include="Scripts\v2\FileListRefresh.cs" />
     <Compile Include="Scripts\v2\FileListSelect.cs" />
     <Compile Include="Scripts\v2\NotifyRootChanged.cs" />
@@ -166,7 +167,7 @@
     <Compile Include="Scripts\v2\ExplorerDo.cs" />
     <Compile Include="Scripts\v2\NotifyDirectoryChanged.cs" />
     <Compile Include="Scripts\v2\ExplorerGoTo.cs" />
-    <Compile Include="Scripts\v2\FileListAssignSelection.cs" />
+    <None Include="Scripts\v2\FileListAssignSelection.cs" />
     <Compile Include="Scripts\v2\MessageBoxShow.cs" />
     <Compile Include="Scripts\v2\TabbedExplorerShow.cs" />
     <Compile Include="Scripts\v2\TabExplorerNewTab.cs" />

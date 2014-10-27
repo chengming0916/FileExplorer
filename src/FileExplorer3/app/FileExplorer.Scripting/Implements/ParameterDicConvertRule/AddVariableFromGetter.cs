@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FileExplorer.Script
 {    
  
-
+ 
     public class AddVariableFromGetter<T> : IParameterDicConvertRule
     {
         private Func<object[], T> _getterFunc;
