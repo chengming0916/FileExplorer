@@ -32,7 +32,7 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
-        /// If StartupPath is defined, goto the path, otherwise go to first root directory and expand it.
+        /// Serializable, If {StartupPath} is defined, goto the path, otherwise go to first root directory and expand it.
         /// Used to initialize Explorer onViewAttached.
         /// </summary>
         /// <param name="explorerVariable"></param>
@@ -62,7 +62,7 @@ namespace FileExplorer.Script
         /// <param name="directory"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ExplorerGoTo(string explorerVariable = "{Explorer}", IEntryModel directory = null,
+        public static IScriptCommand ExplorerGoToValue(string explorerVariable = "{Explorer}", IEntryModel directory = null,
             IScriptCommand nextCommand = null)
         {
             return ScriptCommands.Assign("{Goto-Directory}", directory, false,
@@ -84,10 +84,10 @@ namespace FileExplorer.Script
                 ExplorerGoTo(explorerVariable, "{Goto-Directory}", nextCommand));
         }
 
-        public static IScriptCommand ExplorerGoTo(IEntryModel directory = null,
+        public static IScriptCommand ExplorerGoToValue(IEntryModel directory = null,
            IScriptCommand nextCommand = null)
         {
-            return ExplorerGoTo("{Explorer}", directory, nextCommand);
+            return ExplorerGoToValue("{Explorer}", directory, nextCommand);
         }
     }
 

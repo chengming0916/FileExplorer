@@ -1,5 +1,6 @@
 ﻿using FileExplorer.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,8 @@ namespace FileExplorer
         public static async Task<IEntryModel[]> GetValueAsEntryModelArrayAsync(this ParameterDic paramDic, string entryKey, string profileKey = null)
         {
             object value = paramDic.GetValue<object>(entryKey);
+            if (value is IEnumerable)
+                return (value as IEnumerable).Cast<IEntryModel>().ToArray();
             if (value is IEntryModel[])
                 return (IEntryModel[])value;
 

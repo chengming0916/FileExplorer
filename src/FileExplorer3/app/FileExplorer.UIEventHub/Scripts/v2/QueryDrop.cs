@@ -15,6 +15,18 @@ namespace FileExplorer.UIEventHub
 
     public static partial class HubScriptCommands
     {
+        /// <summary>
+        /// Call droptarget (ISupportDrop).Drop and assign result to destination variable.
+        /// </summary>
+        /// <param name="dragSourceVariable"></param>
+        /// <param name="dropTargetVariable"></param>
+        /// <param name="draggablesVariable"></param>
+        /// <param name="dataObjVariable"></param>
+        /// <param name="dropEffectVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="skipIfExists"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand QueryDrop(string dragSourceVariable = null, string dropTargetVariable = "{ISupportDrop}", string draggablesVariable = "{Draggables}",
             string dataObjVariable = "{DataObj}", string dropEffectVariable = "{Effect}",
             string destinationVariable = "{ResultEffect}",

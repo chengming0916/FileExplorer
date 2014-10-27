@@ -11,6 +11,18 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, Create a new tab explorer window (IExplorerViewModel), and show it.
+        /// </summary>
+        /// <param name="onModelCreatedVariable"></param>
+        /// <param name="onViewAttachedVariable"></param>
+        /// <param name="onTabExplorerCreatedVariable"></param>
+        /// <param name="onTabExplorerAttachedVariable"></param>
+        /// <param name="windowManagerVariable"></param>
+        /// <param name="eventAggregatorVariable"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand ExplorerNewTabWindow(
             string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string onTabExplorerCreatedVariable = "{OnTabExplorerCreated}", string onTabExplorerAttachedVariable = "{OnTabExplorerAttached}",

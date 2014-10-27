@@ -53,7 +53,9 @@ namespace FileExplorer.WPF.ViewModels
         #region Methods
 
         protected override IParameterDicConverter setupParamDicConverter()
-        {
+        {            
+
+     
             return ParameterDicConverters.ConvertVMParameter(
                new Tuple<string, object>("Explorer", _evm),
                  new Tuple<string, object>("DirectoryTree", _evm.DirectoryTree),

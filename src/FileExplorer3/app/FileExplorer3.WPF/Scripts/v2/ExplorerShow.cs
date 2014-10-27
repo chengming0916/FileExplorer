@@ -12,7 +12,16 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
-
+        /// <summary>
+        /// Serializable, Create a new explorer window (IExplorerViewModel), and show it.
+        /// </summary>
+        /// <param name="onModelCreatedVariable"></param>
+        /// <param name="onViewAttachedVariable"></param>
+        /// <param name="windowManagerVariable"></param>
+        /// <param name="eventAggregatorVariable"></param>
+        /// <param name="explorerVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand ExplorerNewWindow(
            string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
@@ -43,7 +52,19 @@ namespace FileExplorer.Script
             };
         }
 
-
+        /// <summary>
+        /// Serializable, Create a new directory or file picker explorer window (IExplorerViewModel), and show it.
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="onModelCreatedVariable"></param>
+        /// <param name="onViewAttachedVariable"></param>
+        /// <param name="windowManagerVariable"></param>
+        /// <param name="eventAggregatorVariable"></param>
+        /// <param name="selectionVariable"></param>
+        /// <param name="selectionPathsVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <param name="cancelCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand ExplorerPick(ExplorerMode mode = ExplorerMode.FileSave, string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
             string selectionVariable = null,

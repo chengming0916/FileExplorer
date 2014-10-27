@@ -16,7 +16,12 @@ namespace FileExplorer.Script
         /// </summary>
         /// <param name="pd"></param>
         void AddAdditionalParameters(ParameterDic pd);
-        ParameterDic Convert(object parameter, params object[] additionalParameters);
-        object ConvertBack(ParameterDic pd, params object[] additionalParameters);
+        ParameterDic Convert(object sender, params object[] additionalParameters);
+        //object ConvertBack(ParameterDic pd, params object[] additionalParameters);
+    }
+
+    public interface IParameterDicConverter2
+    {        
+        ParameterDic Convert(params object[] parameters);        
     }
 }

@@ -164,6 +164,26 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
+         /// Serializable, shortcut method for [AssignValueConverter], which obtains value of a property from a variable and assign to another variable.
+        /// </summary>
+        /// <typeparam name="C"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sourceObjectVariable"></param>
+        /// <param name="expression"></param>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
+         public static IScriptCommand AssignProperty<C,T>(string sourceObjectVariable = "{Source}",
+              Expression<Func<C, T>> expression = null,           
+             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+         {
+             MemberExpression memberExpression = (MemberExpression)expression.Body;
+             string property = memberExpression.Member.Name;
+
+             return AssignProperty(sourceObjectVariable, property, destinationVariable, nextCommand);
+         }
+
+        /// <summary>
         /// Set property of an object in ParameterDic to another object in ParameterDic.
         /// <example>
         /// ScriptCommands.SetProperty("{PSI}", "FileName", "{Value}")

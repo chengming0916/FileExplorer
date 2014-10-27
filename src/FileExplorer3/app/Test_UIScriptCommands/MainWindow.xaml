@@ -1,0 +1,39 @@
+﻿<Window x:Class="Test_UIScriptCommands.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:uc="http://www.quickzip.org/UserControls"
+        Title="Test_UIScriptCommands" Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!--<WrapPanel Orientation="Horizontal" Margin="0,5" >
+            <Button x:Name="gotoDirectory" Content="Goto" ToolTip="Using ExplorerGoto" Click="ButtonClickHandler" />
+            <Button x:Name="expandDirectory" Content="Expand" ToolTip="Using DirectoryTreeToggleNode" Click="ButtonClickHandler" />
+            <Button x:Name="collapseDirectory" Content="Collapse" ToolTip="Using DirectoryTreeToggleNode" Click="ButtonClickHandler" />
+            <Button x:Name="assignCurrentDirectory" Content="GetCurrent" ToolTip="Using ExplorerAssignCurrentDirectory" Click="ButtonClickHandler" />
+            <TextBlock Text="Directory:" />
+            <TextBox x:Name="tbDirectory" Text="C:\" Width="100" />
+        </WrapPanel>-->
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Directory:" />
+                <TextBox x:Name="tbDirectory" Text="C:\" Width="200" />
+            </StackPanel>
+            <DockPanel>                
+                <Button x:Name="execute" Content="Run" Click="execute_Click" DockPanel.Dock="Right" />
+                <ComboBox x:Name="cbCommand">
+                    <ComboBoxItem x:Name="goto">UIScriptCommands.ExplorerGoto</ComboBoxItem>
+                    <ComboBoxItem x:Name="expand" >UIScriptCommands.DirectoryTreeToggleNode (Expand)</ComboBoxItem>
+                    <ComboBoxItem x:Name="collapse">UIScriptCommands.DirectoryTreeToggleNode (Collapse)</ComboBoxItem>
+                    <ComboBoxItem x:Name="assignCurrent">UIScriptCommands.ExplorerAssignCurrentDirectory</ComboBoxItem>
+                    <ComboBoxItem x:Name="assignScriptParam">UIScriptCommands.ExplorerAssignScriptParameters</ComboBoxItem>
+                    <ComboBoxItem x:Name="setParameters">UIScriptCommands.ExplorerSet/GetParameter</ComboBoxItem>
+                </ComboBox>
+            </DockPanel>          
+        </StackPanel>
+
+        <uc:Explorer x:Name="explorer" Grid.Row="1" Mode="Normal" />
+    </Grid>
+</Window>

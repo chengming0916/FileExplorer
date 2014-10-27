@@ -62,6 +62,21 @@ namespace FileExplorer.Script
                 };
             }, null, ParameterDicConverters.ConvertParameterOnly);
 
+        /// <summary>
+        /// Convert ConvertUIParameter +  parameters specified in viewModelProperties
+        /// </summary>
+        /// <param name="viewModelProperties"></param>
+        /// <returns></returns>
+        public static IParameterDicConverter ConvertVMParameter(params Tuple<string, object>[] viewModelProperties)
+        {
+            return new ParameterDicConverterBase((p, p2) =>
+            {
+                var retVal = new ParameterDic();
+                foreach (var pp in viewModelProperties)
+                    retVal.Add(pp.Item1, pp.Item2);
+                return retVal;
+            }, null, ParameterDicConverters.ConvertUIParameter);
+        }
 
         public static IParameterDicConverter FromParameterDic(ParameterDic pd, IParameterDicConverter baseConverter = null)
         {

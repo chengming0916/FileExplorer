@@ -14,6 +14,14 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, broadcast RootChangedEvent to EventAggregator, indicate root items changed.
+        /// </summary>
+        /// <param name="eventsVariable"></param>
+        /// <param name="changeType"></param>
+        /// <param name="directoryVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand NotifyRootChanged(string eventsVariable, ChangeType changeType, 
             string directoryVariable,IScriptCommand nextCommand = null)
         {

@@ -47,6 +47,12 @@ namespace FileExplorer.WPF.ViewModels
 
         public async Task InitializeModelCreatedAsync(IExplorerViewModel evm)
         {
+
+            if (Events != null)
+                evm.Events = Events;
+            if (WindowManager != null)
+                evm.WindowManager = WindowManager;
+
             if (OnModelCreated != null)
                 await evm.Commands.ExecuteAsync(
                     new IScriptCommand[] {

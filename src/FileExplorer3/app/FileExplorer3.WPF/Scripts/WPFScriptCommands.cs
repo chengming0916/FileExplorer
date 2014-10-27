@@ -1139,7 +1139,7 @@ namespace FileExplorer.Script
             _initializer.WindowManager.ShowWindow(evm, _context, _settings);
             if (_settings != null && _settings.ContainsKey("StartupDirectory") &&
                 _settings["StartupDirectory"] is IEntryModel)
-                return UIScriptCommands.ExplorerGoTo(_settings["StartupDirectory"] as IEntryModel);
+                return UIScriptCommands.ExplorerGoToValue(_settings["StartupDirectory"] as IEntryModel);
             return ResultCommand.NoError;
         }
     }

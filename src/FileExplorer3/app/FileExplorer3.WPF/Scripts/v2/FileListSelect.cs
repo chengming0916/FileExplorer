@@ -12,6 +12,13 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {
+        /// <summary>
+        /// Serializable, select the specified entries (IEnumerable or IEntryModel[]) in the filelist.
+        /// </summary>
+        /// <param name="fileListVariable"></param>
+        /// <param name="entriesVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand FileListSelect(string fileListVariable = "{FileList}", string entriesVariable = "{Entries}",
             IScriptCommand nextCommand = null)
         {
@@ -23,6 +30,14 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Serializable, refresh and select the specified entries (IEnumerable or IEntryModel[]) in the filelist.
+        /// </summary>
+        /// <param name="fileListVariable"></param>
+        /// <param name="entriesVariable"></param>
+        /// <param name="force"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand FileListRefreshThenSelect(string fileListVariable = "{FileList}",
             string entriesVariable = "{Entries}", bool force = false,
             IScriptCommand nextCommand = null)
@@ -31,6 +46,12 @@ namespace FileExplorer.Script
                 FileListSelect(fileListVariable, entriesVariable, nextCommand));
         }
 
+        /// <summary>
+        /// Serializable, select the specified entries (IEnumerable or IEntryModel[]) in the filelist.
+        /// </summary>
+        /// <param name="entriesVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand FileListSelect(string entriesVariable = "{Entries}",
             IScriptCommand nextCommand = null)
         {

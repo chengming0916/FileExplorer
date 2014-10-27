@@ -108,9 +108,6 @@
     <Compile Include="Defines\Cofe3\Defines\Structs\VMParameterDic.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Defines\Cofe3\Implements\ParameterDicConverters.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Defines\Cofe3\Utils\W32ConverterUtils.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -802,6 +799,7 @@
     <EmbeddedResource Include="Themes\Resources\file.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Defines\Cofe3\Implements\" />
     <Folder Include="Defines\Script\" />
   </ItemGroup>
   <ItemGroup>

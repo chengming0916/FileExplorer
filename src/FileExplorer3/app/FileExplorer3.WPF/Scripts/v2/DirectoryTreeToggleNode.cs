@@ -14,8 +14,12 @@ namespace FileExplorer.Script
     public static partial class UIScriptCommands
     {
         /// <summary>
-        /// Serializable, toggle a node specified in an variable in [DirectoryTree] to expand or collapse.
+        /// Serializable, toggle a node specified in an variable in [DirectoryTree] to expand or collapse, recrusively.
         /// </summary>
+        /// <example>
+        ///   cmd = CoreScriptCommands.ParsePath("{Profiles}", tbDirectory.Text, "{Directory}",
+        ///      UIScriptCommands.DirectoryTreeToggleNode("{DirectoryTree}", "{Directory}", DirectoryTreeToggleMode.Collapse)));
+        ///</example>
         /// <param name="explorerVariable"></param>
         /// <param name="directoryEntryVariable"></param>
         /// <param name="toggleMode"></param>

@@ -23,7 +23,7 @@ using System.Windows.Markup;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("1a768716-4371-4213-8764-1e87fb84a523")]
 
-[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.WPF.UserControls")]
+//[assembly: XmlnsDefinition("http://www.quickzip.org/UserControls", "FileExplorer.WPF.UserControls")]
 
 // Version information for an assembly consists of the following four values:
 //

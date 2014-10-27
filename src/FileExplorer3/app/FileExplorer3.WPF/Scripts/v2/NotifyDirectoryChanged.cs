@@ -14,6 +14,13 @@ namespace FileExplorer.Script
 {
     public static partial class UIScriptCommands
     {        
+        /// <summary>
+        /// Serializable, broadcast DirectoryChangedEvent to EventAggregator, indicate file system changed. 
+        /// </summary>
+        /// <param name="eventsVariable"></param>
+        /// <param name="directoryVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand NotifyDirectoryChanged(string eventsVariable, 
             string directoryVariable,IScriptCommand nextCommand = null)
         {
@@ -25,6 +32,12 @@ namespace FileExplorer.Script
             };
         }
 
+        /// <summary>
+        /// Serializable, broadcast DirectoryChangedEvent to EventAggregator, indicate file system changed.
+        /// </summary>
+        /// <param name="directoryVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand NotifyDirectoryChanged(
             string directoryVariable = "{Directory}", IScriptCommand nextCommand = null)
         {

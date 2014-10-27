@@ -102,12 +102,20 @@ namespace FileExplorer
             return "{" + prefix + new Random().Next().ToString() + "}";
         }
 
-        public static ParameterDic Combine(ParameterDic orginalDic, ParameterDic newDic)
+        private static ParameterDic combine(ParameterDic orginalDic, ParameterDic newDic)
         {
             ParameterDic retDic = orginalDic.Clone();
             if (newDic != null)
                 foreach (var v in newDic.VariableNames)
                     retDic.SetValue(v, newDic.GetValue(v), true);
+            return retDic;
+        }
+
+        public static ParameterDic Combine(params ParameterDic[] dics)
+        {
+            ParameterDic retDic = dics.First();
+            foreach (var d in dics.Skip(1))
+                retDic = combine(retDic, d);
             return retDic;
         }
 
