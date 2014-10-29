@@ -67,6 +67,7 @@
     <Compile Include="Implements\NullParameterDicConverter.cs" />
     <Compile Include="Implements\ParameterDicConverter.cs" />
     <Compile Include="Implements\ParameterDicConverterBase.cs" />
+    <Compile Include="Implements\ParameterDicConvertRule\AddVariable.cs" />
     <Compile Include="Implements\ParameterDicConvertRule\AddVariableFromGetter.cs" />
     <Compile Include="Implements\ParameterDicConvertRule\AddVariableFromParameterDIc.cs" />
     <Compile Include="Implements\ParameterDicConvertRule\ConvertParameterToVariable.cs" />
