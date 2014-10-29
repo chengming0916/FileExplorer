@@ -6,6 +6,7 @@ using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,9 @@ namespace Test_UIScriptCommands
             IEventAggregator _events = new EventAggregator();
             IWindowManager _windowManager = new AppWindowManager();
             IProfile _exProfile = new FileSystemInfoExProfile(_events, _windowManager);
-            IProfile[] _profiles = new IProfile[] { _exProfile };
+            IProfile _ioProfile = new FileSystemInfoProfile(_events);
+
+            IProfile[] _profiles = new IProfile[] { _exProfile, _ioProfile };
             IEntryModel[] _rootDirs = new IEntryModel[] { AsyncUtils.RunSync(() => _exProfile.ParseAsync("")) };
 
             explorer.WindowManager = _windowManager;
@@ -73,98 +76,43 @@ namespace Test_UIScriptCommands
                          { "OnViewAttached", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
                     }
                 };
-            
+
+            cbCommand.ItemsSource = ScriptCommandDictionary.CommandList;
+        }
+
+        ScriptCommandSerializer _serializer = new ScriptCommandSerializer(
+            typeof(Int32[]), //Needed by ArithmeticCommand.
+             typeof(BaseScriptCommands),
+             typeof(FileExplorer3Commands),
+             typeof(FileExplorer3IOCommands),
+             typeof(FileExplorer3WPFCommands));
+
+        private void cbCommand_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IScriptCommand command = ScriptCommandDictionary.Dictionary[cbCommand.SelectedValue as string];
+
+            using (var sr = new StreamReader(_serializer.SerializeScriptCommand(command)))
+            {
+                tbCommand.Text = sr.ReadToEnd();
+            }
         }
 
         private void execute_Click(object sender, RoutedEventArgs e)
         {
-            IScriptCommand cmd = null;
-            ParameterDic pd1 = new ParameterDic();  
-            var selectedItem = cbCommand.SelectedItem as ComboBoxItem;
+            MemoryStream ms = new MemoryStream();
+            var sw = new StreamWriter(ms);
+            sw.Write(tbCommand.Text);
+            sw.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
 
-            if (selectedItem != null)
-                switch (selectedItem.Name)
-            {
-                case "goto":
-                   cmd =
-                        CoreScriptCommands.ParsePath("{Profiles}", tbDirectory.Text, "{Directory}",
-                            UIScriptCommands.ExplorerGoTo("{Directory}"));
-                    break;
-                case "expand":
-                    cmd = 
-                       CoreScriptCommands.ParsePath("{Profiles}", tbDirectory.Text, "{Directory}",
-                            UIScriptCommands.DirectoryTreeToggleExpand("{Directory}"));
-                           //UIScriptCommands.DirectoryTreeToggleNode("{DirectoryTree}", "{Directory}", DirectoryTreeToggleMode.Expand));
-                    break;
-
-                case "collapse":
-                    cmd = 
-                        CoreScriptCommands.ParsePath("{Profiles}", tbDirectory.Text, "{Directory}",
-                            UIScriptCommands.DirectoryTreeToggleCollapse("{Directory}"));
-                           //UIScriptCommands.DirectoryTreeToggleNode("{DirectoryTree}", "{Directory}", DirectoryTreeToggleMode.Collapse));
-                    break;
-                case "assignCurrent":
-
-                    cmd = UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}",                        
-                        ScriptCommands.SetProperty("{tbDirectory}", (TextBlock tb) => tb.Text, "{CurrentDirectory.FullPath}"));
-                    pd1.SetValue("{tbDirectory}", tbDirectory);                                   
-                    break;
-                case "assignScriptParam":
-                    explorer.ViewModel.Commands.Execute(
-                        ScriptCommands.Assign("{LastEdit}", DateTime.Now, false,
-                          ScriptCommands.Assign("{Today}", DateTime.Now.DayOfWeek, false,
-                          UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", "{LastEdit},{Today}"))));
-                    cmd = UIScriptCommands.MessageBoxOK("ExplorerAssignScriptParameters", "LastEdit = {LastEdit}, Today = {Today}");
-                    break;
-                    case "setParameters":
-                        cmd =  //Warning, Parameter.Width/Height is binded in AppWindowManager.                            
-                            UIScriptCommands.ExplorerGetParameter(ExplorerParameterType.ExplorerWidth, "{Width}", 
-                            UIScriptCommands.ExplorerGetParameter(ExplorerParameterType.ExplorerHeight, "{Height}", 
-                            ScriptCommands.AddValue("{Width}", -150, "{Width}",
-                            ScriptCommands.AddValue("{Height}", -150, "{Height}",
-                               UIScriptCommands.MessageBoxOK("SetParameter", "Creating new window size {Width} x {Height}", 
-                                UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{Events}", 
-                                    "{TestExplorer}", 
-                                    UIScriptCommands.ExplorerSetParameter("{TestExplorer}", ExplorerParameterType.ExplorerWidth, "{Width}", 
-                                    UIScriptCommands.ExplorerSetParameter("{TestExplorer}", ExplorerParameterType.ExplorerHeight, "{Height}"))))))));
-                              
-                            ////UIScriptCommands.ExplorerGetParameter(ExplorerParameterType.ColumnFilters, "{Width}", 
-                            ////UIScriptCommands.ExplorerGetParameter(ExplorerParameterType.ExplorerHeight, "{Height}", 
-                            ////ScriptCommands.AddValue("{Width}", 50, "{Width}",
-                            ////ScriptCommands.AddValue("{Height}", 50, "{Height}",
-                            //ScriptCommands.Assign("{ColumnFilters}", IOInitializeHelpers.FileList_ColumList_For_DiskBased_Items, false, 
-                            //ScriptCommands.Assign("{ColumnList}", IOInitializeHelpers.FileList_ColumList_For_DiskBased_Items, false, 
-                            //UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.ColumnFilters, "{ColumnFilters}", 
-                            //UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.ColumnList, "{ColumnList}"))));
-                        break;
-                    case "newwindow":
-                        cmd =  //Warning, Parameter.Width/Height is binded in AppWindowManager.                                         
-                            ScriptCommands.Assign("{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default, true,
-                            ScriptCommands.Assign("{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(), true, 
-                            UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{Events}",
-                                "{TestExplorer}")));
-                              
-                        break;
-                    case "pick":
-                        cmd = 
-                        ScriptCommands.Assign("{OnModelCreated_Pick}", 
-                            ScriptCommands.RunSequence(    
-                                ScriptCommands.Assign("{Filter}", "Text File|*.txt", false, 
-                                    UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.FilterString, "{Filter}")), 
-                                IOInitializeHelpers.Explorer_Initialize_Default), true,
-                        UIScriptCommands.ExplorerPick(ExplorerMode.FileOpen, "{OnModelCreated_Pick}", "{OnViewAttached}", "{WindowManager}", "{Events}",
-                        "{SelectedEntries}", "{SelectedPaths}", 
-                            UIScriptCommands.MessageBoxOK("ExplorerPick", "{SelectedPaths[0]}")));
-                        break;
-                    case "select":
-                        cmd = //Select All.
-                            UIScriptCommands.FileListAssignAll("{CurrentFileList}",                               
-                                UIScriptCommands.FileListSelect("{CurrentFileList}", ResultCommand.NoError));
-                        break;
-            }
-
+            IScriptCommand cmd = _serializer.DeserializeScriptCommand(ms);
+            ParameterDic pd1 = new ParameterDic();
+            pd1.SetValue("{tbDirectory}", tbDirectory);
+            pd1.SetValue("{Now}", DateTime.Now);
             if (cmd != null)
-                 explorer.ViewModel.Commands.ExecuteAsync(cmd, pd1);
+                explorer.ViewModel.Commands.ExecuteAsync(cmd, pd1);            
         }
+
+        
     }
 }
