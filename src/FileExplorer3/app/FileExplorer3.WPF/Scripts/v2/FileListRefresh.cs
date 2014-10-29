@@ -30,7 +30,7 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
-        /// Serializable, refresh file list.
+        /// Serializable, refresh the file list.
         /// </summary>
         /// <param name="force"></param>
         /// <param name="nextCommand"></param>

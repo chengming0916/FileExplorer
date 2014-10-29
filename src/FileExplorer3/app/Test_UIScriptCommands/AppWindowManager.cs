@@ -25,8 +25,7 @@ namespace Test_UIScriptCommands
             Window window = base.EnsureWindow(model, view, isDialog);
 
             switch (model.GetType().ToString())
-            {
-                
+            {                
                 case "FileExplorer.WPF.ViewModels.ExplorerViewModel":
                     window.SizeToContent = SizeToContent.Manual;
                     IExplorerViewModel evm = model as IExplorerViewModel;

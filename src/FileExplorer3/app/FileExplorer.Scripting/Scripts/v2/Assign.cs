@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace FileExplorer.Script
 {
@@ -98,6 +99,7 @@ namespace FileExplorer.Script
         /// <summary>
         /// Func of value, if this is set, Value is overrided by result of this func at runtime, Default = null.
         /// </summary>
+        [XmlIgnore]
         public Func<object> ValueFunc { get; set; }
 
         /// <summary>

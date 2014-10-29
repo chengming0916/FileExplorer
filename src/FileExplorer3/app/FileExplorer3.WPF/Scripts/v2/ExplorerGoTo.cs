@@ -91,7 +91,7 @@ namespace FileExplorer.Script
         }
     }
 
-    class ExplorerGoTo : ScriptCommandBase
+    public class ExplorerGoTo : ScriptCommandBase
     {
         /// <summary>
         /// Point to Events (IEventAggregator), this is used if Explorer is not found. Default = "{Events}".

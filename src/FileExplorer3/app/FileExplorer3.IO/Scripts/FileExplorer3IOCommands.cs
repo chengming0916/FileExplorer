@@ -7,8 +7,12 @@ using System.Xml.Serialization;
 
 namespace FileExplorer.Script
 {
-    [XmlInclude(typeof(DiskTransfer))]  
+    [XmlInclude(typeof(DiskClipboard))]
     [XmlInclude(typeof(DiskRun))]
+    [XmlInclude(typeof(DiskTransfer))]
+    [XmlInclude(typeof(IOExplorerDefault))]
+    [XmlInclude(typeof(IOExplorerDefaultToolbarCommands))]
+    [XmlInclude(typeof(SzsDiskTransfer))]      
     public class FileExplorer3IOCommands
     {
 

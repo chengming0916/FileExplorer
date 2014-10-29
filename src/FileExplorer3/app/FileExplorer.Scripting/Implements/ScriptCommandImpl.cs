@@ -66,7 +66,7 @@ namespace FileExplorer.Script
         public string ErrorMessage
         {
             get { return _exception == null ? "" : _exception.Message; }
-            set { _exception = new Exception(value); }
+            set { if (!String.IsNullOrEmpty(value)) _exception = new Exception(value); }
         }
         
     }

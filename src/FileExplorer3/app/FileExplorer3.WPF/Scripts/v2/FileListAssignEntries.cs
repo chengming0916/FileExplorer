@@ -38,6 +38,12 @@ namespace FileExplorer.Script
             return FileListAssignEntries("{FileList}", FileListAssignType.Selected, destinationVariable, nextCommand);
         }
 
+        /// <summary>
+        /// Serializable, assign all models (IEntryModel[]) to a variable.
+        /// </summary>
+        /// <param name="destinationVariable"></param>
+        /// <param name="nextCommand"></param>
+        /// <returns></returns>
         public static IScriptCommand FileListAssignAll(
             string destinationVariable = "{All}", IScriptCommand nextCommand = null)
         {

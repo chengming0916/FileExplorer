@@ -76,7 +76,7 @@ namespace FileExplorer.Script
             IScriptCommand otherwiseCommand = null)
         {
             return IfEquals<T>(variable, value, otherwiseCommand, trueCommand);
-        }       
+        }
 
         public static IScriptCommand IfAssigned(string variable = "{variable}", IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
         {
@@ -177,7 +177,21 @@ namespace FileExplorer.Script
         }
     }
 
-    public enum ComparsionOperator { Equals, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual }
+    public enum ComparsionOperator
+    {
+        Equals,
+        GreaterThan,
+        GreaterThanOrEqual,
+        LessThan,
+        LessThanOrEqual,
+        /// <summary>
+        /// Convert both value to string (.ToString()) and compare if Variable1.ToString().StartWith(Variable2.ToString())
+        /// </summary>
+        StartWith,
+        EndsWith,
+        StartWithIgnoreCase,
+        EndsWithIgnoreCase
+    }
     public class IfValue : ScriptCommandBase
     {
         public ScriptCommandBase OtherwiseCommand { get; set; }
@@ -211,6 +225,17 @@ namespace FileExplorer.Script
                         case ComparsionOperator.GreaterThanOrEqual: expression = Expression.GreaterThanOrEqual(left, right); break;
                         case ComparsionOperator.LessThan: expression = Expression.LessThan(left, right); break;
                         case ComparsionOperator.LessThanOrEqual: expression = Expression.LessThanOrEqual(left, right); break;
+                        case ComparsionOperator.StartWith:
+                        case ComparsionOperator.StartWithIgnoreCase:
+                            return value1.ToString().StartsWith(value2.ToString(),
+                                Operator == ComparsionOperator.StartWith ? StringComparison.CurrentCulture :
+                                StringComparison.CurrentCultureIgnoreCase);
+
+                        case ComparsionOperator.EndsWith:
+                        case ComparsionOperator.EndsWithIgnoreCase:
+                            return value1.ToString().EndsWith(value2.ToString(),
+                                Operator == ComparsionOperator.EndsWith ? StringComparison.CurrentCulture :
+                                StringComparison.CurrentCultureIgnoreCase);
                         default:
                             throw new NotSupportedException(Operator.ToString());
                     }
