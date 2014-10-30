@@ -57,6 +57,7 @@ namespace Test_UIScriptCommands
                         ScriptCommands.Assign("{Filter}", "Text File|*.txt", false, 
                             UIScriptCommands.ExplorerSetParameter(ExplorerParameterType.FilterString, "{Filter}")), 
                                 IOInitializeHelpers.Explorer_Initialize_Default), true,
+                        //Also See IOScriptCommands.FilePick
                         UIScriptCommands.ExplorerPick(ExplorerMode.FileOpen, "{OnModelCreated_Pick}", 
                             "{OnViewAttached}", "{WindowManager}", "{Events}", "{SelectedEntries}", "{SelectedPaths}", 
                             UIScriptCommands.MessageBoxOK("ExplorerPick", "{SelectedPaths[0]}"))) },
