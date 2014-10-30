@@ -331,6 +331,7 @@ namespace FileExplorer.Script
         internal ShowProgress(IWindowManager wm, string header, IScriptCommand nextCommand, bool handleProgress)
             : base("ShowProgress", nextCommand)
         {
+            ContinueOnCaptureContext = true;
             _wm = wm;
             _header = header;
             _handleProgress = handleProgress;
@@ -372,7 +373,7 @@ namespace FileExplorer.Script
 
             try
             {
-                await ScriptRunner.RunScriptAsync(pm, _nextCommand);
+                await ScriptRunner.RunScriptAsync(pm, _nextCommand).ConfigureAwait(true);
             }
             catch (Exception ex)
             {

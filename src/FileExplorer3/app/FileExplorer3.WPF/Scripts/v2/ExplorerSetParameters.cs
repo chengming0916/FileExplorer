@@ -121,6 +121,7 @@ namespace FileExplorer.Script
         public ExplorerParam()
             : base("ExplorerSetParameters")
         {
+            ContinueOnCaptureContext = true;
             ExplorerKey = "{Explorer}";
             ParameterType = ExplorerParameterType.EnableDrag;
             ValueKey = "true";
@@ -211,7 +212,7 @@ namespace FileExplorer.Script
 
         private async Task<IScriptCommand> setParameterAsync(ParameterDic pm, IExplorerViewModel evm)
         {
-            object value = ValueKey is string ? pm.GetValue<object>(ValueKey as string) : ValueKey;
+            object value = ValueKey is string && (ValueKey as string).StartsWith("{") ? pm.GetValue<object>(ValueKey as string) : ValueKey;
 
             switch (ParameterType)
             {
