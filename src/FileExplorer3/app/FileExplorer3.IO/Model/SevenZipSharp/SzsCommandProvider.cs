@@ -194,14 +194,22 @@ namespace FileExplorer.Models.SevenZipSharp
 
                         string firstArchiveName = path.ChangeExtension(firstEntry.Name, ".zip");
                         string firstArchivePath = path.Combine(firstEntry.Parent.FullPath, firstArchiveName);
-
-
+                        
                         subCommands.Add(new CommandModel(
-                          WPFScriptCommands.SaveFilePicker(_initializer, "Zip archives (.zip)|*.zip|7z archives (.7z)|*.7z", firstArchivePath,
-                              pmi => WPFScriptCommands.ShowProgress("Compress",
-                                  IOScriptCommands.ParseOrCreateArchive(pmi.Profile as IDiskProfile, pmi.FileName,                               
-                                  pm => IOScriptCommands.DiskTransfer(appliedModels, pm, false, true))), 
-                                        ResultCommand.NoError)) //ShowFilePicker.Cancel
+                            ScriptCommands.Assign(new Dictionary<string, object>()
+                        {                   
+                          { "{Profile}", firstProfile },
+                          { "{Header}", "Compress" },                           
+                          {"{CompressFiles}", appliedModels }, 
+                          {"{StartupPath}", firstEntry.Parent.FullPath },
+                          {"{FileName}", firstArchiveName }
+                        }, false, 
+                                IOScriptCommands.FileSave("Zip archives (.zip)|*.zip|7z archives (.7z)|*.7z",  "{ArchivePath}",
+                                    WPFScriptCommands.ShowProgress("Compress", 
+                                    IOScriptCommands.DiskParseOrCreateArchive("{Profile}", "{ArchivePath}", "{Archive}",                                     
+                                        IOScriptCommands.SzsDiskTransfer("{CompressFiles}", "{Archive}", false))), 
+                                    UIScriptCommands.MessageBoxOK("Compress", "Compress is canceled."))))
+
                         {
                             Header = "Compress to ...",
                             IsEnabled = true,

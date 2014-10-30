@@ -82,6 +82,26 @@ namespace FileExplorer.Script
                         "{Events}", null, selectionPathsVariable, nextCommand, cancelCommand));
         }
 
+
+        public static IScriptCommand FileSave(
+           string filterString = "All files (*.*)|*.*",
+           string selectionPathsVariable = "{Selection}",
+           IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
+        {
+            return ScriptCommands.Assign(new Dictionary<string, object>()
+                {                                     
+                    {"{EnableDrag}", false },
+                    {"{EnableDrop}", false },
+                    {"{FilterString}", filterString },
+                    {"{EnableMultiSelect}", false },
+                    {"{FileListNewWindowCommand}", NullScriptCommand.Instance },
+                    {"{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default }, 
+                    {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
+                }, false,
+                  UIScriptCommands.ExplorerPick(ExplorerMode.FileSave, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
+                        "{Events}", null, selectionPathsVariable, nextCommand, cancelCommand));
+        }
+
         public static IScriptCommand DirectoryPick(IProfile[] profiles, IEntryModel[] rootDirectories,
             string selectionVariable = "{Selection}", string selectionPathVariable = "{SelectionPaths}",
             IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
