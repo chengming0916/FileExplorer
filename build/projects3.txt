@@ -10,3 +10,4 @@ Test_NonShellDragDemo
 Test_ShellDragDemo
 Test_TabDragDemo
 Test_InputProcessor
+Test_UIScriptCommands

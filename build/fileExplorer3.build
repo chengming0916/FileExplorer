@@ -78,6 +78,10 @@
     <property name="msbuild.csproj.path" value="${src.test_inputprocessor.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
+
+    <property name="msbuild.csproj.path" value="${src.test_uiscriptcommands.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
   </target>
 
   <target name="build-revision">
@@ -236,6 +240,15 @@
       </fileset>
     </copy>
 
+    <echo message="copy.source: Test_UIScriptCommands -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\Test_UIScriptCommands">
+      <fileset basedir="${src.path}\app\Test_UIScriptCommands">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+
     <copy todir="${dest.path}\src\FileExplorer3\app\.nuget">
       <fileset basedir="${src.path}\app\.nuget">
         <include name="*" />
@@ -273,6 +286,8 @@
         <include name="${dest.test_tabdragdemo.pdb}" />
         <include name="${dest.test_inputprocessor.exe}" />
         <include name="${dest.test_inputprocessor.pdb}" />
+        <include name="${dest.test_uiscriptcommands.exe}" />
+        <include name="${dest.test_uiscriptcommands.pdb}" />
         <include name="*.dll" />
       </fileset>
     </copy>
