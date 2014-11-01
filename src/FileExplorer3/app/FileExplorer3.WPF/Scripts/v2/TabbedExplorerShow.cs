@@ -26,7 +26,7 @@ namespace FileExplorer.Script
         public static IScriptCommand ExplorerNewTabWindow(
             string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
             string onTabExplorerCreatedVariable = "{OnTabExplorerCreated}", string onTabExplorerAttachedVariable = "{OnTabExplorerAttached}",
-            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{GlobalEvents}",
             string destinationVariable = "{TabbedExplorer}", IScriptCommand nextCommand = null)
         {
             return new TabbedExplorerShow()
@@ -72,7 +72,7 @@ namespace FileExplorer.Script
         public string WindowManagerKey { get; set; }
 
         /// <summary>
-        /// Global Event Aggregator, Default={Events}
+        /// Global Event Aggregator, Default={GlobalEvents}
         /// </summary>
         public string EventAggregatorKey { get; set; }
 
@@ -88,7 +88,7 @@ namespace FileExplorer.Script
             : base("TabbedExplorerShow")
         {
             WindowManagerKey = "{WindowManager}";
-            EventAggregatorKey = "{Events}";
+            EventAggregatorKey = "{GlobalEvents}";
             OnModelCreatedKey = "{OnModelCreated}";
             OnTabExplorerCreatedKey = "{OnTabExplorerCreated}";
             OnViewAttachedKey = "{OnViewAttached}";

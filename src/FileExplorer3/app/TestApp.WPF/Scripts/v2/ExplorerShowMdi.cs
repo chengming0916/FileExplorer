@@ -40,11 +40,11 @@ namespace TestApp
                         UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}", "{MdiContainer},{RootDirectories}"))}, 
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }                    
                 }, false,
-                  TestAppCommands.ExplorerNewMdiWindow("{MdiContainer}", "{WindowManager}", "{Events}", "{Explorer}", nextCommand));                  
+                  TestAppCommands.ExplorerNewMdiWindow("{MdiContainer}", "{WindowManager}", "{GlobalEvents}", "{Explorer}", nextCommand));                  
         }
 
         public static IScriptCommand ExplorerNewMdiWindow(string mdiContainerVariable = "{MdiContainer}",
-            string windowManagerVariable = "{WindowManager}", string eventsVariable = "{Events}", string explorerVariable = "{Explorer}",
+            string windowManagerVariable = "{WindowManager}", string eventsVariable = "{GlobalEvents}", string explorerVariable = "{Explorer}",
             IScriptCommand nextCommand = null)
         {
             return

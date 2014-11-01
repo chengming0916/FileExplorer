@@ -42,14 +42,14 @@ namespace Test_UIScriptCommands
                         ScriptCommands.AddValue("{Width}", -150, "{Width}",
                             ScriptCommands.AddValue("{Height}", -150, "{Height}",
                                 UIScriptCommands.MessageBoxOK("SetParameter", "Creating new window size {Width} x {Height}", 
-                                    UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{Events}", "{TestExplorer}", 
+                                    UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{GlobalEvents}", "{TestExplorer}", 
                                         UIScriptCommands.ExplorerSetParameter("{TestExplorer}", ExplorerParameterType.ExplorerWidth, "{Width}", 
                                             UIScriptCommands.ExplorerSetParameter("{TestExplorer}", ExplorerParameterType.ExplorerHeight, "{Height}")))))))) },
 
              {"UIScriptCommands.ExplorerNewWindow", 
                 ScriptCommands.Assign("{OnModelCreated}", IOInitializeHelpers.Explorer_Initialize_Default, true,
                     ScriptCommands.Assign("{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(), true, 
-                        UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{Events}", "{TestExplorer}"))) },
+                        UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}", "{GlobalEvents}", "{TestExplorer}"))) },
              
              {"UIScriptCommands.ExplorerPick", 
                 ScriptCommands.Assign("{OnModelCreated_Pick}", 
@@ -59,7 +59,7 @@ namespace Test_UIScriptCommands
                                 IOInitializeHelpers.Explorer_Initialize_Default), true,
                         //Also See IOScriptCommands.FilePick
                         UIScriptCommands.ExplorerPick(ExplorerMode.FileOpen, "{OnModelCreated_Pick}", 
-                            "{OnViewAttached}", "{WindowManager}", "{Events}", "{SelectedEntries}", "{SelectedPaths}", 
+                            "{OnViewAttached}", "{WindowManager}", "{GlobalEvents}", "{SelectedEntries}", "{SelectedPaths}", 
                             UIScriptCommands.MessageBoxOK("ExplorerPick", "{SelectedPaths[0]}"))) },
 
              {"UIScriptCommands.FileListSelect", 
@@ -99,7 +99,7 @@ namespace Test_UIScriptCommands
                 
              {"UIScriptCommands.ExplorerNewTabWindow", 
                 CoreScriptCommands.ParsePath("{Profiles}", "{tbDirectory.Text}", "{newRoot}", 
-                    UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", null, null, "{WindowManager}", "{Events}", "{TabbedExplorer}", 
+                    UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", null, null, "{WindowManager}", "{GlobalEvents}", "{TabbedExplorer}", 
                         UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{newRoot}", "{Explorer}", null ))) } 
                     
         };

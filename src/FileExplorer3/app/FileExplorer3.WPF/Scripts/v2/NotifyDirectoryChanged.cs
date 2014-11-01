@@ -33,7 +33,7 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
-        /// Serializable, broadcast DirectoryChangedEvent to EventAggregator, indicate file system changed.
+        /// Serializable, broadcast DirectoryChangedEvent to EventAggregator {GlobalEvents}, indicate file system changed.
         /// </summary>
         /// <param name="directoryVariable"></param>
         /// <param name="nextCommand"></param>

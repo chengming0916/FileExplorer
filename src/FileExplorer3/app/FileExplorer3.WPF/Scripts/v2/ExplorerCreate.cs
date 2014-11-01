@@ -25,7 +25,7 @@ namespace FileExplorer.Script
         /// <returns></returns>
         public static IScriptCommand ExplorerCreate(ExplorerMode explorerMode,
             string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{GlobalEvents}",
             string destinationVariable = "{Explorer}", IScriptCommand nextCommand = null
             )
         {
@@ -66,7 +66,7 @@ namespace FileExplorer.Script
         public string WindowManagerKey { get; set; }
 
         /// <summary>
-        /// Global Event Aggregator, Default={Events}
+        /// Global Event Aggregator, Default={GlobalEvents}
         /// </summary>
         public string EventAggregatorKey { get; set; }
 
@@ -81,7 +81,7 @@ namespace FileExplorer.Script
             : base("ExplorerCreate")
         {
             WindowManagerKey = "{WindowManager}";
-            EventAggregatorKey = "{Events}";
+            EventAggregatorKey = "{GlobalEvents}";
             ExplorerMode = Script.ExplorerMode.Normal;
             OnModelCreatedKey = "{OnModelCreated}";
             OnViewAttachedKey = "{OnViewAttached}";

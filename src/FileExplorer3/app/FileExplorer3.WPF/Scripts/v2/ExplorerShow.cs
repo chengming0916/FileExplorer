@@ -24,7 +24,7 @@ namespace FileExplorer.Script
         /// <returns></returns>
         public static IScriptCommand ExplorerNewWindow(
            string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{GlobalEvents}",
           string explorerVariable = "{Explorer}", IScriptCommand nextCommand = null
           )
         {
@@ -66,7 +66,7 @@ namespace FileExplorer.Script
         /// <param name="cancelCommand"></param>
         /// <returns></returns>
         public static IScriptCommand ExplorerPick(ExplorerMode mode = ExplorerMode.FileSave, string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+            string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{GlobalEvents}",
             string selectionVariable = null,
             string selectionPathsVariable = "{SelectionPaths}",
             IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)

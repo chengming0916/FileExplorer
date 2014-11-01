@@ -48,7 +48,7 @@ namespace TestApp
 
             _events.Subscribe(this);
             _profile = new FileSystemInfoProfile(_events);
-            _profileEx = new FileSystemInfoExProfile(events, windowManager, new FileExplorer.Models.SevenZipSharp.SzsProfile());
+            _profileEx = new FileSystemInfoExProfile(_events, _windowManager, new FileExplorer.Models.SevenZipSharp.SzsProfile(_events));
 
             Func<string> loginSkyDrive = () =>
             {
@@ -198,6 +198,7 @@ namespace TestApp
             ScriptRunner.RunScriptAsync(
                  new ParameterDic() { 
                     { "WindowManager", _windowManager }, 
+                    { "GlobalEvents", _events },
                     { "Header", "OpenFile(s)" },                    
                     { "StartupPath", OpenPath } 
                },
@@ -228,6 +229,7 @@ namespace TestApp
             ScriptRunner.RunScriptAsync(
                new ParameterDic() { 
                     { "WindowManager", _windowManager }, 
+                    { "GlobalEvents", _events }, 
                     { "Header", "SaveFile" }, 
                     { "FileName", "OpenFile.txt"},
                     { "StartupPath", OpenPath } 
@@ -286,6 +288,7 @@ namespace TestApp
                 "{OutputDirectory}",
                 new ParameterDic() { 
                     { "WindowManager", _windowManager }, 
+                     { "GlobalEvents", _events },
                     { "Header", "DirectoryPick" } 
                 },
 
