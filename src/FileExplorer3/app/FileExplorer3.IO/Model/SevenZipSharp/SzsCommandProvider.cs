@@ -198,7 +198,7 @@ namespace FileExplorer.Models.SevenZipSharp
                         subCommands.Add(new CommandModel(
                             ScriptCommands.Assign(new Dictionary<string, object>()
                         {                   
-                          { "{Profile}", firstProfile },
+                          { "{Profile}", firstEntry.Parent.Profile },
                           { "{Header}", "Compress" },                           
                           {"{CompressFiles}", appliedModels }, 
                           {"{StartupPath}", firstEntry.Parent.FullPath },
