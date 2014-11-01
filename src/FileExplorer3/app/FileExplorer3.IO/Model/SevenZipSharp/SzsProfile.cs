@@ -23,8 +23,8 @@ namespace FileExplorer.Models.SevenZipSharp
 
         #region Constructors
 
-        public SzsProfile()
-            : base(null)
+        public SzsProfile(IEventAggregator events)
+            : base(events)
         {            
             DragDrop = new FileBasedDragDropHandler(this, em => !(em is SzsRootModel));
             MetadataProvider = new SzsMetadataProvider();

@@ -21,7 +21,7 @@ namespace FileExplorer.Script
 
                 }, false,
                   UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
-                        "{Events}", explorerVariable, nextCommand));
+                        "{GlobalEvents}", explorerVariable, nextCommand));
         }
 
         public static IScriptCommand ExplorerNewTabWindow(IProfile[] profiles, IEntryModel[] rootDirectories,
@@ -36,8 +36,8 @@ namespace FileExplorer.Script
 
                 }, false,
                   UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", 
-                  "{OnTabExplorerCreated}", "{OnTabExplorerAttached}", 
-                  "{WindowManager}", "{Events}", tabbedExplorerVariable, UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", null, "{Explorer}", nextCommand)));
+                  "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
+                  "{WindowManager}", "{GlobalEvents}", tabbedExplorerVariable, UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", null, "{Explorer}", nextCommand)));
         }
 
         public static IScriptCommand FileOpen(IProfile[] profiles, IEntryModel[] rootDirectories,            
@@ -58,7 +58,7 @@ namespace FileExplorer.Script
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
                 }, false,
                   UIScriptCommands.ExplorerPick(ExplorerMode.FileOpen, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
-                        "{Events}", null, selectionPathsVariable, nextCommand, cancelCommand));
+                        "{GlobalEvents}", null, selectionPathsVariable, nextCommand, cancelCommand));
         }
 
         public static IScriptCommand FileSave(IProfile[] profiles, IEntryModel[] rootDirectories,            
@@ -79,7 +79,7 @@ namespace FileExplorer.Script
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
                 }, false,
                   UIScriptCommands.ExplorerPick(ExplorerMode.FileSave, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
-                        "{Events}", null, selectionPathsVariable, nextCommand, cancelCommand));
+                        "{GlobalEvents}", null, selectionPathsVariable, nextCommand, cancelCommand));
         }
 
 
@@ -99,7 +99,7 @@ namespace FileExplorer.Script
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
                 }, false,
                   UIScriptCommands.ExplorerPick(ExplorerMode.FileSave, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
-                        "{Events}", null, selectionPathsVariable, nextCommand, cancelCommand));
+                        "{GlobalEvents}", null, selectionPathsVariable, nextCommand, cancelCommand));
         }
 
         public static IScriptCommand DirectoryPick(IProfile[] profiles, IEntryModel[] rootDirectories,
@@ -118,12 +118,12 @@ namespace FileExplorer.Script
                     {"{OnViewAttached}", UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot() }
                 }, false,
                  UIScriptCommands.ExplorerPick(ExplorerMode.DirectoryOpen, "{OnModelCreated}", "{OnViewAttached}", "{WindowManager}",
-                       "{Events}", selectionVariable, selectionPathVariable, nextCommand, cancelCommand));
+                       "{GlobalEvents}", selectionVariable, selectionPathVariable, nextCommand, cancelCommand));
         }
 
 
          //public static IScriptCommand DirectoryPick(string onModelCreatedVariable = "{OnModelCreated}", string onViewAttachedVariable = "{OnViewAttached}",
-         //   string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{Events}",
+        //   string windowManagerVariable = "{WindowManager}", string eventAggregatorVariable = "{GlobalEvents}",
          //   string selectedEntryVariable = "{Selection}", string selectedPathVariable = "{SelectionPath}", 
          //   IScriptCommand nextCommand = null, IScriptCommand cancelCommand = null)
     }
