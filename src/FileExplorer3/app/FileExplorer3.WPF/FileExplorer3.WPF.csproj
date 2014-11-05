@@ -126,9 +126,7 @@
     <Compile Include="Defines\Converters\ScrollBarConverters.cs" />
     <Compile Include="Defines\Converters\TimeElapsedConverter.cs" />
     <Compile Include="Defines\Converters\UriToImageSourceConverter.cs" />
-    <Compile Include="Defines\MetadataStrings.cs" />
     <Compile Include="Defines\Structs.cs" />
-    <Compile Include="Models\BasicMetadataProvider.cs" />
     <Compile Include="Models\ColumnFilter.cs" />
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\CommandModelImpl.cs" />
@@ -136,6 +134,7 @@
     <Compile Include="Models\EntryModelBase.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\FileBasedCommandProvider.cs" />
+    <Compile Include="Models\GetResourceIcon.cs" />
     <Compile Include="Models\ICommandModelImpl.cs" />
     <Compile Include="Models\IconExtractorImpl.cs" />
     <Compile Include="Models\IDiskIOHelper.cs" />
@@ -143,11 +142,8 @@
     <Compile Include="Models\IModelIconExtractorImpl.cs" />
     <Compile Include="Models\IRoutedCommandModel.cs" />
     <Compile Include="Models\IWPFProfile.cs" />
-    <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\NullDragDropHandler.cs" />
     <Compile Include="Models\NullMetadataProvider.cs" />
-    <Compile Include="Models\PathComparer.cs" />
-    <Compile Include="Models\ProfileSuggestionSource.cs" />
     <Compile Include="Models\RootEntryModel.cs" />
     <Compile Include="Scripts\FileExplorer3WPFCommands.cs" />
     <Compile Include="Scripts\ModelWPFScriptCommands.cs" />
@@ -315,7 +311,6 @@
     <Compile Include="BaseControls\PathExistsValidationRule.cs" />
     <Compile Include="BaseControls\PathHierarchyHelper.cs" />
     <Compile Include="BaseControls\BreacrumbCorePanel.cs" />
-    <Compile Include="BaseControls\SuggestSourceImpl.cs" />
     <Compile Include="BaseControls\HotTrack.cs" />
     <Compile Include="BaseControls\SuggestBox.cs" />
     <Compile Include="Defines\Converters\FormatNumbers.cs" />

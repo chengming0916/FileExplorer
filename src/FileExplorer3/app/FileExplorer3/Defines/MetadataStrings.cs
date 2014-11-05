@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer.WPF.Defines
+namespace FileExplorer.Defines
 {
     public static class MetadataStrings
     {

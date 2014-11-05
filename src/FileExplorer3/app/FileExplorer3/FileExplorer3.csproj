@@ -37,7 +37,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Defines\Enums.cs" />
+    <Compile Include="Defines\MetadataStrings.cs" />
     <Compile Include="Defines\Structs.cs" />
+    <Compile Include="Models\BasicMetadataProvider.cs" />
+    <Compile Include="Models\Bookmark\BookmarkModel.cs" />
+    <Compile Include="Models\Bookmark\BookmarkProfile.cs" />
+    <Compile Include="Models\Bookmark\BookmarkSerializeTest.cs" />
+    <Compile Include="Models\GetDefaultIcon.cs" />
+    <Compile Include="Models\Metadata.cs" />
+    <Compile Include="Models\AutoSuggestSource.cs" />
+    <Compile Include="Models\MetadataProviderBase.cs" />
+    <Compile Include="Models\NullSuggestSource.cs" />
+    <Compile Include="Models\PathComparer.cs" />
+    <Compile Include="Models\ProfileBase.cs" />
+    <Compile Include="Models\ProfileSuggestionSource.cs" />
+    <Compile Include="Models\MultiSuggestSource.cs" />
     <Compile Include="Scripts\FileExplorer3Commands.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
@@ -107,6 +121,12 @@
       <Project>{ecabbc13-1922-4500-908b-cd865e91e4c5}</Project>
       <Name>FileExplorer.Scripting</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Themes\Resources\file.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Themes\Resources\folder.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

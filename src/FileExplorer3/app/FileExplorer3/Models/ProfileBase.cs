@@ -6,17 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
-using FileExplorer.WPF.BaseControls;
-using FileExplorer.WPF.Defines;
-using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 using System.Text.RegularExpressions;
-using System.ComponentModel.Composition;
 using FileExplorer.WPF.Utils;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     public abstract class ProfileBase : NotifyPropertyChanged, IProfile
     {
@@ -37,7 +33,7 @@ namespace FileExplorer.WPF.Models
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = NullDiskPatheMapper.Instance;
 
-            DragDrop = new NullDragDropHandler();
+           
             Events = events ?? new EventAggregator();
             _pathPatterns = new string[] { "." };
             Converters = converters;            
@@ -118,7 +114,7 @@ namespace FileExplorer.WPF.Models
                 _mSuggestSource = new MultiSuggestSource(value, Converters.Select(c => c.SuggestSource).ToArray());
             }
         }
-        public IDragDropHandler DragDrop { get; protected set; }
+        
         public string RootDisplayName { get; protected set; }
         public IEntryHierarchyComparer HierarchyComparer { get; protected set; }
         public IMetadataProvider MetadataProvider { get; protected set; }

@@ -17,8 +17,10 @@ namespace FileExplorer.Models
             : base(events, converters)
         {
             MetadataProvider = new MetadataProviderBase(new BasicMetadataProvider(), new FileBasedMetadataProvider());
+            DragDrop = new NullDragDropHandler();
         }
 
         public IDiskIOHelper DiskIO { get; protected set; }
+        public IDragDropHandler DragDrop { get; protected set; }
     }
 }
