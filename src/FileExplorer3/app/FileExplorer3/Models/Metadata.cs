@@ -7,7 +7,7 @@ using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     public class Metadata : PropertyChangedBase, IMetadata, IEquatable<Metadata>
     {

@@ -177,7 +177,6 @@
     <Compile Include="Model\GoogleDrive\GoogleDriveFileStream.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMimeTypeManager.cs" />
     <Compile Include="Model\HardDriveDiskIOHelper.cs" />
-    <Compile Include="Model\ProfileBase.cs" />
     <Compile Include="Model\SevenZipSharp\IOScriptCommands.cs" />
     <Compile Include="Model\SevenZipSharp\SzsCommandProvider.cs" />
     <Compile Include="Model\SevenZipSharp\SzsFileStream.cs" />

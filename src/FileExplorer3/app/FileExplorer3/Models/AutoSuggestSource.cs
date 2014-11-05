@@ -6,13 +6,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Threading;
 using FileExplorer.WPF.Utils;
-using FileExplorer.WPF.Models;
 using FileExplorer.Models;
 
-namespace FileExplorer.WPF.BaseControls
+namespace FileExplorer.Models
 {
     /// <summary>
     /// Suggest based on sub entries of specified data.
@@ -74,34 +71,5 @@ namespace FileExplorer.WPF.BaseControls
         #endregion
     }
 
-    public class NullSuggestSource : ISuggestSource
-    {
-
-        public Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
-        {
-            return Task.Run<IList<object>>(() => new List<object>() );
-        }
-    }
-
-    public class MultiSuggestSource : ISuggestSource
-    {
-        private ISuggestSource[] _suggestSources;
-        public MultiSuggestSource(params ISuggestSource[] suggestSources)
-        {
-            _suggestSources = suggestSources;
-        }
-
-        public MultiSuggestSource(ISuggestSource source1, params ISuggestSource[] moreSources)
-        {
-            _suggestSources = (new ISuggestSource[] { source1 }).Concat(moreSources).ToArray();
-        }
-
-        public async Task<IList<object>> SuggestAsync(object data, string input, IHierarchyHelper helper)
-        {
-            List<object> retVal = new List<object>();
-            foreach (var ss in _suggestSources)
-                retVal.AddRange(await ss.SuggestAsync(data, input, helper));
-            return retVal;
-        }
-    }
+   
 }

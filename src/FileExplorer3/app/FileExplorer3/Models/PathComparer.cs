@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using FileExplorer.Defines;
 using FileExplorer.Models;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     public class PathComparer : IEntryHierarchyComparer
     {
         #region Cosntructor
 
-        public static PathComparer LocalDefault = new PathComparer('\\', StringComparison.InvariantCultureIgnoreCase);
-        public static PathComparer WebDefault = new PathComparer('/', StringComparison.InvariantCultureIgnoreCase);
+        public static PathComparer LocalDefault = new PathComparer('\\', StringComparison.CurrentCultureIgnoreCase);
+        public static PathComparer WebDefault = new PathComparer('/', StringComparison.CurrentCultureIgnoreCase);
 
         public PathComparer(char separator, StringComparison comparsion)
         {
@@ -53,7 +53,7 @@ namespace FileExplorer.WPF.Models
 
         #region Data
 
-        private StringComparison _stringComparsion = StringComparison.InvariantCultureIgnoreCase;
+        private StringComparison _stringComparsion = StringComparison.CurrentCultureIgnoreCase;
         private char _separator = '\\';
 
         #endregion
