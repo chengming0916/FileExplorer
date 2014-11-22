@@ -4,26 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileExplorer.Models.Bookmark
 {
-    public class BookmarkProfile : NotifyPropertyChanged, IProfile
+    public class BookmarkProfile : ProfileBase
     {
         #region fields
 
         public static BookmarkProfile Instance = new BookmarkProfile();
         private string _rootLabel;
+        private BookmarkModel _rootModel;
 
         #endregion
 
         #region constructors
 
         public BookmarkProfile(string rootLabel = "Bookmarks", IEventAggregator events = null)
+            : base(events)
         {
+            ProfileName = "Bookmarks";
+            HierarchyComparer = new PathHierarchyComparer(StringComparison.CurrentCultureIgnoreCase);
+            MetadataProvider = new BasicMetadataProvider();
             Path = PathHelper.Web;
             _rootLabel = rootLabel;
-            Events = events ?? new EventAggregator();
+            _rootModel = BookmarkSerializeTest.CreateTestData(this, rootLabel); 
+            //new BookmarkModel(BookmarkModel.BookmarkEntryType.Root, rootLabel);
+            PathPatterns = new string[] { _rootLabel + "." };            
         }
 
 
@@ -35,100 +43,32 @@ namespace FileExplorer.Models.Bookmark
 
         #region properties
 
-
-        public string[] PathPatterns
-        {
-            get { return new string[]{ _rootLabel + "." }; }
-        }
-
-        public string ProfileName
-        {
-            get { return "Bookmarks"; }
-        }
-
-        public byte[] ProfileIcon
-        {
-            get { return new byte[] {}; }
-        }
-
-        public IConverterProfile[] Converters
-        {
-            get { return new IConverterProfile[] {}; }
-        }
-
-        public string RootDisplayName
-        {
-            get { return _rootLabel; }
-        }
-
-        public IPathHelper Path
-        {
-            get;
-            private set;
-        }
-
-        public IEntryHierarchyComparer HierarchyComparer
-        {
-            get;
-            private set;
-        }
-
-        public IMetadataProvider MetadataProvider
-        {
-            get;
-            private set;
-        }
-
-        public IEnumerable<ICommandProvider> CommandProviders
-        {
-            get;
-            private set;
-        }
-
-        public IEventAggregator Events
-        {
-            get;
-            private set;
-        }
-
-        public ISuggestSource SuggestSource
-        {
-            get { throw new NotImplementedException(); }
-        }
-
+        public BookmarkModel RootModel { get { return _rootModel; } }
 
         #endregion
 
         #region methods
 
+        public override async Task<IEntryModel> ParseAsync(string path)
+        {
+            if (path.Equals(_rootLabel))
+                return _rootModel;
+
+            return null;
+        }
+
+        public override async Task<IList<IEntryModel>> ListAsync(IEntryModel entry, CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false)
+        {
+            BookmarkModel bm = entry as BookmarkModel;
+            filter = filter ?? (em => true);
+            if (bm != null)
+                return bm.SubModels.Where(sub => filter(sub)).Cast<IEntryModel>().ToList();
+
+            throw new NotImplementedException();
+        }
+
         #endregion
 
-
-      
-        public IComparer<IEntryModel> GetComparer(Defines.ColumnInfo column)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEntryModel> ParseAsync(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IList<IEntryModel>> ListAsync(IEntryModel entry, System.Threading.CancellationToken ct, Func<IEntryModel, bool> filter = null, bool refresh = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool MatchPathPattern(string path)
-        {
-            throw new NotImplementedException();
-        }
 
     }
 }

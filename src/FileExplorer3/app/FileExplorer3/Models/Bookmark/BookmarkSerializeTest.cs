@@ -11,12 +11,20 @@ namespace FileExplorer.Models.Bookmark
 {
     public static class BookmarkSerializeTest
     {
+        public static BookmarkModel CreateTestData(BookmarkProfile profile, string rootLabel = "Bookmarks")
+        {
+            BookmarkModel root = new BookmarkModel(profile, BookmarkModel.BookmarkEntryType.Root, rootLabel);
+            BookmarkModel sub = new BookmarkModel(profile, BookmarkModel.BookmarkEntryType.Directory, rootLabel + "/Sub");
+            root.SubModels.Add(sub);
+            sub.SubModels.Add(new BookmarkModel(profile, BookmarkModel.BookmarkEntryType.Link, rootLabel + "/Sub/Link"));
+            return root;
+        }
+
         public static void Test()
         {
-            BookmarkModel root = new BookmarkModel(BookmarkModel.BookmarkEntryType.Root, "");
-            BookmarkModel sub = new BookmarkModel(BookmarkModel.BookmarkEntryType.Directory, "/Sub");
-            root.SubModels.Add(sub);
-            sub.SubModels.Add(new BookmarkModel(BookmarkModel.BookmarkEntryType.Link, "/Sub/Link"));
+            BookmarkProfile profile = new BookmarkProfile("Bmarks");
+
+            BookmarkModel root = CreateTestData(profile);
 
             XmlSerializer serializer = new XmlSerializer(typeof(BookmarkModel));
             MemoryStream ms = new MemoryStream();

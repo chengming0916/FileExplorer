@@ -26,6 +26,7 @@ using DropNet.Models;
 using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.Defines;
+using FileExplorer.Models.Bookmark;
 
 namespace TestApp
 {
@@ -48,6 +49,7 @@ namespace TestApp
             _events = events;
 
             _events.Subscribe(this);
+            _profileBm = new BookmarkProfile("Bookmarks");
             _profile = new FileSystemInfoProfile(_events);
             _profileEx = new FileSystemInfoExProfile(_events, _windowManager, new FileExplorer.Models.SevenZipSharp.SzsProfile(_events));
 
@@ -89,11 +91,12 @@ namespace TestApp
                 }
 
 
+            RootModels.Add((_profileBm as BookmarkProfile).RootModel);
             RootModels.Add(AsyncUtils.RunSync(() => _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName)));
 
 
             _profiles = new IProfile[] {
-                _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive }.Where(p => p != null).ToArray();
+                _profileBm, _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive }.Where(p => p != null).ToArray();
 
 
         }
@@ -511,6 +514,7 @@ namespace TestApp
 
         #region Data
 
+        IProfile _profileBm;
         IProfile _profile;
         IProfile _profileEx;
         IProfile _profileSkyDrive;

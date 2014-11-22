@@ -24,9 +24,10 @@ namespace FileExplorer.Models.Bookmark
 
         }
 
-        public BookmarkModel(BookmarkEntryType type, string fullPath)
+        public BookmarkModel(BookmarkProfile profile, BookmarkEntryType type, string fullPath)
             : this()
-        {            
+        {
+            Profile = profile;
             Name = Profile.Path.GetFileName(fullPath);
             this.Type = type;
             FullPath = fullPath;
@@ -47,7 +48,8 @@ namespace FileExplorer.Models.Bookmark
         [XmlIgnore]
         public IProfile Profile
         {
-            get { return BookmarkProfile.Instance; }
+            get;
+            private set;
         }
 
         public BookmarkEntryType Type

@@ -102,7 +102,7 @@ namespace FileExplorer.Models.SevenZipSharp
         {
             _baseProfile = profile;
             base.HierarchyComparer = profile.HierarchyComparer;
-            base.Events = profile.Events();
+            base.Events = profile.Events;
         }
 
         #endregion
