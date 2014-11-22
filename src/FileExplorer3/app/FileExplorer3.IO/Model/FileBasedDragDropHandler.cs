@@ -68,7 +68,7 @@ namespace FileExplorer.Models
         {
             _profile = profile;
             _fsiProfile = profile is FileSystemInfoProfile ? (FileSystemInfoProfile)profile :
-                new FileSystemInfoProfile(profile.Events());
+                new FileSystemInfoProfile(profile.Events);
             _getIsVirtualFunc = getIsVirtualFunc ?? (em => true);
 
             TransferCommand =

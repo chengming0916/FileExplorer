@@ -49,6 +49,7 @@
     <Compile Include="Models\MetadataProviderBase.cs" />
     <Compile Include="Models\NullSuggestSource.cs" />
     <Compile Include="Models\PathComparer.cs" />
+    <Compile Include="Models\PathHierarchyComparer.cs" />
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ProfileSuggestionSource.cs" />
     <Compile Include="Models\MultiSuggestSource.cs" />

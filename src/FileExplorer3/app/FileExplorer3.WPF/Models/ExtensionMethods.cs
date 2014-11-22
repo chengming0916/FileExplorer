@@ -21,12 +21,12 @@ namespace FileExplorer.WPF.Models
     {
         public static IDragDropHandler DragDrop(this IProfile profile)
         {
-            return (profile as IWPFProfile).DragDrop;
+            return (profile is IWPFProfile) ? (profile as IWPFProfile).DragDrop : null;
         }
 
         public static IEventAggregator Events(this IProfile profile)
         {
-            return (profile as IWPFProfile).Events;
+            return profile.Events;
         }
 
 
@@ -67,12 +67,12 @@ namespace FileExplorer.WPF.Models
 
         public static void NotifyEntryChanges(this IProfile profile, object sender, string fullPath, ChangeType changeType, string orgParseName = null)
         {
-            if (profile == null || profile.Events() == null)
+            if (profile == null || profile.Events == null)
                 return;
 
             if (changeType == ChangeType.Moved)
-                profile.Events().PublishOnUIThread(new EntryChangedEvent(fullPath, orgParseName));
-            else profile.Events().PublishOnUIThread(new EntryChangedEvent(changeType, fullPath));
+                profile.Events.PublishOnUIThread(new EntryChangedEvent(fullPath, orgParseName));
+            else profile.Events.PublishOnUIThread(new EntryChangedEvent(changeType, fullPath));
         }
 
 

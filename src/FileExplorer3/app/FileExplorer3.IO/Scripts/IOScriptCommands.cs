@@ -287,7 +287,7 @@ namespace FileExplorer.Script
                 destModel = (await _destDirModel.Profile.ListAsync(_destDirModel, CancellationToken.None, em =>
                         em.FullPath.Equals(destFullName,
                         StringComparison.CurrentCultureIgnoreCase), true)).FirstOrDefault();
-                _destDirModel.Profile.Events().PublishOnUIThread(new EntryChangedEvent(ChangeType.Created, destFullName));
+                _destDirModel.Profile.Events.PublishOnUIThread(new EntryChangedEvent(ChangeType.Created, destFullName));
             }
 
             if (destModel == null)
