@@ -108,4 +108,8 @@ namespace FileExplorer.Defines
         Recrusive = 1 << 2
     }
 
+    
+
+   
+
 }

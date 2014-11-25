@@ -105,7 +105,7 @@ namespace FileExplorer.WPF.BaseControls
 
         #region Methods
 
-        public void SetFileDropData(IFileDropItem[] fileDrops, DragDropEffects effects = DragDropEffects.Copy)
+        public void SetFileDropData(IFileDropItem[] fileDrops, DragDropEffectsEx effects = DragDropEffectsEx.Copy)
         {
             _fileDrops = fileDrops;
 

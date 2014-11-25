@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace FileExplorer.UIEventHub
     public interface ISupportShellDrop : ISupportDrop
     {
         IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
-        DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects);
+        DragDropEffectsEx Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffectsEx allowedEffects);
     }
 
 }

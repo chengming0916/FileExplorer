@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,9 @@ namespace FileExplorer.UIEventHub
         #region Methods
 
         public abstract IEnumerable<IDraggable> QueryDropDraggables(IDataObject da);
-        public abstract DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects);
+        public abstract DragDropEffectsEx Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffectsEx allowedEffects);
 
-        public override DragDropEffects Drop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        public override DragDropEffectsEx Drop(IEnumerable<IDraggable> draggables, DragDropEffectsEx allowedEffects)
         {
             return Drop(draggables, null, allowedEffects);
         }
@@ -58,14 +59,14 @@ namespace FileExplorer.UIEventHub
             yield break;
         }
 
-        public override QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        public override QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffectsEx allowedEffects)
         {
             return QueryDropEffects.None;
         }
 
-        public override DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
+        public override DragDropEffectsEx Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffectsEx allowedEffects)
         {
-            return DragDropEffects.None;
+            return DragDropEffectsEx.None;
         }
     }
 
@@ -95,12 +96,12 @@ namespace FileExplorer.UIEventHub
 
         public abstract IEnumerable<M> QueryDropModels(IDataObject da);
         
-        public virtual DragDropEffects Drop(IEnumerable<M> models, IDataObject da, DragDropEffects allowedEffects)
+        public virtual DragDropEffectsEx Drop(IEnumerable<M> models, IDataObject da, DragDropEffectsEx allowedEffects)
         {
             return Drop(models, allowedEffects);
         }
 
-        public override DragDropEffects Drop(IEnumerable<M> models, DragDropEffects allowedEffects)
+        public override DragDropEffectsEx Drop(IEnumerable<M> models, DragDropEffectsEx allowedEffects)
         {
             return Drop(models, null, allowedEffects);
         }
@@ -111,7 +112,7 @@ namespace FileExplorer.UIEventHub
             return ConvertBack(QueryDropModels(da), true);
         }
 
-        public virtual DragDropEffects Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects allowedEffects)
+        public virtual DragDropEffectsEx Drop(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffectsEx allowedEffects)
         {
             return Drop(Convert(draggables, true), da, allowedEffects);
         }
@@ -134,8 +135,8 @@ namespace FileExplorer.UIEventHub
     public class LambdaShellDropHelper<M> : ShellDropHelper<M>
         where M : class
     {
-        private Func<IEnumerable<M>, DragDropEffects, QueryDropEffects> _queryDropFunc;
-        private Func<IEnumerable<M>, IDataObject, DragDropEffects, DragDropEffects> _dropFunc;
+        private Func<IEnumerable<M>, DragDropEffectsEx, QueryDropEffects> _queryDropFunc;
+        private Func<IEnumerable<M>, IDataObject, DragDropEffectsEx, DragDropEffectsEx> _dropFunc;
         private IValueConverter _dataObjectConverter;
 
         /// <summary>
@@ -147,8 +148,8 @@ namespace FileExplorer.UIEventHub
         /// <param name="dropFunc">Call when Drop, with models, dataObject and allowedEffects as parameter, return actual effect.</param>
         public LambdaShellDropHelper(IValueConverter converter,
             IValueConverter dataObjectConverter,
-            Func<IEnumerable<M>, DragDropEffects, QueryDropEffects> queryDropFunc,
-            Func<IEnumerable<M>, IDataObject, DragDropEffects, DragDropEffects> dropFunc)
+            Func<IEnumerable<M>, DragDropEffectsEx, QueryDropEffects> queryDropFunc,
+            Func<IEnumerable<M>, IDataObject, DragDropEffectsEx, DragDropEffectsEx> dropFunc)
             : base(converter)
         {
             _dataObjectConverter = dataObjectConverter;
@@ -162,12 +163,12 @@ namespace FileExplorer.UIEventHub
                 as IEnumerable<M>;
         }
 
-        public override QueryDropEffects QueryDrop(IEnumerable<M> models, DragDropEffects allowedEffects)
+        public override QueryDropEffects QueryDrop(IEnumerable<M> models, DragDropEffectsEx allowedEffects)
         {
             return _queryDropFunc(models, allowedEffects);
         }
 
-        public override DragDropEffects Drop(IEnumerable<M> models, IDataObject da, DragDropEffects allowedEffects)
+        public override DragDropEffectsEx Drop(IEnumerable<M> models, IDataObject da, DragDropEffectsEx allowedEffects)
         {
             return _dropFunc(models, da, allowedEffects);
         }

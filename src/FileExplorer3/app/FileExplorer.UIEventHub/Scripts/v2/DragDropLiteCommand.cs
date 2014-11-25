@@ -143,7 +143,7 @@ namespace FileExplorer.UIEventHub
                 var draggables = isd.GetDraggables();
                 IDataObject dataObj = isd is ISupportShellDrag ?
                     (isd as ISupportShellDrag).GetDataObject(draggables) : null;
-                DragDropEffects effect = isd.QueryDrag(draggables);
+                DragDropEffectsEx effect = isd.QueryDrag(draggables);
                 
                 pm.SetValue(DragDropModeKey, mode);
                 pm.SetValue(DragDropDeviceKey, input.InputType);
@@ -152,7 +152,7 @@ namespace FileExplorer.UIEventHub
                 pm.SetValue(DragDropDragSourceKey, isd);
                 pm.SetValue(ParameterDic.CombineVariable(DragDropDragSourceKey, ".IsDraggingFrom", false), true);
                 pm.SetValue(DragDropStartPositionKey, pm.GetValue<Point>(CurrentPositionAdjustedKey));
-                pm.SetValue(InputKey, new DragInput(input, dataObj, DragDropEffects.Copy, (eff) => { }));
+                pm.SetValue(InputKey, new DragInput(input, dataObj, DragDropEffectsEx.Copy, (eff) => { }));
 
                 return true;
             }

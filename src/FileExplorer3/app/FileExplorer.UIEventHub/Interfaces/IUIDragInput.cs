@@ -15,8 +15,8 @@ namespace FileExplorer.UIEventHub
     public interface IUIDragInput : IUIInput
     {
         IDataObject Data { get; }
-        DragDropEffects AllowedEffects { get; }
-        DragDropEffects Effects { get;  set; }
+        DragDropEffectsEx AllowedEffects { get; }
+        DragDropEffectsEx Effects { get;  set; }
 
     }
 
@@ -25,7 +25,7 @@ namespace FileExplorer.UIEventHub
         #region Constructors
 
         private void init(IDataObject dataObject,
-             DragDropEffects allowedEffects, Action<DragDropEffects> effectSetFunc)
+             DragDropEffectsEx allowedEffects, Action<DragDropEffectsEx> effectSetFunc)
         {
             Data = dataObject;
             AllowedEffects = allowedEffects;
@@ -33,7 +33,7 @@ namespace FileExplorer.UIEventHub
         }
 
         public DragInput(IUIInput sourceInput, IDataObject dataObject,
-             DragDropEffects allowedEffects, Action<DragDropEffects> effectSetFunc)
+             DragDropEffectsEx allowedEffects, Action<DragDropEffectsEx> effectSetFunc)
         {
             _sourceInput = sourceInput;
             init(dataObject, allowedEffects, effectSetFunc);
@@ -45,7 +45,7 @@ namespace FileExplorer.UIEventHub
             var eventArgs = sourceInput.EventArgs as DragEventArgs;
             _relPositionFunc = relTo => eventArgs.GetPosition(relTo);
             _position = _relPositionFunc(sourceInput.Sender as IInputElement);
-            init(eventArgs.Data, eventArgs.AllowedEffects, (eff) => { eventArgs.Effects = eff; });
+            init(eventArgs.Data, (DragDropEffectsEx)eventArgs.AllowedEffects, (eff) => { eventArgs.Effects = (DragDropEffects)eff; });
         }
 
         #endregion
@@ -64,8 +64,8 @@ namespace FileExplorer.UIEventHub
         #region Data
 
         IUIInput _sourceInput;
-        private Action<DragDropEffects> _effectSetFunc;
-        private DragDropEffects _effect = DragDropEffects.None;
+        private Action<DragDropEffectsEx> _effectSetFunc;
+        private DragDropEffectsEx _effect = DragDropEffectsEx.None;
         private Func<IInputElement, Point> _relPositionFunc;
         private Point? _position;
         
@@ -75,8 +75,8 @@ namespace FileExplorer.UIEventHub
         #region Public Properties
 
         public IDataObject Data { get; private set; }
-        public DragDropEffects AllowedEffects { get; private set; }
-        public DragDropEffects Effects { get { return _effect; } set { _effect = value; _effectSetFunc(value); } }
+        public DragDropEffectsEx AllowedEffects { get; private set; }
+        public DragDropEffectsEx Effects { get { return _effect; } set { _effect = value; _effectSetFunc(value); } }
 
         public RoutedEventArgs EventArgs { get { return _sourceInput.EventArgs; } }
         public object Sender { get { return _sourceInput.Sender; } set { _sourceInput.Sender = value; } }

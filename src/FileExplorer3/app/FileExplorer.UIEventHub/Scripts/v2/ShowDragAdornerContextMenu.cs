@@ -1,4 +1,5 @@
-﻿using FileExplorer.Script;
+﻿using FileExplorer.Defines;
+using FileExplorer.Script;
 using FileExplorer.WPF.BaseControls;
 using MetroLog;
 using System;
@@ -72,8 +73,8 @@ namespace FileExplorer.UIEventHub
         public override IScriptCommand Execute(ParameterDic pm)
         {
             DragAdorner dragAdorner = pm.GetValue<DragAdorner>(AdornerKey);
-            DragDropEffects supportedEffects = pm.GetValue<DragDropEffects>(SupportedEffectsKey, DragDropEffects.All);
-            DragDropEffects defaultEffect = pm.GetValue<DragDropEffects>(DefaultEffectKey, DragDropEffects.Copy);
+            DragDropEffectsEx supportedEffects = pm.GetValue<DragDropEffectsEx>(SupportedEffectsKey, DragDropEffectsEx.All);
+            DragDropEffectsEx defaultEffect = pm.GetValue<DragDropEffectsEx>(DefaultEffectKey, DragDropEffectsEx.Copy);
 
             RoutedEventHandler ContextMenu_Closed = null;
             ContextMenu_Closed = (o, e) =>

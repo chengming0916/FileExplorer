@@ -69,7 +69,6 @@
     <Compile Include="Defines\DragLiteParameters.cs" />
     <Compile Include="Defines\DragnDropAttachedProperties.cs" />
     <Compile Include="Defines\Enums.cs" />
-    <Compile Include="Defines\QueryDropEffects.cs" />
     <Compile Include="Defines\MultiSelectAttachedProperties.cs" />
     <Compile Include="Defines\TouchGesture.cs" />
     <Compile Include="Defines\UIAttachedProperties.cs" />

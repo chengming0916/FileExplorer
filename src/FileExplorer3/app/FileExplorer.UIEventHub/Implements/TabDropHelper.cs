@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,16 +37,16 @@ namespace FileExplorer.UIEventHub
             return new List<T>();
         }
 
-        public override QueryDropEffects QueryDrop(IEnumerable<T> models, System.Windows.DragDropEffects allowedEffects)
+        public override QueryDropEffects QueryDrop(IEnumerable<T> models, DragDropEffectsEx allowedEffects)
         {
             if (models.Count() > 0)
-                return QueryDropEffects.CreateNew(DragDropEffects.Move);
+                return QueryDropEffects.CreateNew(DragDropEffectsEx.Move);
 
             _tcvm.SelectedItem = _tvm;
             return QueryDropEffects.None;
-        }
+        }        
 
-        public override DragDropEffects Drop(IEnumerable<IDraggable> sourceDraggable, IDataObject da, DragDropEffects allowedEffects)
+        public override DragDropEffectsEx Drop(IEnumerable<IDraggable> sourceDraggable, IDataObject da, DragDropEffectsEx allowedEffects)
         {
             var sourceVM = sourceDraggable.FirstOrDefault() as T;
             if (sourceVM != null)
@@ -58,11 +59,11 @@ namespace FileExplorer.UIEventHub
                     if (destIdx != -1 && srcIdx != destIdx)
                     {
                         _tcvm.MoveTab(srcIdx, destIdx);
-                        return DragDropEffects.Move;
+                        return DragDropEffectsEx.Move;
                     }
                 }
             }
-            return DragDropEffects.None;
+            return DragDropEffectsEx.None;
         }
 
         public override void OnDragOver()

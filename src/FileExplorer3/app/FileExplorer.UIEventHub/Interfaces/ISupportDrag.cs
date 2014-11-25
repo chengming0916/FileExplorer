@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,8 +19,8 @@ namespace FileExplorer.UIEventHub
         bool HasDraggables { get; }
         bool IsDraggingFrom { get; set; }
         IEnumerable<IDraggable> GetDraggables();
-        DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables);
-        void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect);
+        DragDropEffectsEx QueryDrag(IEnumerable<IDraggable> draggables);
+        void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect);
     }
 
     public class NullSupportDrag : ISupportDrag
@@ -33,9 +34,9 @@ namespace FileExplorer.UIEventHub
             return new List<IDraggable>();
         }
 
-        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        public DragDropEffectsEx QueryDrag(IEnumerable<IDraggable> draggables)
         {
-            return DragDropEffects.None;
+            return DragDropEffectsEx.None;
         }
 
         public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
@@ -43,7 +44,7 @@ namespace FileExplorer.UIEventHub
             return null;
         }
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect)
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect)
         {
            
         }

@@ -48,7 +48,7 @@ namespace FileExplorer.UIEventHub
     }
 
     /// <summary>
-    /// Use DropTarget's QueryDrop to obtain DragDropEffects (QueryDropResult), which contains
+    /// Use DropTarget's QueryDrop to obtain DragDropEffectsEx (QueryDropResult), which contains
     /// PreferredEffect and SupportedEffects
     /// </summary>
     public class QueryDropCommand : UIScriptCommandBase<UIElement, RoutedEventArgs>
@@ -104,20 +104,20 @@ namespace FileExplorer.UIEventHub
             IEnumerable<IDraggable> draggables = pm.GetValue<IEnumerable<IDraggable>>(DraggablesKey).ToList();
             if (dropTarget != null && draggables != null)
             {
-                DragDropEffects effect =
-                    pm.HasValue<DragDropEffects>(DropEffectKey) ? pm.GetValue<DragDropEffects>(DropEffectKey) :
-                    devnt != null ? devnt.AllowedEffects : DragDropEffects.All;
-                DragDropEffects resultEffect = DragDropEffects.None;
+                DragDropEffectsEx effect =
+                    pm.HasValue<DragDropEffectsEx>(DropEffectKey) ? pm.GetValue<DragDropEffectsEx>(DropEffectKey) :
+                    devnt != null ? (DragDropEffectsEx)devnt.AllowedEffects : DragDropEffectsEx.All;
+                DragDropEffectsEx resultEffect = DragDropEffectsEx.None;
 
                 var dataObj = pm.GetValue<IDataObject>(DataObjectKey);
 
-                if (effect != DragDropEffects.None)
+                if (effect != DragDropEffectsEx.None)
                     if (dropTarget is ISupportShellDrop)
                         resultEffect = (dropTarget as ISupportShellDrop).Drop(draggables, dataObj, effect);
                     else resultEffect = dropTarget.Drop(draggables, effect);
 
                 if (devnt != null)
-                    devnt.Effects = resultEffect;
+                    devnt.Effects = (DragDropEffects)resultEffect;
 
                 pm.SetValue(DestinationKey, resultEffect, SkipIfExists);
                 if (dragSource != null)

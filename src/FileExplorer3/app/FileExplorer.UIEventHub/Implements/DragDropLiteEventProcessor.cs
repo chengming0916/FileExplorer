@@ -162,7 +162,7 @@ namespace FileExplorer.WPF.BaseControls
                                                             "{DragDrop.QueryDropResult.PreferredEffect}", 
                                                             "{ResultEffect}", 
                                                 //After menu closed...
-                                                ScriptCommands.IfEquals("{ResultEffect}", DragDropEffects.None, 
+                                                ScriptCommands.IfEquals("{ResultEffect}", DragDropEffectsEx.None, 
                                                     //If User choose None (click on empty area), detach and reset.
                                                     detachAdornerAndResetDragDrop, 
                                                     //Otherwise, call ISupportDrop.Drop()
