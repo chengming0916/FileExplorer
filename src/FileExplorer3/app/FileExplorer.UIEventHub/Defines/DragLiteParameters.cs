@@ -34,7 +34,7 @@ namespace FileExplorer.UIEventHub
 
     //    public static UIInputType DragInputType = UIInputType.None;
     //    public static ISupportDrag DragSource = null;
-    //    public static DragDropEffects Effects;
+    //    public static DragDropEffectsEx Effects;
     //}
 
 }

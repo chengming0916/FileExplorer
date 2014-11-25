@@ -19,7 +19,7 @@ namespace FileExplorer.WPF.Models
 {
     public static partial class ExtensionMethods
     {
-        public static IDragDropHandler DragDrop(this IProfile profile)
+        public static IShellDragDropHandler DragDrop(this IProfile profile)
         {
             return (profile is IWPFProfile) ? (profile as IWPFProfile).DragDrop : null;
         }

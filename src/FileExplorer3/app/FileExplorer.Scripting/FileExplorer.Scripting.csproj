@@ -39,6 +39,7 @@
     <Compile Include="Defines\Interfaces\IParameterDicConvertRule.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicStore.cs" />
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
+    <Compile Include="Defines\QueryDropEffects.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Implements\MemoryParameterDicStore.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />

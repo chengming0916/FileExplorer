@@ -32,7 +32,7 @@ namespace FileExplorer.WPF.ViewModels
                         da => flvm.EntryModel.Profile.DragDrop().GetEntryModels(da)), 
 
                 (ems, eff) => flvm.EntryModel.Profile.DragDrop().QueryDrop(ems, flvm.EntryModel, eff),
-                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop().OnDropCompleted(ems, da, flvm.EntryModel, eff))
+                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop().OnDropCompleted(ems, flvm.EntryModel, eff))
 
             {   
                 

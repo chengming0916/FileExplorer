@@ -44,6 +44,7 @@
     <Compile Include="Models\Bookmark\BookmarkProfile.cs" />
     <Compile Include="Models\Bookmark\BookmarkSerializeTest.cs" />
     <Compile Include="Models\GetDefaultIcon.cs" />
+    <Compile Include="Models\IDragDropHandler.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\AutoSuggestSource.cs" />
     <Compile Include="Models\MetadataProviderBase.cs" />

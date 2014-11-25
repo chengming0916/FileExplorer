@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,12 +39,12 @@ namespace FileExplorer.UIEventHub
             return new DataObject(typeof(IEnumerable<T>), models);
         }
 
-        public override DragDropEffects QueryDrag(IEnumerable<T> models)
+        public override DragDropEffectsEx QueryDrag(IEnumerable<T> models)
         {
-            return DragDropEffects.Move;
+            return DragDropEffectsEx.Move;
         }
 
-        public override void OnDragCompleted(IEnumerable<T> models, IDataObject da, DragDropEffects effect)
+        public override void OnDragCompleted(IEnumerable<T> models, IDataObject da, DragDropEffectsEx effect)
         {            
         }
 

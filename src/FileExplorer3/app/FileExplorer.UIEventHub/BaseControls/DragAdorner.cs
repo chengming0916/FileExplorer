@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Diagnostics;
 using System.Collections;
+using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.BaseControls
 {
@@ -52,7 +53,7 @@ namespace FileExplorer.WPF.BaseControls
 
 
             this.ContextMenu = new ContextMenu() { PlacementTarget = _items };
-            SetSupportedDragDropEffects(DragDropEffects.All);
+            SetSupportedDragDropEffects(DragDropEffectsEx.All);
 
 
             this.ContextMenu.AddHandler(MenuItem.ClickEvent, (RoutedEventHandler)((o, e) =>
@@ -73,13 +74,13 @@ namespace FileExplorer.WPF.BaseControls
 
         #region Methods
 
-        public void SetSupportedDragDropEffects(DragDropEffects effects, DragDropEffects defaultEffect = DragDropEffects.Copy)
+        public void SetSupportedDragDropEffects(DragDropEffectsEx effects, DragDropEffectsEx defaultEffect = DragDropEffectsEx.Copy)
         {
             ContextMenu.Items.Clear();
             foreach (var e in Enum.GetValues(typeof(DragDropEffects)))
             {
-                DragDropEffects curEffect = (DragDropEffects)e;
-                if (curEffect != DragDropEffects.None && effects.HasFlag(curEffect))
+                DragDropEffectsEx curEffect = (DragDropEffectsEx)e;
+                if (curEffect != DragDropEffectsEx.None && effects.HasFlag(curEffect))
                 {
                     var header = new TextBlock() { Text = curEffect.ToString() };
                     if (curEffect.Equals(defaultEffect))
@@ -212,15 +213,15 @@ namespace FileExplorer.WPF.BaseControls
             new UIPropertyMetadata("", new PropertyChangedCallback(OnTextChanged)));
 
 
-        public DragDropEffects DragDropEffect
+        public DragDropEffectsEx DragDropEffect
         {
-            get { return (DragDropEffects)GetValue(DragDropEffectProperty); }
+            get { return (DragDropEffectsEx)GetValue(DragDropEffectProperty); }
             set { SetValue(DragDropEffectProperty, value); }
         }
         
         public static readonly DependencyProperty DragDropEffectProperty =
-            DependencyProperty.Register("DragDropEffect", typeof(DragDropEffects), typeof(DragAdorner),
-            new UIPropertyMetadata(DragDropEffects.None));
+            DependencyProperty.Register("DragDropEffect", typeof(DragDropEffectsEx), typeof(DragAdorner),
+            new UIPropertyMetadata(DragDropEffectsEx.None));
 
 
 

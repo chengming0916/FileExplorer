@@ -79,7 +79,7 @@ namespace FileExplorer.UIEventHub
                                 //Call ISupportDrop.QueryDropEffects() to get QueryDropEffect.
                                 HubScriptCommands.QueryDropEffects(iSupportDropVariable, destinationVariable, destinationDataObjectVariable, null,
                                    queryDropResultVariable, false, 
-                                   ScriptCommands.IfEquals(queryDropResultVariable, FileExplorer.UIEventHub.QueryDropEffects.None, 
+                                   ScriptCommands.IfEquals(queryDropResultVariable, FileExplorer.Defines.QueryDropEffects.None, 
                                    otherwiseCommand, 
                                    successCommand)), otherwiseCommand)));
          }

@@ -126,11 +126,11 @@ namespace FileExplorer.UIEventHub
 
             foreach (var d in draggables) d.IsDragging = true;
 
-            DragDropEffects resultEffect;
+            DragDropEffectsEx resultEffect;
             try
             {
                 //Start the DragDrop.
-                resultEffect = System.Windows.DragDrop.DoDragDrop(sender, _dataObj, effect);
+                resultEffect = (DragDropEffectsEx)System.Windows.DragDrop.DoDragDrop(sender, _dataObj, (DragDropEffects)effect);
             }
             finally
             {

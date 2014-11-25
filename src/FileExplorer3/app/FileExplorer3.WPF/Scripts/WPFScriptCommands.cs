@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+
 using System.Windows.Controls;
 using System.Windows.Input;
 using Caliburn.Micro;
@@ -1748,7 +1748,7 @@ namespace FileExplorer.Script
             new CopyToClipboardCommand(WPFScriptCommands.GetEntryModelFromParameter, true);
 
         public static PasteFromClipboardCommand Paste(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc,
-            Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
+            Func<DragDropEffectsEx, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
         {
             return new PasteFromClipboardCommand(currentDirectoryModelFunc, transferCommandFunc);
         }
@@ -1780,8 +1780,8 @@ namespace FileExplorer.Script
             dropEffect.Write(moveEffect, 0, moveEffect.Length);
             da.SetData("Preferred DropEffect", dropEffect);
 
-            Clipboard.Clear(); 
-            Clipboard.SetDataObject(da, true);
+            System.Windows.Clipboard.Clear(); 
+            System.Windows.Clipboard.SetDataObject(da, true);
 
             return ResultCommand.NoError;
         }
@@ -1791,10 +1791,10 @@ namespace FileExplorer.Script
     {
 
         private Func<ParameterDic, IEntryModel> _currentDirectoryModelFunc;
-        private Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> _transferCommandFunc;
+        private Func<DragDropEffectsEx, IEntryModel[], IEntryModel, IScriptCommand> _transferCommandFunc;
 
         public PasteFromClipboardCommand(Func<ParameterDic, IEntryModel> currentDirectoryModelFunc,
-            Func<DragDropEffects, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
+            Func<DragDropEffectsEx, IEntryModel[], IEntryModel, IScriptCommand> transferCommandFunc)
             : base("Paste")
         {
             _currentDirectoryModelFunc = currentDirectoryModelFunc;
@@ -1806,13 +1806,13 @@ namespace FileExplorer.Script
             var currentDirectory = _currentDirectoryModelFunc(pm);
             if (currentDirectory != null)
             {
-                IDataObject da = Clipboard.GetDataObject();
+                System.Windows.IDataObject da = System.Windows.Clipboard.GetDataObject();
                 if (da != null)
                 {
                     var srcModels = currentDirectory.Profile.DragDrop().GetEntryModels(da);
                     if (srcModels != null && srcModels.Count() > 0)
                     {
-                        return _transferCommandFunc(DragDropEffects.Copy, srcModels.ToArray(), currentDirectory);
+                        return _transferCommandFunc(DragDropEffectsEx.Copy, srcModels.ToArray(), currentDirectory);
                     }
                 }
             }
@@ -1825,7 +1825,7 @@ namespace FileExplorer.Script
             var currentDirectory = _currentDirectoryModelFunc(pm);
             if (currentDirectory != null)
             {
-                IDataObject da = Clipboard.GetDataObject();
+                System.Windows.IDataObject da = System.Windows.Clipboard.GetDataObject();
                 var srcModels = currentDirectory.Profile.DragDrop().GetEntryModels(da);
                 return srcModels != null && srcModels.Count() > 0;
             }
@@ -1845,7 +1845,7 @@ namespace FileExplorer.Script
     {
         #region Constructor
 
-        public TransferCommand(Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> transferOneFunc)
+        public TransferCommand(Func<DragDropEffectsEx, IEntryModel, IEntryModel, IScriptCommand> transferOneFunc)
             : base("Transfer", "Source", "Dest", "DragDropEffects")
         {            
             _transferOneFunc = transferOneFunc;
@@ -1859,8 +1859,8 @@ namespace FileExplorer.Script
         {
             var source = pm["Source"] as IEntryModel[];
             var dest = pm["Dest"] as IEntryModel;
-            DragDropEffects effects = pm.ContainsKey("DragDropEffects") && pm["DragDropEffects"] is DragDropEffects ?
-                (DragDropEffects)pm["DragDropEffects"] : DragDropEffects.Copy;
+            DragDropEffectsEx effects = pm.ContainsKey("DragDropEffects") && pm["DragDropEffects"] is DragDropEffectsEx ?
+                (DragDropEffectsEx)pm["DragDropEffects"] : DragDropEffectsEx.Copy;
 
             if (source == null || source.Length == 0 || dest == null)
                 return false;
@@ -1875,8 +1875,8 @@ namespace FileExplorer.Script
 
             var source = pm["Source"] as IEntryModel[];
             var dest = pm["Dest"] as IEntryModel;
-            DragDropEffects effects = pm.ContainsKey("DragDropEffects") && pm["DragDropEffects"] is DragDropEffects ?
-              (DragDropEffects)pm["DragDropEffects"] : DragDropEffects.Copy;
+            DragDropEffectsEx effects = pm.ContainsKey("DragDropEffects") && pm["DragDropEffects"] is DragDropEffectsEx ?
+              (DragDropEffectsEx)pm["DragDropEffects"] : DragDropEffectsEx.Copy;
 
             var transferCommands = source.Select(s => _transferOneFunc(effects, s, dest)).ToArray();
             if (transferCommands.Any(c => c == null || !c.CanExecute(pm)))
@@ -1892,7 +1892,7 @@ namespace FileExplorer.Script
 
         #region Data
 
-        private Func<DragDropEffects, IEntryModel, IEntryModel, IScriptCommand> _transferOneFunc;
+        private Func<DragDropEffectsEx, IEntryModel, IEntryModel, IScriptCommand> _transferOneFunc;
 
         #endregion
 

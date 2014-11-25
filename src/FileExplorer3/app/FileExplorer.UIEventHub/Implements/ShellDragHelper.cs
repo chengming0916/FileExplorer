@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.Defines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,9 +23,9 @@ namespace FileExplorer.UIEventHub
 
         public abstract IDataObject GetDataObject(IEnumerable<IDraggable> draggables);
 
-        public abstract void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect);
+        public abstract void OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffectsEx effect);
 
-        public override void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect)
+        public override void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect)
         {
             OnDragCompleted(draggables, null, effect);
         }
@@ -67,7 +68,7 @@ namespace FileExplorer.UIEventHub
         #region Methods
 
         public abstract IDataObject GetDataObject(IEnumerable<M> models);
-        public abstract void OnDragCompleted(IEnumerable<M> models, IDataObject da, DragDropEffects effect);
+        public abstract void OnDragCompleted(IEnumerable<M> models, IDataObject da, DragDropEffectsEx effect);
 
 
         IDataObject ISupportShellDrag.GetDataObject(IEnumerable<IDraggable> draggables)
@@ -75,12 +76,12 @@ namespace FileExplorer.UIEventHub
             return GetDataObject(Convert(draggables));
         }
 
-        void ISupportShellDrag.OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffects effect)
+        void ISupportShellDrag.OnDragCompleted(IEnumerable<IDraggable> draggables, IDataObject da, DragDropEffectsEx effect)
         {
             OnDragCompleted(Convert(draggables), da, effect);
         }
 
-        public override void OnDragCompleted(IEnumerable<M> models, DragDropEffects effect)
+        public override void OnDragCompleted(IEnumerable<M> models, DragDropEffectsEx effect)
         {
             OnDragCompleted(models, null, effect);
         }
@@ -103,8 +104,8 @@ namespace FileExplorer.UIEventHub
         where M : class
      {
          private Func<IEnumerable<M>> _getModelsFunc;
-         private Func<IEnumerable<M>, DragDropEffects> _queryDragFunc;
-         private Action<IEnumerable<M>, IDataObject, DragDropEffects> _onDragCompletedAction;         
+         private Func<IEnumerable<M>, DragDropEffectsEx> _queryDragFunc;
+         private Action<IEnumerable<M>, IDataObject, DragDropEffectsEx> _onDragCompletedAction;         
          private IValueConverter _dataObjectConverter;
 
          /// <summary>
@@ -117,8 +118,8 @@ namespace FileExplorer.UIEventHub
          /// <param name="onDragCompletedAction"></param>
          public LambdaShellDragHelper(IValueConverter converter, IValueConverter dataObjectConverter,
             Func<IEnumerable<M>> getModelsFunc,            
-            Func<IEnumerable<M>, DragDropEffects> queryDragFunc,
-            Action<IEnumerable<M>, IDataObject, DragDropEffects> onDragCompletedAction)
+            Func<IEnumerable<M>, DragDropEffectsEx> queryDragFunc,
+            Action<IEnumerable<M>, IDataObject, DragDropEffectsEx> onDragCompletedAction)
             : base(converter)
         {
             _getModelsFunc = getModelsFunc;
@@ -137,13 +138,13 @@ namespace FileExplorer.UIEventHub
              return _dataObjectConverter.Convert(models, typeof(IDataObject), null, Thread.CurrentThread.CurrentUICulture) as IDataObject;
          }
 
-         public override DragDropEffects QueryDrag(IEnumerable<M> models)
+         public override DragDropEffectsEx QueryDrag(IEnumerable<M> models)
          {
              return _queryDragFunc(models);
          }
 
          
-         public override void OnDragCompleted(IEnumerable<M> models, IDataObject da, DragDropEffects effect)
+         public override void OnDragCompleted(IEnumerable<M> models, IDataObject da, DragDropEffectsEx effect)
          {
              _onDragCompletedAction(models, da, effect);
          }         
