@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using FileExplorer.Models;
 using FileExplorer.WPF.Utils;
+using System.Windows;
 
 namespace FileExplorer.WPF.Models
 {
@@ -92,7 +93,7 @@ namespace FileExplorer.WPF.Models
             return model.Profile.Path.Combine(model.FullPath, paths);
         }
 
-        public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath, 
+        public static async Task<Stream> OpenStreamAsync(this IDiskIOHelper ioHelper, string fullPath,
             FileExplorer.Defines.FileAccess access, CancellationToken ct)
         {
             IEntryModel entryModel = await ioHelper.Profile.ParseAsync(fullPath);
@@ -122,7 +123,7 @@ namespace FileExplorer.WPF.Models
                 }
                 else
                 {
-                    using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath, 
+                    using (var srcStream = await ioHelper.OpenStreamAsync(entry.FullPath,
                         FileExplorer.Defines.FileAccess.Read, ct))
                     using (var outputStream = System.IO.File.OpenWrite(mapping.IOPath))
                         await StreamUtils.CopyStreamAsync(srcStream, outputStream).ConfigureAwait(false);
@@ -156,14 +157,38 @@ namespace FileExplorer.WPF.Models
         {
             byte[] bytes = await extractor.GetIconBytesForModelAsync(model, ct);
             ct.ThrowIfCancellationRequested();
-            return bytes == null ? 
-                new BitmapImage() : 
+            return bytes == null ?
+                new BitmapImage() :
                 FileExplorer.WPF.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes);
         }
-            
-    //        public interface IModelIconExtractor<IEntryModel>
-    //{
-    //    Task<byte[]> GetIconForModelAsync(IEntryModel model, CancellationToken ct);
-    //}
+
+
+        public static void OnDragCompleted(this IDragDropHandler dragDropHandler,
+            IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffectsEx effect)
+        {
+            if (dragDropHandler is IShellDragDropHandler)
+                (dragDropHandler as IShellDragDropHandler).OnDragCompleted(entries, da, effect);
+            else dragDropHandler.OnDragCompleted(entries, effect);
+        }
+
+        public static QueryDropEffects QueryDrop(this IDragDropHandler dragDropHandler,
+            IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffectsEx allowedEffects)
+        {
+            if (dragDropHandler is IShellDragDropHandler)
+                return (dragDropHandler as IShellDragDropHandler).QueryDrop(entries, da, dest, allowedEffects);
+            else return dragDropHandler.QueryDrop(entries, dest, allowedEffects);
+        }
+        public static DragDropEffectsEx OnDropCompleted(this IDragDropHandler dragDropHandler,
+            IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffectsEx allowedEffects)
+        {
+            if (dragDropHandler is IShellDragDropHandler)
+                return (dragDropHandler as IShellDragDropHandler).OnDropCompleted(entries, da, dest, allowedEffects);
+            else return dragDropHandler.OnDropCompleted(entries, dest, allowedEffects);
+        }
+
+        //        public interface IModelIconExtractor<IEntryModel>
+        //{
+        //    Task<byte[]> GetIconForModelAsync(IEntryModel model, CancellationToken ct);
+        //}
     }
 }

@@ -80,7 +80,7 @@ namespace FileExplorer.WPF.ViewModels
                 () => flvm.Selection.SelectedItems.ToList(),
                 ems => ems.First().Profile.DragDrop().QueryDrag(ems),
                 ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop().GetDataObject(ems)),
-                (ems, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, eff)
+                (ems, da, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

@@ -57,7 +57,7 @@ namespace FileExplorer.Models
         }
     }
 
-    public class FileBasedDragDropHandler : IDragDropHandler
+    public class FileBasedDragDropHandler : IShellDragDropHandler
     {
         private IProfile _fsiProfile; //For loading drag items.        
         public  DiskTransfer TransferCommand { get; set; }        
@@ -76,7 +76,7 @@ namespace FileExplorer.Models
                 new DiskTransfer();
                //new FileExplorer.Script.TransferCommand((effect, source, destDir) =>
                //    source.Profile is IDiskProfile ?                      
-               //        IOScriptCommands.DiskTransfer(source, destDir, effect == DragDropEffects.Move, true)                       
+               //        IOScriptCommands.DiskTransfer(source, destDir, effect == DragDropEffectsEx.Move, true)                       
                //        : ResultCommand.Error(new NotSupportedException())
                //    );
         }
@@ -105,17 +105,17 @@ namespace FileExplorer.Models
             //    );
         }
 
-        public DragDropEffects QueryDrag(IEnumerable<IEntryModel> entries)
+        public DragDropEffectsEx QueryDrag(IEnumerable<IEntryModel> entries)
         {
             foreach (var e in entries)
                 if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.Mapper[e].IsVirtual)
-                    return DragDropEffects.Copy;
-            return DragDropEffects.Copy | DragDropEffects.Move;
+                    return DragDropEffectsEx.Copy;
+            return DragDropEffectsEx.Copy | DragDropEffectsEx.Move;
         }
 
-        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffects effect)
+        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffectsEx effect)
         {
-            //if (effect == DragDropEffects.Move)
+            //if (effect == DragDropEffectsEx.Move)
             //    draggables.First().Profile.
         }
 
@@ -161,15 +161,15 @@ namespace FileExplorer.Models
         }
 
 
-        public DragDropEffects OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffects allowedEffects)
+        public DragDropEffectsEx OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel destDir, DragDropEffectsEx allowedEffects)
         {
             string fileName = PathEx.GetFileName(destDir.FullPath);
             if (fileName == null) fileName = destDir.FullPath;
 
             if (entries.Count() == 0)
-                return DragDropEffects.None;
+                return DragDropEffectsEx.None;
             if (entries.Any(e => e.Equals(destDir) || e.Parent.Equals(destDir)))
-                return DragDropEffects.None;
+                return DragDropEffectsEx.None;
             
 
 
@@ -177,20 +177,36 @@ namespace FileExplorer.Models
             //    String.Format("[OnDropCompleted] ({2}) {0} entries to {1}",
             //    entries.Count(), fileName, allowedEffects), "FileBasedDragDropHandler.OnDropCompleted", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                DragDropEffects effect = allowedEffects.HasFlag(DragDropEffects.Copy) ? DragDropEffects.Copy :
-                    allowedEffects.HasFlag(DragDropEffects.Move) ? DragDropEffects.Move : DragDropEffects.None;
+                DragDropEffectsEx effect = allowedEffects.HasFlag(DragDropEffectsEx.Copy) ? DragDropEffectsEx.Copy :
+                    allowedEffects.HasFlag(DragDropEffectsEx.Move) ? DragDropEffectsEx.Move : DragDropEffectsEx.None;
 
-                if (effect == DragDropEffects.None)
-                    return DragDropEffects.None;
+                if (effect == DragDropEffectsEx.None)
+                    return DragDropEffectsEx.None;
                 
                 ScriptRunner.RunScriptAsync(
                     WPFScriptCommands.ShowProgress(effect.ToString(), 
-                    IOScriptCommands.DiskTransfer(entries.ToArray(), destDir, effect == DragDropEffects.Move, true), true));
+                    IOScriptCommands.DiskTransfer(entries.ToArray(), destDir, effect == DragDropEffectsEx.Move, true), true));
                 return effect;
             };
-            return DragDropEffects.None;
+            return DragDropEffectsEx.None;
         }
 
 
+
+
+
+
+        public void OnDragCompleted(IEnumerable<IEntryModel> entries, DragDropEffectsEx effect)
+        {
+            
+        }
+
+        public DragDropEffectsEx OnDropCompleted(IEnumerable<IEntryModel> entries, IEntryModel dest, DragDropEffectsEx allowedEffects)
+        {
+            return OnDropCompleted(entries, null, dest, allowedEffects);
+        }
+
+
+       
     }
 }
