@@ -113,14 +113,14 @@ namespace TestApp
 
                  (ems, eff) =>
                  {
-                     return QueryDropEffects.CreateNew(DragDropEffects.Copy);
+                     return QueryDropEffects.CreateNew(DragDropEffectsEx.Copy);
                  },
                 (ems, da, eff) =>
                 {
                     if (ems.Count() > 1)
                         Label = ems.Count() + " items.";
                     else Label = ems.First().FullPath;
-                    return DragDropEffects.Copy;
+                    return DragDropEffectsEx.Copy;
                 }) { DisplayName = "TestLabel" };
         }
 

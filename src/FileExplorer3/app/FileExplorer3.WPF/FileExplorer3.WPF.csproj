@@ -138,7 +138,7 @@
     <Compile Include="Models\ICommandModelImpl.cs" />
     <Compile Include="Models\IconExtractorImpl.cs" />
     <Compile Include="Models\IDiskIOHelper.cs" />
-    <Compile Include="Models\IDragDropHandler.cs" />
+    <Compile Include="Models\IShellDragDropHandler.cs" />
     <Compile Include="Models\IModelIconExtractorImpl.cs" />
     <Compile Include="Models\IRoutedCommandModel.cs" />
     <Compile Include="Models\IWPFProfile.cs" />

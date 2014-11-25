@@ -204,6 +204,6 @@ namespace FileExplorer.Models
         public string Alias { get; protected set; }
         public IEntryModelCache<DropBoxItemModel> ModelCache { get; private set; }
 
-        #endregion
+        #endregion       
     }
 }
