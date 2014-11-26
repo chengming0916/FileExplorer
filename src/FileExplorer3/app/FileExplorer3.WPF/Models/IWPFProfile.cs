@@ -11,7 +11,7 @@ namespace FileExplorer.WPF.Models
 {
     public interface IWPFProfile : IProfile
     {
-        IShellDragDropHandler DragDrop { get; }
+        //IShellDragDropHandler DragDrop { get; }
         //IEventAggregator Events { get; }
     }
 

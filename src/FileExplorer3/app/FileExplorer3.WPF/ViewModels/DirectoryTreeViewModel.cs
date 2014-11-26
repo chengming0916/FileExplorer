@@ -31,8 +31,8 @@ namespace FileExplorer.WPF.ViewModels
                 : base(
                 () => new[] { selection.RootSelector.SelectedViewModel },
                 ems => (ems.First().Profile as IWPFProfile). DragDrop.QueryDrag(ems),
-                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop().GetDataObject(ems)),
-                (ems, da, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, da, eff)                    
+                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop.GetDataObject(ems)),
+                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)                    
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

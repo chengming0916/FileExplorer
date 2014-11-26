@@ -22,6 +22,6 @@ namespace FileExplorer.Models
 
         public IDiskIOHelper DiskIO { get; protected set; }
         //public IDragDropHandler DragDrop { get; protected set; }
-        public new IShellDragDropHandler DragDrop { get; protected set; }        
+        //public new IShellDragDropHandler DragDrop { get; protected set; }        
     }
 }

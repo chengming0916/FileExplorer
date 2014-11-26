@@ -76,12 +76,13 @@ namespace FileExplorer.UIEventHub
                          HubScriptCommands.QueryDraggablesFromDataObject(iSupportDropVariable, destinationDataObjectVariable, destinationVariable, false,
                          //And if there's draggables,
                              ScriptCommands.IfAssigned("{DragDrop.Draggables}",
+                               ScriptCommands.IfNotEquals("{DragDrop.Draggables.Count()}", 0, 
                                 //Call ISupportDrop.QueryDropEffects() to get QueryDropEffect.
                                 HubScriptCommands.QueryDropEffects(iSupportDropVariable, destinationVariable, destinationDataObjectVariable, null,
                                    queryDropResultVariable, false, 
                                    ScriptCommands.IfEquals(queryDropResultVariable, FileExplorer.Defines.QueryDropEffects.None, 
                                    otherwiseCommand, 
-                                   successCommand)), otherwiseCommand)));
+                                   successCommand)), otherwiseCommand), otherwiseCommand)));
          }
                                        
     }

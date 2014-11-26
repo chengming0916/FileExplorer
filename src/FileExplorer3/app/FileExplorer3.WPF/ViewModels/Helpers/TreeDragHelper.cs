@@ -44,14 +44,14 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         }
 
         public DragDropEffectsEx QueryDrag(IEnumerable<IDraggable> draggables)
-        {
+        {         
             var entryModels = draggables.Select(d => _convertBackFunc(d));
             return _queryDragFunc(entryModels);
 
         }
 
         public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
-        {
+        {            
             var entryModels = draggables.Select(d => _convertBackFunc(d));
             return _dataObjectFunc(entryModels);
         }

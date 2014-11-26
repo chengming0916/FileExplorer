@@ -20,15 +20,15 @@ namespace FileExplorer.WPF.Models
 {
     public static partial class ExtensionMethods
     {
-        public static IShellDragDropHandler DragDrop(this IProfile profile)
-        {
-            return (profile is IWPFProfile) ? (profile as IWPFProfile).DragDrop : null;
-        }
+        //public static IShellDragDropHandler DragDrop(this IProfile profile)
+        //{
+        //    return (profile is IWPFProfile) ? (profile as IWPFProfile).DragDrop : null;
+        //}
 
-        public static IEventAggregator Events(this IProfile profile)
-        {
-            return profile.Events;
-        }
+        //public static IEventAggregator Events(this IProfile profile)
+        //{
+        //    return profile.Events;
+        //}
 
 
         public static async Task<IEntryModel> ParseAsync(this IProfile[] profiles, string path)
@@ -162,6 +162,19 @@ namespace FileExplorer.WPF.Models
                 FileExplorer.WPF.Utils.BitmapSourceUtils.CreateBitmapSourceFromBitmap(bytes);
         }
 
+
+        public static Task<IDataObject> GetDataObject(this IDragDropHandler dragDropHandler, IEnumerable<IEntryModel> entries)
+        {
+            if (dragDropHandler is IShellDragDropHandler)
+                return (dragDropHandler as IShellDragDropHandler).GetDataObject(entries);
+            else return Task.FromResult<IDataObject>(null);
+        }
+        public static IEnumerable<IEntryModel> GetEntryModels(this IDragDropHandler dragDropHandler, IDataObject dataObject)
+        {
+            if (dragDropHandler is IShellDragDropHandler)
+                return (dragDropHandler as IShellDragDropHandler).GetEntryModels(dataObject);
+            else return new List<IEntryModel>();
+        }
 
         public static void OnDragCompleted(this IDragDropHandler dragDropHandler,
             IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffectsEx effect)
