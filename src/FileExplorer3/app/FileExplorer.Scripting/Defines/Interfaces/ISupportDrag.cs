@@ -38,11 +38,7 @@ namespace FileExplorer.UIEventHub
         {
             return DragDropEffectsEx.None;
         }
-
-        public IDataObject GetDataObject(IEnumerable<IDraggable> draggables)
-        {
-            return null;
-        }
+      
 
         public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect)
         {

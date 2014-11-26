@@ -36,11 +36,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Defines\Interfaces\IDraggable.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicConvertRule.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicStore.cs" />
     <Compile Include="Defines\Interfaces\IPathHelper.cs" />
+    <Compile Include="Defines\Interfaces\ISupportDrag.cs" />
+    <Compile Include="Defines\Interfaces\ISupportDrop.cs" />
+    <Compile Include="Defines\Interfaces\IUIAware.cs" />
     <Compile Include="Defines\QueryDropEffects.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
+    <Compile Include="Implements\DragHelper.cs" />
+    <Compile Include="Implements\DropHelper.cs" />
     <Compile Include="Implements\MemoryParameterDicStore.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
     <Compile Include="Implements\DynamicRelayCommandDictionary.cs" />
