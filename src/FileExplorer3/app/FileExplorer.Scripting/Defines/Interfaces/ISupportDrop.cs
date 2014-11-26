@@ -59,11 +59,6 @@ namespace FileExplorer.UIEventHub
         public bool IsDroppable { get { return false; }}
         public string DropTargetLabel { get { return null; }}
         public string DisplayName { get; set; }
-        public QueryDropEffects QueryDrop(IDataObject da, DragDropEffectsEx allowedEffects)
-        {
-            return QueryDropEffects.None;
-        }
-
 
         public DragDropEffectsEx Drop(IEnumerable<IDraggable> draggables, DragDropEffectsEx allowedEffects)
         {

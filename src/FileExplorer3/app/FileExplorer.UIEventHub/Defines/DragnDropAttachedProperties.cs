@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.UIEventHub;
+using FileExplorer.Models;
 
 namespace FileExplorer.Defines
 {

@@ -78,10 +78,10 @@
     <Compile Include="Implements\DragDropEventProcessor.cs" />
     <Compile Include="Implements\DragDropLiteEventProcessor.cs" />
     <Compile Include="Implements\DragHelper.cs" />
+    <Compile Include="Implements\DropHelper.cs" />
     <Compile Include="Implements\InputBindingsEventProcessor.cs" />
     <Compile Include="Implements\ParameterDicConvertRule\UIParameterDicConvertRule.cs" />
     <Compile Include="Implements\ResizeAdornerEventProcessor.cs" />
-    <Compile Include="Implements\DropHelper.cs" />
     <Compile Include="Implements\ShellDragHelper.cs" />
     <Compile Include="Implements\ShellDropHelper.cs" />
     <Compile Include="Implements\TabControlDragHelper.cs" />
@@ -118,11 +118,7 @@
     <Compile Include="Interfaces\IUIInput.cs" />
     <Compile Include="Interfaces\IUIInputManager.cs" />
     <Compile Include="Interfaces\IUIInputProcessor.cs" />
-    <Compile Include="Interfaces\IDraggable.cs" />
     <Compile Include="Interfaces\IFileDropItem.cs" />
-    <Compile Include="Interfaces\ISupportDrag.cs" />
-    <Compile Include="Interfaces\ISupportDrop.cs" />
-    <Compile Include="Interfaces\IUIAware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\v2\AdornerCommand.cs" />
     <Compile Include="Scripts\v2\AssignDiskParameterDic.cs" />
