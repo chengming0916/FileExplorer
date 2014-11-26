@@ -1,33 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 #if WINRT
 using Windows.UI.Xaml.Controls;
 #else
 using System.ComponentModel.Composition;
-using System.Windows.Controls;
+
 #endif
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.WPF.Models;
-using System.Diagnostics;
-using System.Windows.Data;
-using System.ComponentModel;
 using System.Windows;
-using System.Collections;
-using FileExplorer.WPF.ViewModels.Actions;
 using FileExplorer.WPF.Utils;
-using System.Collections.ObjectModel;
 using FileExplorer.WPF.ViewModels.Helpers;
-using Cinch;
-using System.Windows.Input;
-using FileExplorer.Defines;
 using FileExplorer.Script;
 using System.Threading;
-using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
 using FileExplorer.UIEventHub;
@@ -54,11 +42,11 @@ namespace FileExplorer.WPF.ViewModels
                     (em) => EntryViewModel.FromEntryModel(em)),
 
                 new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
-                        ems => AsyncUtils.RunSync(() => flvm.CurrentDirectory.Profile.DragDrop().GetDataObject(ems)),
-                        da => flvm.CurrentDirectory.Profile.DragDrop().GetEntryModels(da)), 
+                        ems => AsyncUtils.RunSync(() => flvm.CurrentDirectory.Profile.DragDrop.GetDataObject(ems)),
+                        da => flvm.CurrentDirectory.Profile.DragDrop.GetEntryModels(da)), 
 
-                (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop().QueryDrop(ems, flvm.CurrentDirectory, eff),                
-                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop().OnDropCompleted(ems, da, flvm.CurrentDirectory, eff))
+                (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop.QueryDrop(ems, flvm.CurrentDirectory, eff),                
+                (ems, da, eff) => flvm.CurrentDirectory.Profile.DragDrop.OnDropCompleted(ems, da, flvm.CurrentDirectory, eff))
             { _flvm = flvm; }
 
             public override string DisplayName
@@ -78,9 +66,9 @@ namespace FileExplorer.WPF.ViewModels
             public FileListDragHelper(FileListViewModel flvm)
                 : base(
                 () => flvm.Selection.SelectedItems.ToList(),
-                ems => ems.First().Profile.DragDrop().QueryDrag(ems),
-                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop().GetDataObject(ems)),
-                (ems, da, eff) => ems.First().Profile.DragDrop().OnDragCompleted(ems, eff)
+                ems => ems.First().Profile.DragDrop.QueryDrag(ems),
+                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop.GetDataObject(ems)),
+                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

@@ -1773,7 +1773,7 @@ namespace FileExplorer.Script
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var _srcModels = _srcModelFunc(pm);
-            var da = await _srcModels.First().Profile.DragDrop().GetDataObject(_srcModels);
+            var da = await _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
 
             byte[] moveEffect = _removeOrginal ? preferCut : preferCopy;
             MemoryStream dropEffect = new MemoryStream();
@@ -1809,7 +1809,7 @@ namespace FileExplorer.Script
                 System.Windows.IDataObject da = System.Windows.Clipboard.GetDataObject();
                 if (da != null)
                 {
-                    var srcModels = currentDirectory.Profile.DragDrop().GetEntryModels(da);
+                    var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
                     if (srcModels != null && srcModels.Count() > 0)
                     {
                         return _transferCommandFunc(DragDropEffectsEx.Copy, srcModels.ToArray(), currentDirectory);
@@ -1826,7 +1826,7 @@ namespace FileExplorer.Script
             if (currentDirectory != null)
             {
                 System.Windows.IDataObject da = System.Windows.Clipboard.GetDataObject();
-                var srcModels = currentDirectory.Profile.DragDrop().GetEntryModels(da);
+                var srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da);
                 return srcModels != null && srcModels.Count() > 0;
             }
             return false;

@@ -73,7 +73,7 @@ namespace FileExplorer.Script
                 case ClipboardOperation.Copy:
                 case ClipboardOperation.Cut:
                     var _srcModels = await pm.GetValueAsEntryModelArrayAsync(EntriesKey);
-                    var da = await _srcModels.First().Profile.DragDrop().GetDataObject(_srcModels);
+                    var da = await _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
                     byte[] moveEffect = Operation == ClipboardOperation.Cut ? preferCut : preferCopy;
                     MemoryStream dropEffect = new MemoryStream();
                     dropEffect.Write(moveEffect, 0, moveEffect.Length);
@@ -89,7 +89,7 @@ namespace FileExplorer.Script
                         IDataObject da1 = Clipboard.GetDataObject();
                         if (da1 != null)
                         {
-                            IEntryModel[] srcModels = currentDirectory.Profile.DragDrop().GetEntryModels(da1).ToArray();
+                            IEntryModel[] srcModels = currentDirectory.Profile.DragDrop.GetEntryModels(da1).ToArray();
                             string sourceModelKey = "{Clipboard-SourceModels}";
                             return ScriptCommands.Assign(sourceModelKey, srcModels, false, 
                                 IOScriptCommands.DiskTransfer(sourceModelKey, CurrentDirectoryEntryKey, DestinationKey, false, true, NextCommand));

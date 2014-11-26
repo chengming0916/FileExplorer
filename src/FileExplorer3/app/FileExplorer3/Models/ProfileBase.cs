@@ -122,7 +122,7 @@ namespace FileExplorer.Models
         //public IDiskPathMapper PathMapper { get; protected set; }
         public IEventAggregator Events { get; protected set; }
         public IConverterProfile[] Converters { get { return _converters; } set { setConverters(value); } }
-
+        public IDragDropHandler DragDrop { get; protected set; }
 
         #endregion
 

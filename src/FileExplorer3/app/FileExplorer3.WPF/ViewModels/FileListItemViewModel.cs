@@ -28,11 +28,11 @@ namespace FileExplorer.WPF.ViewModels
                     (em) => EntryViewModel.FromEntryModel(em)),
 
                 new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
-                        ems => AsyncUtils.RunSync(() => flvm.EntryModel.Profile.DragDrop().GetDataObject(ems)), 
-                        da => flvm.EntryModel.Profile.DragDrop().GetEntryModels(da)), 
+                        ems => AsyncUtils.RunSync(() => flvm.EntryModel.Profile.DragDrop.GetDataObject(ems)), 
+                        da => flvm.EntryModel.Profile.DragDrop.GetEntryModels(da)), 
 
-                (ems, eff) => flvm.EntryModel.Profile.DragDrop().QueryDrop(ems, flvm.EntryModel, eff),
-                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop().OnDropCompleted(ems, flvm.EntryModel, eff))
+                (ems, eff) => flvm.EntryModel.Profile.DragDrop.QueryDrop(ems, flvm.EntryModel, eff),
+                (ems, da, eff) => flvm.EntryModel.Profile.DragDrop.OnDropCompleted(ems, da, flvm.EntryModel, eff))
 
             {   
                 
@@ -45,7 +45,7 @@ namespace FileExplorer.WPF.ViewModels
             : base(model)
         {
             _reportSelected = reportSelected;
-            var dragDropHandler = model.Profile.DragDrop();
+            var dragDropHandler = model.Profile.DragDrop;
             DropHelper = dragDropHandler == null ? NoDropHelper.Instance : 
                 dragDropHandler.QueryCanDrop(model) ? (ISupportDrop)new FileListItemDropHelper(this) {  DisplayName = model.Label }
                 : NoDropHelper.Instance;

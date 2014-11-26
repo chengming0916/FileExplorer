@@ -82,7 +82,8 @@ namespace FileExplorer.Models
 
         IEntryHierarchyComparer HierarchyComparer { get; }
         IMetadataProvider MetadataProvider { get; }
-        IEnumerable<ICommandProvider> CommandProviders { get; }        
+        IEnumerable<ICommandProvider> CommandProviders { get; }
+        IDragDropHandler DragDrop { get; }
                 
         IEventAggregator Events { get; }
         ISuggestSource SuggestSource { get; }

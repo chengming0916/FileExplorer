@@ -34,7 +34,7 @@ namespace FileExplorer.WPF.ViewModels
                 var profiles = selection.RootSelector.EntryHelper.All.Select(rvm => rvm.EntryModel.Profile);
                 foreach (var p in profiles)
                 {
-                    var retVal = p.DragDrop().GetEntryModels(da);
+                    var retVal = p.DragDrop.GetEntryModels(da);
                     if (retVal != null)
                         return retVal;
                 }
@@ -49,11 +49,11 @@ namespace FileExplorer.WPF.ViewModels
                     (em) => EntryViewModel.FromEntryModel(em)),
 
                 new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
-                        ems => AsyncUtils.RunSync(() => curDir.Profile.DragDrop().GetDataObject(ems)),
+                        ems => AsyncUtils.RunSync(() => curDir.Profile.DragDrop.GetDataObject(ems)),
                         da => dataObjectFunc(da, selection)), 
 
-                (ems, eff) => curDir.Profile.DragDrop().QueryDrop(ems, curDir, eff),                                
-                (ems, da, eff) => curDir.Profile.DragDrop().OnDropCompleted(ems, curDir, eff))
+                (ems, eff) => curDir.Profile.DragDrop.QueryDrop(ems, curDir, eff),                                
+                (ems, da, eff) => curDir.Profile.DragDrop.OnDropCompleted(ems, curDir, eff))
             {
                 
             }
