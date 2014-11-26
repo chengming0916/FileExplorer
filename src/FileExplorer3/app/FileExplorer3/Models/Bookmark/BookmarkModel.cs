@@ -138,5 +138,8 @@ namespace FileExplorer.Models.Bookmark
 
         #endregion
 
+
+        public bool IsDragging { get; set; }       
+        public string DisplayName { get { return this.Label; } }
     }
 }

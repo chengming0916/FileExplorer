@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.Models
 {
-    public interface IEntryModel : INotifyPropertyChanged, IEquatable<IEntryModel>
+    public interface IEntryModel : INotifyPropertyChanged, IEquatable<IEntryModel>, IDraggable
     {
         IProfile Profile { get; }
 
@@ -52,5 +53,8 @@ namespace FileExplorer.Models
         {
             return false;
         }
+
+        public bool IsDragging { get; set;}
+        public string DisplayName { get { return Label; }}
     }
 }

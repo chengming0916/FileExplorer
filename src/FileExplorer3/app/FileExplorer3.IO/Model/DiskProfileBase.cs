@@ -16,8 +16,7 @@ namespace FileExplorer.Models
         public DiskProfileBase(IEventAggregator events, params IConverterProfile[] converters)
             : base(events, converters)
         {
-            MetadataProvider = new MetadataProviderBase(new BasicMetadataProvider(), new FileBasedMetadataProvider());
-            DragDrop = new NullShellDragDropHandler();
+            MetadataProvider = new MetadataProviderBase(new BasicMetadataProvider(), new FileBasedMetadataProvider());            
         }
 
         public IDiskIOHelper DiskIO { get; protected set; }

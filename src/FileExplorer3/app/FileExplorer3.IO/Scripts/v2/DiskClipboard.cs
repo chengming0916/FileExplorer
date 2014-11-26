@@ -73,7 +73,7 @@ namespace FileExplorer.Script
                 case ClipboardOperation.Copy:
                 case ClipboardOperation.Cut:
                     var _srcModels = await pm.GetValueAsEntryModelArrayAsync(EntriesKey);
-                    var da = await _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
+                    var da = _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
                     byte[] moveEffect = Operation == ClipboardOperation.Cut ? preferCut : preferCopy;
                     MemoryStream dropEffect = new MemoryStream();
                     dropEffect.Write(moveEffect, 0, moveEffect.Length);
