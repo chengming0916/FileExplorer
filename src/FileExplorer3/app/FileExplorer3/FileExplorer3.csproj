@@ -48,6 +48,7 @@
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\AutoSuggestSource.cs" />
     <Compile Include="Models\MetadataProviderBase.cs" />
+    <Compile Include="Models\NullDragDropHandler.cs" />
     <Compile Include="Models\NullSuggestSource.cs" />
     <Compile Include="Models\PathComparer.cs" />
     <Compile Include="Models\PathHierarchyComparer.cs" />

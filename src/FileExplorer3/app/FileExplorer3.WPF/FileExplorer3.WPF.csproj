@@ -142,7 +142,6 @@
     <Compile Include="Models\IModelIconExtractorImpl.cs" />
     <Compile Include="Models\IRoutedCommandModel.cs" />
     <Compile Include="Models\IWPFProfile.cs" />
-    <Compile Include="Models\NullDragDropHandler.cs" />
     <Compile Include="Models\NullMetadataProvider.cs" />
     <Compile Include="Models\RootEntryModel.cs" />
     <Compile Include="Scripts\FileExplorer3WPFCommands.cs" />

@@ -49,11 +49,11 @@ namespace FileExplorer.WPF.ViewModels
                     (em) => EntryViewModel.FromEntryModel(em)),
 
                 new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
-                        ems => AsyncUtils.RunSync(() => curDir.Profile.DragDrop.GetDataObject(ems)),
+                        ems => curDir.Profile.DragDrop.GetDataObject(ems),
                         da => dataObjectFunc(da, selection)), 
 
                 (ems, eff) => curDir.Profile.DragDrop.QueryDrop(ems, curDir, eff),                                
-                (ems, da, eff) => curDir.Profile.DragDrop.OnDropCompleted(ems, curDir, eff))
+                (ems, da, eff) => curDir.Profile.DragDrop.OnDropCompleted(ems, da, curDir, eff))
             {
                 
             }

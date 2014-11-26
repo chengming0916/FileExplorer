@@ -10,15 +10,15 @@ using FileExplorer.Defines;
 
 namespace FileExplorer.WPF.Models
 {
-    /// <summary>
-    /// Owned by IProfile, for drag drop handling.
-    /// </summary>
-    public interface IShellDragDropHandler : IDragDropHandler
-    {
-        Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries);
-        IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject);
+    ///// <summary>
+    ///// Owned by IProfile, for drag drop handling.
+    ///// </summary>
+    //public interface IShellDragDropHandler : IDragDropHandler
+    //{
+    //    Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries);
+    //    IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject);
 
-        void OnDragCompleted(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffectsEx effect);        
-        DragDropEffectsEx OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffectsEx allowedEffects);
-    }
+    //    void OnDragCompleted(IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffectsEx effect);        
+    //    DragDropEffectsEx OnDropCompleted(IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffectsEx allowedEffects);
+    //}
 }

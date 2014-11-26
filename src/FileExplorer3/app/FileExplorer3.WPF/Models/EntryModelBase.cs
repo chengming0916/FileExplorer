@@ -84,11 +84,12 @@ namespace FileExplorer.WPF.Models
 
         public DateTime CreationTimeUtc { get; protected set; }
         public DateTime LastUpdateTimeUtc { get; protected set; }
+        public bool IsDragging { get; set;}
+        public virtual string DisplayName { get { return Label; } }
 
         #endregion
 
 
-        
     }
 
 }

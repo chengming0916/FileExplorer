@@ -16,6 +16,7 @@ using FileExplorer.IO;
 using FileExplorer.WPF.BaseControls;
 using FileExplorer.UIEventHub;
 using FileExplorer.Defines;
+using System.Windows.Data;
 
 namespace FileExplorer.Models
 {
@@ -57,13 +58,19 @@ namespace FileExplorer.Models
         }
     }
 
-    public class FileBasedDragDropHandler : IShellDragDropHandler
+    public class FileBasedDragDropHandler : IDragDropHandler
     {
-        private IProfile _fsiProfile; //For loading drag items.        
-        public  DiskTransfer TransferCommand { get; set; }        
+        private static IProfile _fsiProfile; //For loading drag items.        
+        public  DiskTransfer TransferCommand { get; set; }
+
+        public ISupportDrag DragHelper { get; private set; }
+        public ISupportDrop DropHelper { get; private set; }
+
 
         private IProfile _profile;
         private Func<IEntryModel, bool> _getIsVirtualFunc;
+        private IValueConverter converter;
+        private IValueConverter dataObjConverter;
 
         public FileBasedDragDropHandler(IProfile profile, Func<IEntryModel, bool> getIsVirtualFunc = null)
         {
@@ -79,9 +86,25 @@ namespace FileExplorer.Models
                //        IOScriptCommands.DiskTransfer(source, destDir, effect == DragDropEffectsEx.Move, true)                       
                //        : ResultCommand.Error(new NotSupportedException())
                //    );
+            
+            converter = LambdaValueConverter.ConvertUsingCast<IDraggable, IEntryModel>();
+            dataObjConverter = new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
+             ems => getDataObject(ems), da => getEntryModels(da));   
         }
 
-        public virtual async Task<IDataObject> GetDataObject(IEnumerable<IEntryModel> entries)
+        public ISupportDrag GetDragHelper(IEnumerable<IEntryModel> entries)
+        {
+            return new LambdaShellDragHelper<IEntryModel>(converter, dataObjConverter, () => entries,
+                ems => QueryDrag(ems), (ems, da, eff) => OnDragCompleted(ems, da, eff));
+        }
+
+        public ISupportDrop GetDropHelper(IEntryModel destEm)
+        {
+            return new LambdaShellDropHelper<IEntryModel>(converter, dataObjConverter,
+               (ems, eff) => QueryDrop(ems, destEm, eff), (ems, da, eff) => OnDropCompleted(ems, da, destEm, eff));
+        }
+
+        private IDataObject getDataObject(IEnumerable<IEntryModel> entries)
         {
             entries =
                 entries.Select(m => m is IConvertedEntryModel ? (m as IConvertedEntryModel).OriginalEntryModel : m);
@@ -105,21 +128,8 @@ namespace FileExplorer.Models
             //    );
         }
 
-        public DragDropEffectsEx QueryDrag(IEnumerable<IEntryModel> entries)
-        {
-            foreach (var e in entries)
-                if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.Mapper[e].IsVirtual)
-                    return DragDropEffectsEx.Copy;
-            return DragDropEffectsEx.Copy | DragDropEffectsEx.Move;
-        }
 
-        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffectsEx effect)
-        {
-            //if (effect == DragDropEffectsEx.Move)
-            //    draggables.First().Profile.
-        }
-
-        public IEnumerable<IEntryModel> GetEntryModels(IDataObject dataObject)
+        private IEnumerable<IEntryModel> getEntryModels(IDataObject dataObject)
         {
             if (dataObject.GetDataPresent(DataFormats.FileDrop))
             {
@@ -144,6 +154,21 @@ namespace FileExplorer.Models
                 }
             }
         }
+
+        public DragDropEffectsEx QueryDrag(IEnumerable<IEntryModel> entries)
+        {
+            foreach (var e in entries)
+                if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.Mapper[e].IsVirtual)
+                    return DragDropEffectsEx.Copy;
+            return DragDropEffectsEx.Copy | DragDropEffectsEx.Move;
+        }
+
+        public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffectsEx effect)
+        {
+            //if (effect == DragDropEffectsEx.Move)
+            //    draggables.First().Profile.
+        }
+
 
         public bool QueryCanDrop(IEntryModel destDir)
         {
@@ -190,22 +215,6 @@ namespace FileExplorer.Models
             };
             return DragDropEffectsEx.None;
         }
-
-
-
-
-
-
-        public void OnDragCompleted(IEnumerable<IEntryModel> entries, DragDropEffectsEx effect)
-        {
-            
-        }
-
-        public DragDropEffectsEx OnDropCompleted(IEnumerable<IEntryModel> entries, IEntryModel dest, DragDropEffectsEx allowedEffects)
-        {
-            return OnDropCompleted(entries, null, dest, allowedEffects);
-        }
-
 
        
     }

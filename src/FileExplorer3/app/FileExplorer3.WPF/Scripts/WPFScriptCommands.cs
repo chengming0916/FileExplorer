@@ -1773,7 +1773,7 @@ namespace FileExplorer.Script
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var _srcModels = _srcModelFunc(pm);
-            var da = await _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
+            var da = _srcModels.First().Profile.DragDrop.GetDataObject(_srcModels);
 
             byte[] moveEffect = _removeOrginal ? preferCut : preferCopy;
             MemoryStream dropEffect = new MemoryStream();

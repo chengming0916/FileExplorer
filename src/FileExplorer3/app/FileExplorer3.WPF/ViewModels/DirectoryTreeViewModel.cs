@@ -30,8 +30,8 @@ namespace FileExplorer.WPF.ViewModels
                 ITreeSelector<IDirectoryNodeViewModel, IEntryModel> selection)
                 : base(
                 () => new[] { selection.RootSelector.SelectedViewModel },
-                ems => (ems.First().Profile as IWPFProfile). DragDrop.QueryDrag(ems),
-                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop.GetDataObject(ems)),
+                ems => ems.First().Profile.DragDrop.QueryDrag(ems),
+                ems => ems.First().Profile.DragDrop.GetDataObject(ems),
                 (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)                    
                 , d => (d as IEntryViewModel).EntryModel)
             { }

@@ -42,7 +42,7 @@ namespace FileExplorer.WPF.ViewModels
                     (em) => EntryViewModel.FromEntryModel(em)),
 
                 new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
-                        ems => AsyncUtils.RunSync(() => flvm.CurrentDirectory.Profile.DragDrop.GetDataObject(ems)),
+                        ems => flvm.CurrentDirectory.Profile.DragDrop.GetDataObject(ems),
                         da => flvm.CurrentDirectory.Profile.DragDrop.GetEntryModels(da)), 
 
                 (ems, eff) => flvm.CurrentDirectory.Profile.DragDrop.QueryDrop(ems, flvm.CurrentDirectory, eff),                
@@ -67,8 +67,8 @@ namespace FileExplorer.WPF.ViewModels
                 : base(
                 () => flvm.Selection.SelectedItems.ToList(),
                 ems => ems.First().Profile.DragDrop.QueryDrag(ems),
-                ems => AsyncUtils.RunSync(() => ems.First().Profile.DragDrop.GetDataObject(ems)),
-                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, eff)
+                ems => ems.First().Profile.DragDrop.GetDataObject(ems),
+                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

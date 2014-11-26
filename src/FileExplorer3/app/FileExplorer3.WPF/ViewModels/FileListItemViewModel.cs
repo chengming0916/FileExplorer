@@ -28,7 +28,7 @@ namespace FileExplorer.WPF.ViewModels
                     (em) => EntryViewModel.FromEntryModel(em)),
 
                 new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
-                        ems => AsyncUtils.RunSync(() => flvm.EntryModel.Profile.DragDrop.GetDataObject(ems)), 
+                        ems => flvm.EntryModel.Profile.DragDrop.GetDataObject(ems), 
                         da => flvm.EntryModel.Profile.DragDrop.GetEntryModels(da)), 
 
                 (ems, eff) => flvm.EntryModel.Profile.DragDrop.QueryDrop(ems, flvm.EntryModel, eff),

@@ -108,7 +108,7 @@ namespace TestApp
                     (em) => EntryViewModel.FromEntryModel(em)),
 
                  new LambdaValueConverter<IEnumerable<IEntryModel>, IDataObject>(
-                     (ems) => AsyncUtils.RunSync(() => exProfile.DragDrop.GetDataObject(ems)),
+                     (ems) => exProfile.DragDrop.GetDataObject(ems),
                      (da) => exProfile.DragDrop.GetEntryModels(da)), 
 
                  (ems, eff) =>

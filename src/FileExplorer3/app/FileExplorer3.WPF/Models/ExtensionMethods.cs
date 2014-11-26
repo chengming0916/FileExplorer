@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using FileExplorer.Models;
 using FileExplorer.WPF.Utils;
 using System.Windows;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.WPF.Models
 {
@@ -163,40 +164,56 @@ namespace FileExplorer.WPF.Models
         }
 
 
-        public static Task<IDataObject> GetDataObject(this IDragDropHandler dragDropHandler, IEnumerable<IEntryModel> entries)
+        public static IDataObject GetDataObject(this IDragDropHandler dragDropHandler, IEnumerable<IEntryModel> entries)
         {
-            if (dragDropHandler is IShellDragDropHandler)
-                return (dragDropHandler as IShellDragDropHandler).GetDataObject(entries);
-            else return Task.FromResult<IDataObject>(null);
+            var dragHelper = dragDropHandler.GetDragHelper(entries);
+            if (dragHelper is ISupportShellDrag)
+                return (dragHelper as ISupportShellDrag).GetDataObject(entries.Cast<IDraggable>());
+            else return null;
         }
         public static IEnumerable<IEntryModel> GetEntryModels(this IDragDropHandler dragDropHandler, IDataObject dataObject)
         {
-            if (dragDropHandler is IShellDragDropHandler)
-                return (dragDropHandler as IShellDragDropHandler).GetEntryModels(dataObject);
+            var dropHelper = dragDropHandler.GetDropHelper(null);
+            if (dropHelper is ISupportShellDrop)
+                return (dropHelper as ISupportShellDrop).QueryDropDraggables(dataObject).Cast<IEntryModel>();
             else return new List<IEntryModel>();
         }
 
         public static void OnDragCompleted(this IDragDropHandler dragDropHandler,
             IEnumerable<IEntryModel> entries, IDataObject da, DragDropEffectsEx effect)
         {
-            if (dragDropHandler is IShellDragDropHandler)
-                (dragDropHandler as IShellDragDropHandler).OnDragCompleted(entries, da, effect);
-            else dragDropHandler.OnDragCompleted(entries, effect);
+            var dragHelper = dragDropHandler.GetDragHelper(entries);
+            if (dragHelper is ISupportShellDrag)
+                (dragHelper as ISupportShellDrag).OnDragCompleted(entries.Cast<IDraggable>(), da, effect);
+            else dragHelper.OnDragCompleted(entries.Cast<IDraggable>(), effect);
+        }
+
+        public static DragDropEffectsEx QueryDrag(this IDragDropHandler dragDropHandler, IEnumerable<IEntryModel> ems)
+        {
+            var dragHelper = dragDropHandler.GetDragHelper(ems);
+            return dragHelper.QueryDrag(ems.Cast<IDraggable>());
+        }
+
+        public static bool QueryCanDrop(this IDragDropHandler dragDropHandler, IEntryModel dest)
+        {
+            var dropHelper = dragDropHandler.GetDropHelper(dest);
+            return dropHelper.IsDroppable;
         }
 
         public static QueryDropEffects QueryDrop(this IDragDropHandler dragDropHandler,
-            IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffectsEx allowedEffects)
+            IEnumerable<IEntryModel> entries, IEntryModel dest, DragDropEffectsEx allowedEffects)
         {
-            if (dragDropHandler is IShellDragDropHandler)
-                return (dragDropHandler as IShellDragDropHandler).QueryDrop(entries, da, dest, allowedEffects);
-            else return dragDropHandler.QueryDrop(entries, dest, allowedEffects);
+            var dropHelper = dragDropHandler.GetDropHelper(dest);
+            return (dropHelper as ISupportShellDrop).QueryDrop(entries.Cast<IDraggable>(), allowedEffects);
         }
+
         public static DragDropEffectsEx OnDropCompleted(this IDragDropHandler dragDropHandler,
             IEnumerable<IEntryModel> entries, IDataObject da, IEntryModel dest, DragDropEffectsEx allowedEffects)
         {
-            if (dragDropHandler is IShellDragDropHandler)
-                return (dragDropHandler as IShellDragDropHandler).OnDropCompleted(entries, da, dest, allowedEffects);
-            else return dragDropHandler.OnDropCompleted(entries, dest, allowedEffects);
+            var dropHelper = dragDropHandler.GetDropHelper(dest);
+            if (dropHelper is ISupportShellDrop)
+                return (dropHelper as ISupportShellDrop).Drop(entries.Cast<IDraggable>(), da, allowedEffects);
+            else return dropHelper.Drop(entries.Cast<IDraggable>(), allowedEffects);
         }
 
         //        public interface IModelIconExtractor<IEntryModel>

@@ -11,6 +11,7 @@ using FileExplorer.Defines;
 using FileExplorer.Models;
 using System.Text.RegularExpressions;
 using FileExplorer.WPF.Utils;
+using FileExplorer.UIEventHub;
 
 namespace FileExplorer.Models
 {
@@ -32,6 +33,7 @@ namespace FileExplorer.Models
             MetadataProvider = new BasicMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = NullDiskPatheMapper.Instance;
+            DragDrop = NullDragDropHandler.Instance;
 
            
             Events = events ?? new EventAggregator();
