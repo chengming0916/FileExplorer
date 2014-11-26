@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Defines\Enums.cs" />
     <Compile Include="Defines\Interfaces\ExtensionMethods.cs" />
+    <Compile Include="Defines\Interfaces\IDraggable.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicConverter.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicConvertRule.cs" />
     <Compile Include="Defines\Interfaces\IParameterDicStore.cs" />
@@ -58,9 +59,15 @@
     <Compile Include="Defines\Interfaces\IScriptCommandConstructor.cs" />
     <Compile Include="Defines\Interfaces\IScriptRunner.cs" />
     <Compile Include="Defines\Interfaces\IScriptRunnerSource.cs" />
+    <Compile Include="Defines\Interfaces\ISupportDrag.cs" />
+    <Compile Include="Defines\Interfaces\ISupportDrop.cs" />
+    <Compile Include="Defines\Interfaces\IUIAware.cs" />
+    <Compile Include="Defines\QueryDropEffects.cs" />
     <Compile Include="Defines\RegexPatterns.cs" />
     <Compile Include="Defines\Structs\ParameterDic.cs" />
     <Compile Include="Defines\Structs\TransferProgress.cs" />
+    <Compile Include="Implements\DragHelper.cs" />
+    <Compile Include="Implements\DropHelper.cs" />
     <Compile Include="Implements\DynamicRelayCommandDictionary.cs" />
     <Compile Include="Implements\ExtensionMethods.cs" />
     <Compile Include="Implements\MemoryParameterDicStore.cs" />

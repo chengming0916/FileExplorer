@@ -10,6 +10,7 @@ using System.Windows.Input;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Utils;
 using FileExplorer.UIEventHub;
+using FileExplorer.Defines;
 
 namespace Test_NonShellDragDemo
 {
@@ -80,15 +81,15 @@ namespace Test_NonShellDragDemo
         //        (from i in draggables.Cast<DragDropItemViewModel>() where i.IsSelected select i.Value).ToArray());
         //}
 
-        public DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        public DragDropEffectsEx QueryDrag(IEnumerable<IDraggable> draggables)
         {
-            return DragDropEffects.Move | DragDropEffects.Copy;
+            return DragDropEffectsEx.Move | DragDropEffectsEx.Copy;
         }
 
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffects effect)
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect)
         {
-            if (effect == DragDropEffects.Move)
+            if (effect == DragDropEffectsEx.Move)
             {
                 foreach (var item in draggables.Cast<DragDropItemViewModel>())
                     if (Items.Contains(item))
@@ -99,14 +100,14 @@ namespace Test_NonShellDragDemo
 
 
 
-        public QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffects allowedEffects)
+        public QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, DragDropEffectsEx allowedEffects)
         {
             if (draggables.Count() == 0)
                 return QueryDropEffects.None;
             foreach (var dm in draggables.Cast<DragDropItemViewModel>())             
                 if (dm.Value == this.Value || this.Items.Contains(dm))
                     return QueryDropEffects.None;
-            return QueryDropEffects.CreateNew(DragDropEffects.Move | DragDropEffects.Copy, DragDropEffects.Move);
+            return QueryDropEffects.CreateNew(DragDropEffectsEx.Move | DragDropEffectsEx.Copy, DragDropEffectsEx.Move);
         }
 
         //public IEnumerable<IDraggable> QueryDropDraggables(IDataObject da)
@@ -119,10 +120,10 @@ namespace Test_NonShellDragDemo
         //    }
         //}
 
-        public DragDropEffects Drop(IEnumerable<IDraggable> draggable, DragDropEffects allowedEffects)
+        public DragDropEffectsEx Drop(IEnumerable<IDraggable> draggable, DragDropEffectsEx allowedEffects)
         {
-            if (allowedEffects.HasFlag(DragDropEffects.Move) ||
-                allowedEffects.HasFlag(DragDropEffects.Copy))
+            if (allowedEffects.HasFlag(DragDropEffectsEx.Move) ||
+                allowedEffects.HasFlag(DragDropEffectsEx.Copy))
             {
                 var draggableViewModels = draggable.Cast<DragDropItemViewModel>();
                 if (draggableViewModels.Any())
@@ -131,9 +132,9 @@ namespace Test_NonShellDragDemo
                     foreach (var d in draggableViewModels)
                         Items.Insert(idx++, d);
                 }
-                return DragDropEffects.Move;
+                return DragDropEffectsEx.Move;
             }
-            else return DragDropEffects.None;
+            else return DragDropEffectsEx.None;
         }
 
         public override string ToString()
