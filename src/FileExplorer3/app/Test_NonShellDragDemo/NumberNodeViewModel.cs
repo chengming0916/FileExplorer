@@ -1,4 +1,5 @@
-﻿using FileExplorer.UIEventHub;
+﻿using FileExplorer.Defines;
+using FileExplorer.UIEventHub;
 using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Test_NonShellDragDemo
 
             DragHelper = new LambdaDragHelper<NumberModel>(converter,
                 () => GetAllSubItems(true).Select(nvm => nvm.Model).ToList(),
-                nms => DragDropEffects.Move,
+                nms => DragDropEffectsEx.Move,
                 (nms, eff) =>
                 {
                     if (parentNode is NumberNodeViewModel)
@@ -46,13 +47,13 @@ namespace Test_NonShellDragDemo
                     foreach (var nm in nms)
                         if (Items.Any(ivm => ivm.Model.Equals(nm)))
                             return QueryDropEffects.None;
-                    return QueryDropEffects.CreateNew(DragDropEffects.Move);
+                    return QueryDropEffects.CreateNew(DragDropEffectsEx.Move);
                 },
                 (nms, eff) =>
                 {
                     foreach (var nm in nms)
                         Items.Add(new NumberNodeViewModel(this, nm));
-                    return DragDropEffects.Move;
+                    return DragDropEffectsEx.Move;
                 }) { DisplayName = "Node " + model.Value.ToString() };
 
         }

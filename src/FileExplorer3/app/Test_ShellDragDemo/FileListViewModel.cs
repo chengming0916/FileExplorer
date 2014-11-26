@@ -1,4 +1,5 @@
 ﻿using FileExplorer;
+using FileExplorer.Defines;
 using FileExplorer.Script;
 using FileExplorer.UIEventHub;
 using FileExplorer.WPF.BaseControls;
@@ -47,10 +48,10 @@ namespace Test_ShellDragDemo
                 _fileModelConverter,  //Convert IDraggable (FileViewModel) to M (FileModel), ConvertBack is used.
                 _dataObjectConverter, //Convert IEnumerable<M> (IEnumerable<FileModel>) to IDataObject, Convert is used.
                 () => Items.Where(fvm => fvm.IsSelected).Select(fvm => fvm.Model),
-                (fmList) => DragDropEffects.Link | DragDropEffects.Copy | DragDropEffects.Move, //QueryDrag
+                (fmList) => DragDropEffectsEx.Link | DragDropEffectsEx.Copy | DragDropEffectsEx.Move, //QueryDrag
                 (fmList, da, effect) => //OnDragCompleted
                 {
-                    if (effect == DragDropEffects.Move)
+                    if (effect == DragDropEffectsEx.Move)
                         foreach (var f in fmList)
                         {
                             var foundItem = Items.FirstOrDefault(fvm => fvm.Model.Equals(f));
@@ -62,23 +63,23 @@ namespace Test_ShellDragDemo
             DropHelper = new LambdaShellDropHelper<FileModel>(
                 _fileModelConverter,  //Convert IDraggable (FileViewModel) to M (FileModel), Convert is used.
                 _dataObjectConverter, //Convert IEnumerable<M> (IEnumerable<FileModel>) to IDataObject, ConvertBack is used.
-                (fms, eff) => //QueryDrop(IEnumerable<FileModel>, DragDropEffects) : QueryDropEffects
+                (fms, eff) => //QueryDrop(IEnumerable<FileModel>, DragDropEffectsEx) : QueryDropEffects
                 {
                     IEnumerable<FileModel> itemsModel = Items.Select(fvm => fvm.Model);
                     if (fms.Any(f => itemsModel.Contains(f)))
                         return QueryDropEffects.None;
-                    return QueryDropEffects.CreateNew(eff & (DragDropEffects.Link | DragDropEffects.Move), eff & DragDropEffects.Move);
+                    return QueryDropEffects.CreateNew(eff & (DragDropEffectsEx.Link | DragDropEffectsEx.Move), eff & DragDropEffectsEx.Move);
 
                 },
-                (fms, da, eff) => //Drop(IEnumerable<FileModel>, IDataObject, DragDropEffects) : DragDropEffects
+                (fms, da, eff) => //Drop(IEnumerable<FileModel>, IDataObject, DragDropEffectsEx) : DragDropEffectsEx
                 {
                     foreach (var existingFvm in Items) existingFvm.IsSelected = false;
                     foreach (var fm in fms) Items.Add(new FileViewModel(fm));
-                    if (eff.HasFlag(DragDropEffects.Move))
-                        return DragDropEffects.Move;
-                    if (eff.HasFlag(DragDropEffects.Copy))
-                        return DragDropEffects.Copy;
-                    return DragDropEffects.Link;
+                    if (eff.HasFlag(DragDropEffectsEx.Move))
+                        return DragDropEffectsEx.Move;
+                    if (eff.HasFlag(DragDropEffectsEx.Copy))
+                        return DragDropEffectsEx.Copy;
+                    return DragDropEffectsEx.Link;
                 }) { DisplayName = label };
 
             #endregion

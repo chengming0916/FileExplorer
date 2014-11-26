@@ -9,6 +9,7 @@ using FileExplorer.UIEventHub;
 using FileExplorer.Script;
 using FileExplorer;
 using System.Collections;
+using FileExplorer.Defines;
 
 namespace DiagramingDemo
 {
@@ -62,14 +63,14 @@ namespace DiagramingDemo
             get { return Items.Any(i => i.IsSelected); }
         }
 
-        public void OnDragCompleted(IEnumerable<IDraggable> draggables, System.Windows.DragDropEffects effect)
+        public void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect)
         {
            
         }
 
-        public System.Windows.DragDropEffects QueryDrag(IEnumerable<IDraggable> draggables)
+        public DragDropEffectsEx QueryDrag(IEnumerable<IDraggable> draggables)
         {
-            return System.Windows.DragDropEffects.Move;
+            return DragDropEffectsEx.Move;
         }
         #endregion
 
@@ -80,5 +81,7 @@ namespace DiagramingDemo
         //    return new System.Windows.Rect(item.Left, item.Top, item.Width, item.Height);
         //}
         //#endregion 
+
+
     }
 }
