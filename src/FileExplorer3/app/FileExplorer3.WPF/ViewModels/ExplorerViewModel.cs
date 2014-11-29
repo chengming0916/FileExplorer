@@ -161,11 +161,17 @@ namespace FileExplorer.WPF.ViewModels
             if (rootModels == null || rootModels.Length == 0)
                 return;
             _rootModels = rootModels;
-            _rootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
+            
+            RootProfiles = rootModels.Select(m => m.Profile).Distinct().ToArray();
 
-            Breadcrumb.Profiles = _rootProfiles; Breadcrumb.RootModels = rootModels;
-            DirectoryTree.Profiles = _rootProfiles; DirectoryTree.RootModels = rootModels;
-            FileList.Profiles = _rootProfiles;
+            Breadcrumb.Profiles = RootProfiles; Breadcrumb.RootModels = rootModels;
+            DirectoryTree.Profiles = RootProfiles; DirectoryTree.RootModels = rootModels;
+            FileList.Profiles = RootProfiles;
+        }
+
+        void onEntryChanged(object sender, EntryChangedEvent e)
+        {
+            this.Events.PublishOnUIThreadAsync(e);
         }
 
         public async Task BroascastAsync(EntryChangedEvent message)
@@ -354,6 +360,23 @@ namespace FileExplorer.WPF.ViewModels
 
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
+
+        public IProfile[] RootProfiles
+        {
+            get { return _rootProfiles; }
+            set
+            {
+                if (_rootProfiles != null)
+                    foreach (var p in _rootProfiles)
+                        p.OnEntryChanged -= onEntryChanged;
+
+                _rootProfiles = value;
+
+                if (_rootProfiles != null)
+                    foreach (var p in _rootProfiles)
+                        p.OnEntryChanged += onEntryChanged;
+            }
+        }
 
         public ICommandManager Commands { get; private set; }
 

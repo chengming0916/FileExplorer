@@ -82,6 +82,10 @@ namespace FileExplorer.Models
             _mSuggestSource = new MultiSuggestSource(_suggestSource, Converters.Select(c => c.SuggestSource).ToArray());
         }
 
+        protected void raiseEntryChanged(EntryChangedEvent evnt)
+        {
+            OnEntryChanged(this, evnt);
+        }
 
         #endregion
 
@@ -125,6 +129,8 @@ namespace FileExplorer.Models
         public IEventAggregator Events { get; protected set; }
         public IConverterProfile[] Converters { get { return _converters; } set { setConverters(value); } }
         public IDragDropHandler DragDrop { get; protected set; }
+
+        public event EventHandler<EntryChangedEvent> OnEntryChanged = (o, e) => { };
 
         #endregion
 

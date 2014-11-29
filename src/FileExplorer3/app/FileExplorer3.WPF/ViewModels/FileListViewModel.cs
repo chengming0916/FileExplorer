@@ -68,7 +68,11 @@ namespace FileExplorer.WPF.ViewModels
                 () => flvm.Selection.SelectedItems.ToList(),
                 ems => ems.First().Profile.DragDrop.QueryDrag(ems),
                 ems => ems.First().Profile.DragDrop.GetDataObject(ems),
-                (ems, da, eff) => ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff)
+                (ems, da, eff) => 
+                    {
+                        ems.First().Profile.DragDrop.OnDragCompleted(ems, da, eff);
+
+                    }
                 , d => (d as IEntryViewModel).EntryModel)
             { }
         }

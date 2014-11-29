@@ -15,7 +15,9 @@ namespace FileExplorer.Models.Bookmark
         {
             BookmarkModel root = new BookmarkModel(profile, BookmarkModel.BookmarkEntryType.Root, rootLabel);
             BookmarkModel sub = new BookmarkModel(profile, BookmarkModel.BookmarkEntryType.Directory, rootLabel + "/Sub");
+            BookmarkModel sub2 = new BookmarkModel(profile, BookmarkModel.BookmarkEntryType.Directory, rootLabel + "/Sub2");
             root.SubModels.Add(sub);
+            root.SubModels.Add(sub2);
             sub.SubModels.Add(new BookmarkModel(profile, BookmarkModel.BookmarkEntryType.Link, rootLabel + "/Sub/Link"));
             return root;
         }

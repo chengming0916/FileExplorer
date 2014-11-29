@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,14 @@ namespace FileExplorer.Models.Bookmark
             : base(events)
         {
             ProfileName = "Bookmarks";
-            HierarchyComparer = new PathHierarchyComparer(StringComparison.CurrentCultureIgnoreCase);
+            HierarchyComparer = new PathHierarchyComparer<BookmarkModel>(StringComparison.CurrentCultureIgnoreCase);
             MetadataProvider = new BasicMetadataProvider();
             Path = PathHelper.Web;
             _rootLabel = rootLabel;
-            _rootModel = BookmarkSerializeTest.CreateTestData(this, rootLabel); 
+            _rootModel = BookmarkSerializeTest.CreateTestData(this, rootLabel);
             //new BookmarkModel(BookmarkModel.BookmarkEntryType.Root, rootLabel);
-            PathPatterns = new string[] { _rootLabel + "." };            
+            PathPatterns = new string[] { _rootLabel + "." };
+            DragDrop = new BookmarkDragDropHandler();
         }
 
 
@@ -49,10 +51,26 @@ namespace FileExplorer.Models.Bookmark
 
         #region methods
 
+        private BookmarkModel lookup(BookmarkModel lookupEntryModel, string[] pathSplits, int idx)
+        {
+            if (lookupEntryModel == null)
+                return null;
+
+            if (idx >= pathSplits.Length)
+                return lookupEntryModel;
+
+            return
+                lookup(lookupEntryModel.SubModels.FirstOrDefault(sub => sub.Name.Equals(pathSplits[idx])),
+                pathSplits, idx + 1);
+        }
+
         public override async Task<IEntryModel> ParseAsync(string path)
         {
             if (path.Equals(_rootLabel))
                 return _rootModel;
+
+            if (path.StartsWith(_rootLabel, StringComparison.CurrentCultureIgnoreCase))
+                return lookup(_rootModel, path.Split(new char[] { Path.Separator }, StringSplitOptions.RemoveEmptyEntries), 1);
 
             return null;
         }
@@ -65,6 +83,11 @@ namespace FileExplorer.Models.Bookmark
                 return bm.SubModels.Where(sub => filter(sub)).Cast<IEntryModel>().ToList();
 
             throw new NotImplementedException();
+        }
+
+        internal void RaiseEntryChanged(EntryChangedEvent evnt)
+        {
+            raiseEntryChanged(evnt);
         }
 
         #endregion

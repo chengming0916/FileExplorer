@@ -164,7 +164,7 @@ namespace FileExplorer.WPF.UserControls
             get { return (bool)GetValue(IsHeaderProperty); }
             set { SetValue(IsHeaderProperty, value); }
         }
-
+        
         public static DependencyProperty TypeProperty = DependencyProperty.Register("Type",
             typeof(DisplayType), typeof(StatusbarItemEx), new PropertyMetadata(DisplayType.Auto));
 

@@ -26,7 +26,11 @@ namespace FileExplorer.UIEventHub
 
         public abstract IEnumerable<IDraggable> GetDraggables();
         public abstract DragDropEffectsEx QueryDrag(IEnumerable<IDraggable> draggables);
-        public abstract void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect);
+        
+        public virtual void OnDragCompleted(IEnumerable<IDraggable> draggables, DragDropEffectsEx effect)
+        {
+
+        }
 
         public virtual void OnDragStart()
         {
