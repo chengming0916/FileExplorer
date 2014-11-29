@@ -27,8 +27,7 @@ namespace FileExplorer.Models.Bookmark
         public BookmarkModel(BookmarkProfile profile, BookmarkEntryType type, string fullPath)
             : this()
         {
-            Profile = profile;
-            Name = Profile.Path.GetFileName(fullPath);
+            Profile = profile;            
             this.Type = type;
             FullPath = fullPath;
 
@@ -80,10 +79,11 @@ namespace FileExplorer.Models.Bookmark
             set { Name = value; }
         }
 
+        [XmlIgnore]
         public string Name
         {
-            get;
-            set;
+            get { return Profile.Path.GetFileName(FullPath); }
+            set { FullPath = Profile.Path.Combine(Profile.Path.GetDirectoryName(FullPath), value); }
         }
 
         public string Description
@@ -136,10 +136,42 @@ namespace FileExplorer.Models.Bookmark
             return FullPath;
         }
 
+        public BookmarkModel AddLink(string label, string linkPath)
+        {
+            var nameGenerator = FileNameGenerator.Rename(label);
+            while (SubModels.Any(bm => bm.Label == label))
+                label = nameGenerator.Generate();
+
+            var retVal = new BookmarkModel(Profile as BookmarkProfile, BookmarkEntryType.Link,
+                FullPath + "/" + label) { LinkPath = linkPath, Label = label };
+            SubModels.Add(retVal);
+            return retVal;
+        }
+
+        public BookmarkModel AddFolder(string label)
+        {
+            var nameGenerator = FileNameGenerator.Rename(label);
+            while (SubModels.Any(bm => bm.Label == label))
+                label = nameGenerator.Generate();
+
+            var retVal = new BookmarkModel(Profile as BookmarkProfile, BookmarkEntryType.Directory,
+                FullPath + "/" + label) { Label = label };
+            SubModels.Add(retVal);
+            return retVal;
+        }
+
+        public void Remove(string label)
+        {
+            var link2Remove = SubModels.FirstOrDefault(bm => bm.Label.Equals(label, StringComparison.CurrentCultureIgnoreCase));
+            if (link2Remove != null)
+                SubModels.Remove(link2Remove);
+        }
+
         #endregion
 
 
         public bool IsDragging { get; set; }       
         public string DisplayName { get { return this.Label; } }
+        public string LinkPath { get; set; }
     }
 }

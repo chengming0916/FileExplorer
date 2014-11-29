@@ -87,6 +87,8 @@ namespace FileExplorer.Models
                 
         IEventAggregator Events { get; }
         ISuggestSource SuggestSource { get; }
+
+        event EventHandler<EntryChangedEvent> OnEntryChanged;
         
         #endregion
     }

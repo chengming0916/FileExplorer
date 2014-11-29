@@ -160,7 +160,7 @@ namespace FileExplorer.Models
             foreach (var e in entries)
                 if (e.Profile is IDiskProfile && (e.Profile as IDiskProfile).DiskIO.Mapper[e].IsVirtual)
                     return DragDropEffectsEx.Copy;
-            return DragDropEffectsEx.Copy | DragDropEffectsEx.Move;
+            return DragDropEffectsEx.Copy | DragDropEffectsEx.Move | DragDropEffectsEx.Link;
         }
 
         public void OnDragCompleted(IEnumerable<IEntryModel> draggables, IDataObject da, DragDropEffectsEx effect)

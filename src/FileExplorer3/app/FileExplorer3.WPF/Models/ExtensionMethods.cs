@@ -169,7 +169,7 @@ namespace FileExplorer.WPF.Models
             var dragHelper = dragDropHandler.GetDragHelper(entries);
             if (dragHelper is ISupportShellDrag)
                 return (dragHelper as ISupportShellDrag).GetDataObject(entries.Cast<IDraggable>());
-            else return null;
+            else return new DataObject();
         }
         public static IEnumerable<IEntryModel> GetEntryModels(this IDragDropHandler dragDropHandler, IDataObject dataObject)
         {
@@ -204,7 +204,7 @@ namespace FileExplorer.WPF.Models
             IEnumerable<IEntryModel> entries, IEntryModel dest, DragDropEffectsEx allowedEffects)
         {
             var dropHelper = dragDropHandler.GetDropHelper(dest);
-            return (dropHelper as ISupportShellDrop).QueryDrop(entries.Cast<IDraggable>(), allowedEffects);
+            return dropHelper.QueryDrop(entries.Cast<IDraggable>(), allowedEffects);
         }
 
         public static DragDropEffectsEx OnDropCompleted(this IDragDropHandler dragDropHandler,

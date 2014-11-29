@@ -61,7 +61,7 @@ namespace FileExplorer.Script
             if (entry == null)
                 return ResultCommand.Error(new KeyNotFoundException(EntryKey));
             IDiskProfile profile = entry.Profile as IDiskProfile;
-            if (entry == null)
+            if (profile == null)
                 return ResultCommand.Error(new ArgumentException(EntryKey + "'s Profile is not IDiskProfile"));
 
             var entryMapping = profile.DiskIO.Mapper[entry];
