@@ -73,6 +73,12 @@ namespace FileExplorer.Models.Bookmark
 
         public override QueryDropEffects QueryDrop(IEnumerable<IDraggable> draggables, Defines.DragDropEffectsEx allowedEffects)
         {
+            if (_dropTarget.SubModels == null ||
+                draggables.Any(d => 
+                    _dropTarget.Equals(d) ||
+                    _dropTarget.SubModels.Contains(d)))
+                return QueryDropEffects.None;
+
             if (draggables.Any(d => d is BookmarkModel))
                 return new QueryDropEffects(DragDropEffectsEx.Move, DragDropEffectsEx.Move);
             if (allowedEffects.HasFlag(DragDropEffectsEx.Link))
@@ -89,7 +95,7 @@ namespace FileExplorer.Models.Bookmark
 
             if (source.Type == BookmarkModel.BookmarkEntryType.Directory)
                 foreach (var sub in source.SubModels)
-                    add(addedModel, sub);
+                    add(sub, addedModel);
         }
 
         public override DragDropEffectsEx Drop(IEnumerable<IDraggable> draggables, DragDropEffectsEx allowedEffects)

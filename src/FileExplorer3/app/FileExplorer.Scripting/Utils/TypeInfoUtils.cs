@@ -19,16 +19,18 @@ namespace FileExplorer.WPF.Utils
             return obj;
         }
 
-        public static void SetProperty(object obj, string name, object value)
+        public static void SetProperty(object obj, string name, object value, bool throwIfNotFound = false)
         {
             var propertyInfo = obj.GetType().GetTypeInfo().GetPropertyInfoRecursive(name);
             if (propertyInfo == null)
-                throw new KeyNotFoundException(name);
-
-            propertyInfo.SetValue(obj, value);
+            {
+                if (throwIfNotFound)
+                    throw new KeyNotFoundException(name);                
+            }
+            else propertyInfo.SetValue(obj, value);
         }
 
-        public static object GetPropertyOrMethod(object obj, string name)
+        public static object GetPropertyOrMethod(object obj, string name, bool throwIfNotFound = false)
         {
             var match = Regex.Match(name, RegexPatterns.ParseArrayCounterPattern);
             name = match.Groups["variable"].Value;
@@ -47,7 +49,9 @@ namespace FileExplorer.WPF.Utils
                     methodInfo = typInfo.GetMethodInfoFromExtension(mi => mi.Name.Equals(methodName), assembly).FirstOrDefault();
                     if (methodInfo != null)
                         return methodInfo.Invoke(null, new object[] { obj });
-                    else throw new KeyNotFoundException(name);
+                    else if (throwIfNotFound)
+                        throw new KeyNotFoundException(name);
+                    else return null;
                 }
                 else
                 {
@@ -58,7 +62,12 @@ namespace FileExplorer.WPF.Utils
             {
                 var propertyInfo = obj.GetType().GetTypeInfo().GetPropertyInfoRecursive(name);
                 if (propertyInfo == null)
-                    throw new KeyNotFoundException(name);
+                {
+                    if (throwIfNotFound)
+                        throw new KeyNotFoundException(name);
+                    else return null;
+                }
+                    
                 else
                 {
                     object retVal = propertyInfo.GetValue(obj);
