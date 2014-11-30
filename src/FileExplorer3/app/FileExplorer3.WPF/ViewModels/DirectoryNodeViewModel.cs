@@ -91,7 +91,12 @@ namespace FileExplorer.WPF.ViewModels
 
             Entries = new EntriesHelper<IDirectoryNodeViewModel>(loadEntriesTask) { ClearBeforeLoad = true };
             Selection = new TreeSelector<IDirectoryNodeViewModel, IEntryModel>(curDirModel, this, 
-                parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);
+                parentModel == null ? rootModel.Selection : parentModel.Selection, Entries);            
+            Selection.PropertyChanged += (o, e) =>
+                {
+                    if (e.PropertyName == "IsSelected")
+                        IsSelected = Selection.IsSelected;
+                };
             DropHelper = new DirectoryNodeDropHelper(curDirModel, Entries, Selection) { DisplayName = curDirModel.Label };
         }
 

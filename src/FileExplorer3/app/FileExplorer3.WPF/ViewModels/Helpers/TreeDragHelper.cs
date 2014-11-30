@@ -40,7 +40,8 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
         public IEnumerable<IDraggable> GetDraggables()
         {
-            return _getDraggableFunc();
+            IEnumerable<IDraggable> retVal = _getDraggableFunc();
+            return (retVal is Array) ? _getDraggableFunc().ToList() : retVal;
         }
 
         public DragDropEffectsEx QueryDrag(IEnumerable<IDraggable> draggables)

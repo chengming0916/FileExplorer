@@ -71,6 +71,7 @@
     <Compile Include="Defines\Structs.cs" />
     <Compile Include="Models\AutoSuggestSource.cs" />
     <Compile Include="Models\BasicMetadataProvider.cs" />
+    <Compile Include="Models\Bookmark\BookmarkDragDropHandler.cs" />
     <Compile Include="Models\Bookmark\BookmarkModel.cs" />
     <Compile Include="Models\Bookmark\BookmarkProfile.cs" />
     <Compile Include="Models\Bookmark\BookmarkSerializeTest.cs" />

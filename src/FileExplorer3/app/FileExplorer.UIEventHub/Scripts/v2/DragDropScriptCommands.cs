@@ -31,8 +31,9 @@ namespace FileExplorer.UIEventHub
                 HubScriptCommands.AssignItemUnderMouse("{ItemUnderMouse}", false,
                 //And If it's exists and selected,                                                    
                 ScriptCommands.IfAssigned("{ItemUnderMouse}",
-                ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}", trueCommand,
-                otherwiseCommand), otherwiseCommand)));
+                ScriptCommands.IfNotAssigned("{ItemUnderMouse.IsSelected}", trueCommand,
+                    ScriptCommands.IfTrue("{ItemUnderMouse.IsSelected}", trueCommand,
+                otherwiseCommand)), otherwiseCommand)));
         }
 
         public static IScriptCommand StartShellDrag(string iShellDragVariable = "{DragDrop.SupportDrag}", IScriptCommand nextCommand = null)
