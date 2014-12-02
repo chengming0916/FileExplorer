@@ -25,12 +25,9 @@ namespace FileExplorer.Models
             _profile = profile;
         }
 
-        public List<ICommandModel> GetCommandModels()
+        public IEnumerable<ICommandModel> GetCommandModels()
         {
-            return new List<ICommandModel>()
-                    {                        
-                        new OpenWithCommandEx(_profile) { IsVisibleOnToolbar = true }
-                    };
+            yield return new OpenWithCommandEx(_profile) { IsVisibleOnToolbar = true };                    
         }
     }
 

@@ -71,10 +71,12 @@
     <Compile Include="Defines\Structs.cs" />
     <Compile Include="Models\AutoSuggestSource.cs" />
     <Compile Include="Models\BasicMetadataProvider.cs" />
+    <Compile Include="Models\Bookmark\BookmarkCommandProvider.cs" />
     <Compile Include="Models\Bookmark\BookmarkDragDropHandler.cs" />
     <Compile Include="Models\Bookmark\BookmarkModel.cs" />
     <Compile Include="Models\Bookmark\BookmarkProfile.cs" />
     <Compile Include="Models\Bookmark\BookmarkSerializeTest.cs" />
+    <Compile Include="Models\Bookmark\CommandModel.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\GetDefaultIcon.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="Models\PathHierarchyComparer.cs" />
     <Compile Include="Models\ProfileBase.cs" />
     <Compile Include="Models\ProfileSuggestionSource.cs" />
+    <Compile Include="Models\StaticCommandProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\FileExplorer3Commands.cs" />
     <Compile Include="Scripts\ScriptCommands.cs" />

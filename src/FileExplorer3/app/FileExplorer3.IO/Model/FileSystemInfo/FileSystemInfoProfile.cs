@@ -29,7 +29,7 @@ namespace FileExplorer.Models
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.LocalDefault;
             MetadataProvider = new ExMetadataProvider();
-            CommandProviders = new List<ICommandProvider>();
+            //CommandProviders = new List<ICommandProvider>();
             //PathMapper = IODiskPatheMapper.Instance;
             DragDrop = new FileBasedDragDropHandler(this, em => false);
         }
