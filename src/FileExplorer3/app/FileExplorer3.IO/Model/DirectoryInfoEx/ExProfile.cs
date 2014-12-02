@@ -142,10 +142,7 @@ namespace FileExplorer.Models
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer(this);
             MetadataProvider = new ExMetadataProvider();
-            CommandProviders = new List<ICommandProvider>()
-            {
-                new ExCommandProvider(this)
-            };
+            CommandProviders.Add(new ExCommandProvider(this));
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
             DragDrop = new FileBasedDragDropHandler(this, em => false);
             //PathMapper = IODiskPatheMapper.Instance;

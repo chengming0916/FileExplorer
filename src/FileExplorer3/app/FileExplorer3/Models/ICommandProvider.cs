@@ -12,23 +12,7 @@ namespace FileExplorer.Models
     /// </summary>
     public interface ICommandProvider
     {
-        List<ICommandModel> GetCommandModels();
+        IEnumerable<ICommandModel> GetCommandModels();
     }
 
-    /// <summary>
-    /// Provide a fixed number of commands.
-    /// </summary>
-    public class StaticCommandProvider : ICommandProvider
-    {
-        private ICommandModel[] _commands;
-        public StaticCommandProvider(params ICommandModel[] commands)
-        {
-            _commands = commands;
-        }
-
-        public List<ICommandModel> GetCommandModels()
-        {
-            return _commands.ToList();
-        }
-    }
 }

@@ -124,7 +124,7 @@ namespace FileExplorer.Models
         public string RootDisplayName { get; protected set; }
         public IEntryHierarchyComparer HierarchyComparer { get; protected set; }
         public IMetadataProvider MetadataProvider { get; protected set; }
-        public IEnumerable<ICommandProvider> CommandProviders { get; protected set; }
+        public IList<ICommandProvider> CommandProviders { get; protected set; }
         //public IDiskPathMapper PathMapper { get; protected set; }
         public IEventAggregator Events { get; protected set; }
         public IConverterProfile[] Converters { get { return _converters; } set { setConverters(value); } }

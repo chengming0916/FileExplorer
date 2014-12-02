@@ -80,7 +80,7 @@ namespace FileExplorer.Models
             DiskIO = new GoogleDriveDiskIOHelper(this);
             HierarchyComparer = PathComparer.WebDefault;
             MetadataProvider = new GoogleDriveMetadataProvider();
-            CommandProviders = new List<ICommandProvider>();
+            //CommandProviders = new List<ICommandProvider>();
             SuggestSource = new NullSuggestSource();
             DragDrop = new FileBasedDragDropHandler(this);
             _rootAccessPath = rootAccessPath;

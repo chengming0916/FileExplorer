@@ -62,7 +62,8 @@ namespace FileExplorer.Script
 
         #region Data
 
-        protected IScriptCommand _nextCommand;
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected IScriptCommand _nextCommand; //Use NextCommand.
         private bool _continueOnCaptureContext = false;
 
         #endregion

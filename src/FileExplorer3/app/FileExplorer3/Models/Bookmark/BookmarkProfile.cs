@@ -32,6 +32,7 @@ namespace FileExplorer.Models.Bookmark
             _rootLabel = rootLabel;
             _rootModel = BookmarkSerializeTest.CreateTestData(this, rootLabel);
             //new BookmarkModel(BookmarkModel.BookmarkEntryType.Root, rootLabel);
+            CommandProviders.Add(new BookmarkCommandProvider(this));
             PathPatterns = new string[] { _rootLabel + "." };
             DragDrop = new BookmarkDragDropHandler();
         }
