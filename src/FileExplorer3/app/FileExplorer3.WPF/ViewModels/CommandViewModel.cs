@@ -27,13 +27,13 @@ namespace FileExplorer.WPF.ViewModels
 
         public CommandViewModel(ICommandModel commandModel, IParameterDicConverter parameterDicConverter, ICommandViewModel parentCommandViewModel = null)
         {
-            CommandModel = commandModel as IRoutedCommandModel;
+            CommandModel = commandModel;
             _parentCommandViewModel = parentCommandViewModel;
             _parameterDicConverter = parameterDicConverter;
 
             if (CommandModel != null)
-                if (CommandModel.RoutedCommand != null)
-                    CommandBinding = ScriptCommandBinding.ForRoutedUICommand(CommandModel.RoutedCommand);
+                if (CommandModel is IRoutedCommandModel && (CommandModel as IRoutedCommandModel).RoutedCommand != null)
+                    CommandBinding = ScriptCommandBinding.ForRoutedUICommand((CommandModel as IRoutedCommandModel).RoutedCommand);
                 else
                     CommandBinding = ScriptCommandBinding.FromScriptCommand(
                         ApplicationCommands.NotACommand, commandModel, cm => cm.Command,
@@ -141,7 +141,7 @@ namespace FileExplorer.WPF.ViewModels
         #region Data
 
         private object _icon = null;
-        private IRoutedCommandModel _commandModel;
+        private ICommandModel _commandModel;
         private IScriptCommandBinding _commandBinding;
         private bool _subCommandsLoaded = false;
         private EntriesHelper<ICommandViewModel> _subCommands;
@@ -154,7 +154,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public IEntriesHelper<ICommandViewModel> SubCommands { get; private set; }
 
-        public IRoutedCommandModel CommandModel { get { return _commandModel; } set { _commandModel = value; NotifyOfPropertyChange(() => CommandModel); } }
+        public ICommandModel CommandModel { get { return _commandModel; } set { _commandModel = value; NotifyOfPropertyChange(() => CommandModel); } }
 
         public IScriptCommandBinding CommandBinding { get { return _commandBinding; } set { _commandBinding = value; NotifyOfPropertyChange(() => CommandBinding); } }
 

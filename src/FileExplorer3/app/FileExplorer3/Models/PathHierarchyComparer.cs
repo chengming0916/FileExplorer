@@ -11,10 +11,12 @@ namespace FileExplorer.Models
         where T : IEntryModel
     {        
         private StringComparison _comparsion;
+        private char _separator;
 
-        public PathHierarchyComparer(StringComparison comparsion)
+        public PathHierarchyComparer(StringComparison comparsion, char separator = '\\')
         {            
             _comparsion = comparsion;
+            _separator = separator;
         }
 
         public HierarchicalResult CompareHierarchy(IEntryModel value1, IEntryModel value2)
@@ -27,10 +29,10 @@ namespace FileExplorer.Models
                 if (value1.FullPath.Equals(value2.FullPath, _comparsion))
                     return HierarchicalResult.Current;
 
-                if (value1.FullPath.StartsWith(value2.FullPath, _comparsion))
+                if (value1.FullPath.StartsWith(value2.FullPath + _separator, _comparsion))
                     return HierarchicalResult.Parent;
 
-                if (value2.FullPath.StartsWith(value1.FullPath, _comparsion))
+                if (value2.FullPath.StartsWith(value1.FullPath + _separator, _comparsion))
                     return HierarchicalResult.Child;
             }
             return HierarchicalResult.Unrelated;

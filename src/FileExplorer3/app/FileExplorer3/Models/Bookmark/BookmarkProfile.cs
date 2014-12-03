@@ -26,7 +26,7 @@ namespace FileExplorer.Models.Bookmark
             : base(events)
         {
             ProfileName = "Bookmarks";
-            HierarchyComparer = new PathHierarchyComparer<BookmarkModel>(StringComparison.CurrentCultureIgnoreCase);
+            HierarchyComparer = new PathHierarchyComparer<BookmarkModel>(StringComparison.CurrentCultureIgnoreCase, '/');
             MetadataProvider = new BasicMetadataProvider();
             Path = PathHelper.Web;
             _rootLabel = rootLabel;

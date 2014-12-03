@@ -8,26 +8,31 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Models.Bookmark
 {
-    internal class CommandModel : NotifyPropertyChanged, ICommandModel
+    internal class CommandModelBase : NotifyPropertyChanged, ICommandModel
     {
-
 
         #region Constructor
 
-        public CommandModel(IScriptCommand command, object parameter = null)
+        public CommandModelBase(Func<IEntryModel[], IScriptCommand> commandFunc, object parameter = null)
         {
-            _command = command;
+            _commandFunc = commandFunc;
             _parameter = parameter;
-        }    
 
-        public CommandModel()
-        {
+            _command = _commandFunc(null);
+            
         }
+
+        public CommandModelBase(IScriptCommand command, object parameter = null)
+           : this(en => command, parameter)
+        {            
+            _parameter = parameter;
+        }        
 
 
         #endregion
 
         #region Methods
+        
 
         public int CompareTo(object obj)
         {
@@ -45,6 +50,7 @@ namespace FileExplorer.Models.Bookmark
 
         public virtual void NotifySelectionChanged(IEntryModel[] appliedModels)
         {
+            _command = _commandFunc(appliedModels);
         }
 
         #endregion
@@ -52,6 +58,7 @@ namespace FileExplorer.Models.Bookmark
         #region Data
         private string _commandType;
         private IScriptCommand _command;
+        private Func<IEntryModel[], IScriptCommand> _commandFunc;
 
         private char? _symbol;
         private IModelIconExtractor<ICommandModel> _headerIconExtractor;
