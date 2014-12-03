@@ -14,32 +14,34 @@ namespace FileExplorer.Models.Bookmark
         public BookmarkCommandProvider(BookmarkProfile profile)
         {
             _profile = profile;
-        }
+        }        
 
         public IEnumerable<ICommandModel> GetCommandModels()
         {
-            yield return new CommandModel(new NewBookmarkFolder(_profile))
+            yield return new CommandModelBase(ems => new NewBookmarkFolder(_profile, ems))
                 {
-                    Header = "New Folder"
+                    Header = "New Folder", IsVisibleOnToolbar = true
                 };
         }
     }
+   
 
     public class NewBookmarkFolder : ScriptCommandBase
     {
         private BookmarkProfile _profile;
-        public NewBookmarkFolder(BookmarkProfile profile)
+        private IEntryModel[] _selectedModels;
+        public NewBookmarkFolder(BookmarkProfile profile, IEntryModel[] selectedModels)
             : base("NewBookmarkFolder")
         {
             _profile = profile;
+            _selectedModels = selectedModels;
         }
 
         public override IScriptCommand Execute(ParameterDic pm)
-        {
-            IEntryModel[] selectedModels = pm.GetValue<IEntryModel[]>("{Parameter}");
-            if (selectedModels.Length == 1)
+        {            
+            if (CanExecute(pm))
             {
-                BookmarkModel bm = (selectedModels[0] as BookmarkModel);
+                BookmarkModel bm = (_selectedModels[0] as BookmarkModel);
                 bm.AddFolder("New Folder");
             }
 
@@ -47,11 +49,11 @@ namespace FileExplorer.Models.Bookmark
         }
 
         public override bool CanExecute(ParameterDic pm)
-        {
-            IEntryModel[] selectedModels = pm.GetValue<IEntryModel[]>("{Parameter}");
-            return selectedModels.Length == 1 && selectedModels[0] is BookmarkModel &&
-                ((selectedModels[0] as BookmarkModel).Type == BookmarkModel.BookmarkEntryType.Directory ||
-                    (selectedModels[0] as BookmarkModel).Type == BookmarkModel.BookmarkEntryType.Root);
+        {                        
+            return _selectedModels != null && _selectedModels.Length == 1 && 
+                _selectedModels[0] is BookmarkModel &&
+                ((_selectedModels[0] as BookmarkModel).Type == BookmarkModel.BookmarkEntryType.Directory ||
+                    (_selectedModels[0] as BookmarkModel).Type == BookmarkModel.BookmarkEntryType.Root);
         }
     }
 

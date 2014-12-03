@@ -9,12 +9,13 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.UserControls;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.ViewModels.Helpers;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels
 {
     public interface ICommandViewModel : IComparable<ICommandViewModel>, IComparable 
     {
-        IRoutedCommandModel CommandModel { get; }
+        ICommandModel CommandModel { get; }
         IScriptCommandBinding CommandBinding { get; }
         ToolbarItemType CommandType { get; }
         IEntriesHelper<ICommandViewModel> SubCommands { get; }
