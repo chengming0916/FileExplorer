@@ -77,6 +77,8 @@
     <Compile Include="Models\Bookmark\BookmarkProfile.cs" />
     <Compile Include="Models\Bookmark\BookmarkSerializeTest.cs" />
     <Compile Include="Models\Bookmark\CommandModel.cs" />
+    <Compile Include="Models\Bookmark\LoadFromAnotherProfile.cs" />
+    <Compile Include="Models\EntryModelBase.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\GetDefaultIcon.cs" />
     <Compile Include="Models\IColumnFilter.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="Models\MetadataProviderBase.cs" />
     <Compile Include="Models\MultiSuggestSource.cs" />
     <Compile Include="Models\NullDragDropHandler.cs" />
+    <Compile Include="Models\NullEntryModel.cs" />
     <Compile Include="Models\NullSuggestSource.cs" />
     <Compile Include="Models\PathComparer.cs" />
     <Compile Include="Models\PathHierarchyComparer.cs" />
