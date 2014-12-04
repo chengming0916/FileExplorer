@@ -24,7 +24,7 @@ namespace FileExplorer.Models.Bookmark
 
         public static void Test()
         {
-            BookmarkProfile profile = new BookmarkProfile("Bmarks");
+            BookmarkProfile profile = new BookmarkProfile();
 
             BookmarkModel root = CreateTestData(profile);
 

@@ -108,7 +108,7 @@ namespace FileExplorer.Script
             IProfile[] profiles = profile != null ? new IProfile[] { profile } :
                 pm.GetValue<IProfile[]>(ProfileKey, null);
             if (profiles == null)
-                return ResultCommand.Error(new ArgumentException("Profiles not specified."));
+                return ResultCommand.Error(new ArgumentException("Profile/s not specified."));
 
             pm.SetValue<IEntryModel>(DestinationKey, null);
             foreach (var p in profiles)

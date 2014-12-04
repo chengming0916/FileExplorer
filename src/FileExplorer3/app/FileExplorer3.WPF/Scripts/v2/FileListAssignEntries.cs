@@ -91,7 +91,7 @@ namespace FileExplorer.Script
         {
             FileListKey = "{FileList}";
             DestinationKey = "{Selection}";
-            AssignType = FileListAssignType.All;
+            AssignType = FileListAssignType.All;            
         }
 
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)

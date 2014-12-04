@@ -32,17 +32,7 @@ namespace FileExplorer.WPF.Models
         //}
 
 
-        public static async Task<IEntryModel> ParseAsync(this IProfile[] profiles, string path)
-        {
-            foreach (var p in profiles)
-            {
-                var result = await p.ParseAsync(path);
-                if (result != null)
-                    return result;
-            }
-            return null;
-        }
-
+       
         public static IScriptCommand Parse(this IProfile[] profiles, string path,
             Func<IEntryModel, IScriptCommand> ifFoundFunc, IScriptCommand ifNotFound)
         {

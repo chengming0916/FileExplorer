@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Utils;
+﻿using FileExplorer.Defines;
+using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,11 +10,14 @@ using System.Xml.Serialization;
 
 namespace FileExplorer.Models.Bookmark
 {
-    public class BookmarkModel : NotifyPropertyChanged, IEntryModel
+    public class BookmarkModel : NotifyPropertyChanged, IEntryLinkModel
     {
+        private string _fullPath;
+        private string _name;
+        private IProfile _profile;
         #region fields
 
-        public enum BookmarkEntryType {  Root, Directory, Link }
+        public enum BookmarkEntryType { Root, Directory, Link }
 
         #endregion
 
@@ -21,18 +25,17 @@ namespace FileExplorer.Models.Bookmark
 
         public BookmarkModel()
         {
-
+            SubModels = new List<BookmarkModel>();
         }
 
         public BookmarkModel(BookmarkProfile profile, BookmarkEntryType type, string fullPath)
             : this()
         {
-            Profile = profile;            
+            Profile = profile;
             this.Type = type;
             FullPath = fullPath;
 
-            if (IsDirectory)
-                SubModels = new List<BookmarkModel>();
+            IsRenamable = true;
         }
 
         #endregion
@@ -47,8 +50,8 @@ namespace FileExplorer.Models.Bookmark
         [XmlIgnore]
         public IProfile Profile
         {
-            get;
-            private set;
+            get { return _profile; }
+            internal set { _profile = value; foreach (var m in SubModels) m.Profile = value; }
         }
 
         public BookmarkEntryType Type
@@ -60,7 +63,7 @@ namespace FileExplorer.Models.Bookmark
         [XmlIgnore]
         public bool IsDirectory
         {
-            get { return Type != BookmarkEntryType.Link; }            
+            get { return Type != BookmarkEntryType.Link; }
         }
 
         public IEntryModel Parent
@@ -76,14 +79,33 @@ namespace FileExplorer.Models.Bookmark
         public string Label
         {
             get { return Name; }
-            set { Name = value; }
+            protected set { Name = value; }
         }
 
         [XmlIgnore]
         public string Name
         {
-            get { return Profile.Path.GetFileName(FullPath); }
-            set { FullPath = Profile.Path.Combine(Profile.Path.GetDirectoryName(FullPath), value); }
+            get { return _name; }
+            set { renameAsync(value); }
+        }
+
+        private async Task renameAsync(string value)
+        {
+            switch (Type)
+            {
+                case BookmarkEntryType.Link:
+                    FullPath = Profile.Path.Combine(Profile.Path.GetDirectoryName(FullPath), value);
+                    break;
+                case BookmarkEntryType.Directory:
+                case BookmarkEntryType.Root:
+                    string newFullPath = Profile.Path.Combine(Profile.Path.GetDirectoryName(FullPath), value);
+                    var subEntries = await Profile.ListRecursiveAsync(this, System.Threading.CancellationToken.None, em => true, em => true);
+                    foreach (var subEntry in subEntries.Cast<BookmarkModel>())
+                        subEntry.FullPath = subEntry.FullPath.Replace(FullPath, newFullPath);
+                    FullPath = newFullPath;
+                    break;
+            }            
+            NotifyOfPropertyChanged(() => Name, () => FullPath, () => Label);
         }
 
         public string Description
@@ -94,8 +116,13 @@ namespace FileExplorer.Models.Bookmark
 
         public string FullPath
         {
-            get;
-            set;
+            get { return _fullPath; }
+            set
+            {
+                _fullPath = value;
+                _name = PathHelper.Web.GetFileName(value);                
+                NotifyOfPropertyChanged(() => FullPath, () => Label, () => Name);
+            }
         }
 
         public bool IsRenamable
@@ -145,6 +172,7 @@ namespace FileExplorer.Models.Bookmark
             var retVal = new BookmarkModel(Profile as BookmarkProfile, BookmarkEntryType.Link,
                 FullPath + "/" + label) { LinkPath = linkPath, Label = label };
             SubModels.Add(retVal);
+            (Profile as BookmarkProfile).RaiseEntryChanged(new EntryChangedEvent(ChangeType.Created, retVal.FullPath));
             return retVal;
         }
 
@@ -157,6 +185,7 @@ namespace FileExplorer.Models.Bookmark
             var retVal = new BookmarkModel(Profile as BookmarkProfile, BookmarkEntryType.Directory,
                 FullPath + "/" + label) { Label = label };
             SubModels.Add(retVal);
+            (Profile as BookmarkProfile).RaiseEntryChanged(new EntryChangedEvent(ChangeType.Created, retVal.FullPath));
             return retVal;
         }
 
@@ -165,12 +194,13 @@ namespace FileExplorer.Models.Bookmark
             var link2Remove = SubModels.FirstOrDefault(bm => bm.Label.Equals(label, StringComparison.CurrentCultureIgnoreCase));
             if (link2Remove != null)
                 SubModels.Remove(link2Remove);
+            (Profile as BookmarkProfile).RaiseEntryChanged(new EntryChangedEvent(ChangeType.Deleted, link2Remove.FullPath));
         }
 
         #endregion
 
 
-        public bool IsDragging { get; set; }       
+        public bool IsDragging { get; set; }
         public string DisplayName { get { return this.Label; } }
         public string LinkPath { get; set; }
     }

@@ -13,16 +13,17 @@ namespace FileExplorer.WPF.Utils
     /// </summary>
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {
-        protected virtual void NotifyOfPropertyChanged<T>(Expression<Func<T>> expression)
+        protected virtual void NotifyOfPropertyChanged<T>(params Expression<Func<T>>[] expressions)
         {
-            NotifyOfPropertyChanged(GetPropertyName<T>(expression));
+            foreach (var expression in expressions)
+                NotifyOfPropertyChanged(GetPropertyName<T>(expression));
         }
+         
         protected virtual void NotifyOfPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)                
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
 
         protected string GetPropertyName<T>(Expression<Func<T>> expression)
         {

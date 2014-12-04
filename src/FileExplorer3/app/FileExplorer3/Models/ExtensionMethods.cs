@@ -134,6 +134,18 @@ namespace FileExplorer.Models
             return retVal;
         }
 
+        public static async Task<IEntryModel> ParseAsync(this IProfile[] profiles, string path)
+        {
+            foreach (var p in profiles)
+            {
+                var result = await p.ParseAsync(path);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
+
+
         public static async Task<IEntryModel> ParseThenLookupAsync(this IProfile profile, string path, CancellationToken ct)
         {
             IEntryModel retVal = await profile.ParseAsync(path);

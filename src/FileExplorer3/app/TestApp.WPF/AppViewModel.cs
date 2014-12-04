@@ -27,6 +27,7 @@ using FileExplorer.Script;
 using FileExplorer.WPF.Models;
 using FileExplorer.Defines;
 using FileExplorer.Models.Bookmark;
+using FileExplorer.IO;
 
 namespace TestApp
 {
@@ -49,9 +50,9 @@ namespace TestApp
             _events = events;
 
             _events.Subscribe(this);
-            _profileBm = new BookmarkProfile("Bookmarks");
+            
             _profile = new FileSystemInfoProfile(_events);
-            _profileEx = new FileSystemInfoExProfile(_events, _windowManager, new FileExplorer.Models.SevenZipSharp.SzsProfile(_events));
+            _profileEx = new FileSystemInfoExProfile(_events, _windowManager, new FileExplorer.Models.SevenZipSharp.SzsProfile(_events));            
 
             Func<string> loginSkyDrive = () =>
             {
@@ -90,15 +91,17 @@ namespace TestApp
                     _profileGoogleDrive = new GoogleDriveProfile(_events, gapi_secret_stream);
                 }
 
+            _profileBm = new BookmarkProfile(_profileEx as IDiskProfile, @"C:\Temp\FileExplorer.xml",
+                 new IProfile[] { _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive });
+
 
             RootModels.Add((_profileBm as BookmarkProfile).RootModel);
             RootModels.Add(AsyncUtils.RunSync(() => _profileEx.ParseAsync(System.IO.DirectoryInfoEx.DesktopDirectory.FullName)));
 
-
             _profiles = new IProfile[] {
                 _profileBm, _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive }.Where(p => p != null).ToArray();
 
-
+            
         }
 
         
