@@ -115,7 +115,7 @@ namespace FileExplorer.Script
             IScriptCommand otherwiseCommand = null)
         {
             return IfEquals<bool>(variable, false, trueCommand, otherwiseCommand);
-        }
+        }        
 
         /// <summary>
         /// Serializable, Use Reassign to obtain a property of a vaiable in ParameterDic and use IfEquals to compare, and run different command based on result.
@@ -201,6 +201,17 @@ namespace FileExplorer.Script
         public ComparsionOperator Operator { get; set; }
 
         public string Variable2Key { get; set; }
+
+        public override bool ContinueOnCaptureContext
+        {
+            get
+            {
+                return base.ContinueOnCaptureContext
+                    || (NextCommand != null && NextCommand.RequireCaptureContext())
+                    || (OtherwiseCommand != null && OtherwiseCommand.RequireCaptureContext());
+            }
+            set { base.ContinueOnCaptureContext = value; }
+        }
 
         private static ILogger logger = LogManagerFactory.DefaultLogManager.GetLogger<IfValue>();
 

@@ -80,11 +80,17 @@ namespace FileExplorer.Script
              UIScriptCommands.FileListAssignSelection("{Selection}",                        //Assign Selection
                ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,    //If Selection.Length = 1
                  ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",        //FirstSelected = Selection[0]
-                   ScriptCommands.IfPropertyIsTrue("{FirstSelected}", "IsDirectory",        //FirstSelected.IsDirectory?                   
+                   ScriptCommands.IfAssigned("{FirstSelected[0].LinkPath}", 
+                     CoreScriptCommands.ParsePath("{Profiles}", "{FirstSelected.LinkPath}", "{Link-Entry}",
+                       ScriptCommands.IfAssigned("{Link-Entry}", 
+                         ScriptCommands.IfTrue("{Link-Entry.IsDirectory}", 
+                            UIScriptCommands.ExplorerGoTo("{Explorer}", "{Link-Entry}"),
+                            IOScriptCommands.DiskRun("{Link-Entry}")))),
+                     ScriptCommands.IfPropertyIsTrue("{FirstSelected}", "IsDirectory",        //FirstSelected.IsDirectory?                   
                         UIScriptCommands.NotifyDirectoryChanged("{Selection}"),             //True -> Broadcast ChangeDirectory using {GlobalEvents}
                         IOScriptCommands.DiskRun("{FirstSelected}")                         //False -> DiskRun
                         )
-               )));
+               ))));
 
 
 

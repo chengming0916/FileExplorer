@@ -9,7 +9,7 @@ using FileExplorer.Script;
 using FileExplorer.WPF.Utils;
 using FileExplorer.Models;
 
-namespace FileExplorer.WPF.Models
+namespace FileExplorer.Models
 {
     public class EntryModelBase : PropertyChangedBase, IEntryModel
     {

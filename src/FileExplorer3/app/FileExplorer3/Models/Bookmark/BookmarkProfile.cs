@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using FileExplorer.Defines;
+using FileExplorer.IO;
 using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace FileExplorer.Models.Bookmark
 {
@@ -14,29 +16,42 @@ namespace FileExplorer.Models.Bookmark
     {
         #region fields
 
-        public static BookmarkProfile Instance = new BookmarkProfile();
+        //public static BookmarkProfile Instance = new BookmarkProfile();
         private string _rootLabel;
         private BookmarkModel _rootModel;
+        private IDiskProfile _store;
+        private string _fileName;
+        private IProfile[] _profiles;
 
         #endregion
 
         #region constructors
 
-        public BookmarkProfile(string rootLabel = "Bookmarks", IEventAggregator events = null)
+        public BookmarkProfile(IEventAggregator events = null)
             : base(events)
         {
             ProfileName = "Bookmarks";
             HierarchyComparer = new PathHierarchyComparer<BookmarkModel>(StringComparison.CurrentCultureIgnoreCase, '/');
             MetadataProvider = new BasicMetadataProvider();
             Path = PathHelper.Web;
-            _rootLabel = rootLabel;
-            _rootModel = BookmarkSerializeTest.CreateTestData(this, rootLabel);
+            _rootLabel = "Bookmarks";
+            _rootModel = new BookmarkModel(this, BookmarkModel.BookmarkEntryType.Root, _rootLabel);
+            //BookmarkSerializeTest.CreateTestData(this, rootLabel);
             //new BookmarkModel(BookmarkModel.BookmarkEntryType.Root, rootLabel);
             CommandProviders.Add(new BookmarkCommandProvider(this));
             PathPatterns = new string[] { _rootLabel + "." };
             DragDrop = new BookmarkDragDropHandler();
         }
 
+        public BookmarkProfile(IDiskProfile store, string fileName, IProfile[] profiles)
+            : this(null)
+        {
+            _store = store;
+            _fileName = fileName;
+            _profiles = profiles;
+
+            AsyncUtils.RunSync(() => LoadSettingsAsync());
+        }
 
         #endregion
 
@@ -51,6 +66,36 @@ namespace FileExplorer.Models.Bookmark
         #endregion
 
         #region methods
+
+        public async Task LoadSettingsAsync()
+        {
+            var settingsFile = await _store.ParseAsync(_fileName);
+            if (settingsFile != null)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(BookmarkModel));
+                using (var stream = await _store.DiskIO.OpenStreamAsync(settingsFile, FileAccess.Read, CancellationToken.None))
+                {
+                    BookmarkModel bm = serializer.Deserialize(stream) as BookmarkModel;
+                    bm.Profile = this;
+                    _rootModel = bm;
+                }
+            }
+        }
+
+        public async Task SaveSettingsAsync()
+        {
+            if (_fileName != null)
+            {
+                var settingsFile = await _store.ParseAsync(_fileName);
+                if (settingsFile == null)
+                    settingsFile = await _store.DiskIO.CreateAsync(_fileName, false, CancellationToken.None);
+                XmlSerializer serializer = new XmlSerializer(typeof(BookmarkModel));
+                using (var stream = await _store.DiskIO.OpenStreamAsync(settingsFile, FileAccess.Write, CancellationToken.None))
+                {
+                    serializer.Serialize(stream, _rootModel);
+                }
+            }
+        }
 
         private BookmarkModel lookup(BookmarkModel lookupEntryModel, string[] pathSplits, int idx)
         {
@@ -89,6 +134,16 @@ namespace FileExplorer.Models.Bookmark
         internal void RaiseEntryChanged(EntryChangedEvent evnt)
         {
             raiseEntryChanged(evnt);
+            SaveSettingsAsync();
+        }
+
+        public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
+        {
+            if (entry is BookmarkModel && (entry as BookmarkModel).Type == BookmarkModel.BookmarkEntryType.Link)
+                return new List<IModelIconExtractor<IEntryModel>>()
+                            {   new LoadFromLinkPath(_profiles) };
+
+            return base.GetIconExtractSequence(entry);
         }
 
         #endregion

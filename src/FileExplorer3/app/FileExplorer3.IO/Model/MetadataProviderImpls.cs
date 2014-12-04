@@ -30,7 +30,7 @@ namespace FileExplorer.Models
                 {
                     try
                     {
-                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, 
+                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel,
                             FileExplorer.Defines.FileAccess.Read, CancellationToken.None))
                         using (Bitmap bitmap = new Bitmap(stream))
                         {
@@ -124,32 +124,33 @@ namespace FileExplorer.Models
                 try
                 {
                     var diskModel = selectedModels.First() as DiskEntryModelBase;
-                    if (diskModel.IsFileWithExtension(FileExtensions.ExifExtensions))
-                    {
-                        using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel, 
-                            FileExplorer.Defines.FileAccess.Read, CancellationToken.None))
-                        using (ExifReader reader = new ExifReader(stream))
+                    if (diskModel != null)
+                        if (diskModel.IsFileWithExtension(FileExtensions.ExifExtensions))
                         {
-                            var thumbnailBytes = reader.GetJpegThumbnailBytes();
-                            if (thumbnailBytes != null && thumbnailBytes.Length > 0)
-                                retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
-                                    W32ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInSidebar = true });
-                            else retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
-                                    W32ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
-
-                            UInt16 width,height;
-                            if (reader.GetTagValue(ExifTags.PixelXDimension, out width) &&
-                                reader.GetTagValue(ExifTags.PixelYDimension, out height))
+                            using (var stream = await diskModel.DiskProfile.DiskIO.OpenStreamAsync(diskModel,
+                                FileExplorer.Defines.FileAccess.Read, CancellationToken.None))
+                            using (ExifReader reader = new ExifReader(stream))
                             {
-                                string dimension = String.Format("{0} x {1}", width, height);
-                                retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strImage, MetadataStrings.strDimension,
-                                    dimension) { IsVisibleInSidebar = true });
-                            }
+                                var thumbnailBytes = reader.GetJpegThumbnailBytes();
+                                if (thumbnailBytes != null && thumbnailBytes.Length > 0)
+                                    retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
+                                        W32ConverterUtils.ToBitmapImage(thumbnailBytes)) { IsVisibleInSidebar = true });
+                                else retList.Add(new Metadata(DisplayType.Image, MetadataStrings.strImage, MetadataStrings.strThumbnail,
+                                        W32ConverterUtils.ToBitmapImage(stream.ToByteArray())) { IsVisibleInSidebar = true });
 
-                            //foreach (var tag in RecognizedExifTags)
-                            //    addExifVal(reader, tag);
+                                UInt16 width, height;
+                                if (reader.GetTagValue(ExifTags.PixelXDimension, out width) &&
+                                    reader.GetTagValue(ExifTags.PixelYDimension, out height))
+                                {
+                                    string dimension = String.Format("{0} x {1}", width, height);
+                                    retList.Add(new Metadata(DisplayType.Text, MetadataStrings.strImage, MetadataStrings.strDimension,
+                                        dimension) { IsVisibleInSidebar = true });
+                                }
+
+                                //foreach (var tag in RecognizedExifTags)
+                                //    addExifVal(reader, tag);
+                            }
                         }
-                    }
                 }
                 catch
                 {
