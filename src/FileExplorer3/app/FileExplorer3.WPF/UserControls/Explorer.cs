@@ -20,7 +20,7 @@ namespace FileExplorer.WPF.UserControls
 
     public class Explorer : ContentControl
     {
-        public enum ExplorerMode { Unknown, Normal, ToolWindow }
+        public enum ExplorerMode { Unknown, Normal, ToolWindow, DirectoryPicker }
         #region Constructors
 
         static Explorer()
@@ -57,6 +57,7 @@ namespace FileExplorer.WPF.UserControls
                 {
                     case ExplorerMode.Normal: exp.Content = new ExplorerView(); break;
                     case ExplorerMode.ToolWindow: exp.Content = new ToolWindow(); break;
+                    case ExplorerMode.DirectoryPicker: exp.Content = new DirectoryPicker(); break;
                     default: exp.Content = null; break;
                 }
 

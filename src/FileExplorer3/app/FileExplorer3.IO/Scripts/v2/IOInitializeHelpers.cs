@@ -25,9 +25,7 @@ namespace FileExplorer.Script
                     ColumnInfo.FromBindings("Type", "EntryModel.Description", "", new ValueComparer<IEntryModel>(p => p.Description), 200),
                     
                     ColumnInfo.FromBindings("Time", "EntryModel.LastUpdateTimeUtc", "", 
-                        new ValueComparer<IEntryModel>(p => 
-                            (p is DiskEntryModelBase) ? (p as DiskEntryModelBase).LastUpdateTimeUtc
-                            : DateTime.MinValue), 200), 
+                        new ValueComparer<IEntryModel>(p => p.LastUpdateTimeUtc), 200), 
         
                     ColumnInfo.FromTemplate("Size", "GridSizeTemplate", "", 
                     new ValueComparer<IEntryModel>(p => 
@@ -110,52 +108,18 @@ namespace FileExplorer.Script
                     UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
 
         public static IScriptCommand FileList_Selection_Is_One_Folder =
-          UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
-           ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
-             ScriptCommands.IfTrue("{Selection[0].IsDirectory}", ResultCommand.OK)));
+          UIInitializeHelpers.FileList_Selection_Is_One_Folder;
 
         #region FileList_NewWindow, NewTabbedWindow, OpenTab
-        public static IScriptCommand FileList_NewWindow =
-         ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder,
-          UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-           UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}",
-               "{WindowManager}", "{GlobalEvents}", "{Explorer}",
-                   UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}"))));
-
-        public static IScriptCommand FileList_NewTabbedWindow =
-             ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder,
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                    UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
-                        "{WindowManager}", "{GlobalEvents}", "{TabbedExplorer}",
-                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null))));
-
-
-        public static IScriptCommand FileList_OpenTab =
-            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder,
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null)));
+        public static IScriptCommand FileList_NewWindow = UIInitializeHelpers.FileList_NewWindow;         
+        public static IScriptCommand FileList_NewTabbedWindow = UIInitializeHelpers.FileList_NewTabbedWindow;
+        public static IScriptCommand FileList_OpenTab = UIInitializeHelpers.FileList_OpenTab;
         #endregion
 
         #region DirectoryTree_NewWindow, NewTabbedWindow, OpenTab
-        public static IScriptCommand DirectoryTree_NewWindow =
-         UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", 
-          UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-           UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}",
-               "{WindowManager}", "{GlobalEvents}", "{Explorer}",
-                   UIScriptCommands.ExplorerGoTo("{Explorer}", "{CurrentDirectory}"))));
-
-        public static IScriptCommand DirectoryTree_NewTabbedWindow =
-             UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", 
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                    UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
-                        "{WindowManager}", "{GlobalEvents}", "{TabbedExplorer}",
-                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{CurrentDirectory}", "{Explorer}", null))));
-
-
-        public static IScriptCommand DirectoryTree_OpenTab =
-            UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", 
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{CurrentDirectory}", "{Explorer}", null)));
+        public static IScriptCommand DirectoryTree_NewWindow = UIInitializeHelpers.DirectoryTree_NewWindow;        
+        public static IScriptCommand DirectoryTree_NewTabbedWindow = UIInitializeHelpers.DirectoryTree_NewTabbedWindow;
+        public static IScriptCommand DirectoryTree_OpenTab = UIInitializeHelpers.DirectoryTree_OpenTab;
         #endregion
 
 
@@ -170,24 +134,10 @@ namespace FileExplorer.Script
                 IOScriptCommands.DiskPaste("{CurrentDirectory}", "{Destination}",
                 UIScriptCommands.FileListSelect("{FileList}", "{Destination}")));
 
-        public static IScriptCommand DirectoryTree_Map_From_Profiles =
-            UIScriptCommands.ProfilePicker("{Profiles}", "{Profile}", "{WindowManager}",
-                   CoreScriptCommands.ParsePath("{Profile}", "", "{RootDirectories}",
-                   ScriptCommands.AssignProperty("{RootDirectories}", "FullPath", "{StartupPath}",
-                    UIScriptCommands.ExplorerPick(ExplorerMode.DirectoryOpen, "{OnModelCreated}", "{OnViewAttached}",
-                     "{WindowManager}", null, "{Selection}", "{SelectionPath}",
-                      UIScriptCommands.NotifyRootCreated("{Selection}",
-                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection}"))))));
-
+        public static IScriptCommand DirectoryTree_Map_From_Profiles = UIInitializeHelpers.DirectoryTree_Map_From_Profiles;
+            
         //To-Do: Update to new ScriptCommand.
-        public static IScriptCommand DirectoryTree_Unmap =
-            Explorer.DoSelection(ems =>
-                Script.ScriptCommands.If(pd => (ems.First() as FileExplorer.WPF.ViewModels.IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
-                        Script.WPFScriptCommands.IfOkCancel(new Caliburn.Micro.WindowManager(), pd => "Unmap",
-                            pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label),
-                            Explorer.BroadcastRootChanged(FileExplorer.WPF.Defines.RootChangedEvent.Deleted(ems.Select(em => em.EntryModel).ToArray())),
-                            ResultCommand.OK),
-                        Script.ScriptCommands.NoCommand), Script.ScriptCommands.NoCommand);
+        public static IScriptCommand DirectoryTree_Unmap = UIInitializeHelpers.DirectoryTree_Unmap;
 
         //explorerModel.FileList.Commands.Commands.NewFolder =
         //     FileList.Do(flvm => WPFScriptCommands.CreatePath(

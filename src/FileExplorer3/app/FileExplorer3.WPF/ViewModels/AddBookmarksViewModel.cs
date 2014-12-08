@@ -1,15 +1,17 @@
-﻿using FileExplorer.Models;
+﻿using Caliburn.Micro;
+using FileExplorer.Models;
 using FileExplorer.Models.Bookmark;
 using FileExplorer.WPF.Utils;
+using FileExplorer.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FileExplorer3.WPF.ViewModels
+namespace FileExplorer.WPF.ViewModels
 {
-    public class AddBookmarksViewModel : NotifyPropertyChanged
+    public class AddBookmarksViewModel : Screen
     {        
         #region fields
 
@@ -18,6 +20,11 @@ namespace FileExplorer3.WPF.ViewModels
         #endregion
 
         #region constructors
+
+        public AddBookmarksViewModel(BookmarkProfile bProfile, IWindowManager windowManager, IEventAggregator events)
+        {
+            Profile = bProfile;            
+        }
 
         #endregion
 
@@ -29,13 +36,15 @@ namespace FileExplorer3.WPF.ViewModels
 
         public BookmarkProfile Profile { get; set; }
 
+        public ICommandManager Commands { get; private set; }        
+
         public IEntryModel SelectedDirectory
         {
             get { return _selectedPath; }
             set
             {
                 _selectedPath = value;
-                NotifyOfPropertyChanged(() => SelectedDirectory);                
+                NotifyOfPropertyChange(() => SelectedDirectory);                
             }
         }
 

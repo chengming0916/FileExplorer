@@ -150,9 +150,12 @@
     <Compile Include="Scripts\v2\ExplorerAssignCurrentDirectory.cs" />
     <Compile Include="Scripts\v2\ExplorerAssignScriptParameters.cs" />
     <Compile Include="Scripts\v2\ExplorerCreate.cs" />
+    <Compile Include="Scripts\v2\ExplorerDefault.cs" />
+    <Compile Include="Scripts\v2\ExplorerDefaultToolbarCommands.cs" />
     <Compile Include="Scripts\v2\FileListAssignEntries.cs" />
     <Compile Include="Scripts\v2\FileListRefresh.cs" />
     <Compile Include="Scripts\v2\FileListSelect.cs" />
+    <Compile Include="Scripts\v2\UIInitializeHelpers.cs" />
     <Compile Include="Scripts\v2\NotifyRootChanged.cs" />
     <Compile Include="Scripts\v2\ProfilePicker.cs" />
     <Compile Include="Scripts\v2\SetScriptCommand.cs" />
@@ -250,6 +253,12 @@
     <Compile Include="ViewModels\Interfaces\IToolbarViewModel.cs" />
     <Compile Include="ViewModels\EstimateTimeRemainViewModel.cs" />
     <Compile Include="ViewModels\TabbedExplorerViewModel.cs" />
+    <Compile Include="Views\AddBookmarksView.xaml.cs">
+      <DependentUpon>AddBookmarksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Explorer.DirectoryPicker.xaml.cs">
+      <DependentUpon>Explorer.DirectoryPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SelectProfileView.xaml.cs">
       <DependentUpon>SelectProfileView.xaml</DependentUpon>
     </Compile>
@@ -679,6 +688,14 @@
     <Page Include="Themes\Common\EditBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AddBookmarksView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Explorer.DirectoryPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SelectProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>

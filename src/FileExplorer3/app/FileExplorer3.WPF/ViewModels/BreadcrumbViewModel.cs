@@ -19,6 +19,7 @@ using FileExplorer.Script;
 using System.Windows;
 using System.Threading;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Models.Bookmark;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -33,7 +34,7 @@ namespace FileExplorer.WPF.ViewModels
 
             if (events != null)
                 events.Subscribe(this);
-
+            
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
             var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries) { Comparers = new[] { PathComparer.LocalDefault } };
             selection.SelectionChanged += (o, e) =>
@@ -151,7 +152,6 @@ namespace FileExplorer.WPF.ViewModels
             _profiles = rootModels.Select(rm => rm.Profile).Distinct();
             Entries.SetEntries(UpdateMode.Update, rootModels
                 .Select(r => new BreadcrumbItemViewModel(_events, this, r, null)).ToArray());
-
         }
 
         private void setProfiles(IProfile[] profiles)
@@ -163,6 +163,10 @@ namespace FileExplorer.WPF.ViewModels
                     .Comparers = profiles.Select(p => p.HierarchyComparer);
                 SuggestSources = profiles.Select(p => p.SuggestSource);
             }
+
+            BookmarkProfile bProfile = profiles.FirstOrDefault(p => p is BookmarkProfile) as BookmarkProfile;
+            if (bProfile != null)            
+                AddBookmarks = new AddBookmarksViewModel(bProfile, null, _events);
         }
 
         public void Handle(DirectoryChangedEvent message)
@@ -189,12 +193,18 @@ namespace FileExplorer.WPF.ViewModels
 
         private IEntriesHelper<IBreadcrumbItemViewModel> _entries;
         private ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> _selection;
+        private AddBookmarksViewModel _addBookmarks;
 
         #endregion
 
         #region Public Properties
 
         public ICommandManager Commands { get; private set; }
+        public AddBookmarksViewModel AddBookmarks
+        {
+            get { return _addBookmarks; }
+            set { _addBookmarks = value; NotifyOfPropertyChange(() => AddBookmarks); }
+        }
 
         public IEntryModel[] RootModels { set { setRootModels(value); } }
         public IProfile[] Profiles { set { setProfiles(value); } }
