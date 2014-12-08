@@ -51,6 +51,7 @@ namespace FileExplorer.WPF.Views
                          { "ItemSize", 16 },
                          { "EnableDrag", true }, 
                          { "EnableDrop", true }, 
+                         { "EnableMap", false },
                          { "FileListNewWindowCommand", NullScriptCommand.Instance }, //Disable NewWindow Command.
                          { "EnableMultiSelect", true},
                          { "ShowToolbar", false }, 

@@ -163,7 +163,7 @@ namespace FileExplorer.Script
                    IOScriptCommands.ExplorerDefault(),
                    IOScriptCommands.ExplorerDefaultToolbarCommands(),
                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
-                        "{RootDirectories},{Profiles},{GlobalEvents},{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect},{EnableTabsWhenOneTab}")
+                        UIInitializeHelpers.Explorer_Initialize_Default_Retain_Script_Parameters)
                    );
 
         public static IScriptCommand TabbedExplorer_Initialize_Default =

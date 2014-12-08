@@ -94,7 +94,7 @@ namespace FileExplorer.WPF.ViewModels
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Rename, this, (ch) => ch.CommandDictionary.ToggleRename, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.OpenTab, this, (ch) => ch.CommandDictionary.OpenTab, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.NewWindow, this, (ch) => ch.CommandDictionary.NewWindow, ParameterDicConverter, ScriptBindingScope.Local),
-                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.CommandDictionary.Map, ParameterDicConverter, ScriptBindingScope.Explorer),
+                    ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Map, this, (ch) => ch.CommandDictionary.Map, ParameterDicConverter, ScriptBindingScope.Local),
                     ScriptCommandBinding.FromScriptCommand(ExplorerCommands.Unmap, this, (ch) => ch.CommandDictionary.Unmap, ParameterDicConverter, ScriptBindingScope.Local)
                 ));
 

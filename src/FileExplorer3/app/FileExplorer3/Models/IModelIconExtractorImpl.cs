@@ -87,7 +87,7 @@ namespace FileExplorer.Models
 
                         if (!_cacheDic.ContainsKey(key))
                             return _cacheDic[key] = await task(t);
-                        return _cacheDic[key];
+                        return _cacheDic[key] ?? new byte[] { };
                     }
                 );
         }
@@ -103,7 +103,7 @@ namespace FileExplorer.Models
 
                        if (!_cacheDic.ContainsKey(key))
                            return _cacheDic[key] = await task();
-                       return _cacheDic[key];
+                       return _cacheDic[key] ?? new byte[] {};
                    }
                );
         }
@@ -122,11 +122,11 @@ namespace FileExplorer.Models
                        if (!_cacheDic.ContainsKey(key))
                        {
                            byte[] val = func(t);
-                           if (val.Length > 0)
+                           if (val != null && val.Length > 0)
                                _cacheDic[key] = val;
                            return val;                           
                        }
-                       return _cacheDic[key];
+                       return _cacheDic[key] ?? new byte[] {};
                    }
                );
         }
@@ -141,8 +141,8 @@ namespace FileExplorer.Models
                           return func();
 
                       if (!_cacheDic.ContainsKey(key))
-                          return _cacheDic[key] = func();
-                      return _cacheDic[key];
+                          return _cacheDic[key] = func() ?? new byte[] {};
+                      return _cacheDic[key] ?? new byte[] {};
                   }
               );
         }
