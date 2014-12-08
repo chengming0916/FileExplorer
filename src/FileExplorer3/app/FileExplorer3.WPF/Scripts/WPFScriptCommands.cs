@@ -36,12 +36,13 @@ namespace FileExplorer.Script
         /// <returns></returns>
         public static IEntryModel[] GetEntryModelFromParameter(ParameterDic pd)
         {
-            return pd["Parameter"] as IEntryModel[];
+            var evms = pd.GetValue("{FileList.Selection.SelectedItems}") as List<IEntryViewModel>;
+            return (evms != null) ? evms.Select(evm => evm.EntryModel).ToArray() : new IEntryModel[] { };            
         }
 
         public static IEntryModel GetFirstEntryModelFromParameter(ParameterDic pd)
         {
-            return (pd["Parameter"] as IEntryModel[]).FirstOrDefault();
+            return GetEntryModelFromParameter(pd).FirstOrDefault();
         }
 
         public static IScriptCommand DoSelection(string commandKey,

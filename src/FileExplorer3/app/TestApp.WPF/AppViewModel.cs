@@ -157,11 +157,12 @@ namespace TestApp
             //IOScriptCommands.ExplorerShow initialize {OnModelCreated} and {OnViewAttached} to IO based.
             //While UIScriptCommands.ExplorerShow have to specify explicitly.
             ScriptRunner.RunScriptAsync(new ParameterDic() {                   
-                    { "StartupPath", OpenPath },
+                    { "StartupPath", OpenPath },                    
                     { "GlobalEvents", _events },
                     { "WindowManager", _windowManager },
                     { "EnableDrag", _enableDrag }, 
                     { "EnableDrop", _enableDrop },                     
+                    { "EnableMap", true },
                     { "EnableMultiSelect", _enableMultiSelect}, 
                 },
                 IOScriptCommands.ExplorerNewWindow(_profiles, RootModels.ToArray()));

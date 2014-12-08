@@ -59,16 +59,19 @@ namespace FileExplorer.Models
                      using (FileSystemInfoEx fsi = FileSystemInfoEx.FromString(em.FullPath))
                      {
                          Bitmap bitmap = null;
-                         if (fsi != null)
+                         if (fsi != null && fsi.Exists)
                              return fsi.RequestPIDL(pidl =>
                              {
-                                 bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
-                                     pidl.Ptr, em.IsDirectory, false);
+                                 if (pidl != null)
+                                 {
+                                     bitmap = _iconExtractor.GetBitmap(QuickZip.Converters.IconSize.extraLarge,
+                                         pidl.Ptr, em.IsDirectory, false);
 
-                                 if (bitmap != null)
-                                     return
-                                         bitmap.ToByteArray();
-                                 else return null;
+                                     if (bitmap != null)
+                                         return
+                                             bitmap.ToByteArray();
+                                 }
+                                 return new byte[] {};
                              });
                      }
                 return null;

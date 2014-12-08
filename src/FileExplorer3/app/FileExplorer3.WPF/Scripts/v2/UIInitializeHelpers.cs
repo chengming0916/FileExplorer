@@ -146,27 +146,48 @@ namespace FileExplorer.Script
         #endregion
 
         #region Map/Unmap
+
+        public static IScriptCommand DirectoryTree_SupportMapping =
+          ScriptCommands.IfTrue("{EnableMap}",         
+            ScriptCommands.IfValue(ComparsionOperator.GreaterThan, "{Profiles.Length}", 1, 
+                ResultCommand.OK));            
+
         public static IScriptCommand DirectoryTree_Map_From_Profiles =
+          ScriptCommands.AssignCanExecuteCondition(DirectoryTree_SupportMapping,
             UIScriptCommands.ProfilePicker("{Profiles}", "{Profile}", "{WindowManager}",
                    CoreScriptCommands.ParsePath("{Profile}", "", "{RootDirectories}",
                    ScriptCommands.AssignProperty("{RootDirectories}", "FullPath", "{StartupPath}",
                     UIScriptCommands.ExplorerPick(ExplorerMode.DirectoryOpen, "{OnModelCreated}", "{OnViewAttached}",
                      "{WindowManager}", null, "{Selection}", "{SelectionPath}",
                       UIScriptCommands.NotifyRootCreated("{Selection}",
-                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection}"))))));
+                        UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection}")))))));
+
+        public static IScriptCommand DirectoryTree_SupportMapping_And_IsFirstLevel =
+            ScriptCommands.IfTrue("{EnableMap}",         
+            ScriptCommands.IfValue(ComparsionOperator.GreaterThan, "{Profiles.Length}", 1,
+                Explorer.DoSelection(ems =>
+                Script.ScriptCommands.If(pd => (ems.First() as FileExplorer.WPF.ViewModels.IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(), 
+                ResultCommand.OK, ResultCommand.NoError))));        
 
         //To-Do: Update to new ScriptCommand.
         public static IScriptCommand DirectoryTree_Unmap =
+          ScriptCommands.AssignCanExecuteCondition(DirectoryTree_SupportMapping_And_IsFirstLevel,
             Explorer.DoSelection(ems =>
                 Script.ScriptCommands.If(pd => (ems.First() as FileExplorer.WPF.ViewModels.IDirectoryNodeViewModel).Selection.IsFirstLevelSelector(),
                         Script.WPFScriptCommands.IfOkCancel(new Caliburn.Micro.WindowManager(), pd => "Unmap",
                             pd => String.Format("Unmap {0}?", ems.First().EntryModel.Label),
                             Explorer.BroadcastRootChanged(FileExplorer.WPF.Defines.RootChangedEvent.Deleted(ems.Select(em => em.EntryModel).ToArray())),
                             ResultCommand.OK),
-                        Script.ScriptCommands.NoCommand), Script.ScriptCommands.NoCommand);
+                        Script.ScriptCommands.NoCommand), Script.ScriptCommands.NoCommand));
 
         #endregion
-        
+
+
+        public static string Explorer_Initialize_Default_Retain_Script_Parameters =
+                        "{RootDirectories},{Profiles},{GlobalEvents},{OnViewAttached},{OnModelCreated}," +
+                        "{EnableDrag},{EnableDrop},{EnableMultiSelect},{EnableTabsWhenOneTab}," +
+                        "{EnableMap}";
+
         /// <summary>
         /// <para>Call ExplorerDefault(), ExplorerDefaultToolbarCommands() 
         /// and assign the followings parameter to CommandManager: (for use when OpenInNewWindow)
@@ -184,7 +205,7 @@ namespace FileExplorer.Script
                    UIScriptCommands.ExplorerDefault(),
                    UIScriptCommands.ExplorerDefaultToolbarCommands(),
                    UIScriptCommands.ExplorerAssignScriptParameters("{Explorer}",
-                        "{RootDirectories},{Profiles},{GlobalEvents},{OnViewAttached},{OnModelCreated},{EnableDrag},{EnableDrop},{EnableMultiSelect},{EnableTabsWhenOneTab}")
+                       Explorer_Initialize_Default_Retain_Script_Parameters)
                    );
 
         public static IScriptCommand TabbedExplorer_Initialize_Default =
