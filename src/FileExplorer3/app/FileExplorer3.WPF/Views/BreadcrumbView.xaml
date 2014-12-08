@@ -50,7 +50,7 @@
                                 HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="True" />
                             </bc:DropDownList.Header>
                             <bc:DropDownList.ItemContainerStyle>
-                                <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource ComboboxNullAsSeparatorStyle}">                                    
+                                <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource ComboboxNullAsSeparatorStyle}">
                                     <Setter Property="Visibility" 
                                         Value="{Binding IsOverflowedOrRoot, Mode=OneWay, Converter={StaticResource btvc}}"  />
                                 </Style>
@@ -94,14 +94,18 @@
                 <ScaleTransform ScaleX="2" ScaleY="2" />
             </bc:Switch.LayoutTransform>-->
             </bc:Switch>
-            <Button Grid.Column="1" Command="{x:Static def:ExplorerCommands.Refresh}"                                             
+            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <bc:DropDown Header="B">                    
+                    <ContentControl x:Name="AddBookmarks" />
+                </bc:DropDown>
+                <Button Command="{x:Static def:ExplorerCommands.Refresh}"                                             
                                         Template="{StaticResource BaseButton}" Padding="0,0,2,0">
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Path Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" StrokeThickness="1" Data="{StaticResource RefreshBranch}"   />
-                    <Path Fill="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" Data="{StaticResource RefreshArrow}"   />
-                </Grid>
-            </Button>
-
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Path Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" StrokeThickness="1" Data="{StaticResource RefreshBranch}"   />
+                        <Path Fill="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" Data="{StaticResource RefreshArrow}"   />
+                    </Grid>
+                </Button>
+            </StackPanel>
             <!--<uc:BreadcrumbBase x:Name="bcrumb" 
                            RootItemsSource="{Binding Subdirectories}" 
                            DropDownHeight="200" DropDownWidth="300"

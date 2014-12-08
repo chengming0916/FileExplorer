@@ -31,7 +31,7 @@ namespace TestApp
         private IEntryModel[] _rootDirs;
         private string _filterStr;
         private string _selectedPath;
-        private IProfile[] _profiles;
+        private IProfile[] _profiles;        
 
         public ToolWindowTest(IProfile[] profiles, IEntryModel[] rootDirs, string mask, string selectedPath = "c:\\")
         {
@@ -45,8 +45,11 @@ namespace TestApp
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            FileExplorer.WPF.UserControls.Explorer exp = explorer as FileExplorer.WPF.UserControls.Explorer;       
-            
+            FileExplorer.WPF.UserControls.Explorer exp = explorer as FileExplorer.WPF.UserControls.Explorer;
+
+            cbExplorerMode.ItemsSource = Enum.GetValues(typeof(FileExplorer.WPF.UserControls.Explorer.ExplorerMode));
+            cbExplorerMode.SelectedValue = FileExplorer.WPF.UserControls.Explorer.ExplorerMode.ToolWindow;
+
             exp.ViewModel.Initializer =
                 new ScriptCommandInitializer()
                 {

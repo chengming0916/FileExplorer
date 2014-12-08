@@ -17,12 +17,12 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-       
-        
-        
+
+
+
         <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="3" />
 
-        <uc:Explorer x:Name="explorer" Mode="ToolWindow" />
+        <uc:Explorer x:Name="explorer" Mode="{Binding SelectedValue, ElementName=cbExplorerMode}" />
         <GridSplitter ResizeDirection="Columns" 
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       ResizeBehavior="PreviousAndNext" Grid.Column="1" />
@@ -30,18 +30,20 @@
             <hub:UIEventAdapter.Processors>
                 <hub:DragDropLiteEventProcessor />
             </hub:UIEventAdapter.Processors>
+            <TextBlock Text="Mode" FontWeight="Bold" />
+            <ComboBox x:Name="cbExplorerMode" />
             <TextBlock Text="CurrentDirectory" FontWeight="Bold" />
             <!--ViewModel.FileList.Selection.SelectedItems is IEntryModel-->
             <TextBlock Text="{Binding ViewModel.FileList.CurrentDirectory, 
                 Converter={StaticResource emts},
                 ElementName=explorer}" />
-            
+
             <TextBlock Text="Selection" FontWeight="Bold" />
             <!--ViewModel.FileList.Selection.SelectedItems is List<IEntryViewModel>-->
             <TextBlock Text="{Binding ViewModel.FileList.Selection.SelectedItems, 
                 Converter={StaticResource emts},
                 ElementName=explorer}" />
-            
+
             <TextBlock Text="Drop Target" FontWeight="Bold" />
             <TextBlock x:Name="testDroppable" 
                    AllowDrop="True"
