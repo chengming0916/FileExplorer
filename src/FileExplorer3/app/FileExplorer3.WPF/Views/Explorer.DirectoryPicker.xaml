@@ -16,7 +16,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>        
-        <ComboBox x:Name="cbox" Text="{Binding CurrentDirectory.EntryModel.Label}" 
+        <ComboBox x:Name="cbox" Text="{Binding CurrentDirectory.Model.Label}" 
                   IsEditable="True"
                   Grid.Row="0" Grid.Column="0" />        
         <ContentControl  Name="DirectoryTree"  Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" />

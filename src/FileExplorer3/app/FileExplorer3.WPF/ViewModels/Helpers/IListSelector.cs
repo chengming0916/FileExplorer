@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FileExplorer.WPF.Utils;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
@@ -17,6 +18,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
     }
 
     public interface IListSelector<VM, T> : IReportSelected<VM>, INotifyPropertyChanged, IExportCommandBindings
+        where VM : IViewModelOf<T>
     {
         #region Constructor
 
@@ -46,7 +48,10 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         #region Public Properties
         event EventHandler SelectionChanged;
 
-        IList<VM> SelectedItems { get;  }
+        IList<VM> SelectedItems { get; }
+        
+        VM[] SelectedViewModels { get; set; }
+        T[] SelectedModels { get; set; }
 
         #endregion
         

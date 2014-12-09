@@ -169,6 +169,7 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         public IEntryModel EntryModel { get; private set; }
+        public IEntryModel Model { get { return EntryModel; } }
 
         public ImageSource Icon
         {

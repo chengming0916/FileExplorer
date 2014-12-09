@@ -50,6 +50,7 @@
     <Compile Include="Models\GetDefaultIcon.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
     <Compile Include="Models\Bookmark\LoadFromAnotherProfile.cs" />
+    <Compile Include="Models\IViewModelOf.cs" />
     <Compile Include="Models\NullEntryModel.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\AutoSuggestSource.cs" />
