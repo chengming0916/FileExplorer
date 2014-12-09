@@ -14,6 +14,7 @@ using FileExplorer.WPF.ViewModels;
 using FileExplorer.Defines;
 using FileExplorer.Script;
 using FileExplorer.Models;
+using System.Windows.Data;
 
 namespace FileExplorer.WPF.UserControls
 {
@@ -33,6 +34,9 @@ namespace FileExplorer.WPF.UserControls
             _wm = new WindowManager();
             _events = new EventAggregator();
             _evm = new ExplorerViewModel(_wm, _events);
+
+            this.SetBinding(CurrentDirectoryProperty, new Binding("FileList.CurrentDirectory") { Source = _evm, Mode= BindingMode.TwoWay });
+            this.SetBinding(SelectedEntriesProperty, new Binding("FileList.Selection.SelectedModels") { Source = _evm, Mode= BindingMode.TwoWay });            
         }
 
         #endregion
@@ -92,9 +96,29 @@ namespace FileExplorer.WPF.UserControls
             set { SetValue(ModeProperty, value); }
         }
 
+
+        public static DependencyProperty CurrentDirectoryProperty = DependencyProperty.Register("CurrentDirectory",
+            typeof(IEntryModel), typeof(Explorer), new PropertyMetadata(null));
+
+        public IEntryModel CurrentDirectory
+        {
+            get { return (IEntryModel)GetValue(CurrentDirectoryProperty); }
+            set { SetValue(CurrentDirectoryProperty, value); }
+        }
+
+        public static DependencyProperty SelectedEntriesProperty = DependencyProperty.Register("SelectedEntries",
+           typeof(IEntryModel[]), typeof(Explorer), new PropertyMetadata(null));
+
+
+        public IEntryModel[] SelectedEntries
+        {
+            get { return (IEntryModel[])GetValue(SelectedEntriesProperty); }
+            set { SetValue(SelectedEntriesProperty, value); }
+        }
+
         public static DependencyProperty RootDirectoriesProperty = DependencyProperty.Register("RootDirectories",
             typeof(IEntryModel[]), typeof(Explorer), new PropertyMetadata(null, OnPropertiesChanged));
-
+     
         public IEntryModel[] RootDirectories
         {
             get { return (IEntryModel[])GetValue(RootDirectoriesProperty); }

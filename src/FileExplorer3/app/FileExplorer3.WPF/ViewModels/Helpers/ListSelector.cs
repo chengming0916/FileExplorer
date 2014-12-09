@@ -11,11 +11,12 @@ using FileExplorer.Defines;
 using FileExplorer.WPF.Utils;
 using FileExplorer.WPF.Defines;
 using FileExplorer.UIEventHub;
+using FileExplorer.Models;
 
 namespace FileExplorer.WPF.ViewModels.Helpers
 {
     public class ListSelector<VM, T> : NotifyPropertyChanged, IListSelector<VM, T>
-        where VM : ISelectable
+        where VM : ISelectable, IViewModelOf<T>
     {
         #region Constructor
 
@@ -39,6 +40,8 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         private void notifySelectionChanged()
         {
             NotifyOfPropertyChanged(() => SelectedItems);
+            NotifyOfPropertyChanged(() => SelectedViewModels);
+            NotifyOfPropertyChanged(() => SelectedModels);
             if (SelectionChanged != null)
                 SelectionChanged(this, EventArgs.Empty);
         }
@@ -112,17 +115,23 @@ namespace FileExplorer.WPF.ViewModels.Helpers
 
         public IEntriesHelper<VM> EntryHelper { get; private set; }
 
+        [Obsolete]
         public IList<VM> SelectedItems
         {
-            get { return getSelectedItems().ToList(); }
-            //get { return _selectedVms; }
-            //set
-            //{
-            //    _selectedVms = value;
-            //    NotifyOfPropertyChanged(() => SelectedItems);
-            //}
+            get { return getSelectedItems().ToList(); }            
         }
 
+        public VM[] SelectedViewModels
+        {
+            get { return getSelectedItems().ToArray(); }
+            set { this.Select(vm => value.Contains(vm)); }
+        }
+
+        public T[] SelectedModels
+        {
+            get { return SelectedViewModels.Select(vm => vm.Model).ToArray(); }
+            set { this.Select(vm => value.Contains(vm.Model)); }
+        }
 
         public event EventHandler SelectionChanged;
 

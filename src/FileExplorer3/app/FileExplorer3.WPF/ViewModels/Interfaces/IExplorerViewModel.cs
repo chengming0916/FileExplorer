@@ -29,7 +29,7 @@ namespace FileExplorer.WPF.ViewModels
 
         IExplorerParameters Parameters { get; set; }
         string FilterStr { get; set; }
-        IEntryViewModel CurrentDirectory { get; }
+        IEntryViewModel CurrentDirectory { get; }        
         Task GoAsync(string gotoPath);
         Task GoAsync(IEntryModel entryModel);
 

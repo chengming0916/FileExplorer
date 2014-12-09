@@ -133,6 +133,9 @@ namespace FileExplorer.WPF.ViewModels
                     FileList.SetCurrentDirectoryAsync(entryModel),
                     DirectoryTree.SelectAsync(entryModel),
                     Breadcrumb.Selection.AsRoot().SelectAsync(entryModel));
+
+                NotifyOfPropertyChange(() => CurrentDirectory);
+                NotifyOfPropertyChange(() => CurrentDirectory);
             }
 
         }
@@ -208,7 +211,7 @@ namespace FileExplorer.WPF.ViewModels
         {
             this.DisplayName = String.Format(WindowTitleMask, message.NewModel.Label);
             _currentDirectoryViewModel = EntryViewModel.FromEntryModel(message.NewModel);
-            NotifyOfPropertyChange("CurrentDirectory");
+            NotifyOfPropertyChange(() => CurrentDirectory);            
         }
 
         public void Handle(EntryChangedEvent message)
@@ -357,7 +360,6 @@ namespace FileExplorer.WPF.ViewModels
 
         public string WindowTitleMask { get; set; }
         public IEntryViewModel CurrentDirectory { get { return _currentDirectoryViewModel; } }
-
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
 
