@@ -104,7 +104,7 @@ namespace FileExplorer.Models.Bookmark
                         subEntry.FullPath = subEntry.FullPath.Replace(FullPath, newFullPath);
                     FullPath = newFullPath;
                     break;
-            }            
+            }
             NotifyOfPropertyChanged(() => Name, () => FullPath, () => Label);
         }
 
@@ -120,7 +120,7 @@ namespace FileExplorer.Models.Bookmark
             set
             {
                 _fullPath = value;
-                _name = PathHelper.Web.GetFileName(value);                
+                _name = PathHelper.Web.GetFileName(value);
                 NotifyOfPropertyChanged(() => FullPath, () => Label, () => Name);
             }
         }
@@ -193,8 +193,10 @@ namespace FileExplorer.Models.Bookmark
         {
             var link2Remove = SubModels.FirstOrDefault(bm => bm.Label.Equals(label, StringComparison.CurrentCultureIgnoreCase));
             if (link2Remove != null)
+            {
                 SubModels.Remove(link2Remove);
-            (Profile as BookmarkProfile).RaiseEntryChanged(new EntryChangedEvent(ChangeType.Deleted, link2Remove.FullPath));
+                (Profile as BookmarkProfile).RaiseEntryChanged(new EntryChangedEvent(ChangeType.Deleted, link2Remove.FullPath));
+            }
         }
 
         #endregion

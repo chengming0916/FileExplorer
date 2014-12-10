@@ -34,7 +34,7 @@ namespace FileExplorer.WPF.ViewModels
             events.Subscribe(this);
 
             AddBookmarkCommand = new RelayCommand(e => AddBookmark());
-            CurrentBookmarkDirectory = Profile.RootModel;
+            //CurrentBookmarkDirectory = Profile.RootModel;
         }
 
         #endregion
@@ -69,8 +69,11 @@ namespace FileExplorer.WPF.ViewModels
             get { return _currentBookmarkDirectory; }
             set
             {
-                _currentBookmarkDirectory = value;
-                NotifyOfPropertyChange(() => CurrentBookmarkDirectory);
+                if (_currentBookmarkDirectory != value)
+                {
+                    _currentBookmarkDirectory = value;
+                    NotifyOfPropertyChange(() => CurrentBookmarkDirectory);
+                }
             }
         }
 
@@ -117,8 +120,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public async Task AddBookmark(string label = null)
         {
-            if (CurrentBookmarkDirectory == null)
-                CurrentBookmarkDirectory = Profile.RootModel;
+
 
             if (CurrentDirectory != null)
             {
@@ -137,8 +139,12 @@ namespace FileExplorer.WPF.ViewModels
                         _lastAddedLink = (CurrentBookmarkDirectory as BookmarkModel)
                             .AddLink(label ?? CurrentDirectory.Label, CurrentDirectory.FullPath);
                 }
-                else _lastAddedLink = (CurrentBookmarkDirectory as BookmarkModel)
+                else
+                {
+                    _lastAddedLink = (CurrentBookmarkDirectory as BookmarkModel)
                             .AddLink(label ?? CurrentDirectory.Label, CurrentDirectory.FullPath);
+                    //CurrentBookmarkDirectory = Profile.RootModel;
+                }
             }
         }
 
@@ -146,15 +152,17 @@ namespace FileExplorer.WPF.ViewModels
         {
             if (_lastAddedLink != null)
             {
-                RemoveBookmark();
+                (_lastAddedLink.Parent as BookmarkModel).Remove(_lastAddedLink.Label);
                 AddBookmark(BookmarkLabel);
+                IsVisible = false;
             }
         }
 
         public void RemoveBookmark()
         {
             if (_lastAddedLink != null)
-                Profile.RootModel.Remove(_lastAddedLink.Label);
+                (_lastAddedLink.Parent as BookmarkModel).Remove(_lastAddedLink.Label);
+            IsVisible = false;
         }
 
         protected override void OnActivate()

@@ -58,6 +58,17 @@ namespace FileExplorer.WPF.Views
                          { "ShowGridHeader", false }
                     }
                 };
+
+            expFolderPicker.ViewModel.FileList.PropertyChanged += (o, e) =>
+                {
+                    if (e.PropertyName == "CurrentDirectory")
+                        vm.CurrentBookmarkDirectory = expFolderPicker.ViewModel.FileList.CurrentDirectory;
+                };
+            vm.PropertyChanged += (o, e) =>
+            {
+                if (e.PropertyName == "CurrentBookmarkDirectory")
+                    expFolderPicker.ViewModel.FileList.CurrentDirectory = vm.CurrentBookmarkDirectory;
+            };
         }
     }
 }

@@ -33,7 +33,7 @@ namespace FileExplorer.WPF.UserControls
         {
             _wm = new WindowManager();
             _events = new EventAggregator();
-            _evm = new ExplorerViewModel(_wm, _events);
+            _evm = new ExplorerViewModel(_wm, _events);            
 
             this.SetBinding(CurrentDirectoryProperty, new Binding("FileList.CurrentDirectory") { Source = _evm, Mode= BindingMode.TwoWay });
             this.SetBinding(SelectedEntriesProperty, new Binding("FileList.Selection.SelectedModels") { Source = _evm, Mode= BindingMode.TwoWay });            
@@ -98,7 +98,7 @@ namespace FileExplorer.WPF.UserControls
 
 
         public static DependencyProperty CurrentDirectoryProperty = DependencyProperty.Register("CurrentDirectory",
-            typeof(IEntryModel), typeof(Explorer), new PropertyMetadata(null));
+            typeof(IEntryModel), typeof(Explorer));
 
         public IEntryModel CurrentDirectory
         {
@@ -107,7 +107,7 @@ namespace FileExplorer.WPF.UserControls
         }
 
         public static DependencyProperty SelectedEntriesProperty = DependencyProperty.Register("SelectedEntries",
-           typeof(IEntryModel[]), typeof(Explorer), new PropertyMetadata(null));
+           typeof(IEntryModel[]), typeof(Explorer));
 
 
         public IEntryModel[] SelectedEntries

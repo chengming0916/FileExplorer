@@ -97,7 +97,7 @@
             <StackPanel Orientation="Horizontal" Grid.Column="1">
                 <bc:DropDown Header="B"  
                              Visibility="{Binding AddBookmarks.IsBookmarkEnabled, Converter={StaticResource btvc}}"
-                             IsDropDownOpen="{Binding AddBookmarks.IsVisible, Mode=OneWayToSource}">                    
+                             IsDropDownOpen="{Binding AddBookmarks.IsVisible, Mode=TwoWay}">                    
                     <ContentControl x:Name="AddBookmarks" />
                 </bc:DropDown>
                 <Button Command="{x:Static def:ExplorerCommands.Refresh}"                                             

@@ -130,7 +130,7 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         public T[] SelectedModels
         {
             get { return SelectedViewModels.Select(vm => vm.Model).ToArray(); }
-            set { this.Select(vm => value.Contains(vm.Model)); }
+            set { if (value != SelectedModels) this.Select(vm => value.Contains(vm.Model)); }
         }
 
         public event EventHandler SelectionChanged;

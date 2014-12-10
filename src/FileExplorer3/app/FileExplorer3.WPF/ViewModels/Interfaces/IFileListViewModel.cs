@@ -11,10 +11,11 @@ using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels.Helpers;
 using FileExplorer.WPF.Defines;
 using FileExplorer.Models;
+using System.ComponentModel;
 
 namespace FileExplorer.WPF.ViewModels
 {
-    public interface IFileListViewModel : ISupportCommandManager
+    public interface IFileListViewModel : ISupportCommandManager, INotifyPropertyChanged
     {        
         /// <summary>
         /// Load entries and apply filters.
