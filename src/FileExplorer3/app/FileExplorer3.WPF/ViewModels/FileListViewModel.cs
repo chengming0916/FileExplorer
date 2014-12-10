@@ -224,6 +224,11 @@ namespace FileExplorer.WPF.ViewModels
             set
             {
                 if (!value.Equals(_currentDirVM))
+                {
+                    _currentDirVM = value;
+                    SignalChangeDirectory(value);
+                }
+                else
                     SetCurrentDirectoryAsync(value);
             }
         }

@@ -92,6 +92,7 @@ namespace FileExplorer.Models.Bookmark
                 XmlSerializer serializer = new XmlSerializer(typeof(BookmarkModel));
                 using (var stream = await _store.DiskIO.OpenStreamAsync(settingsFile, FileAccess.Write, CancellationToken.None))
                 {
+                    stream.SetLength(0);
                     serializer.Serialize(stream, _rootModel);
                 }
             }
