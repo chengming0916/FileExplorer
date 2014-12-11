@@ -7,6 +7,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/FileExplorer3.WPF;component/Themes/Common/Buttons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="Button" >
+                <Setter Property="Template" Value="{StaticResource BaseButton}" />
+            </Style>
+        </ResourceDictionary>
+        
         <!--<Style TargetType="TextBlock">
             <Setter Property="Margin" Value="5,5" />
         </Style>
@@ -14,7 +23,7 @@
             <Setter Property="Margin" Value="5,5" />
         </Style>-->
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>            
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="5" />
@@ -23,20 +32,23 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" MinHeight="200" />
+            <RowDefinition Height="*" MinHeight="150" />
             <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>        
-        <!--<TextBlock FontWeight="Black" Text="Bookmark added." FontSize="20" Grid.ColumnSpan="3"   />-->
+        <TextBlock FontWeight="Black" Text="Bookmark added:" FontSize="20" Grid.ColumnSpan="3"   />
+        <!--<TextBlock FontWeight="Black" Text="{Binding State}" FontSize="20" Grid.ColumnSpan="3"   />-->
         <Label Content="_Label:" FocusManager.FocusedElement="{Binding ElementName=tbLabel}" Grid.Row="1" Grid.Column="0" />
-        <TextBox x:Name="tbLabel" Text="{Binding BookmarkLabel}" Grid.Row="1" Grid.Column="2" Margin="5"  />
+        <TextBox x:Name="tbLabel" Text="{Binding BookmarkLabel, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="2" Margin="5"  />
         <Label Content="_Folder:" Grid.Row="2" Grid.Column="0" />
         <uc:Explorer Mode="DirectoryPicker" x:Name="expFolderPicker" Margin="5"                     
                      Grid.Row="2" Grid.Column="2" />
         
-        <DockPanel Grid.Row="5" Grid.ColumnSpan="3" LastChildFill="False">            
-            <Button x:Name="UpdateBookmark" Content="Update" DockPanel.Dock="Right" Padding="5" Margin="5" />
-            <Button x:Name="RemoveBookmark" Content="Remove" DockPanel.Dock="Right" Padding="5" Margin="5" />
+        <DockPanel Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="1" LastChildFill="False">            
+            <!--<Button x:Name="UpdateBookmark" Content="Update" 
+                    Visibility="{Binding IsUpdateBookmarkEnabled, Converter={StaticResource btv}}"
+                    DockPanel.Dock="Right" Padding="5" Margin="5" />-->
+            <Button x:Name="RemoveBookmark" Content="Remove" DockPanel.Dock="Right" Padding="5" Margin="5,0" />            
         </DockPanel> 
     </Grid>
 </UserControl>

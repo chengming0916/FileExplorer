@@ -17,12 +17,21 @@ namespace FileExplorer.WPF.ViewModels
     {
         #region fields
 
+        public enum AddBookmarkState
+        {
+            Inactive, //IsVisible is false
+            Added,    //IsVisible is true, just added bookmark.
+            Found,    //IsVisible is true, just found bookmark link to that directory.
+            Changed   //IsVisible is true, after Added or Found, user changed label or directory.
+        }
+
         private IEntryModel _currentDirectory;
         private IEntryModel _currentBookmarkDirectory;
         private bool _isVisible;
         private string _bookmarkLabel;
         private bool _isBookmarkEnabled;
         private BookmarkModel _lastAddedLink;
+        private AddBookmarkState _state = AddBookmarkState.Inactive;        
 
         #endregion
 
@@ -49,6 +58,13 @@ namespace FileExplorer.WPF.ViewModels
         public BookmarkProfile Profile { get; set; }
         public bool IsVisible { get { return _isVisible; } set { setIsVisible(value); } }
 
+        public AddBookmarkState State { get { return _state; } set { _state = value; 
+            NotifyOfPropertyChange(() => State);
+            //NotifyOfPropertyChange(() => Header);
+            NotifyOfPropertyChange(() => IsUpdateBookmarkEnabled);
+        } }
+
+        public bool IsUpdateBookmarkEnabled { get { return State == AddBookmarkState.Changed; } }
         public bool IsBookmarkEnabled { get { return _isBookmarkEnabled; } set { _isBookmarkEnabled = value; NotifyOfPropertyChange(() => IsBookmarkEnabled); } }
 
 
@@ -73,11 +89,28 @@ namespace FileExplorer.WPF.ViewModels
                 {
                     _currentBookmarkDirectory = value;
                     NotifyOfPropertyChange(() => CurrentBookmarkDirectory);
+
+                    if (State == AddBookmarkState.Added || State == AddBookmarkState.Found)
+                        State = AddBookmarkState.Changed;
                 }
             }
         }
 
+        //public string Header
+        //{
+        //    get
+        //    {
+        //        switch (State)
+        //        {
+        //            case AddBookmarkState.Inactive: return "";
+        //            case AddBookmarkState.Added: return "Bookmark added.";
+        //            case AddBookmarkState.Found: return "Bookmark already added.";
+        //            case AddBookmarkState.Changed: return "Press Update to update bookmark.";
+        //            default: return "";
+        //        }
 
+        //    }
+        //}
 
         public string BookmarkLabel
         {
@@ -86,6 +119,9 @@ namespace FileExplorer.WPF.ViewModels
             {
                 _bookmarkLabel = value;
                 NotifyOfPropertyChange(() => BookmarkLabel);
+
+                if (State == AddBookmarkState.Added || State == AddBookmarkState.Found)
+                    State = AddBookmarkState.Changed;
             }
         }
 
@@ -115,6 +151,12 @@ namespace FileExplorer.WPF.ViewModels
 
                 if (value)
                     AddBookmark();
+                else
+                {
+                    if (_lastAddedLink != null) //Not removed.
+                        UpdateBookmark();
+                    State = AddBookmarkState.Inactive;
+                }
             }
         }
 
@@ -124,27 +166,24 @@ namespace FileExplorer.WPF.ViewModels
 
             if (CurrentDirectory != null)
             {
-                if (label == null)
+
+                var allBookmarkLink = await Profile.ListRecursiveAsync(Profile.RootModel, CancellationToken.None,
+                   em => !(em as BookmarkModel).IsDirectory && (em as BookmarkModel).LinkPath == CurrentDirectory.FullPath,
+                   em => (em as BookmarkModel).IsDirectory, false);
+                if (allBookmarkLink.Count() > 0)
                 {
-                    var allBookmarkLink = await Profile.ListRecursiveAsync(Profile.RootModel, CancellationToken.None,
-                       em => !(em as BookmarkModel).IsDirectory && (em as BookmarkModel).LinkPath == CurrentDirectory.FullPath,
-                       em => (em as BookmarkModel).IsDirectory, false);
-                    if (allBookmarkLink.Count() > 0)
-                    {
-                        _lastAddedLink = (allBookmarkLink.First() as BookmarkModel);
-                        CurrentBookmarkDirectory = _lastAddedLink.Parent;
-                        BookmarkLabel = _lastAddedLink.Label;
-                    }
-                    else
-                        _lastAddedLink = (CurrentBookmarkDirectory as BookmarkModel)
-                            .AddLink(label ?? CurrentDirectory.Label, CurrentDirectory.FullPath);
+                    _lastAddedLink = (allBookmarkLink.First() as BookmarkModel);
+                    CurrentBookmarkDirectory = _lastAddedLink.Parent;
+                    BookmarkLabel = _lastAddedLink.Label;
+                    State = AddBookmarkState.Found;
                 }
                 else
                 {
                     _lastAddedLink = (CurrentBookmarkDirectory as BookmarkModel)
-                            .AddLink(label ?? CurrentDirectory.Label, CurrentDirectory.FullPath);
-                    //CurrentBookmarkDirectory = Profile.RootModel;
+                        .AddLink(label ?? CurrentDirectory.Label, CurrentDirectory.FullPath);
+                    State = AddBookmarkState.Added;
                 }
+
             }
         }
 
@@ -161,9 +200,13 @@ namespace FileExplorer.WPF.ViewModels
         public void RemoveBookmark()
         {
             if (_lastAddedLink != null)
+            {
                 (_lastAddedLink.Parent as BookmarkModel).Remove(_lastAddedLink.Label);
-            IsVisible = false;
+                _lastAddedLink = null;
+                IsVisible = false;
+            }
         }
+     
 
         protected override void OnActivate()
         {

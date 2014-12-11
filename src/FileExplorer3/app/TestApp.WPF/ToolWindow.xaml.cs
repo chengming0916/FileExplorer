@@ -45,12 +45,12 @@ namespace TestApp
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            FileExplorer.WPF.UserControls.Explorer exp = explorer as FileExplorer.WPF.UserControls.Explorer;
+            
 
             cbExplorerMode.ItemsSource = Enum.GetValues(typeof(FileExplorer.WPF.UserControls.Explorer.ExplorerMode));
             cbExplorerMode.SelectedValue = FileExplorer.WPF.UserControls.Explorer.ExplorerMode.ToolWindow;
-
-            exp.ViewModel.Initializer =
+            
+            explorer.ViewModel.Initializer =
                 new ScriptCommandInitializer()
                 {
                     OnModelCreated = IOInitializeHelpers.Explorer_Initialize_Default,
