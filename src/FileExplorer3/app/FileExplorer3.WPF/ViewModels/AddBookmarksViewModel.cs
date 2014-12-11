@@ -165,14 +165,12 @@ namespace FileExplorer.WPF.ViewModels
 
 
             if (CurrentDirectory != null)
-            {
+            {                
+                var foundBookmark = Profile.AllBookmarks.FirstOrDefault(em => em.LinkPath == CurrentDirectory.FullPath);
 
-                var allBookmarkLink = await Profile.ListRecursiveAsync(Profile.RootModel, CancellationToken.None,
-                   em => !(em as BookmarkModel).IsDirectory && (em as BookmarkModel).LinkPath == CurrentDirectory.FullPath,
-                   em => (em as BookmarkModel).IsDirectory, false);
-                if (allBookmarkLink.Count() > 0)
+                if (foundBookmark != null)
                 {
-                    _lastAddedLink = (allBookmarkLink.First() as BookmarkModel);
+                    _lastAddedLink = foundBookmark;
                     CurrentBookmarkDirectory = _lastAddedLink.Parent;
                     BookmarkLabel = _lastAddedLink.Label;
                     State = AddBookmarkState.Found;

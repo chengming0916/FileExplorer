@@ -39,13 +39,15 @@ namespace FileExplorer.WPF.Views
                 new ScriptCommandInitializer()
                 {
                     OnModelCreated = UIScriptCommands.ExplorerDefault(),
-                    OnViewAttached = UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot(),
+                    OnViewAttached = ScriptCommands.Assign("{StartupDir}", vm.CurrentBookmarkDirectory, false, 
+                       ScriptCommands.Assign("{StartupPath}", "{StartupDir.FullPath}", false, 
+                        UIScriptCommands.ExplorerGotoStartupPathOrFirstRoot())),
                     RootModels = rootDir,
                     StartupParameters = new ParameterDic()
                     {
                          { "Profiles", vm.Profile },
                          { "RootDirectories", rootDir },	    
-                         {  "StartupPath", vm.CurrentBookmarkDirectory.FullPath },
+                         //{  "StartupPath", vm.CurrentBookmarkDirectory.FullPath },
                          //{ "StartupPath", _selectedPath },
                          //{ "FilterString", _filterStr },
                          { "ViewMode", "List" }, 

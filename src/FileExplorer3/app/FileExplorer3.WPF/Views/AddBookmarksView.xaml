@@ -32,11 +32,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" MinHeight="150" />
+            <RowDefinition Height="Auto"  />
             <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>        
-        <TextBlock FontWeight="Black" Text="Bookmark added:" FontSize="20" Grid.ColumnSpan="3"   />
+        <TextBlock FontWeight="Black" Text="Bookmark added:" Grid.ColumnSpan="3"   />
         <!--<TextBlock FontWeight="Black" Text="{Binding State}" FontSize="20" Grid.ColumnSpan="3"   />-->
         <Label Content="_Label:" FocusManager.FocusedElement="{Binding ElementName=tbLabel}" Grid.Row="1" Grid.Column="0" />
         <TextBox x:Name="tbLabel" Text="{Binding BookmarkLabel, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="2" Margin="5"  />
