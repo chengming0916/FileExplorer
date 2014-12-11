@@ -45,6 +45,7 @@ namespace FileExplorer.WPF.Views
                     {
                          { "Profiles", vm.Profile },
                          { "RootDirectories", rootDir },	    
+                         {  "StartupPath", vm.CurrentBookmarkDirectory.FullPath },
                          //{ "StartupPath", _selectedPath },
                          //{ "FilterString", _filterStr },
                          { "ViewMode", "List" }, 

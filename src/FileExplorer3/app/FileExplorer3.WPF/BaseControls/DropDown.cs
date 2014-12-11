@@ -31,6 +31,8 @@ namespace FileExplorer.WPF.BaseControls
 
         #region Methods
 
+        DateTime lastLostFocusTime = DateTime.MinValue;
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -43,19 +45,40 @@ namespace FileExplorer.WPF.BaseControls
                 _popup.AddHandler(Popup.LostFocusEvent,
                    new RoutedEventHandler((o, e) =>
                    {
+
                        //(o as DropDownControl).                   
                        //IsDropDownOpen = false;
                    }));
             }
         }
 
-        private static void OnIsDropDownOpenChanged(object sender, DependencyPropertyChangedEventArgs args)
+        private static object OnIsDropDownOpenCoerce(DependencyObject sender, object baseValue)
         {
             DropDown ddc = (DropDown)sender;
-            if (ddc._popup != null)
+            if ((bool)baseValue)
             {
-                ddc._popup.IsOpen = (bool)args.NewValue;
+                if (Math.Abs(ddc.lastLostFocusTime.Subtract(DateTime.UtcNow).TotalSeconds) < 0.5)
+                    return false;
             }
+            else
+                ddc.lastLostFocusTime = DateTime.UtcNow;
+
+            return baseValue;
+        }
+
+
+        private static void OnIsDropDownOpenChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            //DropDown ddc = (DropDown)sender;
+            //if ((bool)args.NewValue)
+            //    if (ddc.lastLostFocusTime.Subtract(DateTime.UtcNow).TotalSeconds < 1)
+            //        Isdro
+            //    else ddc.lastLostFocusTime = DateTime.UtcNow;
+
+            //if (ddc._popup != null)
+            //{
+            //    ddc._popup.IsOpen = (bool)args.NewValue;
+            //}
             //if (ddc._content != null)
             //{
             //    ddc._content.Focus();
@@ -88,7 +111,9 @@ namespace FileExplorer.WPF.BaseControls
         public static readonly DependencyProperty IsDropDownOpenProperty =
             DependencyProperty.Register("IsDropDownOpen", typeof(bool),
             typeof(DropDown), new UIPropertyMetadata(false,
-                new PropertyChangedCallback(OnIsDropDownOpenChanged)));
+                new PropertyChangedCallback(OnIsDropDownOpenChanged),
+                new CoerceValueCallback(OnIsDropDownOpenCoerce)));
+
 
 
         public bool IsDropDownAlignLeft
@@ -96,7 +121,7 @@ namespace FileExplorer.WPF.BaseControls
             get { return (bool)GetValue(IsDropDownAlignLeftProperty); }
             set { SetValue(IsDropDownAlignLeftProperty, value); }
         }
-        
+
         public static readonly DependencyProperty IsDropDownAlignLeftProperty =
             DependencyProperty.Register("IsDropDownAlignLeft", typeof(bool),
             typeof(DropDown), new UIPropertyMetadata(false));

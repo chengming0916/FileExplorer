@@ -95,9 +95,12 @@
             </bc:Switch.LayoutTransform>-->
             </bc:Switch>
             <StackPanel Orientation="Horizontal" Grid.Column="1">
-                <bc:DropDown Header="B"  
-                             Visibility="{Binding AddBookmarks.IsBookmarkEnabled, Converter={StaticResource btvc}}"
+                <bc:DropDown Visibility="{Binding AddBookmarks.IsBookmarkEnabled, Converter={StaticResource btvc}}"
                              IsDropDownOpen="{Binding AddBookmarks.IsVisible, Mode=TwoWay}">                    
+                    <bc:DropDown.Header>
+                        <Path Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" 
+                              StrokeThickness="1" Data="{StaticResource Star}"   />
+                    </bc:DropDown.Header>
                     <ContentControl x:Name="AddBookmarks" />
                 </bc:DropDown>
                 <Button Command="{x:Static def:ExplorerCommands.Refresh}"                                             
