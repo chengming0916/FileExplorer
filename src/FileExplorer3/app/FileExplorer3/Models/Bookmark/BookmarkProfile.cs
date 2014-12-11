@@ -22,6 +22,7 @@ namespace FileExplorer.Models.Bookmark
         private IDiskProfile _store;
         private string _fileName;
         private IProfile[] _profiles;
+        private IList<BookmarkModel> _allBookmarks;
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace FileExplorer.Models.Bookmark
             CommandProviders.Add(new BookmarkCommandProvider(this));
             PathPatterns = new string[] { _rootLabel + "." };
             DragDrop = new BookmarkDragDropHandler();
+            AllBookmarks = new List<BookmarkModel>();
         }
 
         public BookmarkProfile(IDiskProfile store, string fileName, IProfile[] profiles)
@@ -48,8 +50,7 @@ namespace FileExplorer.Models.Bookmark
         {
             _store = store;
             _fileName = fileName;
-            _profiles = profiles;
-
+            _profiles = profiles;            
             AsyncUtils.RunSync(() => LoadSettingsAsync());
         }
 
@@ -62,10 +63,18 @@ namespace FileExplorer.Models.Bookmark
         #region properties
 
         public BookmarkModel RootModel { get { return _rootModel; } }
+        public IList<BookmarkModel> AllBookmarks { get { return _allBookmarks; } set { _allBookmarks = value; } }
 
         #endregion
 
         #region methods
+
+        public async Task RefreshAllBookmarksAsync()
+        {
+            AllBookmarks = (await this.ListRecursiveAsync(this.RootModel, CancellationToken.None,
+                   em => em is BookmarkModel,
+                   em => (em as BookmarkModel).IsDirectory, false)).Cast<BookmarkModel>().ToList();
+        }
 
         public async Task LoadSettingsAsync()
         {
@@ -79,6 +88,7 @@ namespace FileExplorer.Models.Bookmark
                     bm.Profile = this;
                     _rootModel = bm;
                 }
+                await RefreshAllBookmarksAsync();
             }
         }
 
@@ -136,6 +146,7 @@ namespace FileExplorer.Models.Bookmark
         {
             raiseEntryChanged(evnt);
             SaveSettingsAsync();
+            RefreshAllBookmarksAsync();
         }
 
         public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
