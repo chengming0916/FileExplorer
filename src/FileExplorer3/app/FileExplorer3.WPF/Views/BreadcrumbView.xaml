@@ -98,9 +98,11 @@
                 <bc:DropDown Visibility="{Binding AddBookmarks.IsBookmarkEnabled, Converter={StaticResource btvc}}"
                              IsDropDownOpen="{Binding AddBookmarks.IsVisible, Mode=TwoWay}">                    
                     <bc:DropDown.Header>
-                        <Path Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" 
+                        <Path x:Name="StarGeometry" Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" 
+                              Fill="{Binding AddBookmarks.BookmarkFillBrush}"
                               StrokeThickness="1" Data="{StaticResource Star}"   />
                     </bc:DropDown.Header>
+
                     <ContentControl x:Name="AddBookmarks" />
                 </bc:DropDown>
                 <Button Command="{x:Static def:ExplorerCommands.Refresh}"                                             
