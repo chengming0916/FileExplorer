@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace FileExplorer.WPF.ViewModels
 {
@@ -31,7 +33,8 @@ namespace FileExplorer.WPF.ViewModels
         private string _bookmarkLabel;
         private bool _isBookmarkEnabled;
         private BookmarkModel _lastAddedLink;
-        private AddBookmarkState _state = AddBookmarkState.Inactive;        
+        private AddBookmarkState _state = AddBookmarkState.Inactive;
+        private bool _isBookmarked;
 
         #endregion
 
@@ -58,15 +61,26 @@ namespace FileExplorer.WPF.ViewModels
         public BookmarkProfile Profile { get; set; }
         public bool IsVisible { get { return _isVisible; } set { setIsVisible(value); } }
 
-        public AddBookmarkState State { get { return _state; } set { _state = value; 
-            NotifyOfPropertyChange(() => State);
-            //NotifyOfPropertyChange(() => Header);
-            NotifyOfPropertyChange(() => IsUpdateBookmarkEnabled);
-        } }
+        public AddBookmarkState State
+        {
+            get { return _state; }
+            set
+            {
+                _state = value;
+                NotifyOfPropertyChange(() => State);
+                //NotifyOfPropertyChange(() => Header);
+                NotifyOfPropertyChange(() => IsUpdateBookmarkEnabled);
+            }
+        }
 
         public bool IsUpdateBookmarkEnabled { get { return State == AddBookmarkState.Changed; } }
+        public bool IsBookmarked { get { return _isBookmarked; } set { _isBookmarked = value; 
+            NotifyOfPropertyChange(() => IsBookmarked);
+            NotifyOfPropertyChange(() => BookmarkFillBrush);
+        }
+        }
         public bool IsBookmarkEnabled { get { return _isBookmarkEnabled; } set { _isBookmarkEnabled = value; NotifyOfPropertyChange(() => IsBookmarkEnabled); } }
-
+        public Brush BookmarkFillBrush { get { return IsBookmarked ? SystemColors.ActiveCaptionBrush : Brushes.Transparent; } } 
 
         public ICommandManager Commands { get; private set; }
 
@@ -138,6 +152,7 @@ namespace FileExplorer.WPF.ViewModels
             {
                 BookmarkLabel = CurrentDirectory.Label;
                 IsBookmarkEnabled = !(CurrentDirectory is BookmarkModel);
+                IsBookmarked = Profile.AllBookmarks.Any(bm => CurrentDirectory.FullPath == bm.LinkPath);
             }
             else IsBookmarkEnabled = false;
         }
@@ -165,7 +180,7 @@ namespace FileExplorer.WPF.ViewModels
 
 
             if (CurrentDirectory != null)
-            {                
+            {
                 var foundBookmark = Profile.AllBookmarks.FirstOrDefault(em => em.LinkPath == CurrentDirectory.FullPath);
 
                 if (foundBookmark != null)
@@ -180,6 +195,7 @@ namespace FileExplorer.WPF.ViewModels
                     _lastAddedLink = (CurrentBookmarkDirectory as BookmarkModel)
                         .AddLink(label ?? CurrentDirectory.Label, CurrentDirectory.FullPath);
                     State = AddBookmarkState.Added;
+                    IsBookmarked = true;
                 }
 
             }
@@ -202,9 +218,10 @@ namespace FileExplorer.WPF.ViewModels
                 (_lastAddedLink.Parent as BookmarkModel).Remove(_lastAddedLink.Label);
                 _lastAddedLink = null;
                 IsVisible = false;
+                IsBookmarked = false; 
             }
         }
-     
+
 
         protected override void OnActivate()
         {

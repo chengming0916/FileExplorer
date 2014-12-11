@@ -101,6 +101,7 @@
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
     <Compile Include="Models\ISuggestSource.cs" />
+    <Compile Include="Models\IViewModelOf.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\MetadataProviderBase.cs" />
     <Compile Include="Models\MultiSuggestSource.cs" />
