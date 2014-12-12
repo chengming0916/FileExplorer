@@ -49,8 +49,13 @@ namespace TestApp
 
             cbExplorerMode.ItemsSource = Enum.GetValues(typeof(FileExplorer.WPF.UserControls.Explorer.ExplorerMode));
             cbExplorerMode.SelectedValue = FileExplorer.WPF.UserControls.Explorer.ExplorerMode.ToolWindow;
-            
-            explorer.ViewModel.Initializer =
+
+            //For use in ToolWindow2 mode.
+            //explorer.ViewModel.Parameters.NavigationSize = 25;
+            //explorer.ViewModel.Parameters.DirectoryTreeSize = "2*";
+            //explorer.ViewModel.Parameters.FileListSize = "*";
+
+            explorer.ViewModel.Initializer = 
                 new ScriptCommandInitializer()
                 {
                     OnModelCreated = IOInitializeHelpers.Explorer_Initialize_Default,

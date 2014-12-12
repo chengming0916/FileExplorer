@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="FileExplorer.WPF.Views.Explorer.ToolWindow"
+﻿<UserControl x:Class="FileExplorer.WPF.Views.Explorer.ToolWindow2"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -31,10 +31,10 @@
             <hub:DragDropLiteEventProcessor />
         </hub:UIEventAdapter.Processors>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25" />
+            <RowDefinition Height="{Binding Parameters.NavigationSize, Mode=TwoWay, Converter={StaticResource glv}}" />
             <RowDefinition Height="Auto" />
-
-            <RowDefinition Height="*" />
+            <RowDefinition Height="{Binding Parameters.DirectoryTreeSize, Mode=TwoWay, Converter={StaticResource glv}}" />
+            <RowDefinition Height="{Binding Parameters.FileListSize, Mode=TwoWay, Converter={StaticResource glv}}" />
         </Grid.RowDefinitions>
         
         <ContentControl Name="Breadcrumb" Grid.Row="0" />
@@ -45,6 +45,7 @@
                           SelectedValue="{Binding SelectedFilter}" />
             <!--<TextBox Text="{Binding FileList.Mask, UpdateSourceTrigger=PropertyChanged}"  />-->
         </DockPanel>
-        <ContentControl  Name="FileList"  Grid.Row="2" />
+        <ContentControl  Name="DirectoryTree" Grid.Row="2" />
+        <ContentControl  Name="FileList"  Grid.Row="3" />
     </Grid>
 </UserControl>

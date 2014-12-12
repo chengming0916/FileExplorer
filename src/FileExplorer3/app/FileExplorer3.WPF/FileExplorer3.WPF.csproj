@@ -260,6 +260,9 @@
     <Compile Include="Views\Explorer.DirectoryPicker.xaml.cs">
       <DependentUpon>Explorer.DirectoryPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Explorer.ToolWindow2.xaml.cs">
+      <DependentUpon>Explorer.ToolWindow2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SelectProfileView.xaml.cs">
       <DependentUpon>SelectProfileView.xaml</DependentUpon>
     </Compile>
@@ -697,6 +700,10 @@
     <Page Include="Views\Explorer.DirectoryPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Explorer.ToolWindow2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SelectProfileView.xaml">
       <Generator>MSBuild:Compile</Generator>
