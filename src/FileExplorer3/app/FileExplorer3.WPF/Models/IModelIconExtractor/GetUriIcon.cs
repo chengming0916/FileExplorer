@@ -16,31 +16,19 @@ using FileExplorer.Models;
 
 namespace FileExplorer.WPF.Models
 {
-    public static class EntryModelIconExtractors
+    public static partial class EntryModelIconExtractors
     {
-        public static IModelIconExtractor<IEntryModel> ProvideValue(byte[] value)
+        public static IModelIconExtractor<IEntryModel> FromUrl(Func<IEntryModel, Uri> uriFunc, Func<HttpClient> clientFunc = null)
         {
-            return new ProvideValueIconExtractor(value);
+            return new GetUriIcon(uriFunc, clientFunc);
+        }
+
+        public static IModelIconExtractor<IEntryModel> FromUrl(Uri uri, Func<HttpClient> clientFunc = null)
+        {
+            return FromUrl(em => uri, clientFunc);
         }
     }
 
-
-    public class ProvideValueIconExtractor : IModelIconExtractor<IEntryModel>
-    {
-        private static byte[] Value { get; set; }
-
-        public ProvideValueIconExtractor(byte[] value)
-        {
-            Value = value;
-        }
-
-        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
-        {
-            return Task<ImageSource>.FromResult(Value);
-        }
-    }
-
-  
     public class GetUriIcon : IModelIconExtractor<IEntryModel>
     {
         private Func<IEntryModel, Uri> _uriFunc;
@@ -66,4 +54,7 @@ namespace FileExplorer.WPF.Models
             return await new GetDefaultIcon().GetIconBytesForModelAsync(model, ct);
         }
     }
+
+  
+    
 }
