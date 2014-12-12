@@ -163,9 +163,14 @@
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\FileBasedMetaProvider.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMetaProvider.cs" />
+    <Compile Include="Model\IModelIconExtractor\DrawOverlayTextExtractor.cs" />
+    <Compile Include="Model\IModelIconExtractor\GetFromIconExtractIcon.cs" />
+    <Compile Include="Model\IModelIconExtractor\GetImageFromImageExtractor.cs" />
+    <Compile Include="Model\IModelIconExtractor\GetFromSystemImageListUsingExtension.cs" />
+    <Compile Include="Model\IModelIconExtractor\GetFromSystemImageList.cs" />
     <Compile Include="Model\MetadataProviderImpls.cs" />
     <Compile Include="Model\FileBasedDragDropHandler.cs" />
-    <Compile Include="Model\FileBasedIconExtractors.cs" />
+    <Compile Include="Model\IModelIconExtractor\GetExifThumbnail.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoMetadataProvider.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoModel.cs" />
     <Compile Include="Model\FileSystemInfo\FileSystemInfoProfile.cs" />

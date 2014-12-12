@@ -25,7 +25,7 @@ namespace FileExplorer.Models
 {
     public class FileSystemInfoExProfile : DiskProfileBase, IWPFProfile
     {
-        
+
 
         #region Constructor
 
@@ -63,7 +63,7 @@ namespace FileExplorer.Models
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);
 
                 if (a.FullPath.Equals(b.FullPath))
-                    return HierarchicalResult.Current;                
+                    return HierarchicalResult.Current;
 
                 while (a != null && !(a is FileSystemInfoExModel))
                     a = a.Parent;
@@ -138,7 +138,7 @@ namespace FileExplorer.Models
         {
             ProfileName = "FileSystem (Ex)";
             ProfileIcon = ResourceUtils.GetEmbeddedResourceAsByteArray(this, "/Model/DirectoryInfoEx/My_Computer.png");
-          
+
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer(this);
             MetadataProvider = new ExMetadataProvider();
@@ -146,7 +146,7 @@ namespace FileExplorer.Models
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
             DragDrop = new FileBasedDragDropHandler(this, em => false);
             //PathMapper = IODiskPatheMapper.Instance;
-            
+
             PathPatterns = new string[] { RegexPatterns.FileSystemGuidPattern, RegexPatterns.FileSystemPattern };
         }
 
@@ -176,7 +176,7 @@ namespace FileExplorer.Models
         {
             return new FileInfoEx(path);
         }
-      
+
         public override async Task<IEntryModel> ParseAsync(string path)
         {
             return await Task<IEntryModel>.Factory.StartNew(() =>
@@ -229,6 +229,8 @@ namespace FileExplorer.Models
         {
             yield return GetDefaultIcon.Instance;
             yield return GetFromSystemImageList.Instance;
+            //if (!entry.IsDirectory)
+            //    yield return GetFromIconExtractIcon.Instance;
             if (!entry.IsDirectory)
                 if (entry.FullPath.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase) ||
                     entry.FullPath.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase) ||

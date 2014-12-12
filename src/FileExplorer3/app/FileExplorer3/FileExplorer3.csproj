@@ -49,7 +49,7 @@
     <Compile Include="Models\EntryModelBase.cs" />
     <Compile Include="Models\GetDefaultIcon.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
-    <Compile Include="Models\Bookmark\LoadFromAnotherProfile.cs" />
+    <Compile Include="Models\IModelIconExtractor\LoadFromAnotherProfile.cs" />
     <Compile Include="Models\IViewModelOf.cs" />
     <Compile Include="Models\NullEntryModel.cs" />
     <Compile Include="Models\Metadata.cs" />

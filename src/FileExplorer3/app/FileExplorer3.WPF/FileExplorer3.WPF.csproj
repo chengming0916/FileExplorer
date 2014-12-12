@@ -135,10 +135,11 @@
     <Compile Include="Models\FileBasedCommandProvider.cs" />
     <Compile Include="Models\GetResourceIcon.cs" />
     <Compile Include="Models\ICommandModelImpl.cs" />
-    <Compile Include="Models\IconExtractorImpl.cs" />
     <Compile Include="Models\IDiskIOHelper.cs" />
+    <Compile Include="Models\IModelIconExtractor\GetUriIcon.cs" />
+    <Compile Include="Models\IModelIconExtractor\ProvideValueIconExtractor.cs" />
     <Compile Include="Models\IShellDragDropHandler.cs" />
-    <Compile Include="Models\IModelIconExtractorImpl.cs" />
+    <Compile Include="Models\IModelIconExtractor\ResourceIconExtractor.cs" />
     <Compile Include="Models\IRoutedCommandModel.cs" />
     <Compile Include="Models\IWPFProfile.cs" />
     <Compile Include="Models\NullMetadataProvider.cs" />

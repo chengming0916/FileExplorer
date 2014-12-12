@@ -79,7 +79,7 @@ namespace FileExplorer.Models.Bookmark
         public string Label
         {
             get { return Name; }
-            protected set { Name = value; }
+            //protected set { Name = value; }
         }
 
         [XmlIgnore]
@@ -170,7 +170,7 @@ namespace FileExplorer.Models.Bookmark
                 label = nameGenerator.Generate();
 
             var retVal = new BookmarkModel(Profile as BookmarkProfile, BookmarkEntryType.Link,
-                FullPath + "/" + label) { LinkPath = linkPath, Label = label };
+                FullPath + "/" + label) { LinkPath = linkPath, Name = label };
             SubModels.Add(retVal);
             (Profile as BookmarkProfile).RaiseEntryChanged(new EntryChangedEvent(ChangeType.Created, retVal.FullPath));
             return retVal;
@@ -183,7 +183,7 @@ namespace FileExplorer.Models.Bookmark
                 label = nameGenerator.Generate();
 
             var retVal = new BookmarkModel(Profile as BookmarkProfile, BookmarkEntryType.Directory,
-                FullPath + "/" + label) { Label = label };
+                FullPath + "/" + label) { Name = label };
             SubModels.Add(retVal);
             (Profile as BookmarkProfile).RaiseEntryChanged(new EntryChangedEvent(ChangeType.Created, retVal.FullPath));
             return retVal;

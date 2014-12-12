@@ -77,7 +77,6 @@
     <Compile Include="Models\Bookmark\BookmarkProfile.cs" />
     <Compile Include="Models\Bookmark\BookmarkSerializeTest.cs" />
     <Compile Include="Models\Bookmark\CommandModel.cs" />
-    <Compile Include="Models\Bookmark\LoadFromAnotherProfile.cs" />
     <Compile Include="Models\EntryModelBase.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
     <Compile Include="Models\GetDefaultIcon.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="Models\IMetadataProvider.cs" />
     <Compile Include="Models\IModelIconExtractor.cs" />
     <Compile Include="Models\IModelIconExtractorImpl.cs" />
+    <Compile Include="Models\IModelIconExtractor\LoadFromAnotherProfile.cs" />
     <Compile Include="Models\IProfile.cs" />
     <Compile Include="Models\IProfileCommands.cs" />
     <Compile Include="Models\ISuggestSource.cs" />
