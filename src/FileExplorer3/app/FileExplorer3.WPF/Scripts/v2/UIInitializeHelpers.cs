@@ -80,21 +80,30 @@ namespace FileExplorer.Script
                ))));
 
 
+        //public static IScriptCommand FileList_Delete_For_DiskBased_Items =
+              
 
+        //public static IScriptCommand FileList_NewFolder_ForDiskBased_Items =
+        //    UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
+        //        CoreScriptCommands.DiskCreateFolder("{CurrentDirectory.Profile}", "{CurrentDirectory.FullPath}\\NewFolder",
+        //            "{NewFolder}", NameGenerationMode.Rename,
+        //            UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
 
-        public static IScriptCommand FileList_Delete = ResultCommand.NoError; //Not implemented
-                //UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
-                //ScriptCommands.AssignProperty("{Selection}", "Length", "{Selection-Length}",  //Assign Selection Length
-                //ScriptCommands.IfValue<int>(ComparsionOperator.GreaterThanOrEqual, "{Selection-Length}", 1, //If Selection Length >= 1
-                //  ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",  //True, FirstSelected = Selection[0]
-                //  UIScriptCommands.MessageBoxYesNo("FileExplorer", "Delete {FirstSelected} and {Selection-Length} Item(s)?", //Yes, ShowMessageBox   
-                //  CoreScriptCommands.DiskDeleteMultiple("{Selection}", true))))));   //User clicked yes, Call Delete.
+        public static IScriptCommand FileList_Delete =
+             ScriptCommands.AssignCanExecuteCondition(
+                  UIScriptCommands.FileListAssignSelection("{Selection}",
+                  ScriptCommands.IfValue<int>(ComparsionOperator.GreaterThanOrEqual, "{Selection.Length}", 1, //If DeleteEntries Length >= 1                        
+                    ScriptCommands.IfAssigned("{Selection[0].Profile.DeleteCommand}", ResultCommand.OK))),
+              UIScriptCommands.FileListAssignSelection("{DeleteEntries}",                     //Assign Selection                
+                ScriptCommands.Run("{DeleteEntries[0].Profile.DeleteCommand}", true)));
 
-        public static IScriptCommand FileList_NewFolder = ResultCommand.NoError; //Not implemented
-            //UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
-            //    CoreScriptCommands.DiskCreateFolder("{CurrentDirectory.Profile}", "{CurrentDirectory.FullPath}\\NewFolder",
-            //        "{NewFolder}", NameGenerationMode.Rename,
-            //        UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
+        public static IScriptCommand FileList_NewFolder = ScriptCommands.AssignCanExecuteCondition(
+                  UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentFolder}",
+                    ScriptCommands.IfAssigned("{CurrentFolder.Profile.CreateFolderCommand}", ResultCommand.OK)),
+                UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{BaseFolder}",
+                    ScriptCommands.Assign("{FolderName}", "New Folder", false,
+                        ScriptCommands.Run("{BaseFolder.Profile.CreateFolderCommand}", true,
+                            UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{CreatedFolder}", true, ResultCommand.OK)))));
 
         public static IScriptCommand FileList_Selection_Is_One_Folder =
           UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection

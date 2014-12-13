@@ -91,7 +91,11 @@ namespace TestApp
                     _profileGoogleDrive = new GoogleDriveProfile(_events, gapi_secret_stream);
                 }
 
-            _profileBm = new BookmarkProfile(_profileEx as IDiskProfile, @"C:\Temp\FileExplorer.xml",
+
+            string appDataPath = Environment.ExpandEnvironmentVariables("%AppData%\\FileExplorer3");
+            System.IO.Directory.CreateDirectory(appDataPath);
+            string bookmarkPath = Path.Combine(appDataPath, "Bookmarks.xml");
+            _profileBm = new BookmarkProfile(_profileEx as IDiskProfile, bookmarkPath,
                  new IProfile[] { _profileEx, _profileSkyDrive, _profileDropBox, _profileGoogleDrive });
 
 

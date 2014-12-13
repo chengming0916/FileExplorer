@@ -89,11 +89,12 @@ namespace FileExplorer.WPF.ViewModels.Helpers
         {
             List<ICommandModel> cmList = new List<ICommandModel>() { };
 
-            foreach (var cp in _extraCommandProviders)
-                cmList.AddRange(cp.GetCommandModels());
+            //foreach (var cp in _extraCommandProviders)
+            //    cmList.AddRange(cp.GetCommandModels());
 
-            if (_rootProfiles != null)
-                foreach (var cp in _rootProfiles.SelectMany(p => p.CommandProviders))
+            var rp = _rootProfiles ?? new IProfile[] { };            
+            foreach (var cp in rp.SelectMany(p => p.CommandProviders)
+                    .Concat(_extraCommandProviders). Distinct())
                     cmList.AddRange(cp.GetCommandModels());
 
             return cmList.Select(cm => new CommandViewModel(cm, _parameterDicConverter)).ToArray();

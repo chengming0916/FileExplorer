@@ -12,7 +12,7 @@ namespace FileExplorer.Models
 {
     public class FileBasedCommandProvider : StaticCommandProvider
     {
-        public FileBasedCommandProvider(ICommandManager cm)
+        public FileBasedCommandProvider()
             : base(
             new DirectoryCommandModel(
                 //new CommandModel(cm.CommandDictionary.Open) { Header= Strings.strOpen, IsVisibleOnMenu = true },
@@ -35,6 +35,11 @@ namespace FileExplorer.Models
             )
         {
 
+        }        
+
+        public override bool Equals(object obj)
+        {
+            return obj is FileBasedCommandProvider;
         }
     }
 }

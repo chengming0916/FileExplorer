@@ -58,7 +58,7 @@ namespace FileExplorer.Script
                 {
                     #region FileList
                     explorerModel.FileList.Commands.ToolbarCommands.ExtraCommandProviders = new[] {                               
-                new FileBasedCommandProvider(explorerModel.FileList.Commands), //Open, Cut, Copy, Paste etc                 
+                                
                 new StaticCommandProvider(                    
                     new SeparatorCommandModel(),
                     new SelectGroupCommand( explorerModel.FileList),    

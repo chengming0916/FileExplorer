@@ -91,21 +91,23 @@ namespace FileExplorer.Script
                ))));
 
 
+        public static IScriptCommand FileList_Delete = UIInitializeHelpers.FileList_Delete;
+        public static IScriptCommand FileList_NewFolder = UIInitializeHelpers.FileList_NewFolder;
 
 
-        public static IScriptCommand FileList_Delete_For_DiskBased_Items =
-                UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
-                ScriptCommands.AssignProperty("{Selection}", "Length", "{Selection-Length}",  //Assign Selection Length
-                ScriptCommands.IfValue<int>(ComparsionOperator.GreaterThanOrEqual, "{Selection-Length}", 1, //If Selection Length >= 1
-                  ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",  //True, FirstSelected = Selection[0]
-                  UIScriptCommands.MessageBoxYesNo("FileExplorer", "Delete {FirstSelected} and {Selection-Length} Item(s)?", //Yes, ShowMessageBox   
-                  CoreScriptCommands.DiskDeleteMultiple("{Selection}", true))))));   //User clicked yes, Call Delete.
+        //public static IScriptCommand FileList_Delete_For_DiskBased_Items =
+        //        UIScriptCommands.FileListAssignSelection("{Selection}",                     //Assign Selection
+        //        ScriptCommands.AssignProperty("{Selection}", "Length", "{Selection-Length}",  //Assign Selection Length
+        //        ScriptCommands.IfValue<int>(ComparsionOperator.GreaterThanOrEqual, "{Selection-Length}", 1, //If Selection Length >= 1
+        //          ScriptCommands.AssignArrayItem("{Selection}", 0, "{FirstSelected}",  //True, FirstSelected = Selection[0]
+        //          UIScriptCommands.MessageBoxYesNo("FileExplorer", "Delete {FirstSelected} and {Selection-Length} Item(s)?", //Yes, ShowMessageBox   
+        //          CoreScriptCommands.DiskDeleteMultiple("{Selection}", true))))));   //User clicked yes, Call Delete.
 
-        public static IScriptCommand FileList_NewFolder_ForDiskBased_Items =
-            UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
-                CoreScriptCommands.DiskCreateFolder("{CurrentDirectory.Profile}", "{CurrentDirectory.FullPath}\\NewFolder",
-                    "{NewFolder}", NameGenerationMode.Rename,
-                    UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
+        //public static IScriptCommand FileList_NewFolder_ForDiskBased_Items =
+        //    UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
+        //        CoreScriptCommands.DiskCreateFolder("{CurrentDirectory.Profile}", "{CurrentDirectory.FullPath}\\NewFolder",
+        //            "{NewFolder}", NameGenerationMode.Rename,
+        //            UIScriptCommands.FileListRefreshThenSelect("{FileList}", "{NewFolder}", true, ResultCommand.OK)));
 
         public static IScriptCommand FileList_Selection_Is_One_Folder =
           UIInitializeHelpers.FileList_Selection_Is_One_Folder;
@@ -122,17 +124,27 @@ namespace FileExplorer.Script
         public static IScriptCommand DirectoryTree_OpenTab = UIInitializeHelpers.DirectoryTree_OpenTab;
         #endregion
 
+        public static IScriptCommand FileList_Selection_Is_DiskBased =
+           UIScriptCommands.FileListAssignSelection("{Selection}",
+             ScriptCommands.IfValue(ComparsionOperator.GreaterThanOrEqual, "{Selection.Length}", 1, 
+                ScriptCommands.IfAssigned("{Selection[0].DiskProfile}",
+                    ResultCommand.OK)));
+        
+        public static IScriptCommand FileList_Cut_For_DiskBased_Items = 
+            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_DiskBased, 
+            UIScriptCommands.FileListAssignSelection("{Selection}",
+                IOScriptCommands.DiskCut("{Selection}")));
 
+        public static IScriptCommand FileList_Copy_For_DiskBased_Items = 
+            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_DiskBased, 
+            UIScriptCommands.FileListAssignSelection("{Selection}",
+                IOScriptCommands.DiskCopy("{Selection}")));
 
-        public static IScriptCommand FileList_Cut_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
-                IOScriptCommands.DiskCut("{Selection}"));
-
-        public static IScriptCommand FileList_Copy_For_DiskBased_Items = UIScriptCommands.FileListAssignSelection("{Selection}",
-                IOScriptCommands.DiskCopy("{Selection}"));
-
-        public static IScriptCommand FileList_Paste_For_DiskBased_Items = UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
+        public static IScriptCommand FileList_Paste_For_DiskBased_Items = 
+            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_DiskBased, 
+            UIScriptCommands.ExplorerAssignCurrentDirectory("{FileList}", "{CurrentDirectory}",
                 IOScriptCommands.DiskPaste("{CurrentDirectory}", "{Destination}",
-                UIScriptCommands.FileListSelect("{FileList}", "{Destination}")));
+                UIScriptCommands.FileListSelect("{FileList}", "{Destination}"))));
 
         public static IScriptCommand DirectoryTree_Map_From_Profiles = UIInitializeHelpers.DirectoryTree_Map_From_Profiles;
             

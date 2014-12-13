@@ -33,7 +33,7 @@ namespace FileExplorer.Models
         {
             public ExHierarchyComparer(FileSystemInfoExProfile profile)
             {
-                _profile = profile;
+                _profile = profile;                
             }
 
             //Store special directories (start with ::{) only.
@@ -142,7 +142,10 @@ namespace FileExplorer.Models
             DiskIO = new HardDriveDiskIOHelper(this);
             HierarchyComparer = new ExHierarchyComparer(this);
             MetadataProvider = new ExMetadataProvider();
+            
             CommandProviders.Add(new ExCommandProvider(this));
+            
+
             //DragDrop = new FileSystemInfoExDragDropHandler(this);
             DragDrop = new FileBasedDragDropHandler(this, em => false);
             //PathMapper = IODiskPatheMapper.Instance;

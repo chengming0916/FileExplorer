@@ -88,6 +88,16 @@ namespace FileExplorer.Models
         IEventAggregator Events { get; }
         ISuggestSource SuggestSource { get; }
 
+        /// <summary>
+        /// Given {DeleteEntries}, Delete the entries, cannot delete if DeleteCommand is Null.
+        /// </summary>
+        IScriptCommand DeleteCommand { get; }
+
+        /// <summary>
+        /// Given {FolderName}, {BaseFolder}, Create a new folder and store it (IEntryModel) to {CreatedFolder}
+        /// </summary>
+        IScriptCommand CreateFolderCommand { get; }
+
         event EventHandler<EntryChangedEvent> OnEntryChanged;
         
         #endregion
