@@ -33,8 +33,7 @@ namespace FileExplorer.WPF.ViewModels
                 message => { _currentDirectoryModel = message.NewModel; return new IEntryModel[] { _currentDirectoryModel }; },
                 message => message.SelectedModels.Count() == 0 && _currentDirectoryModel != null ? new IEntryModel[] { _currentDirectoryModel } : message.SelectedModels.ToArray())
                 {
-                    ExtraCommandProviders = new[] { 
-                        new FileBasedCommandProvider(this), //Open, Cut, Copy, Paste etc    
+                    ExtraCommandProviders = new[] {                         
                         new StaticCommandProvider(new SelectGroupCommand(flvm), 
                             new ViewModeCommand(flvm),                             
                             new SeparatorCommandModel(),

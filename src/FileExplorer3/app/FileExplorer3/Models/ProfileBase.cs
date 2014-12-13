@@ -12,6 +12,7 @@ using FileExplorer.Models;
 using System.Text.RegularExpressions;
 using FileExplorer.WPF.Utils;
 using FileExplorer.UIEventHub;
+using FileExplorer.Script;
 
 namespace FileExplorer.Models
 {
@@ -33,8 +34,7 @@ namespace FileExplorer.Models
             MetadataProvider = new BasicMetadataProvider();
             CommandProviders = new List<ICommandProvider>();
             //PathMapper = NullDiskPatheMapper.Instance;
-            DragDrop = NullDragDropHandler.Instance;
-
+            DragDrop = NullDragDropHandler.Instance;            
            
             Events = events ?? new EventAggregator();
             _pathPatterns = new string[] { "." };
@@ -129,7 +129,9 @@ namespace FileExplorer.Models
         public IEventAggregator Events { get; protected set; }
         public IConverterProfile[] Converters { get { return _converters; } set { setConverters(value); } }
         public IDragDropHandler DragDrop { get; protected set; }
-
+        
+        public IScriptCommand DeleteCommand { get; protected set; }
+        public IScriptCommand CreateFolderCommand { get; protected set; }
         public event EventHandler<EntryChangedEvent> OnEntryChanged = (o, e) => { };
 
         #endregion

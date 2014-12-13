@@ -50,6 +50,7 @@
     <Compile Include="Models\GetDefaultIcon.cs" />
     <Compile Include="Models\IDragDropHandler.cs" />
     <Compile Include="Models\IModelIconExtractor\LoadFromAnotherProfile.cs" />
+    <Compile Include="Models\IModelIconExtractor\LoadFromAssembly.cs" />
     <Compile Include="Models\IViewModelOf.cs" />
     <Compile Include="Models\NullEntryModel.cs" />
     <Compile Include="Models\Metadata.cs" />
@@ -138,6 +139,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Themes\Resources\folder.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Themes\Resources\bookmark.ico" />
+    <Content Include="Themes\Resources\Reference.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

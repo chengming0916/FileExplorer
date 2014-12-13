@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using FileExplorer.Defines;
 using FileExplorer.IO;
+using FileExplorer.Script;
 using FileExplorer.WPF.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using System.Reflection;
 
 namespace FileExplorer.Models.Bookmark
 {
@@ -39,7 +41,10 @@ namespace FileExplorer.Models.Bookmark
             _rootModel = new BookmarkModel(this, BookmarkModel.BookmarkEntryType.Root, _rootLabel);
             //BookmarkSerializeTest.CreateTestData(this, rootLabel);
             //new BookmarkModel(BookmarkModel.BookmarkEntryType.Root, rootLabel);
-            CommandProviders.Add(new BookmarkCommandProvider(this));
+            //CommandProviders.Add(new BookmarkCommandProvider(this));
+            DeleteCommand = ScriptCommands.ForEach("{DeleteEntries}", "{CurrentEntry}",
+                  ScriptCommands.ExecuteMethod("{CurrentEntry.Parent}", "Remove", new object[] { "{CurrentEntry.Label}" }));
+            CreateFolderCommand = ScriptCommands.ExecuteFunc("{BaseFolder}", "AddFolder", new object[] {"{FolderName}" }, "{CreatedFolder}");
             PathPatterns = new string[] { _rootLabel + "." };
             DragDrop = new BookmarkDragDropHandler();
             AllBookmarks = new List<BookmarkModel>();
@@ -50,6 +55,7 @@ namespace FileExplorer.Models.Bookmark
         {
             _store = store;
             _fileName = fileName;
+            ProfileName = String.Format("Bookmarks {0}", _fileName);
             _profiles = profiles;            
             AsyncUtils.RunSync(() => LoadSettingsAsync());
         }
@@ -151,11 +157,19 @@ namespace FileExplorer.Models.Bookmark
 
         public override IEnumerable<IModelIconExtractor<IEntryModel>> GetIconExtractSequence(IEntryModel entry)
         {
-            if (entry is BookmarkModel && (entry as BookmarkModel).Type == BookmarkModel.BookmarkEntryType.Link)
-                return new List<IModelIconExtractor<IEntryModel>>()
-                            {   new LoadFromLinkPath(_profiles) };
+            BookmarkModel bm = entry as BookmarkModel;
 
-            return base.GetIconExtractSequence(entry);
+            switch (bm.Type)
+            {
+                case BookmarkModel.BookmarkEntryType.Link :
+                    return new List<IModelIconExtractor<IEntryModel>>() { new LoadFromLinkPath(_profiles) };
+                case BookmarkModel.BookmarkEntryType.Root :
+                    return new List<IModelIconExtractor<IEntryModel>>() { 
+                        new LoadFromAssembly(typeof(BookmarkProfile).GetTypeInfo().Assembly, "FileExplorer.Themes.Resources.bookmark.ico") };
+                default : 
+                    return base.GetIconExtractSequence(entry);
+            }            
+             
         }
 
         #endregion
