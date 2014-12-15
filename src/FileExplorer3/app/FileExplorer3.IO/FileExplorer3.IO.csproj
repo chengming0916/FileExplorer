@@ -161,6 +161,7 @@
     <Compile Include="Model\DropBox\DropBoxFileStream.cs" />
     <Compile Include="Model\DropBox\DropBoxMetaProvider.cs" />
     <Compile Include="Model\ExtensionMethods.cs" />
+    <Compile Include="Model\FileBasedCommandProvider.cs" />
     <Compile Include="Model\FileBasedMetaProvider.cs" />
     <Compile Include="Model\GoogleDrive\GoogleDriveMetaProvider.cs" />
     <Compile Include="Model\IModelIconExtractor\DrawOverlayTextExtractor.cs" />

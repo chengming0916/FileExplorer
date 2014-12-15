@@ -26,6 +26,7 @@ namespace FileExplorer.Script
     [XmlInclude(typeof(TabbedExplorerShow))]
     [XmlInclude(typeof(TabExplorerNewTab))]
     [XmlInclude(typeof(TabExplorerCloseTab))]
+    [XmlInclude(typeof(RunCommadLine))]
     public class FileExplorer3WPFCommands
     {
 

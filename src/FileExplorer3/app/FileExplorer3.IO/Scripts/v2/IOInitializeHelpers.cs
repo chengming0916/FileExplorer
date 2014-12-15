@@ -113,9 +113,21 @@ namespace FileExplorer.Script
           UIInitializeHelpers.FileList_Selection_Is_One_Folder;
 
         #region FileList_NewWindow, NewTabbedWindow, OpenTab
+
+        public static Func<string, IScriptCommand> OpenCommandLine = (dirVariable) => 
+            UIScriptCommands.OpenCommandPrompt(ParameterDic.CombineVariable(dirVariable, ".FullPath", false));
+        public static Func<string, IScriptCommand> OpenExplorerWindow = (dirVariable) =>
+            UIScriptCommands.RunCommadLine("explorer.exe", null, "\"" +  
+            ParameterDic.CombineVariable(dirVariable, ".FullPath", false) +  "\"");
+
         public static IScriptCommand FileList_NewWindow = UIInitializeHelpers.FileList_NewWindow;         
         public static IScriptCommand FileList_NewTabbedWindow = UIInitializeHelpers.FileList_NewTabbedWindow;
         public static IScriptCommand FileList_OpenTab = UIInitializeHelpers.FileList_OpenTab;
+        public static IScriptCommand FileList_OpenCommandLine =
+            UIInitializeHelpers.If_FileList_Selection_Is_One_Folder(OpenCommandLine("{Selection[0]}"));
+        public static IScriptCommand FileList_OpenExplorerWindow =
+            UIInitializeHelpers.If_FileList_Selection_Is_One_Folder(OpenExplorerWindow("{Selection[0]}"));
+
         #endregion
 
         #region DirectoryTree_NewWindow, NewTabbedWindow, OpenTab
