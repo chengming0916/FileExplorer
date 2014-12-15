@@ -1,4 +1,5 @@
-﻿using FileExplorer.WPF.Defines;
+﻿using FileExplorer.Script;
+using FileExplorer.WPF.Defines;
 using FileExplorer.WPF.Models;
 using FileExplorer.WPF.ViewModels;
 using System;
@@ -12,13 +13,16 @@ namespace FileExplorer.Models
 {
     public class FileBasedCommandProvider : StaticCommandProvider
     {
-        public FileBasedCommandProvider()
+        public  FileBasedCommandProvider()
             : base(
             new DirectoryCommandModel(
                 //new CommandModel(cm.CommandDictionary.Open) { Header= Strings.strOpen, IsVisibleOnMenu = true },
                 new CommandModel(ApplicationCommands.Open) { IsVisibleOnMenu = true },
                 new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
-                new CommandModel(ExplorerCommands.OpenTab) { IsVisibleOnMenu = true })
+                new CommandModel(ExplorerCommands.OpenTab) { IsVisibleOnMenu = true },
+                new CommandModel(IOInitializeHelpers.FileList_OpenExplorerWindow) {  Header = "Explorer", IsVisibleOnMenu = true, Symbol = (char)0xE188 },
+                new CommandModel(IOInitializeHelpers.FileList_OpenCommandLine) { Header = "Command Prompt", IsVisibleOnMenu = true }
+                )
                 { Header = "Open", IsVisibleOnMenu = true, IsEnabled = true },
              
             new SeparatorCommandModel(),

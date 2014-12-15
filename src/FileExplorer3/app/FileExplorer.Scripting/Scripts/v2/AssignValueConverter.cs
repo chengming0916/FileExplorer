@@ -101,7 +101,7 @@ namespace FileExplorer.Script
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ExecuteFunc<T,R>(string sourceObjectVariable = "{Source}",
+        public static IScriptCommand ExecuteFunc<T, R>(string sourceObjectVariable = "{Source}",
             Expression<Func<T, R>> expression = null, object[] parameters = null,
             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
         {
@@ -137,10 +137,10 @@ namespace FileExplorer.Script
         /// <param name="parameters"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-        public static IScriptCommand ExecuteMethod<T,R>(string sourceObjectVariable = "{Source}",
+        public static IScriptCommand ExecuteMethod<T, R>(string sourceObjectVariable = "{Source}",
             Expression<Func<T, R>> expression = null, object[] parameters = null, IScriptCommand nextCommand = null)
         {
-            return ExecuteFunc<T,R>(sourceObjectVariable,
+            return ExecuteFunc<T, R>(sourceObjectVariable,
               expression, parameters, null, nextCommand);
         }
 
@@ -164,7 +164,7 @@ namespace FileExplorer.Script
         }
 
         /// <summary>
-         /// Serializable, shortcut method for [AssignValueConverter], which obtains value of a property from a variable and assign to another variable.
+        /// Serializable, shortcut method for [AssignValueConverter], which obtains value of a property from a variable and assign to another variable.
         /// </summary>
         /// <typeparam name="C"></typeparam>
         /// <typeparam name="T"></typeparam>
@@ -173,15 +173,15 @@ namespace FileExplorer.Script
         /// <param name="destinationVariable"></param>
         /// <param name="nextCommand"></param>
         /// <returns></returns>
-         public static IScriptCommand AssignProperty<C,T>(string sourceObjectVariable = "{Source}",
-              Expression<Func<C, T>> expression = null,           
-             string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
-         {
-             MemberExpression memberExpression = (MemberExpression)expression.Body;
-             string property = memberExpression.Member.Name;
+        public static IScriptCommand AssignProperty<C, T>(string sourceObjectVariable = "{Source}",
+             Expression<Func<C, T>> expression = null,
+            string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            MemberExpression memberExpression = (MemberExpression)expression.Body;
+            string property = memberExpression.Member.Name;
 
-             return AssignProperty(sourceObjectVariable, property, destinationVariable, nextCommand);
-         }
+            return AssignProperty(sourceObjectVariable, property, destinationVariable, nextCommand);
+        }
 
         /// <summary>
         /// Set property of an object in ParameterDic to another object in ParameterDic.
@@ -313,6 +313,21 @@ namespace FileExplorer.Script
                     destinationVariable, false, nextCommand), addValues);
         }
 
+        public static IScriptCommand Substring(string sourceObjectVariable, object startIdx, object length,
+         string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            return ScriptCommands.ExecuteFunc(sourceObjectVariable, "Substring", new object[] { startIdx, length }, destinationVariable,
+                nextCommand);
+        }
+
+        public static IScriptCommand Substring(string sourceObjectVariable, object startIdx, 
+            string destinationVariable = "{Destination}", IScriptCommand nextCommand = null)
+        {
+            return ScriptCommands.ExecuteFunc(sourceObjectVariable, "Substring", new object[] { startIdx }, destinationVariable,
+                nextCommand);
+        }
+
+
     }
 
     public enum ValueConverterType
@@ -325,7 +340,8 @@ namespace FileExplorer.Script
         ExecuteMethod,
         SetProperty,
         AddValue,
-        ConcatArray
+        ConcatArray,
+        //SubString
     }
 
     public class AssignValueConverter : Assign
@@ -482,6 +498,21 @@ namespace FileExplorer.Script
                     Value = retVa13;
 
                     break;
+                //case ValueConverterType.SubString:
+                //    Func<Object, Object> retVa14 = (Func<Object, Object>)(v =>
+                //       {
+                //           if (ConverterParameter.Length != 2)
+                //               return ResultCommand.Error(new ArgumentException("Incorrect number of parameters (2)."));
+                //           var parameters = ConverterParameter.Select(p => checkParameters(p)).ToArray();
+
+                //           int startIdx = (int)parameters[0];
+                //           int? length = (int?)parameters[1];
+
+                //           string str = v as string;
+                //           return length.HasValue ? str.Substring(startIdx, length.Value) : str.Substring(startIdx);
+                //       });
+                //    Value = retVa14;
+                //    break;
                 default: return ResultCommand.Error(new NotSupportedException(ConverterType.ToString()));
 
             }

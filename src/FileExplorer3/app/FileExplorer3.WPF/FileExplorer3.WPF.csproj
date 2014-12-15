@@ -132,7 +132,6 @@
     <Compile Include="Models\CommandModelImpl.cs" />
     <Compile Include="Models\CommonScriptCommands.cs" />
     <Compile Include="Models\ExtensionMethods.cs" />
-    <Compile Include="Models\FileBasedCommandProvider.cs" />
     <Compile Include="Models\GetResourceIcon.cs" />
     <Compile Include="Models\ICommandModelImpl.cs" />
     <Compile Include="Models\IDiskIOHelper.cs" />
@@ -156,6 +155,7 @@
     <Compile Include="Scripts\v2\FileListAssignEntries.cs" />
     <Compile Include="Scripts\v2\FileListRefresh.cs" />
     <Compile Include="Scripts\v2\FileListSelect.cs" />
+    <Compile Include="Scripts\v2\RunCommadLine.cs" />
     <Compile Include="Scripts\v2\UIInitializeHelpers.cs" />
     <Compile Include="Scripts\v2\NotifyRootChanged.cs" />
     <Compile Include="Scripts\v2\ProfilePicker.cs" />

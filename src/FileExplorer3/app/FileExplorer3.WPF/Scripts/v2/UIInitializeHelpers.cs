@@ -110,48 +110,40 @@ namespace FileExplorer.Script
            ScriptCommands.IfArrayLength(ComparsionOperator.Equals, "{Selection}", 1,
              ScriptCommands.IfTrue("{Selection[0].IsDirectory}", ResultCommand.OK)));
 
+        public static Func<IScriptCommand, IScriptCommand> If_FileList_Selection_Is_One_Folder = thenCommand =>
+            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder, thenCommand);       
+
         #region FileList_NewWindow, NewTabbedWindow, OpenTab
-        public static IScriptCommand FileList_NewWindow =
-         ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder,
-          UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+
+        
+        public static Func<string, IScriptCommand> NewWindow = (dirVariable) =>
+            UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
            UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}",
                "{WindowManager}", "{GlobalEvents}", "{Explorer}",
-                   UIScriptCommands.ExplorerGoTo("{Explorer}", "{Selection[0]}"))));
+                   UIScriptCommands.ExplorerGoTo("{Explorer}", dirVariable)));
 
-        public static IScriptCommand FileList_NewTabbedWindow =
-             ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder,
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+        public static Func<string, IScriptCommand> NewTabbedWindow = (dirVariable) =>
+             UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
                     UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
                         "{WindowManager}", "{GlobalEvents}", "{TabbedExplorer}",
-                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null))));
+                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", dirVariable, "{Explorer}", null)));
 
+        public static Func<string, IScriptCommand> OpenTab = (dirVariable) =>
+            UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
+                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", dirVariable, "{Explorer}", null));
 
-        public static IScriptCommand FileList_OpenTab =
-            ScriptCommands.AssignCanExecuteCondition(FileList_Selection_Is_One_Folder,
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{Selection[0]}", "{Explorer}", null)));
+        public static IScriptCommand FileList_NewWindow = If_FileList_Selection_Is_One_Folder(NewWindow("{Selection[0]}"));          
+        public static IScriptCommand FileList_NewTabbedWindow = If_FileList_Selection_Is_One_Folder(NewTabbedWindow("{Selection[0]}"));                       
+        public static IScriptCommand FileList_OpenTab = If_FileList_Selection_Is_One_Folder(OpenTab("{Selection[0]}"));                        
+                  
         #endregion
 
         #region DirectoryTree_NewWindow, NewTabbedWindow, OpenTab
-        public static IScriptCommand DirectoryTree_NewWindow =
-         UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", 
-          UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-           UIScriptCommands.ExplorerNewWindow("{OnModelCreated}", "{OnViewAttached}",
-               "{WindowManager}", "{GlobalEvents}", "{Explorer}",
-                   UIScriptCommands.ExplorerGoTo("{Explorer}", "{CurrentDirectory}"))));
+        
 
-        public static IScriptCommand DirectoryTree_NewTabbedWindow =
-             UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", 
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                    UIScriptCommands.ExplorerNewTabWindow("{OnModelCreated}", "{OnViewAttached}", "{OnTabExplorerCreated}", "{OnTabExplorerAttached}",
-                        "{WindowManager}", "{GlobalEvents}", "{TabbedExplorer}",
-                        UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{CurrentDirectory}", "{Explorer}", null))));
-
-
-        public static IScriptCommand DirectoryTree_OpenTab =
-            UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", 
-                   UIScriptCommands.ExplorerGetParameter("{Explorer}", ExplorerParameterType.RootModels, "{RootDirectories}",
-                   UIScriptCommands.TabExplorerNewTab("{TabbedExplorer}", "{CurrentDirectory}", "{Explorer}", null)));
+        public static IScriptCommand DirectoryTree_NewWindow = UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", NewWindow("{CurrentDirectory}"));
+        public static IScriptCommand DirectoryTree_NewTabbedWindow = UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", NewTabbedWindow("{CurrentDirectory}"));
+        public static IScriptCommand DirectoryTree_OpenTab = UIScriptCommands.ExplorerAssignCurrentDirectory("{CurrentDirectory}", OpenTab("{CurrentDirectory}"));
         #endregion
 
         #region Map/Unmap

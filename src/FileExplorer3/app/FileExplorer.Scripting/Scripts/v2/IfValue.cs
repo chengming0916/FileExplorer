@@ -175,6 +175,22 @@ namespace FileExplorer.Script
                 ScriptCommands.Assign("{ArrayLengthValue}", value, false,
                   IfArrayLength(op, arrayVariable, "{ArrayLengthValue}", trueCommand, otherwiseCommand));
         }
+
+        public static IScriptCommand IfStartWith(string stringVariable = "{string}", string startWithText = "_StartWith_",
+            bool ignoreCase = true,
+            IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            return IfValue<string>(ignoreCase ? ComparsionOperator.StartWithIgnoreCase :  ComparsionOperator.StartWith, 
+                stringVariable, startWithText, trueCommand, otherwiseCommand);
+        }
+
+        public static IScriptCommand IfEndsWith(string stringVariable = "{string}", string startWithText = "_EndsWith_",
+           bool ignoreCase = true,
+           IScriptCommand trueCommand = null, IScriptCommand otherwiseCommand = null)
+        {
+            return IfValue<string>(ignoreCase ? ComparsionOperator.EndsWithIgnoreCase :  ComparsionOperator.EndsWith, 
+                stringVariable, startWithText, trueCommand, otherwiseCommand);
+        }
     }
 
     public enum ComparsionOperator
