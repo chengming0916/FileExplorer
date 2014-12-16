@@ -43,7 +43,7 @@ namespace FileExplorer.WPF.ViewModels
                  pd =>
                  {
                      IBreadcrumbViewModel bread = pd["Breadcrumb"] as IBreadcrumbViewModel;
-                     bread.ShowBreadcrumb = !bread.ShowBreadcrumb; return ResultCommand.NoError;
+                     bread.EnableBreadcrumb = !bread.EnableBreadcrumb; return ResultCommand.NoError;
                  });
         }
 

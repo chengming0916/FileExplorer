@@ -165,7 +165,9 @@ namespace TestApp
                     { "GlobalEvents", _events },
                     { "WindowManager", _windowManager },
                     { "EnableDrag", _enableDrag }, 
-                    { "EnableDrop", _enableDrop },                     
+                    { "EnableDrop", _enableDrop }, 
+                    { "EnableContextMenu", _enableContextMenu },
+                    { "EnableBookmark", _enableBookmark },
                     { "EnableMap", true },
                     { "EnableMultiSelect", _enableMultiSelect}, 
                 },
@@ -439,7 +441,9 @@ namespace TestApp
                     { "GlobalEvents", _events },
                     { "WindowManager", _windowManager },
                     { "EnableDrag", _enableDrag }, 
-                    { "EnableDrop", _enableDrop },                     
+                    { "EnableDrop", _enableDrop },  
+                    { "EnableContextMenu", _enableContextMenu },
+                    { "EnableBookmark", _enableBookmark },
                     { "EnableMultiSelect", _enableMultiSelect}                    , 
                     { "EnableTabsWhenOneTab", _showTabsWhenOneTab}
                 },
@@ -547,6 +551,8 @@ namespace TestApp
         private DropBoxProfile _profileDropBox;
         private IEntryModel _selectedRootModel;
         private bool _showTabsWhenOneTab;
+        private bool _enableContextMenu = true;
+        private bool _enableBookmark = true;
         #endregion
 
         #region Public Properties
@@ -557,8 +563,10 @@ namespace TestApp
         public ObservableCollection<IEntryModel> RootModels { get { return _rootModels; } }
         public IEntryModel SelectedRootModel { get { return _selectedRootModel; } set { _selectedRootModel = value; NotifyOfPropertyChange(() => SelectedRootModel); } }
         public bool ExpandRootDirectories { get { return _expandRootDirectories; } set { _expandRootDirectories = value; NotifyOfPropertyChange(() => ExpandRootDirectories); } }
+        public bool EnableContextMenu { get { return _enableContextMenu; } set { _enableContextMenu = value; NotifyOfPropertyChange(() => EnableContextMenu); } }
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
+        public bool EnableBookmark { get { return _enableBookmark; } set { _enableBookmark = value; NotifyOfPropertyChange(() => EnableBookmark); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
         public bool UseScriptCommandInitializer { get { return _useScriptCommandInitializer; } set { _useScriptCommandInitializer = value; NotifyOfPropertyChange(() => UseScriptCommandInitializer); } }
 

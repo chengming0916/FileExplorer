@@ -86,9 +86,13 @@ namespace FileExplorer.Script
         FileName, FilePickerMode, FilterString,
 
         //FileList
+        EnableContextMenu,
         EnableDrag, EnableDrop, EnableMultiSelect,
         ColumnList, ColumnFilters, ViewMode, ItemSize,
-        ShowToolbar, ShowSidebar, ShowGridHeader
+        ShowToolbar, ShowSidebar, ShowGridHeader, 
+
+        //Breadcrumb
+        EnableBookmark
     }
 
     public enum ParameterDirection
@@ -146,7 +150,10 @@ namespace FileExplorer.Script
             string ValueKeyString = ValueKey as string;
             if (ValueKeyString != null)
                 switch (ParameterType)
-                {                    
+                {
+                    case ExplorerParameterType.EnableContextMenu:
+                        pm.SetValue(ValueKeyString, evm.FileList.EnableContextMenu);
+                        break;
                     case ExplorerParameterType.EnableDrag:
                         pm.SetValue(ValueKeyString, evm.FileList.EnableDrag);
                         break;
@@ -202,6 +209,9 @@ namespace FileExplorer.Script
                     case ExplorerParameterType.ShowGridHeader:
                         pm.SetValue(ValueKeyString, evm.FileList.ShowGridHeader);
                         break;
+                    case ExplorerParameterType.EnableBookmark:
+                        pm.SetValue(ValueKeyString, evm.Breadcrumb.EnableBookmark);
+                        break;
                     default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));
                 }
 
@@ -216,6 +226,10 @@ namespace FileExplorer.Script
 
             switch (ParameterType)
             {
+                case ExplorerParameterType.EnableContextMenu:
+                    if (value is bool)
+                        evm.FileList.EnableContextMenu = evm.DirectoryTree.EnableContextMenu = true.Equals(value);
+                    break;
                 case ExplorerParameterType.EnableDrag:
                     if (value is bool)
                         evm.FileList.EnableDrag = evm.DirectoryTree.EnableDrag = true.Equals(value);
@@ -307,7 +321,10 @@ namespace FileExplorer.Script
                     if (value is bool)
                         evm.FileList.ShowGridHeader = true.Equals(value);
                     break;
-
+                case ExplorerParameterType.EnableBookmark:
+                    if (value is bool)
+                        evm.Breadcrumb.EnableBookmark = true.Equals(value);
+                    break;
                 default: return ResultCommand.Error(new NotSupportedException(ParameterType.ToString()));
             }
 

@@ -186,7 +186,7 @@ namespace FileExplorer.Script
 
         public static string Explorer_Initialize_Default_Retain_Script_Parameters =
                         "{RootDirectories},{Profiles},{GlobalEvents},{OnViewAttached},{OnModelCreated}," +
-                        "{EnableDrag},{EnableDrop},{EnableMultiSelect},{EnableTabsWhenOneTab}," +
+                        "{EnableDrag},{EnableDrop},{EnableMultiSelect},{EnableContextMenu},{EnableBookmark},{EnableTabsWhenOneTab}," +
                         "{EnableMap}";
 
         /// <summary>
