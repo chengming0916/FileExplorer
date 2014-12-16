@@ -24,10 +24,11 @@ namespace FileExplorer.WPF.BaseControls
 
         protected override FileExplorer.Script.IScriptCommand onEvent(RoutedEvent eventId)
         {
-            switch (eventId.Name)
-            {
-                case "MouseRightButtonUp": return new ShowContextMenu(ContextMenu);
-            }
+            if (EnableContextMenu)
+                switch (eventId.Name)
+                {
+                    case "MouseRightButtonUp": return new ShowContextMenu(ContextMenu);
+                }
 
             return base.onEvent(eventId);
 
@@ -35,12 +36,22 @@ namespace FileExplorer.WPF.BaseControls
 
         public static DependencyProperty ContextMenuProperty =
          DependencyProperty.Register("ContextMenu", typeof(ContextMenu),
-         typeof(DragDropEventProcessor), new PropertyMetadata(null));
+         typeof(ContextMenuEventProcessor), new PropertyMetadata(null));
 
         public ContextMenu ContextMenu
         {
             get { return (ContextMenu)GetValue(ContextMenuProperty); }
             set { SetValue(ContextMenuProperty, value); }
+        }
+
+        public static DependencyProperty EnableContextMenuProperty =
+      DependencyProperty.Register("EnableContextMenu", typeof(bool),
+      typeof(ContextMenuEventProcessor), new PropertyMetadata(true));
+
+        public bool EnableContextMenu
+        {
+            get { return (bool)GetValue(EnableContextMenuProperty); }
+            set { SetValue(EnableContextMenuProperty, value); }
         }
     }
 
@@ -51,7 +62,7 @@ namespace FileExplorer.WPF.BaseControls
         public ShowContextMenu(ContextMenu contextMenu) : base("ShowContextMenu") { _contextMenu = contextMenu; }
 
         protected override IScriptCommand executeInner(ParameterDic pd, Control sender, RoutedEventArgs evnt, IUIInput input, IList<IUIInputProcessor> inpProcs)
-        {            
+        {
             if (!evnt.Handled)
             {
                 pd.IsHandled = true;

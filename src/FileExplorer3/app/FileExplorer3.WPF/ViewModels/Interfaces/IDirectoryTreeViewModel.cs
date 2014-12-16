@@ -18,6 +18,7 @@ namespace FileExplorer.WPF.ViewModels
 
         bool EnableDrag { get; set; }
         bool EnableDrop { get; set; }
+        bool EnableContextMenu { get; set; }
 
         Task SelectAsync(IEntryModel value);
         void ExpandRootEntryModels();

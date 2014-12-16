@@ -39,6 +39,7 @@ namespace FileExplorer.WPF.ViewModels
 
         bool EnableDrag { get; set; }
         bool EnableDrop { get; set; }
+        bool EnableContextMenu { get; set; }
         bool EnableMultiSelect { get; set; }
         bool ShowToolbar { get; set; }
         bool ShowSidebar { get; set; }

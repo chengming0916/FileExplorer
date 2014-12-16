@@ -188,7 +188,7 @@ namespace FileExplorer.WPF.ViewModels
         //private IToolbarViewModel _toolbar = null;
         private bool _showToolbar = true, _showGridHeader = true;
         private bool _isCheckboxVisible = false, _isContextMenuVisible = false;
-        private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true;
+        private bool _enableDrag = true, _enableDrop = true, _enableMultiSelect = true, _enableContextMenu = true;
         private IFileListParameters _parameters = new FileListParameters();
         private IColumnsHelper _columns;
         private ICommandManager _commands;        
@@ -205,6 +205,7 @@ namespace FileExplorer.WPF.ViewModels
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
         public bool EnableMultiSelect { get { return _enableMultiSelect; } set { _enableMultiSelect = value; NotifyOfPropertyChange(() => EnableMultiSelect); } }
+        public bool EnableContextMenu { get { return _enableContextMenu; } set { _enableContextMenu = value; NotifyOfPropertyChange(() => EnableContextMenu); } }
 
         public ICommandManager Commands { get { return _commands; } set { _commands = value; NotifyOfPropertyChange(() => Commands); } }
         public IEntriesProcessor<IEntryViewModel> ProcessedEntries { get; private set; }
