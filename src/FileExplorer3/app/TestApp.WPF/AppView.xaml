@@ -54,6 +54,8 @@
                             <CheckBox x:Name="ExpandRootDirectories" Content="Expand" ToolTip="Expand Root directory when start"/>
                             <CheckBox x:Name="EnableDrag" Content="Drag" ToolTip="Enable Drag support"  />
                             <CheckBox x:Name="EnableDrop" Content="Drop" ToolTip="Enable Drop support" />
+                            <CheckBox x:Name="EnableContextMenu" Content="Context Menu" ToolTip="Enable ContextMenu on DirectoryTree and FileList" />
+                            <CheckBox x:Name="EnableBookmark" Content="Bookmark Button" ToolTip="Enable BookmarkButton on Breadcrumb" />
                             <CheckBox x:Name="EnableMultiSelect" Content="MultiSelect" ToolTip="Enable Multiselect using drag"  />
                             <CheckBox x:Name="UseScriptCommandInitializer" Content="Initialize using ScriptCommand" ToolTip="Instead of using the original ExplorerInitializer" />
                         </WrapPanel>

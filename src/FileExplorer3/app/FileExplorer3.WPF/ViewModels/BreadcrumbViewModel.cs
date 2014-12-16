@@ -34,7 +34,7 @@ namespace FileExplorer.WPF.ViewModels
 
             if (events != null)
                 events.Subscribe(this);
-            
+
             Entries = new EntriesHelper<IBreadcrumbItemViewModel>();
             var selection = new TreeRootSelector<IBreadcrumbItemViewModel, IEntryModel>(Entries) { Comparers = new[] { PathComparer.LocalDefault } };
             selection.SelectionChanged += (o, e) =>
@@ -57,7 +57,7 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         protected override void OnViewAttached(object view, object context)
-        {            
+        {
             if (!IsViewAttached)
             {
                 _sbox = (view as UserControl).FindName("sbox") as SuggestBoxBase;
@@ -124,7 +124,7 @@ namespace FileExplorer.WPF.ViewModels
 
         void OnSuggestPathChanged()
         {
-            if (!ShowBreadcrumb)
+            if (!EnableBreadcrumb)
             {
                 Task.Run(async () =>
                     {
@@ -138,7 +138,7 @@ namespace FileExplorer.WPF.ViewModels
                                 if (found != null)
                                 {
                                     _sbox.Dispatcher.BeginInvoke(new System.Action(() => { SelectAsync(found); }));
-                                    ShowBreadcrumb = true;
+                                    EnableBreadcrumb = true;
                                     BroadcastDirectoryChanged(EntryViewModel.FromEntryModel(found));
                                 }
                                 //else not found
@@ -165,7 +165,7 @@ namespace FileExplorer.WPF.ViewModels
             }
 
             BookmarkProfile bProfile = profiles.FirstOrDefault(p => p is BookmarkProfile) as BookmarkProfile;
-            if (bProfile != null)            
+            if (bProfile != null)
                 AddBookmarks = new AddBookmarksViewModel(bProfile, null, _events);
         }
 
@@ -194,6 +194,7 @@ namespace FileExplorer.WPF.ViewModels
         private IEntriesHelper<IBreadcrumbItemViewModel> _entries;
         private ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> _selection;
         private AddBookmarksViewModel _addBookmarks;
+        private bool _enableBookmark = false;
 
         #endregion
 
@@ -207,15 +208,31 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         public IEntryModel[] RootModels { set { setRootModels(value); } }
-        public IProfile[] Profiles { set { setProfiles(value); } }
+        public IProfile[] Profiles { set { setProfiles(value); NotifyOfPropertyChange(() => IsBookmarkVisible); } }
 
         public ITreeSelector<IBreadcrumbItemViewModel, IEntryModel> Selection { get; set; }
         public IEntriesHelper<IBreadcrumbItemViewModel> Entries { get; set; }
 
-        public bool ShowBreadcrumb
+        public bool EnableBreadcrumb
         {
             get { return _showBreadcrumb; }
-            set { _showBreadcrumb = value; NotifyOfPropertyChange(() => ShowBreadcrumb); }
+            set { _showBreadcrumb = value; NotifyOfPropertyChange(() => EnableBreadcrumb); }
+        }
+
+        public bool IsBookmarkVisible
+        {
+            get { return EnableBookmark && _profiles.Any(p => p is BookmarkProfile); }
+        }
+
+        public bool EnableBookmark
+        {
+            get { return _enableBookmark; }
+            set
+            {
+                _enableBookmark = value; 
+                NotifyOfPropertyChange(() => EnableBookmark);
+                NotifyOfPropertyChange(() => IsBookmarkVisible);
+            }
         }
 
         public IEnumerable<ISuggestSource> SuggestSources

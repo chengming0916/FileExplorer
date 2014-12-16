@@ -14,7 +14,8 @@ namespace FileExplorer.WPF.ViewModels
         IEntryModel[] RootModels { set; }
         IProfile[] Profiles { set; }
 
-        bool ShowBreadcrumb { get; set; }
+        bool EnableBreadcrumb { get; set; }
+        bool EnableBookmark { get; set; }
 
         Task SelectAsync(IEntryModel value);
     }
