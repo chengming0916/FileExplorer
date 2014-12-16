@@ -127,9 +127,9 @@ namespace FileExplorer.WPF.ViewModels
 
         private IEnumerable<IProfile> _profiles = new List<IProfile>();
         private IEventAggregator _events;
-        private bool _enableDrag = true, _enableDrop = true;
+        private bool _enableDrag = true, _enableDrop = true, _enableContextMenu = true;
         private IWindowManager _windowManager;
-        private IEntryModel[] _rootModels;
+        private IEntryModel[] _rootModels;        
 
         #endregion
 
@@ -139,6 +139,7 @@ namespace FileExplorer.WPF.ViewModels
 
         public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; NotifyOfPropertyChange(() => EnableDrag); } }
         public bool EnableDrop { get { return _enableDrop; } set { _enableDrop = value; NotifyOfPropertyChange(() => EnableDrop); } }
+        public bool EnableContextMenu { get { return _enableContextMenu; } set { _enableContextMenu = value; NotifyOfPropertyChange(() => EnableContextMenu); } }
 
         public IEntryModel[] RootModels { get { return _rootModels; } set { setRootModels(value); } }
         public IProfile[] Profiles { set { setProfiles(value); } }

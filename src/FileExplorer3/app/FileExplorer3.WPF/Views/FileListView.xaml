@@ -76,7 +76,7 @@
                                             IsCheckboxEnabled="{Binding IsCheckBoxVisible, Mode=OneWay}"
                 />
 
-                <hub:ContextMenuEventProcessor>
+                <hub:ContextMenuEventProcessor EnableContextMenu="{Binding EnableContextMenu}">
                     <hub:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                     ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />

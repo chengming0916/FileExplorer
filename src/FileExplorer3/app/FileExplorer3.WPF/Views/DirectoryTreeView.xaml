@@ -67,7 +67,7 @@
                 <hub:DragDropEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}" />
                 <hub:DragDropLiteEventProcessor EnableDrag="{Binding EnableDrag}" EnableDrop="{Binding EnableDrop}"
                                                EnableMouse="False" EnableTouch="True" />
-                <hub:ContextMenuEventProcessor>
+                <hub:ContextMenuEventProcessor EnableContextMenu="{Binding EnableContextMenu}">
                     <hub:ContextMenuEventProcessor.ContextMenu>
                         <ContextMenu ItemsSource="{Binding Commands.ToolbarCommands.CommandModels.All}" 
                                      ItemContainerStyle="{StaticResource CommandModelContextMenuMenuItemStyle}" />
