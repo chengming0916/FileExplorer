@@ -8,21 +8,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>            
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>        
+        </Grid.ColumnDefinitions>-->        
         <!--<ComboBox x:Name="cbox" Text="{Binding CurrentDirectory.Model.Label}" 
                   IsEditable="True"
                   Grid.Row="0" Grid.Column="0" />        
         <ContentControl  Name="DirectoryTree"  Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" />-->
 
-        <bc:DropDown x:Name="dd" Header="{Binding CurrentDirectory.Model.Label}">
-            <ContentControl  Name="DirectoryTree"  Grid.Row="2" Grid.Column="0"  Grid.ColumnSpan="2" Width="{Binding ActualWidth, ElementName=dd}" />    
-        </bc:DropDown>
+        <ContentControl  Name="DirectoryTree" />
+
+
     </Grid>
 </UserControl>

@@ -45,7 +45,7 @@ namespace TestApp
         [ImportingConstructor]
         public AppViewModel(IEventAggregator events, IWindowManager windowManager)
         {
-            FileExplorer.Models.Bookmark.BookmarkSerializeTest.Test();
+            //FileExplorer.Models.Bookmark.BookmarkSerializeTest.Test();
             _windowManager = windowManager;
             _events = events;
 
