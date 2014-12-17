@@ -132,9 +132,11 @@
         <bc:HotTrack x:Name="HotTrack" SelectedBorderBrush="{TemplateBinding BorderBrush}"
                 Padding="{TemplateBinding Padding}" Background="Transparent" 
                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                 BorderThickness="{TemplateBinding BorderThickness}">
-            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
-                              VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
         </bc:HotTrack>
 
         <ControlTemplate.Triggers>
