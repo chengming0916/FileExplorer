@@ -59,7 +59,7 @@ namespace FileExplorer.WPF.BaseControls
             this.ContextMenu.AddHandler(MenuItem.ClickEvent, (RoutedEventHandler)((o, e) =>
             {
                 MenuItem mi =  e.Source as MenuItem;
-                if (mi.Tag is DragDropEffects)
+                if (mi.Tag is DragDropEffectsEx)
                 {
                     this.SetValue(DragDropEffectProperty, mi.Tag);
                     this.ContextMenu.StaysOpen = false;
@@ -77,7 +77,7 @@ namespace FileExplorer.WPF.BaseControls
         public void SetSupportedDragDropEffects(DragDropEffectsEx effects, DragDropEffectsEx defaultEffect = DragDropEffectsEx.Copy)
         {
             ContextMenu.Items.Clear();
-            foreach (var e in Enum.GetValues(typeof(DragDropEffects)))
+            foreach (var e in Enum.GetValues(typeof(DragDropEffectsEx)))
             {
                 DragDropEffectsEx curEffect = (DragDropEffectsEx)e;
                 if (curEffect != DragDropEffectsEx.None && effects.HasFlag(curEffect))
