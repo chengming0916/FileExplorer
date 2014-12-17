@@ -356,7 +356,7 @@
     <Compile Include="BaseControls\BreadcrumbOverflowPanel.cs" />
     <Compile Include="UserControls\Breadcrumb.cs" />
     <Compile Include="UserControls\BreadcrumbBase.cs" />
-    <Compile Include="BaseControls\DragAdorner.cs" />
+    <None Include="BaseControls\DragAdorner.cs" />
     <Compile Include="Defines\AttachedProperties.cs" />
     <Compile Include="UserControls\EditBox.cs" />
     <Compile Include="UserControls\EditBoxAdorner.cs" />
