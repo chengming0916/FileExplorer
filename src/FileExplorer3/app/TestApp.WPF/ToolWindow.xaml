@@ -22,7 +22,13 @@
 
         <AdornerDecorator x:Name="PART_DragDropAdorner" Grid.ColumnSpan="3" />
 
-        <uc:Explorer x:Name="explorer" Mode="{Binding SelectedValue, ElementName=cbExplorerMode}" />
+        <uc:Explorer x:Name="explorer" Mode="{Binding SelectedValue, ElementName=cbExplorerMode}"
+                     EnableBookmark="{Binding IsChecked, ElementName=cbEnableBookmark}" 
+                     EnableContextMenu="{Binding IsChecked, ElementName=cbEnableContextMenu}" 
+                     EnableDrag="{Binding IsChecked, ElementName=cbEnableDrag}"
+                     EnableDrop="{Binding IsChecked, ElementName=cbEnableDrop}"
+                     EnableMultiSelect="{Binding IsChecked, ElementName=cbEnableMultiSelect}"
+                     />
         <GridSplitter ResizeDirection="Columns" 
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       ResizeBehavior="PreviousAndNext" Grid.Column="1" />
@@ -44,7 +50,14 @@
                 Converter={StaticResource emts},
                 ElementName=explorer}" />-->
             <TextBlock Text="{Binding SelectedEntries, Converter={StaticResource emts}, ElementName=explorer}" />
-
+            
+            <WrapPanel Orientation="Horizontal">
+                <CheckBox x:Name="cbEnableContextMenu" Content="ContextMenu" IsChecked="True" />
+                <CheckBox x:Name="cbEnableDrag" Content="Drag" IsChecked="True" />
+                <CheckBox x:Name="cbEnableDrop" Content="Drop" IsChecked="True" />
+                <CheckBox x:Name="cbEnableMultiSelect" Content="MultiSelect" IsChecked="True" />
+                <CheckBox x:Name="cbEnableBookmark" Content="Bookmark" IsChecked="False" />
+            </WrapPanel>
             <TextBlock Text="Drop Target" FontWeight="Bold" />
             <TextBlock x:Name="testDroppable" 
                    AllowDrop="True"
