@@ -35,6 +35,7 @@ namespace FileExplorer.WPF.ViewModels
         private BookmarkModel _lastAddedLink;
         private AddBookmarkState _state = AddBookmarkState.Inactive;
         private bool _isBookmarked;
+        private IEventAggregator _events;
 
         #endregion
 
@@ -43,9 +44,12 @@ namespace FileExplorer.WPF.ViewModels
         public AddBookmarksViewModel(BookmarkProfile bProfile, IWindowManager windowManager, IEventAggregator events)
         {
             Profile = bProfile;
+            _events = events;
             events.Subscribe(this);
 
+
             AddBookmarkCommand = new RelayCommand(e => AddBookmark());
+            GotoBookmarkDirectoryCommand = new RelayCommand(e => GotoBookmarkDirectory());
             //CurrentBookmarkDirectory = Profile.RootModel;
         }
 
@@ -58,6 +62,7 @@ namespace FileExplorer.WPF.ViewModels
         #region properties
 
         public RelayCommand AddBookmarkCommand { get; private set; }
+        public RelayCommand GotoBookmarkDirectoryCommand { get; private set; }
         public BookmarkProfile Profile { get; set; }
         public bool IsVisible { get { return _isVisible; } set { setIsVisible(value); } }
 
@@ -199,6 +204,14 @@ namespace FileExplorer.WPF.ViewModels
                 }
 
             }
+        }
+
+        public async Task GotoBookmarkDirectory()
+        {
+            if (State == AddBookmarkState.Changed)
+                UpdateBookmark();
+            IsVisible = false;
+            await _events.PublishOnUIThreadAsync(new DirectoryChangedEvent(this, CurrentBookmarkDirectory, CurrentDirectory));
         }
 
         public void UpdateBookmark()
