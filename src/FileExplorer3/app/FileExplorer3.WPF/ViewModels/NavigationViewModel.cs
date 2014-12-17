@@ -54,11 +54,19 @@ namespace FileExplorer.WPF.ViewModels
             }
         }
 
+        private DateTime _lastBroadcast = DateTime.UtcNow;
+
         public void AddAndBroadcast(IEntryViewModel destFolder)
         {
-            Add(destFolder);
+            //Prevent two events from publishing simultaneously.
+            if (_navigationHistory.Count > 0 && this._navigationHistory[0].Equals(destFolder) &&
+                DateTime.UtcNow.Subtract(_lastBroadcast).TotalSeconds < 1)
+                return;
+
+            Add(destFolder);                        
             Events.PublishOnUIThread(new DirectoryChangedEvent(this, destFolder, _currentFolder));
             _currentFolder = destFolder;
+            _lastBroadcast = DateTime.UtcNow;
         }
 
         public void Add(IEntryViewModel item)
