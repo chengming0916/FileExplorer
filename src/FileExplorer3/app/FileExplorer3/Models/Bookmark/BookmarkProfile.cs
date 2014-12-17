@@ -45,7 +45,7 @@ namespace FileExplorer.Models.Bookmark
             DeleteCommand = ScriptCommands.ForEach("{DeleteEntries}", "{CurrentEntry}",
                   ScriptCommands.ExecuteMethod("{CurrentEntry.Parent}", "Remove", new object[] { "{CurrentEntry.Label}" }));
             CreateFolderCommand = ScriptCommands.ExecuteFunc("{BaseFolder}", "AddFolder", new object[] {"{FolderName}" }, "{CreatedFolder}");
-            PathPatterns = new string[] { _rootLabel + "." };
+            PathPatterns = new string[] { _rootLabel + ".*" };
             DragDrop = new BookmarkDragDropHandler();
             AllBookmarks = new List<BookmarkModel>();
         }

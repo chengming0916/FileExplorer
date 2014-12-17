@@ -20,8 +20,8 @@ namespace FileExplorer.Models
                 new CommandModel(ApplicationCommands.Open) { IsVisibleOnMenu = true },
                 new CommandModel(ExplorerCommands.NewWindow) { IsVisibleOnMenu = true },
                 new CommandModel(ExplorerCommands.OpenTab) { IsVisibleOnMenu = true },
-                new CommandModel(IOInitializeHelpers.FileList_OpenExplorerWindow) {  Header = "Explorer", IsVisibleOnMenu = true, Symbol = (char)0xE188 },
-                new CommandModel(IOInitializeHelpers.FileList_OpenCommandLine) { Header = "Command Prompt", IsVisibleOnMenu = true }
+                new CommandModel(IOInitializeHelpers.FileList_OpenExplorerWindow) {  Header = "Open in Explorer", IsVisibleOnMenu = true, Symbol = (char)0xE188 },
+                new CommandModel(IOInitializeHelpers.FileList_OpenCommandLine) { Header = "Open in Command Prompt", IsVisibleOnMenu = true }
                 )
                 { Header = "Open", IsVisibleOnMenu = true, IsEnabled = true },
              

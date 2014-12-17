@@ -257,6 +257,9 @@
     <Compile Include="Views\AddBookmarksView.xaml.cs">
       <DependentUpon>AddBookmarksView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Explorer.DirectoryPickerCombo.xaml.cs">
+      <DependentUpon>Explorer.DirectoryPickerCombo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Explorer.DirectoryPicker.xaml.cs">
       <DependentUpon>Explorer.DirectoryPicker.xaml</DependentUpon>
     </Compile>
@@ -696,6 +699,10 @@
     <Page Include="Views\AddBookmarksView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Explorer.DirectoryPickerCombo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Explorer.DirectoryPicker.xaml">
       <SubType>Designer</SubType>
