@@ -33,19 +33,27 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="{Binding Parameters.NavigationSize, Mode=TwoWay, Converter={StaticResource glv}}" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="{Binding Parameters.DirectoryTreeSize, Mode=TwoWay, Converter={StaticResource glv}}" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="{Binding Parameters.FileListSize, Mode=TwoWay, Converter={StaticResource glv}}" />
         </Grid.RowDefinitions>
-        
+
+        <!--<GridSplitter Grid.Row="1" ResizeDirection="Rows" Height="10"  Margin="5,0"
+                          ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" />-->
+        <GridSplitter Grid.Row="4" ResizeDirection="Rows" Height="10"  Margin="5,0"
+                          ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" />
+
         <ContentControl Name="Breadcrumb" Grid.Row="0" />
-        <DockPanel Grid.Row="1">
+        <DockPanel Grid.Row="2">
             <ContentControl Name="Navigation" DockPanel.Dock="Left" cal:View.Context="ToolWindow" />
             <ComboBox ItemsSource="{Binding Filters.All}" SelectedValuePath="Filter" 
                           SelectedIndex="0" DisplayMemberPath="Description"
                           SelectedValue="{Binding SelectedFilter}" />
             <!--<TextBox Text="{Binding FileList.Mask, UpdateSourceTrigger=PropertyChanged}"  />-->
         </DockPanel>
-        <ContentControl  Name="DirectoryTree" Grid.Row="2" />
-        <ContentControl  Name="FileList"  Grid.Row="3" />
+        <ContentControl  Name="DirectoryTree" Grid.Row="3" />
+        
+        <ContentControl  Name="FileList"  Grid.Row="5" />
     </Grid>
 </UserControl>
