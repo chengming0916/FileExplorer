@@ -95,6 +95,10 @@ namespace FileExplorer.Script
         public override async Task<IScriptCommand> ExecuteAsync(ParameterDic pm)
         {
             var parameter = _srcModelFunc(pm);
+            //Last line can obtain from FileList.Selection, not current directory. This just temporary fix.
+            if (parameter != null && parameter.Count() == 0)
+                parameter = new[] { pm.GetValue<IEntryModel>("{FileList.CurrentDirectory}") };
+
             if (parameter != null && parameter.Count() == 1)
             {
                 bool _isFolder = parameter[0].IsDirectory;
