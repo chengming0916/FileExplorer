@@ -173,7 +173,7 @@ namespace FileExplorer.WPF.ViewModels
         }
 
         void onEntryChanged(object sender, EntryChangedEvent e)
-        {
+        {            
             this.Events.PublishOnUIThreadAsync(e);
         }
 
