@@ -33,9 +33,9 @@ using System.Windows.Markup;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("3.0.20.7")]
-[assembly: AssemblyVersion("3.0.20.7")]
-[assembly: AssemblyFileVersion("3.0.20.7")]
+// [assembly: AssemblyVersion("3.0.20.8")]
+[assembly: AssemblyVersion("3.0.20.8")]
+[assembly: AssemblyFileVersion("3.0.20.8")]
 
 
 [assembly: XmlnsDefinition("http://www.quickzip.org/UIEventHub", "FileExplorer.WPF.BaseControls")]
