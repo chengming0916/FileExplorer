@@ -26,6 +26,18 @@
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="TreeViewItem">
+                    <Style.Setters>
+                        <Setter Property="VerticalContentAlignment" Value="Top" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    </Style.Setters>                    
+                </Style>
+            </Setter.Value>
+        </Setter>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type uc:TreeViewEx}">
@@ -66,6 +78,7 @@
     <Style TargetType="{x:Type uc:TreeViewEx}" BasedOn="{StaticResource TreeViewStyle}">
         <!--<Setter Property="Background" Value="Gray"></Setter>-->
         <Setter Property="ItemTemplate" Value="{StaticResource DirectoryNodeItemTemplate}" />
+        
     </Style>
 
 </ResourceDictionary>

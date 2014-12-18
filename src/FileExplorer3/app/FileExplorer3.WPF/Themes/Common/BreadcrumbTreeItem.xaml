@@ -39,8 +39,9 @@
                     </VisualState>
                     <VisualState x:Name="HideCaption"  >
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="headerHL"  Duration="0:0:0"
-                                             Storyboard.TargetProperty="MaxWidth" To="{Binding ActualWidth, ElementName=PART_CaptionButton}"  />
+                            <!--<DoubleAnimation Storyboard.TargetName="headerHL"  Duration="0:0:0"
+                                             Storyboard.TargetProperty="MaxWidth" 
+                                             To="{Binding ActualWidth, ElementName=PART_CaptionButton}"  />-->
                             <DoubleAnimation Storyboard.TargetName="headerHL"  Duration="0:0:1"
                                              Storyboard.TargetProperty="MaxWidth" To="0"  />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerHL"
@@ -78,7 +79,8 @@
                                   SelectedValuePath="{Binding ValuePath, RelativeSource={RelativeSource TemplatedParent}}"
                                   IsDropDownOpen="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                   SelectedValue="{Binding SelectedChild, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                  ItemTemplate="{TemplateBinding MenuItemTemplate}" >
+                                  ItemTemplate="{Binding MenuItemTemplate, 
+            RelativeSource={RelativeSource AncestorType={x:Type uc:BreadcrumbTree}}}" >
                         </bc:DropDownList>
                     </bc:HotTrack>
 
@@ -122,15 +124,16 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" />
-        <Setter Property="OverflowedItemContainerStyle" Value="{Binding OverflowedItemContainerStyle, 
-            RelativeSource={RelativeSource AncestorType={x:Type uc:BreadcrumbTree}}}" />
+        <!--<Setter Property="OverflowedItemContainerStyle" Value="{Binding OverflowedItemContainerStyle, 
+            RelativeSource={RelativeSource AncestorType={x:Type uc:BreadcrumbTree}}}" />-->
         <!--<Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>-->
         <Setter Property="Padding" Value="1,0,0,0"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="Template" Value="{StaticResource BreadcrumbTreeItemTemplate}" />
-        <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />
-        <Setter Property="MenuItemTemplate" Value="{Binding MenuItemTemplate, 
-            RelativeSource={RelativeSource AncestorType={x:Type uc:BreadcrumbTree}}}" />
+        <Setter Property="ItemsPanel" Value="{StaticResource StackItemPanelTemplate}" />        
+        <!--<Setter Property="MenuItemTemplate" Value="{Binding MenuItemTemplate, 
+            RelativeSource={RelativeSource AncestorType={x:Type uc:BreadcrumbTree}}}" />-->
+        
         <Style.Triggers>
             <!--This trigger is needed, because RelativeSource binding can only succeeds if the current MenuItem is already connected to its visual parent-->
             <Trigger Property="IsVisible" Value="True">
