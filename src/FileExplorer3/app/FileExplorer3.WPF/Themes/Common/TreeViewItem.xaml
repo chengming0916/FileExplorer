@@ -82,6 +82,8 @@
         <Setter Property="Padding" Value="1,0,0,0"/>
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
         <Setter Property="Template" Value="{StaticResource treeViewItemTemplate}" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Style.Triggers>
             <!--This trigger is needed, because RelativeSource binding can only succeeds if the current MenuItem is already connected to its visual parent-->
             <!--<Trigger Property="IsVisible" Value="True">
