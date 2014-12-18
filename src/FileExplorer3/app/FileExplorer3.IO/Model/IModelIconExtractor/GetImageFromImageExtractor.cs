@@ -27,10 +27,10 @@ namespace FileExplorer.Models
     {
         public static GetImageFromImageExtractor Instance = new GetImageFromImageExtractor();
 
-        public Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
+        public async Task<byte[]> GetIconBytesForModelAsync(IEntryModel model, CancellationToken ct)
         {
-            return Task<byte[]>.Run(() =>
-                {
+            //return Task<byte[]>.Run(() =>
+            //    {
                     if (model != null && !String.IsNullOrEmpty(model.FullPath))
                     {
                         using (Bitmap bitmap =
@@ -41,7 +41,7 @@ namespace FileExplorer.Models
                         }
                     }
                     return null;
-                });
+                //}, ct);
 
         }
     }
