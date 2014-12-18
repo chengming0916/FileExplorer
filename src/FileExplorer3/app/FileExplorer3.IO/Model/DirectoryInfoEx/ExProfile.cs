@@ -59,16 +59,17 @@ namespace FileExplorer.Models
                 if (!_profile.MatchPathPattern(a.FullPath) || !_profile.MatchPathPattern(b.FullPath))
                     return HierarchicalResult.Unrelated;
 
+                while (a != null && !(a is FileSystemInfoExModel))
+                    a = a.Parent;
+                while (b != null && !(b is FileSystemInfoExModel))
+                    b = b.Parent;
+
                 if (!a.FullPath.Contains("::") && !b.FullPath.Contains("::"))
                     return PathComparer.LocalDefault.CompareHierarchy(a, b);
 
                 if (a.FullPath.Equals(b.FullPath))
                     return HierarchicalResult.Current;
-
-                while (a != null && !(a is FileSystemInfoExModel))
-                    a = a.Parent;
-                while (b != null && !(b is FileSystemInfoExModel))
-                    b = b.Parent;
+              
 
                 if (a is FileSystemInfoExModel && b is FileSystemInfoExModel)
                 {

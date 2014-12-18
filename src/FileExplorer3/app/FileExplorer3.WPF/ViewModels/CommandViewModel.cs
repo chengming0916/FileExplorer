@@ -87,6 +87,7 @@ namespace FileExplorer.WPF.ViewModels
                 byte[] bytes = AsyncUtils.RunSync(() =>
                     CommandModel.HeaderIconExtractor.GetIconBytesForModelAsync(CommandModel,
                         CancellationToken.None));
+                
                 if (bytes != null && bytes.Length > 0)
                     Icon = new System.Windows.Controls.Image()
                     {

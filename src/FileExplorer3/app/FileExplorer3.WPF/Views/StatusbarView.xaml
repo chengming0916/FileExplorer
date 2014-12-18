@@ -27,7 +27,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <uc:StatusbarEx ItemsSource="{Binding Metadata.All}" Grid.RowSpan="2" Grid.Column="0" 
+        <uc:StatusbarEx x:Name="sbar" ItemsSource="{Binding Metadata.All}" Grid.RowSpan="2" Grid.Column="0" 
                         IsExpanded="{Binding IsExpanded, Mode=OneWayToSource}" >
             <uc:StatusbarEx.Header>
                 <DockPanel>
@@ -50,7 +50,7 @@
             <uc:StatusbarEx.ItemContainerStyle>
                 <Style TargetType="{x:Type uc:StatusbarItemEx}" >
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=OneWay, 
-                        RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type uc:StatusbarEx}}, NotifyOnValidationError=False}" />
+                        ElementName=sbar, NotifyOnValidationError=False}" />
                     <!-- Bind to ViewModel -->
                     <Setter Property="Header" Value="{Binding MetadataModel.HeaderText, Mode=OneWay}" />
                     <Setter Property="Content" Value="{Binding MetadataModel.Content, Mode=OneWay}" />

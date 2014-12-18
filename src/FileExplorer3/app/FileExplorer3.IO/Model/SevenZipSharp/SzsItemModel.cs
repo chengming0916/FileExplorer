@@ -87,8 +87,8 @@ namespace FileExplorer.Models.SevenZipSharp
             Root = root;
             RelativePath = afi.FileName;            
             base.IsDirectory = afi.IsDirectory;
-
-            _isRenamable = root.IsRenamable;
+            _parentFunc = getParent;
+            _isRenamable = root.IsRenamable;            
             Name = Label = PathHelper.Disk.GetFileName(afi.FileName);
             Description = "";// referencedModel.Description;
             FullPath = PathHelper.Disk.Combine(root.FullPath, afi.FileName);;
@@ -101,7 +101,7 @@ namespace FileExplorer.Models.SevenZipSharp
             Root = root;
             RelativePath = relativePath;
             base.IsDirectory = isDirectory;
-
+            _parentFunc = getParent;
             _isRenamable = root.IsRenamable;
             Name = Label = PathHelper.Disk.GetFileName(relativePath);
             Description = "";// referencedModel.Description;
@@ -111,6 +111,14 @@ namespace FileExplorer.Models.SevenZipSharp
         #endregion
 
         #region Methods
+
+        private ISzsItemModel getParent()
+        {
+            string parentRelPath = PathHelper.Disk.GetDirectoryName(RelativePath);
+            if (String.IsNullOrEmpty(parentRelPath))
+                return Root;
+            else return new SzsChildModel(Root, parentRelPath, true);
+        }
 
         #endregion
 

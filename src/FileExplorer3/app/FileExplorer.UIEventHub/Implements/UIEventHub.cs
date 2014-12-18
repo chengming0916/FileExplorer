@@ -113,13 +113,20 @@ namespace FileExplorer.WPF.BaseControls
                                         if (input.IsValid())
                                         {
                                             _inputProcessors.Update(ref input);
-                                            await executeAsync(_eventProcessors, e, input,
-                                                    pd =>
-                                                    {
-                                                        if (pd.IsHandled)
-                                                            re.Handled = true;
-                                                    }
-                                                );
+                                            try
+                                            {
+                                                await executeAsync(_eventProcessors, e, input,
+                                                        pd =>
+                                                        {
+                                                            if (pd.IsHandled)
+                                                                re.Handled = true;
+                                                        }
+                                                    );
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                Debug.WriteLine(ex);
+                                            }
                                         }
 
 
