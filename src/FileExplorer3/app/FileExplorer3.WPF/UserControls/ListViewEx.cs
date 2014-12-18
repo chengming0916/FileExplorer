@@ -129,7 +129,7 @@ namespace FileExplorer.WPF.UserControls
             ListViewEx fl = (ListViewEx)sender;
             if (args.NewValue == args.OldValue)
                 return;
-            Debug.WriteLine(args.NewValue);
+            //Debug.WriteLine(args.NewValue);
             ViewBase view = fl.View;
             if (args.Property.Equals(ViewModeProperty))
             {
