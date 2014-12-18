@@ -34,7 +34,7 @@
 
             <bc:Switch x:Name="switch" Grid.Column="0"
                    Template="{StaticResource BreadcrumbSwitchTemplate}"                   
-                   IsSwitchOn="{Binding ShowBreadcrumb, Mode=TwoWay}"
+                   IsSwitchOn="{Binding EnableBreadcrumb, Mode=TwoWay}"
                    >
                 <bc:Switch.Header>
                     <Image Source="{Binding Selection.SelectedViewModel.Icon}" />
@@ -85,7 +85,7 @@
                 <bc:Switch.ContentOff>
                     <bc:SuggestBox x:Name="sbox" BorderThickness="0" Text="{Binding SuggestedPath, UpdateSourceTrigger=Explicit}"
                                DisplayMemberPath="FullPath" ValuePath="FullPath" 
-                               IsEnabled="{Binding ShowBreadcrumb, Mode=OneWay, Converter={StaticResource fb}}"
+                               IsEnabled="{Binding EnableBreadcrumb, Mode=OneWay, Converter={StaticResource fb}}"
                                SuggestSources="{Binding SuggestSources}" HierarchyHelper="{x:Null}">
 
                     </bc:SuggestBox>

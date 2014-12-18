@@ -59,7 +59,7 @@ namespace FileExplorer.WPF.ViewModels
         public void AddAndBroadcast(IEntryViewModel destFolder)
         {
             //Prevent two events from publishing simultaneously.
-            if (_navigationHistory.Count > 0 && this._navigationHistory[0].Equals(destFolder) &&
+            if (_navigationHistory.Count > 1 && this._navigationHistory[1].Equals(destFolder) &&
                 DateTime.UtcNow.Subtract(_lastBroadcast).TotalSeconds < 1)
                 return;
 

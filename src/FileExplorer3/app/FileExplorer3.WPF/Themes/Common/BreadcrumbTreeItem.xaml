@@ -39,9 +39,9 @@
                     </VisualState>
                     <VisualState x:Name="HideCaption"  >
                         <Storyboard>
-                            <!--<DoubleAnimation Storyboard.TargetName="headerHL"  Duration="0:0:0"
+                            <DoubleAnimation Storyboard.TargetName="headerHL"  Duration="0:0:0"
                                              Storyboard.TargetProperty="MaxWidth" 
-                                             To="{Binding ActualWidth, ElementName=PART_CaptionButton}"  />-->
+                                             To="{Binding ActualWidth, ElementName=PART_CaptionButton, FallbackValue=1000}"  />
                             <DoubleAnimation Storyboard.TargetName="headerHL"  Duration="0:0:1"
                                              Storyboard.TargetProperty="MaxWidth" To="0"  />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="headerHL"
