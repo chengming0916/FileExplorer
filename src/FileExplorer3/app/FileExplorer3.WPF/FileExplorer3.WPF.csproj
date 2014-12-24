@@ -101,6 +101,7 @@
     <Compile Include="BaseControls\DisplayContentControl.cs" />
     <Compile Include="BaseControls\DockableScrollViewer.cs" />
     <Compile Include="BaseControls\ScrollableTabPanel.cs" />
+    <Compile Include="BaseControls\VirtualWrapPanel2.cs" />
     <Compile Include="Defines\Attributes.cs" />
     <Compile Include="Defines\Cofe3\Defines\Structs\UIParameterDic.cs">
       <SubType>Code</SubType>
@@ -372,7 +373,7 @@
     <Compile Include="UserControls\ListViewEx.cs" />
     <Compile Include="UserControls\ListViewColumnUtils.cs" />
     <Compile Include="UserControls\SelectionHelper.cs" />
-    <Compile Include="BaseControls\VirtualWrapPanel.cs" />
+    <None Include="BaseControls\VirtualWrapPanel.cs" />
     <Compile Include="BaseControls\VirutalStackPanel.cs" />
     <Compile Include="BaseControls\VirutalStackPanelView.cs" />
     <Compile Include="BaseControls\VirutalWrapPanelView.cs" />
