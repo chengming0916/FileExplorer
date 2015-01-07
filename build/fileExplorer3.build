@@ -42,6 +42,10 @@
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
 
+    <property name="msbuild.csproj.path" value="${src.fileexplorer.wpf.panels.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
+
     <property name="msbuild.csproj.path" value="${src.fileexplorer3.wpf.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
@@ -82,6 +86,10 @@
     <property name="msbuild.csproj.path" value="${src.test_uiscriptcommands.csproj}" />
     <property name="msbuild.version" value="4" />
     <call target="msbuild" />
+
+    <property name="msbuild.csproj.path" value="${src.test_iocpaneltest.csproj}" />
+    <property name="msbuild.version" value="4" />
+    <call target="msbuild" />
   </target>
 
   <target name="build-revision">
@@ -110,6 +118,8 @@
         <include name="${dest.fileexplorer.scripting.pdb}" />
         <include name="${dest.fileexplorer.uieventhub.dll}" />
         <include name="${dest.fileexplorer.uieventhub.pdb}" />
+        <include name="${dest.fileexplorer.wpf.panels.dll}" />
+        <include name="${dest.fileexplorer.wpf.panels.pdb}" />
         <include name="${dest.fileexplorer3.dll}" />
         <include name="${dest.fileexplorer3.pdb}" />
         <include name="${dest.fileexplorer3.wpf.dll}" />
@@ -154,6 +164,16 @@
         <exclude name="obj/**" />
       </fileset>
     </copy>
+
+    <echo message="copy.source: FileExplorer3.WPF -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\FileExplorer.WPF.Panels">
+      <fileset basedir="${src.path}\app\FileExplorer.WPF.Panels">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+
 
     <echo message="copy.source: FileExplorer3.WPF -> ${dest.path}\src\app" />
     <copy todir="${dest.path}\src\FileExplorer3\app\FileExplorer3.WPF">
@@ -249,6 +269,15 @@
       </fileset>
     </copy>
 
+    <echo message="copy.source: Test_UIScriptCommands -> ${dest.path}\src\app" />
+    <copy todir="${dest.path}\src\FileExplorer3\app\Test_IOCPanelTest">
+      <fileset basedir="${src.path}\app\Test_IOCPanelTest">
+        <include name="*/**" />
+        <exclude name="bin/**" />
+        <exclude name="obj/**" />
+      </fileset>
+    </copy>
+
     <copy todir="${dest.path}\src\FileExplorer3\app\.nuget">
       <fileset basedir="${src.path}\app\.nuget">
         <include name="*" />
@@ -268,6 +297,8 @@
         <include name="${dest.fileexplorer.uieventhub.pdb}" />
         <include name="${dest.fileexplorer3.dll}" />
         <include name="${dest.fileexplorer3.pdb}" />
+        <include name="${dest.fileexplorer.wpf.panels.dll}" />
+        <include name="${dest.fileexplorer.wpf.panels.pdb}" />
         <include name="${dest.fileexplorer3.wpf.dll}" />
         <include name="${dest.fileexplorer3.wpf.pdb}" />
         <include name="${dest.fileexplorer3.io.dll}" />
@@ -288,6 +319,8 @@
         <include name="${dest.test_inputprocessor.pdb}" />
         <include name="${dest.test_uiscriptcommands.exe}" />
         <include name="${dest.test_uiscriptcommands.pdb}" />
+        <include name="${dest.test_iocpaneltest.exe}" />
+        <include name="${dest.test_iocpaneltest.pdb}" />
         <include name="*.dll" />
       </fileset>
     </copy>

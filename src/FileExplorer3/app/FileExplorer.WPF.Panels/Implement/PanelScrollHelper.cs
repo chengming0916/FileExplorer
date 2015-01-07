@@ -66,7 +66,7 @@ namespace FileExplorer.WPF
                 _viewport = availableSize;
                 if (_owner != null)
                     _owner.InvalidateScrollInfo();
-                //_panel.Layout.ResetLayout();
+                _panel.Layout.ResetLayout();
             }
             
             // Update extent
@@ -139,7 +139,7 @@ namespace FileExplorer.WPF
 
         public void UpdateOffset(OffsetType type, double value)
         {
-            if (_panel.Orientation == Orientation.Horizontal)
+            if (_panel.Layout.DefaultScrollOrientation == Orientation.Horizontal)
                 UpdateOffsetX(type, value);
             else UpdateOffsetY(type, value);
 

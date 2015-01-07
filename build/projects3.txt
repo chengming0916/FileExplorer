@@ -2,6 +2,7 @@ fileExplorer.Scripting
 fileExplorer.UIEventHub
 fileExplorer3
 fileExplorer3.IO
+fileExplorer.WPF.Panels
 fileExplorer3.WPF
 TestApp.WPF
 TestTemplate.WPF
@@ -11,3 +12,4 @@ Test_ShellDragDemo
 Test_TabDragDemo
 Test_InputProcessor
 Test_UIScriptCommands
+Test_IOCPanelTest

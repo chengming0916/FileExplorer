@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileExplorer.UIEventHub;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Windows.Media;
 
 namespace FileExplorer.WPF
 {
-    public /*abstract*/ class IOCPanel : VirtualizingPanel, IScrollInfo, IIOCPanel
+    public /*abstract*/ class IOCPanel : VirtualizingPanel, IScrollInfo, IIOCPanel, IChildInfo
     {
 
         #region fields
@@ -176,6 +177,7 @@ namespace FileExplorer.WPF
         public static readonly DependencyProperty CacheItemCountProperty =
             DependencyProperty.Register("CacheItemCount", typeof(int),
             typeof(IOCPanel), new UIPropertyMetadata(0));
+        private Size _prevAvailableSize;
 
 
 
@@ -193,15 +195,20 @@ namespace FileExplorer.WPF
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            if (_prevAvailableSize != availableSize)
+                Layout.ResetLayout();
+            _prevAvailableSize = availableSize;
+
             Scroll.UpdateScrollInfo(availableSize);
             Layout.Measure(availableSize);
-            return availableSize;
+            return base.MeasureOverride(availableSize);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             Scroll.UpdateScrollInfo(finalSize);
-            return Layout.Arrange(finalSize);
+            Layout.Arrange(finalSize);
+            return base.ArrangeOverride(finalSize);
         }
 
         protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
@@ -218,7 +225,7 @@ namespace FileExplorer.WPF
                 case NotifyCollectionChangedAction.Reset:
                     Layout.ResetLayout();
                     break;
-            }
+            }            
             base.OnItemsChanged(sender, args);
         }
 
@@ -233,6 +240,16 @@ namespace FileExplorer.WPF
                 default:
                     throw new NotSupportedException();
             }            
+        }                
+
+        private void resetScrollOffset()
+        {
+            if (Scroll != null)
+            {
+                Scroll.UpdateOffsetX(OffsetType.Fixed, 0);
+                Scroll.UpdateOffsetY(OffsetType.Fixed, 0);
+            }
+            InvalidateMeasure();
         }
 
         private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -244,6 +261,7 @@ namespace FileExplorer.WPF
                 foreach (var child in panel.Children)
                     (child as FrameworkElement).InvalidateMeasure();
                 panel.Layout = panel.getLayout();
+                panel.resetScrollOffset();
             }
         }
 
@@ -252,6 +270,7 @@ namespace FileExplorer.WPF
             IOCPanel panel = d as IOCPanel;
             if (panel.Layout != null)
                 panel.Layout.ResetLayout();
+            panel.resetScrollOffset();            
         }
 
 
@@ -369,7 +388,18 @@ namespace FileExplorer.WPF
 
         #endregion
 
+        #region IChildInfo
+
+        public Rect GetChildRect(int itemIndex)
+        {
+            return Layout[itemIndex].ArrangedRect.Value;
+        }
+
         #endregion
+
+        #endregion
+
+
 
 
 

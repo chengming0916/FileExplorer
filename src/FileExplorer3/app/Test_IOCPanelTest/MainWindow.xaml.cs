@@ -32,7 +32,7 @@ namespace Test_IOCPanelTest
 
             List<ValueViewModel> list = new List<ValueViewModel>();
 
-            for (int i = 1; i <= 1000; i++)
+            for (int i = 1; i <= 1997; i++)
                 list.Add(new ValueViewModel(i));
             
             lv.ItemsSource = list;
