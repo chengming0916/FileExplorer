@@ -38,6 +38,14 @@ namespace FileExplorer.WPF
 
         #region properties
 
+        public Orientation DefaultScrollOrientation
+        {
+            get
+            {
+                return _panel.Orientation == Orientation.Horizontal ?
+                    Orientation.Vertical : Orientation.Horizontal;
+            }
+        }
         public Size Extent { get; set; }
         public ChildInfo this[int idx]
         {
@@ -46,7 +54,7 @@ namespace FileExplorer.WPF
                 return new ChildInfo()
                 {
                     DesiredSize = _panel.ChildSize,
-                    ArrangedRect = new Rect(new Point(0, idx * _panel.ChildSize.Height), _panel.ChildSize)
+                    ArrangedRect = getChildRect(idx, new Size(_panel.ActualWidth, _panel.ActualHeight))
                 };
             }
         }
@@ -112,16 +120,16 @@ namespace FileExplorer.WPF
 
             double viewPortSize = _panel.Scroll.ViewPort.Height;
             int itemPerLine = calculateChildrenPerRow(availableSize);
-            double offset = _panel.Scroll.Offset.Y;            
+            double offset = _panel.Scroll.Offset.Y;
 
             if (_panel.Orientation == Orientation.Vertical)
             {
                 itemPerLine = calculateChildrenPerCol(availableSize);
                 viewPortSize = _panel.Scroll.ViewPort.Width;
-                offset = _panel.Scroll.Offset.X;                
+                offset = _panel.Scroll.Offset.X;
             }
             int totalLine = (int)Math.Ceiling((double)itemCount / itemPerLine);
-            
+
 
             startIdx = 0;
             endIdx = itemCount - 1;
@@ -134,15 +142,13 @@ namespace FileExplorer.WPF
                     for (int lineItem = 0; lineItem < itemPerLine; lineItem++)
                     {
                         int idx = (lineIdx * itemPerLine) + lineItem;
+                        double lineSize;
                         if (_panel.Orientation == Orientation.Horizontal)
-                            maxLineSize = Math.Max(maxLineSize,
-                                _generator.Measure(idx, new Size(_panel.ItemWidth, availableSize.Height)).Height);
+                            lineSize = _generator.Measure(idx, new Size(_panel.ItemWidth, double.PositiveInfinity)).Height;
                         else
-                            maxLineSize = Math.Max(maxLineSize,
-                                _generator.Measure(idx, new Size(availableSize.Width, _panel.ItemHeight)).Width);
-                    }
-
-                    _lineSizeDictionary[lineIdx] = maxLineSize;
+                            lineSize = _generator.Measure(idx, new Size(availableSize.Width, _panel.ItemHeight)).Width;
+                        _lineSizeDictionary.AddOrUpdate(lineIdx, lineSize, (r, cur) => Math.Max(cur, lineSize));
+                    }                    
                 }
                 if (topPos >= offset)
                 {
@@ -161,15 +167,16 @@ namespace FileExplorer.WPF
                     for (int lineItem = 0; lineItem < itemPerLine; lineItem++)
                     {
                         int idx = (lineIdx * itemPerLine) + lineItem;
+                        double lineSize;
                         if (_panel.Orientation == Orientation.Horizontal)
-                            maxLineSize = Math.Max(maxLineSize,
-                                _generator.Measure(idx, new Size(_panel.ItemWidth, availableSize.Height)).Height);
+                            lineSize = _generator.Measure(idx, new Size(_panel.ItemWidth, availableSize.Height)).Height;
                         else
-                            maxLineSize = Math.Max(maxLineSize,
-                                _generator.Measure(idx, new Size(availableSize.Width, _panel.ItemHeight)).Width);
+                            lineSize = _generator.Measure(idx, new Size(availableSize.Width, _panel.ItemHeight)).Width;
+
+                        _lineSizeDictionary.AddOrUpdate(lineIdx, lineSize, (r, cur) => Math.Max(cur, lineSize));
                     }
 
-                    _lineSizeDictionary[lineIdx] = maxLineSize;
+
                 }
                 if (topPos > viewPortSize + offset)
                 {
@@ -193,10 +200,14 @@ namespace FileExplorer.WPF
 
         private double getLineSize(int lineIdx)
         {
-            return _lineSizeDictionary.ContainsKey(lineIdx) ?
-                _lineSizeDictionary[lineIdx] :
-                _panel.Orientation == Orientation.Horizontal ?
-                _panel.ItemHeight : _panel.ItemWidth;
+            if (_lineSizeDictionary.ContainsKey(lineIdx))
+                return _lineSizeDictionary[lineIdx];
+            else
+            {
+                if (_panel.Orientation == Orientation.Horizontal)
+                    return _panel.ItemHeight;
+                else return _panel.ItemWidth;
+            }
         }
 
 
@@ -208,7 +219,7 @@ namespace FileExplorer.WPF
 
                 int row = itemIndex / childPerRow;
                 int column = itemIndex % childPerRow;
-                
+
 
                 return new Rect(column * _panel.ChildSize.Width, getLineTop(row),
                     _panel.ChildSize.Width, getLineSize(row));
@@ -253,7 +264,7 @@ namespace FileExplorer.WPF
             if (availableSize.Width == Double.PositiveInfinity)
                 childrenPerRow = _panel.Children.Count;
             else
-                childrenPerRow = Math.Max(1, (int)Math.Floor(availableSize.Width / _panel.ChildSize.Width));            
+                childrenPerRow = Math.Max(1, (int)Math.Floor(availableSize.Width / _panel.ChildSize.Width));
             return childrenPerRow;
         }
 

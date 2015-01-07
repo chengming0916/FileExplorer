@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace FileExplorer.WPF
 {
     public interface IPanelLayoutHelper
     {
+        Orientation DefaultScrollOrientation { get; }
         ChildInfo this[int idx] { get; }
         void ResetLayout();
         Size Extent { get; }

@@ -9,19 +9,19 @@ using System.Windows.Controls;
 
 namespace FileExplorer.WPF
 {
-    public class VariableStackLayout : IPanelLayoutHelper
+    public class FixedStackLayout : IPanelLayoutHelper
     {
         #region fields
 
         protected IOCPanel _panel;
         protected IItemGeneratorHelper _generator;
-        protected ConcurrentDictionary<int, Size> _desiredSizeDic;        
+        protected ConcurrentDictionary<int, Size> _desiredSizeDic;
 
         #endregion
 
         #region constructors
 
-        public VariableStackLayout(IOCPanel panel, IItemGeneratorHelper generator)
+        public FixedStackLayout(IOCPanel panel, IItemGeneratorHelper generator)
         {
             _panel = panel;
             _generator = generator;
@@ -37,7 +37,11 @@ namespace FileExplorer.WPF
 
         #region properties
 
+        public Orientation DefaultScrollOrientation { get { return _panel.Orientation; } }
+
         public Size Extent { get; set; }
+
+
         public ChildInfo this[int idx]
         {
             get
@@ -45,7 +49,7 @@ namespace FileExplorer.WPF
                 return new ChildInfo()
                 {
                     DesiredSize = _panel.ChildSize,
-                    ArrangedRect = new Rect(new Point(0, idx * _panel.ChildSize.Height), _panel.ChildSize)
+                    ArrangedRect = getChildRect(idx, new Size(_panel.ActualWidth, _panel.ActualHeight))
                 };
             }
         }
@@ -56,21 +60,19 @@ namespace FileExplorer.WPF
 
         public void ResetLayout()
         {
-            _desiredSizeDic.Clear();
         }
 
-        
         public Size Measure(Size availableSize)
         {
-            int startIdx, endIdx;
             // Figure out range that's visible based on layout algorithm
-            getVisibleRange(availableSize, out startIdx, out endIdx);            
+            int startIdx, endIdx;
+            getVisibleRange(out startIdx, out endIdx);
 
-            //Add and subtract CacheItemCount to StartIdx and EndIdx.            
+            //Add and subtract CacheItemCount to StartIdx and EndIdx.
             _panel.UpdateCacheItemCount(ref startIdx, ref endIdx);
 
             //Generate new items and cleaup unused items.
-            _panel.Generator.Generate(startIdx, endIdx);            
+            _panel.Generator.Generate(startIdx, endIdx);
             _panel.Generator.CleanUp(startIdx, endIdx);
 
             //Output extent so it can be accessed by PanelScrollHelper.
@@ -87,7 +89,7 @@ namespace FileExplorer.WPF
                 // Map the child offset to an item offset 
                 // Note: generator location is different compared to item index.
                 int itemIndex = _panel.Generator[child];
-                
+
                 //Calculate children rect
                 Rect childRect = getChildRect(itemIndex, finalSize);
 
@@ -101,78 +103,35 @@ namespace FileExplorer.WPF
 
         #region Helpers
 
-        private void getVisibleRange(Size availableSize, out int startIdx, out int endIdx)
-        {
-            double topPos = 0;
-            int itemCount = _panel.getItemCount();
-            double viewPortSize = _panel.Scroll.ViewPort.Width;
-            double offset = _panel.Scroll.Offset.X;
-            if (_panel.Orientation == Orientation.Vertical)
-            {
-                viewPortSize = _panel.Scroll.ViewPort.Height;
-                offset = _panel.Scroll.Offset.Y;
-            }
-
-            startIdx = endIdx = itemCount - 1;
-            for (int idx = 0; idx < itemCount; idx++)
-            {
-                double lineSize = getLineSize(idx, availableSize);
-                if (topPos >= offset)
-                {
-                    startIdx = idx;
-                    break;
-                }
-                topPos += lineSize;
-            }
-
-            for (int idx = startIdx; idx < itemCount; idx++)
-            {
-                double lineSize = getLineSize(idx, availableSize);
-                if (topPos > viewPortSize + offset)
-                {
-                    endIdx = idx;
-                    break;
-                }
-                topPos += lineSize;
-            }
-        }
-
-
         private Size calculateExtent(Size availableSize, int itemCount)
         {
-            double curSize = getLineTop(itemCount);
             if (_panel.Orientation == Orientation.Horizontal)
-                return new Size(curSize, _panel.Scroll.ViewPort.Height);
-            else return new Size(_panel.Scroll.ViewPort.Width, curSize);
+                return new Size(itemCount * _panel.ChildSize.Width, _panel.Scroll.ViewPort.Height);
+            else return new Size(_panel.Scroll.ViewPort.Width, _panel.ChildSize.Height * itemCount);
         }
 
-        private double getLineTop(int itemIdx)
+        /// <summary>
+        /// Get the range of children that are visible
+        /// </summary>
+        /// <param name="startIdx">The item index of the first visible item</param>
+        /// <param name="endIdx">The item index of the last visible item</param>
+        private void getVisibleRange(out int startIdx, out int endIdx)
         {
-            double curSize = 0;
-            for (int idx = 0; idx < itemIdx; idx++)
-                curSize += getLineSize(idx);
-            return curSize;
-        }
+            Point offset = _panel.Scroll.Offset;
+            Size viewport = _panel.Scroll.ViewPort;
 
-        private double getLineSize(int idx)
-        {
-            if (_desiredSizeDic.ContainsKey(idx))                
-               return (_panel.Orientation == Orientation.Horizontal) ?
-                _desiredSizeDic[idx].Width : _desiredSizeDic[idx].Height;
 
             if (_panel.Orientation == Orientation.Horizontal)
-                return _panel.ChildSize.Width;
-            else return _panel.ChildSize.Height;
-        }
+            {
+                startIdx = (int)Math.Floor(offset.X / _panel.ChildSize.Width);
+                endIdx = (int)Math.Ceiling((offset.X + viewport.Width) / _panel.ChildSize.Width) - 1;
+            }
+            else
+            {
+                startIdx = (int)Math.Floor(offset.Y / _panel.ChildSize.Height);
+                endIdx = (int)Math.Ceiling((offset.Y + viewport.Height) / _panel.ChildSize.Height) - 1;
+            }
 
-        private double getLineSize(int idx, Size availableSize)
-        {
-            if (_desiredSizeDic.ContainsKey(idx))
-                return getLineSize(idx);
-
-            _desiredSizeDic[idx] = _generator.Measure(idx, availableSize);
-            return (_panel.Orientation == Orientation.Horizontal) ?
-                _desiredSizeDic[idx].Width : _desiredSizeDic[idx].Height;
         }
 
         private Rect getChildRect(int itemIndex, Size finalSize)
@@ -181,8 +140,8 @@ namespace FileExplorer.WPF
 
             if (_panel.Orientation == Orientation.Horizontal)
             {
-                double lineLeft = getLineTop(itemIndex);
-                double lineWidth = getLineSize(itemIndex);
+                double lineLeft = itemIndex * _panel.ChildSize.Width;
+                double lineWidth = _panel.ChildSize.Width;
                 Func<Size> getDesiredSize = () => _desiredSizeDic.ContainsKey(itemIndex) ? _desiredSizeDic[itemIndex] :
                    _desiredSizeDic[itemIndex] = _generator.Measure(itemIndex, finalSize);
                 switch (_panel.VerticalContentAlignment)
@@ -195,8 +154,8 @@ namespace FileExplorer.WPF
             }
             else
             {
-                double lineTop = getLineTop(itemIndex);
-                double lineHeight = getLineSize(itemIndex);
+                double lineTop = itemIndex * _panel.ChildSize.Height;
+                double lineHeight = _panel.ChildSize.Height;
                 Func<Size> getDesiredSize = () => _desiredSizeDic.ContainsKey(itemIndex) ? _desiredSizeDic[itemIndex] :
                    _desiredSizeDic[itemIndex] = _generator.Measure(itemIndex, finalSize);
                 switch (_panel.HorizontalContentAlignment)
@@ -216,4 +175,3 @@ namespace FileExplorer.WPF
 
     }
 }
-

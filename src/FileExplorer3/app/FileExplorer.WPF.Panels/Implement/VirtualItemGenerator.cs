@@ -79,7 +79,7 @@ namespace FileExplorer.WPF
                     {                        
                         _panel.addOrInsertInternalChild(childIndex, child);
                         _generator.PrepareItemContainer(child);
-                        (child as FrameworkElement).ApplyTemplate();
+                        //(child as FrameworkElement).ApplyTemplate();
                     }
                     else Debug.Assert(child == _panel.getInternalChildren(childIndex), "Wrong child was generated");
 

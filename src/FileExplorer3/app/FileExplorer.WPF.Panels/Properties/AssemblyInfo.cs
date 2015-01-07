@@ -1,16 +1,17 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FontToBitmap")]
+[assembly: AssemblyTitle("FileExplorer.WPF.Panels")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FontToBitmap")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("FileExplorer.WPF.Panels")]
+[assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("41930af9-c6a8-45e5-837a-d3df93ba2b0d")]
+[assembly: Guid("50016695-6f75-46a1-8366-adb210c0f3ea")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,3 +35,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("3.0.21.0")]
 [assembly: AssemblyVersion("3.0.21.0")]
 [assembly: AssemblyFileVersion("3.0.21.0")]
+
+[assembly: XmlnsDefinition("http://www.quickzip.org/BaseControls", "FileExplorer.WPF")]

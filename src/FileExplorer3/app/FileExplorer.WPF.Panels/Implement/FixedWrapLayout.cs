@@ -35,6 +35,14 @@ namespace FileExplorer.WPF
 
         #region properties
 
+        public Orientation DefaultScrollOrientation
+        {
+            get
+            {
+                return _panel.Orientation == Orientation.Horizontal ?
+                    Orientation.Vertical : Orientation.Horizontal;
+            }
+        }
         public Size Extent { get; set; }
         public ChildInfo this[int idx]
         {

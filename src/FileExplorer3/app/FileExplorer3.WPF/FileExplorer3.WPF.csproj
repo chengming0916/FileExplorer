@@ -843,6 +843,10 @@
       <Project>{528f0c1a-38b5-4a42-a8bd-702f052cdf2f}</Project>
       <Name>FileExplorer.UIEventHub</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileExplorer.WPF.Panels\FileExplorer.WPF.Panels.csproj">
+      <Project>{feddcf20-7c57-4a59-b101-ce927f01a6bd}</Project>
+      <Name>FileExplorer.WPF.Panels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileExplorer3\FileExplorer3 [WPF].csproj">
       <Project>{b876634c-850c-4678-a1a1-34f6ffea6d52}</Project>
       <Name>FileExplorer3 [WPF]</Name>
