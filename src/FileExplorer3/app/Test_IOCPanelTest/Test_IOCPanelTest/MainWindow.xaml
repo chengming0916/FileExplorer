@@ -43,12 +43,13 @@
             <Slider x:Name="sHeight" Minimum="20" Maximum="120" Value="60" Width="50" />
         </WrapPanel>
 
-        <ListView x:Name="lv" Grid.Row="1">
+        <ListView x:Name="lv" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Value}" Height="{Binding Height}" />
+                    <TextBlock Text="{Binding Value}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                FontSize="{Binding FontSize}" />
                 </DataTemplate>
-            </ListView.ItemTemplate>
+            </ListView.ItemTemplate>            
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <local:IOCPanel x:Name="testIOC" 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.WPF
 {
-    public enum LayoutType {  FixedStack, VariableStack, FixedWrap, VariableWrap }
+    public enum LayoutType {  FixedStack, VariableStack, FixedWrap, HalfVariableWrap }
 
     public enum OffsetType {  Fixed, Relative }
     public enum LayoutState {  Invalidated, Measured, Arranged }

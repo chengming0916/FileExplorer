@@ -82,8 +82,8 @@ namespace FileExplorer.WPF
         public static readonly DependencyProperty ItemWidthProperty
          = DependencyProperty.Register("ItemWidth", typeof(double), typeof(IOCPanel),
             new FrameworkPropertyMetadata(100d, FrameworkPropertyMetadataOptions.AffectsMeasure |
-            FrameworkPropertyMetadataOptions.AffectsArrange));
-
+            FrameworkPropertyMetadataOptions.AffectsArrange, new PropertyChangedCallback(OnResetLayout)));
+        
         // Accessor for the child size dependency property
         public double ItemWidth
         {
@@ -94,7 +94,7 @@ namespace FileExplorer.WPF
         public static readonly DependencyProperty ItemHeightProperty
            = DependencyProperty.Register("ItemHeight", typeof(double), typeof(IOCPanel),
               new FrameworkPropertyMetadata(20d, FrameworkPropertyMetadataOptions.AffectsMeasure |
-              FrameworkPropertyMetadataOptions.AffectsArrange));
+              FrameworkPropertyMetadataOptions.AffectsArrange, new PropertyChangedCallback(OnResetLayout)));
 
         // Accessor for the child size dependency property
         public double ItemHeight
@@ -124,7 +124,7 @@ namespace FileExplorer.WPF
         public static readonly DependencyProperty OrientationProperty
            = DependencyProperty.Register("Orientation", typeof(Orientation), typeof(IOCPanel),
               new FrameworkPropertyMetadata(Orientation.Horizontal, FrameworkPropertyMetadataOptions.AffectsMeasure |
-              FrameworkPropertyMetadataOptions.AffectsArrange));
+              FrameworkPropertyMetadataOptions.AffectsArrange, new PropertyChangedCallback(OnResetLayout)));
 
         public Orientation Orientation
         {
@@ -189,7 +189,7 @@ namespace FileExplorer.WPF
             var necessaryChidrenTouch = InternalChildren;
             Generator = new VirtualItemGenerator(this);
             Layout = getLayout();
-        }
+        }                
 
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -223,22 +223,37 @@ namespace FileExplorer.WPF
         }
 
         private IPanelLayoutHelper getLayout()
-        {
+        {            
             switch (Mode)
             {
-                case LayoutType.VariableStack: return new VariableStackLayout(this, Generator); break;
-                case LayoutType.FixedStack: return new FixedStackLayout(this, Generator); break;
+                case LayoutType.VariableStack: return new VariableStackLayout(this, Generator); 
+                case LayoutType.FixedStack: return new FixedStackLayout(this, Generator);
+                case LayoutType.FixedWrap: return new FixedWrapLayout(this, Generator);
+                case LayoutType.HalfVariableWrap: return new HalfVariableWrapLayout(this, Generator);
                 default:
                     throw new NotSupportedException();
-            }
+            }            
         }
 
         private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             IOCPanel panel = d as IOCPanel;
             if (panel.IsInitialized)
+            {
+                //panel.RemoveInternalChildRange(0, panel.getInternalChildren().Count);
+                foreach (var child in panel.Children)
+                    (child as FrameworkElement).InvalidateMeasure();
                 panel.Layout = panel.getLayout();
+            }
         }
+
+        private static void OnResetLayout(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            IOCPanel panel = d as IOCPanel;
+            if (panel.Layout != null)
+                panel.Layout.ResetLayout();
+        }
+
 
 
         #region helper methods

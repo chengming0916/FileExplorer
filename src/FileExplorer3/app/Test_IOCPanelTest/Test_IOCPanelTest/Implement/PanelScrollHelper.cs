@@ -66,6 +66,7 @@ namespace FileExplorer.WPF
                 _viewport = availableSize;
                 if (_owner != null)
                     _owner.InvalidateScrollInfo();
+                //_panel.Layout.ResetLayout();
             }
             
             // Update extent
