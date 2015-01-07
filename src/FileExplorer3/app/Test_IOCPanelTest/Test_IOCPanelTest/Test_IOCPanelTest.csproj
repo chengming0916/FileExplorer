@@ -53,6 +53,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Implement\FixedWrapLayout.cs" />
+    <Compile Include="Implement\HalfVariableWrapLayout.cs" />
     <Compile Include="ValueViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

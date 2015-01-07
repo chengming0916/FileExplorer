@@ -15,8 +15,7 @@ namespace FileExplorer.WPF
 
         protected IOCPanel _panel;
         protected IItemGeneratorHelper _generator;
-        protected ConcurrentDictionary<int, Size> _desiredSizeDic;
-        private int _startIdx, _endIdx;
+        protected ConcurrentDictionary<int, Size> _desiredSizeDic;        
 
         #endregion
 
@@ -39,8 +38,6 @@ namespace FileExplorer.WPF
         #region properties
 
         public Size Extent { get; set; }
-
-
         public ChildInfo this[int idx]
         {
             get
@@ -65,15 +62,16 @@ namespace FileExplorer.WPF
         
         public Size Measure(Size availableSize)
         {
+            int startIdx, endIdx;
             // Figure out range that's visible based on layout algorithm
-            getVisibleRange(availableSize, out _startIdx, out _endIdx);            
+            getVisibleRange(availableSize, out startIdx, out endIdx);            
 
             //Add and subtract CacheItemCount to StartIdx and EndIdx.            
-            _panel.UpdateCacheItemCount(ref _startIdx, ref _endIdx);
+            _panel.UpdateCacheItemCount(ref startIdx, ref endIdx);
 
             //Generate new items and cleaup unused items.
-            _panel.Generator.Generate(_startIdx, _endIdx);            
-            _panel.Generator.CleanUp(_startIdx, _endIdx);
+            _panel.Generator.Generate(startIdx, endIdx);            
+            _panel.Generator.CleanUp(startIdx, endIdx);
 
             //Output extent so it can be accessed by PanelScrollHelper.
             Extent = calculateExtent(availableSize, _panel.getItemCount());
