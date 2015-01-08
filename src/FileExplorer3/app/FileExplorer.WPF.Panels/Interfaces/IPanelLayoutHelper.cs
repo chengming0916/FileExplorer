@@ -12,9 +12,9 @@ namespace FileExplorer.WPF
     {
         Orientation DefaultScrollOrientation { get; }
         ChildInfo this[int idx] { get; }
-        void ResetLayout();
+        void ResetLayout(int idx = -1);
         Size Extent { get; }
-
+        
         Size Measure(Size availableSize);
         Size Arrange(Size finalSize);
     }

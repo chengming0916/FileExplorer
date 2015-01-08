@@ -191,10 +191,16 @@ namespace FileExplorer.WPF
             var necessaryChidrenTouch = InternalChildren;
             Generator = new VirtualItemGenerator(this);
             Layout = getLayout();
-        }                
+        }
+
+        protected override void OnChildDesiredSizeChanged(UIElement child)
+        {
+            base.OnChildDesiredSizeChanged(child);
+            Layout.ResetLayout(Generator[child]);
+        }
 
         protected override Size MeasureOverride(Size availableSize)
-        {
+        {            
             if (_prevAvailableSize != availableSize)
                 Layout.ResetLayout();
             _prevAvailableSize = availableSize;

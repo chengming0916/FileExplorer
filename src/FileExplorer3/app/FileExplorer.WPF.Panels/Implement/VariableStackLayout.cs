@@ -55,16 +55,20 @@ namespace FileExplorer.WPF
 
         #region methods
 
-        public void ResetLayout()
+        public void ResetLayout(int idx = -1)
         {
-            _desiredSizeDic.Clear();
+            if (idx == -1)
+                _desiredSizeDic.Clear();
+            else
+            {
+                Size value;
+                _desiredSizeDic.TryRemove(idx, out value);
+            }
         }
 
         
         public Size Measure(Size availableSize)
-        {
-            ResetLayout();
-
+        {            
             int startIdx, endIdx;
             // Figure out range that's visible based on layout algorithm
             getVisibleRange(availableSize, out startIdx, out endIdx);            

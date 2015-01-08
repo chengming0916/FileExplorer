@@ -63,9 +63,29 @@ namespace FileExplorer.WPF
 
         #region methods
 
-        public void ResetLayout()
+        public void ResetLayout(int idx = -1)
         {
-            _lineSizeDictionary.Clear();
+            if (idx == -1)
+                _lineSizeDictionary.Clear();
+            else
+            {
+                if (_panel.Orientation == Orientation.Horizontal)
+                {
+                    int childPerRow = calculateChildrenPerRow(new Size(_panel.ActualWidth, _panel.ActualHeight));
+
+                    int row = idx / childPerRow;
+                    double value;
+                    _lineSizeDictionary.TryRemove(row, out value);
+                }
+                else
+                {
+                    int childPerCol = calculateChildrenPerCol(new Size(_panel.ActualWidth, _panel.ActualHeight));
+
+                    int column = idx / childPerCol;
+                    double value;
+                    _lineSizeDictionary.TryRemove(column, out value);
+                }
+            }
         }
 
 
@@ -138,7 +158,6 @@ namespace FileExplorer.WPF
             {
                 if (!_lineSizeDictionary.ContainsKey(lineIdx))
                 {
-                    double maxLineSize = 0;
                     for (int lineItem = 0; lineItem < itemPerLine; lineItem++)
                     {
                         int idx = (lineIdx * itemPerLine) + lineItem;
@@ -146,7 +165,7 @@ namespace FileExplorer.WPF
                         if (_panel.Orientation == Orientation.Horizontal)
                             lineSize = _generator.Measure(idx, new Size(_panel.ItemWidth, double.PositiveInfinity)).Height;
                         else
-                            lineSize = _generator.Measure(idx, new Size(availableSize.Width, _panel.ItemHeight)).Width;
+                            lineSize = _generator.Measure(idx, new Size(availableSize.Width, _panel.ItemHeight)).Width;                        
                         _lineSizeDictionary.AddOrUpdate(lineIdx, lineSize, (r, cur) => Math.Max(cur, lineSize));
                     }                    
                 }
@@ -163,7 +182,6 @@ namespace FileExplorer.WPF
             {
                 if (!_lineSizeDictionary.ContainsKey(lineIdx))
                 {
-                    double maxLineSize = 0;
                     for (int lineItem = 0; lineItem < itemPerLine; lineItem++)
                     {
                         int idx = (lineIdx * itemPerLine) + lineItem;
