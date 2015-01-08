@@ -13,7 +13,14 @@ namespace FileExplorer.Script
             : base(
             pm => 
                 {
-                    scriptRunner.RunAsync(converter.Convert(pm), command);
+                    try
+                    {
+                        scriptRunner.RunAsync(converter.Convert(pm), command);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }, 
             pm => command.CanExecute(converter.Convert(pm)))
         {

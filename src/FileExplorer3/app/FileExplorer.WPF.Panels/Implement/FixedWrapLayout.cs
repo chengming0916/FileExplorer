@@ -60,7 +60,7 @@ namespace FileExplorer.WPF
 
         #region methods
 
-        public void ResetLayout()
+        public void ResetLayout(int idx)
         {
         }
 
